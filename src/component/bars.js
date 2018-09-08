@@ -50,12 +50,12 @@ export default function() {
 	 * Constructor
 	 */
 	function my(selection) {
-		let scene = selection;
-		scene.classed(classed, true);
+		selection.classed(classed, true);
 
 		selection.each(function(data) {
 			init(data);
-			let bars = scene.selectAll(".bar")
+
+			let bars = selection.selectAll(".bar")
 				.data(function(d) { return d.values; });
 
 			let barsEnter = bars.enter()

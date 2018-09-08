@@ -57,8 +57,7 @@ export default function() {
 	 * Constructor
 	 */
 	function my(selection) {
-		let scene = selection;
-		scene.classed(classed, true);
+		selection.classed(classed, true);
 
 		selection.each(function(data) {
 			init(data);
@@ -71,7 +70,7 @@ export default function() {
 				.colors(colors);
 
 			// Create Bar Groups
-			let barGroup = scene.selectAll(".barGroup")
+			let barGroup = selection.selectAll(".barGroup")
 				.data(data);
 
 			barGroup.enter()

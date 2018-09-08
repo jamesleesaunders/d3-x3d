@@ -50,8 +50,7 @@ export default function() {
 	 * Constructor
 	 */
 	function my(selection) {
-		let scene = selection;
-		scene.classed(classed, true);
+		selection.classed(classed, true);
 
 		selection.each(function(data) {
 			init(data);
@@ -64,7 +63,7 @@ export default function() {
 				return selection;
 			};
 
-			let bubblesSelect = scene.selectAll(".point")
+			let bubblesSelect = selection.selectAll(".point")
 				.data(data);
 
 			let bubbles = bubblesSelect.enter()
