@@ -4,7 +4,7 @@ import { default as component } from "../component";
 
 /**
  * Reusable 3D Scatter Plot
- *
+ * @see https://datavizproject.com/data-type/3d-scatterplot/
  */
 export default function() {
 

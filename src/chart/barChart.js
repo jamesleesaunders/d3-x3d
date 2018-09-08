@@ -4,7 +4,7 @@ import { default as component } from "../component";
 
 /**
  * Reusable 3D Bar Chart
- *
+ * @see https://datavizproject.com/data-type/3d-bar-chart/
  */
 export default function() {
 

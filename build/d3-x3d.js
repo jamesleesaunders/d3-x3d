@@ -1183,7 +1183,7 @@ var component = {
 
 /**
  * Reusable 3D Bar Chart
- *
+ * @see https://datavizproject.com/data-type/3d-bar-chart/
  */
 function chartBarChart () {
 
@@ -1306,7 +1306,7 @@ function chartBarChart () {
 
 /**
  * Reusable 3D Scatter Plot
- *
+ * @see https://datavizproject.com/data-type/3d-scatterplot/
  */
 function chartScatterPlot () {
 
@@ -1431,7 +1431,7 @@ function chartScatterPlot () {
 
 /**
  * Reusable 3D Surface Area
- *
+ * @see https://datavizproject.com/data-type/three-dimensional-stream-graph/
  */
 function chartSurfaceArea () {
 

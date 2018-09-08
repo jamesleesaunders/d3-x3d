@@ -4,7 +4,7 @@ import { default as component } from "../component";
 
 /**
  * Reusable 3D Surface Area
- *
+ * @see https://datavizproject.com/data-type/three-dimensional-stream-graph/
  */
 export default function() {
 
