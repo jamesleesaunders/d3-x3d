@@ -321,7 +321,7 @@ function dataTransform (data) {
  * Reusable 3D Axis
  *
  */
-function componentbarsAxis () {
+function componentAxis () {
 
 	/**
   * Default Properties
@@ -509,6 +509,117 @@ function componentbarsAxis () {
 
 	my.tickPadding = function (_) {
 		return arguments.length ? (tickPadding = +_, my) : tickPadding;
+	};
+
+	return my;
+}
+
+/**
+ * Reusable 3D Multi Plane Axis
+ *
+ */
+function componentbarsAxisMulti () {
+
+	/**
+  * Default Properties
+  */
+	var width = 40.0;
+	var height = 40.0;
+	var depth = 40.0;
+	var colors = ["blue", "red", "green"];
+	var classed = "x3dAxisMulti";
+
+	/**
+  * Scales
+  */
+	var xScale = void 0;
+	var yScale = void 0;
+	var zScale = void 0;
+	var colorScale = void 0;
+
+	/**
+  * Constructor
+  */
+	function my(selection) {
+		var scene = selection;
+
+		var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
+		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+			return d;
+		});
+
+		selection.each(function () {
+
+			// Construct Axis Components
+			var xzAxis = componentAxis().scale(xScale).dir('x').tickDir('z').tickSize(xScale.range()[1] - xScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
+
+			var yzAxis = componentAxis().scale(yScale).dir('y').tickDir('z').tickSize(yScale.range()[1] - yScale.range()[0]).color("red");
+
+			var yxAxis = componentAxis().scale(yScale).dir('y').tickDir('x').tickSize(yScale.range()[1] - yScale.range()[0]).tickFormat(function () {
+				return '';
+			}).color("red");
+
+			var zxAxis = componentAxis().scale(zScale).dir('z').tickDir('x').tickSize(zScale.range()[1] - zScale.range()[0]).color("black");
+
+			scene.select(".xzAxis").call(xzAxis);
+
+			scene.select(".yzAxis").call(yzAxis);
+
+			scene.select(".yxAxis").call(yxAxis);
+
+			scene.select(".zxAxis").call(zxAxis);
+		});
+	}
+
+	/**
+  * Configuration Getters & Setters
+  */
+	my.width = function (_) {
+		if (!arguments.length) return width;
+		width = _;
+		return this;
+	};
+
+	my.height = function (_) {
+		if (!arguments.length) return height;
+		height = _;
+		return this;
+	};
+
+	my.depth = function (_) {
+		if (!arguments.length) return depth;
+		depth = _;
+		return this;
+	};
+
+	my.xScale = function (_) {
+		if (!arguments.length) return xScale;
+		xScale = _;
+		return my;
+	};
+
+	my.yScale = function (_) {
+		if (!arguments.length) return yScale;
+		yScale = _;
+		return my;
+	};
+
+	my.zScale = function (_) {
+		if (!arguments.length) return zScale;
+		zScale = _;
+		return my;
+	};
+
+	my.colorScale = function (_) {
+		if (!arguments.length) return colorScale;
+		colorScale = _;
+		return my;
+	};
+
+	my.colors = function (_) {
+		if (!arguments.length) return colors;
+		colors = _;
+		return my;
 	};
 
 	return my;
@@ -1069,11 +1180,12 @@ function componentbarsSurface () {
 }
 
 var component = {
-    axis: componentbarsAxis,
-    bars: componentBars,
-    barsMulti: componentbarsBarsMulti,
-    bubbles: componentbarsBubbles,
-    surface: componentbarsSurface
+	axis: componentAxis,
+	axisMulti: componentbarsAxisMulti,
+	bars: componentBars,
+	barsMulti: componentbarsBarsMulti,
+	bubbles: componentbarsBubbles,
+	surface: componentbarsSurface
 };
 
 /**
@@ -1126,7 +1238,7 @@ function chartBarChart () {
 		var scene = selection;
 
 		// Update the chart dimensions and add layer groups
-		var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis", "barChart"];
+		var layers = ["multiAxis", "barChart"];
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
@@ -1134,27 +1246,13 @@ function chartBarChart () {
 		selection.each(function (data) {
 			init(data);
 
-			// Construct Axis Components
-			var xzAxis = component.axis().scale(xScale).dir('x').tickDir('z').tickSize(xScale.range()[1] - xScale.range()[0]).tickPadding(xScale.range()[0]);
+			// Construct Axis Component
+			var axisMulti = component.axisMulti().xScale(xScale).yScale(yScale).zScale(zScale);
 
-			var yzAxis = component.axis().scale(yScale).dir('y').tickDir('z').tickSize(yScale.range()[1] - yScale.range()[0]);
-
-			var yxAxis = component.axis().scale(yScale).dir('y').tickDir('x').tickSize(yScale.range()[1] - yScale.range()[0]).tickFormat(function () {
-				return '';
-			});
-
-			var zxAxis = component.axis().scale(zScale).dir('z').tickDir('x').tickSize(zScale.range()[1] - zScale.range()[0]);
-
-			// Vertical Bars Component
+			// Construct Bars Component
 			var barsMulti = component.barsMulti().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
 
-			scene.select(".xzAxis").call(xzAxis);
-
-			scene.select(".yzAxis").call(yzAxis);
-
-			scene.select(".yxAxis").call(yxAxis);
-
-			scene.select(".zxAxis").call(zxAxis);
+			scene.select(".multiAxis").call(axisMulti);
 
 			scene.select(".barChart").datum(data).call(barsMulti);
 		});
@@ -1241,8 +1339,6 @@ function chartScatterPlot () {
   * Initialise Data and Scales
   */
 	function init(data) {
-		console.log(data);
-
 		var maxX = d3.max(data, function (d) {
 			return +d.x;
 		});
@@ -1268,7 +1364,7 @@ function chartScatterPlot () {
 		var scene = selection;
 
 		// Update the chart dimensions and add layer groups
-		var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis", "scatterPlot"];
+		var layers = ["multiAxis", "scatterPlot"];
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
@@ -1276,27 +1372,13 @@ function chartScatterPlot () {
 		selection.each(function (data) {
 			init(data);
 
-			// Construct Axis Components
-			var xzAxis = component.axis().scale(xScale).dir('x').tickDir('z').tickSize(xScale.range()[1] - xScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
+			// Construct Axis Component
+			var axisMulti = component.axisMulti().xScale(xScale).yScale(yScale).zScale(zScale);
 
-			var yzAxis = component.axis().scale(yScale).dir('y').tickDir('z').tickSize(yScale.range()[1] - yScale.range()[0]).color("red");
-
-			var yxAxis = component.axis().scale(yScale).dir('y').tickDir('x').tickSize(yScale.range()[1] - yScale.range()[0]).tickFormat(function () {
-				return '';
-			}).color("red");
-
-			var zxAxis = component.axis().scale(zScale).dir('z').tickDir('x').tickSize(zScale.range()[1] - zScale.range()[0]).color("black");
-
-			// Bubbles Component
+			// Construct Bubbles Component
 			var bubbles = component.bubbles().xScale(xScale).yScale(yScale).zScale(zScale).color(color);
 
-			scene.select(".xzAxis").call(xzAxis);
-
-			scene.select(".yzAxis").call(yzAxis);
-
-			scene.select(".yxAxis").call(yxAxis);
-
-			scene.select(".zxAxis").call(zxAxis);
+			scene.select(".multiAxis").call(axisMulti);
 
 			scene.select(".scatterPlot").datum(data).call(bubbles);
 		});
@@ -1383,8 +1465,6 @@ function chartSurfaceArea () {
   * Initialise Data and Scales
   */
 	function init(data) {
-		console.log(data);
-
 		var maxX = d3.max(d3.merge(data), function (d) {
 			return d.x;
 		});
@@ -1416,7 +1496,7 @@ function chartSurfaceArea () {
 		var scene = selection;
 
 		// Update the chart dimensions and add layer groups
-		var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis", "surface"];
+		var layers = ["multiAxis", "surface"];
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
@@ -1424,27 +1504,13 @@ function chartSurfaceArea () {
 		selection.each(function (data) {
 			init(data);
 
-			// Construct Axis Components
-			var xzAxis = component.axis().scale(xScale).dir('x').tickDir('z').tickSize(xScale.range()[1] - xScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
+			// Construct Axis Component
+			var axisMulti = component.axisMulti().xScale(xScale).yScale(yScale).zScale(zScale);
 
-			var yzAxis = component.axis().scale(yScale).dir('y').tickDir('z').tickSize(yScale.range()[1] - yScale.range()[0]).color("red");
-
-			var yxAxis = component.axis().scale(yScale).dir('y').tickDir('x').tickSize(yScale.range()[1] - yScale.range()[0]).tickFormat(function (d) {
-				return '';
-			}).color("red");
-
-			var zxAxis = component.axis().scale(zScale).dir('z').tickDir('x').tickSize(zScale.range()[1] - zScale.range()[0]).color("black");
-
-			// Surface Area Component
+			// Construct Surface Area Component
 			var surface = component.surface().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
 
-			scene.select(".xzAxis").call(xzAxis);
-
-			scene.select(".yzAxis").call(yzAxis);
-
-			scene.select(".yxAxis").call(yxAxis);
-
-			scene.select(".zxAxis").call(zxAxis);
+			scene.select(".multiAxis").call(axisMulti);
 
 			scene.select(".surface").datum(data).call(surface);
 		});

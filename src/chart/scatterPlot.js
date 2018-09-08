@@ -29,8 +29,6 @@ export default function() {
 	 * Initialise Data and Scales
 	 */
 	function init(data) {
-		console.log(data);
-
 		let maxX = d3.max(data, function(d) { return +d.x; });
 		let maxY = d3.max(data, function(d) { return +d.y; });
 		let maxZ = d3.max(data, function(d) { return +d.z; });
@@ -56,7 +54,7 @@ export default function() {
 		let scene = selection;
 
 		// Update the chart dimensions and add layer groups
-		let layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis", "scatterPlot"];
+		let layers = ["multiAxis", "scatterPlot"];
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
@@ -67,55 +65,21 @@ export default function() {
 		selection.each(function(data) {
 			init(data);
 
-			// Construct Axis Components
-			let xzAxis = component.axis()
-				.scale(xScale)
-				.dir('x')
-				.tickDir('z')
-				.tickSize(xScale.range()[1] - xScale.range()[0])
-				.tickPadding(xScale.range()[0])
-				.color("blue");
+			// Construct Axis Component
+			let axisMulti = component.axisMulti()
+				.xScale(xScale)
+				.yScale(yScale)
+				.zScale(zScale);
 
-			let yzAxis = component.axis()
-				.scale(yScale)
-				.dir('y')
-				.tickDir('z')
-				.tickSize(yScale.range()[1] - yScale.range()[0])
-				.color("red");
-
-			let yxAxis = component.axis()
-				.scale(yScale)
-				.dir('y')
-				.tickDir('x')
-				.tickSize(yScale.range()[1] - yScale.range()[0])
-				.tickFormat(function() { return ''; })
-				.color("red");
-
-			let zxAxis = component.axis()
-				.scale(zScale)
-				.dir('z')
-				.tickDir('x')
-				.tickSize(zScale.range()[1] - zScale.range()[0])
-				.color("black");
-
-			// Bubbles Component
+			// Construct Bubbles Component
 			let bubbles = component.bubbles()
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
 				.color(color);
 
-			scene.select(".xzAxis")
-				.call(xzAxis);
-
-			scene.select(".yzAxis")
-				.call(yzAxis);
-
-			scene.select(".yxAxis")
-				.call(yxAxis);
-
-			scene.select(".zxAxis")
-				.call(zxAxis);
+			scene.select(".multiAxis")
+				.call(axisMulti);
 
 			scene.select(".scatterPlot")
 				.datum(data)
