@@ -1,9 +1,9 @@
-import { default as chartX3dBarChart } from "./chart/x3dBarChart";
-import { default as chartX3dScatterPlot } from "./chart/x3dScatterPlot";
-import { default as chartX3dSurfaceArea } from "./chart/x3dSurfaceArea";
+import { default as chartBarChart } from "./chart/barChart";
+import { default as chartScatterPlot } from "./chart/scatterPlot";
+import { default as chartSurfaceArea } from "./chart/surfaceArea";
 
 export default {
-	x3dBarChart: chartX3dBarChart,
-	x3dScatterPlot: chartX3dScatterPlot,
-	x3dSurfaceArea: chartX3dSurfaceArea
+	barChart: chartBarChart,
+	scatterPlot: chartScatterPlot,
+	surfaceArea: chartSurfaceArea
 };

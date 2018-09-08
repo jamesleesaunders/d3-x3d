@@ -1,9 +1,9 @@
 import * as d3 from "d3";
 import { default as dataTransform } from "../dataTransform";
-import { default as x3dBars } from "./x3dBars";
+import { default as componentBars } from "./bars";
 
 /**
- * Reusable 3D Bar Chart 2
+ * Reusable 3D Multi Series Bar Chart
  *
  */
 export default function() {
@@ -63,20 +63,20 @@ export default function() {
 		selection.each(function(data) {
 			init(data);
 
-			// Vertical Bars Component
-			let barsVertical = x3dBars()
+			// Construct Bars Component
+			let bars = componentBars()
 				.xScale(xScale)
 				.yScale(yScale)
 				.depth(zScale.bandwidth())
 				.colors(colors);
 
 			// Create Bar Groups
-			let categoryGroup = scene.selectAll(".categoryGroup")
+			let barGroup = scene.selectAll(".barGroup")
 				.data(data);
 
-			categoryGroup.enter()
+			barGroup.enter()
 				.append("transform")
-				.classed("categoryGroup", true)
+				.classed("barGroup", true)
 				.attr("translation", function(d) {
 					let x = 0;
 					let y = 0;
@@ -84,10 +84,10 @@ export default function() {
 					return x + " " + y + " " + z;
 				})
 				.append("group")
-				.call(barsVertical)
-				.merge(categoryGroup);
+				.call(bars)
+				.merge(barGroup);
 
-			categoryGroup.exit()
+			barGroup.exit()
 				.remove();
 
 		});

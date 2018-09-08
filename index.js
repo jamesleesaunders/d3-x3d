@@ -22,5 +22,5 @@ export default {
 	license: license,
 	chart: chart,
 	component: component,
-    dataTransform: dataTransform
+	dataTransform: dataTransform
 };

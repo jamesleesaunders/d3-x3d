@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>d3-ez : 3D Surface Area Example</title>
+  <title>d3-x3d : 3D Scatter Plot Example</title>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
   <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
@@ -14,26 +14,14 @@
 
   <script>
     // Generate Data
-    var cx = 0.8;
-    var cy = 0.3;
-    var f = function(vx, vz) {
-      return ((vx - cx)*(vx - cx) + (vz - cy)*(vx - cx)) * Math.random();
-    };
-
-    var xRange = d3.range(0, 1.05, 0.1);
-    var zRange = d3.range(0, 1.05, 0.1);
-    var nx = xRange.length;
-    var nz = zRange.length;
-
-    var data = d3.range(nx).map(function(i) {
-      return d3.range(nz).map(
-        function(j) {
-          return {
-            x: xRange[j],
-            y: f(xRange[i], zRange[j]),
-            z: zRange[i]
-          };
-        });
+    var n = 40;
+    var data = d3.range(n).map(function(d, i) {
+      return {
+        key: i,
+        x: Math.floor(Math.random() * 11),
+        y: Math.floor(Math.random() * 11),
+        z: Math.floor(Math.random() * 11)
+      };
     });
 
     // Chart dimensions
@@ -46,13 +34,13 @@
     var fieldOfView = 0.8;
 
     // Construct chart component
-    var surfaceArea = d3.ez.chart.x3dSurfaceArea();
+    var scatterPlot = d3.x3d.chart.scatterPlot();
 
     // Create scene
     var scene = d3.select("#chartholder")
       .append("x3d")
-      //.attr("showLog", "true")
-      //.attr("showStat", "true")
+      .attr("showLog", "true")
+      .attr("showStat", "true")
       .attr("width", width + 'px')
       .attr("height", height + 'px')
       .append("scene");
@@ -68,7 +56,7 @@
     scene.append('group')
       .attr('class', 'chart')
       .datum(data)
-      .call(surfaceArea);
+      .call(scatterPlot);
 
   </script>
 </body>

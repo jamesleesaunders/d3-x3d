@@ -1,5 +1,5 @@
 /**
- * d3-ez
+ * d3-x3d
  *
  * @author James Saunders [james@saunders-family.net]
  * @copyright Copyright (C) 2018 James Saunders
@@ -8,41 +8,41 @@
 
 /* === Global Styles === */
 
-.d3ez {
+.d3X3d {
 		font-family: "Helvetica Neue", Helvetica, sans-serif;
 		font-size: 10px;
 }
 
 /* === Axis Styles === */
 
-.d3ez .axis path, .axis line {
+.d3X3d .axis path, .axis line {
 		fill: none;
 		stroke: #b6b6b6;
 		shape-rendering: crispEdges;
 }
 
-.d3ez .tick text {
+.d3X3d .tick text {
 		fill: #000000;
 }
 
 /* === Title === */
 
-.d3ez #titleGroup text {
+.d3X3d #titleGroup text {
 		fill: #000000;
 }
 
-.d3ez text.title {
+.d3X3d text.title {
 		font-size: 14px;
 		font-weight: bold;
 }
 
-.d3ez text.subTitle {
+.d3X3d text.subTitle {
 		font-size: 12px;
 }
 
 /* === Credit Label === */
 
-.d3ez #creditTag text {
+.d3X3d #creditTag text {
 		cursor: pointer;
 		fill: #cccccc;
 }

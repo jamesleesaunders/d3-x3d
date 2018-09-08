@@ -9,7 +9,7 @@
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('d3')) :
 	typeof define === 'function' && define.amd ? define(['d3'], factory) :
-	(global.d3 = global.d3 || {}, global.d3.ez = factory(global.d3));
+	(global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
 var version = "1.0.0";
@@ -81,7 +81,7 @@ function dataTransform (data) {
   }();
 
   /**
-   * Row Torals Max
+   * Row Totals Max
    */
   var rowTotalsMax = function () {
     var ret = void 0;
@@ -321,7 +321,7 @@ function dataTransform (data) {
  * Reusable 3D Axis
  *
  */
-function componentbarsX3dAxis () {
+function componentbarsAxis () {
 
 	/**
   * Default Properties
@@ -518,7 +518,7 @@ function componentbarsX3dAxis () {
  * Reusable 3D Bar Chart
  *
  */
-function x3dBars () {
+function componentBars () {
 
 	/**
   * Default Properties
@@ -646,10 +646,10 @@ function x3dBars () {
 }
 
 /**
- * Reusable 3D Bar Chart 2
+ * Reusable 3D Multi Series Bar Chart
  *
  */
-function componentbarsX3dBarsMulti () {
+function componentbarsBarsMulti () {
 
 	/**
   * Default Properties
@@ -698,20 +698,20 @@ function componentbarsX3dBarsMulti () {
 		selection.each(function (data) {
 			init(data);
 
-			// Vertical Bars Component
-			var barsVertical = x3dBars().xScale(xScale).yScale(yScale).depth(zScale.bandwidth()).colors(colors);
+			// Construct Bars Component
+			var bars = componentBars().xScale(xScale).yScale(yScale).depth(zScale.bandwidth()).colors(colors);
 
 			// Create Bar Groups
-			var categoryGroup = scene.selectAll(".categoryGroup").data(data);
+			var barGroup = scene.selectAll(".barGroup").data(data);
 
-			categoryGroup.enter().append("transform").classed("categoryGroup", true).attr("translation", function (d) {
+			barGroup.enter().append("transform").classed("barGroup", true).attr("translation", function (d) {
 				var x = 0;
 				var y = 0;
 				var z = zScale(d.key);
 				return x + " " + y + " " + z;
-			}).append("group").call(barsVertical).merge(categoryGroup);
+			}).append("group").call(bars).merge(barGroup);
 
-			categoryGroup.exit().remove();
+			barGroup.exit().remove();
 		});
 	}
 
@@ -773,7 +773,7 @@ function componentbarsX3dBarsMulti () {
  * Reusable 3D Bubble Chart
  *
  */
-function componentbarsX3dBubbles () {
+function componentbarsBubbles () {
 
 	/**
   * Default Properties
@@ -901,7 +901,7 @@ function componentbarsX3dBubbles () {
  * Reusable 3D Surface Area
  *
  */
-function componentbarsX3dSurfaceArea () {
+function componentbarsSurface () {
 
 	/**
   * Default Properties
@@ -910,7 +910,7 @@ function componentbarsX3dSurfaceArea () {
 	var height = 40.0;
 	var depth = 40.0;
 	var colors = ["blue", "red"];
-	var classed = "x3dSurfaceArea";
+	var classed = "x3dSurface";
 
 	/**
   * Scales
@@ -1069,18 +1069,18 @@ function componentbarsX3dSurfaceArea () {
 }
 
 var component = {
-    x3dAxis: componentbarsX3dAxis,
-    x3dBars: x3dBars,
-    x3dBarsMulti: componentbarsX3dBarsMulti,
-    x3dBubbles: componentbarsX3dBubbles,
-    x3dSurfaceArea: componentbarsX3dSurfaceArea
+    axis: componentbarsAxis,
+    bars: componentBars,
+    barsMulti: componentbarsBarsMulti,
+    bubbles: componentbarsBubbles,
+    surface: componentbarsSurface
 };
 
 /**
  * Reusable 3D Bar Chart
  *
  */
-function chartX3dBarChart () {
+function chartBarChart () {
 
 	/**
   * Default Properties
@@ -1135,18 +1135,18 @@ function chartX3dBarChart () {
 			init(data);
 
 			// Construct Axis Components
-			var xzAxis = d3.ez.component.x3dAxis().scale(xScale).dir('x').tickDir('z').tickSize(xScale.range()[1] - xScale.range()[0]).tickPadding(xScale.range()[0]);
+			var xzAxis = component.axis().scale(xScale).dir('x').tickDir('z').tickSize(xScale.range()[1] - xScale.range()[0]).tickPadding(xScale.range()[0]);
 
-			var yzAxis = d3.ez.component.x3dAxis().scale(yScale).dir('y').tickDir('z').tickSize(yScale.range()[1] - yScale.range()[0]);
+			var yzAxis = component.axis().scale(yScale).dir('y').tickDir('z').tickSize(yScale.range()[1] - yScale.range()[0]);
 
-			var yxAxis = d3.ez.component.x3dAxis().scale(yScale).dir('y').tickDir('x').tickSize(yScale.range()[1] - yScale.range()[0]).tickFormat(function () {
+			var yxAxis = component.axis().scale(yScale).dir('y').tickDir('x').tickSize(yScale.range()[1] - yScale.range()[0]).tickFormat(function () {
 				return '';
 			});
 
-			var zxAxis = d3.ez.component.x3dAxis().scale(zScale).dir('z').tickDir('x').tickSize(zScale.range()[1] - zScale.range()[0]);
+			var zxAxis = component.axis().scale(zScale).dir('z').tickDir('x').tickSize(zScale.range()[1] - zScale.range()[0]);
 
 			// Vertical Bars Component
-			var barChart = d3.ez.component.x3dBarsMulti().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
+			var barsMulti = component.barsMulti().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
 
 			scene.select(".xzAxis").call(xzAxis);
 
@@ -1156,7 +1156,7 @@ function chartX3dBarChart () {
 
 			scene.select(".zxAxis").call(zxAxis);
 
-			scene.select(".barChart").datum(data).call(barChart);
+			scene.select(".barChart").datum(data).call(barsMulti);
 		});
 	}
 
@@ -1218,7 +1218,7 @@ function chartX3dBarChart () {
  * Reusable 3D Scatter Plot
  *
  */
-function chartX3dScatterPlot () {
+function chartScatterPlot () {
 
 	/**
   * Default Properties
@@ -1268,7 +1268,7 @@ function chartX3dScatterPlot () {
 		var scene = selection;
 
 		// Update the chart dimensions and add layer groups
-		var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis", "barChart"];
+		var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis", "scatterPlot"];
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
@@ -1277,18 +1277,18 @@ function chartX3dScatterPlot () {
 			init(data);
 
 			// Construct Axis Components
-			var xzAxis = d3.ez.component.x3dAxis().scale(xScale).dir('x').tickDir('z').tickSize(xScale.range()[1] - xScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
+			var xzAxis = component.axis().scale(xScale).dir('x').tickDir('z').tickSize(xScale.range()[1] - xScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
 
-			var yzAxis = d3.ez.component.x3dAxis().scale(yScale).dir('y').tickDir('z').tickSize(yScale.range()[1] - yScale.range()[0]).color("red");
+			var yzAxis = component.axis().scale(yScale).dir('y').tickDir('z').tickSize(yScale.range()[1] - yScale.range()[0]).color("red");
 
-			var yxAxis = d3.ez.component.x3dAxis().scale(yScale).dir('y').tickDir('x').tickSize(yScale.range()[1] - yScale.range()[0]).tickFormat(function (d) {
+			var yxAxis = component.axis().scale(yScale).dir('y').tickDir('x').tickSize(yScale.range()[1] - yScale.range()[0]).tickFormat(function () {
 				return '';
 			}).color("red");
 
-			var zxAxis = d3.ez.component.x3dAxis().scale(zScale).dir('z').tickDir('x').tickSize(zScale.range()[1] - zScale.range()[0]).color("black");
+			var zxAxis = component.axis().scale(zScale).dir('z').tickDir('x').tickSize(zScale.range()[1] - zScale.range()[0]).color("black");
 
 			// Bubbles Component
-			var bubbles = d3.ez.component.x3dBubbles().xScale(xScale).yScale(yScale).zScale(zScale).color(color);
+			var bubbles = component.bubbles().xScale(xScale).yScale(yScale).zScale(zScale).color(color);
 
 			scene.select(".xzAxis").call(xzAxis);
 
@@ -1298,7 +1298,7 @@ function chartX3dScatterPlot () {
 
 			scene.select(".zxAxis").call(zxAxis);
 
-			scene.select(".barChart").datum(data).call(bubbles);
+			scene.select(".scatterPlot").datum(data).call(bubbles);
 		});
 	}
 
@@ -1360,7 +1360,7 @@ function chartX3dScatterPlot () {
  * Reusable 3D Surface Area
  *
  */
-function chartX3dSurfaceArea () {
+function chartSurfaceArea () {
 
 	/**
   * Default Properties
@@ -1416,7 +1416,7 @@ function chartX3dSurfaceArea () {
 		var scene = selection;
 
 		// Update the chart dimensions and add layer groups
-		var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis", "barChart"];
+		var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis", "surface"];
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
@@ -1425,18 +1425,18 @@ function chartX3dSurfaceArea () {
 			init(data);
 
 			// Construct Axis Components
-			var xzAxis = d3.ez.component.x3dAxis().scale(xScale).dir('x').tickDir('z').tickSize(xScale.range()[1] - xScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
+			var xzAxis = component.axis().scale(xScale).dir('x').tickDir('z').tickSize(xScale.range()[1] - xScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
 
-			var yzAxis = d3.ez.component.x3dAxis().scale(yScale).dir('y').tickDir('z').tickSize(yScale.range()[1] - yScale.range()[0]).color("red");
+			var yzAxis = component.axis().scale(yScale).dir('y').tickDir('z').tickSize(yScale.range()[1] - yScale.range()[0]).color("red");
 
-			var yxAxis = d3.ez.component.x3dAxis().scale(yScale).dir('y').tickDir('x').tickSize(yScale.range()[1] - yScale.range()[0]).tickFormat(function (d) {
+			var yxAxis = component.axis().scale(yScale).dir('y').tickDir('x').tickSize(yScale.range()[1] - yScale.range()[0]).tickFormat(function (d) {
 				return '';
 			}).color("red");
 
-			var zxAxis = d3.ez.component.x3dAxis().scale(zScale).dir('z').tickDir('x').tickSize(zScale.range()[1] - zScale.range()[0]).color("black");
+			var zxAxis = component.axis().scale(zScale).dir('z').tickDir('x').tickSize(zScale.range()[1] - zScale.range()[0]).color("black");
 
 			// Surface Area Component
-			var barChart = d3.ez.component.x3dSurfaceArea().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
+			var surface = component.surface().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
 
 			scene.select(".xzAxis").call(xzAxis);
 
@@ -1446,7 +1446,7 @@ function chartX3dSurfaceArea () {
 
 			scene.select(".zxAxis").call(zxAxis);
 
-			scene.select(".barChart").datum(data).call(barChart);
+			scene.select(".surface").datum(data).call(surface);
 		});
 	}
 
@@ -1505,9 +1505,9 @@ function chartX3dSurfaceArea () {
 }
 
 var chart = {
-	x3dBarChart: chartX3dBarChart,
-	x3dScatterPlot: chartX3dScatterPlot,
-	x3dSurfaceArea: chartX3dSurfaceArea
+	barChart: chartBarChart,
+	scatterPlot: chartScatterPlot,
+	surfaceArea: chartSurfaceArea
 };
 
 /**
@@ -1523,13 +1523,13 @@ var date = new Date();
 var copyright = "Copyright (C) " + date.getFullYear() + " " + author$1;
 
 var index = {
-  version: version,
-  author: author$1,
-  copyright: copyright,
-  license: license,
-  chart: chart,
-  component: component,
-  dataTransform: dataTransform
+	version: version,
+	author: author$1,
+	copyright: copyright,
+	license: license,
+	chart: chart,
+	component: component,
+	dataTransform: dataTransform
 };
 
 return index;

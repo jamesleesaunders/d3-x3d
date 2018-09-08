@@ -56,7 +56,7 @@ export default function() {
 		let scene = selection;
 
 		// Update the chart dimensions and add layer groups
-		let layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis", "barChart"];
+		let layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis", "scatterPlot"];
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
@@ -68,7 +68,7 @@ export default function() {
 			init(data);
 
 			// Construct Axis Components
-			let xzAxis = d3.ez.component.x3dAxis()
+			let xzAxis = component.axis()
 				.scale(xScale)
 				.dir('x')
 				.tickDir('z')
@@ -76,22 +76,22 @@ export default function() {
 				.tickPadding(xScale.range()[0])
 				.color("blue");
 
-			let yzAxis = d3.ez.component.x3dAxis()
+			let yzAxis = component.axis()
 				.scale(yScale)
 				.dir('y')
 				.tickDir('z')
 				.tickSize(yScale.range()[1] - yScale.range()[0])
 				.color("red");
 
-			let yxAxis = d3.ez.component.x3dAxis()
+			let yxAxis = component.axis()
 				.scale(yScale)
 				.dir('y')
 				.tickDir('x')
 				.tickSize(yScale.range()[1] - yScale.range()[0])
-				.tickFormat(function(d) { return ''; })
+				.tickFormat(function() { return ''; })
 				.color("red");
 
-			let zxAxis = d3.ez.component.x3dAxis()
+			let zxAxis = component.axis()
 				.scale(zScale)
 				.dir('z')
 				.tickDir('x')
@@ -99,7 +99,7 @@ export default function() {
 				.color("black");
 
 			// Bubbles Component
-			let bubbles = d3.ez.component.x3dBubbles()
+			let bubbles = component.bubbles()
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
@@ -117,7 +117,7 @@ export default function() {
 			scene.select(".zxAxis")
 				.call(zxAxis);
 
-			scene.select(".barChart")
+			scene.select(".scatterPlot")
 				.datum(data)
 				.call(bubbles);
 		});

@@ -15,7 +15,7 @@ export default {
     file: "build/d3-x3d.js",
     format: "umd",
     extend: true,
-    name: "d3.ez",
+    name: "d3.x3d",
     banner: banner,
     strict: true,
     globals: { d3: "d3" }

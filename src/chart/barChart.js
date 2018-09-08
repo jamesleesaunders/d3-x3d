@@ -72,34 +72,34 @@ export default function() {
 			init(data);
 
 			// Construct Axis Components
-			let xzAxis = d3.ez.component.x3dAxis()
+			let xzAxis = component.axis()
 				.scale(xScale)
 				.dir('x')
 				.tickDir('z')
 				.tickSize(xScale.range()[1] - xScale.range()[0])
 				.tickPadding(xScale.range()[0]);
 
-			let yzAxis = d3.ez.component.x3dAxis()
+			let yzAxis = component.axis()
 				.scale(yScale)
 				.dir('y')
 				.tickDir('z')
 				.tickSize(yScale.range()[1] - yScale.range()[0]);
 
-			let yxAxis = d3.ez.component.x3dAxis()
+			let yxAxis = component.axis()
 				.scale(yScale)
 				.dir('y')
 				.tickDir('x')
 				.tickSize(yScale.range()[1] - yScale.range()[0])
 				.tickFormat(function() { return ''; });
 
-			let zxAxis = d3.ez.component.x3dAxis()
+			let zxAxis = component.axis()
 				.scale(zScale)
 				.dir('z')
 				.tickDir('x')
 				.tickSize(zScale.range()[1] - zScale.range()[0]);
 
 			// Vertical Bars Component
-			let barChart = d3.ez.component.x3dBarsMulti()
+			let barsMulti = component.barsMulti()
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
@@ -119,7 +119,7 @@ export default function() {
 
 			scene.select(".barChart")
 				.datum(data)
-				.call(barChart);
+				.call(barsMulti);
 		});
 	}
 

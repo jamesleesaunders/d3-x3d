@@ -1,9 +1,9 @@
-let d3Ez = require("../");
+let d3X3d = require("../");
 let tape = require("tape");
 let d3 = require("d3");
 
 tape("x3dAxis", function(test) {
-	var axis = d3Ez.component.x3dAxis();
+	var axis = d3X3d.component.axis();
 
 	test.equal(axis.width(), 40.0);
 	test.equal(axis.tickFormat(), null);

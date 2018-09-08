@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import { default as dataTransform } from "../dataTransform";
+import { default as component } from "../component";
 
 /**
  * Reusable 3D Surface Area
@@ -24,37 +25,12 @@ export default function() {
 	let zScale;
 	let colorScale;
 
-	function array2dToString(arr) {
-		return arr.reduce(function(a, b) { return a.concat(b); }, [])
-			.reduce(function(a, b) { return a.concat(b); }, [])
-			.join(' ');
-	}
-
-	let coordinatePoints = function(data) {
-		let points = data.map(function(X) {
-			return X.map(function(d) {
-				return [xScale(d.x), yScale(d.y), zScale(d.z)];
-			})
-		});
-
-		return array2dToString(points);
-	};
-
-	let colorFaceSet = function(data) {
-		let colors = data.map(function(X) {
-			return X.map(function(d) {
-				let col = d3.color(colorScale(d.y));
-				return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
-			})
-		});
-
-		return array2dToString(colors);
-	};
-
 	/**
 	 * Initialise Data and Scales
 	 */
 	function init(data) {
+		console.log(data);
+
 		let maxX = d3.max(d3.merge(data), function(d) { return d.x; });
 		let maxY = d3.max(d3.merge(data), function(d) { return d.y; });
 		let maxZ = d3.max(d3.merge(data), function(d) { return d.z; });
@@ -84,44 +60,72 @@ export default function() {
 	 */
 	function my(selection) {
 		let scene = selection;
-		scene.classed(classed, true);
+
+		// Update the chart dimensions and add layer groups
+		let layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis", "surface"];
+		scene.classed(classed, true)
+			.selectAll("group")
+			.data(layers)
+			.enter()
+			.append("group")
+			.attr("class", function(d) { return d; });
 
 		selection.each(function(data) {
 			init(data);
 
-			let ny = data.length;
-			let nx = data[0].length;
+			// Construct Axis Components
+			let xzAxis = component.axis()
+				.scale(xScale)
+				.dir('x')
+				.tickDir('z')
+				.tickSize(xScale.range()[1] - xScale.range()[0])
+				.tickPadding(xScale.range()[0])
+				.color("blue");
 
-			let coordIndex = Array.apply(0, Array(ny - 1)).map(function(_, j) {
-				return Array.apply(0, Array(nx - 1)).map(function(_, i) {
-					let start = i + j * nx;
-					return [start, start + nx, start + nx + 1, start + 1, start, -1];
-				});
-			});
+			let yzAxis = component.axis()
+				.scale(yScale)
+				.dir('y')
+				.tickDir('z')
+				.tickSize(yScale.range()[1] - yScale.range()[0])
+				.color("red");
 
-			let coordIndexBack = Array.apply(0, Array(ny - 1)).map(function(_, j) {
-				return Array.apply(0, Array(nx - 1)).map(function(_, i) {
-					let start = i + j * nx;
-					return [start, start + 1, start + nx + 1, start + nx, start, -1];
-				});
-			});
+			let yxAxis = component.axis()
+				.scale(yScale)
+				.dir('y')
+				.tickDir('x')
+				.tickSize(yScale.range()[1] - yScale.range()[0])
+				.tickFormat(function(d) { return ''; })
+				.color("red");
 
-			let coords = array2dToString(coordIndex.concat(coordIndexBack));
+			let zxAxis = component.axis()
+				.scale(zScale)
+				.dir('z')
+				.tickDir('x')
+				.tickSize(zScale.range()[1] - zScale.range()[0])
+				.color("black");
 
-			let surfaces = scene.selectAll('.surface')
-				.data([data]);
+			// Surface Area Component
+			let surface = component.surface()
+				.xScale(xScale)
+				.yScale(yScale)
+				.zScale(zScale)
+				.colors(colors);
 
-			surfaces
-				.enter()
-				.append('shape')
-				.append('indexedfaceset')
-				.attr('coordIndex', coords)
-				.append("coordinate")
-				.attr('point', coordinatePoints);
+			scene.select(".xzAxis")
+				.call(xzAxis);
 
-			d3.selectAll('indexedFaceSet')
-				.append('color')
-				.attr('color', colorFaceSet);
+			scene.select(".yzAxis")
+				.call(yzAxis);
+
+			scene.select(".yxAxis")
+				.call(yxAxis);
+
+			scene.select(".zxAxis")
+				.call(zxAxis);
+
+			scene.select(".surface")
+				.datum(data)
+				.call(surface);
 		});
 	}
 

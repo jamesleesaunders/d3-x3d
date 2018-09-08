@@ -66,7 +66,7 @@ export default function(data) {
   })();
 
   /**
-   * Row Torals Max
+   * Row Totals Max
    */
   let rowTotalsMax = (function() {
     let ret;
