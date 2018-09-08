@@ -1,0 +1,46 @@
+[
+	{
+		"key": "Conservative",
+		"values": [
+			{"key": "1992", "value": 336},
+			{"key": "1997", "value": 165},
+			{"key": "2001", "value": 412},
+			{"key": "2005", "value": 356},
+			{"key": "2010", "value": 306},
+			{"key": "2015", "value": 331}
+		]
+	},
+	{
+		"key": "Labour",
+		"values": [
+			{"key": "1992", "value": 271},
+			{"key": "1997", "value": 418},
+			{"key": "2001", "value": 166},
+			{"key": "2005", "value": 198},
+			{"key": "2010", "value": 258},
+			{"key": "2015", "value": 232}
+		]
+	},
+	{
+		"key": "Liberal Democrat",
+		"values": [
+			{"key": "1992", "value": 20},
+			{"key": "1997", "value": 46},
+			{"key": "2001", "value": 52},
+			{"key": "2005", "value": 62},
+			{"key": "2010", "value": 57},
+			{"key": "2015", "value": 8}
+		]
+	},
+	{
+		"key": "Scottish National",
+		"values": [
+			{"key": "1992", "value": 3},
+			{"key": "1997", "value": 6},
+			{"key": "2001", "value": 5},
+			{"key": "2005", "value": 6},
+			{"key": "2010", "value": 6},
+			{"key": "2015", "value": 56}
+		]
+	}
+]

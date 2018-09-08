@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-ez : 3D Surface Area Example</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
+  <script src="../build/d3-x3d.js"></script>
+</head>
+
+<body>
+  <div id="chartholder"></div>
+
+  <script>
+    // Generate Data
+    var cx = 0.8;
+    var cy = 0.3;
+    var f = function(vx, vz) {
+      return ((vx - cx)*(vx - cx) + (vz - cy)*(vx - cx)) * Math.random();
+    };
+
+    var xRange = d3.range(0, 1.05, 0.1);
+    var zRange = d3.range(0, 1.05, 0.1);
+    var nx = xRange.length;
+    var nz = zRange.length;
+
+    var data = d3.range(nx).map(function(i) {
+      return d3.range(nz).map(
+        function(j) {
+          return {
+            x: xRange[j],
+            y: f(xRange[i], zRange[j]),
+            z: zRange[i]
+          };
+        });
+    });
+
+    // Chart dimensions
+    var width = 500;
+    var height = 500;
+
+    // Viewpoint parameters
+    var viewPosition = [80.0, 15.0, 80.0];
+    var viewOrientation = [0.0, 1.0, 0.0, 0.8];
+    var fieldOfView = 0.8;
+
+    // Construct chart component
+    var surfaceArea = d3.ez.chart.x3dSurfaceArea();
+
+    // Create scene
+    var scene = d3.select("#chartholder")
+      .append("x3d")
+      //.attr("showLog", "true")
+      //.attr("showStat", "true")
+      .attr("width", width + 'px')
+      .attr("height", height + 'px')
+      .append("scene");
+
+    // Add viewpoint
+    scene.append("viewpoint")
+      .attr("position", viewPosition.join(" "))
+      .attr("orientation", viewOrientation.join(" "))
+      .attr("fieldOfView", fieldOfView)
+      .attr("set_bind", "true");
+
+    // Add chart component
+    scene.append('group')
+      .attr('class', 'chart')
+      .datum(data)
+      .call(surfaceArea);
+
+  </script>
+</body>

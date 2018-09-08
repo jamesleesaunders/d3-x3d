@@ -1,0 +1,54 @@
+{
+	"name": "d3-x3d",
+	"version": "1.0.0",
+	"description": "D3 3D Chart Library",
+	"license": "GPL-2.0",
+	"keywords": [
+		"d3",
+		"d3-module",
+		"visualization",
+		"chart",
+		"graph",
+		"data",
+		"x3dom",
+		"3d",
+		"dataviz"
+	],
+	"homepage": "http://d3-ez.net",
+	"author": "James Saunders (james@saunders-family.net)",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/jamesleesaunders/d3-x3d.git"
+	},
+	"bugs": {
+		"url": "https://github.com/jamesleesaunders/d3-x3d/issues"
+	},
+	"main": "build/d3-x3d.js",
+	"unpkg": "build/d3-x3d.min.js",
+	"module": "index",
+	"scripts": {
+		"pretest": "make",
+		"test": "tape 'test/**/*Test.js'"
+	},
+	"peerDependencies": {
+		"d3": "^5.0.0"
+	},
+	"devDependencies": {
+		"babel-core": "^6.26.0",
+		"babel-plugin-external-helpers": "^6.22.0",
+		"babel-plugin-transform-object-assign": "^6.22.0",
+		"babel-preset-env": "^1.7.0",
+		"eslint": "^4.19.1",
+		"jsdom": "^11.11.0",
+		"rollup": "^0.56.2",
+		"rollup-plugin-babel": "^3.0.7",
+		"rollup-plugin-json": "^2.3.1",
+		"tape": "^4.9.1",
+		"uglify-es": "^3.3.9",
+		"vows": "^0.8.2"
+	},
+	"dependencies": {
+		"d3": "^5.5.0",
+		"x3dom": "1.7.2"
+	}
+}

@@ -1,0 +1,28 @@
+/* === HTML Table Styles === */
+
+table.htmlTable {
+		border-collapse: collapse;
+		table-layout: fixed;
+}
+
+.htmlTable td, .htmlTable th {
+		border: 1px solid #333333;
+}
+
+.htmlTable thead th {
+		font-weight: bold;
+		color: #ffffff;
+		background-color: #3380be;
+		border: 1px solid #ffffff;
+}
+
+.htmlTable tbody th {
+		font-weight: bold;
+		color: #000000;
+		background-color: #cccccc;
+		border: 1px solid #ffffff;
+}
+
+.htmlTable tbody tr:hover {
+		background-color: #eeeeee;
+}

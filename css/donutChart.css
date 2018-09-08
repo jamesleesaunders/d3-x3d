@@ -1,0 +1,19 @@
+/* === Donut Chart Styles === */
+
+.donutChart path.slice {
+		stroke: #999999;
+		stroke-width: 0.5px;
+}
+
+.donutChart path.slice:hover {
+		opacity: 0.7;
+		stroke: black;
+		cursor: pointer;
+}
+
+.donutChart polyline.connector {
+		opacity: .3;
+		stroke: black;
+		stroke-width: 2px;
+		fill: none;
+}

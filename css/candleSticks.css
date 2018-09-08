@@ -1,0 +1,18 @@
+/* === Candlestick Chart Styles === */
+
+.candleSticks .candle {
+		stroke: black;
+		vector-effect: non-scaling-stroke;
+}
+
+.candleSticks .candle path.high-low-line {
+		stroke-width: 0.8px;
+}
+
+.candleSticks .candle rect.open-close-bar {
+		stroke-width: 1px;
+}
+
+.candleSticks .candle path.open-tick, .candleSticks .candle path.close-tick {
+		stroke-width: 0.8px;
+}

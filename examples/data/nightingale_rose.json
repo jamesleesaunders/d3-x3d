@@ -1,0 +1,217 @@
+[{
+  "date": "1854-04-01T07:00:00.000Z",
+  "army_size": 8571,
+  "disease": 1,
+  "wounds": 0,
+  "other": 5,
+  "zymotic_diseases": 1.4,
+  "wounds_and_injuries": 0,
+  "all_other_causes": 7.0
+}, {
+  "date": "1854-05-01T07:00:00.000Z",
+  "army_size": 23333,
+  "disease": 12,
+  "wounds": 0,
+  "other": 9,
+  "zymotic_diseases": 6.2,
+  "wounds_and_injuries": 0,
+  "all_other_causes": 4.6
+}, {
+  "date": "1854-06-01T07:00:00.000Z",
+  "army_size": 28333,
+  "disease": 11,
+  "wounds": 0,
+  "other": 6,
+  "zymotic_diseases": 4.7,
+  "wounds_and_injuries": 0,
+  "all_other_causes": 2.5
+}, {
+  "date": "1854-07-01T07:00:00.000Z",
+  "army_size": 28722,
+  "disease": 359,
+  "wounds": 0,
+  "other": 23,
+  "zymotic_diseases": 150.0,
+  "wounds_and_injuries": 0,
+  "all_other_causes": 9.6
+}, {
+  "date": "1854-08-01T07:00:00.000Z",
+  "army_size": 30246,
+  "disease": 828,
+  "wounds": 1,
+  "other": 30,
+  "zymotic_diseases": 326.5,
+  "wounds_and_injuries": 0.4,
+  "all_other_causes": 11.9
+}, {
+  "date": "1854-09-01T07:00:00.000Z",
+  "army_size": 30290,
+  "disease": 788,
+  "wounds": 81,
+  "other": 70,
+  "zymotic_diseases": 312.2,
+  "wounds_and_injuries": 32.1,
+  "all_other_causes": 27.7
+}, {
+  "date": "1854-10-01T07:00:00.000Z",
+  "army_size": 30643,
+  "disease": 503,
+  "wounds": 132,
+  "other": 128,
+  "zymotic_diseases": 197.0,
+  "wounds_and_injuries": 51.7,
+  "all_other_causes": 50.1
+}, {
+  "date": "1854-11-01T07:00:00.000Z",
+  "army_size": 29736,
+  "disease": 844,
+  "wounds": 287,
+  "other": 106,
+  "zymotic_diseases": 340.6,
+  "wounds_and_injuries": 115.8,
+  "all_other_causes": 42.8
+}, {
+  "date": "1854-12-01T08:00:00.000Z",
+  "army_size": 32779,
+  "disease": 1725,
+  "wounds": 114,
+  "other": 131,
+  "zymotic_diseases": 631.5,
+  "wounds_and_injuries": 41.7,
+  "all_other_causes": 48.0
+}, {
+  "date": "1855-01-01T08:00:00.000Z",
+  "army_size": 32393,
+  "disease": 2761,
+  "wounds": 83,
+  "other": 324,
+  "zymotic_diseases": 1022.8,
+  "wounds_and_injuries": 30.7,
+  "all_other_causes": 120.0
+}, {
+  "date": "1855-02-01T08:00:00.000Z",
+  "army_size": 30919,
+  "disease": 2120,
+  "wounds": 42,
+  "other": 361,
+  "zymotic_diseases": 822.8,
+  "wounds_and_injuries": 16.3,
+  "all_other_causes": 140.1
+}, {
+  "date": "1855-03-01T08:00:00.000Z",
+  "army_size": 30107,
+  "disease": 1205,
+  "wounds": 32,
+  "other": 172,
+  "zymotic_diseases": 480.3,
+  "wounds_and_injuries": 12.8,
+  "all_other_causes": 68.6
+}, {
+  "date": "1855-04-01T07:00:00.000Z",
+  "army_size": 32252,
+  "disease": 477,
+  "wounds": 48,
+  "other": 57,
+  "zymotic_diseases": 177.5,
+  "wounds_and_injuries": 17.9,
+  "all_other_causes": 21.2
+}, {
+  "date": "1855-05-01T07:00:00.000Z",
+  "army_size": 35473,
+  "disease": 508,
+  "wounds": 49,
+  "other": 37,
+  "zymotic_diseases": 171.8,
+  "wounds_and_injuries": 16.6,
+  "all_other_causes": 12.5
+}, {
+  "date": "1855-06-01T07:00:00.000Z",
+  "army_size": 38863,
+  "disease": 802,
+  "wounds": 209,
+  "other": 31,
+  "zymotic_diseases": 247.6,
+  "wounds_and_injuries": 64.5,
+  "all_other_causes": 9.6
+}, {
+  "date": "1855-07-01T07:00:00.000Z",
+  "army_size": 42647,
+  "disease": 382,
+  "wounds": 134,
+  "other": 33,
+  "zymotic_diseases": 107.5,
+  "wounds_and_injuries": 37.7,
+  "all_other_causes": 9.3
+}, {
+  "date": "1855-08-01T07:00:00.000Z",
+  "army_size": 44614,
+  "disease": 483,
+  "wounds": 164,
+  "other": 25,
+  "zymotic_diseases": 129.9,
+  "wounds_and_injuries": 44.1,
+  "all_other_causes": 6.7
+}, {
+  "date": "1855-09-01T07:00:00.000Z",
+  "army_size": 47751,
+  "disease": 189,
+  "wounds": 276,
+  "other": 20,
+  "zymotic_diseases": 47.5,
+  "wounds_and_injuries": 69.4,
+  "all_other_causes": 5.0
+}, {
+  "date": "1855-10-01T07:00:00.000Z",
+  "army_size": 46852,
+  "disease": 128,
+  "wounds": 53,
+  "other": 18,
+  "zymotic_diseases": 32.8,
+  "wounds_and_injuries": 13.6,
+  "all_other_causes": 4.6
+}, {
+  "date": "1855-11-01T07:00:00.000Z",
+  "army_size": 37853,
+  "disease": 178,
+  "wounds": 33,
+  "other": 32,
+  "zymotic_diseases": 56.4,
+  "wounds_and_injuries": 10.5,
+  "all_other_causes": 10.1
+}, {
+  "date": "1855-12-01T08:00:00.000Z",
+  "army_size": 43217,
+  "disease": 91,
+  "wounds": 18,
+  "other": 28,
+  "zymotic_diseases": 25.3,
+  "wounds_and_injuries": 5.0,
+  "all_other_causes": 7.8
+}, {
+  "date": "1856-01-01T08:00:00.000Z",
+  "army_size": 44212,
+  "disease": 42,
+  "wounds": 2,
+  "other": 48,
+  "zymotic_diseases": 11.4,
+  "wounds_and_injuries": 0.5,
+  "all_other_causes": 13.0
+}, {
+  "date": "1856-02-01T08:00:00.000Z",
+  "army_size": 43485,
+  "disease": 24,
+  "wounds": 0,
+  "other": 19,
+  "zymotic_diseases": 6.6,
+  "wounds_and_injuries": 0,
+  "all_other_causes": 5.2
+}, {
+  "date": "1856-03-01T08:00:00.000Z",
+  "army_size": 46140,
+  "disease": 15,
+  "wounds": 0,
+  "other": 35,
+  "zymotic_diseases": 3.9,
+  "wounds_and_injuries": 0,
+  "all_other_causes": 9.1
+}]
