@@ -1,0 +1,12 @@
+/* === Bubble Chart Styles === */
+
+.bubbleChart .bubble circle {
+		opacity: 0.5;
+		stroke: white;
+		stroke-width: 1px;
+}
+
+.bubbleChart .bubble:hover circle {
+		opacity: 1;
+		cursor: pointer;
+}

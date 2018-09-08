@@ -1,0 +1,21 @@
+/* === Line Chart Styles === */
+
+@keyframes circleTransition {
+		from {
+				transform: scale(1);
+		}
+		to {
+				transform: scale(1.8);
+		}
+}
+
+.lineChart circle.dot:hover {
+		transform-box: fill-box;
+		transform-origin: center center;
+		animation-duration: 0.3s;
+		animation-name: circleTransition;
+}
+
+.lineChart .seriesLine {
+	/* vector-effect: non-scaling-stroke; */
+}

@@ -1,0 +1,2530 @@
+{
+  "Metadata": {
+    "Title": "Holiday Weather",
+    "Detail": "Worldwide forecasts for your holiday",
+    "Date": "08-03-2018 22:00:00",
+    "TotalRows": "1406",
+    "Source": "http://www.holiday-weather.com/london/averages/"
+  },
+  "Data": [{
+      "City": "Amsterdam",
+      "Month": "Jan",
+      "Temperature": 3,
+      "Latitude": 52.370216,
+      "Longitude": 4.895168
+    },
+    {
+      "City": "London",
+      "Month": "Jan",
+      "Temperature": 5,
+      "Latitude": 51.507351,
+      "Longitude": -0.127758
+    },
+    {
+      "City": "Vancouver",
+      "Month": "Jan",
+      "Temperature": 4,
+      "Latitude": 49.282729,
+      "Longitude": -123.120738
+    },
+    {
+      "City": "Paris",
+      "Month": "Jan",
+      "Temperature": 5,
+      "Latitude": 48.856614,
+      "Longitude": 2.352222
+    },
+    {
+      "City": "Toronto",
+      "Month": "Jan",
+      "Temperature": -3,
+      "Latitude": 43.653226,
+      "Longitude": -79.383184
+    },
+    {
+      "City": "Dubrovnik",
+      "Month": "Jan",
+      "Temperature": 9,
+      "Latitude": 42.650661,
+      "Longitude": 18.094424
+    },
+    {
+      "City": "Rome",
+      "Month": "Jan",
+      "Temperature": 8,
+      "Latitude": 41.902783,
+      "Longitude": 12.496366
+    },
+    {
+      "City": "Barcelona",
+      "Month": "Jan",
+      "Temperature": 10,
+      "Latitude": 41.385064,
+      "Longitude": 2.173403
+    },
+    {
+      "City": "New York",
+      "Month": "Jan",
+      "Temperature": 2,
+      "Latitude": 40.712775,
+      "Longitude": -74.005973
+    },
+    {
+      "City": "Majorca",
+      "Month": "Jan",
+      "Temperature": 10,
+      "Latitude": 39.695263,
+      "Longitude": 3.017571
+    },
+    {
+      "City": "Lisbon",
+      "Month": "Jan",
+      "Temperature": 11,
+      "Latitude": 38.722252,
+      "Longitude": -9.139337
+    },
+    {
+      "City": "Athens",
+      "Month": "Jan",
+      "Temperature": 10,
+      "Latitude": 37.98381,
+      "Longitude": 23.727539
+    },
+    {
+      "City": "Algarve",
+      "Month": "Jan",
+      "Temperature": 12,
+      "Latitude": 37.017954,
+      "Longitude": -7.930834
+    },
+    {
+      "City": "Malaga",
+      "Month": "Jan",
+      "Temperature": 13,
+      "Latitude": 36.721274,
+      "Longitude": -4.421399
+    },
+    {
+      "City": "Malta",
+      "Month": "Jan",
+      "Temperature": 13,
+      "Latitude": 35.937496,
+      "Longitude": 14.375416
+    },
+    {
+      "City": "Tokyo",
+      "Month": "Jan",
+      "Temperature": 5,
+      "Latitude": 35.689487,
+      "Longitude": 139.691706
+    },
+    {
+      "City": "Crete",
+      "Month": "Jan",
+      "Temperature": 11,
+      "Latitude": 35.240117,
+      "Longitude": 24.809269
+    },
+    {
+      "City": "Paphos",
+      "Month": "Jan",
+      "Temperature": 13,
+      "Latitude": 34.772013,
+      "Longitude": 32.429737
+    },
+    {
+      "City": "Los Angeles",
+      "Month": "Jan",
+      "Temperature": 13,
+      "Latitude": 34.052234,
+      "Longitude": -118.243685
+    },
+    {
+      "City": "Marrakesh",
+      "Month": "Jan",
+      "Temperature": 13,
+      "Latitude": 31.629472,
+      "Longitude": -7.981084
+    },
+    {
+      "City": "Lanzarote",
+      "Month": "Jan",
+      "Temperature": 17,
+      "Latitude": 29.046854,
+      "Longitude": -13.589973
+    },
+    {
+      "City": "Tenerife",
+      "Month": "Jan",
+      "Temperature": 17,
+      "Latitude": 28.291564,
+      "Longitude": -16.62913
+    },
+    {
+      "City": "Gran Canaria",
+      "Month": "Jan",
+      "Temperature": 18,
+      "Latitude": 27.92022,
+      "Longitude": -15.547437
+    },
+    {
+      "City": "Dubai",
+      "Month": "Jan",
+      "Temperature": 19,
+      "Latitude": 25.204849,
+      "Longitude": 55.270783
+    },
+    {
+      "City": "Cancun",
+      "Month": "Jan",
+      "Temperature": 23,
+      "Latitude": 21.161908,
+      "Longitude": -86.851528
+    },
+    {
+      "City": "Punta Cana",
+      "Month": "Jan",
+      "Temperature": 25,
+      "Latitude": 18.58201,
+      "Longitude": -68.405473
+    },
+    {
+      "City": "Maldives",
+      "Month": "Jan",
+      "Temperature": 27,
+      "Latitude": 3.202778,
+      "Longitude": 73.22068
+    },
+    {
+      "City": "Bali",
+      "Month": "Jan",
+      "Temperature": 26,
+      "Latitude": -8.409518,
+      "Longitude": 115.188916
+    },
+    {
+      "City": "Sydney",
+      "Month": "Jan",
+      "Temperature": 23,
+      "Latitude": -33.86882,
+      "Longitude": 151.209296
+    },
+    {
+      "City": "Melbourne",
+      "Month": "Jan",
+      "Temperature": 21,
+      "Latitude": -37.813628,
+      "Longitude": 144.963058
+    },
+    {
+      "City": "Amsterdam",
+      "Month": "Feb",
+      "Temperature": 4,
+      "Latitude": 52.370216,
+      "Longitude": 4.895168
+    },
+    {
+      "City": "London",
+      "Month": "Feb",
+      "Temperature": 7,
+      "Latitude": 51.507351,
+      "Longitude": -0.127758
+    },
+    {
+      "City": "Vancouver",
+      "Month": "Feb",
+      "Temperature": 5,
+      "Latitude": 49.282729,
+      "Longitude": -123.120738
+    },
+    {
+      "City": "Paris",
+      "Month": "Feb",
+      "Temperature": 6,
+      "Latitude": 48.856614,
+      "Longitude": 2.352222
+    },
+    {
+      "City": "Toronto",
+      "Month": "Feb",
+      "Temperature": -3,
+      "Latitude": 43.653226,
+      "Longitude": -79.383184
+    },
+    {
+      "City": "Dubrovnik",
+      "Month": "Feb",
+      "Temperature": 10,
+      "Latitude": 42.650661,
+      "Longitude": 18.094424
+    },
+    {
+      "City": "Rome",
+      "Month": "Feb",
+      "Temperature": 9,
+      "Latitude": 41.902783,
+      "Longitude": 12.496366
+    },
+    {
+      "City": "Barcelona",
+      "Month": "Feb",
+      "Temperature": 10,
+      "Latitude": 41.385064,
+      "Longitude": 2.173403
+    },
+    {
+      "City": "New York",
+      "Month": "Feb",
+      "Temperature": 2,
+      "Latitude": 40.712775,
+      "Longitude": -74.005973
+    },
+    {
+      "City": "Majorca",
+      "Month": "Feb",
+      "Temperature": 10,
+      "Latitude": 39.695263,
+      "Longitude": 3.017571
+    },
+    {
+      "City": "Lisbon",
+      "Month": "Feb",
+      "Temperature": 12,
+      "Latitude": 38.722252,
+      "Longitude": -9.139337
+    },
+    {
+      "City": "Athens",
+      "Month": "Feb",
+      "Temperature": 10,
+      "Latitude": 37.98381,
+      "Longitude": 23.727539
+    },
+    {
+      "City": "Algarve",
+      "Month": "Feb",
+      "Temperature": 13,
+      "Latitude": 37.017954,
+      "Longitude": -7.930834
+    },
+    {
+      "City": "Malaga",
+      "Month": "Feb",
+      "Temperature": 13,
+      "Latitude": 36.721274,
+      "Longitude": -4.421399
+    },
+    {
+      "City": "Malta",
+      "Month": "Feb",
+      "Temperature": 13,
+      "Latitude": 35.937496,
+      "Longitude": 14.375416
+    },
+    {
+      "City": "Tokyo",
+      "Month": "Feb",
+      "Temperature": 6,
+      "Latitude": 35.689487,
+      "Longitude": 139.691706
+    },
+    {
+      "City": "Crete",
+      "Month": "Feb",
+      "Temperature": 12,
+      "Latitude": 35.240117,
+      "Longitude": 24.809269
+    },
+    {
+      "City": "Paphos",
+      "Month": "Feb",
+      "Temperature": 13,
+      "Latitude": 34.772013,
+      "Longitude": 32.429737
+    },
+    {
+      "City": "Los Angeles",
+      "Month": "Feb",
+      "Temperature": 13,
+      "Latitude": 34.052234,
+      "Longitude": -118.243685
+    },
+    {
+      "City": "Marrakesh",
+      "Month": "Feb",
+      "Temperature": 14,
+      "Latitude": 31.629472,
+      "Longitude": -7.981084
+    },
+    {
+      "City": "Lanzarote",
+      "Month": "Feb",
+      "Temperature": 18,
+      "Latitude": 29.046854,
+      "Longitude": -13.589973
+    },
+    {
+      "City": "Tenerife",
+      "Month": "Feb",
+      "Temperature": 17,
+      "Latitude": 28.291564,
+      "Longitude": -16.62913
+    },
+    {
+      "City": "Gran Canaria",
+      "Month": "Feb",
+      "Temperature": 18,
+      "Latitude": 27.92022,
+      "Longitude": -15.547437
+    },
+    {
+      "City": "Dubai",
+      "Month": "Feb",
+      "Temperature": 20,
+      "Latitude": 25.204849,
+      "Longitude": 55.270783
+    },
+    {
+      "City": "Cancun",
+      "Month": "Feb",
+      "Temperature": 23,
+      "Latitude": 21.161908,
+      "Longitude": -86.851528
+    },
+    {
+      "City": "Punta Cana",
+      "Month": "Feb",
+      "Temperature": 25,
+      "Latitude": 18.58201,
+      "Longitude": -68.405473
+    },
+    {
+      "City": "Maldives",
+      "Month": "Feb",
+      "Temperature": 28,
+      "Latitude": 3.202778,
+      "Longitude": 73.22068
+    },
+    {
+      "City": "Bali",
+      "Month": "Feb",
+      "Temperature": 26,
+      "Latitude": -8.409518,
+      "Longitude": 115.188916
+    },
+    {
+      "City": "Sydney",
+      "Month": "Feb",
+      "Temperature": 23,
+      "Latitude": -33.86882,
+      "Longitude": 151.209296
+    },
+    {
+      "City": "Melbourne",
+      "Month": "Feb",
+      "Temperature": 21,
+      "Latitude": -37.813628,
+      "Longitude": 144.963058
+    },
+    {
+      "City": "Amsterdam",
+      "Month": "Mar",
+      "Temperature": 6,
+      "Latitude": 52.370216,
+      "Longitude": 4.895168
+    },
+    {
+      "City": "London",
+      "Month": "Mar",
+      "Temperature": 9,
+      "Latitude": 51.507351,
+      "Longitude": -0.127758
+    },
+    {
+      "City": "Vancouver",
+      "Month": "Mar",
+      "Temperature": 7,
+      "Latitude": 49.282729,
+      "Longitude": -123.120738
+    },
+    {
+      "City": "Paris",
+      "Month": "Mar",
+      "Temperature": 9,
+      "Latitude": 48.856614,
+      "Longitude": 2.352222
+    },
+    {
+      "City": "Toronto",
+      "Month": "Mar",
+      "Temperature": 1,
+      "Latitude": 43.653226,
+      "Longitude": -79.383184
+    },
+    {
+      "City": "Dubrovnik",
+      "Month": "Mar",
+      "Temperature": 11,
+      "Latitude": 42.650661,
+      "Longitude": 18.094424
+    },
+    {
+      "City": "Rome",
+      "Month": "Mar",
+      "Temperature": 12,
+      "Latitude": 41.902783,
+      "Longitude": 12.496366
+    },
+    {
+      "City": "Barcelona",
+      "Month": "Mar",
+      "Temperature": 12,
+      "Latitude": 41.385064,
+      "Longitude": 2.173403
+    },
+    {
+      "City": "New York",
+      "Month": "Mar",
+      "Temperature": 4,
+      "Latitude": 40.712775,
+      "Longitude": -74.005973
+    },
+    {
+      "City": "Majorca",
+      "Month": "Mar",
+      "Temperature": 12,
+      "Latitude": 39.695263,
+      "Longitude": 3.017571
+    },
+    {
+      "City": "Lisbon",
+      "Month": "Mar",
+      "Temperature": 14,
+      "Latitude": 38.722252,
+      "Longitude": -9.139337
+    },
+    {
+      "City": "Athens",
+      "Month": "Mar",
+      "Temperature": 13,
+      "Latitude": 37.98381,
+      "Longitude": 23.727539
+    },
+    {
+      "City": "Algarve",
+      "Month": "Mar",
+      "Temperature": 15,
+      "Latitude": 37.017954,
+      "Longitude": -7.930834
+    },
+    {
+      "City": "Malaga",
+      "Month": "Mar",
+      "Temperature": 15,
+      "Latitude": 36.721274,
+      "Longitude": -4.421399
+    },
+    {
+      "City": "Malta",
+      "Month": "Mar",
+      "Temperature": 14,
+      "Latitude": 35.937496,
+      "Longitude": 14.375416
+    },
+    {
+      "City": "Tokyo",
+      "Month": "Mar",
+      "Temperature": 9,
+      "Latitude": 35.689487,
+      "Longitude": 139.691706
+    },
+    {
+      "City": "Crete",
+      "Month": "Mar",
+      "Temperature": 14,
+      "Latitude": 35.240117,
+      "Longitude": 24.809269
+    },
+    {
+      "City": "Paphos",
+      "Month": "Mar",
+      "Temperature": 14,
+      "Latitude": 34.772013,
+      "Longitude": 32.429737
+    },
+    {
+      "City": "Los Angeles",
+      "Month": "Mar",
+      "Temperature": 14,
+      "Latitude": 34.052234,
+      "Longitude": -118.243685
+    },
+    {
+      "City": "Marrakesh",
+      "Month": "Mar",
+      "Temperature": 17,
+      "Latitude": 31.629472,
+      "Longitude": -7.981084
+    },
+    {
+      "City": "Lanzarote",
+      "Month": "Mar",
+      "Temperature": 19,
+      "Latitude": 29.046854,
+      "Longitude": -13.589973
+    },
+    {
+      "City": "Tenerife",
+      "Month": "Mar",
+      "Temperature": 18,
+      "Latitude": 28.291564,
+      "Longitude": -16.62913
+    },
+    {
+      "City": "Gran Canaria",
+      "Month": "Mar",
+      "Temperature": 19,
+      "Latitude": 27.92022,
+      "Longitude": -15.547437
+    },
+    {
+      "City": "Dubai",
+      "Month": "Mar",
+      "Temperature": 23,
+      "Latitude": 25.204849,
+      "Longitude": 55.270783
+    },
+    {
+      "City": "Cancun",
+      "Month": "Mar",
+      "Temperature": 25,
+      "Latitude": 21.161908,
+      "Longitude": -86.851528
+    },
+    {
+      "City": "Punta Cana",
+      "Month": "Mar",
+      "Temperature": 26,
+      "Latitude": 18.58201,
+      "Longitude": -68.405473
+    },
+    {
+      "City": "Maldives",
+      "Month": "Mar",
+      "Temperature": 29,
+      "Latitude": 3.202778,
+      "Longitude": 73.22068
+    },
+    {
+      "City": "Bali",
+      "Month": "Mar",
+      "Temperature": 27,
+      "Latitude": -8.409518,
+      "Longitude": 115.188916
+    },
+    {
+      "City": "Sydney",
+      "Month": "Mar",
+      "Temperature": 22,
+      "Latitude": -33.86882,
+      "Longitude": 151.209296
+    },
+    {
+      "City": "Melbourne",
+      "Month": "Mar",
+      "Temperature": 19,
+      "Latitude": -37.813628,
+      "Longitude": 144.963058
+    },
+    {
+      "City": "Amsterdam",
+      "Month": "Apr",
+      "Temperature": 8,
+      "Latitude": 52.370216,
+      "Longitude": 4.895168
+    },
+    {
+      "City": "London",
+      "Month": "Apr",
+      "Temperature": 11,
+      "Latitude": 51.507351,
+      "Longitude": -0.127758
+    },
+    {
+      "City": "Vancouver",
+      "Month": "Apr",
+      "Temperature": 9,
+      "Latitude": 49.282729,
+      "Longitude": -123.120738
+    },
+    {
+      "City": "Paris",
+      "Month": "Apr",
+      "Temperature": 11,
+      "Latitude": 48.856614,
+      "Longitude": 2.352222
+    },
+    {
+      "City": "Toronto",
+      "Month": "Apr",
+      "Temperature": 7,
+      "Latitude": 43.653226,
+      "Longitude": -79.383184
+    },
+    {
+      "City": "Dubrovnik",
+      "Month": "Apr",
+      "Temperature": 14,
+      "Latitude": 42.650661,
+      "Longitude": 18.094424
+    },
+    {
+      "City": "Rome",
+      "Month": "Apr",
+      "Temperature": 14,
+      "Latitude": 41.902783,
+      "Longitude": 12.496366
+    },
+    {
+      "City": "Barcelona",
+      "Month": "Apr",
+      "Temperature": 13,
+      "Latitude": 41.385064,
+      "Longitude": 2.173403
+    },
+    {
+      "City": "New York",
+      "Month": "Apr",
+      "Temperature": 11,
+      "Latitude": 40.712775,
+      "Longitude": -74.005973
+    },
+    {
+      "City": "Majorca",
+      "Month": "Apr",
+      "Temperature": 14,
+      "Latitude": 39.695263,
+      "Longitude": 3.017571
+    },
+    {
+      "City": "Lisbon",
+      "Month": "Apr",
+      "Temperature": 15,
+      "Latitude": 38.722252,
+      "Longitude": -9.139337
+    },
+    {
+      "City": "Athens",
+      "Month": "Apr",
+      "Temperature": 16,
+      "Latitude": 37.98381,
+      "Longitude": 23.727539
+    },
+    {
+      "City": "Algarve",
+      "Month": "Apr",
+      "Temperature": 16,
+      "Latitude": 37.017954,
+      "Longitude": -7.930834
+    },
+    {
+      "City": "Malaga",
+      "Month": "Apr",
+      "Temperature": 16,
+      "Latitude": 36.721274,
+      "Longitude": -4.421399
+    },
+    {
+      "City": "Malta",
+      "Month": "Apr",
+      "Temperature": 16,
+      "Latitude": 35.937496,
+      "Longitude": 14.375416
+    },
+    {
+      "City": "Tokyo",
+      "Month": "Apr",
+      "Temperature": 14,
+      "Latitude": 35.689487,
+      "Longitude": 139.691706
+    },
+    {
+      "City": "Crete",
+      "Month": "Apr",
+      "Temperature": 17,
+      "Latitude": 35.240117,
+      "Longitude": 24.809269
+    },
+    {
+      "City": "Paphos",
+      "Month": "Apr",
+      "Temperature": 17,
+      "Latitude": 34.772013,
+      "Longitude": 32.429737
+    },
+    {
+      "City": "Los Angeles",
+      "Month": "Apr",
+      "Temperature": 16,
+      "Latitude": 34.052234,
+      "Longitude": -118.243685
+    },
+    {
+      "City": "Marrakesh",
+      "Month": "Apr",
+      "Temperature": 18,
+      "Latitude": 31.629472,
+      "Longitude": -7.981084
+    },
+    {
+      "City": "Lanzarote",
+      "Month": "Apr",
+      "Temperature": 20,
+      "Latitude": 29.046854,
+      "Longitude": -13.589973
+    },
+    {
+      "City": "Tenerife",
+      "Month": "Apr",
+      "Temperature": 18,
+      "Latitude": 28.291564,
+      "Longitude": -16.62913
+    },
+    {
+      "City": "Gran Canaria",
+      "Month": "Apr",
+      "Temperature": 19,
+      "Latitude": 27.92022,
+      "Longitude": -15.547437
+    },
+    {
+      "City": "Dubai",
+      "Month": "Apr",
+      "Temperature": 26,
+      "Latitude": 25.204849,
+      "Longitude": 55.270783
+    },
+    {
+      "City": "Cancun",
+      "Month": "Apr",
+      "Temperature": 26,
+      "Latitude": 21.161908,
+      "Longitude": -86.851528
+    },
+    {
+      "City": "Punta Cana",
+      "Month": "Apr",
+      "Temperature": 27,
+      "Latitude": 18.58201,
+      "Longitude": -68.405473
+    },
+    {
+      "City": "Maldives",
+      "Month": "Apr",
+      "Temperature": 29,
+      "Latitude": 3.202778,
+      "Longitude": 73.22068
+    },
+    {
+      "City": "Bali",
+      "Month": "Apr",
+      "Temperature": 27,
+      "Latitude": -8.409518,
+      "Longitude": 115.188916
+    },
+    {
+      "City": "Sydney",
+      "Month": "Apr",
+      "Temperature": 19,
+      "Latitude": -33.86882,
+      "Longitude": 151.209296
+    },
+    {
+      "City": "Melbourne",
+      "Month": "Apr",
+      "Temperature": 17,
+      "Latitude": -37.813628,
+      "Longitude": 144.963058
+    },
+    {
+      "City": "Amsterdam",
+      "Month": "May",
+      "Temperature": 12,
+      "Latitude": 52.370216,
+      "Longitude": 4.895168
+    },
+    {
+      "City": "London",
+      "Month": "May",
+      "Temperature": 14,
+      "Latitude": 51.507351,
+      "Longitude": -0.127758
+    },
+    {
+      "City": "Vancouver",
+      "Month": "May",
+      "Temperature": 13,
+      "Latitude": 49.282729,
+      "Longitude": -123.120738
+    },
+    {
+      "City": "Paris",
+      "Month": "May",
+      "Temperature": 15,
+      "Latitude": 48.856614,
+      "Longitude": 2.352222
+    },
+    {
+      "City": "Toronto",
+      "Month": "May",
+      "Temperature": 14,
+      "Latitude": 43.653226,
+      "Longitude": -79.383184
+    },
+    {
+      "City": "Dubrovnik",
+      "Month": "May",
+      "Temperature": 18,
+      "Latitude": 42.650661,
+      "Longitude": 18.094424
+    },
+    {
+      "City": "Rome",
+      "Month": "May",
+      "Temperature": 21,
+      "Latitude": 41.902783,
+      "Longitude": 12.496366
+    },
+    {
+      "City": "Barcelona",
+      "Month": "May",
+      "Temperature": 16,
+      "Latitude": 41.385064,
+      "Longitude": 2.173403
+    },
+    {
+      "City": "New York",
+      "Month": "May",
+      "Temperature": 16,
+      "Latitude": 40.712775,
+      "Longitude": -74.005973
+    },
+    {
+      "City": "Majorca",
+      "Month": "May",
+      "Temperature": 18,
+      "Latitude": 39.695263,
+      "Longitude": 3.017571
+    },
+    {
+      "City": "Lisbon",
+      "Month": "May",
+      "Temperature": 18,
+      "Latitude": 38.722252,
+      "Longitude": -9.139337
+    },
+    {
+      "City": "Athens",
+      "Month": "May",
+      "Temperature": 21,
+      "Latitude": 37.98381,
+      "Longitude": 23.727539
+    },
+    {
+      "City": "Algarve",
+      "Month": "May",
+      "Temperature": 18,
+      "Latitude": 37.017954,
+      "Longitude": -7.930834
+    },
+    {
+      "City": "Malaga",
+      "Month": "May",
+      "Temperature": 19,
+      "Latitude": 36.721274,
+      "Longitude": -4.421399
+    },
+    {
+      "City": "Malta",
+      "Month": "May",
+      "Temperature": 20,
+      "Latitude": 35.937496,
+      "Longitude": 14.375416
+    },
+    {
+      "City": "Tokyo",
+      "Month": "May",
+      "Temperature": 18,
+      "Latitude": 35.689487,
+      "Longitude": 139.691706
+    },
+    {
+      "City": "Crete",
+      "Month": "May",
+      "Temperature": 24,
+      "Latitude": 35.240117,
+      "Longitude": 24.809269
+    },
+    {
+      "City": "Paphos",
+      "Month": "May",
+      "Temperature": 20,
+      "Latitude": 34.772013,
+      "Longitude": 32.429737
+    },
+    {
+      "City": "Los Angeles",
+      "Month": "May",
+      "Temperature": 17,
+      "Latitude": 34.052234,
+      "Longitude": -118.243685
+    },
+    {
+      "City": "Marrakesh",
+      "Month": "May",
+      "Temperature": 21,
+      "Latitude": 31.629472,
+      "Longitude": -7.981084
+    },
+    {
+      "City": "Lanzarote",
+      "Month": "May",
+      "Temperature": 21,
+      "Latitude": 29.046854,
+      "Longitude": -13.589973
+    },
+    {
+      "City": "Tenerife",
+      "Month": "May",
+      "Temperature": 19,
+      "Latitude": 28.291564,
+      "Longitude": -16.62913
+    },
+    {
+      "City": "Gran Canaria",
+      "Month": "May",
+      "Temperature": 20,
+      "Latitude": 27.92022,
+      "Longitude": -15.547437
+    },
+    {
+      "City": "Dubai",
+      "Month": "May",
+      "Temperature": 31,
+      "Latitude": 25.204849,
+      "Longitude": 55.270783
+    },
+    {
+      "City": "Cancun",
+      "Month": "May",
+      "Temperature": 27,
+      "Latitude": 21.161908,
+      "Longitude": -86.851528
+    },
+    {
+      "City": "Punta Cana",
+      "Month": "May",
+      "Temperature": 27,
+      "Latitude": 18.58201,
+      "Longitude": -68.405473
+    },
+    {
+      "City": "Maldives",
+      "Month": "May",
+      "Temperature": 28,
+      "Latitude": 3.202778,
+      "Longitude": 73.22068
+    },
+    {
+      "City": "Bali",
+      "Month": "May",
+      "Temperature": 28,
+      "Latitude": -8.409518,
+      "Longitude": 115.188916
+    },
+    {
+      "City": "Sydney",
+      "Month": "May",
+      "Temperature": 16,
+      "Latitude": -33.86882,
+      "Longitude": 151.209296
+    },
+    {
+      "City": "Melbourne",
+      "Month": "May",
+      "Temperature": 14,
+      "Latitude": -37.813628,
+      "Longitude": 144.963058
+    },
+    {
+      "City": "Amsterdam",
+      "Month": "Jun",
+      "Temperature": 15,
+      "Latitude": 52.370216,
+      "Longitude": 4.895168
+    },
+    {
+      "City": "London",
+      "Month": "Jun",
+      "Temperature": 16,
+      "Latitude": 51.507351,
+      "Longitude": -0.127758
+    },
+    {
+      "City": "Vancouver",
+      "Month": "Jun",
+      "Temperature": 15,
+      "Latitude": 49.282729,
+      "Longitude": -123.120738
+    },
+    {
+      "City": "Paris",
+      "Month": "Jun",
+      "Temperature": 16,
+      "Latitude": 48.856614,
+      "Longitude": 2.352222
+    },
+    {
+      "City": "Toronto",
+      "Month": "Jun",
+      "Temperature": 16,
+      "Latitude": 43.653226,
+      "Longitude": -79.383184
+    },
+    {
+      "City": "Dubrovnik",
+      "Month": "Jun",
+      "Temperature": 22,
+      "Latitude": 42.650661,
+      "Longitude": 18.094424
+    },
+    {
+      "City": "Rome",
+      "Month": "Jun",
+      "Temperature": 23,
+      "Latitude": 41.902783,
+      "Longitude": 12.496366
+    },
+    {
+      "City": "Barcelona",
+      "Month": "Jun",
+      "Temperature": 20,
+      "Latitude": 41.385064,
+      "Longitude": 2.173403
+    },
+    {
+      "City": "New York",
+      "Month": "Jun",
+      "Temperature": 22,
+      "Latitude": 40.712775,
+      "Longitude": -74.005973
+    },
+    {
+      "City": "Majorca",
+      "Month": "Jun",
+      "Temperature": 21,
+      "Latitude": 39.695263,
+      "Longitude": 3.017571
+    },
+    {
+      "City": "Lisbon",
+      "Month": "Jun",
+      "Temperature": 21,
+      "Latitude": 38.722252,
+      "Longitude": -9.139337
+    },
+    {
+      "City": "Athens",
+      "Month": "Jun",
+      "Temperature": 26,
+      "Latitude": 37.98381,
+      "Longitude": 23.727539
+    },
+    {
+      "City": "Algarve",
+      "Month": "Jun",
+      "Temperature": 21,
+      "Latitude": 37.017954,
+      "Longitude": -7.930834
+    },
+    {
+      "City": "Malaga",
+      "Month": "Jun",
+      "Temperature": 22,
+      "Latitude": 36.721274,
+      "Longitude": -4.421399
+    },
+    {
+      "City": "Malta",
+      "Month": "Jun",
+      "Temperature": 23,
+      "Latitude": 35.937496,
+      "Longitude": 14.375416
+    },
+    {
+      "City": "Tokyo",
+      "Month": "Jun",
+      "Temperature": 21,
+      "Latitude": 35.689487,
+      "Longitude": 139.691706
+    },
+    {
+      "City": "Crete",
+      "Month": "Jun",
+      "Temperature": 24,
+      "Latitude": 35.240117,
+      "Longitude": 24.809269
+    },
+    {
+      "City": "Paphos",
+      "Month": "Jun",
+      "Temperature": 23,
+      "Latitude": 34.772013,
+      "Longitude": 32.429737
+    },
+    {
+      "City": "Los Angeles",
+      "Month": "Jun",
+      "Temperature": 19,
+      "Latitude": 34.052234,
+      "Longitude": -118.243685
+    },
+    {
+      "City": "Marrakesh",
+      "Month": "Jun",
+      "Temperature": 24,
+      "Latitude": 31.629472,
+      "Longitude": -7.981084
+    },
+    {
+      "City": "Lanzarote",
+      "Month": "Jun",
+      "Temperature": 23,
+      "Latitude": 29.046854,
+      "Longitude": -13.589973
+    },
+    {
+      "City": "Tenerife",
+      "Month": "Jun",
+      "Temperature": 21,
+      "Latitude": 28.291564,
+      "Longitude": -16.62913
+    },
+    {
+      "City": "Gran Canaria",
+      "Month": "Jun",
+      "Temperature": 22,
+      "Latitude": 27.92022,
+      "Longitude": -15.547437
+    },
+    {
+      "City": "Dubai",
+      "Month": "Jun",
+      "Temperature": 33,
+      "Latitude": 25.204849,
+      "Longitude": 55.270783
+    },
+    {
+      "City": "Cancun",
+      "Month": "Jun",
+      "Temperature": 28,
+      "Latitude": 21.161908,
+      "Longitude": -86.851528
+    },
+    {
+      "City": "Punta Cana",
+      "Month": "Jun",
+      "Temperature": 28,
+      "Latitude": 18.58201,
+      "Longitude": -68.405473
+    },
+    {
+      "City": "Maldives",
+      "Month": "Jun",
+      "Temperature": 28,
+      "Latitude": 3.202778,
+      "Longitude": 73.22068
+    },
+    {
+      "City": "Bali",
+      "Month": "Jun",
+      "Temperature": 27,
+      "Latitude": -8.409518,
+      "Longitude": 115.188916
+    },
+    {
+      "City": "Sydney",
+      "Month": "Jun",
+      "Temperature": 14,
+      "Latitude": -33.86882,
+      "Longitude": 151.209296
+    },
+    {
+      "City": "Melbourne",
+      "Month": "Jun",
+      "Temperature": 11,
+      "Latitude": -37.813628,
+      "Longitude": 144.963058
+    },
+    {
+      "City": "Amsterdam",
+      "Month": "Jul",
+      "Temperature": 17,
+      "Latitude": 52.370216,
+      "Longitude": 4.895168
+    },
+    {
+      "City": "London",
+      "Month": "Jul",
+      "Temperature": 19,
+      "Latitude": 51.507351,
+      "Longitude": -0.127758
+    },
+    {
+      "City": "Vancouver",
+      "Month": "Jul",
+      "Temperature": 17,
+      "Latitude": 49.282729,
+      "Longitude": -123.120738
+    },
+    {
+      "City": "Paris",
+      "Month": "Jul",
+      "Temperature": 20,
+      "Latitude": 48.856614,
+      "Longitude": 2.352222
+    },
+    {
+      "City": "Toronto",
+      "Month": "Jul",
+      "Temperature": 21,
+      "Latitude": 43.653226,
+      "Longitude": -79.383184
+    },
+    {
+      "City": "Dubrovnik",
+      "Month": "Jul",
+      "Temperature": 25,
+      "Latitude": 42.650661,
+      "Longitude": 18.094424
+    },
+    {
+      "City": "Rome",
+      "Month": "Jul",
+      "Temperature": 26,
+      "Latitude": 41.902783,
+      "Longitude": 12.496366
+    },
+    {
+      "City": "Barcelona",
+      "Month": "Jul",
+      "Temperature": 23,
+      "Latitude": 41.385064,
+      "Longitude": 2.173403
+    },
+    {
+      "City": "New York",
+      "Month": "Jul",
+      "Temperature": 25,
+      "Latitude": 40.712775,
+      "Longitude": -74.005973
+    },
+    {
+      "City": "Majorca",
+      "Month": "Jul",
+      "Temperature": 24,
+      "Latitude": 39.695263,
+      "Longitude": 3.017571
+    },
+    {
+      "City": "Lisbon",
+      "Month": "Jul",
+      "Temperature": 24,
+      "Latitude": 38.722252,
+      "Longitude": -9.139337
+    },
+    {
+      "City": "Athens",
+      "Month": "Jul",
+      "Temperature": 29,
+      "Latitude": 37.98381,
+      "Longitude": 23.727539
+    },
+    {
+      "City": "Algarve",
+      "Month": "Jul",
+      "Temperature": 24,
+      "Latitude": 37.017954,
+      "Longitude": -7.930834
+    },
+    {
+      "City": "Malaga",
+      "Month": "Jul",
+      "Temperature": 25,
+      "Latitude": 36.721274,
+      "Longitude": -4.421399
+    },
+    {
+      "City": "Malta",
+      "Month": "Jul",
+      "Temperature": 27,
+      "Latitude": 35.937496,
+      "Longitude": 14.375416
+    },
+    {
+      "City": "Tokyo",
+      "Month": "Jul",
+      "Temperature": 25,
+      "Latitude": 35.689487,
+      "Longitude": 139.691706
+    },
+    {
+      "City": "Crete",
+      "Month": "Jul",
+      "Temperature": 26,
+      "Latitude": 35.240117,
+      "Longitude": 24.809269
+    },
+    {
+      "City": "Paphos",
+      "Month": "Jul",
+      "Temperature": 25,
+      "Latitude": 34.772013,
+      "Longitude": 32.429737
+    },
+    {
+      "City": "Los Angeles",
+      "Month": "Jul",
+      "Temperature": 22,
+      "Latitude": 34.052234,
+      "Longitude": -118.243685
+    },
+    {
+      "City": "Marrakesh",
+      "Month": "Jul",
+      "Temperature": 29,
+      "Latitude": 31.629472,
+      "Longitude": -7.981084
+    },
+    {
+      "City": "Lanzarote",
+      "Month": "Jul",
+      "Temperature": 24,
+      "Latitude": 29.046854,
+      "Longitude": -13.589973
+    },
+    {
+      "City": "Tenerife",
+      "Month": "Jul",
+      "Temperature": 23,
+      "Latitude": 28.291564,
+      "Longitude": -16.62913
+    },
+    {
+      "City": "Gran Canaria",
+      "Month": "Jul",
+      "Temperature": 23,
+      "Latitude": 27.92022,
+      "Longitude": -15.547437
+    },
+    {
+      "City": "Dubai",
+      "Month": "Jul",
+      "Temperature": 35,
+      "Latitude": 25.204849,
+      "Longitude": 55.270783
+    },
+    {
+      "City": "Cancun",
+      "Month": "Jul",
+      "Temperature": 28,
+      "Latitude": 21.161908,
+      "Longitude": -86.851528
+    },
+    {
+      "City": "Punta Cana",
+      "Month": "Jul",
+      "Temperature": 28,
+      "Latitude": 18.58201,
+      "Longitude": -68.405473
+    },
+    {
+      "City": "Maldives",
+      "Month": "Jul",
+      "Temperature": 28,
+      "Latitude": 3.202778,
+      "Longitude": 73.22068
+    },
+    {
+      "City": "Bali",
+      "Month": "Jul",
+      "Temperature": 27,
+      "Latitude": -8.409518,
+      "Longitude": 115.188916
+    },
+    {
+      "City": "Sydney",
+      "Month": "Jul",
+      "Temperature": 13,
+      "Latitude": -33.86882,
+      "Longitude": 151.209296
+    },
+    {
+      "City": "Melbourne",
+      "Month": "Jul",
+      "Temperature": 10,
+      "Latitude": -37.813628,
+      "Longitude": 144.963058
+    },
+    {
+      "City": "Amsterdam",
+      "Month": "Aug",
+      "Temperature": 17,
+      "Latitude": 52.370216,
+      "Longitude": 4.895168
+    },
+    {
+      "City": "London",
+      "Month": "Aug",
+      "Temperature": 19,
+      "Latitude": 51.507351,
+      "Longitude": -0.127758
+    },
+    {
+      "City": "Vancouver",
+      "Month": "Aug",
+      "Temperature": 18,
+      "Latitude": 49.282729,
+      "Longitude": -123.120738
+    },
+    {
+      "City": "Paris",
+      "Month": "Aug",
+      "Temperature": 20,
+      "Latitude": 48.856614,
+      "Longitude": 2.352222
+    },
+    {
+      "City": "Toronto",
+      "Month": "Aug",
+      "Temperature": 21,
+      "Latitude": 43.653226,
+      "Longitude": -79.383184
+    },
+    {
+      "City": "Dubrovnik",
+      "Month": "Aug",
+      "Temperature": 25,
+      "Latitude": 42.650661,
+      "Longitude": 18.094424
+    },
+    {
+      "City": "Rome",
+      "Month": "Aug",
+      "Temperature": 24,
+      "Latitude": 41.902783,
+      "Longitude": 12.496366
+    },
+    {
+      "City": "Barcelona",
+      "Month": "Aug",
+      "Temperature": 24,
+      "Latitude": 41.385064,
+      "Longitude": 2.173403
+    },
+    {
+      "City": "New York",
+      "Month": "Aug",
+      "Temperature": 24,
+      "Latitude": 40.712775,
+      "Longitude": -74.005973
+    },
+    {
+      "City": "Majorca",
+      "Month": "Aug",
+      "Temperature": 25,
+      "Latitude": 39.695263,
+      "Longitude": 3.017571
+    },
+    {
+      "City": "Lisbon",
+      "Month": "Aug",
+      "Temperature": 23,
+      "Latitude": 38.722252,
+      "Longitude": -9.139337
+    },
+    {
+      "City": "Athens",
+      "Month": "Aug",
+      "Temperature": 29,
+      "Latitude": 37.98381,
+      "Longitude": 23.727539
+    },
+    {
+      "City": "Algarve",
+      "Month": "Aug",
+      "Temperature": 24,
+      "Latitude": 37.017954,
+      "Longitude": -7.930834
+    },
+    {
+      "City": "Malaga",
+      "Month": "Aug",
+      "Temperature": 25,
+      "Latitude": 36.721274,
+      "Longitude": -4.421399
+    },
+    {
+      "City": "Malta",
+      "Month": "Aug",
+      "Temperature": 27,
+      "Latitude": 35.937496,
+      "Longitude": 14.375416
+    },
+    {
+      "City": "Tokyo",
+      "Month": "Aug",
+      "Temperature": 26,
+      "Latitude": 35.689487,
+      "Longitude": 139.691706
+    },
+    {
+      "City": "Crete",
+      "Month": "Aug",
+      "Temperature": 26,
+      "Latitude": 35.240117,
+      "Longitude": 24.809269
+    },
+    {
+      "City": "Paphos",
+      "Month": "Aug",
+      "Temperature": 26,
+      "Latitude": 34.772013,
+      "Longitude": 32.429737
+    },
+    {
+      "City": "Los Angeles",
+      "Month": "Aug",
+      "Temperature": 22,
+      "Latitude": 34.052234,
+      "Longitude": -118.243685
+    },
+    {
+      "City": "Marrakesh",
+      "Month": "Aug",
+      "Temperature": 29,
+      "Latitude": 31.629472,
+      "Longitude": -7.981084
+    },
+    {
+      "City": "Lanzarote",
+      "Month": "Aug",
+      "Temperature": 25,
+      "Latitude": 29.046854,
+      "Longitude": -13.589973
+    },
+    {
+      "City": "Tenerife",
+      "Month": "Aug",
+      "Temperature": 24,
+      "Latitude": 28.291564,
+      "Longitude": -16.62913
+    },
+    {
+      "City": "Gran Canaria",
+      "Month": "Aug",
+      "Temperature": 24,
+      "Latitude": 27.92022,
+      "Longitude": -15.547437
+    },
+    {
+      "City": "Dubai",
+      "Month": "Aug",
+      "Temperature": 36,
+      "Latitude": 25.204849,
+      "Longitude": 55.270783
+    },
+    {
+      "City": "Cancun",
+      "Month": "Aug",
+      "Temperature": 28,
+      "Latitude": 21.161908,
+      "Longitude": -86.851528
+    },
+    {
+      "City": "Punta Cana",
+      "Month": "Aug",
+      "Temperature": 28,
+      "Latitude": 18.58201,
+      "Longitude": -68.405473
+    },
+    {
+      "City": "Maldives",
+      "Month": "Aug",
+      "Temperature": 28,
+      "Latitude": 3.202778,
+      "Longitude": 73.22068
+    },
+    {
+      "City": "Bali",
+      "Month": "Aug",
+      "Temperature": 27,
+      "Latitude": -8.409518,
+      "Longitude": 115.188916
+    },
+    {
+      "City": "Sydney",
+      "Month": "Aug",
+      "Temperature": 14,
+      "Latitude": -33.86882,
+      "Longitude": 151.209296
+    },
+    {
+      "City": "Melbourne",
+      "Month": "Aug",
+      "Temperature": 11,
+      "Latitude": -37.813628,
+      "Longitude": 144.963058
+    },
+    {
+      "City": "Amsterdam",
+      "Month": "Sep",
+      "Temperature": 15,
+      "Latitude": 52.370216,
+      "Longitude": 4.895168
+    },
+    {
+      "City": "London",
+      "Month": "Sep",
+      "Temperature": 17,
+      "Latitude": 51.507351,
+      "Longitude": -0.127758
+    },
+    {
+      "City": "Vancouver",
+      "Month": "Sep",
+      "Temperature": 15,
+      "Latitude": 49.282729,
+      "Longitude": -123.120738
+    },
+    {
+      "City": "Paris",
+      "Month": "Sep",
+      "Temperature": 16,
+      "Latitude": 48.856614,
+      "Longitude": 2.352222
+    },
+    {
+      "City": "Toronto",
+      "Month": "Sep",
+      "Temperature": 18,
+      "Latitude": 43.653226,
+      "Longitude": -79.383184
+    },
+    {
+      "City": "Dubrovnik",
+      "Month": "Sep",
+      "Temperature": 22,
+      "Latitude": 42.650661,
+      "Longitude": 18.094424
+    },
+    {
+      "City": "Rome",
+      "Month": "Sep",
+      "Temperature": 22,
+      "Latitude": 41.902783,
+      "Longitude": 12.496366
+    },
+    {
+      "City": "Barcelona",
+      "Month": "Sep",
+      "Temperature": 22,
+      "Latitude": 41.385064,
+      "Longitude": 2.173403
+    },
+    {
+      "City": "New York",
+      "Month": "Sep",
+      "Temperature": 20,
+      "Latitude": 40.712775,
+      "Longitude": -74.005973
+    },
+    {
+      "City": "Majorca",
+      "Month": "Sep",
+      "Temperature": 21,
+      "Latitude": 39.695263,
+      "Longitude": 3.017571
+    },
+    {
+      "City": "Lisbon",
+      "Month": "Sep",
+      "Temperature": 23,
+      "Latitude": 38.722252,
+      "Longitude": -9.139337
+    },
+    {
+      "City": "Athens",
+      "Month": "Sep",
+      "Temperature": 24,
+      "Latitude": 37.98381,
+      "Longitude": 23.727539
+    },
+    {
+      "City": "Algarve",
+      "Month": "Sep",
+      "Temperature": 23,
+      "Latitude": 37.017954,
+      "Longitude": -7.930834
+    },
+    {
+      "City": "Malaga",
+      "Month": "Sep",
+      "Temperature": 24,
+      "Latitude": 36.721274,
+      "Longitude": -4.421399
+    },
+    {
+      "City": "Malta",
+      "Month": "Sep",
+      "Temperature": 25,
+      "Latitude": 35.937496,
+      "Longitude": 14.375416
+    },
+    {
+      "City": "Tokyo",
+      "Month": "Sep",
+      "Temperature": 23,
+      "Latitude": 35.689487,
+      "Longitude": 139.691706
+    },
+    {
+      "City": "Crete",
+      "Month": "Sep",
+      "Temperature": 24,
+      "Latitude": 35.240117,
+      "Longitude": 24.809269
+    },
+    {
+      "City": "Paphos",
+      "Month": "Sep",
+      "Temperature": 24,
+      "Latitude": 34.772013,
+      "Longitude": 32.429737
+    },
+    {
+      "City": "Los Angeles",
+      "Month": "Sep",
+      "Temperature": 21,
+      "Latitude": 34.052234,
+      "Longitude": -118.243685
+    },
+    {
+      "City": "Marrakesh",
+      "Month": "Sep",
+      "Temperature": 27,
+      "Latitude": 31.629472,
+      "Longitude": -7.981084
+    },
+    {
+      "City": "Lanzarote",
+      "Month": "Sep",
+      "Temperature": 25,
+      "Latitude": 29.046854,
+      "Longitude": -13.589973
+    },
+    {
+      "City": "Tenerife",
+      "Month": "Sep",
+      "Temperature": 23,
+      "Latitude": 28.291564,
+      "Longitude": -16.62913
+    },
+    {
+      "City": "Gran Canaria",
+      "Month": "Sep",
+      "Temperature": 24,
+      "Latitude": 27.92022,
+      "Longitude": -15.547437
+    },
+    {
+      "City": "Dubai",
+      "Month": "Sep",
+      "Temperature": 33,
+      "Latitude": 25.204849,
+      "Longitude": 55.270783
+    },
+    {
+      "City": "Cancun",
+      "Month": "Sep",
+      "Temperature": 28,
+      "Latitude": 21.161908,
+      "Longitude": -86.851528
+    },
+    {
+      "City": "Punta Cana",
+      "Month": "Sep",
+      "Temperature": 28,
+      "Latitude": 18.58201,
+      "Longitude": -68.405473
+    },
+    {
+      "City": "Maldives",
+      "Month": "Sep",
+      "Temperature": 27,
+      "Latitude": 3.202778,
+      "Longitude": 73.22068
+    },
+    {
+      "City": "Bali",
+      "Month": "Sep",
+      "Temperature": 27,
+      "Latitude": -8.409518,
+      "Longitude": 115.188916
+    },
+    {
+      "City": "Sydney",
+      "Month": "Sep",
+      "Temperature": 16,
+      "Latitude": -33.86882,
+      "Longitude": 151.209296
+    },
+    {
+      "City": "Melbourne",
+      "Month": "Sep",
+      "Temperature": 13,
+      "Latitude": -37.813628,
+      "Longitude": 144.963058
+    },
+    {
+      "City": "Amsterdam",
+      "Month": "Oct",
+      "Temperature": 11,
+      "Latitude": 52.370216,
+      "Longitude": 4.895168
+    },
+    {
+      "City": "London",
+      "Month": "Oct",
+      "Temperature": 13,
+      "Latitude": 51.507351,
+      "Longitude": -0.127758
+    },
+    {
+      "City": "Vancouver",
+      "Month": "Oct",
+      "Temperature": 10,
+      "Latitude": 49.282729,
+      "Longitude": -123.120738
+    },
+    {
+      "City": "Paris",
+      "Month": "Oct",
+      "Temperature": 12,
+      "Latitude": 48.856614,
+      "Longitude": 2.352222
+    },
+    {
+      "City": "Toronto",
+      "Month": "Oct",
+      "Temperature": 11,
+      "Latitude": 43.653226,
+      "Longitude": -79.383184
+    },
+    {
+      "City": "Dubrovnik",
+      "Month": "Oct",
+      "Temperature": 18,
+      "Latitude": 42.650661,
+      "Longitude": 18.094424
+    },
+    {
+      "City": "Rome",
+      "Month": "Oct",
+      "Temperature": 18,
+      "Latitude": 41.902783,
+      "Longitude": 12.496366
+    },
+    {
+      "City": "Barcelona",
+      "Month": "Oct",
+      "Temperature": 18,
+      "Latitude": 41.385064,
+      "Longitude": 2.173403
+    },
+    {
+      "City": "New York",
+      "Month": "Oct",
+      "Temperature": 14,
+      "Latitude": 40.712775,
+      "Longitude": -74.005973
+    },
+    {
+      "City": "Majorca",
+      "Month": "Oct",
+      "Temperature": 18,
+      "Latitude": 39.695263,
+      "Longitude": 3.017571
+    },
+    {
+      "City": "Lisbon",
+      "Month": "Oct",
+      "Temperature": 19,
+      "Latitude": 38.722252,
+      "Longitude": -9.139337
+    },
+    {
+      "City": "Athens",
+      "Month": "Oct",
+      "Temperature": 20,
+      "Latitude": 37.98381,
+      "Longitude": 23.727539
+    },
+    {
+      "City": "Algarve",
+      "Month": "Oct",
+      "Temperature": 19,
+      "Latitude": 37.017954,
+      "Longitude": -7.930834
+    },
+    {
+      "City": "Malaga",
+      "Month": "Oct",
+      "Temperature": 20,
+      "Latitude": 36.721274,
+      "Longitude": -4.421399
+    },
+    {
+      "City": "Malta",
+      "Month": "Oct",
+      "Temperature": 21,
+      "Latitude": 35.937496,
+      "Longitude": 14.375416
+    },
+    {
+      "City": "Tokyo",
+      "Month": "Oct",
+      "Temperature": 18,
+      "Latitude": 35.689487,
+      "Longitude": 139.691706
+    },
+    {
+      "City": "Crete",
+      "Month": "Oct",
+      "Temperature": 20,
+      "Latitude": 35.240117,
+      "Longitude": 24.809269
+    },
+    {
+      "City": "Paphos",
+      "Month": "Oct",
+      "Temperature": 22,
+      "Latitude": 34.772013,
+      "Longitude": 32.429737
+    },
+    {
+      "City": "Los Angeles",
+      "Month": "Oct",
+      "Temperature": 18,
+      "Latitude": 34.052234,
+      "Longitude": -118.243685
+    },
+    {
+      "City": "Marrakesh",
+      "Month": "Oct",
+      "Temperature": 21,
+      "Latitude": 31.629472,
+      "Longitude": -7.981084
+    },
+    {
+      "City": "Lanzarote",
+      "Month": "Oct",
+      "Temperature": 23,
+      "Latitude": 29.046854,
+      "Longitude": -13.589973
+    },
+    {
+      "City": "Tenerife",
+      "Month": "Oct",
+      "Temperature": 22,
+      "Latitude": 28.291564,
+      "Longitude": -16.62913
+    },
+    {
+      "City": "Gran Canaria",
+      "Month": "Oct",
+      "Temperature": 23,
+      "Latitude": 27.92022,
+      "Longitude": -15.547437
+    },
+    {
+      "City": "Dubai",
+      "Month": "Oct",
+      "Temperature": 29,
+      "Latitude": 25.204849,
+      "Longitude": 55.270783
+    },
+    {
+      "City": "Cancun",
+      "Month": "Oct",
+      "Temperature": 27,
+      "Latitude": 21.161908,
+      "Longitude": -86.851528
+    },
+    {
+      "City": "Punta Cana",
+      "Month": "Oct",
+      "Temperature": 27,
+      "Latitude": 18.58201,
+      "Longitude": -68.405473
+    },
+    {
+      "City": "Maldives",
+      "Month": "Oct",
+      "Temperature": 27,
+      "Latitude": 3.202778,
+      "Longitude": 73.22068
+    },
+    {
+      "City": "Bali",
+      "Month": "Oct",
+      "Temperature": 27,
+      "Latitude": -8.409518,
+      "Longitude": 115.188916
+    },
+    {
+      "City": "Sydney",
+      "Month": "Oct",
+      "Temperature": 18,
+      "Latitude": -33.86882,
+      "Longitude": 151.209296
+    },
+    {
+      "City": "Melbourne",
+      "Month": "Oct",
+      "Temperature": 15,
+      "Latitude": -37.813628,
+      "Longitude": 144.963058
+    },
+    {
+      "City": "Amsterdam",
+      "Month": "Nov",
+      "Temperature": 7,
+      "Latitude": 52.370216,
+      "Longitude": 4.895168
+    },
+    {
+      "City": "London",
+      "Month": "Nov",
+      "Temperature": 10,
+      "Latitude": 51.507351,
+      "Longitude": -0.127758
+    },
+    {
+      "City": "Vancouver",
+      "Month": "Nov",
+      "Temperature": 6,
+      "Latitude": 49.282729,
+      "Longitude": -123.120738
+    },
+    {
+      "City": "Paris",
+      "Month": "Nov",
+      "Temperature": 7,
+      "Latitude": 48.856614,
+      "Longitude": 2.352222
+    },
+    {
+      "City": "Toronto",
+      "Month": "Nov",
+      "Temperature": 5,
+      "Latitude": 43.653226,
+      "Longitude": -79.383184
+    },
+    {
+      "City": "Dubrovnik",
+      "Month": "Nov",
+      "Temperature": 14,
+      "Latitude": 42.650661,
+      "Longitude": 18.094424
+    },
+    {
+      "City": "Rome",
+      "Month": "Nov",
+      "Temperature": 13,
+      "Latitude": 41.902783,
+      "Longitude": 12.496366
+    },
+    {
+      "City": "Barcelona",
+      "Month": "Nov",
+      "Temperature": 13,
+      "Latitude": 41.385064,
+      "Longitude": 2.173403
+    },
+    {
+      "City": "New York",
+      "Month": "Nov",
+      "Temperature": 9,
+      "Latitude": 40.712775,
+      "Longitude": -74.005973
+    },
+    {
+      "City": "Majorca",
+      "Month": "Nov",
+      "Temperature": 14,
+      "Latitude": 39.695263,
+      "Longitude": 3.017571
+    },
+    {
+      "City": "Lisbon",
+      "Month": "Nov",
+      "Temperature": 14,
+      "Latitude": 38.722252,
+      "Longitude": -9.139337
+    },
+    {
+      "City": "Athens",
+      "Month": "Nov",
+      "Temperature": 15,
+      "Latitude": 37.98381,
+      "Longitude": 23.727539
+    },
+    {
+      "City": "Algarve",
+      "Month": "Nov",
+      "Temperature": 16,
+      "Latitude": 37.017954,
+      "Longitude": -7.930834
+    },
+    {
+      "City": "Malaga",
+      "Month": "Nov",
+      "Temperature": 16,
+      "Latitude": 36.721274,
+      "Longitude": -4.421399
+    },
+    {
+      "City": "Malta",
+      "Month": "Nov",
+      "Temperature": 17,
+      "Latitude": 35.937496,
+      "Longitude": 14.375416
+    },
+    {
+      "City": "Tokyo",
+      "Month": "Nov",
+      "Temperature": 12,
+      "Latitude": 35.689487,
+      "Longitude": 139.691706
+    },
+    {
+      "City": "Crete",
+      "Month": "Nov",
+      "Temperature": 17,
+      "Latitude": 35.240117,
+      "Longitude": 24.809269
+    },
+    {
+      "City": "Paphos",
+      "Month": "Nov",
+      "Temperature": 18,
+      "Latitude": 34.772013,
+      "Longitude": 32.429737
+    },
+    {
+      "City": "Los Angeles",
+      "Month": "Nov",
+      "Temperature": 17,
+      "Latitude": 34.052234,
+      "Longitude": -118.243685
+    },
+    {
+      "City": "Marrakesh",
+      "Month": "Nov",
+      "Temperature": 17,
+      "Latitude": 31.629472,
+      "Longitude": -7.981084
+    },
+    {
+      "City": "Lanzarote",
+      "Month": "Nov",
+      "Temperature": 21,
+      "Latitude": 29.046854,
+      "Longitude": -13.589973
+    },
+    {
+      "City": "Tenerife",
+      "Month": "Nov",
+      "Temperature": 20,
+      "Latitude": 28.291564,
+      "Longitude": -16.62913
+    },
+    {
+      "City": "Gran Canaria",
+      "Month": "Nov",
+      "Temperature": 21,
+      "Latitude": 27.92022,
+      "Longitude": -15.547437
+    },
+    {
+      "City": "Dubai",
+      "Month": "Nov",
+      "Temperature": 25,
+      "Latitude": 25.204849,
+      "Longitude": 55.270783
+    },
+    {
+      "City": "Cancun",
+      "Month": "Nov",
+      "Temperature": 25,
+      "Latitude": 21.161908,
+      "Longitude": -86.851528
+    },
+    {
+      "City": "Punta Cana",
+      "Month": "Nov",
+      "Temperature": 27,
+      "Latitude": 18.58201,
+      "Longitude": -68.405473
+    },
+    {
+      "City": "Maldives",
+      "Month": "Nov",
+      "Temperature": 27,
+      "Latitude": 3.202778,
+      "Longitude": 73.22068
+    },
+    {
+      "City": "Bali",
+      "Month": "Nov",
+      "Temperature": 27,
+      "Latitude": -8.409518,
+      "Longitude": 115.188916
+    },
+    {
+      "City": "Sydney",
+      "Month": "Nov",
+      "Temperature": 20,
+      "Latitude": -33.86882,
+      "Longitude": 151.209296
+    },
+    {
+      "City": "Melbourne",
+      "Month": "Nov",
+      "Temperature": 17,
+      "Latitude": -37.813628,
+      "Longitude": 144.963058
+    },
+    {
+      "City": "Amsterdam",
+      "Month": "Dec",
+      "Temperature": 4,
+      "Latitude": 52.370216,
+      "Longitude": 4.895168
+    },
+    {
+      "City": "London",
+      "Month": "Dec",
+      "Temperature": 7,
+      "Latitude": 51.507351,
+      "Longitude": -0.127758
+    },
+    {
+      "City": "Vancouver",
+      "Month": "Dec",
+      "Temperature": 4,
+      "Latitude": 49.282729,
+      "Longitude": -123.120738
+    },
+    {
+      "City": "Paris",
+      "Month": "Dec",
+      "Temperature": 5,
+      "Latitude": 48.856614,
+      "Longitude": 2.352222
+    },
+    {
+      "City": "Toronto",
+      "Month": "Dec",
+      "Temperature": -1,
+      "Latitude": 43.653226,
+      "Longitude": -79.383184
+    },
+    {
+      "City": "Dubrovnik",
+      "Month": "Dec",
+      "Temperature": 11,
+      "Latitude": 42.650661,
+      "Longitude": 18.094424
+    },
+    {
+      "City": "Rome",
+      "Month": "Dec",
+      "Temperature": 10,
+      "Latitude": 41.902783,
+      "Longitude": 12.496366
+    },
+    {
+      "City": "Barcelona",
+      "Month": "Dec",
+      "Temperature": 11,
+      "Latitude": 41.385064,
+      "Longitude": 2.173403
+    },
+    {
+      "City": "New York",
+      "Month": "Dec",
+      "Temperature": 9,
+      "Latitude": 40.712775,
+      "Longitude": -74.005973
+    },
+    {
+      "City": "Majorca",
+      "Month": "Dec",
+      "Temperature": 11,
+      "Latitude": 39.695263,
+      "Longitude": 3.017571
+    },
+    {
+      "City": "Lisbon",
+      "Month": "Dec",
+      "Temperature": 12,
+      "Latitude": 38.722252,
+      "Longitude": -9.139337
+    },
+    {
+      "City": "Athens",
+      "Month": "Dec",
+      "Temperature": 12,
+      "Latitude": 37.98381,
+      "Longitude": 23.727539
+    },
+    {
+      "City": "Algarve",
+      "Month": "Dec",
+      "Temperature": 14,
+      "Latitude": 37.017954,
+      "Longitude": -7.930834
+    },
+    {
+      "City": "Malaga",
+      "Month": "Dec",
+      "Temperature": 13,
+      "Latitude": 36.721274,
+      "Longitude": -4.421399
+    },
+    {
+      "City": "Malta",
+      "Month": "Dec",
+      "Temperature": 14,
+      "Latitude": 35.937496,
+      "Longitude": 14.375416
+    },
+    {
+      "City": "Tokyo",
+      "Month": "Dec",
+      "Temperature": 8,
+      "Latitude": 35.689487,
+      "Longitude": 139.691706
+    },
+    {
+      "City": "Crete",
+      "Month": "Dec",
+      "Temperature": 14,
+      "Latitude": 35.240117,
+      "Longitude": 24.809269
+    },
+    {
+      "City": "Paphos",
+      "Month": "Dec",
+      "Temperature": 15,
+      "Latitude": 34.772013,
+      "Longitude": 32.429737
+    },
+    {
+      "City": "Los Angeles",
+      "Month": "Dec",
+      "Temperature": 14,
+      "Latitude": 34.052234,
+      "Longitude": -118.243685
+    },
+    {
+      "City": "Marrakesh",
+      "Month": "Dec",
+      "Temperature": 14,
+      "Latitude": 31.629472,
+      "Longitude": -7.981084
+    },
+    {
+      "City": "Lanzarote",
+      "Month": "Dec",
+      "Temperature": 19,
+      "Latitude": 29.046854,
+      "Longitude": -13.589973
+    },
+    {
+      "City": "Tenerife",
+      "Month": "Dec",
+      "Temperature": 17,
+      "Latitude": 28.291564,
+      "Longitude": -16.62913
+    },
+    {
+      "City": "Gran Canaria",
+      "Month": "Dec",
+      "Temperature": 19,
+      "Latitude": 27.92022,
+      "Longitude": -15.547437
+    },
+    {
+      "City": "Dubai",
+      "Month": "Dec",
+      "Temperature": 21,
+      "Latitude": 25.204849,
+      "Longitude": 55.270783
+    },
+    {
+      "City": "Cancun",
+      "Month": "Dec",
+      "Temperature": 24,
+      "Latitude": 21.161908,
+      "Longitude": -86.851528
+    },
+    {
+      "City": "Punta Cana",
+      "Month": "Dec",
+      "Temperature": 26,
+      "Latitude": 18.58201,
+      "Longitude": -68.405473
+    },
+    {
+      "City": "Maldives",
+      "Month": "Dec",
+      "Temperature": 27,
+      "Latitude": 3.202778,
+      "Longitude": 73.22068
+    },
+    {
+      "City": "Bali",
+      "Month": "Dec",
+      "Temperature": 27,
+      "Latitude": -8.409518,
+      "Longitude": 115.188916
+    },
+    {
+      "City": "Sydney",
+      "Month": "Dec",
+      "Temperature": 22,
+      "Latitude": -33.86882,
+      "Longitude": 151.209296
+    },
+    {
+      "City": "Melbourne",
+      "Month": "Dec",
+      "Temperature": 19,
+      "Latitude": -37.813628,
+      "Longitude": 144.963058
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+/* === Rose Chart Styles === */
+
+.roseChartSector path.arc {
+		stroke-width: 0.5px;
+		stroke: #999999;
+}
+
+.roseChartSector path.arc:hover {
+		opacity: 0.7;
+		stroke: black;
+		cursor: pointer;
+}

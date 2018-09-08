@@ -1,0 +1,43 @@
+[{
+	"key": "Plants",
+	"values": [{
+		"key": "Cryptogamia",
+		"values": [{
+			"key": "Thallophyta",
+			"values": [{
+				"key": "Bacteria",
+				"value": 21
+			}, {
+				"key": "Algae",
+				"value": 32
+			}, {
+				"key": "Fungi",
+				"value": 43
+			}, {
+				"key": "Lichens",
+				"value": 54
+			}]
+		}, {
+			"key": "Bryophyta",
+			"value": 23
+		}, {
+			"key": "Pteridophyta",
+			"value": 34
+		}]
+	}, {
+		"key": "Phanerogamia",
+		"values": [{
+			"key": "Gymnospermae",
+			"value": 19
+		}, {
+			"key": "Angiospermae",
+			"values": [{
+				"key": "Monocots",
+				"value": 34
+			}, {
+				"key": "Dicots",
+				"value": 20
+			}]
+		}]
+	}]
+}]

@@ -1,0 +1,38 @@
+/* === Polar Area Chart Styles === */
+
+.polarArea path {
+		fill: none;
+}
+
+.polarArea path.segment {
+		fill: steelblue;
+		stroke-width: 0.5px;
+		stroke: #999999;
+}
+
+.polarArea path.segment:hover {
+		opacity: 0.7;
+		stroke: black;
+		cursor: pointer;
+}
+
+.polarArea .outerCircle circle {
+		stroke: #aaa;
+		stroke-dasharray: 4, 4;
+}
+
+.polarArea .tickCircles circle {
+		stroke: #ddd;
+		stroke-dasharray: 2, 2;
+}
+
+.polarArea .spokes line {
+		stroke: #aaa;
+		stroke-width: 1px;
+}
+
+.polarArea .circularLabels text {
+		font-size: 1.1em;
+		font-weight: bold;
+		letter-spacing: -0.2px;
+}

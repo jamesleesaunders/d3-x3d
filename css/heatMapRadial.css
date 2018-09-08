@@ -1,0 +1,23 @@
+/* === Circular Heat Chart Styles === */
+
+.heatMapRadial path.segment {
+		stroke: #999999;
+		stroke-width: 0.5px;
+}
+
+.heatMapRadial path.segment:hover {
+		opacity: 0.7;
+		stroke: black;
+		cursor: pointer;
+}
+
+.heatMapRadial .segmentLabels text {
+		font-size: 1.0em;
+		font-weight: bold;
+}
+
+.heatMapRadial .circularLabels text {
+		font-size: 1.1em;
+		font-weight: bold;
+		letter-spacing: -0.2px;
+}

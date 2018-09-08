@@ -1,0 +1,399 @@
+{
+  "Metadata": {
+    "Title": "The Netflix ISP Speed Index",
+    "Detail": "Measure of prime time Netflix performance",
+    "Date": "29-09-2017 10:21:00",
+    "TotalRows": "78"
+  },
+  "Data": [{
+      "Month": "Aug-16",
+      "ISP": "Virgin",
+      "Value": "3.75"
+    },
+    {
+      "Month": "Sep-16",
+      "ISP": "Virgin",
+      "Value": "3.81"
+    },
+    {
+      "Month": "Oct-16",
+      "ISP": "Virgin",
+      "Value": "3.78"
+    },
+    {
+      "Month": "Nov-16",
+      "ISP": "Virgin",
+      "Value": "3.77"
+    },
+    {
+      "Month": "Dec-16",
+      "ISP": "Virgin",
+      "Value": "3.86"
+    },
+    {
+      "Month": "Jan-17",
+      "ISP": "Virgin",
+      "Value": "3.79"
+    },
+    {
+      "Month": "Feb-17",
+      "ISP": "Virgin",
+      "Value": "3.8"
+    },
+    {
+      "Month": "Mar-17",
+      "ISP": "Virgin",
+      "Value": "3.91"
+    },
+    {
+      "Month": "Apr-17",
+      "ISP": "Virgin",
+      "Value": "3.9"
+    },
+    {
+      "Month": "May-17",
+      "ISP": "Virgin",
+      "Value": "3.99"
+    },
+    {
+      "Month": "Jun-17",
+      "ISP": "Virgin",
+      "Value": "3.94"
+    },
+    {
+      "Month": "Jul-17",
+      "ISP": "Virgin",
+      "Value": "4.01"
+    },
+    {
+      "Month": "Aug-17",
+      "ISP": "Virgin",
+      "Value": "3.93"
+    },
+    {
+      "Month": "Aug-16",
+      "ISP": "BT",
+      "Value": "3.59"
+    },
+    {
+      "Month": "Sep-16",
+      "ISP": "BT",
+      "Value": "3.7"
+    },
+    {
+      "Month": "Oct-16",
+      "ISP": "BT",
+      "Value": "3.7"
+    },
+    {
+      "Month": "Nov-16",
+      "ISP": "BT",
+      "Value": "3.71"
+    },
+    {
+      "Month": "Dec-16",
+      "ISP": "BT",
+      "Value": "3.79"
+    },
+    {
+      "Month": "Jan-17",
+      "ISP": "BT",
+      "Value": "3.76"
+    },
+    {
+      "Month": "Feb-17",
+      "ISP": "BT",
+      "Value": "3.77"
+    },
+    {
+      "Month": "Mar-17",
+      "ISP": "BT",
+      "Value": "3.86"
+    },
+    {
+      "Month": "Apr-17",
+      "ISP": "BT",
+      "Value": "3.81"
+    },
+    {
+      "Month": "May-17",
+      "ISP": "BT",
+      "Value": "3.91"
+    },
+    {
+      "Month": "Jun-17",
+      "ISP": "BT",
+      "Value": "3.83"
+    },
+    {
+      "Month": "Jul-17",
+      "ISP": "BT",
+      "Value": "3.88"
+    },
+    {
+      "Month": "Aug-17",
+      "ISP": "BT",
+      "Value": "3.79"
+    },
+    {
+      "Month": "Aug-16",
+      "ISP": "Plusnet",
+      "Value": "3.31"
+    },
+    {
+      "Month": "Sep-16",
+      "ISP": "Plusnet",
+      "Value": "3.39"
+    },
+    {
+      "Month": "Oct-16",
+      "ISP": "Plusnet",
+      "Value": "3.44"
+    },
+    {
+      "Month": "Nov-16",
+      "ISP": "Plusnet",
+      "Value": "3.44"
+    },
+    {
+      "Month": "Dec-16",
+      "ISP": "Plusnet",
+      "Value": "3.53"
+    },
+    {
+      "Month": "Jan-17",
+      "ISP": "Plusnet",
+      "Value": "3.51"
+    },
+    {
+      "Month": "Feb-17",
+      "ISP": "Plusnet",
+      "Value": "3.51"
+    },
+    {
+      "Month": "Mar-17",
+      "ISP": "Plusnet",
+      "Value": "3.6"
+    },
+    {
+      "Month": "Apr-17",
+      "ISP": "Plusnet",
+      "Value": "3.58"
+    },
+    {
+      "Month": "May-17",
+      "ISP": "Plusnet",
+      "Value": "3.66"
+    },
+    {
+      "Month": "Jun-17",
+      "ISP": "Plusnet",
+      "Value": "3.6"
+    },
+    {
+      "Month": "Jul-17",
+      "ISP": "Plusnet",
+      "Value": "3.64"
+    },
+    {
+      "Month": "Aug-17",
+      "ISP": "Plusnet",
+      "Value": "3.56"
+    },
+    {
+      "Month": "Aug-16",
+      "ISP": "EE",
+      "Value": "3.19"
+    },
+    {
+      "Month": "Sep-16",
+      "ISP": "EE",
+      "Value": "3.26"
+    },
+    {
+      "Month": "Oct-16",
+      "ISP": "EE",
+      "Value": "3.28"
+    },
+    {
+      "Month": "Nov-16",
+      "ISP": "EE",
+      "Value": "3.31"
+    },
+    {
+      "Month": "Dec-16",
+      "ISP": "EE",
+      "Value": "3.38"
+    },
+    {
+      "Month": "Jan-17",
+      "ISP": "EE",
+      "Value": "3.36"
+    },
+    {
+      "Month": "Feb-17",
+      "ISP": "EE",
+      "Value": "3.36"
+    },
+    {
+      "Month": "Mar-17",
+      "ISP": "EE",
+      "Value": "3.49"
+    },
+    {
+      "Month": "Apr-17",
+      "ISP": "EE",
+      "Value": "3.5"
+    },
+    {
+      "Month": "May-17",
+      "ISP": "EE",
+      "Value": "3.58"
+    },
+    {
+      "Month": "Jun-17",
+      "ISP": "EE",
+      "Value": "3.54"
+    },
+    {
+      "Month": "Jul-17",
+      "ISP": "EE",
+      "Value": "3.57"
+    },
+    {
+      "Month": "Aug-17",
+      "ISP": "EE",
+      "Value": "3.51"
+    },
+    {
+      "Month": "Aug-16",
+      "ISP": "TalkTalk",
+      "Value": "3.24"
+    },
+    {
+      "Month": "Sep-16",
+      "ISP": "TalkTalk",
+      "Value": "3.31"
+    },
+    {
+      "Month": "Oct-16",
+      "ISP": "TalkTalk",
+      "Value": "3.31"
+    },
+    {
+      "Month": "Nov-16",
+      "ISP": "TalkTalk",
+      "Value": "3.33"
+    },
+    {
+      "Month": "Dec-16",
+      "ISP": "TalkTalk",
+      "Value": "3.39"
+    },
+    {
+      "Month": "Jan-17",
+      "ISP": "TalkTalk",
+      "Value": "3.36"
+    },
+    {
+      "Month": "Feb-17",
+      "ISP": "TalkTalk",
+      "Value": "3.35"
+    },
+    {
+      "Month": "Mar-17",
+      "ISP": "TalkTalk",
+      "Value": "3.45"
+    },
+    {
+      "Month": "Apr-17",
+      "ISP": "TalkTalk",
+      "Value": "3.43"
+    },
+    {
+      "Month": "May-17",
+      "ISP": "TalkTalk",
+      "Value": "3.51"
+    },
+    {
+      "Month": "Jun-17",
+      "ISP": "TalkTalk",
+      "Value": "3.46"
+    },
+    {
+      "Month": "Jul-17",
+      "ISP": "TalkTalk",
+      "Value": "3.51"
+    },
+    {
+      "Month": "Aug-17",
+      "ISP": "TalkTalk",
+      "Value": "3.44"
+    },
+    {
+      "Month": "Aug-16",
+      "ISP": "Sky",
+      "Value": "3.2"
+    },
+    {
+      "Month": "Sep-16",
+      "ISP": "Sky",
+      "Value": "3.28"
+    },
+    {
+      "Month": "Oct-16",
+      "ISP": "Sky",
+      "Value": "3.28"
+    },
+    {
+      "Month": "Nov-16",
+      "ISP": "Sky",
+      "Value": "3.31"
+    },
+    {
+      "Month": "Dec-16",
+      "ISP": "Sky",
+      "Value": "3.37"
+    },
+    {
+      "Month": "Jan-17",
+      "ISP": "Sky",
+      "Value": "3.36"
+    },
+    {
+      "Month": "Feb-17",
+      "ISP": "Sky",
+      "Value": "3.34"
+    },
+    {
+      "Month": "Mar-17",
+      "ISP": "Sky",
+      "Value": "3.42"
+    },
+    {
+      "Month": "Apr-17",
+      "ISP": "Sky",
+      "Value": "3.41"
+    },
+    {
+      "Month": "May-17",
+      "ISP": "Sky",
+      "Value": "3.5"
+    },
+    {
+      "Month": "Jun-17",
+      "ISP": "Sky",
+      "Value": "3.46"
+    },
+    {
+      "Month": "Jul-17",
+      "ISP": "Sky",
+      "Value": "3.49"
+    },
+    {
+      "Month": "Aug-17",
+      "ISP": "Sky",
+      "Value": "3.42"
+    }
+  ]
+}

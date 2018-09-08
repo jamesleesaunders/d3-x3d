@@ -1,0 +1,25 @@
+/* === Bar Chart (Stacked & Grouped) Styles === */
+
+[class*="barChart"] rect.bar {
+		stroke: #999999;
+		stroke-width: 0.5px;
+}
+
+[class*="barChart"] rect.bar:hover {
+		opacity: 0.7;
+		stroke: black;
+		cursor: pointer;
+}
+
+/* === Bar Chart (Circular) Styles === */
+
+.barChartCircular path.bar {
+		stroke: #999999;
+		stroke-width: 0.5px;
+}
+
+.barChartCircular path.bar:hover {
+		opacity: 0.7;
+		stroke: black;
+		cursor: pointer;
+}
