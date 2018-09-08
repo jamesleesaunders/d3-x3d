@@ -83,8 +83,7 @@ export default function() {
 	 * Constructor
 	 */
 	function my(selection) {
-		let scene = selection;
-		scene.classed(classed, true);
+		selection.classed(classed, true);
 
 		selection.each(function(data) {
 			init(data);
@@ -108,7 +107,7 @@ export default function() {
 
 			let coords = array2dToString(coordIndex.concat(coordIndexBack));
 
-			let surfaces = scene.selectAll('.surface')
+			let surfaces = selection.selectAll('.surface')
 				.data([data]);
 
 			surfaces

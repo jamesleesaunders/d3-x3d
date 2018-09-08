@@ -103,7 +103,7 @@ let dataset3 = [{
   ]
 }];
 
-tape("summary Test1", function(t) {
+tape("Test Summary 1", function(t) {
   let expected = {
     levels: 1,
     rowKey: "Fruit",
@@ -125,7 +125,7 @@ tape("summary Test1", function(t) {
   t.end();
 });
 
-tape("summary Test2", function(t) {
+tape("Test Summary 2", function(t) {
   let expected = {
     levels: 2,
     rowKey: undefined,
@@ -147,7 +147,7 @@ tape("summary Test2", function(t) {
   t.end();
 });
 
-tape("rotate Test1", function(t) {
+tape("Test Rotate", function(t) {
   t.deepEqual(d3X3d.dataTransform(dataset2).rotate(), dataset3);
   t.deepEqual(d3X3d.dataTransform(dataset3).rotate(), dataset2);
 

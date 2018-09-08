@@ -29,62 +29,58 @@ export default function() {
 	 * Constructor
 	 */
 	function my(selection) {
-		let scene = selection;
 
 		let layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
-		scene.classed(classed, true)
+		selection.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
 			.enter()
 			.append("group")
 			.attr("class", function(d) { return d; });
 
-		selection.each(function() {
+		// Construct Axis Components
+		let xzAxis = componentAxis()
+			.scale(xScale)
+			.dir('x')
+			.tickDir('z')
+			.tickSize(xScale.range()[1] - xScale.range()[0])
+			.tickPadding(xScale.range()[0])
+			.color("blue");
 
-			// Construct Axis Components
-			let xzAxis = componentAxis()
-				.scale(xScale)
-				.dir('x')
-				.tickDir('z')
-				.tickSize(xScale.range()[1] - xScale.range()[0])
-				.tickPadding(xScale.range()[0])
-				.color("blue");
+		let yzAxis = componentAxis()
+			.scale(yScale)
+			.dir('y')
+			.tickDir('z')
+			.tickSize(yScale.range()[1] - yScale.range()[0])
+			.color("red");
 
-			let yzAxis = componentAxis()
-				.scale(yScale)
-				.dir('y')
-				.tickDir('z')
-				.tickSize(yScale.range()[1] - yScale.range()[0])
-				.color("red");
+		let yxAxis = componentAxis()
+			.scale(yScale)
+			.dir('y')
+			.tickDir('x')
+			.tickSize(yScale.range()[1] - yScale.range()[0])
+			.tickFormat(function() { return ''; })
+			.color("red");
 
-			let yxAxis = componentAxis()
-				.scale(yScale)
-				.dir('y')
-				.tickDir('x')
-				.tickSize(yScale.range()[1] - yScale.range()[0])
-				.tickFormat(function() { return ''; })
-				.color("red");
+		let zxAxis = componentAxis()
+			.scale(zScale)
+			.dir('z')
+			.tickDir('x')
+			.tickSize(zScale.range()[1] - zScale.range()[0])
+			.color("black");
 
-			let zxAxis = componentAxis()
-				.scale(zScale)
-				.dir('z')
-				.tickDir('x')
-				.tickSize(zScale.range()[1] - zScale.range()[0])
-				.color("black");
+		selection.select(".xzAxis")
+			.call(xzAxis);
 
-			scene.select(".xzAxis")
-				.call(xzAxis);
+		selection.select(".yzAxis")
+			.call(yzAxis);
 
-			scene.select(".yzAxis")
-				.call(yzAxis);
+		selection.select(".yxAxis")
+			.call(yxAxis);
 
-			scene.select(".yxAxis")
-				.call(yxAxis);
+		selection.select(".zxAxis")
+			.call(zxAxis);
 
-			scene.select(".zxAxis")
-				.call(zxAxis);
-
-		});
 	}
 
 	/**

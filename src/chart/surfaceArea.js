@@ -57,11 +57,10 @@ export default function() {
 	 * Constructor
 	 */
 	function my(selection) {
-		let scene = selection;
 
 		// Update the chart dimensions and add layer groups
-		let layers = ["multiAxis", "surface"];
-		scene.classed(classed, true)
+		let layers = ["axis", "chart"];
+		selection.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
 			.enter()
@@ -72,24 +71,24 @@ export default function() {
 			init(data);
 
 			// Construct Axis Component
-			let axisMulti = component.axisMulti()
+			let axis = component.axisMulti()
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale);
 
-			// Construct Surface Area Component
-			let surface = component.surface()
+			// Construct Surface Component
+			let chart = component.surface()
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
 				.colors(colors);
 
-			scene.select(".multiAxis")
-				.call(axisMulti);
+			selection.select(".axis")
+				.call(axis);
 
-			scene.select(".surface")
+			selection.select(".chart")
 				.datum(data)
-				.call(surface);
+				.call(chart);
 		});
 	}
 

@@ -30,7 +30,9 @@ export default function() {
 	/**
 	 * Constructor
 	 */
-	function my(context) {
+	function my(selection) {
+		selection.classed(classed, true);
+
 		let identity = function(x) {
 			return x;
 		};
@@ -48,8 +50,6 @@ export default function() {
 		let range = scale.range();
 		let range0 = range[0];
 		let range1 = range[range.length - 1];
-		let scene = context.selection ? context.selection() : context;
-		scene.classed(classed, true);
 
 		function getAxisDirectionVector(axisDir) {
 			let result;
@@ -96,10 +96,10 @@ export default function() {
 		let rotVec = getAxisRotationVector(dir);
 		let tickRotVec = getAxisRotationVector(tickDir);
 
-		let path = scene.selectAll("transform")
+		let path = selection.selectAll("transform")
 			.data([null]);
 
-		let tick = scene.selectAll(".tick")
+		let tick = selection.selectAll(".tick")
 			.data(values, scale).order();
 
 		let tickExit = tick.exit();
