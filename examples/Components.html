@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3d : 3D Components Example</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
+  <script src="../build/d3-x3d.js"></script>
+</head>
+
+<body>
+  <div id="chartholder1"></div>
+  <div id="chartholder2"></div>
+  <div id="chartholder3"></div>
+  <div id="chartholder4"></div>
+
+  <script>
+    // ========== Bubbles Data ==========
+    var n = 40;
+    var data1 = d3.range(n).map(function(d, i) {
+      return {
+        key: i,
+        x: Math.floor(Math.random() * 11),
+        y: Math.floor(Math.random() * 11),
+        z: Math.floor(Math.random() * 11)
+      };
+    });
+
+    // ========== Surface Data ==========
+    var cx = 0.8;
+    var cy = 0.3;
+    var f = function(vx, vz) {
+      return ((vx - cx)*(vx - cx) + (vz - cy)*(vx - cx)) * Math.random();
+    };
+
+    var xRange = d3.range(0, 1.05, 0.1);
+    var zRange = d3.range(0, 1.05, 0.1);
+    var nx = xRange.length;
+    var nz = zRange.length;
+
+    var data2 = d3.range(nx).map(function(i) {
+      return d3.range(nz).map(
+        function(j) {
+          return {
+            x: xRange[j],
+            y: f(xRange[i], zRange[j]),
+            z: zRange[i]
+          };
+        });
+    });
+
+    // ========== Bars Data ==========
+    function randomNum() {
+      return Math.floor(Math.random() * 10);
+    }
+
+    var data3 = [{
+      key: "Apples",
+      values: [
+        { key: "UK", value: randomNum() },
+        { key: "France", value: randomNum() },
+        { key: "Spain", value: randomNum() },
+        { key: "Germany", value: randomNum() },
+        { key: "Italy", value: randomNum() },
+        { key: "Portugal", value: randomNum() }
+      ]
+    }, {
+      key: "Oranges",
+      values: [
+        { key: "UK", value: randomNum() },
+        { key: "France", value: randomNum() },
+        { key: "Spain", value: randomNum() },
+        { key: "Germany", value: randomNum() },
+        { key: "Italy", value: randomNum() },
+        { key: "Portugal", value: randomNum() }
+      ]
+    }, {
+      key: "Pears",
+      values: [
+        { key: "UK", value: randomNum() },
+        { key: "France", value: randomNum() },
+        { key: "Spain", value: randomNum() },
+        { key: "Germany", value: randomNum() },
+        { key: "Italy", value: randomNum() },
+        { key: "Portugal", value: randomNum() }
+      ]
+    }, {
+      key: "Kiwis",
+      values: [
+        { key: "UK", value: randomNum() },
+        { key: "France", value: randomNum() },
+        { key: "Spain", value: randomNum() },
+        { key: "Germany", value: randomNum() },
+        { key: "Italy", value: randomNum() },
+        { key: "Portugal", value: randomNum() }
+      ]
+    }];
+
+  </script>
+
+  <script>
+    // Chart dimensions
+    var width = 300;
+    var height = 300;
+
+    // Viewpoint parameters
+    var viewPosition = [80.0, 15.0, 80.0];
+    var viewOrientation = [0.0, 1.0, 0.0, 0.8];
+    var fieldOfView = 0.8;
+
+    // ========== Bubbles Component ==========
+
+    // Construct chart component
+    var bubbles = d3.x3d.component.bubbles();
+
+    // Create scene
+    var scene1 = d3.select("#chartholder1")
+      .append("x3d")
+      .attr("id", "bubbles")
+      .attr("width", width + 'px')
+      .attr("height", height + 'px')
+      .append("scene");
+
+    // Add viewpoint
+    scene1.append("viewpoint")
+      .attr("position", viewPosition.join(" "))
+      .attr("orientation", viewOrientation.join(" "))
+      .attr("fieldOfView", fieldOfView)
+      .attr("set_bind", "true");
+
+    // Add chart component
+    scene1.append('group')
+      .attr('class', 'chart')
+      .datum(data1)
+      .call(bubbles);
+
+    // ========== Surface Component ==========
+
+    // Construct chart component
+    var surface = d3.x3d.component.surface();
+
+    // Create scene
+    var scene2 = d3.select("#chartholder2")
+      .append("x3d")
+      .attr("id", "surface")
+      .attr("width", width + 'px')
+      .attr("height", height + 'px')
+      .append("scene");
+
+    // Add viewpoint
+    scene2.append("viewpoint")
+      .attr("position", viewPosition.join(" "))
+      .attr("orientation", viewOrientation.join(" "))
+      .attr("fieldOfView", fieldOfView)
+      .attr("set_bind", "true");
+
+    // Add chart component
+    scene2.append('group')
+      .attr('class', 'chart')
+      .datum(data2)
+      .call(surface);
+
+    // ========== Bars Component ==========
+
+    // Construct chart component
+    var bars = d3.x3d.component.barsMulti();
+
+    // Create scene
+    var scene3 = d3.select("#chartholder3")
+      .append("x3d")
+      .attr("id", "bars")
+      .attr("width", width + 'px')
+      .attr("height", height + 'px')
+      .append("scene");
+
+    // Add viewpoint
+    scene3.append("viewpoint")
+      .attr("position", viewPosition.join(" "))
+      .attr("orientation", viewOrientation.join(" "))
+      .attr("fieldOfView", fieldOfView)
+      .attr("set_bind", "true");
+
+    // Add chart component
+    scene3.append('group')
+      .attr('class', 'chart')
+      .datum(data3)
+      .call(bars);
+
+
+    // ========== Axis ==========
+
+    var xScale = d3.scaleBand().domain(["UK", "France", "Spain", "Germany", "Italy", "Portugal"]).rangeRound([0, 40]);
+    var yScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
+    var zScale = d3.scaleBand().domain(["Apples", "Oranges", "Pears", "Kiwis"]).range([0, 40]);
+
+    // Construct chart component
+    var axisMulti = d3.x3d.component.axisMulti()
+      .xScale(xScale)
+      .yScale(yScale)
+      .zScale(zScale);
+
+    // Create scene
+    var scene4 = d3.select("#chartholder4")
+      .append("x3d")
+      .attr("id", "axis")
+      .attr("width", width + 'px')
+      .attr("height", height + 'px')
+      .append("scene");
+
+    // Add viewpoint
+    scene4.append("viewpoint")
+      .attr("position", viewPosition.join(" "))
+      .attr("orientation", viewOrientation.join(" "))
+      .attr("fieldOfView", fieldOfView)
+      .attr("set_bind", "true");
+
+    // Add chart component
+    scene4.append('group')
+      .attr('class', 'chart')
+      .call(axisMulti);
+
+
+    // ========== Sync Viewpoints ==========
+
+    var viewpoints = document.querySelectorAll("viewpoint");
+    document.onload = function() {
+      viewpoints.forEach(function(viewpoint) {
+        viewpoint.addEventListener('viewpointChanged', syncViewpoints, false);
+      });
+    };
+
+    function syncViewpoints(e) {
+      viewpoints.forEach(function(viewpoint) {
+        viewpoint.setFieldValue('orientation', x3dom.fields.Quaternion.axisAngle(e.orientation[0], e.orientation[1]));
+        viewpoint.setFieldValue('position', e.position);
+      });
+
+    }
+
+  </script>
+</body>
