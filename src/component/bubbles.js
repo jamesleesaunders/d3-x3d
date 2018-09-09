@@ -28,9 +28,9 @@ export default function() {
 	 * Initialise Data and Scales
 	 */
 	function init(data) {
-		let maxX = d3.max(data, function(d) { return +d.x; });
-		let maxY = d3.max(data, function(d) { return +d.y; });
-		let maxZ = d3.max(data, function(d) { return +d.z; });
+		let maxX = d3.max(data.values, function(d) { return +d.x; });
+		let maxY = d3.max(data.values, function(d) { return +d.y; });
+		let maxZ = d3.max(data.values, function(d) { return +d.z; });
 
 		// Calculate Scales.
 		xScale = (typeof xScale === "undefined") ?
@@ -64,7 +64,7 @@ export default function() {
 			};
 
 			let bubblesSelect = selection.selectAll(".point")
-				.data(data);
+				.data(function(d) { return d.values; });
 
 			let bubbles = bubblesSelect.enter()
 				.append("transform")
@@ -89,7 +89,7 @@ export default function() {
 				.call(makeSolid, "blue")
 				.append("text")
 				.attr('class', "labelText")
-				.attr('string', function(d) { return d.x + ', ' + d.y + ', ' + d.z; })
+				.attr('string', function(d) { return d.key; })
 				.append("fontstyle")
 				.attr("size", 1)
 				.attr("family", "SANS")

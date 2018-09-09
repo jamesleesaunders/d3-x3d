@@ -7,6 +7,7 @@
   <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
   <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
   <script src="../build/d3-x3d.js"></script>
+  <script src="random_data.js"></script>
 </head>
 
 <body>
@@ -14,27 +15,7 @@
 
   <script>
     // Generate Data
-    var cx = 0.8;
-    var cy = 0.3;
-    var f = function(vx, vz) {
-      return ((vx - cx)*(vx - cx) + (vz - cy)*(vx - cx)) * Math.random();
-    };
-
-    var xRange = d3.range(0, 1.05, 0.1);
-    var zRange = d3.range(0, 1.05, 0.1);
-    var nx = xRange.length;
-    var nz = zRange.length;
-
-    var data = d3.range(nx).map(function(i) {
-      return d3.range(nz).map(
-        function(j) {
-          return {
-            x: xRange[j],
-            y: f(xRange[i], zRange[j]),
-            z: zRange[i]
-          };
-        });
-    });
+    var data = randomDataset4();
 
     // Chart dimensions
     var width = 500;

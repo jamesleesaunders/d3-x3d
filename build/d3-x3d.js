@@ -879,7 +879,7 @@ function componentbarsBarsMulti () {
  * Reusable 3D Bubble Chart
  *
  */
-function componentbarsBubbles () {
+function componentBubbles () {
 
 	/**
   * Default Properties
@@ -902,13 +902,13 @@ function componentbarsBubbles () {
   * Initialise Data and Scales
   */
 	function init(data) {
-		var maxX = d3.max(data, function (d) {
+		var maxX = d3.max(data.values, function (d) {
 			return +d.x;
 		});
-		var maxY = d3.max(data, function (d) {
+		var maxY = d3.max(data.values, function (d) {
 			return +d.y;
 		});
-		var maxZ = d3.max(data, function (d) {
+		var maxZ = d3.max(data.values, function (d) {
 			return +d.z;
 		});
 
@@ -934,7 +934,9 @@ function componentbarsBubbles () {
 				return selection;
 			};
 
-			var bubblesSelect = selection.selectAll(".point").data(data);
+			var bubblesSelect = selection.selectAll(".point").data(function (d) {
+				return d.values;
+			});
 
 			var bubbles = bubblesSelect.enter().append("transform").attr("class", "point").attr("translation", function (d) {
 				return xScale(d.x) + ' ' + yScale(d.y) + ' ' + zScale(d.z);
@@ -943,7 +945,7 @@ function componentbarsBubbles () {
 			bubbles.append("shape").call(makeSolid, color).append("sphere").attr("radius", 0.6);
 
 			bubbles.append("transform").attr('translation', "0.8 0.8 0.8").append("billboard").attr('render', false).attr("axisOfRotation", "0 0 0").append("shape").call(makeSolid, "blue").append("text").attr('class', "labelText").attr('string', function (d) {
-				return d.x + ', ' + d.y + ', ' + d.z;
+				return d.key;
 			}).append("fontstyle").attr("size", 1).attr("family", "SANS").attr("style", "BOLD").attr("justify", "START").attr('render', false);
 		});
 	}
@@ -997,6 +999,125 @@ function componentbarsBubbles () {
 		if (!arguments.length) return color;
 		color = _;
 		return this;
+	};
+
+	return my;
+}
+
+/**
+ * Reusable 3D Multi Series Bubble Chart
+ *
+ */
+function componentbarsBubblesMulti () {
+
+	/**
+  * Default Properties
+  */
+	var width = 40.0;
+	var height = 40.0;
+	var depth = 40.0;
+	var colors = ["orange", "red", "yellow", "steelblue", "green"];
+	var classed = "x3dBubblesMulti";
+
+	/**
+  * Scales
+  */
+	var xScale = void 0;
+	var yScale = void 0;
+	var zScale = void 0;
+	var colorScale = void 0;
+
+	/**
+  * Initialise Data and Scales
+  */
+	function init(data) {
+		var dataSummary = dataTransform(data).summary();
+		var seriesNames = dataSummary.columnKeys;
+		var maxValue = dataSummary.maxValue;
+
+		// If the colorScale has not been passed then attempt to calculate.
+		colorScale = typeof colorScale === "undefined" ? d3.scaleOrdinal().domain(seriesNames).range(colors) : colorScale;
+
+		// Calculate Scales.
+		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0, width]) : xScale;
+
+		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0, height]) : yScale;
+
+		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0, depth]) : zScale;
+	}
+
+	/**
+  * Constructor
+  */
+	function my(selection) {
+		selection.classed(classed, true);
+
+		selection.each(function (data) {
+			init(data);
+
+			// Construct Bars Component
+			var bubbles = componentBubbles().xScale(xScale).yScale(yScale).zScale(zScale);
+
+			// Create Bar Groups
+			var bubbleGroup = selection.selectAll(".bubbleGroup").data(data);
+
+			bubbleGroup.enter().append("group").classed("bubbleGroup", true).call(bubbles.color(function (d) {
+				return colorScale(d.key);
+			})).merge(bubbleGroup);
+
+			bubbleGroup.exit().remove();
+		});
+	}
+
+	/**
+  * Configuration Getters & Setters
+  */
+	my.width = function (_) {
+		if (!arguments.length) return width;
+		width = _;
+		return this;
+	};
+
+	my.height = function (_) {
+		if (!arguments.length) return height;
+		height = _;
+		return this;
+	};
+
+	my.depth = function (_) {
+		if (!arguments.length) return depth;
+		depth = _;
+		return this;
+	};
+
+	my.xScale = function (_) {
+		if (!arguments.length) return xScale;
+		xScale = _;
+		return my;
+	};
+
+	my.yScale = function (_) {
+		if (!arguments.length) return yScale;
+		yScale = _;
+		return my;
+	};
+
+	my.zScale = function (_) {
+		if (!arguments.length) return zScale;
+		zScale = _;
+		return my;
+	};
+
+	my.colorScale = function (_) {
+		if (!arguments.length) return colorScale;
+		colorScale = _;
+		return my;
+	};
+
+	my.colors = function (_) {
+		if (!arguments.length) return colors;
+		colors = _;
+		return my;
 	};
 
 	return my;
@@ -1177,7 +1298,8 @@ var component = {
 	axisMulti: componentbarsAxisMulti,
 	bars: componentBars,
 	barsMulti: componentbarsBarsMulti,
-	bubbles: componentbarsBubbles,
+	bubbles: componentBubbles,
+	bubblesMulti: componentbarsBubblesMulti,
 	surface: componentbarsSurface
 };
 
@@ -1331,13 +1453,13 @@ function chartScatterPlot () {
   * Initialise Data and Scales
   */
 	function init(data) {
-		var maxX = d3.max(data, function (d) {
+		var maxX = d3.max(data.values, function (d) {
 			return +d.x;
 		});
-		var maxY = d3.max(data, function (d) {
+		var maxY = d3.max(data.values, function (d) {
 			return +d.y;
 		});
-		var maxZ = d3.max(data, function (d) {
+		var maxZ = d3.max(data.values, function (d) {
 			return +d.z;
 		});
 

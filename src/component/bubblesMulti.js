@@ -1,10 +1,10 @@
 import * as d3 from "d3";
 import { default as dataTransform } from "../dataTransform";
-import { default as component } from "../component";
+import { default as componentBubbles } from "./bubbles";
 
 /**
- * Reusable 3D Scatter Plot
- * @see https://datavizproject.com/data-type/3d-scatterplot/
+ * Reusable 3D Multi Series Bubble Chart
+ *
  */
 export default function() {
 
@@ -14,8 +14,8 @@ export default function() {
 	let width = 40.0;
 	let height = 40.0;
 	let depth = 40.0;
-	let color = "orange";
-	let classed = "x3dScatterPlot";
+	let colors = ["orange", "red", "yellow", "steelblue", "green"];
+	let classed = "x3dBubblesMulti";
 
 	/**
 	 * Scales
@@ -29,21 +29,26 @@ export default function() {
 	 * Initialise Data and Scales
 	 */
 	function init(data) {
-		let maxX = d3.max(data.values, function(d) { return +d.x; });
-		let maxY = d3.max(data.values, function(d) { return +d.y; });
-		let maxZ = d3.max(data.values, function(d) { return +d.z; });
+		let dataSummary = dataTransform(data).summary();
+		let seriesNames = dataSummary.columnKeys;
+		let maxValue = dataSummary.maxValue;
+
+		// If the colorScale has not been passed then attempt to calculate.
+		colorScale = (typeof colorScale === "undefined") ?
+			d3.scaleOrdinal().domain(seriesNames).range(colors) :
+			colorScale;
 
 		// Calculate Scales.
 		xScale = (typeof xScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxX]).range([0, width]) :
+			d3.scaleLinear().domain([0, maxValue]).range([0, width]) :
 			xScale;
 
 		yScale = (typeof yScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxY]).range([0, height]) :
+			d3.scaleLinear().domain([0, maxValue]).range([0, height]) :
 			yScale;
 
 		zScale = (typeof zScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxZ]).range([0, depth]) :
+			d3.scaleLinear().domain([0, maxValue]).range([0, depth]) :
 			zScale;
 	}
 
@@ -51,38 +56,30 @@ export default function() {
 	 * Constructor
 	 */
 	function my(selection) {
-
-		// Update the chart dimensions and add layer groups
-		let layers = ["axis", "chart"];
-		selection.classed(classed, true)
-			.selectAll("group")
-			.data(layers)
-			.enter()
-			.append("group")
-			.attr("class", function(d) { return d; });
+		selection.classed(classed, true);
 
 		selection.each(function(data) {
 			init(data);
 
-			// Construct Axis Component
-			let axis = component.axisMulti()
+			// Construct Bars Component
+			let bubbles = componentBubbles()
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale);
 
-			// Construct Bubbles Component
-			let chart = component.bubbles()
-				.xScale(xScale)
-				.yScale(yScale)
-				.zScale(zScale)
-				.color(color);
+			// Create Bar Groups
+			let bubbleGroup = selection.selectAll(".bubbleGroup")
+				.data(data);
 
-			selection.select(".axis")
-				.call(axis);
+			bubbleGroup.enter()
+				.append("group")
+				.classed("bubbleGroup", true)
+				.call(bubbles.color(function(d) { return colorScale(d.key); }))
+				.merge(bubbleGroup);
 
-			selection.select(".chart")
-				.datum(data)
-				.call(chart);
+			bubbleGroup.exit()
+				.remove();
+
 		});
 	}
 
@@ -131,9 +128,9 @@ export default function() {
 		return my;
 	};
 
-	my.color = function(_) {
-		if (!arguments.length) return color;
-		color = _;
+	my.colors = function(_) {
+		if (!arguments.length) return colors;
+		colors = _;
 		return my;
 	};
 

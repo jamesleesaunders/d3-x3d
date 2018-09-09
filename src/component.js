@@ -3,6 +3,7 @@ import { default as componentbarsAxisMulti } from "./component/axisMulti";
 import { default as componentbarsBars } from "./component/bars";
 import { default as componentbarsBarsMulti } from "./component/barsMulti";
 import { default as componentbarsBubbles } from "./component/bubbles";
+import { default as componentbarsBubblesMulti } from "./component/bubblesMulti";
 import { default as componentbarsSurface } from "./component/surface";
 
 export default {
@@ -11,5 +12,6 @@ export default {
 	bars: componentbarsBars,
 	barsMulti: componentbarsBarsMulti,
 	bubbles: componentbarsBubbles,
+	bubblesMulti: componentbarsBubblesMulti,
 	surface: componentbarsSurface
 };
