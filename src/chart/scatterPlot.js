@@ -14,7 +14,7 @@ export default function() {
 	let width = 40.0;
 	let height = 40.0;
 	let depth = 40.0;
-	let color = "orange";
+	let colors = ["orange", "red", "yellow", "steelblue", "green"];
 	let classed = "x3dScatterPlot";
 
 	/**
@@ -29,21 +29,26 @@ export default function() {
 	 * Initialise Data and Scales
 	 */
 	function init(data) {
-		let maxX = d3.max(data.values, function(d) { return +d.x; });
-		let maxY = d3.max(data.values, function(d) { return +d.y; });
-		let maxZ = d3.max(data.values, function(d) { return +d.z; });
+		let dataSummary = dataTransform(data).summary();
+		let categoryNames = dataSummary.columnKeys;
+		let maxCoordinates = dataSummary.maxCoordinates;
+
+		// If the colorScale has not been passed then attempt to calculate.
+		colorScale = (typeof colorScale === "undefined") ?
+			d3.scaleOrdinal().domain(categoryNames).range(colors) :
+			colorScale;
 
 		// Calculate Scales.
 		xScale = (typeof xScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxX]).range([0, width]) :
+			d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, width]) :
 			xScale;
 
 		yScale = (typeof yScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxY]).range([0, height]) :
+			d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, height]) :
 			yScale;
 
 		zScale = (typeof zScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxZ]).range([0, depth]) :
+			d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, depth]) :
 			zScale;
 	}
 
@@ -71,11 +76,11 @@ export default function() {
 				.zScale(zScale);
 
 			// Construct Bubbles Component
-			let chart = component.bubbles()
+			let chart = component.bubblesMulti()
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
-				.color(color);
+				.colorScale(colorScale);
 
 			selection.select(".axis")
 				.call(axis);
@@ -131,9 +136,9 @@ export default function() {
 		return my;
 	};
 
-	my.color = function(_) {
-		if (!arguments.length) return color;
-		color = _;
+	my.colors = function(_) {
+		if (!arguments.length) return colors;
+		colors = _;
 		return my;
 	};
 

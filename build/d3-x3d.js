@@ -15,306 +15,353 @@
 var version = "1.0.2";
 var license = "GPL-2.0";
 
+var _extends = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
 /**
  * Data Analysis
  *
  */
 function dataTransform (data) {
 
-  var STRUCTURE_ROW = 1;
-  var STRUCTURE_ROWS = 2;
+	var SINGLE_SERIES = 1;
+	var MULTI_SERIES = 2;
 
-  /**
-   * Row or Rows?
-   */
-  var dataStructure = function () {
-    if (data["key"] !== undefined) {
-      return STRUCTURE_ROW;
-    } else {
-      return STRUCTURE_ROWS;
-    }
-  }();
+	/**
+  * Row or Rows?
+  */
+	var dataStructure = function () {
+		if (data["key"] !== undefined) {
+			return SINGLE_SERIES;
+		} else {
+			return MULTI_SERIES;
+		}
+	}();
 
-  /**
-   * Row Key
-   */
-  var rowKey = function () {
-    var ret = void 0;
-    if (STRUCTURE_ROW === dataStructure) {
-      ret = d3.values(data)[0];
-    }
+	/**
+  * Row Key
+  */
+	var rowKey = function () {
+		var ret = void 0;
+		if (SINGLE_SERIES === dataStructure) {
+			ret = d3.values(data)[0];
+		}
 
-    return ret;
-  }();
+		return ret;
+	}();
 
-  /**
-   * Row Keys
-   */
-  var rowKeys = function () {
-    var ret = void 0;
-    if (STRUCTURE_ROWS === dataStructure) {
-      ret = data.map(function (d) {
-        return d.key;
-      });
-    }
+	/**
+  * Row Keys
+  */
+	var rowKeys = function () {
+		var ret = void 0;
+		if (MULTI_SERIES === dataStructure) {
+			ret = data.map(function (d) {
+				return d.key;
+			});
+		}
 
-    return ret;
-  }();
+		return ret;
+	}();
 
-  /**
-   * Row Totals
-   */
-  var rowTotals = function () {
-    var ret = void 0;
-    if (STRUCTURE_ROWS === dataStructure) {
-      ret = {};
-      d3.map(data).values().forEach(function (d) {
-        var rowKey = d.key;
-        d.values.forEach(function (d) {
-          ret[rowKey] = typeof ret[rowKey] === "undefined" ? 0 : ret[rowKey];
-          ret[rowKey] += d.value;
-        });
-      });
-    }
+	/**
+  * Row Totals
+  */
+	var rowTotals = function () {
+		var ret = void 0;
+		if (MULTI_SERIES === dataStructure) {
+			ret = {};
+			d3.map(data).values().forEach(function (d) {
+				var rowKey = d.key;
+				d.values.forEach(function (d) {
+					ret[rowKey] = typeof ret[rowKey] === "undefined" ? 0 : ret[rowKey];
+					ret[rowKey] += d.value;
+				});
+			});
+		}
 
-    return ret;
-  }();
+		return ret;
+	}();
 
-  /**
-   * Row Totals Max
-   */
-  var rowTotalsMax = function () {
-    var ret = void 0;
-    if (STRUCTURE_ROWS === dataStructure) {
-      ret = d3.max(d3.values(rowTotals));
-    }
+	/**
+  * Row Totals Max
+  */
+	var rowTotalsMax = function () {
+		var ret = void 0;
+		if (MULTI_SERIES === dataStructure) {
+			ret = d3.max(d3.values(rowTotals));
+		}
 
-    return ret;
-  }();
+		return ret;
+	}();
 
-  /**
-   * Join two arrays
-   */
-  var union = function union(array1, array2) {
-    var ret = [];
-    var arr = array1.concat(array2);
-    var len = arr.length;
-    var assoc = {};
+	/**
+  * Join two arrays
+  */
+	var union = function union(array1, array2) {
+		var ret = [];
+		var arr = array1.concat(array2);
+		var len = arr.length;
+		var assoc = {};
 
-    while (len--) {
-      var item = arr[len];
+		while (len--) {
+			var item = arr[len];
 
-      if (!assoc[item]) {
-        ret.unshift(item);
-        assoc[item] = true;
-      }
-    }
+			if (!assoc[item]) {
+				ret.unshift(item);
+				assoc[item] = true;
+			}
+		}
 
-    return ret;
-  };
+		return ret;
+	};
 
-  /**
-   * Column Keys
-   */
-  var columnKeys = function () {
-    var ret = [];
-    if (STRUCTURE_ROW === dataStructure) {
-      ret = d3.values(data.values).map(function (d) {
-        return d.key;
-      });
-    } else {
-      d3.map(data).values().forEach(function (d) {
-        var tmp = [];
-        d.values.forEach(function (d, i) {
-          tmp[i] = d.key;
-        });
+	/**
+  * Column Keys
+  */
+	var columnKeys = function () {
+		var ret = [];
+		if (SINGLE_SERIES === dataStructure) {
+			ret = d3.values(data.values).map(function (d) {
+				return d.key;
+			});
+		} else {
+			d3.map(data).values().forEach(function (d) {
+				var tmp = [];
+				d.values.forEach(function (d, i) {
+					tmp[i] = d.key;
+				});
 
-        ret = union(tmp, ret);
-      });
-    }
+				ret = union(tmp, ret);
+			});
+		}
 
-    return ret;
-  }();
+		return ret;
+	}();
 
-  /**
-   * Row Totals
-   */
-  var rowTotal = function () {
-    var ret = void 0;
-    if (STRUCTURE_ROW === dataStructure) {
-      ret = d3.sum(data.values, function (d) {
-        return d.value;
-      });
-    }
+	/**
+  * Row Totals
+  */
+	var rowTotal = function () {
+		var ret = void 0;
+		if (SINGLE_SERIES === dataStructure) {
+			ret = d3.sum(data.values, function (d) {
+				return d.value;
+			});
+		}
 
-    return ret;
-  }();
+		return ret;
+	}();
 
-  /**
-   * Column Totals
-   */
-  var columnTotals = function () {
-    var ret = void 0;
-    if (STRUCTURE_ROWS === dataStructure) {
-      ret = {};
-      d3.map(data).values().forEach(function (d) {
-        d.values.forEach(function (d) {
-          var columnName = d.key;
-          ret[columnName] = typeof ret[columnName] === "undefined" ? 0 : ret[columnName];
-          ret[columnName] += d.value;
-        });
-      });
-    }
+	/**
+  * Column Totals
+  */
+	var columnTotals = function () {
+		var ret = void 0;
+		if (MULTI_SERIES === dataStructure) {
+			ret = {};
+			d3.map(data).values().forEach(function (d) {
+				d.values.forEach(function (d) {
+					var columnName = d.key;
+					ret[columnName] = typeof ret[columnName] === "undefined" ? 0 : ret[columnName];
+					ret[columnName] += d.value;
+				});
+			});
+		}
 
-    return ret;
-  }();
+		return ret;
+	}();
 
-  /**
-   * Column Totals Max
-   */
-  var columnTotalsMax = function () {
-    var ret = void 0;
-    if (STRUCTURE_ROWS === dataStructure) {
-      ret = d3.max(d3.values(columnTotals));
-    }
+	/**
+  * Column Totals Max
+  */
+	var columnTotalsMax = function () {
+		var ret = void 0;
+		if (MULTI_SERIES === dataStructure) {
+			ret = d3.max(d3.values(columnTotals));
+		}
 
-    return ret;
-  }();
+		return ret;
+	}();
 
-  /**
-   * Min Value
-   */
-  var minValue = function () {
-    var ret = void 0;
-    if (STRUCTURE_ROW === dataStructure) {
-      ret = d3.min(data.values, function (d) {
-        return +d.value;
-      });
-    } else {
-      d3.map(data).values().forEach(function (d) {
-        d.values.forEach(function (d) {
-          ret = typeof ret === "undefined" ? d.value : d3.min([ret, +d.value]);
-        });
-      });
-    }
+	/**
+  * Min Value
+  */
+	var minValue = function () {
+		var ret = void 0;
+		if (SINGLE_SERIES === dataStructure) {
+			ret = d3.min(data.values, function (d) {
+				return +d.value;
+			});
+		} else {
+			d3.map(data).values().forEach(function (d) {
+				d.values.forEach(function (d) {
+					ret = typeof ret === "undefined" ? d.value : d3.min([ret, +d.value]);
+				});
+			});
+		}
 
-    return +ret;
-  }();
+		return +ret;
+	}();
 
-  /**
-   * Max Value
-   */
-  var maxValue = function () {
-    var ret = void 0;
-    if (STRUCTURE_ROW === dataStructure) {
-      ret = d3.max(data.values, function (d) {
-        return +d.value;
-      });
-    } else {
-      d3.map(data).values().forEach(function (d) {
-        d.values.forEach(function (d) {
-          ret = typeof ret === "undefined" ? d.value : d3.max([ret, +d.value]);
-        });
-      });
-    }
+	/**
+  * Max Value
+  */
+	var maxValue = function () {
+		var ret = void 0;
+		if (SINGLE_SERIES === dataStructure) {
+			ret = d3.max(data.values, function (d) {
+				return +d.value;
+			});
+		} else {
+			d3.map(data).values().forEach(function (d) {
+				d.values.forEach(function (d) {
+					ret = typeof ret === "undefined" ? d.value : d3.max([ret, +d.value]);
+				});
+			});
+		}
 
-    return +ret;
-  }();
+		return +ret;
+	}();
 
-  /**
-   * How many decimal places?
-   */
-  var decimalPlaces = function decimalPlaces(num) {
-    var match = ("" + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
-    if (!match) {
-      return 0;
-    }
+	/**
+  * Max Coordinates
+  */
+	var maxCoordinates = function () {
+		var maxX = void 0,
+		    maxY = void 0,
+		    maxZ = void 0;
 
-    return Math.max(0,
-    // Number of digits right of decimal point.
-    (match[1] ? match[1].length : 0) - (
-    // Adjust for scientific notation.
-    match[2] ? +match[2] : 0));
-  };
+		if (SINGLE_SERIES === dataStructure) {
+			maxX = d3.max(data.values, function (d) {
+				return +d.x;
+			});
+			maxY = d3.max(data.values, function (d) {
+				return +d.y;
+			});
+			maxZ = d3.max(data.values, function (d) {
+				return +d.z;
+			});
+		} else {
+			d3.map(data).values().forEach(function (d) {
+				d.values.forEach(function (d) {
+					maxX = typeof maxX === "undefined" ? d.x : d3.max([maxX, +d.x]);
+					maxY = typeof maxY === "undefined" ? d.y : d3.max([maxY, +d.y]);
+					maxZ = typeof maxZ === "undefined" ? d.z : d3.max([maxZ, +d.z]);
+				});
+			});
+		}
 
-  /**
-   * Max decimal place
-   */
-  var maxDecimalPlace = function () {
-    var ret = 0;
-    if (STRUCTURE_ROWS === dataStructure) {
-      d3.map(data).values().forEach(function (d) {
-        d.values.forEach(function (d) {
-          ret = d3.max([ret, decimalPlaces(d.value)]);
-        });
-      });
-    }
+		return { x: maxX, y: maxY, z: maxZ };
+	}();
 
-    return ret;
-  }();
+	/**
+  * How many decimal places?
+  */
+	var decimalPlaces = function decimalPlaces(num) {
+		var match = ("" + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+		if (!match) {
+			return 0;
+		}
 
-  // If thresholds values are not already set attempt to auto-calculate some thresholds
-  var thresholds = function () {
-    var distance = maxValue - minValue;
+		return Math.max(0,
+		// Number of digits right of decimal point.
+		(match[1] ? match[1].length : 0) - (
+		// Adjust for scientific notation.
+		match[2] ? +match[2] : 0));
+	};
 
-    return [+(minValue + 0.15 * distance).toFixed(maxDecimalPlace), +(minValue + 0.40 * distance).toFixed(maxDecimalPlace), +(minValue + 0.55 * distance).toFixed(maxDecimalPlace), +(minValue + 0.90 * distance).toFixed(maxDecimalPlace)];
-  }();
+	/**
+  * Max decimal place
+  */
+	var maxDecimalPlace = function () {
+		var ret = 0;
+		if (MULTI_SERIES === dataStructure) {
+			d3.map(data).values().forEach(function (d) {
+				d.values.forEach(function (d) {
+					ret = d3.max([ret, decimalPlaces(d.value)]);
+				});
+			});
+		}
 
-  /**
-   * Rotate Data
-   */
-  var rotate = function rotate() {
-    var columnKeys = data.map(function (d) {
-      return d.key;
-    });
+		return ret;
+	}();
 
-    var rowKeys = data[0].values.map(function (d) {
-      return d.key;
-    });
+	// If thresholds values are not already set attempt to auto-calculate some thresholds
+	var thresholds = function () {
+		var distance = maxValue - minValue;
 
-    var rotated = rowKeys.map(function (k, i) {
-      var values = [];
-      for (var j = 0; j <= data.length - 1; j++) {
-        values[j] = {
-          key: columnKeys[j],
-          value: data[j].values[i].value
-        };
-      }
+		return [+(minValue + 0.15 * distance).toFixed(maxDecimalPlace), +(minValue + 0.40 * distance).toFixed(maxDecimalPlace), +(minValue + 0.55 * distance).toFixed(maxDecimalPlace), +(minValue + 0.90 * distance).toFixed(maxDecimalPlace)];
+	}();
 
-      return {
-        key: k,
-        values: values
-      };
-    });
+	/**
+  * Rotate Data
+  */
+	var rotate = function rotate() {
+		var columnKeys = data.map(function (d) {
+			return d.key;
+		});
 
-    return rotated;
-  };
+		var rowKeys = data[0].values.map(function (d) {
+			return d.key;
+		});
 
-  /**
-   * Summary
-   */
-  var summary = function summary() {
-    return {
-      levels: dataStructure,
-      rowKey: rowKey,
-      rowTotal: rowTotal,
-      rowKeys: rowKeys,
-      rowTotals: rowTotals,
-      rowTotalsMax: rowTotalsMax,
-      columnKeys: columnKeys,
-      columnTotals: columnTotals,
-      columnTotalsMax: columnTotalsMax,
-      minValue: minValue,
-      maxValue: maxValue,
-      maxDecimalPlace: maxDecimalPlace,
-      thresholds: thresholds
-    };
-  };
+		var rotated = rowKeys.map(function (rowKey, rowIndex) {
+			var values = columnKeys.map(function (columnKey, columnIndex) {
+				// Copy the values from the original object
+				var values = _extends({}, data[columnIndex].values[rowIndex]);
+				// Swap the key over
+				values.key = columnKey;
 
-  return {
-    summary: summary,
-    rotate: rotate
-  };
+				return values;
+			});
+
+			return {
+				key: rowKey,
+				values: values
+			};
+		});
+
+		return rotated;
+	};
+
+	/**
+  * Summary
+  */
+	var summary = function summary() {
+		return {
+			dataStructure: dataStructure,
+			rowKey: rowKey,
+			rowTotal: rowTotal,
+			rowKeys: rowKeys,
+			rowTotals: rowTotals,
+			rowTotalsMax: rowTotalsMax,
+			columnKeys: columnKeys,
+			columnTotals: columnTotals,
+			columnTotalsMax: columnTotalsMax,
+			minValue: minValue,
+			maxValue: maxValue,
+			maxCoordinates: maxCoordinates,
+			maxDecimalPlace: maxDecimalPlace,
+			thresholds: thresholds
+		};
+	};
+
+	return {
+		summary: summary,
+		rotate: rotate
+	};
 }
 
 /**
@@ -1032,18 +1079,18 @@ function componentbarsBubblesMulti () {
   */
 	function init(data) {
 		var dataSummary = dataTransform(data).summary();
-		var seriesNames = dataSummary.columnKeys;
-		var maxValue = dataSummary.maxValue;
+		var categoryNames = dataSummary.columnKeys;
+		var maxCoordinates = dataSummary.maxCoordinates;
 
 		// If the colorScale has not been passed then attempt to calculate.
-		colorScale = typeof colorScale === "undefined" ? d3.scaleOrdinal().domain(seriesNames).range(colors) : colorScale;
+		colorScale = typeof colorScale === "undefined" ? d3.scaleOrdinal().domain(categoryNames).range(colors) : colorScale;
 
 		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0, width]) : xScale;
+		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, width]) : xScale;
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0, height]) : yScale;
+		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, height]) : yScale;
 
-		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0, depth]) : zScale;
+		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, depth]) : zScale;
 	}
 
 	/**
@@ -1056,14 +1103,14 @@ function componentbarsBubblesMulti () {
 			init(data);
 
 			// Construct Bars Component
-			var bubbles = componentBubbles().xScale(xScale).yScale(yScale).zScale(zScale);
+			var bubbles = componentBubbles().xScale(xScale).yScale(yScale).zScale(zScale).color(function (d) {
+				return colorScale(d.key);
+			});
 
 			// Create Bar Groups
 			var bubbleGroup = selection.selectAll(".bubbleGroup").data(data);
 
-			bubbleGroup.enter().append("group").classed("bubbleGroup", true).call(bubbles.color(function (d) {
-				return colorScale(d.key);
-			})).merge(bubbleGroup);
+			bubbleGroup.enter().append("group").classed("bubbleGroup", true).call(bubbles).merge(bubbleGroup);
 
 			bubbleGroup.exit().remove();
 		});
@@ -1438,7 +1485,7 @@ function chartScatterPlot () {
 	var width = 40.0;
 	var height = 40.0;
 	var depth = 40.0;
-	var color = "orange";
+	var colors = ["orange", "red", "yellow", "steelblue", "green"];
 	var classed = "x3dScatterPlot";
 
 	/**
@@ -1453,22 +1500,19 @@ function chartScatterPlot () {
   * Initialise Data and Scales
   */
 	function init(data) {
-		var maxX = d3.max(data.values, function (d) {
-			return +d.x;
-		});
-		var maxY = d3.max(data.values, function (d) {
-			return +d.y;
-		});
-		var maxZ = d3.max(data.values, function (d) {
-			return +d.z;
-		});
+		var dataSummary = dataTransform(data).summary();
+		var categoryNames = dataSummary.columnKeys;
+		var maxCoordinates = dataSummary.maxCoordinates;
+
+		// If the colorScale has not been passed then attempt to calculate.
+		colorScale = typeof colorScale === "undefined" ? d3.scaleOrdinal().domain(categoryNames).range(colors) : colorScale;
 
 		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxX]).range([0, width]) : xScale;
+		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, width]) : xScale;
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxY]).range([0, height]) : yScale;
+		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, height]) : yScale;
 
-		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxZ]).range([0, depth]) : zScale;
+		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, depth]) : zScale;
 	}
 
 	/**
@@ -1489,7 +1533,7 @@ function chartScatterPlot () {
 			var axis = component.axisMulti().xScale(xScale).yScale(yScale).zScale(zScale);
 
 			// Construct Bubbles Component
-			var chart = component.bubbles().xScale(xScale).yScale(yScale).zScale(zScale).color(color);
+			var chart = component.bubblesMulti().xScale(xScale).yScale(yScale).zScale(zScale).colorScale(colorScale);
 
 			selection.select(".axis").call(axis);
 
@@ -1542,9 +1586,9 @@ function chartScatterPlot () {
 		return my;
 	};
 
-	my.color = function (_) {
-		if (!arguments.length) return color;
-		color = _;
+	my.colors = function (_) {
+		if (!arguments.length) return colors;
+		colors = _;
 		return my;
 	};
 

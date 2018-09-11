@@ -30,25 +30,25 @@ export default function() {
 	 */
 	function init(data) {
 		let dataSummary = dataTransform(data).summary();
-		let seriesNames = dataSummary.columnKeys;
-		let maxValue = dataSummary.maxValue;
+		let categoryNames = dataSummary.columnKeys;
+		let maxCoordinates = dataSummary.maxCoordinates;
 
 		// If the colorScale has not been passed then attempt to calculate.
 		colorScale = (typeof colorScale === "undefined") ?
-			d3.scaleOrdinal().domain(seriesNames).range(colors) :
+			d3.scaleOrdinal().domain(categoryNames).range(colors) :
 			colorScale;
 
 		// Calculate Scales.
 		xScale = (typeof xScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxValue]).range([0, width]) :
+			d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, width]) :
 			xScale;
 
 		yScale = (typeof yScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxValue]).range([0, height]) :
+			d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, height]) :
 			yScale;
 
 		zScale = (typeof zScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxValue]).range([0, depth]) :
+			d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, depth]) :
 			zScale;
 	}
 
@@ -65,7 +65,8 @@ export default function() {
 			let bubbles = componentBubbles()
 				.xScale(xScale)
 				.yScale(yScale)
-				.zScale(zScale);
+				.zScale(zScale)
+				.color(function(d) { return colorScale(d.key); });
 
 			// Create Bar Groups
 			let bubbleGroup = selection.selectAll(".bubbleGroup")
@@ -74,7 +75,7 @@ export default function() {
 			bubbleGroup.enter()
 				.append("group")
 				.classed("bubbleGroup", true)
-				.call(bubbles.color(function(d) { return colorScale(d.key); }))
+				.call(bubbles)
 				.merge(bubbleGroup);
 
 			bubbleGroup.exit()

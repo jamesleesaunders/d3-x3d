@@ -1,3 +1,5 @@
+"use strict";
+
 var countries = ["UK", "France", "Spain", "Germany", "Italy", "Portugal"];
 var fruit = ["Apples", "Oranges", "Pears", "Kiwis"];
 
