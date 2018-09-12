@@ -1,10 +1,7 @@
 # d3-x3d Makefile
 
-CSS_FILES :=       css/global.css
-
 GENERATED_FILES := build/d3-x3d.js \
                    build/d3-x3d.min.js \
-                   build/d3-x3d.css \
                    README.md \
                    LICENSE.md
 
@@ -15,11 +12,6 @@ js:
 	@echo Compiling JS Files...
 	@rm -f build/d3-x3d.js
 	@rollup -c
-
-css: $(CSS_FILES)
-	@echo Concatenating CSS Files...
-	@rm -f build/d3-x3d.css
-	@for file in $^; do cat "$$file"; echo "\n"; done > build/d3-x3d.css
 
 min:
 	@echo Minifying...
