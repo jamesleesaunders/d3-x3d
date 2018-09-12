@@ -1,3 +1,10 @@
+/**
+ * d3-x3d
+ *
+ * @author James Saunders [james@saunders-family.net]
+ * @copyright Copyright (C) 2018 James Saunders
+ * @license GPLv3
+ */
 "use strict";
 
 var countries = ["UK", "France", "Spain", "Germany", "Italy", "Portugal"];
