@@ -30,12 +30,12 @@ export default function() {
 	 */
 	function init(data) {
 		let dataSummary = dataTransform(data).summary();
-		let categoryNames = dataSummary.columnKeys;
+		let seriesNames = dataSummary.rowKeys;
 		let maxCoordinates = dataSummary.maxCoordinates;
 
 		// If the colorScale has not been passed then attempt to calculate.
 		colorScale = (typeof colorScale === "undefined") ?
-			d3.scaleOrdinal().domain(categoryNames).range(colors) :
+			d3.scaleOrdinal().domain(seriesNames).range(colors) :
 			colorScale;
 
 		// Calculate Scales.
@@ -75,7 +75,11 @@ export default function() {
 			bubbleGroup.enter()
 				.append("group")
 				.classed("bubbleGroup", true)
-				.call(bubbles)
+				.each(function(d) {
+					let color = colorScale(d.key);
+					bubbles.color(color);
+					d3.select(this).call(bubbles);
+				})
 				.merge(bubbleGroup);
 
 			bubbleGroup.exit()

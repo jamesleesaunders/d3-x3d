@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.0.2";
+var version = "1.0.3";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -1079,11 +1079,11 @@ function componentbarsBubblesMulti () {
   */
 	function init(data) {
 		var dataSummary = dataTransform(data).summary();
-		var categoryNames = dataSummary.columnKeys;
+		var seriesNames = dataSummary.rowKeys;
 		var maxCoordinates = dataSummary.maxCoordinates;
 
 		// If the colorScale has not been passed then attempt to calculate.
-		colorScale = typeof colorScale === "undefined" ? d3.scaleOrdinal().domain(categoryNames).range(colors) : colorScale;
+		colorScale = typeof colorScale === "undefined" ? d3.scaleOrdinal().domain(seriesNames).range(colors) : colorScale;
 
 		// Calculate Scales.
 		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, width]) : xScale;
@@ -1110,7 +1110,11 @@ function componentbarsBubblesMulti () {
 			// Create Bar Groups
 			var bubbleGroup = selection.selectAll(".bubbleGroup").data(data);
 
-			bubbleGroup.enter().append("group").classed("bubbleGroup", true).call(bubbles).merge(bubbleGroup);
+			bubbleGroup.enter().append("group").classed("bubbleGroup", true).each(function (d) {
+				var color = colorScale(d.key);
+				bubbles.color(color);
+				d3.select(this).call(bubbles);
+			}).merge(bubbleGroup);
 
 			bubbleGroup.exit().remove();
 		});
@@ -1501,11 +1505,11 @@ function chartScatterPlot () {
   */
 	function init(data) {
 		var dataSummary = dataTransform(data).summary();
-		var categoryNames = dataSummary.columnKeys;
+		var seriesNames = dataSummary.rowKeys;
 		var maxCoordinates = dataSummary.maxCoordinates;
 
 		// If the colorScale has not been passed then attempt to calculate.
-		colorScale = typeof colorScale === "undefined" ? d3.scaleOrdinal().domain(categoryNames).range(colors) : colorScale;
+		colorScale = typeof colorScale === "undefined" ? d3.scaleOrdinal().domain(seriesNames).range(colors) : colorScale;
 
 		// Calculate Scales.
 		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, width]) : xScale;

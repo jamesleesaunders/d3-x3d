@@ -30,12 +30,12 @@ export default function() {
 	 */
 	function init(data) {
 		let dataSummary = dataTransform(data).summary();
-		let categoryNames = dataSummary.columnKeys;
+		let seriesNames = dataSummary.rowKeys;
 		let maxCoordinates = dataSummary.maxCoordinates;
 
 		// If the colorScale has not been passed then attempt to calculate.
 		colorScale = (typeof colorScale === "undefined") ?
-			d3.scaleOrdinal().domain(categoryNames).range(colors) :
+			d3.scaleOrdinal().domain(seriesNames).range(colors) :
 			colorScale;
 
 		// Calculate Scales.

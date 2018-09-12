@@ -3,10 +3,20 @@
 var countries = ["UK", "France", "Spain", "Germany", "Italy", "Portugal"];
 var fruit = ["Apples", "Oranges", "Pears", "Kiwis"];
 
+/**
+ * Random Number Generator between 1 and 10
+ *
+ * @returns {number}
+ */
 function randomNum() {
-	return Math.floor(Math.random() * 10);
+	return Math.floor(Math.random() * 10) + 1;
 }
 
+/**
+ * Random Dataset - Single Series
+ *
+ * @returns {{key: string, values: (Array|{key: string, value: number, x: number, y: number, z: number}[])}}
+ */
 function randomDataset1() {
 	var data = {
 		key: "Fruit",
@@ -24,6 +34,11 @@ function randomDataset1() {
 	return data;
 }
 
+/**
+ * Random Dataset - Multi Series
+ *
+ * @returns {Array|{key: string, values: (Array|{key: string, value: number, x: number, y: number, z: number}[])}[]}
+ */
 function randomDataset2() {
 	var data = countries.map(function(d) {
 		return {
@@ -43,6 +58,11 @@ function randomDataset2() {
 	return data;
 }
 
+/**
+ * Random Dataset - Single Series ScatterPlot
+ *
+ * @returns {{key: string, values: (Array|{key: string, value: number, x: number, y: number, z: number}[])}[]}
+ */
 function randomDataset3() {
 	var n = 100;
 	var data = {
@@ -60,6 +80,11 @@ function randomDataset3() {
 	return data;
 }
 
+/**
+ * Random Dataset - Surface Area
+ *
+ * @returns {*}
+ */
 function randomDataset4() {
 	var cx = 0.8;
 	var cy = 0.3;
