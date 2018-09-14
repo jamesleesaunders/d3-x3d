@@ -77,6 +77,7 @@ function randomDataset3() {
 		values: d3.range(n).map(function(d, i) {
 			return {
 				key: i,
+				value: randomNum(),
 				x: randomNum(),
 				y: randomNum(),
 				z: randomNum()

@@ -22,7 +22,7 @@ export default function() {
 	let xScale;
 	let yScale;
 	let zScale;
-	let colorScale;
+	let sizeScale;
 
 	/**
 	 * Initialise Data and Scales
@@ -31,6 +31,7 @@ export default function() {
 		let maxX = d3.max(data.values, function(d) { return +d.x; });
 		let maxY = d3.max(data.values, function(d) { return +d.y; });
 		let maxZ = d3.max(data.values, function(d) { return +d.z; });
+		let maxValue = d3.max(data.values, function(d) { return +d.value; });
 
 		// Calculate Scales.
 		xScale = (typeof xScale === "undefined") ?
@@ -44,6 +45,10 @@ export default function() {
 		zScale = (typeof zScale === "undefined") ?
 			d3.scaleLinear().domain([0, maxZ]).range([0, depth]) :
 			zScale;
+
+		sizeScale = (typeof sizeScale === "undefined") ?
+			d3.scaleLinear().domain([0, maxValue]).range([0.5, 3.0]) :
+			sizeScale;
 	}
 
 	/**
@@ -77,11 +82,11 @@ export default function() {
 			bubbles.append("shape")
 				.call(makeSolid, color)
 				.append("sphere")
-				.attr("radius", 0.6);
+				.attr("radius", function(d) { return sizeScale(d.value); });
 
 			bubbles
 				.append("transform")
-				.attr('translation', "0.8 0.8 0.8")
+				.attr('translation', "0.8 0.8 0.8") // FIXME: transation should be proportional to the sphere radius.
 				.append("billboard")
 				.attr('render', false)
 				.attr("axisOfRotation", "0 0 0")
@@ -138,9 +143,9 @@ export default function() {
 		return my;
 	};
 
-	my.colorScale = function(_) {
-		if (!arguments.length) return colorScale;
-		colorScale = _;
+	my.sizeScale = function(_) {
+		if (!arguments.length) return sizeScale;
+		sizeScale = _;
 		return my;
 	};
 

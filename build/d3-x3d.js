@@ -943,7 +943,7 @@ function componentBubbles () {
 	var xScale = void 0;
 	var yScale = void 0;
 	var zScale = void 0;
-	var colorScale = void 0;
+	var sizeScale = void 0;
 
 	/**
   * Initialise Data and Scales
@@ -958,6 +958,9 @@ function componentBubbles () {
 		var maxZ = d3.max(data.values, function (d) {
 			return +d.z;
 		});
+		var maxValue = d3.max(data.values, function (d) {
+			return +d.value;
+		});
 
 		// Calculate Scales.
 		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxX]).range([0, width]) : xScale;
@@ -965,6 +968,8 @@ function componentBubbles () {
 		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxY]).range([0, height]) : yScale;
 
 		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxZ]).range([0, depth]) : zScale;
+
+		sizeScale = typeof sizeScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0.5, 3.0]) : sizeScale;
 	}
 
 	/**
@@ -989,9 +994,12 @@ function componentBubbles () {
 				return xScale(d.x) + ' ' + yScale(d.y) + ' ' + zScale(d.z);
 			}).attr("onmouseover", "d3.select(this).select('billboard').attr('render', true);").attr("onmouseout", "d3.select(this).select('transform').select('billboard').attr('render', false);").merge(bubblesSelect);
 
-			bubbles.append("shape").call(makeSolid, color).append("sphere").attr("radius", 0.6);
+			bubbles.append("shape").call(makeSolid, color).append("sphere").attr("radius", function (d) {
+				return sizeScale(d.value);
+			});
 
-			bubbles.append("transform").attr('translation', "0.8 0.8 0.8").append("billboard").attr('render', false).attr("axisOfRotation", "0 0 0").append("shape").call(makeSolid, "blue").append("text").attr('class', "labelText").attr('string', function (d) {
+			bubbles.append("transform").attr('translation', "0.8 0.8 0.8") // FIXME: transation should be proportional to the sphere radius.
+			.append("billboard").attr('render', false).attr("axisOfRotation", "0 0 0").append("shape").call(makeSolid, "blue").append("text").attr('class', "labelText").attr('string', function (d) {
 				return d.key;
 			}).append("fontstyle").attr("size", 1).attr("family", "SANS").attr("style", "BOLD").attr("justify", "START").attr('render', false);
 		});
@@ -1036,9 +1044,9 @@ function componentBubbles () {
 		return my;
 	};
 
-	my.colorScale = function (_) {
-		if (!arguments.length) return colorScale;
-		colorScale = _;
+	my.sizeScale = function (_) {
+		if (!arguments.length) return sizeScale;
+		sizeScale = _;
 		return my;
 	};
 
