@@ -1,14 +1,15 @@
 # d3-x3d
 ## Contributing Guidelines
 
-**d3-x3d** is a library of reusable graphs and charts which use [D3](http://www.d3js.org/).
+**d3-x3d** makes it easy to quickly produce beautiful 3D data visualisations with minimal code.
 
 The `build/d3-x3d.js` and `build/d3-x3d.css` files are built from source files in the `src` directory.
 Do NOT edit the `build` files directly, but rather edit the `src` files and then run `make` or `npm test` to generate the `build` files.
 
 ## Code Styles
 
-To ensure **d3-x3d** code formatting is kept standard, IDE configuration files for PHPStorm and Atom can be found in the `config` directory. If contributing to **d3-x3d** please code formatting is maintained as per these standards.
+To ensure **d3-x3d** code formatting is kept standard, IDE configuration files for PHPStorm and Atom can be found in the `config` directory. 
+If contributing to **d3-x3d** please ensure code formatting is maintained as per these standards.
 
 * Atom Beautify Config
   * Copy `config/Atom_Beautify_Confg.json` to a file called `.jsbeautifyrc` in the project root.

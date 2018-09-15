@@ -1,7 +1,7 @@
 {
 	"name": "d3-x3d",
 	"version": "1.0.3",
-	"description": "D3 3D Chart Library",
+	"description": "D3 X3DOM Data Visualisation Library",
 	"license": "GPL-2.0",
 	"keywords": [
 		"d3",
@@ -11,7 +11,7 @@
 		"graph",
 		"data",
 		"x3dom",
-		"3d",
+		"3D",
 		"dataviz"
 	],
 	"homepage": "http://d3-ez.net",

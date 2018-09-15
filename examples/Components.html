@@ -36,8 +36,8 @@
     var scene1 = d3.select("#chartholder1")
       .append("x3d")
       .attr("id", "bubbles")
-      .attr("width", width + 'px')
-      .attr("height", height + 'px')
+      .attr("width", width + "px")
+      .attr("height", height + "px")
       .append("scene");
 
     // Add viewpoint
@@ -48,8 +48,8 @@
       .attr("set_bind", "true");
 
     // Add chart component
-    scene1.append('group')
-      .attr('class', 'chart')
+    scene1.append("group")
+      .attr("class", "chart")
       .datum(bubblesData)
       .call(bubblesComponent);
 
@@ -61,8 +61,8 @@
     var scene5 = d3.select("#chartholder2")
       .append("x3d")
       .attr("id", "bars")
-      .attr("width", width + 'px')
-      .attr("height", height + 'px')
+      .attr("width", width + "px")
+      .attr("height", height + "px")
       .append("scene");
 
     // Add viewpoint
@@ -73,8 +73,8 @@
       .attr("set_bind", "true");
 
     // Add chart component
-    scene5.append('group')
-      .attr('class', 'chart')
+    scene5.append("group")
+      .attr("class", "chart")
       .datum(bubblesMultiData)
       .call(bubblesMultiComponent);
 
@@ -86,8 +86,8 @@
     var scene2 = d3.select("#chartholder3")
       .append("x3d")
       .attr("id", "surface")
-      .attr("width", width + 'px')
-      .attr("height", height + 'px')
+      .attr("width", width + "px")
+      .attr("height", height + "px")
       .append("scene");
 
     // Add viewpoint
@@ -98,8 +98,8 @@
       .attr("set_bind", "true");
 
     // Add chart component
-    scene2.append('group')
-      .attr('class', 'chart')
+    scene2.append("group")
+      .attr("class", "chart")
       .datum(surfaceData)
       .call(surfaceComponent);
 
@@ -111,8 +111,8 @@
     var scene3 = d3.select("#chartholder4")
       .append("x3d")
       .attr("id", "bars")
-      .attr("width", width + 'px')
-      .attr("height", height + 'px')
+      .attr("width", width + "px")
+      .attr("height", height + "px")
       .append("scene");
 
     // Add viewpoint
@@ -123,8 +123,8 @@
       .attr("set_bind", "true");
 
     // Add chart component
-    scene3.append('group')
-      .attr('class', 'chart')
+    scene3.append("group")
+      .attr("class", "chart")
       .datum(barsMultiData)
       .call(barsMultiComponent);
 
@@ -141,8 +141,8 @@
     var scene4 = d3.select("#chartholder5")
       .append("x3d")
       .attr("id", "axis")
-      .attr("width", width + 'px')
-      .attr("height", height + 'px')
+      .attr("width", width + "px")
+      .attr("height", height + "px")
       .append("scene");
 
     // Add viewpoint
@@ -153,22 +153,22 @@
       .attr("set_bind", "true");
 
     // Add chart component
-    scene4.append('group')
-      .attr('class', 'chart')
+    scene4.append("group")
+      .attr("class", "chart")
       .call(axisMultiComponent);
 
     // ========== Sync Viewpoints ==========
     var viewpoints = document.querySelectorAll("viewpoint");
     document.onload = function() {
       viewpoints.forEach(function(viewpoint) {
-        viewpoint.addEventListener('viewpointChanged', syncViewpoints, false);
+        viewpoint.addEventListener("viewpointChanged", syncViewpoints, false);
       });
     };
 
     function syncViewpoints(e) {
       viewpoints.forEach(function(viewpoint) {
-        viewpoint.setFieldValue('orientation', x3dom.fields.Quaternion.axisAngle(e.orientation[0], e.orientation[1]));
-        viewpoint.setFieldValue('position', e.position);
+        viewpoint.setFieldValue("orientation", x3dom.fields.Quaternion.axisAngle(e.orientation[0], e.orientation[1]));
+        viewpoint.setFieldValue("position", e.position);
       });
 
     }

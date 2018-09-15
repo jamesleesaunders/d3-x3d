@@ -34,8 +34,8 @@
       .append("x3d")
       //.attr("showLog", "true")
       //.attr("showStat", "true")
-      .attr("width", width + 'px')
-      .attr("height", height + 'px')
+      .attr("width", width + "px")
+      .attr("height", height + "px")
       .append("scene");
 
     // Add viewpoint
@@ -46,8 +46,8 @@
       .attr("set_bind", "true");
 
     // Add chart component
-    scene.append('group')
-      .attr('class', 'chart')
+    scene.append("group")
+      .attr("class", "chart")
       .datum(data)
       .call(surfaceArea);
 
