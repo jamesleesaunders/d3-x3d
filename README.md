@@ -33,7 +33,7 @@ Add a chartholder `<div>` and `<script>` tags to your page `<body>`:
 
 Place the following code between the `<script>` section of your page:
 
-Declare the [chart component](#chart-components):
+Declare the [chart](#charts-and-components):
 ```javascript
 var myChart = d3.x3d.chart.barChart();
 ```
@@ -75,21 +75,29 @@ scene.append("group")
 	.call(myChart);
 ```
 
-### Chart Components
+### Charts and Components
 
-Charts:
-* d3.x3d.chart.barChart()
-* d3.x3d.chart.scatterPlot()
-* d3.x3d.chart.surfaceArea()
+**d3-x3d** have two levels component: `charts` and `components`:
 
-Components:
-* d3.x3d.component.axis()
-* d3.x3d.component.axisMulti()
-* d3.x3d.component.bars()
-* d3.x3d.component.barsMulti()
-* d3.x3d.component.bubbles()
-* d3.x3d.component.bubblesMulti()
-* d3.x3d.component.surface()
+`components` are the lower level building blocks which, when combined, can be used to build a chart. For example by combining the `bubbles` and `axis` components together we can create a scatter plot chart:
+
+| Component                       | Description   |
+| ------------------------------- | ------------- |
+| d3.x3d.component.axis()         |               |
+| d3.x3d.component.axisMulti()    |               |
+| d3.x3d.component.bars()         |               |
+| d3.x3d.component.barsMulti()    |               |
+| d3.x3d.component.bubbles()      |               |
+| d3.x3d.component.bubblesMulti() |               |
+| d3.x3d.component.surface()      |               |
+
+`charts` are higher level, pre-combned components, which makes it easier to quickly create a chart:
+
+| Component                       | Description   |
+| ------------------------------- | ------------- |
+| d3.x3d.chart.barChart()         |               |
+| d3.x3d.chart.scatterPlot()      |               | 
+| d3.x3d.chart.surfaceArea()      |               |
 
 ### Data Structure
 
