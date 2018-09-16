@@ -28,6 +28,7 @@
 
     // Construct chart component
     var barChart = d3.x3d.chart.barChart();
+    var viewpoint = d3.x3d.component.viewpoint();
 
     // Create scene
     var scene = d3.select("#chartholder")
@@ -38,19 +39,14 @@
       .attr("height", height + "px")
       .append("scene");
 
-    // Add viewpoint
-    scene.append("viewpoint")
-      .attr("position", viewPosition.join(" "))
-      .attr("orientation", viewOrientation.join(" "))
-      .attr("fieldOfView", fieldOfView)
-      .attr("set_bind", "true");
-
     // Add chart component
     scene.append("group")
       .attr("class", "chart")
       .datum(data)
       .call(barChart);
 
+    // Add viewpoint
+    scene.call(viewpoint);
 
   </script>
 </body>

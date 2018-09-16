@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.0.3";
+var version = "1.0.4";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -565,7 +565,7 @@ function componentAxis () {
  * Reusable 3D Multi Plane Axis
  *
  */
-function componentbarsAxisMulti () {
+function componentAxisMulti () {
 
 	/**
   * Default Properties
@@ -803,7 +803,7 @@ function componentBars () {
  * Reusable 3D Multi Series Bar Chart
  *
  */
-function componentbarsBarsMulti () {
+function componentBarsMulti () {
 
 	/**
   * Default Properties
@@ -1063,7 +1063,7 @@ function componentBubbles () {
  * Reusable 3D Multi Series Bubble Chart
  *
  */
-function componentbarsBubblesMulti () {
+function componentBubblesMulti () {
 
 	/**
   * Default Properties
@@ -1186,7 +1186,7 @@ function componentbarsBubblesMulti () {
  * Reusable 3D Surface Area
  *
  */
-function componentbarsSurface () {
+function componentSurface () {
 
 	/**
   * Default Properties
@@ -1352,14 +1352,59 @@ function componentbarsSurface () {
 	return my;
 }
 
+/**
+ * Viewpoint
+ *
+ */
+function componentViewpoint () {
+
+	/**
+  * Default Properties
+  */
+	var viewPosition = [80.0, 15.0, 80.0];
+	var viewOrientation = [0.0, 1.0, 0.0, 0.8];
+	var fieldOfView = 0.8;
+
+	/**
+  * Constructor
+  */
+	function my(selection) {
+		selection.append("viewpoint").attr("position", viewPosition.join(" ")).attr("orientation", viewOrientation.join(" ")).attr("fieldOfView", fieldOfView).attr("set_bind", "true");
+	}
+
+	/**
+  * Configuration Getters & Setters
+  */
+	my.viewPosition = function (_) {
+		if (!arguments.length) return viewPosition;
+		viewPosition = _;
+		return my;
+	};
+
+	my.viewOrientation = function (_) {
+		if (!arguments.length) return viewOrientation;
+		viewOrientation = _;
+		return my;
+	};
+
+	my.fieldOfView = function (_) {
+		if (!arguments.length) return fieldOfView;
+		fieldOfView = _;
+		return my;
+	};
+
+	return my;
+}
+
 var component = {
 	axis: componentAxis,
-	axisMulti: componentbarsAxisMulti,
+	axisMulti: componentAxisMulti,
 	bars: componentBars,
-	barsMulti: componentbarsBarsMulti,
+	barsMulti: componentBarsMulti,
 	bubbles: componentBubbles,
-	bubblesMulti: componentbarsBubblesMulti,
-	surface: componentbarsSurface
+	bubblesMulti: componentBubblesMulti,
+	surface: componentSurface,
+	viewpoint: componentViewpoint
 };
 
 /**
