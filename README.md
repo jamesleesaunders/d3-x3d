@@ -111,8 +111,14 @@ The `chart` modules are higher level, pre-combined components, making it even si
 | Function                        | Description                     |
 | ------------------------------- | ------------------------------- |
 | d3.x3d.chart.barChart()         | Bar Chart & Axis                |
-| d3.x3d.chart.scatterPlot()      | Scatter Plot & Axis             | 
+| d3.x3d.chart.scatterPlot()      | Scatter Plot & Axis             |
 | d3.x3d.chart.surfaceArea()      | Surface Area & Axis             |
+
+### Examples
+* [BarChart.html](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/BarChart.html)
+* [ScatterPlot.html](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/ScatterPlot.html)
+* [SurfaceArea.html](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/SurfaceArea.html)
+* [Components.html](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
 
 ### Data Structures
 
