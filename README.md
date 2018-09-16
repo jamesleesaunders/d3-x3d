@@ -11,7 +11,7 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 
 ### Getting Started
 
-Include D3.js, X3DOM and d3-x3d script and style files in the `<head>` section of your page:
+Include D3.js, X3DOM and d3-x3d js and css files in the `<head>` section of your page:
 
 ```html
 <head>
@@ -20,10 +20,10 @@ Include D3.js, X3DOM and d3-x3d script and style files in the `<head>` section o
    <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
    <script src="d3-x3d.js"></script>
 </head>
-
 ```
 
 Add a chartholder `<div>` and `<script>` tags to your page `<body>`:
+
 ```html
 <body>
    <div id="chartholder"></div>
@@ -31,27 +31,41 @@ Add a chartholder `<div>` and `<script>` tags to your page `<body>`:
 </body>
 ```
 
-Place the following code between the `<script>` section of your page:
+Place the following code between the `<script>` tags of your page:
 
-Declare the [chart](#charts-and-components):
+Declare the [chart component](#components-and-charts):
+
 ```javascript
 var myChart = d3.x3d.chart.barChart();
 ```
 
 Generate some [data](#data-structure):
+
 ```javascript
-var myData = {
-	"key": "Fruit",
-	"values": [
-		{"key": "Apples", "value": 9},
-		{"key": "Oranges", "value": 3},
-		{"key": "Grapes", "value": 5},
-		{"key": "Bananas", "value": 7}
-	]
-};
+var myData = [
+	{
+		key: "UK",
+		values: [
+			{ key: "Apples", value: 9 },
+			{ key: "Oranges", value: 3 },
+			{ key: "Grapes", value: 5 },
+			{ key: "Bananas", value: 7 }
+		]
+	},
+	{
+		key: "France",
+		values: [
+			{ key: "Apples", value: 5 },
+			{ key: "Oranges", value: 4 },
+			{ key: "Grapes", value: 6 },
+			{ key: "Bananas", value: 2 }
+		]
+	}
+];
 ```
 
 Attach `x3d`, `scene` and `viewpoint` to the chartholder div:
+
 ```javascript
 var x3d = d3.select("#chartholder")
 	.append("x3d")
@@ -68,6 +82,7 @@ scene.append("viewpoint")
 ```
 
 Attach data and chart to scene:
+
 ```javascript
 scene.append("group")
 	.attr("class", "chart")
@@ -75,36 +90,85 @@ scene.append("group")
 	.call(myChart);
 ```
 
-### Charts and Components
+### Components and Charts
 
-**d3-x3d** have two levels component: `charts` and `components`:
+**d3-x3d** has two types of components: `chart` and `component`.
 
-`components` are the lower level building blocks which, when combined, can be used to build a chart. For example by combining the `bubbles` and `axis` components together we can create a scatter plot chart:
+The `component` modules are lower level building blocks which can be used independently or combined to build more advanced charts. For example combining the `bubbles()` and `axis()` components together we create the `scatterPlot()` chart:
 
-| Component                       | Description   |
-| ------------------------------- | ------------- |
-| d3.x3d.component.axis()         |               |
-| d3.x3d.component.axisMulti()    |               |
-| d3.x3d.component.bars()         |               |
-| d3.x3d.component.barsMulti()    |               |
-| d3.x3d.component.bubbles()      |               |
-| d3.x3d.component.bubblesMulti() |               |
-| d3.x3d.component.surface()      |               |
+| Function                        | Description                     |
+| ------------------------------- | ------------------------------- |
+| d3.x3d.component.axis()         | Single plane x/y Axis           |
+| d3.x3d.component.axisMulti()    | Multi plane x/y/z Axis          |
+| d3.x3d.component.bars()         | Single series Bar Chart         |
+| d3.x3d.component.barsMulti()    | Multi Series Bar Chart          |
+| d3.x3d.component.bubbles()      | Bubble / Scatter Plot           |
+| d3.x3d.component.bubblesMulti() | Multi Series Bubbles / Scatter  |
+| d3.x3d.component.surface()      | Surface Area                    |
 
-`charts` are higher level, pre-combned components, which makes it easier to quickly create a chart:
+The `chart` modules are higher level, pre-combined components, making it even simpler to quickly create charts. All the charts typically include an axis and one or more of the other components above.
 
-| Component                       | Description   |
-| ------------------------------- | ------------- |
-| d3.x3d.chart.barChart()         |               |
-| d3.x3d.chart.scatterPlot()      |               | 
-| d3.x3d.chart.surfaceArea()      |               |
+| Function                        | Description                     |
+| ------------------------------- | ------------------------------- |
+| d3.x3d.chart.barChart()         | Bar Chart & Axis                |
+| d3.x3d.chart.scatterPlot()      | Scatter Plot & Axis             | 
+| d3.x3d.chart.surfaceArea()      | Surface Area & Axis             |
 
-### Data Structure
+### Data Structures
 
-The format of the d3-x3d data must be in key / value pairs.
+At its most basic description, the format of the d3-x3d data is a series of key / value pairs. Depending on whether the chart is a single series or multi series chart the data structure differs slightly.
+
+#### Single Series Data
+Used by charts such as a single series bar chart, the data structure is an object with the following structure:
+* `key` {string} - The series name.
+* `values` {array} - An array of objects containing:
+  * `key` {string} - The value name.
+  * `value` {number} - The value.
+  * `x` {number} - \*X axis value.
+  * `y` {number} - \*Y axis value.
+  * `z` {number} - \*Z axis value.
+	
+_\*optional, `x`, `y` & `z` values are used for cartesian coordinate graphs such as scatter plot._
+
+```javascript
+var myData = {
+	key: "Fruit",
+	values: [
+		{ key: "Apples", value: 9, x: 1, y: 2, z: 5 },
+		// ...
+		{ key: "Oranges", value: 7, x: 6, y: 3, z: 8 }
+	]
+};
+```
+
+#### Multi Series Data 
+Used for charts such as the multi series scatter plot, the data structure is simply an array the single series objects described above.
+
+```javascript
+var myData = [
+	{
+		key: "UK",
+		values: [
+			{ key: "Apples", value: 9 },
+			...
+			{ key: "Oranges", value: 7 }
+		]
+	},
+	// ...
+	{
+		key: "France",
+		values: [
+			{ key: "Apples", value: 5 },
+			...
+			{ key: "Oranges", value: 2 }
+		]
+	}
+];
+```
 
 ### Credits
 
-* Fabian Dubois <http://bl.ocks.org/fabid/61cbfe14de686cc25c47/>
-* Fabian Dubois <https://github.com/fabid/d3-x3dom-shape>
-* David Sankel <http://bl.ocks.org/camio/5087116>
+* Fabian Dubois - 3D Axis <http://bl.ocks.org/fabid/61cbfe14de686cc25c47/>
+* Fabian Dubois - Surface Area <https://github.com/fabid/d3-x3dom-shape>
+* Fabian Dubois - Scatter Plot <http://bl.ocks.org/fabid/acb5dc4961ffa741b52b>
+* David Sankel - Bar Chart <http://bl.ocks.org/camio/5087116>
