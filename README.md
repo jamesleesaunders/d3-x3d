@@ -9,6 +9,13 @@ Combining the power the [D3.js](http://www.d3js.org/) data-driven documents visu
 
 Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), **d3-x3d** is built on a foundation of building blocks, called components, which can be combined to create a variety of different data visualisations.
 
+### Examples
+
+* [Bar Chart](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/BarChart.html)
+* [Scatter Plot](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/ScatterPlot.html)
+* [Surface Area](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/SurfaceArea.html)
+* [Components Showcase](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
+
 ### Getting Started
 
 Include D3.js, X3DOM and d3-x3d js and css files in the `<head>` section of your page:
@@ -33,10 +40,15 @@ Add a chartholder `<div>` and `<script>` tags to your page `<body>`:
 
 Place the following code between the `<script>` tags of your page:
 
-Declare the [chart component](#components-and-charts):
+Attach `x3d` and `scene` to the chartholder div:
 
 ```javascript
-var myChart = d3.x3d.chart.barChart();
+var x3d = d3.select("#chartholder")
+	.append("x3d")
+	.attr("width", "500px")
+	.attr("height", "500px");
+
+var scene = x3d.append("scene");
 ```
 
 Generate some [data](#data-structure):
@@ -64,30 +76,16 @@ var myData = [
 ];
 ```
 
-Attach `x3d`, `scene` and `viewpoint` to the chartholder div:
+Declare the [chart component](#components-and-charts):
 
 ```javascript
-var x3d = d3.select("#chartholder")
-	.append("x3d")
-	.attr("width", "500px")
-	.attr("height", "500px");
-
-var scene = x3d.append("scene");
-
-scene.append("viewpoint")
-	.attr("position", "80.0 15.0 80.0")
-	.attr("orientation", "0.0 1.0 0.0 0.8")
-	.attr("fieldOfView", "0.8")
-	.attr("set_bind", "true");
+var myChart = d3.x3d.chart.barChart();
 ```
 
 Attach data and chart to scene:
 
 ```javascript
-scene.append("group")
-	.attr("class", "chart")
-	.datum(myData)
-	.call(myChart);
+scene.datum(myData).call(myChart);
 ```
 
 ### Components and Charts
@@ -105,6 +103,7 @@ The `component` modules are lower level building blocks which can be used indepe
 | d3.x3d.component.bubbles()      | Bubble / Scatter Plot           |
 | d3.x3d.component.bubblesMulti() | Multi Series Bubbles / Scatter  |
 | d3.x3d.component.surface()      | Surface Area                    |
+| d3.x3d.component.viewpoint()    | Viewpoint camera                |
 
 The `chart` modules are higher level, pre-combined components, making it even simpler to quickly create charts. All the charts typically include an axis and one or more of the other components above.
 
@@ -113,12 +112,6 @@ The `chart` modules are higher level, pre-combined components, making it even si
 | d3.x3d.chart.barChart()         | Bar Chart & Axis                |
 | d3.x3d.chart.scatterPlot()      | Scatter Plot & Axis             |
 | d3.x3d.chart.surfaceArea()      | Surface Area & Axis             |
-
-### Examples
-* [BarChart.html](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/BarChart.html)
-* [ScatterPlot.html](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/ScatterPlot.html)
-* [SurfaceArea.html](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/SurfaceArea.html)
-* [Components.html](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
 
 ### Data Structures
 
@@ -156,7 +149,7 @@ var myData = [
 		key: "UK",
 		values: [
 			{ key: "Apples", value: 9 },
-			...
+			// ...
 			{ key: "Oranges", value: 7 }
 		]
 	},
@@ -165,7 +158,7 @@ var myData = [
 		key: "France",
 		values: [
 			{ key: "Apples", value: 5 },
-			...
+			// ...
 			{ key: "Oranges", value: 2 }
 		]
 	}
@@ -174,7 +167,5 @@ var myData = [
 
 ### Credits
 
-* Fabian Dubois - 3D Axis <http://bl.ocks.org/fabid/61cbfe14de686cc25c47/>
-* Fabian Dubois - Surface Area <https://github.com/fabid/d3-x3dom-shape>
-* Fabian Dubois - Scatter Plot <http://bl.ocks.org/fabid/acb5dc4961ffa741b52b>
-* David Sankel - Bar Chart <http://bl.ocks.org/camio/5087116>
+* Fabian Dubois - For the original [3D Axis](http://bl.ocks.org/fabid/61cbfe14de686cc25c47/), [Surface Area](https://github.com/fabid/d3-x3dom-shape) and [Scatter Plot](http://bl.ocks.org/fabid/acb5dc4961ffa741b52b).
+* David Sankel - For the original [Bar Chart](http://bl.ocks.org/camio/5087116).

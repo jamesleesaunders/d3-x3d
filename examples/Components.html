@@ -22,11 +22,7 @@
     var width = 300;
     var height = 300;
 
-    // Viewpoint parameters
-    var viewPosition = [80.0, 15.0, 80.0];
-    var viewOrientation = [0.0, 1.0, 0.0, 0.8];
-    var fieldOfView = 0.8;
-
+    var viewpoint = d3.x3d.component.viewpoint();
 
     // ========== Bubbles Component ==========
     var bubblesData = randomDataset3();
@@ -40,15 +36,9 @@
       .attr("height", height + "px")
       .append("scene");
 
-    // Add viewpoint
-    scene1.append("viewpoint")
-      .attr("position", viewPosition.join(" "))
-      .attr("orientation", viewOrientation.join(" "))
-      .attr("fieldOfView", fieldOfView)
-      .attr("set_bind", "true");
-
     // Add chart component
-    scene1.append("group")
+    scene1.call(viewpoint)
+      .append("group")
       .attr("class", "chart")
       .datum(bubblesData)
       .call(bubblesComponent);
@@ -58,22 +48,16 @@
     var bubblesMultiComponent = d3.x3d.component.bubblesMulti();
 
     // Create scene
-    var scene5 = d3.select("#chartholder2")
+    var scene2 = d3.select("#chartholder2")
       .append("x3d")
       .attr("id", "bars")
       .attr("width", width + "px")
       .attr("height", height + "px")
       .append("scene");
 
-    // Add viewpoint
-    scene5.append("viewpoint")
-      .attr("position", viewPosition.join(" "))
-      .attr("orientation", viewOrientation.join(" "))
-      .attr("fieldOfView", fieldOfView)
-      .attr("set_bind", "true");
-
     // Add chart component
-    scene5.append("group")
+    scene2.call(viewpoint)
+      .append("group")
       .attr("class", "chart")
       .datum(bubblesMultiData)
       .call(bubblesMultiComponent);
@@ -83,22 +67,16 @@
     var surfaceComponent = d3.x3d.component.surface();
 
     // Create scene
-    var scene2 = d3.select("#chartholder3")
+    var scene3 = d3.select("#chartholder3")
       .append("x3d")
       .attr("id", "surface")
       .attr("width", width + "px")
       .attr("height", height + "px")
       .append("scene");
 
-    // Add viewpoint
-    scene2.append("viewpoint")
-      .attr("position", viewPosition.join(" "))
-      .attr("orientation", viewOrientation.join(" "))
-      .attr("fieldOfView", fieldOfView)
-      .attr("set_bind", "true");
-
     // Add chart component
-    scene2.append("group")
+    scene3.call(viewpoint)
+      .append("group")
       .attr("class", "chart")
       .datum(surfaceData)
       .call(surfaceComponent);
@@ -108,22 +86,16 @@
     var barsMultiComponent = d3.x3d.component.barsMulti();
 
     // Create scene
-    var scene3 = d3.select("#chartholder4")
+    var scene4 = d3.select("#chartholder4")
       .append("x3d")
       .attr("id", "bars")
       .attr("width", width + "px")
       .attr("height", height + "px")
       .append("scene");
 
-    // Add viewpoint
-    scene3.append("viewpoint")
-      .attr("position", viewPosition.join(" "))
-      .attr("orientation", viewOrientation.join(" "))
-      .attr("fieldOfView", fieldOfView)
-      .attr("set_bind", "true");
-
     // Add chart component
-    scene3.append("group")
+    scene4.call(viewpoint)
+      .append("group")
       .attr("class", "chart")
       .datum(barsMultiData)
       .call(barsMultiComponent);
@@ -138,22 +110,16 @@
       .zScale(zScale);
 
     // Create scene
-    var scene4 = d3.select("#chartholder5")
+    var scene5 = d3.select("#chartholder5")
       .append("x3d")
       .attr("id", "axis")
       .attr("width", width + "px")
       .attr("height", height + "px")
       .append("scene");
 
-    // Add viewpoint
-    scene4.append("viewpoint")
-      .attr("position", viewPosition.join(" "))
-      .attr("orientation", viewOrientation.join(" "))
-      .attr("fieldOfView", fieldOfView)
-      .attr("set_bind", "true");
-
     // Add chart component
-    scene4.append("group")
+    scene5.call(viewpoint)
+      .append("group")
       .attr("class", "chart")
       .call(axisMultiComponent);
 

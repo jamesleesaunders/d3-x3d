@@ -1,17 +1,19 @@
-import { default as componentbarsAxis } from "./component/axis";
-import { default as componentbarsAxisMulti } from "./component/axisMulti";
-import { default as componentbarsBars } from "./component/bars";
-import { default as componentbarsBarsMulti } from "./component/barsMulti";
-import { default as componentbarsBubbles } from "./component/bubbles";
-import { default as componentbarsBubblesMulti } from "./component/bubblesMulti";
-import { default as componentbarsSurface } from "./component/surface";
+import { default as componentAxis } from "./component/axis";
+import { default as componentAxisMulti } from "./component/axisMulti";
+import { default as componentBars } from "./component/bars";
+import { default as componentBarsMulti } from "./component/barsMulti";
+import { default as componentBubbles } from "./component/bubbles";
+import { default as componentBubblesMulti } from "./component/bubblesMulti";
+import { default as componentSurface } from "./component/surface";
+import { default as componentViewpoint } from "./component/viewpoint";
 
 export default {
-	axis: componentbarsAxis,
-	axisMulti: componentbarsAxisMulti,
-	bars: componentbarsBars,
-	barsMulti: componentbarsBarsMulti,
-	bubbles: componentbarsBubbles,
-	bubblesMulti: componentbarsBubblesMulti,
-	surface: componentbarsSurface
+	axis: componentAxis,
+	axisMulti: componentAxisMulti,
+	bars: componentBars,
+	barsMulti: componentBarsMulti,
+	bubbles: componentBubbles,
+	bubblesMulti: componentBubblesMulti,
+	surface: componentSurface,
+	viewpoint: componentViewpoint
 };

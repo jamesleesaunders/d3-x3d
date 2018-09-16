@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.0.3";
+var version = "1.0.4";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -565,7 +565,7 @@ function componentAxis () {
  * Reusable 3D Multi Plane Axis
  *
  */
-function componentbarsAxisMulti () {
+function componentAxisMulti () {
 
 	/**
   * Default Properties
@@ -803,7 +803,7 @@ function componentBars () {
  * Reusable 3D Multi Series Bar Chart
  *
  */
-function componentbarsBarsMulti () {
+function componentBarsMulti () {
 
 	/**
   * Default Properties
@@ -1063,7 +1063,7 @@ function componentBubbles () {
  * Reusable 3D Multi Series Bubble Chart
  *
  */
-function componentbarsBubblesMulti () {
+function componentBubblesMulti () {
 
 	/**
   * Default Properties
@@ -1186,7 +1186,7 @@ function componentbarsBubblesMulti () {
  * Reusable 3D Surface Area
  *
  */
-function componentbarsSurface () {
+function componentSurface () {
 
 	/**
   * Default Properties
@@ -1352,14 +1352,59 @@ function componentbarsSurface () {
 	return my;
 }
 
+/**
+ * Viewpoint
+ *
+ */
+function componentViewpoint () {
+
+	/**
+  * Default Properties
+  */
+	var viewPosition = [80.0, 15.0, 80.0];
+	var viewOrientation = [0.0, 1.0, 0.0, 0.8];
+	var fieldOfView = 0.8;
+
+	/**
+  * Constructor
+  */
+	function my(selection) {
+		selection.append("viewpoint").attr("position", viewPosition.join(" ")).attr("orientation", viewOrientation.join(" ")).attr("fieldOfView", fieldOfView).attr("set_bind", "true");
+	}
+
+	/**
+  * Configuration Getters & Setters
+  */
+	my.viewPosition = function (_) {
+		if (!arguments.length) return viewPosition;
+		viewPosition = _;
+		return my;
+	};
+
+	my.viewOrientation = function (_) {
+		if (!arguments.length) return viewOrientation;
+		viewOrientation = _;
+		return my;
+	};
+
+	my.fieldOfView = function (_) {
+		if (!arguments.length) return fieldOfView;
+		fieldOfView = _;
+		return my;
+	};
+
+	return my;
+}
+
 var component = {
 	axis: componentAxis,
-	axisMulti: componentbarsAxisMulti,
+	axisMulti: componentAxisMulti,
 	bars: componentBars,
-	barsMulti: componentbarsBarsMulti,
+	barsMulti: componentBarsMulti,
 	bubbles: componentBubbles,
-	bubblesMulti: componentbarsBubblesMulti,
-	surface: componentbarsSurface
+	bubblesMulti: componentBubblesMulti,
+	surface: componentSurface,
+	viewpoint: componentViewpoint
 };
 
 /**
@@ -1408,15 +1453,18 @@ function chartBarChart () {
 	/**
   * Constructor
   */
-	function my(selection) {
+	function my(scene) {
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "chart"];
-		selection.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
 
-		selection.each(function (data) {
+		var viewpoint = d3.x3d.component.viewpoint();
+		scene.call(viewpoint);
+
+		scene.each(function (data) {
 			init(data);
 
 			// Construct Axis Component
@@ -1425,9 +1473,9 @@ function chartBarChart () {
 			// Construct Bars Component
 			var chart = component.barsMulti().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
 
-			selection.select(".axis").call(axis);
+			scene.select(".axis").call(axis);
 
-			selection.select(".chart").datum(data).call(chart);
+			scene.select(".chart").datum(data).call(chart);
 		});
 	}
 
@@ -1530,15 +1578,18 @@ function chartScatterPlot () {
 	/**
   * Constructor
   */
-	function my(selection) {
+	function my(scene) {
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "chart"];
-		selection.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
 
-		selection.each(function (data) {
+		var viewpoint = d3.x3d.component.viewpoint();
+		scene.call(viewpoint);
+
+		scene.each(function (data) {
 			init(data);
 
 			// Construct Axis Component
@@ -1547,9 +1598,9 @@ function chartScatterPlot () {
 			// Construct Bubbles Component
 			var chart = component.bubblesMulti().xScale(xScale).yScale(yScale).zScale(zScale).colorScale(colorScale);
 
-			selection.select(".axis").call(axis);
+			scene.select(".axis").call(axis);
 
-			selection.select(".chart").datum(data).call(chart);
+			scene.select(".chart").datum(data).call(chart);
 		});
 	}
 
@@ -1661,15 +1712,18 @@ function chartSurfaceArea () {
 	/**
   * Constructor
   */
-	function my(selection) {
+	function my(scene) {
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "chart"];
-		selection.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
 
-		selection.each(function (data) {
+		var viewpoint = d3.x3d.component.viewpoint();
+		scene.call(viewpoint);
+
+		scene.each(function (data) {
 			init(data);
 
 			// Construct Axis Component
@@ -1678,9 +1732,9 @@ function chartSurfaceArea () {
 			// Construct Surface Component
 			var chart = component.surface().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
 
-			selection.select(".axis").call(axis);
+			scene.select(".axis").call(axis);
 
-			selection.select(".chart").datum(data).call(chart);
+			scene.select(".chart").datum(data).call(chart);
 		});
 	}
 
