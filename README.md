@@ -40,10 +40,15 @@ Add a chartholder `<div>` and `<script>` tags to your page `<body>`:
 
 Place the following code between the `<script>` tags of your page:
 
-Declare the [chart component](#components-and-charts):
+Attach `x3d` and `scene` to the chartholder div:
 
 ```javascript
-var myChart = d3.x3d.chart.barChart();
+var x3d = d3.select("#chartholder")
+	.append("x3d")
+	.attr("width", "500px")
+	.attr("height", "500px");
+
+var scene = x3d.append("scene");
 ```
 
 Generate some [data](#data-structure):
@@ -71,30 +76,16 @@ var myData = [
 ];
 ```
 
-Attach `x3d`, `scene` and `viewpoint` to the chartholder div:
+Declare the [chart component](#components-and-charts):
 
 ```javascript
-var x3d = d3.select("#chartholder")
-	.append("x3d")
-	.attr("width", "500px")
-	.attr("height", "500px");
-
-var scene = x3d.append("scene");
-
-scene.append("viewpoint")
-	.attr("position", "80.0 15.0 80.0")
-	.attr("orientation", "0.0 1.0 0.0 0.8")
-	.attr("fieldOfView", "0.8")
-	.attr("set_bind", "true");
+var myChart = d3.x3d.chart.barChart();
 ```
 
 Attach data and chart to scene:
 
 ```javascript
-scene.append("group")
-	.attr("class", "chart")
-	.datum(myData)
-	.call(myChart);
+scene.datum(myData).call(myChart);
 ```
 
 ### Components and Charts
@@ -112,6 +103,7 @@ The `component` modules are lower level building blocks which can be used indepe
 | d3.x3d.component.bubbles()      | Bubble / Scatter Plot           |
 | d3.x3d.component.bubblesMulti() | Multi Series Bubbles / Scatter  |
 | d3.x3d.component.surface()      | Surface Area                    |
+| d3.x3d.component.viewpoint()    | Viewpoint camera                |
 
 The `chart` modules are higher level, pre-combined components, making it even simpler to quickly create charts. All the charts typically include an axis and one or more of the other components above.
 
