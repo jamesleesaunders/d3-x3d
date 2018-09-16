@@ -55,18 +55,21 @@ export default function() {
 	/**
 	 * Constructor
 	 */
-	function my(selection) {
+	function my(scene) {
 
 		// Update the chart dimensions and add layer groups
 		let layers = ["axis", "chart"];
-		selection.classed(classed, true)
+		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
 			.enter()
 			.append("group")
 			.attr("class", function(d) { return d; });
 
-		selection.each(function(data) {
+		let viewpoint = d3.x3d.component.viewpoint();
+		scene.call(viewpoint);
+
+		scene.each(function(data) {
 			init(data);
 
 			// Construct Axis Component
@@ -82,10 +85,10 @@ export default function() {
 				.zScale(zScale)
 				.colorScale(colorScale);
 
-			selection.select(".axis")
+			scene.select(".axis")
 				.call(axis);
 
-			selection.select(".chart")
+			scene.select(".chart")
 				.datum(data)
 				.call(chart);
 		});

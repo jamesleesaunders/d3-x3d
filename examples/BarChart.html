@@ -32,13 +32,9 @@
 
     // Construct chart component
     var myChart = d3.x3d.chart.barChart();
-    var viewpoint = d3.x3d.component.viewpoint();
 
     // Add chart component
     scene.datum(myData).call(myChart);
-
-    // Add viewpoint
-    scene.call(viewpoint);
 
   </script>
 </body>
