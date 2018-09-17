@@ -11,11 +11,14 @@ export default function() {
 	/**
 	 * Default Properties
 	 */
+	var chartW = 500;
+	var chartH = 500;
 	let width = 40.0;
 	let height = 40.0;
 	let depth = 40.0;
 	let colors = ["blue", "red"];
 	let classed = "x3dSurfaceArea";
+	let debug = false;
 
 	/**
 	 * Scales
@@ -56,7 +59,16 @@ export default function() {
 	/**
 	 * Constructor
 	 */
-	function my(scene) {
+	function my(selection) {
+		let x3d = selection.append("x3d")
+			.attr("width", chartW + "px")
+			.attr("height", chartH + "px");
+
+		if (debug) {
+			x3d.attr("showLog", "true").attr("showStat", "true")
+		}
+
+		let scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
 		let layers = ["axis", "chart"];
@@ -143,6 +155,12 @@ export default function() {
 	my.colors = function(_) {
 		if (!arguments.length) return colors;
 		colors = _;
+		return my;
+	};
+
+	my.debug = function(_) {
+		if (!arguments.length) return debug;
+		debug = _;
 		return my;
 	};
 

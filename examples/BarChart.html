@@ -14,27 +14,17 @@
   <div id="chartholder"></div>
 
   <script>
-    // Generate Data
+    // Select chart holder
+    var chartHolder = d3.select("#chartholder");
+
+    // Generate data
     var myData = randomDataset2();
 
-    // Chart dimensions
-    var width = 500;
-    var height = 500;
-
-    // Create scene
-    var scene = d3.select("#chartholder")
-      .append("x3d")
-      .attr("width", width + "px")
-      .attr("height", height + "px")
-      //.attr("showLog", "true")
-      //.attr("showStat", "true")
-      .append("scene");
-
-    // Construct chart component
+    // Construct chart
     var myChart = d3.x3d.chart.barChart();
 
-    // Add chart component
-    scene.datum(myData).call(myChart);
+    // Add chart and data to holder
+    chartHolder.datum(myData).call(myChart);
 
   </script>
 </body>

@@ -1416,11 +1416,14 @@ function chartBarChart () {
 	/**
   * Default Properties
   */
+	var chartW = 500;
+	var chartH = 500;
 	var width = 40.0;
 	var height = 40.0;
 	var depth = 40.0;
 	var colors = ["orange", "red", "yellow", "steelblue", "green"];
 	var classed = "x3dBarChart";
+	var debug = false;
 
 	/**
   * Scales
@@ -1453,7 +1456,14 @@ function chartBarChart () {
 	/**
   * Constructor
   */
-	function my(scene) {
+	function my(selection) {
+		var x3d = selection.append("x3d").attr("width", chartW + "px").attr("height", chartH + "px");
+
+		if (debug) {
+			x3d.attr("showLog", "true").attr("showStat", "true");
+		}
+
+		var scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "chart"];
@@ -1530,6 +1540,12 @@ function chartBarChart () {
 		return my;
 	};
 
+	my.debug = function (_) {
+		if (!arguments.length) return debug;
+		debug = _;
+		return my;
+	};
+
 	return my;
 }
 
@@ -1542,11 +1558,14 @@ function chartScatterPlot () {
 	/**
   * Default Properties
   */
+	var chartW = 500;
+	var chartH = 500;
 	var width = 40.0;
 	var height = 40.0;
 	var depth = 40.0;
 	var colors = ["orange", "red", "yellow", "steelblue", "green"];
 	var classed = "x3dScatterPlot";
+	var debug = false;
 
 	/**
   * Scales
@@ -1578,7 +1597,14 @@ function chartScatterPlot () {
 	/**
   * Constructor
   */
-	function my(scene) {
+	function my(selection) {
+		var x3d = selection.append("x3d").attr("width", chartW + "px").attr("height", chartH + "px");
+
+		if (debug) {
+			x3d.attr("showLog", "true").attr("showStat", "true");
+		}
+
+		var scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "chart"];
@@ -1655,6 +1681,12 @@ function chartScatterPlot () {
 		return my;
 	};
 
+	my.debug = function (_) {
+		if (!arguments.length) return debug;
+		debug = _;
+		return my;
+	};
+
 	return my;
 }
 
@@ -1667,11 +1699,14 @@ function chartSurfaceArea () {
 	/**
   * Default Properties
   */
+	var chartW = 500;
+	var chartH = 500;
 	var width = 40.0;
 	var height = 40.0;
 	var depth = 40.0;
 	var colors = ["blue", "red"];
 	var classed = "x3dSurfaceArea";
+	var debug = false;
 
 	/**
   * Scales
@@ -1712,7 +1747,14 @@ function chartSurfaceArea () {
 	/**
   * Constructor
   */
-	function my(scene) {
+	function my(selection) {
+		var x3d = selection.append("x3d").attr("width", chartW + "px").attr("height", chartH + "px");
+
+		if (debug) {
+			x3d.attr("showLog", "true").attr("showStat", "true");
+		}
+
+		var scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "chart"];
@@ -1786,6 +1828,12 @@ function chartSurfaceArea () {
 	my.colors = function (_) {
 		if (!arguments.length) return colors;
 		colors = _;
+		return my;
+	};
+
+	my.debug = function (_) {
+		if (!arguments.length) return debug;
+		debug = _;
 		return my;
 	};
 
