@@ -10,8 +10,7 @@ export default function() {
 	/**
 	 * Default Properties
 	 */
-	let width = 40.0;
-	let height = 40.0;
+	let dimensions = { x: 40, y: 40, z: 40 };
 	let color = "black";
 	let classed = "x3dAxis";
 
@@ -166,15 +165,9 @@ export default function() {
 	 */
 	let slice = Array.prototype.slice;
 
-	my.width = function(_) {
-		if (!arguments.length) return width;
-		width = _;
-		return this;
-	};
-
-	my.height = function(_) {
-		if (!arguments.length) return height;
-		height = _;
+	my.dimensions = function(_) {
+		if (!arguments.length) return dimensions;
+		dimensions = _;
 		return this;
 	};
 

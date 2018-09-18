@@ -11,9 +11,7 @@ export default function() {
 	/**
 	 * Default Properties
 	 */
-	let width = 40.0;
-	let height = 40.0;
-	let depth = 40.0;
+	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["orange", "red", "yellow", "steelblue", "green"];
 	let classed = "x3dBubblesMulti";
 
@@ -40,15 +38,15 @@ export default function() {
 
 		// Calculate Scales.
 		xScale = (typeof xScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, width]) :
+			d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]) :
 			xScale;
 
 		yScale = (typeof yScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, height]) :
+			d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, dimensions.y]) :
 			yScale;
 
 		zScale = (typeof zScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, depth]) :
+			d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]) :
 			zScale;
 	}
 
@@ -91,21 +89,9 @@ export default function() {
 	/**
 	 * Configuration Getters & Setters
 	 */
-	my.width = function(_) {
-		if (!arguments.length) return width;
-		width = _;
-		return this;
-	};
-
-	my.height = function(_) {
-		if (!arguments.length) return height;
-		height = _;
-		return this;
-	};
-
-	my.depth = function(_) {
-		if (!arguments.length) return depth;
-		depth = _;
+	my.dimensions = function(_) {
+		if (!arguments.length) return dimensions;
+		dimensions = _;
 		return this;
 	};
 

@@ -14,25 +14,17 @@
   <div id="chartholder"></div>
 
   <script>
-    // Generate Data
+    // Select chartholder
+    var chartHolder = d3.select("#chartholder");
+
+    // Generate some data
     var myData = randomDataset4();
 
-    // Chart dimensions
-    var width = 500;
-    var height = 500;
-
-    // Create scene
-    var scene = d3.select("#chartholder")
-      .append("x3d")
-      .attr("width", width + "px")
-      .attr("height", height + "px")
-      .append("scene");
-
-    // Construct chart component
+    // Declare the chart component
     var myChart = d3.x3d.chart.surfaceArea();
 
-    // Add chart component
-    scene.datum(myData).call(myChart);
+    // Attach chart and data to the chartholder
+    chartHolder.datum(myData).call(myChart);
 
   </script>
 </body>

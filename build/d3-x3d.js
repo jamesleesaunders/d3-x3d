@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.0.4";
+var version = "1.0.5";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -373,8 +373,7 @@ function componentAxis () {
 	/**
   * Default Properties
   */
-	var width = 40.0;
-	var height = 40.0;
+	var dimensions = { x: 40, y: 40, z: 40 };
 	var color = "black";
 	var classed = "x3dAxis";
 
@@ -502,15 +501,9 @@ function componentAxis () {
   */
 	var slice = Array.prototype.slice;
 
-	my.width = function (_) {
-		if (!arguments.length) return width;
-		width = _;
-		return this;
-	};
-
-	my.height = function (_) {
-		if (!arguments.length) return height;
-		height = _;
+	my.dimensions = function (_) {
+		if (!arguments.length) return dimensions;
+		dimensions = _;
 		return this;
 	};
 
@@ -570,9 +563,7 @@ function componentAxisMulti () {
 	/**
   * Default Properties
   */
-	var width = 40.0;
-	var height = 40.0;
-	var depth = 40.0;
+	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["blue", "red", "green"];
 	var classed = "x3dAxisMulti";
 
@@ -595,15 +586,15 @@ function componentAxisMulti () {
 		});
 
 		// Construct Axis Components
-		var xzAxis = componentAxis().scale(xScale).dir('x').tickDir('z').tickSize(xScale.range()[1] - xScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
+		var xzAxis = componentAxis().scale(xScale).dir('x').tickDir('z').tickSize(xScale.range()[1] - xScale.range()[0]).tickPadding(xScale.range()[0]).color("blue").dimensions(dimensions);
 
-		var yzAxis = componentAxis().scale(yScale).dir('y').tickDir('z').tickSize(yScale.range()[1] - yScale.range()[0]).color("red");
+		var yzAxis = componentAxis().scale(yScale).dir('y').tickDir('z').tickSize(yScale.range()[1] - yScale.range()[0]).color("red").dimensions(dimensions);
 
 		var yxAxis = componentAxis().scale(yScale).dir('y').tickDir('x').tickSize(yScale.range()[1] - yScale.range()[0]).tickFormat(function () {
 			return '';
-		}).color("red");
+		}).color("red").dimensions(dimensions);
 
-		var zxAxis = componentAxis().scale(zScale).dir('z').tickDir('x').tickSize(zScale.range()[1] - zScale.range()[0]).color("black");
+		var zxAxis = componentAxis().scale(zScale).dir('z').tickDir('x').tickSize(zScale.range()[1] - zScale.range()[0]).color("black").dimensions(dimensions);
 
 		selection.select(".xzAxis").call(xzAxis);
 
@@ -617,21 +608,9 @@ function componentAxisMulti () {
 	/**
   * Configuration Getters & Setters
   */
-	my.width = function (_) {
-		if (!arguments.length) return width;
-		width = _;
-		return this;
-	};
-
-	my.height = function (_) {
-		if (!arguments.length) return height;
-		height = _;
-		return this;
-	};
-
-	my.depth = function (_) {
-		if (!arguments.length) return depth;
-		depth = _;
+	my.dimensions = function (_) {
+		if (!arguments.length) return dimensions;
+		dimensions = _;
 		return this;
 	};
 
@@ -677,9 +656,7 @@ function componentBars () {
 	/**
   * Default Properties
   */
-	var width = 40.0;
-	var height = 40.0;
-	var depth = 2.0;
+	var dimensions = { x: 40, y: 40, z: 2 };
 	var colors = ["orange", "red", "yellow", "steelblue", "green"];
 	var classed = "x3dBars";
 
@@ -702,9 +679,9 @@ function componentBars () {
 		colorScale = typeof colorScale === "undefined" ? d3.scaleOrdinal().domain(seriesNames).range(colors) : colorScale;
 
 		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleBand().domain(seriesNames).rangeRound([0, width]).padding(0.3) : xScale;
+		xScale = typeof xScale === "undefined" ? d3.scaleBand().domain(seriesNames).rangeRound([0, dimentions.x]).padding(0.3) : xScale;
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0, height]) : yScale;
+		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0, dimentions.y]) : yScale;
 	}
 
 	/**
@@ -723,7 +700,7 @@ function componentBars () {
 			var barsEnter = bars.enter().append("transform").classed("bar", true).attr("scale", function (d) {
 				var x = xScale.bandwidth();
 				var y = yScale(d.value);
-				var z = depth;
+				var z = dimensions.z;
 				return x + " " + y + " " + z;
 			}).attr("translation", function (d) {
 				var x = xScale(d.key);
@@ -740,7 +717,7 @@ function componentBars () {
 			bars.transition().attr("scale", function (d) {
 				var x = xScale.bandwidth();
 				var y = yScale(d.value);
-				var z = depth;
+				var z = dimensions.z;
 				return x + " " + y + " " + z;
 			}).attr("translation", function (d) {
 				var x = xScale(d.key);
@@ -754,21 +731,9 @@ function componentBars () {
 	/**
   * Configuration Getters & Setters
   */
-	my.width = function (_) {
-		if (!arguments.length) return width;
-		width = _;
-		return this;
-	};
-
-	my.height = function (_) {
-		if (!arguments.length) return height;
-		height = _;
-		return this;
-	};
-
-	my.depth = function (_) {
-		if (!arguments.length) return depth;
-		depth = _;
+	my.dimensions = function (_) {
+		if (!arguments.length) return dimensions;
+		dimensions = _;
 		return this;
 	};
 
@@ -808,9 +773,7 @@ function componentBarsMulti () {
 	/**
   * Default Properties
   */
-	var width = 40.0;
-	var height = 40.0;
-	var depth = 40.0;
+	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["orange", "red", "yellow", "steelblue", "green"];
 	var classed = "x3dBarsMulti";
 
@@ -835,11 +798,11 @@ function componentBarsMulti () {
 		colorScale = typeof colorScale === "undefined" ? d3.scaleOrdinal().domain(seriesNames).range(colors) : colorScale;
 
 		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleBand().domain(seriesNames).rangeRound([0, width]).padding(0.5) : xScale;
+		xScale = typeof xScale === "undefined" ? d3.scaleBand().domain(seriesNames).rangeRound([0, dimensions.x]).padding(0.5) : xScale;
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0, height]) : yScale;
+		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]) : yScale;
 
-		zScale = typeof zScale === "undefined" ? d3.scaleBand().domain(categoryNames).range([0, depth]).padding(0.7) : zScale;
+		zScale = typeof zScale === "undefined" ? d3.scaleBand().domain(categoryNames).range([0, dimensions.z]).padding(0.7) : zScale;
 	}
 
 	/**
@@ -852,7 +815,11 @@ function componentBarsMulti () {
 			init(data);
 
 			// Construct Bars Component
-			var bars = componentBars().xScale(xScale).yScale(yScale).depth(zScale.bandwidth()).colors(colors);
+			var bars = componentBars().xScale(xScale).yScale(yScale).dimensions({
+				x: dimensions.x,
+				y: dimensions.y,
+				z: zScale.bandwidth()
+			}).colors(colors);
 
 			// Create Bar Groups
 			var barGroup = selection.selectAll(".barGroup").data(data);
@@ -871,21 +838,9 @@ function componentBarsMulti () {
 	/**
   * Configuration Getters & Setters
   */
-	my.width = function (_) {
-		if (!arguments.length) return width;
-		width = _;
-		return this;
-	};
-
-	my.height = function (_) {
-		if (!arguments.length) return height;
-		height = _;
-		return this;
-	};
-
-	my.depth = function (_) {
-		if (!arguments.length) return depth;
-		depth = _;
+	my.dimensions = function (_) {
+		if (!arguments.length) return dimensions;
+		dimensions = _;
 		return this;
 	};
 
@@ -931,9 +886,7 @@ function componentBubbles () {
 	/**
   * Default Properties
   */
-	var width = 40.0;
-	var height = 40.0;
-	var depth = 40.0;
+	var dimensions = { x: 40, y: 40, z: 40 };
 	var color = "orange";
 	var classed = "x3dBubbles";
 
@@ -963,11 +916,11 @@ function componentBubbles () {
 		});
 
 		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxX]).range([0, width]) : xScale;
+		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxX]).range([0, dimensions.x]) : xScale;
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxY]).range([0, height]) : yScale;
+		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxY]).range([0, dimensions.y]) : yScale;
 
-		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxZ]).range([0, depth]) : zScale;
+		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxZ]).range([0, dimensions.z]) : zScale;
 
 		sizeScale = typeof sizeScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0.5, 3.0]) : sizeScale;
 	}
@@ -1008,21 +961,9 @@ function componentBubbles () {
 	/**
   * Configuration Getters & Setters
   */
-	my.width = function (_) {
-		if (!arguments.length) return width;
-		width = _;
-		return this;
-	};
-
-	my.height = function (_) {
-		if (!arguments.length) return height;
-		height = _;
-		return this;
-	};
-
-	my.depth = function (_) {
-		if (!arguments.length) return depth;
-		depth = _;
+	my.dimensions = function (_) {
+		if (!arguments.length) return dimensions;
+		dimensions = _;
 		return this;
 	};
 
@@ -1068,9 +1009,7 @@ function componentBubblesMulti () {
 	/**
   * Default Properties
   */
-	var width = 40.0;
-	var height = 40.0;
-	var depth = 40.0;
+	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["orange", "red", "yellow", "steelblue", "green"];
 	var classed = "x3dBubblesMulti";
 
@@ -1094,11 +1033,11 @@ function componentBubblesMulti () {
 		colorScale = typeof colorScale === "undefined" ? d3.scaleOrdinal().domain(seriesNames).range(colors) : colorScale;
 
 		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, width]) : xScale;
+		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]) : xScale;
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, height]) : yScale;
+		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, dimensions.y]) : yScale;
 
-		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, depth]) : zScale;
+		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]) : zScale;
 	}
 
 	/**
@@ -1131,21 +1070,9 @@ function componentBubblesMulti () {
 	/**
   * Configuration Getters & Setters
   */
-	my.width = function (_) {
-		if (!arguments.length) return width;
-		width = _;
-		return this;
-	};
-
-	my.height = function (_) {
-		if (!arguments.length) return height;
-		height = _;
-		return this;
-	};
-
-	my.depth = function (_) {
-		if (!arguments.length) return depth;
-		depth = _;
+	my.dimensions = function (_) {
+		if (!arguments.length) return dimensions;
+		dimensions = _;
 		return this;
 	};
 
@@ -1191,9 +1118,7 @@ function componentSurface () {
 	/**
   * Default Properties
   */
-	var width = 40.0;
-	var height = 40.0;
-	var depth = 40.0;
+	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["blue", "red"];
 	var classed = "x3dSurface";
 
@@ -1255,11 +1180,11 @@ function componentSurface () {
 		colorScale = typeof colorScale === "undefined" ? d3.scaleLinear().domain(extent).range(colors).interpolate(d3.interpolateLab) : colorScale;
 
 		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxX]).range([0, width]).nice() : xScale;
+		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxX]).range([0, dimensions.x]).nice() : xScale;
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxY]).range([0, height]).nice() : yScale;
+		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxY]).range([0, dimensions.y]).nice() : yScale;
 
-		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxZ]).range([0, depth]).nice() : zScale;
+		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxZ]).range([0, dimensions.z]).nice() : zScale;
 	}
 
 	/**
@@ -1301,21 +1226,9 @@ function componentSurface () {
 	/**
   * Configuration Getters & Setters
   */
-	my.width = function (_) {
-		if (!arguments.length) return width;
-		width = _;
-		return this;
-	};
-
-	my.height = function (_) {
-		if (!arguments.length) return height;
-		height = _;
-		return this;
-	};
-
-	my.depth = function (_) {
-		if (!arguments.length) return depth;
-		depth = _;
+	my.dimensions = function (_) {
+		if (!arguments.length) return dimensions;
+		dimensions = _;
 		return this;
 	};
 
@@ -1416,11 +1329,12 @@ function chartBarChart () {
 	/**
   * Default Properties
   */
-	var width = 40.0;
-	var height = 40.0;
-	var depth = 40.0;
+	var width = 500;
+	var height = 500;
+	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["orange", "red", "yellow", "steelblue", "green"];
 	var classed = "x3dBarChart";
+	var debug = false;
 
 	/**
   * Scales
@@ -1443,17 +1357,24 @@ function chartBarChart () {
 		colorScale = typeof colorScale === "undefined" ? d3.scaleOrdinal().domain(seriesNames).range(colors) : colorScale;
 
 		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleBand().domain(seriesNames).rangeRound([0, width]).padding(0.5) : xScale;
+		xScale = typeof xScale === "undefined" ? d3.scaleBand().domain(seriesNames).rangeRound([0, dimensions.x]).padding(0.5) : xScale;
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0, height]).nice() : yScale;
+		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]).nice() : yScale;
 
-		zScale = typeof zScale === "undefined" ? d3.scaleBand().domain(categoryNames).range([0, depth]).padding(0.7) : zScale;
+		zScale = typeof zScale === "undefined" ? d3.scaleBand().domain(categoryNames).range([0, dimensions.z]).padding(0.7) : zScale;
 	}
 
 	/**
   * Constructor
   */
-	function my(scene) {
+	function my(selection) {
+		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
+
+		if (debug) {
+			x3d.attr("showLog", "true").attr("showStat", "true");
+		}
+
+		var scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "chart"];
@@ -1494,9 +1415,9 @@ function chartBarChart () {
 		return this;
 	};
 
-	my.depth = function (_) {
-		if (!arguments.length) return depth;
-		depth = _;
+	my.dimensions = function (_) {
+		if (!arguments.length) return dimensions;
+		dimensions = _;
 		return this;
 	};
 
@@ -1530,6 +1451,12 @@ function chartBarChart () {
 		return my;
 	};
 
+	my.debug = function (_) {
+		if (!arguments.length) return debug;
+		debug = _;
+		return my;
+	};
+
 	return my;
 }
 
@@ -1542,11 +1469,12 @@ function chartScatterPlot () {
 	/**
   * Default Properties
   */
-	var width = 40.0;
-	var height = 40.0;
-	var depth = 40.0;
+	var width = 500;
+	var height = 500;
+	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["orange", "red", "yellow", "steelblue", "green"];
 	var classed = "x3dScatterPlot";
+	var debug = false;
 
 	/**
   * Scales
@@ -1568,17 +1496,24 @@ function chartScatterPlot () {
 		colorScale = typeof colorScale === "undefined" ? d3.scaleOrdinal().domain(seriesNames).range(colors) : colorScale;
 
 		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, width]) : xScale;
+		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]) : xScale;
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, height]) : yScale;
+		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, dimensions.y]) : yScale;
 
-		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, depth]) : zScale;
+		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]) : zScale;
 	}
 
 	/**
   * Constructor
   */
-	function my(scene) {
+	function my(selection) {
+		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
+
+		if (debug) {
+			x3d.attr("showLog", "true").attr("showStat", "true");
+		}
+
+		var scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "chart"];
@@ -1619,9 +1554,9 @@ function chartScatterPlot () {
 		return this;
 	};
 
-	my.depth = function (_) {
-		if (!arguments.length) return depth;
-		depth = _;
+	my.dimensions = function (_) {
+		if (!arguments.length) return dimensions;
+		dimensions = _;
 		return this;
 	};
 
@@ -1655,6 +1590,12 @@ function chartScatterPlot () {
 		return my;
 	};
 
+	my.debug = function (_) {
+		if (!arguments.length) return debug;
+		debug = _;
+		return my;
+	};
+
 	return my;
 }
 
@@ -1667,11 +1608,12 @@ function chartSurfaceArea () {
 	/**
   * Default Properties
   */
-	var width = 40.0;
-	var height = 40.0;
-	var depth = 40.0;
+	var width = 500;
+	var height = 500;
+	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["blue", "red"];
 	var classed = "x3dSurfaceArea";
+	var debug = false;
 
 	/**
   * Scales
@@ -1702,17 +1644,24 @@ function chartSurfaceArea () {
 		colorScale = typeof colorScale === "undefined" ? d3.scaleLinear().domain(extent).range(colors).interpolate(d3.interpolateLab) : colorScale;
 
 		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxX]).range([0, width]).nice() : xScale;
+		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxX]).range([0, dimensions.x]).nice() : xScale;
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxY]).range([0, height]).nice() : yScale;
+		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxY]).range([0, dimensions.y]).nice() : yScale;
 
-		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxZ]).range([0, depth]).nice() : zScale;
+		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxZ]).range([0, dimensions.z]).nice() : zScale;
 	}
 
 	/**
   * Constructor
   */
-	function my(scene) {
+	function my(selection) {
+		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
+
+		if (debug) {
+			x3d.attr("showLog", "true").attr("showStat", "true");
+		}
+
+		var scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "chart"];
@@ -1753,9 +1702,9 @@ function chartSurfaceArea () {
 		return this;
 	};
 
-	my.depth = function (_) {
-		if (!arguments.length) return depth;
-		depth = _;
+	my.dimensions = function (_) {
+		if (!arguments.length) return dimensions;
+		dimensions = _;
 		return this;
 	};
 
@@ -1786,6 +1735,12 @@ function chartSurfaceArea () {
 	my.colors = function (_) {
 		if (!arguments.length) return colors;
 		colors = _;
+		return my;
+	};
+
+	my.debug = function (_) {
+		if (!arguments.length) return debug;
+		debug = _;
 		return my;
 	};
 
