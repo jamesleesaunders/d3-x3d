@@ -193,7 +193,7 @@ export default function() {
 	};
 
 	/**
-	 * Colors
+	 * Debug
 	 *
 	 * @param {Boolean} _
 	 * @returns {*}
