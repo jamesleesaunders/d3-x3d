@@ -586,15 +586,15 @@ function componentAxisMulti () {
 		});
 
 		// Construct Axis Components
-		var xzAxis = componentAxis().scale(xScale).dir('x').tickDir('z').tickSize(xScale.range()[1] - xScale.range()[0]).tickPadding(xScale.range()[0]).color("blue").dimensions(dimensions);
+		var xzAxis = componentAxis().scale(xScale).dir('x').tickDir('z').tickSize(zScale.range()[1] - zScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
 
-		var yzAxis = componentAxis().scale(yScale).dir('y').tickDir('z').tickSize(yScale.range()[1] - yScale.range()[0]).color("red").dimensions(dimensions);
+		var yzAxis = componentAxis().scale(yScale).dir('y').tickDir('z').tickSize(zScale.range()[1] - zScale.range()[0]).color("red");
 
-		var yxAxis = componentAxis().scale(yScale).dir('y').tickDir('x').tickSize(yScale.range()[1] - yScale.range()[0]).tickFormat(function () {
+		var yxAxis = componentAxis().scale(yScale).dir('y').tickDir('x').tickSize(xScale.range()[1] - xScale.range()[0]).tickFormat(function () {
 			return '';
-		}).color("red").dimensions(dimensions);
+		}).color("red");
 
-		var zxAxis = componentAxis().scale(zScale).dir('z').tickDir('x').tickSize(zScale.range()[1] - zScale.range()[0]).color("black").dimensions(dimensions);
+		var zxAxis = componentAxis().scale(zScale).dir('z').tickDir('x').tickSize(xScale.range()[1] - xScale.range()[0]).color("black");
 
 		selection.select(".xzAxis").call(xzAxis);
 
@@ -1415,42 +1415,84 @@ function chartBarChart () {
 		return this;
 	};
 
+	/**
+  * Dimensions
+  *
+  * @param {{x: {number}, y: {number}, z: {number}}} _
+  * @returns {*}
+  */
 	my.dimensions = function (_) {
 		if (!arguments.length) return dimensions;
 		dimensions = _;
 		return this;
 	};
 
+	/**
+  * X Scale
+  *
+  * @param {Object} _
+  * @returns {*}
+  */
 	my.xScale = function (_) {
 		if (!arguments.length) return xScale;
 		xScale = _;
 		return my;
 	};
 
+	/**
+  * Y Scale
+  *
+  * @param {Object} _
+  * @returns {*}
+  */
 	my.yScale = function (_) {
 		if (!arguments.length) return yScale;
 		yScale = _;
 		return my;
 	};
 
+	/**
+  * Z Scale
+  *
+  * @param {Object} _
+  * @returns {*}
+  */
 	my.zScale = function (_) {
 		if (!arguments.length) return zScale;
 		zScale = _;
 		return my;
 	};
 
+	/**
+  * Color Scale
+  *
+  * @param {Object} _
+  * @returns {*}
+  */
 	my.colorScale = function (_) {
 		if (!arguments.length) return colorScale;
 		colorScale = _;
 		return my;
 	};
 
+	/**
+  * Colors
+  *
+  * @param {Array} _
+  * @returns {*}
+  */
 	my.colors = function (_) {
 		if (!arguments.length) return colors;
 		colors = _;
 		return my;
 	};
 
+	/**
+  * Colors
+  *
+  * @param {Boolean} _
+  * @returns {*}
+  */
 	my.debug = function (_) {
 		if (!arguments.length) return debug;
 		debug = _;

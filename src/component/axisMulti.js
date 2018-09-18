@@ -41,35 +41,31 @@ export default function() {
 			.scale(xScale)
 			.dir('x')
 			.tickDir('z')
-			.tickSize(xScale.range()[1] - xScale.range()[0])
+			.tickSize(zScale.range()[1] - zScale.range()[0])
 			.tickPadding(xScale.range()[0])
-			.color("blue")
-			.dimensions(dimensions);
+			.color("blue");
 
 		let yzAxis = componentAxis()
 			.scale(yScale)
 			.dir('y')
 			.tickDir('z')
-			.tickSize(yScale.range()[1] - yScale.range()[0])
-			.color("red")
-			.dimensions(dimensions);
+			.tickSize(zScale.range()[1] - zScale.range()[0])
+			.color("red");
 
 		let yxAxis = componentAxis()
 			.scale(yScale)
 			.dir('y')
 			.tickDir('x')
-			.tickSize(yScale.range()[1] - yScale.range()[0])
+			.tickSize(xScale.range()[1] - xScale.range()[0])
 			.tickFormat(function() { return ''; })
-			.color("red")
-			.dimensions(dimensions);
+			.color("red");
 
 		let zxAxis = componentAxis()
 			.scale(zScale)
 			.dir('z')
 			.tickDir('x')
-			.tickSize(zScale.range()[1] - zScale.range()[0])
-			.color("black")
-			.dimensions(dimensions);
+			.tickSize(xScale.range()[1] - xScale.range()[0])
+			.color("black");
 
 		selection.select(".xzAxis")
 			.call(xzAxis);
