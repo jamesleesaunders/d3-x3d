@@ -10,9 +10,7 @@ export default function() {
 	/**
 	 * Default Properties
 	 */
-	let width = 40.0;
-	let height = 40.0;
-	let depth = 40.0;
+	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["blue", "red"];
 	let classed = "x3dSurface";
 
@@ -67,15 +65,15 @@ export default function() {
 
 		// Calculate Scales.
 		xScale = (typeof xScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxX]).range([0, width]).nice() :
+			d3.scaleLinear().domain([0, maxX]).range([0, dimensions.x]).nice() :
 			xScale;
 
 		yScale = (typeof yScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxY]).range([0, height]).nice() :
+			d3.scaleLinear().domain([0, maxY]).range([0, dimensions.y]).nice() :
 			yScale;
 
 		zScale = (typeof zScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxZ]).range([0, depth]).nice() :
+			d3.scaleLinear().domain([0, maxZ]).range([0, dimensions.z]).nice() :
 			zScale;
 	}
 
@@ -127,21 +125,9 @@ export default function() {
 	/**
 	 * Configuration Getters & Setters
 	 */
-	my.width = function(_) {
-		if (!arguments.length) return width;
-		width = _;
-		return this;
-	};
-
-	my.height = function(_) {
-		if (!arguments.length) return height;
-		height = _;
-		return this;
-	};
-
-	my.depth = function(_) {
-		if (!arguments.length) return depth;
-		depth = _;
+	my.dimensions = function(_) {
+		if (!arguments.length) return dimensions;
+		dimensions = _;
 		return this;
 	};
 

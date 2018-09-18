@@ -11,11 +11,9 @@ export default function() {
 	/**
 	 * Default Properties
 	 */
-	var chartW = 500;
-	var chartH = 500;
-	let width = 40.0;
-	let height = 40.0;
-	let depth = 40.0;
+	let width = 500;
+	let height = 500;
+	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["orange", "red", "yellow", "steelblue", "green"];
 	let classed = "x3dScatterPlot";
 	let debug = false;
@@ -43,15 +41,15 @@ export default function() {
 
 		// Calculate Scales.
 		xScale = (typeof xScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, width]) :
+			d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]) :
 			xScale;
 
 		yScale = (typeof yScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, height]) :
+			d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, dimensions.y]) :
 			yScale;
 
 		zScale = (typeof zScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, depth]) :
+			d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]) :
 			zScale;
 	}
 
@@ -60,8 +58,8 @@ export default function() {
 	 */
 	function my(selection) {
 		let x3d = selection.append("x3d")
-			.attr("width", chartW + "px")
-			.attr("height", chartH + "px");
+			.attr("width", width + "px")
+			.attr("height", height + "px");
 
 		if (debug) {
 			x3d.attr("showLog", "true").attr("showStat", "true")
@@ -121,9 +119,9 @@ export default function() {
 		return this;
 	};
 
-	my.depth = function(_) {
-		if (!arguments.length) return depth;
-		depth = _;
+	my.dimensions = function(_) {
+		if (!arguments.length) return dimensions;
+		dimensions = _;
 		return this;
 	};
 

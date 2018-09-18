@@ -11,9 +11,7 @@ export default function() {
 	/**
 	 * Default Properties
 	 */
-	let width = 40.0;
-	let height = 40.0;
-	let depth = 40.0;
+	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["blue", "red", "green"];
 	let classed = "x3dAxisMulti";
 
@@ -45,14 +43,16 @@ export default function() {
 			.tickDir('z')
 			.tickSize(xScale.range()[1] - xScale.range()[0])
 			.tickPadding(xScale.range()[0])
-			.color("blue");
+			.color("blue")
+			.dimensions(dimensions);
 
 		let yzAxis = componentAxis()
 			.scale(yScale)
 			.dir('y')
 			.tickDir('z')
 			.tickSize(yScale.range()[1] - yScale.range()[0])
-			.color("red");
+			.color("red")
+			.dimensions(dimensions);
 
 		let yxAxis = componentAxis()
 			.scale(yScale)
@@ -60,14 +60,16 @@ export default function() {
 			.tickDir('x')
 			.tickSize(yScale.range()[1] - yScale.range()[0])
 			.tickFormat(function() { return ''; })
-			.color("red");
+			.color("red")
+			.dimensions(dimensions);
 
 		let zxAxis = componentAxis()
 			.scale(zScale)
 			.dir('z')
 			.tickDir('x')
 			.tickSize(zScale.range()[1] - zScale.range()[0])
-			.color("black");
+			.color("black")
+			.dimensions(dimensions);
 
 		selection.select(".xzAxis")
 			.call(xzAxis);
@@ -86,21 +88,9 @@ export default function() {
 	/**
 	 * Configuration Getters & Setters
 	 */
-	my.width = function(_) {
-		if (!arguments.length) return width;
-		width = _;
-		return this;
-	};
-
-	my.height = function(_) {
-		if (!arguments.length) return height;
-		height = _;
-		return this;
-	};
-
-	my.depth = function(_) {
-		if (!arguments.length) return depth;
-		depth = _;
+	my.dimensions = function(_) {
+		if (!arguments.length) return dimensions;
+		dimensions = _;
 		return this;
 	};
 

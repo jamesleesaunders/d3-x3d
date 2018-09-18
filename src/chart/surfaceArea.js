@@ -11,11 +11,9 @@ export default function() {
 	/**
 	 * Default Properties
 	 */
-	var chartW = 500;
-	var chartH = 500;
-	let width = 40.0;
-	let height = 40.0;
-	let depth = 40.0;
+	let width = 500;
+	let height = 500;
+	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["blue", "red"];
 	let classed = "x3dSurfaceArea";
 	let debug = false;
@@ -44,15 +42,15 @@ export default function() {
 
 		// Calculate Scales.
 		xScale = (typeof xScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxX]).range([0, width]).nice() :
+			d3.scaleLinear().domain([0, maxX]).range([0, dimensions.x]).nice() :
 			xScale;
 
 		yScale = (typeof yScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxY]).range([0, height]).nice() :
+			d3.scaleLinear().domain([0, maxY]).range([0, dimensions.y]).nice() :
 			yScale;
 
 		zScale = (typeof zScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxZ]).range([0, depth]).nice() :
+			d3.scaleLinear().domain([0, maxZ]).range([0, dimensions.z]).nice() :
 			zScale;
 	}
 
@@ -61,8 +59,8 @@ export default function() {
 	 */
 	function my(selection) {
 		let x3d = selection.append("x3d")
-			.attr("width", chartW + "px")
-			.attr("height", chartH + "px");
+			.attr("width", width + "px")
+			.attr("height", height + "px");
 
 		if (debug) {
 			x3d.attr("showLog", "true").attr("showStat", "true")
@@ -122,9 +120,9 @@ export default function() {
 		return this;
 	};
 
-	my.depth = function(_) {
-		if (!arguments.length) return depth;
-		depth = _;
+	my.dimensions = function(_) {
+		if (!arguments.length) return dimensions;
+		dimensions = _;
 		return this;
 	};
 

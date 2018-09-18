@@ -11,9 +11,7 @@ export default function() {
 	/**
 	 * Default Properties
 	 */
-	let width = 40.0;
-	let height = 40.0;
-	let depth = 40.0;
+	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["orange", "red", "yellow", "steelblue", "green"];
 	let classed = "x3dBarsMulti";
 
@@ -41,15 +39,15 @@ export default function() {
 
 		// Calculate Scales.
 		xScale = (typeof xScale === "undefined") ?
-			d3.scaleBand().domain(seriesNames).rangeRound([0, width]).padding(0.5) :
+			d3.scaleBand().domain(seriesNames).rangeRound([0, dimensions.x]).padding(0.5) :
 			xScale;
 
 		yScale = (typeof yScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxValue]).range([0, height]) :
+			d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]) :
 			yScale;
 
 		zScale = (typeof zScale === "undefined") ?
-			d3.scaleBand().domain(categoryNames).range([0, depth]).padding(0.7) :
+			d3.scaleBand().domain(categoryNames).range([0, dimensions.z]).padding(0.7) :
 			zScale;
 	}
 
@@ -66,7 +64,11 @@ export default function() {
 			let bars = componentBars()
 				.xScale(xScale)
 				.yScale(yScale)
-				.depth(zScale.bandwidth())
+				.dimensions({
+					x: dimensions.x,
+					y: dimensions.y,
+					z: zScale.bandwidth()
+				})
 				.colors(colors);
 
 			// Create Bar Groups
@@ -95,21 +97,9 @@ export default function() {
 	/**
 	 * Configuration Getters & Setters
 	 */
-	my.width = function(_) {
-		if (!arguments.length) return width;
-		width = _;
-		return this;
-	};
-
-	my.height = function(_) {
-		if (!arguments.length) return height;
-		height = _;
-		return this;
-	};
-
-	my.depth = function(_) {
-		if (!arguments.length) return depth;
-		depth = _;
+	my.dimensions = function(_) {
+		if (!arguments.length) return dimensions;
+		dimensions = _;
 		return this;
 	};
 

@@ -14,16 +14,16 @@
   <div id="chartholder"></div>
 
   <script>
-    // Select chart holder
+    // Select chartholder
     var chartHolder = d3.select("#chartholder");
 
-    // Generate data
+    // Generate some data
     var myData = randomDataset2();
 
-    // Construct chart
+    // Declare the chart component
     var myChart = d3.x3d.chart.scatterPlot();
 
-    // Add chart and data to holder
+    // Attach chart and data to the chartholder
     chartHolder.datum(myData).call(myChart);
 
   </script>

@@ -40,15 +40,10 @@ Add a chartholder `<div>` and `<script>` tags to your page `<body>`:
 
 Place the following code between the `<script>` tags of your page:
 
-Attach `x3d` and `scene` to the chartholder div:
+Select chartholder:
 
 ```javascript
-var x3d = d3.select("#chartholder")
-	.append("x3d")
-	.attr("width", "500px")
-	.attr("height", "500px");
-
-var scene = x3d.append("scene");
+var chartHolder = d3.select("#chartholder");
 ```
 
 Generate some [data](#data-structure):
@@ -82,15 +77,19 @@ Declare the [chart component](#components-and-charts):
 var myChart = d3.x3d.chart.barChart();
 ```
 
-Attach data and chart to scene:
+Attach chart and data to the chartholder:
 
 ```javascript
-scene.datum(myData).call(myChart);
+chartHolder.datum(myData).call(myChart);
 ```
+
+Thats it! Load page and you should see a basic 3D bar chart.
 
 ### Components and Charts
 
 **d3-x3d** has two types of components: `chart` and `component`.
+
+#### Components
 
 The `component` modules are lower level building blocks which can be used independently or combined to build more advanced charts. For example combining the `bubbles()` and `axis()` components together we create the `scatterPlot()` chart:
 
@@ -105,6 +104,8 @@ The `component` modules are lower level building blocks which can be used indepe
 | d3.x3d.component.surface()      | Surface Area                    |
 | d3.x3d.component.viewpoint()    | Viewpoint camera                |
 
+#### Charts
+
 The `chart` modules are higher level, pre-combined components, making it even simpler to quickly create charts. All the charts typically include an axis and one or more of the other components above.
 
 | Function                        | Description                     |
@@ -112,6 +113,23 @@ The `chart` modules are higher level, pre-combined components, making it even si
 | d3.x3d.chart.barChart()         | Bar Chart & Axis                |
 | d3.x3d.chart.scatterPlot()      | Scatter Plot & Axis             |
 | d3.x3d.chart.surfaceArea()      | Surface Area & Axis             |
+
+#### Options
+
+All of the component and chart modules above support the following options:
+
+| Option       | Description   |
+| ------------ | ------------- |
+| width        |               |
+| height       |               |
+| dimensions   |               |
+| xScale       |               |
+| yscale       |               |
+| zScale       |               |
+| colorScale   |               |
+| color        |               |
+| debug        |               |
+
 
 ### Data Structures
 
