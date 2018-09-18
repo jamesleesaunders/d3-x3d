@@ -367,6 +367,7 @@ function dataTransform (data) {
 /**
  * Reusable 3D Axis
  *
+ * @module
  */
 function componentAxis () {
 
@@ -391,6 +392,9 @@ function componentAxis () {
 
 	/**
   * Constructor
+  *
+  * @constructor
+  * @param {d3.selection} selection
   */
 	function my(selection) {
 		selection.classed(classed, true);
@@ -497,22 +501,42 @@ function componentAxis () {
 	}
 
 	/**
-  * Configuration Getters & Setters
+  * Slice
+  *
+  * @type {(start?: number, end?: number) => T[]}
   */
 	var slice = Array.prototype.slice;
 
+	/**
+  * Dimensions Getter / Setter
+  *
+  * @param {{x: {number}, y: {number}, z: {number}}} _ - 3D Object dimensions.
+  * @returns {*}
+  */
 	my.dimensions = function (_) {
 		if (!arguments.length) return dimensions;
 		dimensions = _;
 		return this;
 	};
 
+	/**
+  * Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.scale = function (_) {
 		if (!arguments.length) return scale;
 		scale = _;
 		return my;
 	};
 
+	/**
+  * Color Getter / Setter
+  *
+  * @param {string} _ - Color 'red' or '#ff0000'.
+  * @returns {*}
+  */
 	my.color = function (_) {
 		if (!arguments.length) return color;
 		color = _;
@@ -557,6 +581,7 @@ function componentAxis () {
 /**
  * Reusable 3D Multi Plane Axis
  *
+ * @module
  */
 function componentAxisMulti () {
 
@@ -577,6 +602,9 @@ function componentAxisMulti () {
 
 	/**
   * Constructor
+  *
+  * @constructor
+  * @param {d3.selection} selection
   */
 	function my(selection) {
 
@@ -606,7 +634,10 @@ function componentAxisMulti () {
 	}
 
 	/**
-  * Configuration Getters & Setters
+  * Dimensions Getter / Setter
+  *
+  * @param {{x: {number}, y: {number}, z: {number}}} _ - 3D Object dimensions.
+  * @returns {*}
   */
 	my.dimensions = function (_) {
 		if (!arguments.length) return dimensions;
@@ -614,30 +645,60 @@ function componentAxisMulti () {
 		return this;
 	};
 
+	/**
+  * X Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.xScale = function (_) {
 		if (!arguments.length) return xScale;
 		xScale = _;
 		return my;
 	};
 
+	/**
+  * Y Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.yScale = function (_) {
 		if (!arguments.length) return yScale;
 		yScale = _;
 		return my;
 	};
 
+	/**
+  * Z Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.zScale = function (_) {
 		if (!arguments.length) return zScale;
 		zScale = _;
 		return my;
 	};
 
+	/**
+  * Color Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Color Scale.
+  * @returns {*}
+  */
 	my.colorScale = function (_) {
 		if (!arguments.length) return colorScale;
 		colorScale = _;
 		return my;
 	};
 
+	/**
+  * Colors Getter / Setter
+  *
+  * @param {Array} _ - Array of colours used by color scale.
+  * @returns {*}
+  */
 	my.colors = function (_) {
 		if (!arguments.length) return colors;
 		colors = _;
@@ -650,6 +711,7 @@ function componentAxisMulti () {
 /**
  * Reusable 3D Bar Chart
  *
+ * @module
  */
 function componentBars () {
 
@@ -669,6 +731,8 @@ function componentBars () {
 
 	/**
   * Initialise Data and Scales
+  *
+  * @param {Array} data - Chart data.
   */
 	function init(data) {
 		var dataSummary = dataTransform(data).summary();
@@ -686,6 +750,9 @@ function componentBars () {
 
 	/**
   * Constructor
+  *
+  * @constructor
+  * @param {d3.selection} selection
   */
 	function my(selection) {
 		selection.classed(classed, true);
@@ -729,7 +796,10 @@ function componentBars () {
 	}
 
 	/**
-  * Configuration Getters & Setters
+  * Dimensions Getter / Setter
+  *
+  * @param {{x: {number}, y: {number}, z: {number}}} _ - 3D Object dimensions.
+  * @returns {*}
   */
 	my.dimensions = function (_) {
 		if (!arguments.length) return dimensions;
@@ -737,24 +807,48 @@ function componentBars () {
 		return this;
 	};
 
+	/**
+  * X Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.xScale = function (_) {
 		if (!arguments.length) return xScale;
 		xScale = _;
 		return my;
 	};
 
+	/**
+  * Y Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.yScale = function (_) {
 		if (!arguments.length) return yScale;
 		yScale = _;
 		return my;
 	};
 
+	/**
+  * Color Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.colorScale = function (_) {
 		if (!arguments.length) return colorScale;
 		colorScale = _;
 		return my;
 	};
 
+	/**
+  * Colors Getter / Setter
+  *
+  * @param {Array} _ - Array of colours used by color scale.
+  * @returns {*}
+  */
 	my.colors = function (_) {
 		if (!arguments.length) return colors;
 		colors = _;
@@ -767,6 +861,7 @@ function componentBars () {
 /**
  * Reusable 3D Multi Series Bar Chart
  *
+ * @module
  */
 function componentBarsMulti () {
 
@@ -787,6 +882,8 @@ function componentBarsMulti () {
 
 	/**
   * Initialise Data and Scales
+  *
+  * @param {Array} data - Chart data.
   */
 	function init(data) {
 		var dataSummary = dataTransform(data).summary();
@@ -807,6 +904,9 @@ function componentBarsMulti () {
 
 	/**
   * Constructor
+  *
+  * @constructor
+  * @param {d3.selection} selection
   */
 	function my(selection) {
 		selection.classed(classed, true);
@@ -836,7 +936,10 @@ function componentBarsMulti () {
 	}
 
 	/**
-  * Configuration Getters & Setters
+  * Dimensions Getter / Setter
+  *
+  * @param {{x: {number}, y: {number}, z: {number}}} _ - 3D Object dimensions.
+  * @returns {*}
   */
 	my.dimensions = function (_) {
 		if (!arguments.length) return dimensions;
@@ -844,30 +947,60 @@ function componentBarsMulti () {
 		return this;
 	};
 
+	/**
+  * X Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.xScale = function (_) {
 		if (!arguments.length) return xScale;
 		xScale = _;
 		return my;
 	};
 
+	/**
+  * Y Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.yScale = function (_) {
 		if (!arguments.length) return yScale;
 		yScale = _;
 		return my;
 	};
 
+	/**
+  * Z Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.zScale = function (_) {
 		if (!arguments.length) return zScale;
 		zScale = _;
 		return my;
 	};
 
+	/**
+  * Color Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Color Scale.
+  * @returns {*}
+  */
 	my.colorScale = function (_) {
 		if (!arguments.length) return colorScale;
 		colorScale = _;
 		return my;
 	};
 
+	/**
+  * Colors Getter / Setter
+  *
+  * @param {Array} _ - Array of colours used by color scale.
+  * @returns {*}
+  */
 	my.colors = function (_) {
 		if (!arguments.length) return colors;
 		colors = _;
@@ -880,6 +1013,7 @@ function componentBarsMulti () {
 /**
  * Reusable 3D Bubble Chart
  *
+ * @module
  */
 function componentBubbles () {
 
@@ -900,6 +1034,8 @@ function componentBubbles () {
 
 	/**
   * Initialise Data and Scales
+  *
+  * @param {Array} data - Chart data.
   */
 	function init(data) {
 		var maxX = d3.max(data.values, function (d) {
@@ -927,6 +1063,9 @@ function componentBubbles () {
 
 	/**
   * Constructor
+  *
+  * @constructor
+  * @param {d3.selection} selection
   */
 	function my(selection) {
 		selection.classed(classed, true);
@@ -959,7 +1098,10 @@ function componentBubbles () {
 	}
 
 	/**
-  * Configuration Getters & Setters
+  * Dimensions Getter / Setter
+  *
+  * @param {{x: {number}, y: {number}, z: {number}}} _ - 3D Object dimensions.
+  * @returns {*}
   */
 	my.dimensions = function (_) {
 		if (!arguments.length) return dimensions;
@@ -967,30 +1109,60 @@ function componentBubbles () {
 		return this;
 	};
 
+	/**
+  * X Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.xScale = function (_) {
 		if (!arguments.length) return xScale;
 		xScale = _;
 		return my;
 	};
 
+	/**
+  * Y Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.yScale = function (_) {
 		if (!arguments.length) return yScale;
 		yScale = _;
 		return my;
 	};
 
+	/**
+  * Z Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.zScale = function (_) {
 		if (!arguments.length) return zScale;
 		zScale = _;
 		return my;
 	};
 
+	/**
+  * Size Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Color Scale.
+  * @returns {*}
+  */
 	my.sizeScale = function (_) {
 		if (!arguments.length) return sizeScale;
 		sizeScale = _;
 		return my;
 	};
 
+	/**
+  * Color Getter / Setter
+  *
+  * @param {string} _ - Color 'red' or '#ff0000'.
+  * @returns {*}
+  */
 	my.color = function (_) {
 		if (!arguments.length) return color;
 		color = _;
@@ -1003,6 +1175,7 @@ function componentBubbles () {
 /**
  * Reusable 3D Multi Series Bubble Chart
  *
+ * @module
  */
 function componentBubblesMulti () {
 
@@ -1023,6 +1196,8 @@ function componentBubblesMulti () {
 
 	/**
   * Initialise Data and Scales
+  *
+  * @param {Array} data - Chart data.
   */
 	function init(data) {
 		var dataSummary = dataTransform(data).summary();
@@ -1042,6 +1217,9 @@ function componentBubblesMulti () {
 
 	/**
   * Constructor
+  *
+  * @constructor
+  * @param {d3.selection} selection
   */
 	function my(selection) {
 		selection.classed(classed, true);
@@ -1068,7 +1246,10 @@ function componentBubblesMulti () {
 	}
 
 	/**
-  * Configuration Getters & Setters
+  * Dimensions Getter / Setter
+  *
+  * @param {{x: {number}, y: {number}, z: {number}}} _ - 3D Object dimensions.
+  * @returns {*}
   */
 	my.dimensions = function (_) {
 		if (!arguments.length) return dimensions;
@@ -1076,30 +1257,60 @@ function componentBubblesMulti () {
 		return this;
 	};
 
+	/**
+  * X Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.xScale = function (_) {
 		if (!arguments.length) return xScale;
 		xScale = _;
 		return my;
 	};
 
+	/**
+  * Y Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.yScale = function (_) {
 		if (!arguments.length) return yScale;
 		yScale = _;
 		return my;
 	};
 
+	/**
+  * Z Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.zScale = function (_) {
 		if (!arguments.length) return zScale;
 		zScale = _;
 		return my;
 	};
 
+	/**
+  * Color Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Color Scale.
+  * @returns {*}
+  */
 	my.colorScale = function (_) {
 		if (!arguments.length) return colorScale;
 		colorScale = _;
 		return my;
 	};
 
+	/**
+  * Colors Getter / Setter
+  *
+  * @param {Array} _ - Array of colours used by color scale.
+  * @returns {*}
+  */
 	my.colors = function (_) {
 		if (!arguments.length) return colors;
 		colors = _;
@@ -1112,6 +1323,7 @@ function componentBubblesMulti () {
 /**
  * Reusable 3D Surface Area
  *
+ * @module
  */
 function componentSurface () {
 
@@ -1130,6 +1342,12 @@ function componentSurface () {
 	var zScale = void 0;
 	var colorScale = void 0;
 
+	/**
+  * Array to String
+  *
+  * @param arr
+  * @returns {*}
+  */
 	function array2dToString(arr) {
 		return arr.reduce(function (a, b) {
 			return a.concat(b);
@@ -1161,6 +1379,8 @@ function componentSurface () {
 
 	/**
   * Initialise Data and Scales
+  *
+  * @param {Array} data - Chart data.
   */
 	function init(data) {
 		var maxX = d3.max(d3.merge(data), function (d) {
@@ -1189,6 +1409,9 @@ function componentSurface () {
 
 	/**
   * Constructor
+  *
+  * @constructor
+  * @param {d3.selection} selection
   */
 	function my(selection) {
 		selection.classed(classed, true);
@@ -1224,7 +1447,10 @@ function componentSurface () {
 	}
 
 	/**
-  * Configuration Getters & Setters
+  * Dimensions Getter / Setter
+  *
+  * @param {{x: {number}, y: {number}, z: {number}}} _ - 3D Object dimensions.
+  * @returns {*}
   */
 	my.dimensions = function (_) {
 		if (!arguments.length) return dimensions;
@@ -1232,30 +1458,60 @@ function componentSurface () {
 		return this;
 	};
 
+	/**
+  * X Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.xScale = function (_) {
 		if (!arguments.length) return xScale;
 		xScale = _;
 		return my;
 	};
 
+	/**
+  * Y Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.yScale = function (_) {
 		if (!arguments.length) return yScale;
 		yScale = _;
 		return my;
 	};
 
+	/**
+  * Z Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.zScale = function (_) {
 		if (!arguments.length) return zScale;
 		zScale = _;
 		return my;
 	};
 
+	/**
+  * Color Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Color Scale.
+  * @returns {*}
+  */
 	my.colorScale = function (_) {
 		if (!arguments.length) return colorScale;
 		colorScale = _;
 		return my;
 	};
 
+	/**
+  * Colors Getter / Setter
+  *
+  * @param {Array} _ - Array of colours used by color scale.
+  * @returns {*}
+  */
 	my.colors = function (_) {
 		if (!arguments.length) return colors;
 		colors = _;
@@ -1268,6 +1524,7 @@ function componentSurface () {
 /**
  * Viewpoint
  *
+ * @module
  */
 function componentViewpoint () {
 
@@ -1280,13 +1537,19 @@ function componentViewpoint () {
 
 	/**
   * Constructor
+  *
+  * @constructor
+  * @param {d3.selection} selection
   */
 	function my(selection) {
 		selection.append("viewpoint").attr("position", viewPosition.join(" ")).attr("orientation", viewOrientation.join(" ")).attr("fieldOfView", fieldOfView).attr("set_bind", "true");
 	}
 
 	/**
-  * Configuration Getters & Setters
+  * View Position Getter / Setter
+  *
+  * @param {[{number}, {number}, {number}]} _
+  * @returns {*}
   */
 	my.viewPosition = function (_) {
 		if (!arguments.length) return viewPosition;
@@ -1294,12 +1557,24 @@ function componentViewpoint () {
 		return my;
 	};
 
+	/**
+  * View Orientation Getter / Setter
+  *
+  * @param {[{number}, {number}, {number}, {number}]} _
+  * @returns {*}
+  */
 	my.viewOrientation = function (_) {
 		if (!arguments.length) return viewOrientation;
 		viewOrientation = _;
 		return my;
 	};
 
+	/**
+  * Field of View Getter / Setter
+  *
+  * @param {number} _
+  * @returns {*}
+  */
 	my.fieldOfView = function (_) {
 		if (!arguments.length) return fieldOfView;
 		fieldOfView = _;
@@ -1322,6 +1597,8 @@ var component = {
 
 /**
  * Reusable 3D Bar Chart
+ *
+ * @module
  * @see https://datavizproject.com/data-type/3d-bar-chart/
  */
 function chartBarChart () {
@@ -1346,6 +1623,8 @@ function chartBarChart () {
 
 	/**
   * Initialise Data and Scales
+  *
+  * @param {Array} data - Chart data.
   */
 	function init(data) {
 		var dataSummary = dataTransform(data).summary();
@@ -1366,6 +1645,9 @@ function chartBarChart () {
 
 	/**
   * Constructor
+  *
+  * @constructor
+  * @param {d3.selection} selection
   */
 	function my(selection) {
 		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
@@ -1401,7 +1683,10 @@ function chartBarChart () {
 	}
 
 	/**
-  * Configuration Getters & Setters
+  * Width Getter / Setter
+  *
+  * @param {number} _ - X3D Canvas Height in px.
+  * @returns {*}
   */
 	my.width = function (_) {
 		if (!arguments.length) return width;
@@ -1409,6 +1694,12 @@ function chartBarChart () {
 		return this;
 	};
 
+	/**
+  * Height Getter / Setter
+  *
+  * @param {number} _ - X3D Canvas Height in px.
+  * @returns {*}
+  */
 	my.height = function (_) {
 		if (!arguments.length) return height;
 		height = _;
@@ -1416,9 +1707,9 @@ function chartBarChart () {
 	};
 
 	/**
-  * Dimensions
+  * Dimensions Getter / Setter
   *
-  * @param {{x: {number}, y: {number}, z: {number}}} _
+  * @param {{x: {number}, y: {number}, z: {number}}} _ - 3D Object dimensions.
   * @returns {*}
   */
 	my.dimensions = function (_) {
@@ -1428,9 +1719,9 @@ function chartBarChart () {
 	};
 
 	/**
-  * X Scale
+  * X Scale Getter / Setter
   *
-  * @param {Object} _
+  * @param {d3.scale} _ - D3 Scale.
   * @returns {*}
   */
 	my.xScale = function (_) {
@@ -1440,9 +1731,9 @@ function chartBarChart () {
 	};
 
 	/**
-  * Y Scale
+  * Y Scale Getter / Setter
   *
-  * @param {Object} _
+  * @param {Object} _ - D3 Scale.
   * @returns {*}
   */
 	my.yScale = function (_) {
@@ -1452,9 +1743,9 @@ function chartBarChart () {
 	};
 
 	/**
-  * Z Scale
+  * Z Scale Getter / Setter
   *
-  * @param {Object} _
+  * @param {d3.scale} _ - D3 Scale.
   * @returns {*}
   */
 	my.zScale = function (_) {
@@ -1464,9 +1755,9 @@ function chartBarChart () {
 	};
 
 	/**
-  * Color Scale
+  * Color Scale Getter / Setter
   *
-  * @param {Object} _
+  * @param {d3.scale} _ - D3 Color Scale.
   * @returns {*}
   */
 	my.colorScale = function (_) {
@@ -1476,9 +1767,9 @@ function chartBarChart () {
 	};
 
 	/**
-  * Colors
+  * Colors Getter / Setter
   *
-  * @param {Array} _
+  * @param {Array} _ - Array of colours used by color scale.
   * @returns {*}
   */
 	my.colors = function (_) {
@@ -1488,9 +1779,9 @@ function chartBarChart () {
 	};
 
 	/**
-  * Colors
+  * Debug Getter / Setter
   *
-  * @param {Boolean} _
+  * @param {Boolean} _ - Show debug log and stats. True/False.
   * @returns {*}
   */
 	my.debug = function (_) {
@@ -1504,6 +1795,8 @@ function chartBarChart () {
 
 /**
  * Reusable 3D Scatter Plot
+ *
+ * @module
  * @see https://datavizproject.com/data-type/3d-scatterplot/
  */
 function chartScatterPlot () {
@@ -1528,6 +1821,8 @@ function chartScatterPlot () {
 
 	/**
   * Initialise Data and Scales
+  *
+  * @param {Array} data - Chart data.
   */
 	function init(data) {
 		var dataSummary = dataTransform(data).summary();
@@ -1547,6 +1842,9 @@ function chartScatterPlot () {
 
 	/**
   * Constructor
+  *
+  * @constructor
+  * @param {d3.selection} selection
   */
 	function my(selection) {
 		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
@@ -1582,7 +1880,10 @@ function chartScatterPlot () {
 	}
 
 	/**
-  * Configuration Getters & Setters
+  * Width Getter / Setter
+  *
+  * @param {number} _ - X3D Canvas Height in px.
+  * @returns {*}
   */
 	my.width = function (_) {
 		if (!arguments.length) return width;
@@ -1590,48 +1891,96 @@ function chartScatterPlot () {
 		return this;
 	};
 
+	/**
+  * Height Getter / Setter
+  *
+  * @param {number} _ - X3D Canvas Height in px.
+  * @returns {*}
+  */
 	my.height = function (_) {
 		if (!arguments.length) return height;
 		height = _;
 		return this;
 	};
 
+	/**
+  * Dimensions Getter / Setter
+  *
+  * @param {{x: {number}, y: {number}, z: {number}}} _ - 3D Object dimensions.
+  * @returns {*}
+  */
 	my.dimensions = function (_) {
 		if (!arguments.length) return dimensions;
 		dimensions = _;
 		return this;
 	};
 
+	/**
+  * X Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.xScale = function (_) {
 		if (!arguments.length) return xScale;
 		xScale = _;
 		return my;
 	};
 
+	/**
+  * Y Scale Getter / Setter
+  *
+  * @param {Object} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.yScale = function (_) {
 		if (!arguments.length) return yScale;
 		yScale = _;
 		return my;
 	};
 
+	/**
+  * Z Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.zScale = function (_) {
 		if (!arguments.length) return zScale;
 		zScale = _;
 		return my;
 	};
 
+	/**
+  * Color Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Color Scale.
+  * @returns {*}
+  */
 	my.colorScale = function (_) {
 		if (!arguments.length) return colorScale;
 		colorScale = _;
 		return my;
 	};
 
+	/**
+  * Colors Getter / Setter
+  *
+  * @param {Array} _ - Array of colours used by color scale.
+  * @returns {*}
+  */
 	my.colors = function (_) {
 		if (!arguments.length) return colors;
 		colors = _;
 		return my;
 	};
 
+	/**
+  * Debug Getter / Setter
+  *
+  * @param {Boolean} _ - Show debug log and stats. True/False.
+  * @returns {*}
+  */
 	my.debug = function (_) {
 		if (!arguments.length) return debug;
 		debug = _;
@@ -1730,7 +2079,10 @@ function chartSurfaceArea () {
 	}
 
 	/**
-  * Configuration Getters & Setters
+  * Width Getter / Setter
+  *
+  * @param {number} _ - X3D Canvas Height in px.
+  * @returns {*}
   */
 	my.width = function (_) {
 		if (!arguments.length) return width;
@@ -1738,48 +2090,96 @@ function chartSurfaceArea () {
 		return this;
 	};
 
+	/**
+  * Height Getter / Setter
+  *
+  * @param {number} _ - X3D Canvas Height in px.
+  * @returns {*}
+  */
 	my.height = function (_) {
 		if (!arguments.length) return height;
 		height = _;
 		return this;
 	};
 
+	/**
+  * Dimensions Getter / Setter
+  *
+  * @param {{x: {number}, y: {number}, z: {number}}} _ - 3D Object dimensions.
+  * @returns {*}
+  */
 	my.dimensions = function (_) {
 		if (!arguments.length) return dimensions;
 		dimensions = _;
 		return this;
 	};
 
+	/**
+  * X Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.xScale = function (_) {
 		if (!arguments.length) return xScale;
 		xScale = _;
 		return my;
 	};
 
+	/**
+  * Y Scale Getter / Setter
+  *
+  * @param {Object} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.yScale = function (_) {
 		if (!arguments.length) return yScale;
 		yScale = _;
 		return my;
 	};
 
+	/**
+  * Z Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
 	my.zScale = function (_) {
 		if (!arguments.length) return zScale;
 		zScale = _;
 		return my;
 	};
 
+	/**
+  * Color Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Color Scale.
+  * @returns {*}
+  */
 	my.colorScale = function (_) {
 		if (!arguments.length) return colorScale;
 		colorScale = _;
 		return my;
 	};
 
+	/**
+  * Colors Getter / Setter
+  *
+  * @param {Array} _ - Array of colours used by color scale.
+  * @returns {*}
+  */
 	my.colors = function (_) {
 		if (!arguments.length) return colors;
 		colors = _;
 		return my;
 	};
 
+	/**
+  * Debug Getter / Setter
+  *
+  * @param {Boolean} _ - Show debug log and stats. True/False.
+  * @returns {*}
+  */
 	my.debug = function (_) {
 		if (!arguments.length) return debug;
 		debug = _;

@@ -4,6 +4,7 @@ import { default as dataTransform } from "../dataTransform";
 /**
  * Viewpoint
  *
+ * @module
  */
 export default function() {
 
@@ -16,6 +17,9 @@ export default function() {
 
 	/**
 	 * Constructor
+	 *
+	 * @constructor
+	 * @param {d3.selection} selection
 	 */
 	function my(selection) {
 		selection.append("viewpoint")
@@ -26,7 +30,10 @@ export default function() {
 	}
 
 	/**
-	 * Configuration Getters & Setters
+	 * View Position Getter / Setter
+	 *
+	 * @param {[{number}, {number}, {number}]} _
+	 * @returns {*}
 	 */
 	my.viewPosition = function(_) {
 		if (!arguments.length) return viewPosition;
@@ -34,12 +41,24 @@ export default function() {
 		return my;
 	};
 
+	/**
+	 * View Orientation Getter / Setter
+	 *
+	 * @param {[{number}, {number}, {number}, {number}]} _
+	 * @returns {*}
+	 */
 	my.viewOrientation = function(_) {
 		if (!arguments.length) return viewOrientation;
 		viewOrientation = _;
 		return my;
 	};
 
+	/**
+	 * Field of View Getter / Setter
+	 *
+	 * @param {number} _
+	 * @returns {*}
+	 */
 	my.fieldOfView = function(_) {
 		if (!arguments.length) return fieldOfView;
 		fieldOfView = _;

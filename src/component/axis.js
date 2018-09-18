@@ -4,6 +4,7 @@ import { default as dataTransform } from "../dataTransform";
 /**
  * Reusable 3D Axis
  *
+ * @module
  */
 export default function() {
 
@@ -27,7 +28,62 @@ export default function() {
 	let tickPadding = 1;
 
 	/**
+	 * Get Axis Direction Vector
+	 *
+	 * @param {string} axisDir
+	 * @returns {[{number}, {number}, {number}]}
+	 */
+	function getAxisDirectionVector(axisDir) {
+		let result;
+		switch (axisDir) {
+			case "x": {
+				result = [1, 0, 0];
+				break;
+			}
+			case "y": {
+				result = [0, 1, 0];
+				break;
+			}
+			case "z": {
+				result = [0, 0, 1];
+				break;
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * Get Axis Rotation Vector
+	 *
+	 * @param {string} axisDir
+	 *  @returns {[{number}, {number}, {number}, {number}]}
+	 */
+	function getAxisRotationVector(axisDir) {
+		let result;
+		switch (axisDir) {
+			case "x": {
+				result = [1, 1, 0, Math.PI];
+				break;
+			}
+			case "y": {
+				result = [0, 0, 0, 0];
+				break;
+			}
+			case "z": {
+				result = [0, 1, 1, Math.PI];
+				break;
+			}
+		}
+
+		return result;
+	}
+
+	/**
 	 * Constructor
+	 *
+	 * @constructor
+	 * @param {d3.selection} selection
 	 */
 	function my(selection) {
 		selection.classed(classed, true);
@@ -49,46 +105,6 @@ export default function() {
 		let range = scale.range();
 		let range0 = range[0];
 		let range1 = range[range.length - 1];
-
-		function getAxisDirectionVector(axisDir) {
-			let result;
-			switch (axisDir) {
-				case "x": {
-					result = [1, 0, 0];
-					break;
-				}
-				case "y": {
-					result = [0, 1, 0];
-					break;
-				}
-				case "z": {
-					result = [0, 0, 1];
-					break;
-				}
-			}
-
-			return result;
-		}
-
-		function getAxisRotationVector(axisDir) {
-			let result;
-			switch (axisDir) {
-				case "x": {
-					result = [1, 1, 0, Math.PI];
-					break;
-				}
-				case "y": {
-					result = [0, 0, 0, 0];
-					break;
-				}
-				case "z": {
-					result = [0, 1, 1, Math.PI];
-					break;
-				}
-			}
-
-			return result;
-		}
 
 		let dirVec = getAxisDirectionVector(dir);
 		let tickDirVec = getAxisDirectionVector(tickDir);
@@ -157,60 +173,125 @@ export default function() {
 			.append("cylinder")
 			.attr("radius", 0.05)
 			.attr("height", tickSize);
-
 	}
 
 	/**
-	 * Configuration Getters & Setters
+	 * Slice
+	 *
+	 * @type {(start?: number, end?: number) => T[]}
 	 */
 	let slice = Array.prototype.slice;
 
+	/**
+	 * Dimensions Getter / Setter
+	 *
+	 * @param {{x: {number}, y: {number}, z: {number}}} _ - 3D Object dimensions.
+	 * @returns {*}
+	 */
 	my.dimensions = function(_) {
 		if (!arguments.length) return dimensions;
 		dimensions = _;
 		return this;
 	};
 
+	/**
+	 * Scale Getter / Setter
+	 *
+	 * @param {d3.scale} _ - D3 Scale.
+	 * @returns {*}
+	 */
 	my.scale = function(_) {
 		if (!arguments.length) return scale;
 		scale = _;
 		return my;
 	};
 
+	/**
+	 * Color Getter / Setter
+	 *
+	 * @param {string} _ - Color 'red' or '#ff0000'.
+	 * @returns {*}
+	 */
 	my.color = function(_) {
 		if (!arguments.length) return color;
 		color = _;
 		return my;
 	};
 
+	/**
+	 * Direction
+	 *
+	 * @param _
+	 * @returns {*}
+	 */
 	my.dir = function(_) {
 		return arguments.length ? (dir = _, my) : dir;
 	};
 
+	/**
+	 * Tick Direction
+	 *
+	 * @param _
+	 * @returns {*}
+	 */
 	my.tickDir = function(_) {
 		return arguments.length ? (tickDir = _, my) : tickDir;
 	};
 
+	/**
+	 * Ticks
+	 *
+	 */
 	my.ticks = function() {
 		return tickArguments = slice.call(arguments), my;
 	};
 
+	/**
+	 * Tick Arguments
+	 *
+	 * @param _
+	 * @returns {*[]}
+	 */
 	my.tickArguments = function(_) {
 		return arguments.length ? (tickArguments = _ === null ? [] : slice.call(_), my) : tickArguments.slice();
 	};
 
+	/**
+	 * Tick Values
+	 *
+	 * @param _
+	 * @returns {*}
+	 */
 	my.tickValues = function(_) {
 		return arguments.length ? (tickValues = _ === null ? null : slice.call(_), my) : tickValues && tickValues.slice();
 	};
 
+	/**
+	 * Tick Format
+	 *
+	 * @param _
+	 * @returns {*}
+	 */
 	my.tickFormat = function(_) {
 		return arguments.length ? (tickFormat = _, my) : tickFormat;
 	};
 
+	/**
+	 * Tick Size
+	 *
+	 * @param _
+	 * @returns {number}
+	 */
 	my.tickSize = function(_) {
 		return arguments.length ? (tickSize = +_, my) : tickSize;
 	};
 
+	/**
+	 * Tick Padding
+	 *
+	 * @param _
+	 * @returns {number}
+	 */
 	my.tickPadding = function(_) {
 		return arguments.length ? (tickPadding = +_, my) : tickPadding;
 	};

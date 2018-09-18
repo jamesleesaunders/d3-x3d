@@ -4,6 +4,8 @@ import { default as component } from "../component";
 
 /**
  * Reusable 3D Scatter Plot
+ *
+ * @module
  * @see https://datavizproject.com/data-type/3d-scatterplot/
  */
 export default function() {
@@ -28,6 +30,8 @@ export default function() {
 
 	/**
 	 * Initialise Data and Scales
+	 *
+	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
 		let dataSummary = dataTransform(data).summary();
@@ -55,6 +59,9 @@ export default function() {
 
 	/**
 	 * Constructor
+	 *
+	 * @constructor
+	 * @param {d3.selection} selection
 	 */
 	function my(selection) {
 		let x3d = selection.append("x3d")
@@ -105,7 +112,10 @@ export default function() {
 	}
 
 	/**
-	 * Configuration Getters & Setters
+	 * Width Getter / Setter
+	 *
+	 * @param {number} _ - X3D Canvas Height in px.
+	 * @returns {*}
 	 */
 	my.width = function(_) {
 		if (!arguments.length) return width;
@@ -113,48 +123,96 @@ export default function() {
 		return this;
 	};
 
+	/**
+	 * Height Getter / Setter
+	 *
+	 * @param {number} _ - X3D Canvas Height in px.
+	 * @returns {*}
+	 */
 	my.height = function(_) {
 		if (!arguments.length) return height;
 		height = _;
 		return this;
 	};
 
+	/**
+	 * Dimensions Getter / Setter
+	 *
+	 * @param {{x: {number}, y: {number}, z: {number}}} _ - 3D Object dimensions.
+	 * @returns {*}
+	 */
 	my.dimensions = function(_) {
 		if (!arguments.length) return dimensions;
 		dimensions = _;
 		return this;
 	};
 
+	/**
+	 * X Scale Getter / Setter
+	 *
+	 * @param {d3.scale} _ - D3 Scale.
+	 * @returns {*}
+	 */
 	my.xScale = function(_) {
 		if (!arguments.length) return xScale;
 		xScale = _;
 		return my;
 	};
 
+	/**
+	 * Y Scale Getter / Setter
+	 *
+	 * @param {Object} _ - D3 Scale.
+	 * @returns {*}
+	 */
 	my.yScale = function(_) {
 		if (!arguments.length) return yScale;
 		yScale = _;
 		return my;
 	};
 
+	/**
+	 * Z Scale Getter / Setter
+	 *
+	 * @param {d3.scale} _ - D3 Scale.
+	 * @returns {*}
+	 */
 	my.zScale = function(_) {
 		if (!arguments.length) return zScale;
 		zScale = _;
 		return my;
 	};
 
+	/**
+	 * Color Scale Getter / Setter
+	 *
+	 * @param {d3.scale} _ - D3 Color Scale.
+	 * @returns {*}
+	 */
 	my.colorScale = function(_) {
 		if (!arguments.length) return colorScale;
 		colorScale = _;
 		return my;
 	};
 
+	/**
+	 * Colors Getter / Setter
+	 *
+	 * @param {Array} _ - Array of colours used by color scale.
+	 * @returns {*}
+	 */
 	my.colors = function(_) {
 		if (!arguments.length) return colors;
 		colors = _;
 		return my;
 	};
 
+	/**
+	 * Debug Getter / Setter
+	 *
+	 * @param {Boolean} _ - Show debug log and stats. True/False.
+	 * @returns {*}
+	 */
 	my.debug = function(_) {
 		if (!arguments.length) return debug;
 		debug = _;

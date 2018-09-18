@@ -4,6 +4,7 @@ import { default as dataTransform } from "../dataTransform";
 /**
  * Reusable 3D Surface Area
  *
+ * @module
  */
 export default function() {
 
@@ -22,6 +23,12 @@ export default function() {
 	let zScale;
 	let colorScale;
 
+	/**
+	 * Array to String
+	 *
+	 * @param arr
+	 * @returns {*}
+	 */
 	function array2dToString(arr) {
 		return arr.reduce(function(a, b) { return a.concat(b); }, [])
 			.reduce(function(a, b) { return a.concat(b); }, [])
@@ -51,6 +58,8 @@ export default function() {
 
 	/**
 	 * Initialise Data and Scales
+	 *
+	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
 		let maxX = d3.max(d3.merge(data), function(d) { return d.x; });
@@ -79,6 +88,9 @@ export default function() {
 
 	/**
 	 * Constructor
+	 *
+	 * @constructor
+	 * @param {d3.selection} selection
 	 */
 	function my(selection) {
 		selection.classed(classed, true);
@@ -123,7 +135,10 @@ export default function() {
 	}
 
 	/**
-	 * Configuration Getters & Setters
+	 * Dimensions Getter / Setter
+	 *
+	 * @param {{x: {number}, y: {number}, z: {number}}} _ - 3D Object dimensions.
+	 * @returns {*}
 	 */
 	my.dimensions = function(_) {
 		if (!arguments.length) return dimensions;
@@ -131,30 +146,60 @@ export default function() {
 		return this;
 	};
 
+	/**
+	 * X Scale Getter / Setter
+	 *
+	 * @param {d3.scale} _ - D3 Scale.
+	 * @returns {*}
+	 */
 	my.xScale = function(_) {
 		if (!arguments.length) return xScale;
 		xScale = _;
 		return my;
 	};
 
+	/**
+	 * Y Scale Getter / Setter
+	 *
+	 * @param {d3.scale} _ - D3 Scale.
+	 * @returns {*}
+	 */
 	my.yScale = function(_) {
 		if (!arguments.length) return yScale;
 		yScale = _;
 		return my;
 	};
 
+	/**
+	 * Z Scale Getter / Setter
+	 *
+	 * @param {d3.scale} _ - D3 Scale.
+	 * @returns {*}
+	 */
 	my.zScale = function(_) {
 		if (!arguments.length) return zScale;
 		zScale = _;
 		return my;
 	};
 
+	/**
+	 * Color Scale Getter / Setter
+	 *
+	 * @param {d3.scale} _ - D3 Color Scale.
+	 * @returns {*}
+	 */
 	my.colorScale = function(_) {
 		if (!arguments.length) return colorScale;
 		colorScale = _;
 		return my;
 	};
 
+	/**
+	 * Colors Getter / Setter
+	 *
+	 * @param {Array} _ - Array of colours used by color scale.
+	 * @returns {*}
+	 */
 	my.colors = function(_) {
 		if (!arguments.length) return colors;
 		colors = _;

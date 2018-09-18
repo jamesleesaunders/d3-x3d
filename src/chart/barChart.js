@@ -4,6 +4,8 @@ import { default as component } from "../component";
 
 /**
  * Reusable 3D Bar Chart
+ *
+ * @module
  * @see https://datavizproject.com/data-type/3d-bar-chart/
  */
 export default function() {
@@ -28,6 +30,8 @@ export default function() {
 
 	/**
 	 * Initialise Data and Scales
+	 *
+	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
 		let dataSummary = dataTransform(data).summary();
@@ -56,6 +60,9 @@ export default function() {
 
 	/**
 	 * Constructor
+	 *
+	 * @constructor
+	 * @param {d3.selection} selection
 	 */
 	function my(selection) {
 		let x3d = selection.append("x3d")
@@ -106,7 +113,10 @@ export default function() {
 	}
 
 	/**
-	 * Configuration Getters & Setters
+	 * Width Getter / Setter
+	 *
+	 * @param {number} _ - X3D Canvas Height in px.
+	 * @returns {*}
 	 */
 	my.width = function(_) {
 		if (!arguments.length) return width;
@@ -114,6 +124,12 @@ export default function() {
 		return this;
 	};
 
+	/**
+	 * Height Getter / Setter
+	 *
+	 * @param {number} _ - X3D Canvas Height in px.
+	 * @returns {*}
+	 */
 	my.height = function(_) {
 		if (!arguments.length) return height;
 		height = _;
@@ -121,9 +137,9 @@ export default function() {
 	};
 
 	/**
-	 * Dimensions
+	 * Dimensions Getter / Setter
 	 *
-	 * @param {{x: {number}, y: {number}, z: {number}}} _
+	 * @param {{x: {number}, y: {number}, z: {number}}} _ - 3D Object dimensions.
 	 * @returns {*}
 	 */
 	my.dimensions = function(_) {
@@ -133,9 +149,9 @@ export default function() {
 	};
 
 	/**
-	 * X Scale
+	 * X Scale Getter / Setter
 	 *
-	 * @param {Object} _
+	 * @param {d3.scale} _ - D3 Scale.
 	 * @returns {*}
 	 */
 	my.xScale = function(_) {
@@ -145,9 +161,9 @@ export default function() {
 	};
 
 	/**
-	 * Y Scale
+	 * Y Scale Getter / Setter
 	 *
-	 * @param {Object} _
+	 * @param {Object} _ - D3 Scale.
 	 * @returns {*}
 	 */
 	my.yScale = function(_) {
@@ -157,9 +173,9 @@ export default function() {
 	};
 
 	/**
-	 * Z Scale
+	 * Z Scale Getter / Setter
 	 *
-	 * @param {Object} _
+	 * @param {d3.scale} _ - D3 Scale.
 	 * @returns {*}
 	 */
 	my.zScale = function(_) {
@@ -169,9 +185,9 @@ export default function() {
 	};
 
 	/**
-	 * Color Scale
+	 * Color Scale Getter / Setter
 	 *
-	 * @param {Object} _
+	 * @param {d3.scale} _ - D3 Color Scale.
 	 * @returns {*}
 	 */
 	my.colorScale = function(_) {
@@ -181,9 +197,9 @@ export default function() {
 	};
 
 	/**
-	 * Colors
+	 * Colors Getter / Setter
 	 *
-	 * @param {Array} _
+	 * @param {Array} _ - Array of colours used by color scale.
 	 * @returns {*}
 	 */
 	my.colors = function(_) {
@@ -193,9 +209,9 @@ export default function() {
 	};
 
 	/**
-	 * Debug
+	 * Debug Getter / Setter
 	 *
-	 * @param {Boolean} _
+	 * @param {Boolean} _ - Show debug log and stats. True/False.
 	 * @returns {*}
 	 */
 	my.debug = function(_) {

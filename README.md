@@ -38,7 +38,7 @@ Add a chartholder `<div>` and `<script>` tags to your page `<body>`:
 </body>
 ```
 
-Place the following code between the `<script>` tags of your page:
+Place the following code between the `<script></script>` tags:
 
 Select chartholder:
 
@@ -71,7 +71,7 @@ var myData = [
 ];
 ```
 
-Declare the [chart component](#components-and-charts):
+Declare the [chart](#components-and-charts) component:
 
 ```javascript
 var myChart = d3.x3d.chart.barChart();
@@ -83,15 +83,15 @@ Attach chart and data to the chartholder:
 chartHolder.datum(myData).call(myChart);
 ```
 
-Thats it! Load page and you should see a basic 3D bar chart.
+Thats it! View the page in a browser and you should see a basic 3D bar chart.
 
 ### Components and Charts
 
-**d3-x3d** has two types of components: `chart` and `component`.
+**d3-x3d** has two types of modules: `chart` and `component`.
 
 #### Components
 
-The `component` modules are lower level building blocks which can be used independently or combined to build more advanced charts. For example combining the `bubbles()` and `axis()` components together we create the `scatterPlot()` chart:
+The `component` modules are lower level building blocks which can be used independently, or combined to build more advanced charts. For example combining the `bubbles()` and `axis()` components together we create the `scatterPlot()` chart:
 
 | Function                        | Description                     |
 | ------------------------------- | ------------------------------- |
@@ -106,7 +106,7 @@ The `component` modules are lower level building blocks which can be used indepe
 
 #### Charts
 
-The `chart` modules are higher level, pre-combined components, making it even simpler to quickly create charts. All the charts typically include an axis and one or more of the other components above.
+The `chart` modules are higher level, pre-combined components, making it even simpler to quickly create charts. All the charts typically include a viewpoint, axis and one or more of the other components above.
 
 | Function                        | Description                     |
 | ------------------------------- | ------------------------------- |
@@ -116,7 +116,7 @@ The `chart` modules are higher level, pre-combined components, making it even si
 
 #### Options
 
-All of the component and chart modules above support the following options:
+All of the component and chart modules above support the following basic options:
 
 | Option       | Description   |
 | ------------ | ------------- |
@@ -145,7 +145,7 @@ Used by charts such as a single series bar chart, the data structure is an objec
   * `y` {number} - \*Y axis value.
   * `z` {number} - \*Z axis value.
 	
-_\*optional, `x`, `y` & `z` values are used for cartesian coordinate graphs such as scatter plot._
+_\*optional, `x`, `y` & `z` values are used for cartesian coordinate type graphs such as the scatter plot._
 
 ```javascript
 var myData = {
@@ -159,7 +159,7 @@ var myData = {
 ```
 
 #### Multi Series Data 
-Used for charts such as the multi series scatter plot, the data structure is simply an array the single series objects described above.
+Used for charts such as the multi series scatter plot, the data structure is simply an array of single series data objects.
 
 ```javascript
 var myData = [
