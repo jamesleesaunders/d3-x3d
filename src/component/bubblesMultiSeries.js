@@ -23,6 +23,8 @@ export default function() {
 	let yScale;
 	let zScale;
 	let colorScale;
+	let sizeScale;
+	let sizeDomain = [0.5, 4.0];
 
 	/**
 	 * Initialise Data and Scales
@@ -33,6 +35,7 @@ export default function() {
 		let dataSummary = dataTransform(data).summary();
 		let seriesNames = dataSummary.rowKeys;
 		let maxCoordinates = dataSummary.maxCoordinates;
+		let maxValue = dataSummary.maxValue;
 
 		// If the colorScale has not been passed then attempt to calculate.
 		colorScale = (typeof colorScale === "undefined") ?
@@ -51,6 +54,10 @@ export default function() {
 		zScale = (typeof zScale === "undefined") ?
 			d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]) :
 			zScale;
+
+		sizeScale = (typeof sizeScale === "undefined") ?
+			d3.scaleLinear().domain([0, maxValue]).range([0.5, 3.0]) :
+			sizeScale;
 	}
 
 	/**
@@ -70,6 +77,7 @@ export default function() {
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
+				.sizeScale(sizeScale)
 				.color(function(d) { return colorScale(d.key); });
 
 			// Create Bar Groups
@@ -149,6 +157,30 @@ export default function() {
 	my.colorScale = function(_) {
 		if (!arguments.length) return colorScale;
 		colorScale = _;
+		return my;
+	};
+
+	/**
+	 * Size Scale Getter / Setter
+	 *
+	 * @param {d3.scale} _ - D3 Color Scale.
+	 * @returns {*}
+	 */
+	my.sizeScale = function(_) {
+		if (!arguments.length) return sizeScale;
+		sizeScale = _;
+		return my;
+	};
+
+	/**
+	 * Size Domain Getter / Setter
+	 *
+	 * @param {[{number}, {number}]} _ - Size min and max.
+	 * @returns {*}
+	 */
+	my.sizeDomain = function(_) {
+		if (!arguments.length) return sizeDomain;
+		sizeDomain = _;
 		return my;
 	};
 

@@ -3,10 +3,10 @@ import { default as dataTransform } from "../dataTransform";
 import { default as component } from "../component";
 
 /**
- * Reusable 3D Scatter Plot
+ * Reusable 3D Bubble Chart
  *
  * @module
- * @see https://datavizproject.com/data-type/3d-scatterplot/
+ * @see https://datavizproject.com/data-type/bubble-chart/
  */
 export default function() {
 
@@ -16,7 +16,7 @@ export default function() {
 	let width = 500;
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let color = "orange";
+	let colors = ["orange", "red", "yellow", "steelblue", "green"];
 	let classed = "x3dScatterPlot";
 	let debug = false;
 
@@ -27,6 +27,8 @@ export default function() {
 	let yScale;
 	let zScale;
 	let colorScale;
+	let sizeScale;
+	let sizeDomain = [0.5, 4.0];
 
 	/**
 	 * Initialise Data and Scales
@@ -35,7 +37,9 @@ export default function() {
 	 */
 	function init(data) {
 		let dataSummary = dataTransform(data).summary();
+		let seriesNames = dataSummary.rowKeys;
 		let maxCoordinates = dataSummary.maxCoordinates;
+		let maxValue = dataSummary.maxValue;
 
 		// Calculate Scales.
 		xScale = (typeof xScale === "undefined") ?
@@ -49,6 +53,14 @@ export default function() {
 		zScale = (typeof zScale === "undefined") ?
 			d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]) :
 			zScale;
+
+		colorScale = (typeof colorScale === "undefined") ?
+			d3.scaleOrdinal().domain(seriesNames).range(colors) :
+			colorScale;
+
+		sizeScale = (typeof sizeScale === "undefined") ?
+			d3.scaleLinear().domain([0, maxValue]).range(sizeDomain) :
+			sizeScale;
 	}
 
 	/**
@@ -90,12 +102,12 @@ export default function() {
 				.zScale(zScale);
 
 			// Construct Bubbles Component
-			let chart = component.bubbles()
+			let chart = component.bubblesMultiSeries()
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
-				.color(color)
-				.sizeDomain([0.5, 0.5]);
+				.sizeScale(sizeScale)
+				.colorScale(colorScale);
 
 			scene.select(".axis")
 				.call(axis);
@@ -179,14 +191,50 @@ export default function() {
 	};
 
 	/**
-	 * Color Getter / Setter
+	 * Color Scale Getter / Setter
 	 *
-	 * @param {string} _ - Color 'red' or '#ff0000'.
+	 * @param {d3.scale} _ - D3 Color Scale.
 	 * @returns {*}
 	 */
-	my.color = function(_) {
-		if (!arguments.length) return color;
-		color = _;
+	my.colorScale = function(_) {
+		if (!arguments.length) return colorScale;
+		colorScale = _;
+		return my;
+	};
+
+	/**
+	 * Colors Getter / Setter
+	 *
+	 * @param {Array} _ - Array of colours used by color scale.
+	 * @returns {*}
+	 */
+	my.colors = function(_) {
+		if (!arguments.length) return colors;
+		colors = _;
+		return my;
+	};
+
+	/**
+	 * Size Scale Getter / Setter
+	 *
+	 * @param {d3.scale} _ - D3 Color Scale.
+	 * @returns {*}
+	 */
+	my.sizeScale = function(_) {
+		if (!arguments.length) return sizeScale;
+		sizeScale = _;
+		return my;
+	};
+
+	/**
+	 * Size Domain Getter / Setter
+	 *
+	 * @param {[{number}, {number}]} _ - Size min and max.
+	 * @returns {*}
+	 */
+	my.sizeDomain = function(_) {
+		if (!arguments.length) return sizeDomain;
+		sizeDomain = _;
 		return my;
 	};
 

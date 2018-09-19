@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.0.5";
+var version = "1.0.6";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -1089,6 +1089,7 @@ function componentBubbles () {
 	var yScale = void 0;
 	var zScale = void 0;
 	var sizeScale = void 0;
+	var sizeDomain = [0.5, 4.0];
 
 	/**
   * Initialise Data and Scales
@@ -1116,7 +1117,7 @@ function componentBubbles () {
 
 		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxZ]).range([0, dimensions.z]) : zScale;
 
-		sizeScale = typeof sizeScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0.5, 3.0]) : sizeScale;
+		sizeScale = typeof sizeScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range(sizeDomain) : sizeScale;
 	}
 
 	/**
@@ -1216,6 +1217,18 @@ function componentBubbles () {
 	};
 
 	/**
+  * Size Domain Getter / Setter
+  *
+  * @param {[{number}, {number}]} _ - Size min and max.
+  * @returns {*}
+  */
+	my.sizeDomain = function (_) {
+		if (!arguments.length) return sizeDomain;
+		sizeDomain = _;
+		return my;
+	};
+
+	/**
   * Color Getter / Setter
   *
   * @param {string} _ - Color 'red' or '#ff0000'.
@@ -1251,6 +1264,8 @@ function componentBubblesMultiSeries () {
 	var yScale = void 0;
 	var zScale = void 0;
 	var colorScale = void 0;
+	var sizeScale = void 0;
+	var sizeDomain = [0.5, 4.0];
 
 	/**
   * Initialise Data and Scales
@@ -1261,6 +1276,7 @@ function componentBubblesMultiSeries () {
 		var dataSummary = dataTransform(data).summary();
 		var seriesNames = dataSummary.rowKeys;
 		var maxCoordinates = dataSummary.maxCoordinates;
+		var maxValue = dataSummary.maxValue;
 
 		// If the colorScale has not been passed then attempt to calculate.
 		colorScale = typeof colorScale === "undefined" ? d3.scaleOrdinal().domain(seriesNames).range(colors) : colorScale;
@@ -1271,6 +1287,8 @@ function componentBubblesMultiSeries () {
 		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, dimensions.y]) : yScale;
 
 		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]) : zScale;
+
+		sizeScale = typeof sizeScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0.5, 3.0]) : sizeScale;
 	}
 
 	/**
@@ -1286,7 +1304,7 @@ function componentBubblesMultiSeries () {
 			init(data);
 
 			// Construct Bars Component
-			var bubbles = componentBubbles().xScale(xScale).yScale(yScale).zScale(zScale).color(function (d) {
+			var bubbles = componentBubbles().xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).color(function (d) {
 				return colorScale(d.key);
 			});
 
@@ -1360,6 +1378,30 @@ function componentBubblesMultiSeries () {
 	my.colorScale = function (_) {
 		if (!arguments.length) return colorScale;
 		colorScale = _;
+		return my;
+	};
+
+	/**
+  * Size Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Color Scale.
+  * @returns {*}
+  */
+	my.sizeScale = function (_) {
+		if (!arguments.length) return sizeScale;
+		sizeScale = _;
+		return my;
+	};
+
+	/**
+  * Size Domain Getter / Setter
+  *
+  * @param {[{number}, {number}]} _ - Size min and max.
+  * @returns {*}
+  */
+	my.sizeDomain = function (_) {
+		if (!arguments.length) return sizeDomain;
+		sizeDomain = _;
 		return my;
 	};
 
@@ -1852,12 +1894,12 @@ function chartBarChart () {
 }
 
 /**
- * Reusable 3D Scatter Plot
+ * Reusable 3D Bubble Chart
  *
  * @module
- * @see https://datavizproject.com/data-type/3d-scatterplot/
+ * @see https://datavizproject.com/data-type/bubble-chart/
  */
-function chartScatterPlot () {
+function chartBubbleChart () {
 
 	/**
   * Default Properties
@@ -1876,6 +1918,8 @@ function chartScatterPlot () {
 	var yScale = void 0;
 	var zScale = void 0;
 	var colorScale = void 0;
+	var sizeScale = void 0;
+	var sizeDomain = [0.5, 4.0];
 
 	/**
   * Initialise Data and Scales
@@ -1886,9 +1930,7 @@ function chartScatterPlot () {
 		var dataSummary = dataTransform(data).summary();
 		var seriesNames = dataSummary.rowKeys;
 		var maxCoordinates = dataSummary.maxCoordinates;
-
-		// If the colorScale has not been passed then attempt to calculate.
-		colorScale = typeof colorScale === "undefined" ? d3.scaleOrdinal().domain(seriesNames).range(colors) : colorScale;
+		var maxValue = dataSummary.maxValue;
 
 		// Calculate Scales.
 		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]) : xScale;
@@ -1896,6 +1938,10 @@ function chartScatterPlot () {
 		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, dimensions.y]) : yScale;
 
 		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]) : zScale;
+
+		colorScale = typeof colorScale === "undefined" ? d3.scaleOrdinal().domain(seriesNames).range(colors) : colorScale;
+
+		sizeScale = typeof sizeScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range(sizeDomain) : sizeScale;
 	}
 
 	/**
@@ -1929,7 +1975,7 @@ function chartScatterPlot () {
 			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
 
 			// Construct Bubbles Component
-			var chart = component.bubblesMultiSeries().xScale(xScale).yScale(yScale).zScale(zScale).colorScale(colorScale);
+			var chart = component.bubblesMultiSeries().xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).colorScale(colorScale);
 
 			scene.select(".axis").call(axis);
 
@@ -2030,6 +2076,210 @@ function chartScatterPlot () {
 	my.colors = function (_) {
 		if (!arguments.length) return colors;
 		colors = _;
+		return my;
+	};
+
+	/**
+  * Size Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Color Scale.
+  * @returns {*}
+  */
+	my.sizeScale = function (_) {
+		if (!arguments.length) return sizeScale;
+		sizeScale = _;
+		return my;
+	};
+
+	/**
+  * Size Domain Getter / Setter
+  *
+  * @param {[{number}, {number}]} _ - Size min and max.
+  * @returns {*}
+  */
+	my.sizeDomain = function (_) {
+		if (!arguments.length) return sizeDomain;
+		sizeDomain = _;
+		return my;
+	};
+
+	/**
+  * Debug Getter / Setter
+  *
+  * @param {Boolean} _ - Show debug log and stats. True/False.
+  * @returns {*}
+  */
+	my.debug = function (_) {
+		if (!arguments.length) return debug;
+		debug = _;
+		return my;
+	};
+
+	return my;
+}
+
+/**
+ * Reusable 3D Scatter Plot
+ *
+ * @module
+ * @see https://datavizproject.com/data-type/3d-scatterplot/
+ */
+function chartScatterPlot () {
+
+	/**
+  * Default Properties
+  */
+	var width = 500;
+	var height = 500;
+	var dimensions = { x: 40, y: 40, z: 40 };
+	var color = "orange";
+	var classed = "x3dScatterPlot";
+	var debug = false;
+
+	/**
+  * Scales
+  */
+	var xScale = void 0;
+	var yScale = void 0;
+	var zScale = void 0;
+
+	/**
+  * Initialise Data and Scales
+  *
+  * @param {Array} data - Chart data.
+  */
+	function init(data) {
+		var dataSummary = dataTransform(data).summary();
+		var maxCoordinates = dataSummary.maxCoordinates;
+
+		// Calculate Scales.
+		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]) : xScale;
+
+		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, dimensions.y]) : yScale;
+
+		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]) : zScale;
+	}
+
+	/**
+  * Constructor
+  *
+  * @constructor
+  * @param {d3.selection} selection
+  */
+	function my(selection) {
+		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
+
+		if (debug) {
+			x3d.attr("showLog", "true").attr("showStat", "true");
+		}
+
+		var scene = x3d.append("scene");
+
+		// Update the chart dimensions and add layer groups
+		var layers = ["axis", "chart"];
+		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+			return d;
+		});
+
+		var viewpoint = d3.x3d.component.viewpoint();
+		scene.call(viewpoint);
+
+		scene.each(function (data) {
+			init(data);
+
+			// Construct Axis Component
+			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
+
+			// Construct Bubbles Component
+			var chart = component.bubbles().xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([0.5, 0.5]);
+
+			scene.select(".axis").call(axis);
+
+			scene.select(".chart").datum(data).call(chart);
+		});
+	}
+
+	/**
+  * Width Getter / Setter
+  *
+  * @param {number} _ - X3D Canvas Height in px.
+  * @returns {*}
+  */
+	my.width = function (_) {
+		if (!arguments.length) return width;
+		width = _;
+		return this;
+	};
+
+	/**
+  * Height Getter / Setter
+  *
+  * @param {number} _ - X3D Canvas Height in px.
+  * @returns {*}
+  */
+	my.height = function (_) {
+		if (!arguments.length) return height;
+		height = _;
+		return this;
+	};
+
+	/**
+  * Dimensions Getter / Setter
+  *
+  * @param {{x: {number}, y: {number}, z: {number}}} _ - 3D Object dimensions.
+  * @returns {*}
+  */
+	my.dimensions = function (_) {
+		if (!arguments.length) return dimensions;
+		dimensions = _;
+		return this;
+	};
+
+	/**
+  * X Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
+	my.xScale = function (_) {
+		if (!arguments.length) return xScale;
+		xScale = _;
+		return my;
+	};
+
+	/**
+  * Y Scale Getter / Setter
+  *
+  * @param {Object} _ - D3 Scale.
+  * @returns {*}
+  */
+	my.yScale = function (_) {
+		if (!arguments.length) return yScale;
+		yScale = _;
+		return my;
+	};
+
+	/**
+  * Z Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
+	my.zScale = function (_) {
+		if (!arguments.length) return zScale;
+		zScale = _;
+		return my;
+	};
+
+	/**
+  * Color Getter / Setter
+  *
+  * @param {string} _ - Color 'red' or '#ff0000'.
+  * @returns {*}
+  */
+	my.color = function (_) {
+		if (!arguments.length) return color;
+		color = _;
 		return my;
 	};
 
@@ -2249,6 +2499,7 @@ function chartSurfaceArea () {
 
 var chart = {
 	barChart: chartBarChart,
+	bubbleChart: chartBubbleChart,
 	scatterPlot: chartScatterPlot,
 	surfaceArea: chartSurfaceArea
 };

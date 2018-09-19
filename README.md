@@ -12,6 +12,7 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 ### Examples
 
 * [Bar Chart](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/BarChart.html)
+* [Bubble Chart](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/BubbleChart.html)
 * [Scatter Plot](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/ScatterPlot.html)
 * [Surface Area](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/SurfaceArea.html)
 * [Components Showcase](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
@@ -111,6 +112,7 @@ The `chart` modules are higher level, pre-combined components, making it even si
 | Function                        | Description                     |
 | ------------------------------- | ------------------------------- |
 | d3.x3d.chart.barChart()         | Bar Chart & Axis                |
+| d3.x3d.chart.bubbleChart()      | Bubble Chart & Axis             |
 | d3.x3d.chart.scatterPlot()      | Scatter Plot & Axis             |
 | d3.x3d.chart.surfaceArea()      | Surface Area & Axis             |
 

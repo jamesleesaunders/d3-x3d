@@ -22,6 +22,7 @@ export default function() {
 	let yScale;
 	let zScale;
 	let sizeScale;
+	let sizeDomain = [0.5, 4.0];
 
 	/**
 	 * Initialise Data and Scales
@@ -48,7 +49,7 @@ export default function() {
 			zScale;
 
 		sizeScale = (typeof sizeScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxValue]).range([0.5, 3.0]) :
+			d3.scaleLinear().domain([0, maxValue]).range(sizeDomain) :
 			sizeScale;
 	}
 
@@ -165,6 +166,18 @@ export default function() {
 	my.sizeScale = function(_) {
 		if (!arguments.length) return sizeScale;
 		sizeScale = _;
+		return my;
+	};
+
+	/**
+	 * Size Domain Getter / Setter
+	 *
+	 * @param {[{number}, {number}]} _ - Size min and max.
+	 * @returns {*}
+	 */
+	my.sizeDomain = function(_) {
+		if (!arguments.length) return sizeDomain;
+		sizeDomain = _;
 		return my;
 	};
 
