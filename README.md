@@ -93,16 +93,16 @@ Thats it! View the page in a browser and you should see a basic 3D bar chart.
 
 The `component` modules are lower level building blocks which can be used independently, or combined to build more advanced charts. For example combining the `bubbles()` and `axis()` components together we create the `scatterPlot()` chart:
 
-| Function                        | Description                     |
-| ------------------------------- | ------------------------------- |
-| d3.x3d.component.axis()         | Single plane x/y Axis           |
-| d3.x3d.component.axisMulti()    | Multi plane x/y/z Axis          |
-| d3.x3d.component.bars()         | Single series Bar Chart         |
-| d3.x3d.component.barsMulti()    | Multi Series Bar Chart          |
-| d3.x3d.component.bubbles()      | Bubble / Scatter Plot           |
-| d3.x3d.component.bubblesMulti() | Multi Series Bubbles / Scatter  |
-| d3.x3d.component.surface()      | Surface Area                    |
-| d3.x3d.component.viewpoint()    | Viewpoint camera                |
+| Function                              | Description                     |
+| ------------------------------------- | ------------------------------- |
+| d3.x3d.component.axis()               | Single plane x/y Axis           |
+| d3.x3d.component.axisThreePlane()     | Multi plane x/y/z Axis          |
+| d3.x3d.component.bars()               | Single series Bar Chart         |
+| d3.x3d.component.barsMultiSeries()    | Multi Series Bar Chart          |
+| d3.x3d.component.bubbles()            | Bubble / Scatter Plot           |
+| d3.x3d.component.bubblesMultiSeries() | Multi Series Bubbles / Scatter  |
+| d3.x3d.component.surfaceArea()        | Surface Area                    |
+| d3.x3d.component.viewpoint()          | Viewpoint camera                |
 
 #### Charts
 
@@ -118,17 +118,28 @@ The `chart` modules are higher level, pre-combined components, making it even si
 
 All of the component and chart modules above support the following basic options:
 
-| Option       | Description   |
-| ------------ | ------------- |
-| width        |               |
-| height       |               |
-| dimensions   |               |
-| xScale       |               |
-| yscale       |               |
-| zScale       |               |
-| colorScale   |               |
-| color        |               |
-| debug        |               |
+| Option       | Description                 |
+| ------------ | --------------------------- |
+| width        | X3DOM canvas width          |
+| height       | X3DOM canvas height         |
+| dimensions   | 3D chart dimensions {x,y,z} |
+| xScale       | X Scale Object              |
+| yscale       | Y Scale Object              |
+| zScale       | Z Scale Object              |
+| colorScale   | Color Scale                 |
+| color        | Color list                  |
+| debug        | Bool Show debug and stats   |
+
+Example:
+
+```javascript
+var myChart = d3.x3d.chart.scatterPlot()
+	.debug(true)
+	.height(500)
+	.width(500)
+	.dimensions({x: 40, y: 40, z: 40})
+	.colors(["orange", "red", "yellow", "steelblue", "green"]);
+```
 
 
 ### Data Structures

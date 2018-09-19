@@ -90,13 +90,13 @@ export default function() {
 			init(data);
 
 			// Construct Axis Component
-			let axis = component.axisMulti()
+			let axis = component.axisThreePlane()
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale);
 
 			// Construct Bubbles Component
-			let chart = component.bubblesMulti()
+			let chart = component.bubblesMultiSeries()
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)

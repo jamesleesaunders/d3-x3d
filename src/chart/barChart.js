@@ -91,13 +91,13 @@ export default function() {
 			init(data);
 
 			// Construct Axis Component
-			let axis = component.axisMulti()
+			let axis = component.axisThreePlane()
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale);
 
 			// Construct Bars Component
-			let chart = component.barsMulti()
+			let chart = component.barsMultiSeries()
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)

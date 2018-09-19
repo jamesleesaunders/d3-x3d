@@ -84,13 +84,13 @@ export default function() {
 			init(data);
 
 			// Construct Axis Component
-			let axis = component.axisMulti()
+			let axis = component.axisThreePlane()
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale);
 
-			// Construct Surface Component
-			let chart = component.surface()
+			// Construct Surface Area Component
+			let chart = component.surfaceArea()
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)

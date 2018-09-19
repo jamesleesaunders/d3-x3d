@@ -391,6 +391,64 @@ function componentAxis () {
 	var tickPadding = 1;
 
 	/**
+  * Get Axis Direction Vector
+  *
+  * @param {string} axisDir
+  * @returns {[{number}, {number}, {number}]}
+  */
+	function getAxisDirectionVector(axisDir) {
+		var result = void 0;
+		switch (axisDir) {
+			case "x":
+				{
+					result = [1, 0, 0];
+					break;
+				}
+			case "y":
+				{
+					result = [0, 1, 0];
+					break;
+				}
+			case "z":
+				{
+					result = [0, 0, 1];
+					break;
+				}
+		}
+
+		return result;
+	}
+
+	/**
+  * Get Axis Rotation Vector
+  *
+  * @param {string} axisDir
+  *  @returns {[{number}, {number}, {number}, {number}]}
+  */
+	function getAxisRotationVector(axisDir) {
+		var result = void 0;
+		switch (axisDir) {
+			case "x":
+				{
+					result = [1, 1, 0, Math.PI];
+					break;
+				}
+			case "y":
+				{
+					result = [0, 0, 0, 0];
+					break;
+				}
+			case "z":
+				{
+					result = [0, 1, 1, Math.PI];
+					break;
+				}
+		}
+
+		return result;
+	}
+
+	/**
   * Constructor
   *
   * @constructor
@@ -414,52 +472,6 @@ function componentAxis () {
 		var range = scale.range();
 		var range0 = range[0];
 		var range1 = range[range.length - 1];
-
-		function getAxisDirectionVector(axisDir) {
-			var result = void 0;
-			switch (axisDir) {
-				case "x":
-					{
-						result = [1, 0, 0];
-						break;
-					}
-				case "y":
-					{
-						result = [0, 1, 0];
-						break;
-					}
-				case "z":
-					{
-						result = [0, 0, 1];
-						break;
-					}
-			}
-
-			return result;
-		}
-
-		function getAxisRotationVector(axisDir) {
-			var result = void 0;
-			switch (axisDir) {
-				case "x":
-					{
-						result = [1, 1, 0, Math.PI];
-						break;
-					}
-				case "y":
-					{
-						result = [0, 0, 0, 0];
-						break;
-					}
-				case "z":
-					{
-						result = [0, 1, 1, Math.PI];
-						break;
-					}
-			}
-
-			return result;
-		}
 
 		var dirVec = getAxisDirectionVector(dir);
 		var tickDirVec = getAxisDirectionVector(tickDir);
@@ -543,34 +555,80 @@ function componentAxis () {
 		return my;
 	};
 
+	/**
+  * Direction
+  *
+  * @param _
+  * @returns {*}
+  */
 	my.dir = function (_) {
 		return arguments.length ? (dir = _, my) : dir;
 	};
 
+	/**
+  * Tick Direction
+  *
+  * @param _
+  * @returns {*}
+  */
 	my.tickDir = function (_) {
 		return arguments.length ? (tickDir = _, my) : tickDir;
 	};
 
+	/**
+  * Ticks
+  *
+  */
 	my.ticks = function () {
 		return tickArguments = slice.call(arguments), my;
 	};
 
+	/**
+  * Tick Arguments
+  *
+  * @param _
+  * @returns {*[]}
+  */
 	my.tickArguments = function (_) {
 		return arguments.length ? (tickArguments = _ === null ? [] : slice.call(_), my) : tickArguments.slice();
 	};
 
+	/**
+  * Tick Values
+  *
+  * @param _
+  * @returns {*}
+  */
 	my.tickValues = function (_) {
 		return arguments.length ? (tickValues = _ === null ? null : slice.call(_), my) : tickValues && tickValues.slice();
 	};
 
+	/**
+  * Tick Format
+  *
+  * @param _
+  * @returns {*}
+  */
 	my.tickFormat = function (_) {
 		return arguments.length ? (tickFormat = _, my) : tickFormat;
 	};
 
+	/**
+  * Tick Size
+  *
+  * @param _
+  * @returns {number}
+  */
 	my.tickSize = function (_) {
 		return arguments.length ? (tickSize = +_, my) : tickSize;
 	};
 
+	/**
+  * Tick Padding
+  *
+  * @param _
+  * @returns {number}
+  */
 	my.tickPadding = function (_) {
 		return arguments.length ? (tickPadding = +_, my) : tickPadding;
 	};
@@ -583,7 +641,7 @@ function componentAxis () {
  *
  * @module
  */
-function componentAxisMulti () {
+function componentAxisThreePlane () {
 
 	/**
   * Default Properties
@@ -863,7 +921,7 @@ function componentBars () {
  *
  * @module
  */
-function componentBarsMulti () {
+function componentBarsMultiSeries () {
 
 	/**
   * Default Properties
@@ -1177,7 +1235,7 @@ function componentBubbles () {
  *
  * @module
  */
-function componentBubblesMulti () {
+function componentBubblesMultiSeries () {
 
 	/**
   * Default Properties
@@ -1325,7 +1383,7 @@ function componentBubblesMulti () {
  *
  * @module
  */
-function componentSurface () {
+function componentSurfaceArea () {
 
 	/**
   * Default Properties
@@ -1586,12 +1644,12 @@ function componentViewpoint () {
 
 var component = {
 	axis: componentAxis,
-	axisMulti: componentAxisMulti,
+	axisThreePlane: componentAxisThreePlane,
 	bars: componentBars,
-	barsMulti: componentBarsMulti,
+	barsMultiSeries: componentBarsMultiSeries,
 	bubbles: componentBubbles,
-	bubblesMulti: componentBubblesMulti,
-	surface: componentSurface,
+	bubblesMultiSeries: componentBubblesMultiSeries,
+	surfaceArea: componentSurfaceArea,
 	viewpoint: componentViewpoint
 };
 
@@ -1671,10 +1729,10 @@ function chartBarChart () {
 			init(data);
 
 			// Construct Axis Component
-			var axis = component.axisMulti().xScale(xScale).yScale(yScale).zScale(zScale);
+			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
 
 			// Construct Bars Component
-			var chart = component.barsMulti().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
+			var chart = component.barsMultiSeries().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
 
 			scene.select(".axis").call(axis);
 
@@ -1868,10 +1926,10 @@ function chartScatterPlot () {
 			init(data);
 
 			// Construct Axis Component
-			var axis = component.axisMulti().xScale(xScale).yScale(yScale).zScale(zScale);
+			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
 
 			// Construct Bubbles Component
-			var chart = component.bubblesMulti().xScale(xScale).yScale(yScale).zScale(zScale).colorScale(colorScale);
+			var chart = component.bubblesMultiSeries().xScale(xScale).yScale(yScale).zScale(zScale).colorScale(colorScale);
 
 			scene.select(".axis").call(axis);
 
@@ -2067,10 +2125,10 @@ function chartSurfaceArea () {
 			init(data);
 
 			// Construct Axis Component
-			var axis = component.axisMulti().xScale(xScale).yScale(yScale).zScale(zScale);
+			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
 
-			// Construct Surface Component
-			var chart = component.surface().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
+			// Construct Surface Area Component
+			var chart = component.surfaceArea().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
 
 			scene.select(".axis").call(axis);
 

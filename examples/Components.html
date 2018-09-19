@@ -45,7 +45,7 @@
 
     // ========== Bubbles Multi Component ==========
     var bubblesMultiData = randomDataset2();
-    var bubblesMultiComponent = d3.x3d.component.bubblesMulti();
+    var bubblesMultiComponent = d3.x3d.component.bubblesMultiSeries()
 
     // Create scene
     var scene2 = d3.select("#chartholder2")
@@ -64,7 +64,7 @@
 
     // ========== Surface Component ==========
     var surfaceData = randomDataset4();
-    var surfaceComponent = d3.x3d.component.surface();
+    var surfaceComponent = d3.x3d.component.surfaceArea();
 
     // Create scene
     var scene3 = d3.select("#chartholder3")
@@ -83,7 +83,7 @@
 
     // ========== Bars Multi Component ==========
     var barsMultiData = randomDataset2();
-    var barsMultiComponent = d3.x3d.component.barsMulti();
+    var barsMultiComponent = d3.x3d.component.barsMultiSeries();
 
     // Create scene
     var scene4 = d3.select("#chartholder4")
@@ -104,7 +104,7 @@
     var xScale = d3.scaleBand().domain(countries).rangeRound([0, 40]);
     var yScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
     var zScale = d3.scaleBand().domain(fruit).range([0, 40]);
-    var axisMultiComponent = d3.x3d.component.axisMulti()
+    var axisMultiComponent = d3.x3d.component.axisThreePlane()
       .xScale(xScale)
       .yScale(yScale)
       .zScale(zScale);
