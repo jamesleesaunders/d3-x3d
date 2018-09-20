@@ -116,9 +116,9 @@ The `chart` modules are higher level, pre-combined components, making it even si
 | d3.x3d.chart.scatterPlot()      | Scatter Plot & Axis             |
 | d3.x3d.chart.surfaceArea()      | Surface Area & Axis             |
 
-#### Options
+### Options
 
-All of the component and chart modules above support the following basic options:
+The chart components can be customised with various options:
 
 | Option       | Description                 |
 | ------------ | --------------------------- |
@@ -126,7 +126,7 @@ All of the component and chart modules above support the following basic options
 | height       | X3DOM canvas height         |
 | dimensions   | 3D chart dimensions {x,y,z} |
 | xScale       | X Scale Object              |
-| yscale       | Y Scale Object              |
+| yScale       | Y Scale Object              |
 | zScale       | Z Scale Object              |
 | colorScale   | Color Scale                 |
 | color        | Color list                  |
@@ -142,7 +142,6 @@ var myChart = d3.x3d.chart.scatterPlot()
 	.dimensions({x: 40, y: 40, z: 40})
 	.colors(["orange", "red", "yellow", "steelblue", "green"]);
 ```
-
 
 ### Data Structures
 

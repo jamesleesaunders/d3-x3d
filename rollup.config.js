@@ -10,29 +10,29 @@ let banner = "/**\n\
  */\n";
 
 export default {
-  input: "index.js",
-  output: {
-    file: "build/d3-x3d.js",
-    format: "umd",
-    extend: true,
-    name: "d3.x3d",
-    banner: banner,
-    strict: true,
-    globals: { d3: "d3" }
-  },
-  external: ["d3"],
-  plugins: [
-    babel({
-      exclude: ["node_modules/**", "*.json"],
-      babelrc: false,
-      presets: [["env", { modules: false }]],
-      plugins: [
-         "external-helpers",
-         "transform-object-assign"
-      ]
-    }),
-    json({
-      exclude: ["node_modules/**"]
-    })
-  ]
+	input: "index.js",
+	output: {
+		file: "build/d3-x3d.js",
+		format: "umd",
+		extend: true,
+		name: "d3.x3d",
+		banner: banner,
+		strict: true,
+		globals: { d3: "d3" }
+	},
+	external: ["d3"],
+	plugins: [
+		babel({
+			exclude: ["node_modules/**", "*.json"],
+			babelrc: false,
+			presets: [["env", { modules: false }]],
+			plugins: [
+				"external-helpers",
+				"transform-object-assign"
+			]
+		}),
+		json({
+			exclude: ["node_modules/**"]
+		})
+	]
 };
