@@ -84,7 +84,7 @@ export default function() {
 			.append("group")
 			.attr("class", function(d) { return d; });
 
-		let viewpoint = d3.x3d.component.viewpoint();
+		let viewpoint = component.viewpoint();
 		scene.call(viewpoint);
 
 		scene.each(function(data) {
