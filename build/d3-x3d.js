@@ -1791,7 +1791,7 @@ function chartBarChart () {
 			return d;
 		});
 
-		var viewpoint = d3.x3d.component.viewpoint();
+		var viewpoint = component.viewpoint();
 		scene.call(viewpoint);
 
 		scene.each(function (data) {
@@ -1992,7 +1992,7 @@ function chartBubbleChart () {
 			return d;
 		});
 
-		var viewpoint = d3.x3d.component.viewpoint();
+		var viewpoint = component.viewpoint();
 		scene.call(viewpoint);
 
 		scene.each(function (data) {
@@ -2208,7 +2208,7 @@ function chartScatterPlot () {
 			return d;
 		});
 
-		var viewpoint = d3.x3d.component.viewpoint();
+		var viewpoint = component.viewpoint();
 		scene.call(viewpoint);
 
 		scene.each(function (data) {
@@ -2395,7 +2395,7 @@ function chartSurfaceArea () {
 			return d;
 		});
 
-		var viewpoint = d3.x3d.component.viewpoint();
+		var viewpoint = component.viewpoint();
 		scene.call(viewpoint);
 
 		scene.each(function (data) {
