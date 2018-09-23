@@ -89,11 +89,69 @@ function randomDataset3() {
 }
 
 /**
- * Random Dataset - Surface Area
+ * Random Dataset - Surface Area 2
  *
  * @returns {*}
  */
 function randomDataset4() {
+	var data = [
+		{
+			key: 'a',
+			values: [
+				{ key: '1', value: 4 },
+				{ key: '2', value: 0 },
+				{ key: '3', value: 2 },
+				{ key: '4', value: 0 },
+				{ key: '5', value: 0 }
+			]
+		}, {
+			key: 'b',
+			values: [
+				{ key: '1', value: 4 },
+				{ key: '2', value: 0 },
+				{ key: '3', value: 2 },
+				{ key: '4', value: 0 },
+				{ key: '5', value: 0 }
+			]
+		}, {
+			key: 'c',
+			values: [
+				{ key: '1', value: 1 },
+				{ key: '2', value: 0 },
+				{ key: '3', value: 1 },
+				{ key: '4', value: 0 },
+				{ key: '5', value: 0 }
+			]
+		}, {
+			key: 'd',
+			values: [
+				{ key: '1', value: 4 },
+				{ key: '2', value: 0 },
+				{ key: '3', value: 2 },
+				{ key: '4', value: 0 },
+				{ key: '5', value: 0 }
+			]
+		}, {
+			key: 'e',
+			values: [
+				{ key: '1', value: 1 },
+				{ key: '2', value: 1 },
+				{ key: '3', value: 1 },
+				{ key: '4', value: 1 },
+				{ key: '5', value: 1 }
+			]
+		}
+	];
+
+	return data;
+}
+
+/**
+ * Random Dataset - Surface Area
+ *
+ * @returns {*}
+ */
+function randomDataset5() {
 	var cx = 0.8;
 	var cy = 0.3;
 	var f = function(vx, vz) {
@@ -106,62 +164,20 @@ function randomDataset4() {
 	var nz = zRange.length;
 
 	var data = d3.range(nx).map(function(i) {
-		return d3.range(nz).map(
+
+		var values = d3.range(nz).map(
 			function(j) {
 				return {
-					x: xRange[j],
-					y: f(xRange[i], zRange[j]),
-					z: zRange[i]
+					key: xRange[j],
+					value: f(xRange[i], zRange[j])
 				};
 			});
+
+		return {
+			key: zRange[i],
+			values: values
+		};
 	});
-
-	return data;
-}
-
-/**
- * Random Dataset - Surface Area 2
- *
- * @returns {*}
- */
-function randomDataset5() {
-	var data = [
-		[
-			{ x: 0, y: 4, z: 0 },
-			{ x: 0, y: 0, z: 1 },
-			{ x: 0, y: 2, z: 2 },
-			{ x: 0, y: 0, z: 3 },
-			{ x: 0, y: 0, z: 4 }
-		],
-		[
-			{ x: 1, y: 4, z: 0 },
-			{ x: 1, y: 0, z: 1 },
-			{ x: 1, y: 2, z: 2 },
-			{ x: 1, y: 0, z: 3 },
-			{ x: 1, y: 0, z: 4 }
-		],
-		[
-			{ x: 2, y: 1, z: 0 },
-			{ x: 2, y: 0, z: 1 },
-			{ x: 2, y: 1, z: 2 },
-			{ x: 2, y: 0, z: 3 },
-			{ x: 2, y: 0, z: 4 }
-		],
-		[
-			{ x: 3, y: 4, z: 0 },
-			{ x: 3, y: 0, z: 1 },
-			{ x: 3, y: 2, z: 2 },
-			{ x: 3, y: 0, z: 3 },
-			{ x: 3, y: 0, z: 4 }
-		],
-		[
-			{ x: 4, y: 4, z: 0 },
-			{ x: 4, y: 0, z: 1 },
-			{ x: 4, y: 2, z: 2 },
-			{ x: 4, y: 0, z: 3 },
-			{ x: 4, y: 0, z: 4 }
-		]
-	];
 
 	return data;
 }

@@ -30,10 +30,12 @@ export default function() {
 	 * Initialise Data and Scales
 	 */
 	function init(data) {
-		let maxX = d3.max(d3.merge(data), function(d) { return d.x; });
-		let maxY = d3.max(d3.merge(data), function(d) { return d.y; });
-		let maxZ = d3.max(d3.merge(data), function(d) { return d.z; });
-		let extent = d3.extent(d3.merge(data), function(d) { return d.y; });
+		let dataSummary = dataTransform(data).summary();
+		let seriesNames = dataSummary.rowKeys;
+		let groupNames = dataSummary.columnKeys;
+		let maxValue = dataSummary.maxValue;
+
+		let extent = [0, maxValue];
 
 		// If the colorScale has not been passed then attempt to calculate.
 		colorScale = (typeof colorScale === "undefined") ?
@@ -42,15 +44,15 @@ export default function() {
 
 		// Calculate Scales.
 		xScale = (typeof xScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxX]).range([0, dimensions.x]).nice() :
+			d3.scaleBand().domain(seriesNames).range([0, dimensions.x]) :
 			xScale;
 
 		yScale = (typeof yScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxY]).range([0, dimensions.y]).nice() :
+			d3.scaleLinear().domain(extent).range([0, dimensions.y]).nice() :
 			yScale;
 
 		zScale = (typeof zScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxZ]).range([0, dimensions.z]).nice() :
+			d3.scaleBand().domain(groupNames).range([0, dimensions.z]) :
 			zScale;
 	}
 

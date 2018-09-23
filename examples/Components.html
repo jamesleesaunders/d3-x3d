@@ -45,7 +45,7 @@
 
     // ========== Bubbles Multi Component ==========
     var bubblesMultiData = randomDataset2();
-    var bubblesMultiComponent = d3.x3d.component.bubblesMultiSeries()
+    var bubblesMultiComponent = d3.x3d.component.bubblesMultiSeries();
 
     // Create scene
     var scene2 = d3.select("#chartholder2")
@@ -63,7 +63,7 @@
       .call(bubblesMultiComponent);
 
     // ========== Surface Component ==========
-    var surfaceData = randomDataset4();
+    var surfaceData = randomDataset5();
     var surfaceComponent = d3.x3d.component.surfaceArea();
 
     // Create scene

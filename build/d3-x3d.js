@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.0.6";
+var version = "1.0.7";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -1458,18 +1458,18 @@ function componentSurfaceArea () {
 
 	var coordinatePoints = function coordinatePoints(data) {
 		var points = data.map(function (X) {
-			return X.map(function (d) {
-				return [xScale(d.x), yScale(d.y), zScale(d.z)];
+			return X.values.map(function (d) {
+				return [xScale(X.key), yScale(d.value), zScale(d.key)];
 			});
 		});
-
+		console.log(points);
 		return array2dToString(points);
 	};
 
 	var colorFaceSet = function colorFaceSet(data) {
 		var colors = data.map(function (X) {
-			return X.map(function (d) {
-				var col = d3.color(colorScale(d.y));
+			return X.values.map(function (d) {
+				var col = d3.color(colorScale(d.value));
 				return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
 			});
 		});
@@ -1483,28 +1483,20 @@ function componentSurfaceArea () {
   * @param {Array} data - Chart data.
   */
 	function init(data) {
-		var maxX = d3.max(d3.merge(data), function (d) {
-			return d.x;
-		});
-		var maxY = d3.max(d3.merge(data), function (d) {
-			return d.y;
-		});
-		var maxZ = d3.max(d3.merge(data), function (d) {
-			return d.z;
-		});
-		var extent = d3.extent(d3.merge(data), function (d) {
-			return d.y;
-		});
+		var dataSummary = dataTransform(data).summary();
+		var seriesNames = dataSummary.rowKeys;
+		var groupNames = dataSummary.columnKeys;
+		var maxValue = dataSummary.maxValue;
 
 		// If the colorScale has not been passed then attempt to calculate.
-		colorScale = typeof colorScale === "undefined" ? d3.scaleLinear().domain(extent).range(colors).interpolate(d3.interpolateLab) : colorScale;
+		colorScale = typeof colorScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range(colors).interpolate(d3.interpolateLab) : colorScale;
 
 		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxX]).range([0, dimensions.x]).nice() : xScale;
+		xScale = typeof xScale === "undefined" ? d3.scaleBand().domain(seriesNames).range([0, dimensions.x]) : xScale;
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxY]).range([0, dimensions.y]).nice() : yScale;
+		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]).nice() : yScale;
 
-		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxZ]).range([0, dimensions.z]).nice() : zScale;
+		zScale = typeof zScale === "undefined" ? d3.scaleBand().domain(groupNames).range([0, dimensions.z]) : zScale;
 	}
 
 	/**
@@ -1517,10 +1509,11 @@ function componentSurfaceArea () {
 		selection.classed(classed, true);
 
 		selection.each(function (data) {
+			console.log(data);
 			init(data);
 
 			var ny = data.length;
-			var nx = data[0].length;
+			var nx = data[0].values.length;
 
 			var coordIndex = Array.apply(0, Array(ny - 1)).map(function (_, j) {
 				return Array.apply(0, Array(nx - 1)).map(function (_, i) {
@@ -1537,6 +1530,7 @@ function componentSurfaceArea () {
 			});
 
 			var coords = array2dToString(coordIndex.concat(coordIndexBack));
+			console.log(coords);
 
 			var surfaces = selection.selectAll('.surface').data([data]);
 
@@ -2353,28 +2347,22 @@ function chartSurfaceArea () {
   * Initialise Data and Scales
   */
 	function init(data) {
-		var maxX = d3.max(d3.merge(data), function (d) {
-			return d.x;
-		});
-		var maxY = d3.max(d3.merge(data), function (d) {
-			return d.y;
-		});
-		var maxZ = d3.max(d3.merge(data), function (d) {
-			return d.z;
-		});
-		var extent = d3.extent(d3.merge(data), function (d) {
-			return d.y;
-		});
+		var dataSummary = dataTransform(data).summary();
+		var seriesNames = dataSummary.rowKeys;
+		var groupNames = dataSummary.columnKeys;
+		var maxValue = dataSummary.maxValue;
+
+		var extent = [0, maxValue];
 
 		// If the colorScale has not been passed then attempt to calculate.
 		colorScale = typeof colorScale === "undefined" ? d3.scaleLinear().domain(extent).range(colors).interpolate(d3.interpolateLab) : colorScale;
 
 		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxX]).range([0, dimensions.x]).nice() : xScale;
+		xScale = typeof xScale === "undefined" ? d3.scaleBand().domain(seriesNames).range([0, dimensions.x]) : xScale;
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxY]).range([0, dimensions.y]).nice() : yScale;
+		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain(extent).range([0, dimensions.y]).nice() : yScale;
 
-		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxZ]).range([0, dimensions.z]).nice() : zScale;
+		zScale = typeof zScale === "undefined" ? d3.scaleBand().domain(groupNames).range([0, dimensions.z]) : zScale;
 	}
 
 	/**
