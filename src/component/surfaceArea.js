@@ -35,54 +35,33 @@ export default function() {
 			.join(' ');
 	}
 
-	let coordinatePoints = function(data) {
-		let points = data.map(function(X) {
-			return X.map(function(d) {
-				return [xScale(d.x), yScale(d.y), zScale(d.z)];
-			})
-		});
-
-		return array2dToString(points);
-	};
-
-	let colorFaceSet = function(data) {
-		let colors = data.map(function(X) {
-			return X.map(function(d) {
-				let col = d3.color(colorScale(d.y));
-				return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
-			})
-		});
-
-		return array2dToString(colors);
-	};
-
 	/**
 	 * Initialise Data and Scales
 	 *
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		let maxX = d3.max(d3.merge(data), function(d) { return d.x; });
-		let maxY = d3.max(d3.merge(data), function(d) { return d.y; });
-		let maxZ = d3.max(d3.merge(data), function(d) { return d.z; });
-		let extent = d3.extent(d3.merge(data), function(d) { return d.y; });
+		let dataSummary = dataTransform(data).summary();
+		let seriesNames = dataSummary.rowKeys;
+		let groupNames = dataSummary.columnKeys;
+		let maxValue = dataSummary.maxValue;
 
 		// If the colorScale has not been passed then attempt to calculate.
 		colorScale = (typeof colorScale === "undefined") ?
-			d3.scaleLinear().domain(extent).range(colors).interpolate(d3.interpolateLab) :
+			d3.scaleLinear().domain([0, maxValue]).range(colors).interpolate(d3.interpolateLab) :
 			colorScale;
 
 		// Calculate Scales.
 		xScale = (typeof xScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxX]).range([0, dimensions.x]).nice() :
+			d3.scalePoint().domain(seriesNames).range([0, dimensions.x]) :
 			xScale;
 
 		yScale = (typeof yScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxY]).range([0, dimensions.y]).nice() :
+			d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]) :
 			yScale;
 
 		zScale = (typeof zScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxZ]).range([0, dimensions.z]).nice() :
+			d3.scalePoint().domain(groupNames).range([0, dimensions.z]) :
 			zScale;
 	}
 
@@ -99,7 +78,26 @@ export default function() {
 			init(data);
 
 			let ny = data.length;
-			let nx = data[0].length;
+			let nx = data[0].values.length;
+
+			let coordinatePoints = function(data) {
+				let points = data.map(function(X) {
+					return X.values.map(function(d) {
+						return [xScale(X.key), yScale(d.value), zScale(d.key)];
+					})
+				});
+				return array2dToString(points);
+			};
+
+			let colorFaceSet = function(data) {
+				let colors = data.map(function(X) {
+					return X.values.map(function(d) {
+						let col = d3.color(colorScale(d.value));
+						return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
+					})
+				});
+				return array2dToString(colors);
+			};
 
 			let coordIndex = Array.apply(0, Array(ny - 1)).map(function(_, j) {
 				return Array.apply(0, Array(nx - 1)).map(function(_, i) {

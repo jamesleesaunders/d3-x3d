@@ -89,11 +89,69 @@ function randomDataset3() {
 }
 
 /**
- * Random Dataset - Surface Area
+ * Random Dataset - Surface Area 2
  *
  * @returns {*}
  */
 function randomDataset4() {
+	var data = [
+		{
+			key: 'a',
+			values: [
+				{ key: '1', value: 4 },
+				{ key: '2', value: 0 },
+				{ key: '3', value: 2 },
+				{ key: '4', value: 0 },
+				{ key: '5', value: 0 }
+			]
+		}, {
+			key: 'b',
+			values: [
+				{ key: '1', value: 4 },
+				{ key: '2', value: 0 },
+				{ key: '3', value: 2 },
+				{ key: '4', value: 0 },
+				{ key: '5', value: 0 }
+			]
+		}, {
+			key: 'c',
+			values: [
+				{ key: '1', value: 1 },
+				{ key: '2', value: 0 },
+				{ key: '3', value: 1 },
+				{ key: '4', value: 0 },
+				{ key: '5', value: 0 }
+			]
+		}, {
+			key: 'd',
+			values: [
+				{ key: '1', value: 4 },
+				{ key: '2', value: 0 },
+				{ key: '3', value: 2 },
+				{ key: '4', value: 0 },
+				{ key: '5', value: 0 }
+			]
+		}, {
+			key: 'e',
+			values: [
+				{ key: '1', value: 1 },
+				{ key: '2', value: 1 },
+				{ key: '3', value: 1 },
+				{ key: '4', value: 1 },
+				{ key: '5', value: 1 }
+			]
+		}
+	];
+
+	return data;
+}
+
+/**
+ * Random Dataset - Surface Area
+ *
+ * @returns {*}
+ */
+function randomDataset5() {
 	var cx = 0.8;
 	var cy = 0.3;
 	var f = function(vx, vz) {
@@ -106,14 +164,19 @@ function randomDataset4() {
 	var nz = zRange.length;
 
 	var data = d3.range(nx).map(function(i) {
-		return d3.range(nz).map(
+
+		var values = d3.range(nz).map(
 			function(j) {
 				return {
-					x: xRange[j],
-					y: f(xRange[i], zRange[j]),
-					z: zRange[i]
+					key: j,
+					value: f(xRange[i], zRange[j])
 				};
 			});
+
+		return {
+			key: i,
+			values: values
+		};
 	});
 
 	return data;
