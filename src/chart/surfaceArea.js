@@ -44,7 +44,7 @@ export default function() {
 
 		// Calculate Scales.
 		xScale = (typeof xScale === "undefined") ?
-			d3.scaleBand().domain(seriesNames).range([0, dimensions.x]) :
+			d3.scalePoint().domain(seriesNames).range([0, dimensions.x]) :
 			xScale;
 
 		yScale = (typeof yScale === "undefined") ?
@@ -52,7 +52,7 @@ export default function() {
 			yScale;
 
 		zScale = (typeof zScale === "undefined") ?
-			d3.scaleBand().domain(groupNames).range([0, dimensions.z]) :
+			d3.scalePoint().domain(groupNames).range([0, dimensions.z]) :
 			zScale;
 	}
 

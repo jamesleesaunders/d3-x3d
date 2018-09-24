@@ -41,7 +41,6 @@ export default function() {
 				return [xScale(X.key), yScale(d.value), zScale(d.key)];
 			})
 		});
-		console.log(points);
 		return array2dToString(points);
 	};
 
@@ -74,15 +73,15 @@ export default function() {
 
 		// Calculate Scales.
 		xScale = (typeof xScale === "undefined") ?
-			d3.scaleBand().domain(seriesNames).range([0, dimensions.x]) :
+			d3.scalePoint().domain(seriesNames).range([0, dimensions.x]) :
 			xScale;
 
 		yScale = (typeof yScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]).nice() :
+			d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]) :
 			yScale;
 
 		zScale = (typeof zScale === "undefined") ?
-			d3.scaleBand().domain(groupNames).range([0, dimensions.z]) :
+			d3.scalePoint().domain(groupNames).range([0, dimensions.z]) :
 			zScale;
 	}
 
@@ -96,7 +95,6 @@ export default function() {
 		selection.classed(classed, true);
 
 		selection.each(function(data) {
-			console.log(data);
 			init(data);
 
 			let ny = data.length;
@@ -117,7 +115,6 @@ export default function() {
 			});
 
 			let coords = array2dToString(coordIndex.concat(coordIndexBack));
-			console.log(coords);
 
 			let surfaces = selection.selectAll('.surface')
 				.data([data]);

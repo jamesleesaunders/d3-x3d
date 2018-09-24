@@ -168,13 +168,13 @@ function randomDataset5() {
 		var values = d3.range(nz).map(
 			function(j) {
 				return {
-					key: xRange[j],
+					key: j,
 					value: f(xRange[i], zRange[j])
 				};
 			});
 
 		return {
-			key: zRange[i],
+			key: i,
 			values: values
 		};
 	});

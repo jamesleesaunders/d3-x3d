@@ -1462,7 +1462,6 @@ function componentSurfaceArea () {
 				return [xScale(X.key), yScale(d.value), zScale(d.key)];
 			});
 		});
-		console.log(points);
 		return array2dToString(points);
 	};
 
@@ -1492,11 +1491,11 @@ function componentSurfaceArea () {
 		colorScale = typeof colorScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range(colors).interpolate(d3.interpolateLab) : colorScale;
 
 		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleBand().domain(seriesNames).range([0, dimensions.x]) : xScale;
+		xScale = typeof xScale === "undefined" ? d3.scalePoint().domain(seriesNames).range([0, dimensions.x]) : xScale;
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]).nice() : yScale;
+		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]) : yScale;
 
-		zScale = typeof zScale === "undefined" ? d3.scaleBand().domain(groupNames).range([0, dimensions.z]) : zScale;
+		zScale = typeof zScale === "undefined" ? d3.scalePoint().domain(groupNames).range([0, dimensions.z]) : zScale;
 	}
 
 	/**
@@ -1509,7 +1508,6 @@ function componentSurfaceArea () {
 		selection.classed(classed, true);
 
 		selection.each(function (data) {
-			console.log(data);
 			init(data);
 
 			var ny = data.length;
@@ -1530,7 +1528,6 @@ function componentSurfaceArea () {
 			});
 
 			var coords = array2dToString(coordIndex.concat(coordIndexBack));
-			console.log(coords);
 
 			var surfaces = selection.selectAll('.surface').data([data]);
 
@@ -2358,11 +2355,11 @@ function chartSurfaceArea () {
 		colorScale = typeof colorScale === "undefined" ? d3.scaleLinear().domain(extent).range(colors).interpolate(d3.interpolateLab) : colorScale;
 
 		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleBand().domain(seriesNames).range([0, dimensions.x]) : xScale;
+		xScale = typeof xScale === "undefined" ? d3.scalePoint().domain(seriesNames).range([0, dimensions.x]) : xScale;
 
 		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain(extent).range([0, dimensions.y]).nice() : yScale;
 
-		zScale = typeof zScale === "undefined" ? d3.scaleBand().domain(groupNames).range([0, dimensions.z]) : zScale;
+		zScale = typeof zScale === "undefined" ? d3.scalePoint().domain(groupNames).range([0, dimensions.z]) : zScale;
 	}
 
 	/**
