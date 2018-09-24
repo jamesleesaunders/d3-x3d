@@ -35,26 +35,6 @@ export default function() {
 			.join(' ');
 	}
 
-	let coordinatePoints = function(data) {
-		let points = data.map(function(X) {
-			return X.values.map(function(d) {
-				return [xScale(X.key), yScale(d.value), zScale(d.key)];
-			})
-		});
-		return array2dToString(points);
-	};
-
-	let colorFaceSet = function(data) {
-		let colors = data.map(function(X) {
-			return X.values.map(function(d) {
-				let col = d3.color(colorScale(d.value));
-				return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
-			})
-		});
-
-		return array2dToString(colors);
-	};
-
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -99,6 +79,25 @@ export default function() {
 
 			let ny = data.length;
 			let nx = data[0].values.length;
+
+			let coordinatePoints = function(data) {
+				let points = data.map(function(X) {
+					return X.values.map(function(d) {
+						return [xScale(X.key), yScale(d.value), zScale(d.key)];
+					})
+				});
+				return array2dToString(points);
+			};
+
+			let colorFaceSet = function(data) {
+				let colors = data.map(function(X) {
+					return X.values.map(function(d) {
+						let col = d3.color(colorScale(d.value));
+						return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
+					})
+				});
+				return array2dToString(colors);
+			};
 
 			let coordIndex = Array.apply(0, Array(ny - 1)).map(function(_, j) {
 				return Array.apply(0, Array(nx - 1)).map(function(_, i) {

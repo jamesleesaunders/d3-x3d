@@ -1456,26 +1456,6 @@ function componentSurfaceArea () {
 		}, []).join(' ');
 	}
 
-	var coordinatePoints = function coordinatePoints(data) {
-		var points = data.map(function (X) {
-			return X.values.map(function (d) {
-				return [xScale(X.key), yScale(d.value), zScale(d.key)];
-			});
-		});
-		return array2dToString(points);
-	};
-
-	var colorFaceSet = function colorFaceSet(data) {
-		var colors = data.map(function (X) {
-			return X.values.map(function (d) {
-				var col = d3.color(colorScale(d.value));
-				return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
-			});
-		});
-
-		return array2dToString(colors);
-	};
-
 	/**
   * Initialise Data and Scales
   *
@@ -1512,6 +1492,25 @@ function componentSurfaceArea () {
 
 			var ny = data.length;
 			var nx = data[0].values.length;
+
+			var coordinatePoints = function coordinatePoints(data) {
+				var points = data.map(function (X) {
+					return X.values.map(function (d) {
+						return [xScale(X.key), yScale(d.value), zScale(d.key)];
+					});
+				});
+				return array2dToString(points);
+			};
+
+			var colorFaceSet = function colorFaceSet(data) {
+				var colors = data.map(function (X) {
+					return X.values.map(function (d) {
+						var col = d3.color(colorScale(d.value));
+						return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
+					});
+				});
+				return array2dToString(colors);
+			};
 
 			var coordIndex = Array.apply(0, Array(ny - 1)).map(function (_, j) {
 				return Array.apply(0, Array(nx - 1)).map(function (_, i) {
