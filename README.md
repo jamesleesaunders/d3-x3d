@@ -12,7 +12,7 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 ### Examples
 
 * [Multi Series Bar Chart](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/BarChartMultiSeries.html)
-* [Bar Chart](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/BarChartVertical.html)
+* [Vertical Bar Chart](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/BarChartVertical.html)
 * [Bubble Chart](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/BubbleChart.html)
 * [Scatter Plot](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/ScatterPlot.html)
 * [Surface Area](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/SurfaceArea.html)
