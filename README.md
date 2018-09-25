@@ -139,7 +139,7 @@ _\*optional, `x`, `y` & `z` values are used for cartesian coordinate type graphs
 
 ```javascript
 var myData = {
-	key: "Tesco",
+	key: "France",
 	values: [
 		{ key: "Apples", value: 9, x: 1, y: 2, z: 5 },
 		/* ... */
@@ -155,7 +155,7 @@ Used for charts such as the multi series scatter plot, the data structure is sim
 ```javascript
 var myData = [
 	{
-		key: "Tesco",
+		key: "UK",
 		values: [
 			{ key: "Apples", value: 9, /* ... */ },
 			/* ... */
@@ -164,7 +164,7 @@ var myData = [
 	},
 	/* ... */
 	{
-		key: "Asda",
+		key: "France",
 		values: [
 			{ key: "Apples", value: 5, /* ... */ },
 			/* ... */
