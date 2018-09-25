@@ -298,9 +298,14 @@ function dataTransform (data) {
 		return ret;
 	}();
 
-	// If thresholds values are not already set attempt to auto-calculate some thresholds
+	/**
+  * Attempt to auto-calculate some thresholds
+  */
 	var thresholds = function () {
 		var distance = maxValue - minValue;
+
+		// toFixed must be between 0 and 20
+		maxDecimalPlace = maxDecimalPlace > 20 ? 20 : maxDecimalPlace;
 
 		return [+(minValue + 0.15 * distance).toFixed(maxDecimalPlace), +(minValue + 0.40 * distance).toFixed(maxDecimalPlace), +(minValue + 0.55 * distance).toFixed(maxDecimalPlace), +(minValue + 0.90 * distance).toFixed(maxDecimalPlace)];
 	}();
