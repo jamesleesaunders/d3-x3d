@@ -84,112 +84,89 @@ Attach chart and data to the chartholder:
 chartHolder.datum(myData).call(myChart);
 ```
 
-Thats it! View the page in a browser and you should see a basic 3D bar chart.
+Thats all there is to it! View the page in a browser and you should see a basic 3D bar chart.
 
 ### Components and Charts
 
-**d3-x3d** has two types of modules: `chart` and `component`.
+**d3-x3d** has two types of reusable modules: `chart` and `component`.
 
 #### Components
 
-The `component` modules are lower level building blocks which can be used independently, or combined to build more advanced charts. For example combining the `bubbles()` and `axis()` components together we create the `scatterPlot()` chart:
+The `component` modules are lower level building blocks which can be used independently, or combined to build more advanced charts. 
+For example, combining the `bubbles()` and `axis()` components together we create the `scatterPlot()` chart:
 
-| Function                              | Description                     |
-| ------------------------------------- | ------------------------------- |
-| d3.x3d.component.axis()               | Single plane x/y Axis           |
-| d3.x3d.component.axisThreePlane()     | Multi plane x/y/z Axis          |
-| d3.x3d.component.bars()               | Single series Bar Chart         |
-| d3.x3d.component.barsMultiSeries()    | Multi Series Bar Chart          |
-| d3.x3d.component.bubbles()            | Bubble / Scatter Plot           |
-| d3.x3d.component.bubblesMultiSeries() | Multi Series Bubbles / Scatter  |
-| d3.x3d.component.surfaceArea()        | Surface Area                    |
-| d3.x3d.component.viewpoint()          | Viewpoint camera                |
+| Function                              | Description                                  |
+| ------------------------------------- | -------------------------------------------- |
+| d3.x3d.component.axis()               | Single plane x/y Axis                        |
+| d3.x3d.component.axisThreePlane()     | Multi plane x/y/z Axis                       |
+| d3.x3d.component.bars()               | Singles series Bar Chart                     |
+| d3.x3d.component.barsMultiSeries()    | Multi series Bar Chart                       |
+| d3.x3d.component.bubbles()            | Bubble / Scatter Plot                        |
+| d3.x3d.component.bubblesMultiSeries() | Multi series Bubbles / Scatter Plot          |
+| d3.x3d.component.surfaceArea()        | Surface Area                                 |
+| d3.x3d.component.viewpoint()          | User's location and viewing model parameters |
 
 #### Charts
 
-The `chart` modules are higher level, pre-combined components, making it even simpler to quickly create charts. All the charts typically include a viewpoint, axis and one or more of the other components above.
+The `chart` modules are higher level, pre-combined components, making it even simpler to quickly create charts. 
+All the charts typically include a viewpoint, axis and one or more of the other components above.
 
-| Function                        | Description                     |
-| ------------------------------- | ------------------------------- |
-| d3.x3d.chart.barChart()         | Bar Chart & Axis                |
-| d3.x3d.chart.bubbleChart()      | Bubble Chart & Axis             |
-| d3.x3d.chart.scatterPlot()      | Scatter Plot & Axis             |
-| d3.x3d.chart.surfaceArea()      | Surface Area & Axis             |
-
-### Options
-
-The chart components can be customised with various options:
-
-| Option       | Description                 |
-| ------------ | --------------------------- |
-| width        | X3DOM canvas width          |
-| height       | X3DOM canvas height         |
-| dimensions   | 3D chart dimensions {x,y,z} |
-| xScale       | X Scale Object              |
-| yScale       | Y Scale Object              |
-| zScale       | Z Scale Object              |
-| colorScale   | Color Scale                 |
-| color        | Color list                  |
-| debug        | Bool Show debug and stats   |
-
-Example:
-
-```javascript
-var myChart = d3.x3d.chart.scatterPlot()
-	.debug(true)
-	.height(500)
-	.width(500)
-	.dimensions({x: 40, y: 40, z: 40})
-	.colors(["orange", "red", "yellow", "steelblue", "green"]);
-```
+| Function                              | Description                                  |
+| ------------------------------------- | -------------------------------------------- |
+| d3.x3d.chart.barChart()               | Multi series Bar Chart & Axis                |
+| d3.x3d.chart.bubbleChart()            | Multi series Bubble Chart & Axis             |
+| d3.x3d.chart.scatterPlot()            | Scatter Plot & Axis                          |
+| d3.x3d.chart.surfaceArea()            | Surface Area Chart & Axis                    |
 
 ### Data Structures
 
 At its most basic description, the format of the d3-x3d data is a series of key / value pairs. Depending on whether the chart is a single series or multi series chart the data structure differs slightly.
 
 #### Single Series Data
+
 Used by charts such as a single series bar chart, the data structure is an object with the following structure:
-* `key` {string} - The series name.
+* `key` {string} - The series name
 * `values` {array} - An array of objects containing:
-  * `key` {string} - The value name.
-  * `value` {number} - The value.
-  * `x` {number} - \*X axis value.
-  * `y` {number} - \*Y axis value.
-  * `z` {number} - \*Z axis value.
+  * `key` {string} - The value name
+  * `value` {number} - The value
+  * `x` {number} - X axis value\*
+  * `y` {number} - Y axis value\*
+  * `z` {number} - Z axis value\*
 	
 _\*optional, `x`, `y` & `z` values are used for cartesian coordinate type graphs such as the scatter plot._
 
 ```javascript
 var myData = {
-	key: "Fruit",
+	key: "Tesco",
 	values: [
 		{ key: "Apples", value: 9, x: 1, y: 2, z: 5 },
-		// ...
+		/* ... */
 		{ key: "Oranges", value: 7, x: 6, y: 3, z: 8 }
 	]
 };
 ```
 
-#### Multi Series Data 
+#### Multi Series Data
+
 Used for charts such as the multi series scatter plot, the data structure is simply an array of single series data objects.
 
 ```javascript
 var myData = [
 	{
-		key: "UK",
+		key: "Tesco",
 		values: [
-			{ key: "Apples", value: 9 },
-			// ...
-			{ key: "Oranges", value: 7 }
+			{ key: "Apples", value: 9, /* ... */ },
+			/* ... */
+			{ key: "Oranges", value: 7, /* ... */ }
 		]
 	},
-	// ...
+	/* ... */
 	{
-		key: "France",
+		key: "Asda",
 		values: [
-			{ key: "Apples", value: 5 },
-			// ...
-			{ key: "Oranges", value: 2 }
+			{ key: "Apples", value: 5, /* ... */ },
+			/* ... */
+			{ key: "Oranges", value: 2, /* ... */ }
 		]
 	}
 ];
