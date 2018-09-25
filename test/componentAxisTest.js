@@ -1,6 +1,5 @@
 let d3X3d = require("../");
 let tape = require("tape");
-let d3 = require("d3");
 
 tape("Test Axis Component", function(test) {
 	let axis = d3X3d.component.axis();
