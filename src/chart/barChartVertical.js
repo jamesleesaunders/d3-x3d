@@ -78,7 +78,8 @@ export default function() {
 			.append("group")
 			.attr("class", function(d) { return d; });
 
-		let viewpoint = component.viewpoint();
+		let viewpoint = component.viewpoint()
+			.quickView("left");
 		scene.call(viewpoint);
 
 		scene.each(function(data) {

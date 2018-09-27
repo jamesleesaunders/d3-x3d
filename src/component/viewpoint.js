@@ -38,7 +38,7 @@ export default function() {
 	my.quickView = function(view) {
 		switch (view) {
 			case "left":
-				viewPosition = [18.41614, 20.45000, 108.68742];
+				viewPosition = [18.41614, 20.45000, 53.52338];
 				viewOrientation = [0.0, 0.0, 0.0, 0.0];
 				fieldOfView = 1.0;
 				break;
