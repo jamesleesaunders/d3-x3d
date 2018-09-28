@@ -142,8 +142,7 @@ var myData = {
 	key: "Sainsburys",
 	values: [
 		{ key: "Apples", value: 9, x: 1, y: 2, z: 5 },
-		{ key: "Pears", value: 3, x: 3, y: 9, z: 8 },
-		{ key: "Grapes", value: 1, x: 3, y: 5, z: 1 },
+		/* ... */
 		{ key: "Oranges", value: 7, x: 6, y: 3, z: 8 }
 	]
 };
