@@ -99,7 +99,7 @@ For example, combining the `bubbles()` and `axis()` components together we creat
 | Function                              | Description                                  | Example     
 | ------------------------------------- | -------------------------------------------- | ------- 
 | d3.x3d.component.axis()               | Single plane x/y Axis                        | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
-| d3.x3d.component.axisThreePlane()     | Multi plane x/y/z Axis                       | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
+| d3.x3d.component.axisThreePlane()     | Three plane x/y/z Axis                       | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
 | d3.x3d.component.bars()               | Single series Bar Chart                      | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
 | d3.x3d.component.barsMultiSeries()    | Multi series Bar Chart                       | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
 | d3.x3d.component.bubbles()            | Bubble / Scatter Plot                        | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
