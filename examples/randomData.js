@@ -7,7 +7,7 @@
  */
 "use strict";
 
-var countries = ["UK", "France", "Spain", "Germany", "Italy", "Portugal"];
+var countries = ["Sainsburys", "Tesco", "Asda", "Waitrose", "Morrisons", "Lidl"];
 var fruit = ["Apples", "Oranges", "Pears", "Kiwis"];
 
 /**
