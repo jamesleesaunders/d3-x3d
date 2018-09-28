@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3d : 2D Rectangle</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
+  <script src="../build/d3-x3d.js"></script>
+  <script src="randomData.js"></script>
+</head>
+
+<body>
+  <div id="chartholder">
+    <x3d width="500px" height="500px">
+      <scene render="true" bboxcenter="0,0,0" bboxsize="-1,-1,-1" pickmode="idBuf" dopickpass="true">
+        <transform translation="0 0 0" render="true" bboxCenter="0,0,0" bboxSize="-1,-1,-1" center="0,0,0" rotation="0,0,0,0" scale="1,1,1" scaleOrientation="0,0,0,0">
+          <shape render="true" bboxCenter="0,0,0" bboxSize="-1,-1,-1" isPickable="true">
+            <rectangle2d size="2 1" solid="true" ccw="true" useGeoCache="true" lit="true" subdivision="1,1"></rectangle2d>
+            <appearance>
+              <material diffuseColor="red"></material>
+            </appearance>
+          </shape>
+        </transform>
+      </scene>
+    </x3d>
+  </div>
+</body>
