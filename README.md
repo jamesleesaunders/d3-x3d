@@ -53,7 +53,7 @@ Generate some [data](#data-structure):
 ```javascript
 var myData = [
 	{
-		key: "UK",
+		key: "Sainsburys",
 		values: [
 			{ key: "Apples", value: 9 },
 			{ key: "Oranges", value: 3 },
@@ -62,7 +62,7 @@ var myData = [
 		]
 	},
 	{
-		key: "France",
+		key: "Tesco",
 		values: [
 			{ key: "Apples", value: 5 },
 			{ key: "Oranges", value: 4 },
