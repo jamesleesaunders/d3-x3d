@@ -16,7 +16,7 @@ export default function() {
 	let width = 500;
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = ["orange", "red", "yellow", "steelblue", "green"];
+	let colors = ["green", "red", "yellow", "steelblue", "orange"];
 	let classed = "x3dBarChart";
 	let debug = false;
 

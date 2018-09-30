@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.0.8";
+var version = "1.0.9";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -506,7 +506,7 @@ function componentAxis () {
 
 		newText.attr("translation", tickDirVec.map(function (d) {
 			return -d * tickPadding;
-		})).append("billboard").attr("axisOfRotation", "0 0 0").append("shape").call(makeSolid, "black").append("text").attr("string", format).append("fontstyle").attr("size", 1).attr("family", "SANS").attr("style", "BOLD").attr("justify", "MIDDLE ");
+		})).append("billboard").attr("axisOfRotation", "0 0 0").append("shape").call(makeSolid, "black").append("text").attr("string", format).append("fontstyle").attr("size", 1.3).attr("family", "SANS").attr("style", "BOLD").attr("justify", "MIDDLE ");
 		text = text.merge(newText);
 
 		tickExit.remove();
@@ -842,7 +842,7 @@ function componentBars () {
 			barsEnter.append("box").attr("size", "1.0 1.0 1.0");
 			barsEnter.append("appearance").append("material").attr("diffuseColor", function (d) {
 				return colorScale(d.key);
-			});
+			}).attr("ambientIntensity", "0.1");
 
 			bars.transition().attr("scale", function (d) {
 				var x = xScale.bandwidth();
@@ -1259,7 +1259,7 @@ function componentBubblesMultiSeries () {
   * Default Properties
   */
 	var dimensions = { x: 40, y: 40, z: 40 };
-	var colors = ["orange", "red", "yellow", "steelblue", "green"];
+	var colors = ["green", "red", "yellow", "steelblue", "orange"];
 	var classed = "x3dBubblesMulti";
 
 	/**
@@ -1740,7 +1740,7 @@ function chartBarChartMultiSeries () {
 	var width = 500;
 	var height = 500;
 	var dimensions = { x: 40, y: 40, z: 40 };
-	var colors = ["orange", "red", "yellow", "steelblue", "green"];
+	var colors = ["green", "red", "yellow", "steelblue", "orange"];
 	var classed = "x3dBarChart";
 	var debug = false;
 
@@ -1797,6 +1797,8 @@ function chartBarChartMultiSeries () {
 
 		var viewpoint = component.viewpoint();
 		scene.call(viewpoint);
+
+		scene.append("directionallight").attr("direction", "1 0 -1").attr("on", "true").attr("intensity", "0.4").attr("shadowintensity", "0");
 
 		scene.each(function (data) {
 			init(data);
@@ -1938,7 +1940,7 @@ function chartBarChartVertical () {
 	var width = 500;
 	var height = 500;
 	var dimensions = { x: 40, y: 40, z: 40 };
-	var colors = ["orange", "red", "yellow", "steelblue", "green"];
+	var colors = ["green", "red", "yellow", "steelblue", "orange"];
 	var classed = "x3dBarChart";
 	var debug = false;
 
@@ -2124,7 +2126,7 @@ function chartBubbleChart () {
 	var width = 500;
 	var height = 500;
 	var dimensions = { x: 40, y: 40, z: 40 };
-	var colors = ["orange", "red", "yellow", "steelblue", "green"];
+	var colors = ["green", "red", "yellow", "steelblue", "orange"];
 	var classed = "x3dScatterPlot";
 	var debug = false;
 
@@ -2184,6 +2186,8 @@ function chartBubbleChart () {
 
 		var viewpoint = component.viewpoint();
 		scene.call(viewpoint);
+
+		scene.append("directionallight").attr("direction", "1 0 -1").attr("on", "true").attr("intensity", "0.4").attr("shadowintensity", "0");
 
 		scene.each(function (data) {
 			init(data);

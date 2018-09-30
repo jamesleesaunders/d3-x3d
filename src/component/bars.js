@@ -86,7 +86,8 @@ export default function() {
 				.append("material")
 				.attr("diffuseColor", function(d) {
 					return colorScale(d.key);
-				});
+				})
+				.attr("ambientIntensity", "0.1");
 
 			bars.transition()
 				.attr("scale", function(d) {

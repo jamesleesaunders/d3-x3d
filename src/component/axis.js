@@ -150,7 +150,7 @@ export default function() {
 			.append("text")
 			.attr("string", format)
 			.append("fontstyle")
-			.attr("size", 1)
+			.attr("size", 1.3)
 			.attr("family", "SANS")
 			.attr("style", "BOLD")
 			.attr("justify", "MIDDLE ");

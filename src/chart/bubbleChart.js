@@ -16,7 +16,7 @@ export default function() {
 	let width = 500;
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = ["orange", "red", "yellow", "steelblue", "green"];
+	let colors = ["green", "red", "yellow", "steelblue", "orange"];
 	let classed = "x3dScatterPlot";
 	let debug = false;
 
@@ -91,6 +91,12 @@ export default function() {
 
 		let viewpoint = component.viewpoint();
 		scene.call(viewpoint);
+
+		scene.append("directionallight")
+			.attr("direction", "1 0 -1")
+			.attr("on", "true")
+			.attr("intensity", "0.4")
+			.attr("shadowintensity", "0");
 
 		scene.each(function(data) {
 			init(data);
