@@ -57,7 +57,7 @@ export default function() {
 	 * Get Axis Rotation Vector
 	 *
 	 * @param {string} axisDir
-	 *  @returns {[{number}, {number}, {number}, {number}]}
+	 * @returns {[{number}, {number}, {number}, {number}]}
 	 */
 	function getAxisRotationVector(axisDir) {
 		let result;
@@ -153,7 +153,7 @@ export default function() {
 			.attr("size", 1.3)
 			.attr("family", "SANS")
 			.attr("style", "BOLD")
-			.attr("justify", "MIDDLE ");
+			.attr("justify", "MIDDLE");
 		text = text.merge(newText);
 
 		tickExit.remove();

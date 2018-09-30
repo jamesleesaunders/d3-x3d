@@ -428,7 +428,7 @@ function componentAxis () {
   * Get Axis Rotation Vector
   *
   * @param {string} axisDir
-  *  @returns {[{number}, {number}, {number}, {number}]}
+  * @returns {[{number}, {number}, {number}, {number}]}
   */
 	function getAxisRotationVector(axisDir) {
 		var result = void 0;
@@ -499,14 +499,14 @@ function componentAxis () {
 
 		path = path.merge(path.enter().append("transform").attr("rotation", rotVec.join(" ")).attr("translation", dirVec.map(function (d) {
 			return d * (range0 + range1) / 2;
-		}).join("   ")).append("shape").call(makeSolid, color).attr("class", "domain"));
+		}).join(" ")).append("shape").call(makeSolid, color).attr("class", "domain"));
 		tick = tick.merge(tickEnter);
 		line = line.merge(tickEnter.append("transform"));
 		var newText = tickEnter.append("transform");
 
 		newText.attr("translation", tickDirVec.map(function (d) {
 			return -d * tickPadding;
-		})).append("billboard").attr("axisOfRotation", "0 0 0").append("shape").call(makeSolid, "black").append("text").attr("string", format).append("fontstyle").attr("size", 1.3).attr("family", "SANS").attr("style", "BOLD").attr("justify", "MIDDLE ");
+		})).append("billboard").attr("axisOfRotation", "0 0 0").append("shape").call(makeSolid, "black").append("text").attr("string", format).append("fontstyle").attr("size", 1.3).attr("family", "SANS").attr("style", "BOLD").attr("justify", "MIDDLE");
 		text = text.merge(newText);
 
 		tickExit.remove();
