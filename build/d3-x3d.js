@@ -499,7 +499,7 @@ function componentAxis () {
 
 		path = path.merge(path.enter().append("transform").attr("rotation", rotVec.join(" ")).attr("translation", dirVec.map(function (d) {
 			return d * (range0 + range1) / 2;
-		}).join(" ")).append("shape").call(makeSolid, color).attr("class", "domain"));
+		}).join("   ")).append("shape").call(makeSolid, color).attr("class", "domain"));
 		tick = tick.merge(tickEnter);
 		line = line.merge(tickEnter.append("transform"));
 		var newText = tickEnter.append("transform");
