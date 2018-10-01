@@ -15,6 +15,7 @@ export default function() {
 	let viewPosition = [80.0, 15.0, 80.0];
 	let viewOrientation = [0.0, 1.0, 0.0, 0.8];
 	let fieldOfView = 0.8;
+	let classed = "x3dViewpoint";
 
 	/**
 	 * Constructor
@@ -24,6 +25,7 @@ export default function() {
 	 */
 	function my(selection) {
 		selection.append("viewpoint")
+			.classed(classed, true)
 			.attr("centerOfRotation", centerOfRotation.join(" "))
 			.attr("position", viewPosition.join(" "))
 			.attr("orientation", viewOrientation.join(" "))

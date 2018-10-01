@@ -653,7 +653,7 @@ function componentAxisThreePlane () {
   */
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["blue", "red", "green"];
-	var classed = "x3dAxisMulti";
+	var classed = "x3dAxisThreePlane";
 
 	/**
   * Scales
@@ -933,7 +933,7 @@ function componentBarsMultiSeries () {
   */
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["orange", "red", "yellow", "steelblue", "green"];
-	var classed = "x3dBarsMulti";
+	var classed = "x3dBarsMultiSeries";
 
 	/**
   * Scales
@@ -1260,7 +1260,7 @@ function componentBubblesMultiSeries () {
   */
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["green", "red", "yellow", "steelblue", "orange"];
-	var classed = "x3dBubblesMulti";
+	var classed = "x3dBubblesMultiSeries";
 
 	/**
   * Scales
@@ -1437,7 +1437,7 @@ function componentSurfaceArea () {
   */
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["blue", "red"];
-	var classed = "x3dSurface";
+	var classed = "x3dSurfaceArea";
 
 	/**
   * Scales
@@ -1533,11 +1533,11 @@ function componentSurfaceArea () {
 
 			var coords = array2dToString(coordIndex.concat(coordIndexBack));
 
-			var surfaces = selection.selectAll('.surface').data([data]);
+			var surfaces = selection.selectAll(".surface").data([data]);
 
-			surfaces.enter().append('shape').append('indexedfaceset').attr('coordIndex', coords).append("coordinate").attr('point', coordinatePoints);
+			surfaces.enter().append("shape").append("indexedfaceset").attr("coordIndex", coords).append("coordinate").attr("point", coordinatePoints);
 
-			d3.selectAll('indexedFaceSet').append('color').attr('color', colorFaceSet);
+			d3.selectAll("indexedFaceSet").append("color").attr("color", colorFaceSet);
 		});
 	}
 
@@ -1630,6 +1630,7 @@ function componentViewpoint () {
 	var viewPosition = [80.0, 15.0, 80.0];
 	var viewOrientation = [0.0, 1.0, 0.0, 0.8];
 	var fieldOfView = 0.8;
+	var classed = "x3dViewpoint";
 
 	/**
   * Constructor
@@ -1638,7 +1639,7 @@ function componentViewpoint () {
   * @param {d3.selection} selection
   */
 	function my(selection) {
-		selection.append("viewpoint").attr("centerOfRotation", centerOfRotation.join(" ")).attr("position", viewPosition.join(" ")).attr("orientation", viewOrientation.join(" ")).attr("fieldOfView", fieldOfView).attr("set_bind", "true");
+		selection.append("viewpoint").classed(classed, true).attr("centerOfRotation", centerOfRotation.join(" ")).attr("position", viewPosition.join(" ")).attr("orientation", viewOrientation.join(" ")).attr("fieldOfView", fieldOfView).attr("set_bind", "true");
 	}
 
 	/**
@@ -1741,7 +1742,7 @@ function chartBarChartMultiSeries () {
 	var height = 500;
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["green", "red", "yellow", "steelblue", "orange"];
-	var classed = "x3dBarChart";
+	var classed = "x3dBarChartMultiSeries";
 	var debug = false;
 
 	/**
@@ -1941,7 +1942,7 @@ function chartBarChartVertical () {
 	var height = 500;
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["green", "red", "yellow", "steelblue", "orange"];
-	var classed = "x3dBarChart";
+	var classed = "x3dBarChartVertical";
 	var debug = false;
 
 	/**
@@ -2127,7 +2128,7 @@ function chartBubbleChart () {
 	var height = 500;
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["green", "red", "yellow", "steelblue", "orange"];
-	var classed = "x3dScatterPlot";
+	var classed = "x3dBubbleChart";
 	var debug = false;
 
 	/**

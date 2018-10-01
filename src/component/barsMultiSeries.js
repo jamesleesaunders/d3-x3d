@@ -14,7 +14,7 @@ export default function() {
 	 */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["orange", "red", "yellow", "steelblue", "green"];
-	let classed = "x3dBarsMulti";
+	let classed = "x3dBarsMultiSeries";
 
 	/**
 	 * Scales

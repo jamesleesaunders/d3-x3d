@@ -14,7 +14,7 @@ export default function() {
 	 */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["green", "red", "yellow", "steelblue", "orange"];
-	let classed = "x3dBubblesMulti";
+	let classed = "x3dBubblesMultiSeries";
 
 	/**
 	 * Scales

@@ -13,7 +13,7 @@ export default function() {
 	 */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["blue", "red"];
-	let classed = "x3dSurface";
+	let classed = "x3dSurfaceArea";
 
 	/**
 	 * Scales
@@ -115,20 +115,20 @@ export default function() {
 
 			let coords = array2dToString(coordIndex.concat(coordIndexBack));
 
-			let surfaces = selection.selectAll('.surface')
+			let surfaces = selection.selectAll(".surface")
 				.data([data]);
 
 			surfaces
 				.enter()
-				.append('shape')
-				.append('indexedfaceset')
-				.attr('coordIndex', coords)
+				.append("shape")
+				.append("indexedfaceset")
+				.attr("coordIndex", coords)
 				.append("coordinate")
-				.attr('point', coordinatePoints);
+				.attr("point", coordinatePoints);
 
-			d3.selectAll('indexedFaceSet')
-				.append('color')
-				.attr('color', colorFaceSet);
+			d3.selectAll("indexedFaceSet")
+				.append("color")
+				.attr("color", colorFaceSet);
 		});
 	}
 

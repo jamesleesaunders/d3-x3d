@@ -14,7 +14,7 @@ export default function() {
 	 */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["blue", "red", "green"];
-	let classed = "x3dAxisMulti";
+	let classed = "x3dAxisThreePlane";
 
 	/**
 	 * Scales
