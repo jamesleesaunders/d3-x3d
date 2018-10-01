@@ -17,6 +17,7 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Scatter Plot](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/ScatterPlot.html)
 * [Surface Area](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/SurfaceArea.html)
 * [Components Showcase](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
+* [Observable Examples](https://beta.observablehq.com/collection/@jamesleesaunders/d3-x3d)
 
 ### Getting Started
 
