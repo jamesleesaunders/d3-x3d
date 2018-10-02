@@ -7,7 +7,7 @@
  */
 "use strict";
 
-var countries = ["Sainsburys", "Tesco", "Asda", "Waitrose", "Morrisons", "Lidl"];
+var stores = ["Sainsburys", "Tesco", "Asda", "Waitrose", "Morrisons", "Lidl"];
 var fruit = ["Apples", "Oranges", "Pears", "Kiwis"];
 
 /**
@@ -47,7 +47,7 @@ function randomDataset1() {
  * @returns {Array|{key: string, values: (Array|{key: string, value: number, x: number, y: number, z: number}[])}[]}
  */
 function randomDataset2() {
-	var data = countries.map(function(d) {
+	var data = stores.map(function(d) {
 		return {
 			key: d,
 			values: fruit.map(function(d) {
