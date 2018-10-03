@@ -44,8 +44,8 @@
       .call(bubblesComponent);
 
     // ========== Bubbles Multi Component ==========
-    var bubblesMultiData = randomDataset2();
-    var bubblesMultiComponent = d3.x3d.component.bubblesMultiSeries();
+    var bubblesMultiSeriesData = randomDataset2();
+    var bubblesMultiSeriesComponent = d3.x3d.component.bubblesMultiSeries();
 
     // Create scene
     var scene2 = d3.select("#chartholder2")
@@ -59,12 +59,12 @@
     scene2.call(viewpoint)
       .append("group")
       .attr("class", "chart")
-      .datum(bubblesMultiData)
-      .call(bubblesMultiComponent);
+      .datum(bubblesMultiSeriesData)
+      .call(bubblesMultiSeriesComponent);
 
     // ========== Surface Component ==========
-    var surfaceData = randomDataset5();
-    var surfaceComponent = d3.x3d.component.surfaceArea();
+    var surfaceAreaData = randomDataset5();
+    var surfaceAreaComponent = d3.x3d.component.surfaceArea();
 
     // Create scene
     var scene3 = d3.select("#chartholder3")
@@ -78,12 +78,12 @@
     scene3.call(viewpoint)
       .append("group")
       .attr("class", "chart")
-      .datum(surfaceData)
-      .call(surfaceComponent);
+      .datum(surfaceAreaData)
+      .call(surfaceAreaComponent);
 
     // ========== Bars Multi Component ==========
-    var barsMultiData = randomDataset2();
-    var barsMultiComponent = d3.x3d.component.barsMultiSeries();
+    var barsMultiSeriedData = randomDataset2();
+    var barsMultiSeriesComponent = d3.x3d.component.barsMultiSeries();
 
     // Create scene
     var scene4 = d3.select("#chartholder4")
@@ -97,14 +97,14 @@
     scene4.call(viewpoint)
       .append("group")
       .attr("class", "chart")
-      .datum(barsMultiData)
-      .call(barsMultiComponent);
+      .datum(barsMultiSeriesData)
+      .call(barsMultiSeriesComponent);
 
     // ========== Axis Component ==========
     var xScale = d3.scaleBand().domain(stores).rangeRound([0, 40]);
     var yScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
     var zScale = d3.scaleBand().domain(fruit).range([0, 40]);
-    var axisMultiComponent = d3.x3d.component.axisThreePlane()
+    var axisThreePlaneComponent = d3.x3d.component.axisThreePlane()
       .xScale(xScale)
       .yScale(yScale)
       .zScale(zScale);
@@ -121,7 +121,7 @@
     scene5.call(viewpoint)
       .append("group")
       .attr("class", "chart")
-      .call(axisMultiComponent);
+      .call(axisThreePlaneComponent);
 
     // ========== Sync Viewpoints ==========
     var viewpoints = document.querySelectorAll("viewpoint");
