@@ -53,7 +53,7 @@ export default function() {
 				fieldOfView = 1.0;
 				break;
 
-			case "front":
+        	case "dimetric":
 			default:
 				viewPosition = [80.0, 15.0, 80.0];
 				viewOrientation = [0.0, 1.0, 0.0, 0.8];
