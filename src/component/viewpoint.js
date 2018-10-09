@@ -36,18 +36,27 @@ export default function() {
 	/**
 	 * Set Quick Viewpoint
 	 *
-	 * @param {string} view - 'left', 'top', 'front'
+	 * @param {string} view - 'left', 'side', 'top', 'dimetric'
 	 * @returns {my}
 	 */
 	my.quickView = function(view) {
 		switch (view) {
 			case "left":
+				centerOfRotation = [0.0, 0.0, 0.0];
 				viewPosition = [37.10119, 18.70484, 51.01594];
 				viewOrientation = [0.06724, 0.99767, -0.01148, 0.33908];
 				fieldOfView = 1.0;
 				break;
 
+			case "side":
+				centerOfRotation = [20.0, 0.0, 0.0];
+				viewPosition = [20.00000, 20.00000, 50.00000];
+				viewOrientation = [0.00000, 0.00000, 0.00000, 0.00000];
+				fieldOfView = 1.0;
+				break;
+
 			case "top":
+				centerOfRotation = [0.0, 0.0, 0.0];
 				viewPosition = [27.12955, 106.67181, 31.65828];
 				viewOrientation = [-0.86241, 0.37490, 0.34013, 1.60141];
 				fieldOfView = 1.0;
@@ -55,6 +64,7 @@ export default function() {
 
 			case "dimetric":
 			default:
+				centerOfRotation = [0.0, 0.0, 0.0];
 				viewPosition = [80.0, 15.0, 80.0];
 				viewOrientation = [0.0, 1.0, 0.0, 0.8];
 				fieldOfView = 0.8;
