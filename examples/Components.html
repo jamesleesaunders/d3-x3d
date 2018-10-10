@@ -16,6 +16,7 @@
   <div id="chartholder3"></div>
   <div id="chartholder4"></div>
   <div id="chartholder5"></div>
+  <div id="chartholder6"></div>
 
   <script>
     // Chart dimensions
@@ -122,6 +123,25 @@
       .append("group")
       .attr("class", "chart")
       .call(axisThreePlaneComponent);
+
+    // ========== Bars Multi Component ==========
+    var barsData = randomDataset1();
+    var barsComponent = d3.x3d.component.bars();
+
+    // Create scene
+    var scene6 = d3.select("#chartholder6")
+      .append("x3d")
+      .attr("id", "bars")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("scene");
+
+    // Add chart component
+    scene6.call(viewpoint)
+      .append("group")
+      .attr("class", "chart")
+      .datum(barsData)
+      .call(barsComponent);
 
     // ========== Sync Viewpoints ==========
     var viewpoints = document.querySelectorAll("viewpoint");

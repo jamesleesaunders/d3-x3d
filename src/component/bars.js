@@ -39,11 +39,11 @@ export default function() {
 
 		// Calculate Scales.
 		xScale = (typeof xScale === "undefined") ?
-			d3.scaleBand().domain(seriesNames).rangeRound([0, dimentions.x]).padding(0.3) :
+			d3.scaleBand().domain(seriesNames).rangeRound([0, dimensions.x]).padding(0.3) :
 			xScale;
 
 		yScale = (typeof yScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxValue]).range([0, dimentions.y]) :
+			d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]) :
 			yScale;
 	}
 
