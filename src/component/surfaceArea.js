@@ -118,16 +118,16 @@ export default function() {
 			let surfaces = selection.selectAll(".surface")
 				.data([data]);
 
-			surfaces
+			let indexedfaceset = surfaces
 				.enter()
 				.append("shape")
 				.append("indexedfaceset")
-				.attr("coordIndex", coords)
-				.append("coordinate")
+				.attr("coordIndex", coords);
+
+			indexedfaceset.append("coordinate")
 				.attr("point", coordinatePoints);
 
-			d3.selectAll("indexedFaceSet")
-				.append("color")
+			indexedfaceset.append("color")
 				.attr("color", colorFaceSet);
 		});
 	}

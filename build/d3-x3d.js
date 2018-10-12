@@ -1535,9 +1535,11 @@ function componentSurfaceArea () {
 
 			var surfaces = selection.selectAll(".surface").data([data]);
 
-			surfaces.enter().append("shape").append("indexedfaceset").attr("coordIndex", coords).append("coordinate").attr("point", coordinatePoints);
+			var indexedfaceset = surfaces.enter().append("shape").append("indexedfaceset").attr("coordIndex", coords);
 
-			d3.selectAll("indexedFaceSet").append("color").attr("color", colorFaceSet);
+			indexedfaceset.append("coordinate").attr("point", coordinatePoints);
+
+			indexedfaceset.append("color").attr("color", colorFaceSet);
 		});
 	}
 
