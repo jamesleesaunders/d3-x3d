@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.0.10";
+var version = "1.0.11";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
