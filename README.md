@@ -90,7 +90,7 @@ Thats all there is to it! View the page in a browser and you should see a basic 
 
 ### Import as ES6 module
 
-If your JS project is using ES6 modules you can also import **d3.x3d** (for example from NPM):
+If your JS project is using ES6 modules you can also import d3-x3d (for example from NPM):
 
 ```javascript
 var d3X3d = require("d3-x3d");
@@ -98,7 +98,7 @@ var d3X3d = require("d3-x3d");
 
 ### Components and Charts
 
-**d3-x3d** has two types of reusable modules: `component` and `chart`.
+d3-x3d has two types of reusable modules: `component` and `chart`.
 
 #### Components
 
