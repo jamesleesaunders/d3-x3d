@@ -88,9 +88,9 @@ chartHolder.datum(myData).call(myChart);
 
 Thats all there is to it! View the page in a browser and you should see a basic 3D bar chart.
 
-### Import from NPM
+### Import as ES6 module
 
-You can also import **d3.x3d** from NPM:
+If your JS project is using ES6 modules you can also import **d3.x3d** (for example from NPM):
 
 ```javascript
 var d3X3d = require("d3-x3d");
