@@ -98,7 +98,7 @@ var d3X3d = require("d3-x3d");
 
 ### Components and Charts
 
-**d3-x3d** has two types of reusable modules: `chart` and `component`.
+**d3-x3d** has two types of reusable modules: `component` and `chart`.
 
 #### Components
 
