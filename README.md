@@ -88,38 +88,45 @@ chartHolder.datum(myData).call(myChart);
 
 Thats all there is to it! View the page in a browser and you should see a basic 3D bar chart.
 
+### Import from NPM
+
+You can also import **d3.x3d** from NPM:
+
+```javascript
+var d3X3d = require("d3-x3d");
+```
+
 ### Components and Charts
 
 **d3-x3d** has two types of reusable modules: `chart` and `component`.
 
 #### Components
 
-The `component` modules are lower level building blocks which can be used independently, or combined to build more advanced charts. 
-For example, combining the `bubbles()` and `axis()` components together we create the `scatterPlot()` chart:
+The \`component\` modules are lower level building blocks which can be used independently, or combined to build higher level \`chart\` modules. For example, combining \`component.bars()\`, \`component.axis()\` and \`component.viewpoint()\` modules together we have built the \`chart.barChartMultiSeries()\`:
 
-| Function                              | Description                                  | Example     
-| ------------------------------------- | -------------------------------------------- | ------- 
-| d3.x3d.component.axis()               | Single plane x/y Axis                        | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
-| d3.x3d.component.axisThreePlane()     | Three plane x/y/z Axis                       | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
-| d3.x3d.component.bars()               | Single series Bar Chart                      | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
-| d3.x3d.component.barsMultiSeries()    | Multi series Bar Chart                       | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
-| d3.x3d.component.bubbles()            | Bubble / Scatter Plot                        | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
-| d3.x3d.component.bubblesMultiSeries() | Multi series Bubbles / Scatter Plot          | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
-| d3.x3d.component.surfaceArea()        | Surface Area                                 | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
-| d3.x3d.component.viewpoint()          | User's location and viewing model parameters | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
+| Function                       | Description                                  | Example     
+| ------------------------------ | -------------------------------------------- | ------- 
+| component.axis()               | Single plane x/y Axis                        | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
+| component.axisThreePlane()     | Three plane x/y/z Axis                       | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
+| component.bars()               | Single series Bar Chart                      | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
+| component.barsMultiSeries()    | Multi series Bar Chart                       | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
+| component.bubbles()            | Bubble / Scatter Plot                        | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
+| component.bubblesMultiSeries() | Multi series Bubbles / Scatter Plot          | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
+| component.surfaceArea()        | Surface Area                                 | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
+| component.viewpoint()          | User's location and viewing model parameters | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
 
 #### Charts
 
 The `chart` modules are higher level, pre-combined components, making it even simpler to quickly create charts. 
 All the charts typically include a viewpoint, axis and one or more of the other components above.
 
-| Function                              | Description                                  | Example 
-| ------------------------------------- | -------------------------------------------- | ------- 
-| d3.x3d.chart.barChartMultiSeries()    | Multi series Bar Chart & Axis                | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/BarChartMultiSeries.html)
-| d3.x3d.chart.barChartVertical()       | Simple single series Bar Chart & Axis        | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/BarChartVertical.html)
-| d3.x3d.chart.bubbleChart()            | Multi series Bubble Chart & Axis             | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/BubbleChart.html)
-| d3.x3d.chart.scatterPlot()            | Scatter Plot & Axis                          | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/ScatterPlot.html)
-| d3.x3d.chart.surfaceArea()            | Surface Area Chart & Axis                    | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/SurfaceArea.html)
+| Function                       | Description                                  | Example 
+| ------------------------------ | -------------------------------------------- | ------- 
+| chart.barChartMultiSeries()    | Multi series Bar Chart & Axis                | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/BarChartMultiSeries.html)
+| chart.barChartVertical()       | Simple single series Bar Chart & Axis        | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/BarChartVertical.html)
+| chart.bubbleChart()            | Multi series Bubble Chart & Axis             | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/BubbleChart.html)
+| chart.scatterPlot()            | Scatter Plot & Axis                          | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/ScatterPlot.html)
+| chart.surfaceArea()            | Surface Area Chart & Axis                    | [View](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/SurfaceArea.html)
 
 ### Data Structures
 
