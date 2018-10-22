@@ -1,23 +1,23 @@
 # d3-x3d
 ## D3 X3DOM Data Visualisation Library
 
-[![npm version](https://badge.fury.io/js/d3-x3d.svg)](https://badge.fury.io/js/d3-x3d)
-[![Build Status](https://travis-ci.org/jamesleesaunders/d3-x3d.svg?branch=master)](https://travis-ci.org/jamesleesaunders/d3-x3d)
-[![Known Vulnerabilities](https://snyk.io/test/github/jamesleesaunders/d3-x3d/badge.svg?targetFile=package.json)](https://snyk.io/test/github/jamesleesaunders/d3-x3d?targetFile=package.json)
+[![npm version](https://badge.fury.io/js/d3-x3dom.svg)](https://badge.fury.io/js/d3-x3dom)
+[![Build Status](https://travis-ci.org/jamesleesaunders/d3-x3dom.svg?branch=master)](https://travis-ci.org/jamesleesaunders/d3-x3dom)
+[![Known Vulnerabilities](https://snyk.io/test/github/jamesleesaunders/d3-x3dom/badge.svg?targetFile=package.json)](https://snyk.io/test/github/jamesleesaunders/d3-x3dom?targetFile=package.json)
 
-Combining the power of the [D3.js](http://www.d3js.org/) data-driven documents visualisation library, and the [X3DOM](https://github.com/x3dom/x3dom) declarative 3D DOM framework, **d3-x3d** makes it easy to quickly produce beautiful 3D data visualisations with minimal code.
+Combining the power of the [D3.js](http://www.d3js.org/) data-driven documents visualisation library, and the [X3DOM](https://github.com/x3dom/x3dom) declarative 3D DOM framework, **d3-x3dom** makes it easy to quickly produce beautiful 3D data visualisations with minimal code.
 
-Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), **d3-x3d** is built on a foundation of building blocks, called components, which can be combined to create a variety of different data visualisations.
+Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), **d3-x3dom** is built on a foundation of building blocks, called components, which can be combined to create a variety of different data visualisations.
 
 ### Examples
 
-* [Multi Series Bar Chart](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/BarChartMultiSeries.html)
-* [Vertical Bar Chart](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/BarChartVertical.html)
-* [Bubble Chart](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/BubbleChart.html)
-* [Scatter Plot](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/ScatterPlot.html)
-* [Surface Area](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/SurfaceArea.html)
-* [Components Showcase](https://rawgit.com/jamesleesaunders/d3-x3d/master/examples/Components.html)
-* [Observable Examples](https://beta.observablehq.com/collection/@jamesleesaunders/d3-x3d)
+* [Multi Series Bar Chart](https://rawgit.com/jamesleesaunders/d3-x3dom/master/examples/BarChartMultiSeries.html)
+* [Vertical Bar Chart](https://rawgit.com/jamesleesaunders/d3-x3dom/master/examples/BarChartVertical.html)
+* [Bubble Chart](https://rawgit.com/jamesleesaunders/d3-x3dom/master/examples/BubbleChart.html)
+* [Scatter Plot](https://rawgit.com/jamesleesaunders/d3-x3dom/master/examples/ScatterPlot.html)
+* [Surface Area](https://rawgit.com/jamesleesaunders/d3-x3dom/master/examples/SurfaceArea.html)
+* [Components Showcase](https://rawgit.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
+* [Observable Examples](https://beta.observablehq.com/collection/@jamesleesaunders/d3-x3dom)
 
 ### Getting Started
 
@@ -28,7 +28,7 @@ Include D3.js, X3DOM and d3-x3d js and css files in the `<head>` section of your
    <script src="https://d3js.org/d3.v5.min.js"></script>   
    <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
    <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
-   <script src="d3-x3d.js"></script>
+   <script src="d3-x3dom.js"></script>
 </head>
 ```
 
@@ -77,7 +77,7 @@ var myData = [
 Declare the [chart](#components-and-charts) component:
 
 ```javascript
-var myChart = d3.x3d.chart.barChartMultiSeries();
+var myChart = d3.x3dom.chart.barChartMultiSeries();
 ```
 
 Attach chart and data to the chartholder:
@@ -90,15 +90,15 @@ Thats all there is to it! View the page in a browser and you should see a basic 
 
 ### Import as ES6 module
 
-If your JS project is using ES6 modules you can also import d3-x3d (for example from NPM):
+If your JS project is using ES6 modules you can also import d3-x3dom (for example from NPM):
 
 ```javascript
-var d3X3d = require("d3-x3d");
+var d3X3dom = require("d3-x3dom");
 ```
 
 ### Components and Charts
 
-d3-x3d has two types of reusable modules: `component` and `chart`.
+d3-x3dom has two types of reusable modules: `component` and `chart`.
 
 #### Components
 
