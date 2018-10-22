@@ -23,11 +23,11 @@
     var width = 300;
     var height = 300;
 
-    var viewpoint = d3.x3dom.component.viewpoint();
+    var viewpoint = d3.x3dom.componentViewpoint();
 
     // ========== Bubbles Component ==========
     var bubblesData = randomDataset3();
-    var bubblesComponent = d3.x3dom.component.bubbles();
+    var bubblesComponent = d3.x3dom.componentBubbles();
 
     // Create scene
     var scene1 = d3.select("#chartholder1")
@@ -46,7 +46,7 @@
 
     // ========== Bubbles Multi Component ==========
     var bubblesMultiSeriesData = randomDataset2();
-    var bubblesMultiSeriesComponent = d3.x3dom.component.bubblesMultiSeries();
+    var bubblesMultiSeriesComponent = d3.x3dom.componentBubblesMultiSeries();
 
     // Create scene
     var scene2 = d3.select("#chartholder2")
@@ -65,7 +65,7 @@
 
     // ========== Surface Component ==========
     var surfaceAreaData = randomDataset5();
-    var surfaceAreaComponent = d3.x3dom.component.surfaceArea();
+    var surfaceAreaComponent = d3.x3dom.componentSurfaceArea();
 
     // Create scene
     var scene3 = d3.select("#chartholder3")
@@ -84,7 +84,7 @@
 
     // ========== Bars Multi Component ==========
     var barsMultiSeriesData = randomDataset2();
-    var barsMultiSeriesComponent = d3.x3dom.component.barsMultiSeries();
+    var barsMultiSeriesComponent = d3.x3dom.componentBarsMultiSeries();
 
     // Create scene
     var scene4 = d3.select("#chartholder4")
@@ -105,7 +105,7 @@
     var xScale = d3.scaleBand().domain(stores).rangeRound([0, 40]);
     var yScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
     var zScale = d3.scaleBand().domain(fruit).range([0, 40]);
-    var axisThreePlaneComponent = d3.x3dom.component.axisThreePlane()
+    var axisThreePlaneComponent = d3.x3dom.componentAxisThreePlane()
       .xScale(xScale)
       .yScale(yScale)
       .zScale(zScale);
@@ -126,7 +126,7 @@
 
     // ========== Bars Multi Component ==========
     var barsData = randomDataset1();
-    var barsComponent = d3.x3dom.component.bars();
+    var barsComponent = d3.x3dom.componentBars();
 
     // Create scene
     var scene6 = d3.select("#chartholder6")
