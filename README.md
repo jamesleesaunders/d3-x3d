@@ -1,4 +1,4 @@
-# d3-x3d
+# d3-x3dom
 ## D3 X3DOM Data Visualisation Library
 
 [![npm version](https://badge.fury.io/js/d3-x3dom.svg)](https://badge.fury.io/js/d3-x3dom)
