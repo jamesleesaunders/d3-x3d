@@ -11,12 +11,12 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 
 ### Examples
 
-* [Multi Series Bar Chart](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom@v1.0.11/examples/BarChartMultiSeries.html)
-* [Vertical Bar Chart](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom@v1.0.11/examples/BarChartVertical.html)
-* [Bubble Chart](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom@v1.0.11/examples/BubbleChart.html)
-* [Scatter Plot](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom@v1.0.11/examples/ScatterPlot.html)
-* [Surface Area](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom@v1.0.11/examples/SurfaceArea.html)
-* [Components Showcase](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom@v1.0.11/examples/Components.html)
+* [Multi Series Bar Chart](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom/examples/BarChartMultiSeries.html)
+* [Vertical Bar Chart](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom/examples/BarChartVertical.html)
+* [Bubble Chart](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom/examples/BubbleChart.html)
+* [Scatter Plot](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom/examples/ScatterPlot.html)
+* [Surface Area](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom/examples/SurfaceArea.html)
+* [Components Showcase](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom/examples/Components.html)
 * [Observable Examples](https://beta.observablehq.com/collection/@jamesleesaunders/d3-x3dom)
 
 ### Getting Started
