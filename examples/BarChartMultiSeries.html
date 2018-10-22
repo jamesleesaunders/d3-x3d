@@ -2,11 +2,11 @@
 <html>
 
 <head>
-  <title>d3-x3d : 3D Bar Chart Example</title>
+  <title>d3-x3dom : 3D Bar Chart Example</title>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
   <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
-  <script src="../build/d3-x3d.js"></script>
+  <script src="../build/d3-x3dom.js"></script>
   <script src="randomData.js"></script>
 </head>
 
@@ -21,12 +21,12 @@
     var myData = randomDataset2();
 
     // Declare the chart component
-    var myChart = d3.x3d.chart.barChartMultiSeries();
+    var myChart = d3.x3dom.chart.barChartMultiSeries();
 
     // Attach chart and data to the chartholder
     chartHolder.datum(myData).call(myChart);
 
   </script>
 
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3DOM Data Visualization Library.</div>
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.</div>
 </body>

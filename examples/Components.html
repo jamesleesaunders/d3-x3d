@@ -2,11 +2,11 @@
 <html>
 
 <head>
-  <title>d3-x3d : 3D Components Example</title>
+  <title>d3-x3dom : 3D Components Example</title>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
   <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
-  <script src="../build/d3-x3d.js"></script>
+  <script src="../build/d3-x3dom.js"></script>
   <script src="randomData.js"></script>
 </head>
 
@@ -23,11 +23,11 @@
     var width = 300;
     var height = 300;
 
-    var viewpoint = d3.x3d.component.viewpoint();
+    var viewpoint = d3.x3dom.component.viewpoint();
 
     // ========== Bubbles Component ==========
     var bubblesData = randomDataset3();
-    var bubblesComponent = d3.x3d.component.bubbles();
+    var bubblesComponent = d3.x3dom.component.bubbles();
 
     // Create scene
     var scene1 = d3.select("#chartholder1")
@@ -46,7 +46,7 @@
 
     // ========== Bubbles Multi Component ==========
     var bubblesMultiSeriesData = randomDataset2();
-    var bubblesMultiSeriesComponent = d3.x3d.component.bubblesMultiSeries();
+    var bubblesMultiSeriesComponent = d3.x3dom.component.bubblesMultiSeries();
 
     // Create scene
     var scene2 = d3.select("#chartholder2")
@@ -65,7 +65,7 @@
 
     // ========== Surface Component ==========
     var surfaceAreaData = randomDataset5();
-    var surfaceAreaComponent = d3.x3d.component.surfaceArea();
+    var surfaceAreaComponent = d3.x3dom.component.surfaceArea();
 
     // Create scene
     var scene3 = d3.select("#chartholder3")
@@ -84,7 +84,7 @@
 
     // ========== Bars Multi Component ==========
     var barsMultiSeriesData = randomDataset2();
-    var barsMultiSeriesComponent = d3.x3d.component.barsMultiSeries();
+    var barsMultiSeriesComponent = d3.x3dom.component.barsMultiSeries();
 
     // Create scene
     var scene4 = d3.select("#chartholder4")
@@ -105,7 +105,7 @@
     var xScale = d3.scaleBand().domain(stores).rangeRound([0, 40]);
     var yScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
     var zScale = d3.scaleBand().domain(fruit).range([0, 40]);
-    var axisThreePlaneComponent = d3.x3d.component.axisThreePlane()
+    var axisThreePlaneComponent = d3.x3dom.component.axisThreePlane()
       .xScale(xScale)
       .yScale(yScale)
       .zScale(zScale);
@@ -126,7 +126,7 @@
 
     // ========== Bars Multi Component ==========
     var barsData = randomDataset1();
-    var barsComponent = d3.x3d.component.bars();
+    var barsComponent = d3.x3dom.component.bars();
 
     // Create scene
     var scene6 = d3.select("#chartholder6")
@@ -160,5 +160,5 @@
     }
   </script>
 
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3DOM Data Visualization Library.</div>
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.</div>
 </body>

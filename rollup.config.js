@@ -2,7 +2,7 @@ import json from "rollup-plugin-json";
 import babel from "rollup-plugin-babel";
 
 let banner = `/**
- * d3-x3d
+ * d3-x3dom
  *
  * @author James Saunders [james@saunders-family.net]
  * @copyright Copyright (C) 2018 James Saunders
@@ -13,10 +13,10 @@ let banner = `/**
 export default {
 	input: "index.js",
 	output: {
-		file: "build/d3-x3d.js",
+		file: "build/d3-x3dom.js",
 		format: "umd",
 		extend: true,
-		name: "d3.x3d",
+		name: "d3.x3dom",
 		banner: banner,
 		strict: true,
 		globals: { d3: "d3" }

@@ -1,5 +1,5 @@
 /**
- * d3-x3d
+ * d3-x3dom
  *
  * @author James Saunders [james@saunders-family.net]
  * @copyright Copyright (C) 2018 James Saunders
@@ -9,10 +9,10 @@
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('d3')) :
 	typeof define === 'function' && define.amd ? define(['d3'], factory) :
-	(global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3));
+	(global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.0.11";
+var version = "1.0.12";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -2734,7 +2734,7 @@ var chart = {
 };
 
 /**
- * d3-x3d
+ * d3-x3dom
  *
  * @author James Saunders [james@saunders-family.net]
  * @copyright Copyright (C) 2018 James Saunders

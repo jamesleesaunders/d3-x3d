@@ -1,4 +1,4 @@
-let d3X3d = require("../");
+let d3X3dom = require("../");
 let tape = require("tape");
 
 let dataset1 = {
@@ -120,7 +120,7 @@ tape("Test Summary 1", function(t) {
 		maxDecimalPlace: 0,
 		thresholds: [4, 5, 6, 8]
 	};
-	let actual = d3X3d.dataTransform(dataset1).summary();
+	let actual = d3X3dom.dataTransform(dataset1).summary();
 	t.deepEqual(actual, expected);
 
 	t.end();
@@ -143,15 +143,15 @@ tape("Test Summary 2", function(t) {
 		maxDecimalPlace: 0,
 		thresholds: [3, 7, 10, 16]
 	};
-	let actual = d3X3d.dataTransform(dataset2).summary();
+	let actual = d3X3dom.dataTransform(dataset2).summary();
 	t.deepEqual(actual, expected);
 
 	t.end();
 });
 
 tape("Test Rotate", function(t) {
-	t.deepEqual(d3X3d.dataTransform(dataset2).rotate(), dataset3);
-	t.deepEqual(d3X3d.dataTransform(dataset3).rotate(), dataset2);
+	t.deepEqual(d3X3dom.dataTransform(dataset2).rotate(), dataset3);
+	t.deepEqual(d3X3dom.dataTransform(dataset3).rotate(), dataset2);
 
 	t.end();
 });
