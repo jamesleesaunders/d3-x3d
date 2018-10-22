@@ -21,7 +21,7 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 
 ### Getting Started
 
-Include D3.js, X3DOM and d3-x3d js and css files in the `<head>` section of your page:
+Include D3.js, X3DOM and d3-x3dom js and css files in the `<head>` section of your page:
 
 ```html
 <head>
@@ -130,7 +130,7 @@ All the charts typically include a viewpoint, axis and one or more of the other 
 
 ### Data Structures
 
-At its most basic description, the format of the d3-x3d data is a series of key / value pairs. Depending on whether the chart is a single series or multi series chart the data structure differs slightly.
+At its most basic description, the format of the d3-x3dom data is a series of key / value pairs. Depending on whether the chart is a single series or multi series chart the data structure differs slightly.
 
 #### Single Series Data
 
