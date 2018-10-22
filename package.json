@@ -1,6 +1,6 @@
 {
-	"name": "d3-x3d",
-	"version": "1.0.11",
+	"name": "d3-x3dom",
+	"version": "1.0.12",
 	"description": "D3 X3DOM Data Visualisation Library",
 	"license": "GPL-2.0",
 	"keywords": [
@@ -18,13 +18,13 @@
 	"author": "James Saunders (james@saunders-family.net)",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/jamesleesaunders/d3-x3d.git"
+		"url": "https://github.com/jamesleesaunders/d3-x3dom.git"
 	},
 	"bugs": {
-		"url": "https://github.com/jamesleesaunders/d3-x3d/issues"
+		"url": "https://github.com/jamesleesaunders/d3-x3dom/issues"
 	},
-	"main": "build/d3-x3d.js",
-	"unpkg": "build/d3-x3d.min.js",
+	"main": "build/d3-x3dom.js",
+	"unpkg": "build/d3-x3dom.min.js",
 	"module": "index",
 	"scripts": {
 		"pretest": "make",
