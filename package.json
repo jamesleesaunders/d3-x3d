@@ -14,7 +14,7 @@
 		"3D",
 		"dataviz"
 	],
-	"homepage": "http://d3-ez.net",
+	"homepage": "https://github.com/jamesleesaunders/d3-x3dom",
 	"author": "James Saunders (james@saunders-family.net)",
 	"repository": {
 		"type": "git",
