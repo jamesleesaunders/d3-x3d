@@ -2752,20 +2752,7 @@ var index = {
 	license: license,
 	dataTransform: dataTransform,
 	chart: chart,
-	chartBarChartMultiSeries: chart.barChartMultiSeries,
-	chartBarChartVertical: chart.barChartVertical,
-	chartBubbleChart: chart.bubbleChart,
-	chartScatterPlot: chart.scatterPlot,
-	chartSurfaceArea: chart.surfaceArea,
-	component: component,
-	componentAxis: component.axis,
-	componentAxisThreePlane: component.axisThreePlane,
-	componentBars: component.bars,
-	componentBarsMultiSeries: component.barsMultiSeries,
-	componentBubbles: component.bubbles,
-	componentBubblesMultiSeries: component.bubblesMultiSeries,
-	componentSurfaceArea: component.surfaceArea,
-	componentViewpoint: component.viewpoint
+	component: component
 };
 
 return index;

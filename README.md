@@ -77,7 +77,7 @@ var myData = [
 Declare the [chart](#components-and-charts) component:
 
 ```javascript
-var myChart = d3.x3dom.chartBarChartMultiSeries();
+var myChart = d3.x3dom.chart.barChartMultiSeries();
 ```
 
 Attach chart and data to the chartholder:
@@ -102,31 +102,34 @@ d3-x3dom has two types of reusable modules: `component` and `chart`.
 
 #### Components
 
-The \`component\` modules are lower level building blocks which can be used independently, or combined to build higher level \`chart\` modules. For example, combining \`component.bars()\`, \`component.axis()\` and \`component.viewpoint()\` modules together we have built the \`chart.barChartMultiSeries()\`:
+The \`component\` modules are lower level building blocks which can be used independently, or combined to build higher level \`chart\` modules. 
+For example, combining \`component.bars()\`, \`component.axis()\` and \`component.viewpoint()\` modules together we have built the \`chart.barChartMultiSeries()\`.
+Component modules do not generate a `x3d` tag, these should be attached to an exiting `x3d` tag.
 
 | Function                       | Description                                  | Example     
 | ------------------------------ | -------------------------------------------- | ------- 
-| componentAxis()                | Single plane x/y Axis                        | [View](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom/examples/Components.html)
-| componentAxisThreePlane()      | Three plane x/y/z Axis                       | [View](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom/examples/Components.html)
-| componentBars()                | Single series Bar Chart                      | [View](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom/examples/Components.html)
-| componentBarsMultiSeries()     | Multi series Bar Chart                       | [View](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom/examples/Components.html)
-| componentBubbles()             | Bubble / Scatter Plot                        | [View](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom/examples/Components.html)
-| componentBubblesMultiSeries()  | Multi series Bubbles / Scatter Plot          | [View](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom/examples/Components.html)
-| componentSurfaceArea()         | Surface Area                                 | [View](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom/examples/Components.html)
-| componentViewpoint()           | User's location and viewing model parameters | [View](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom/examples/Components.html)
+| component.axis()               | Single plane x/y Axis                        | [View](https://jamesleesaunders.github.io/d3-x3dom/examples/Components.html)
+| component.axisThreePlane()     | Three plane x/y/z Axis                       | [View](https://jamesleesaunders.github.io/d3-x3dom/examples/Components.html)
+| component.bars()               | Single series Bar Chart                      | [View](https://jamesleesaunders.github.io/d3-x3dom/examples/Components.html)
+| component.barsMultiSeries()    | Multi series Bar Chart                       | [View](https://jamesleesaunders.github.io/d3-x3dom/examples/Components.html)
+| component.bubbles()            | Bubble / Scatter Plot                        | [View](https://jamesleesaunders.github.io/d3-x3dom/examples/Components.html)
+| component.bubblesMultiSeries() | Multi series Bubbles / Scatter Plot          | [View](https://jamesleesaunders.github.io/d3-x3dom/examples/Components.html)
+| component.surfaceArea()        | Surface Area                                 | [View](https://jamesleesaunders.github.io/d3-x3dom/examples/Components.html)
+| component.viewpoint()          | User's location and viewing model parameters | [View](https://jamesleesaunders.github.io/d3-x3dom/examples/Components.html)
 
 #### Charts
 
 The `chart` modules are higher level, pre-combined components, making it even simpler to quickly create charts. 
-All the charts typically include a viewpoint, axis and one or more of the other components above. These also generate the x3d tag.
+All the charts are typically constructed of a viewpoint, axis and one or more of the other components above. 
+Chart modules also generate the `x3d` tag, these should be attached to a `div` tag.
 
 | Function                       | Description                                  | Example 
 | ------------------------------ | -------------------------------------------- | ------- 
-| chartBarChartMultiSeries()     | Multi series Bar Chart & Axis                | [View](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom/examples/BarChartMultiSeries.html)
-| chartBarChartVertical()        | Simple single series Bar Chart & Axis        | [View](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom/examples/BarChartVertical.html)
-| chartBubbleChart()             | Multi series Bubble Chart & Axis             | [View](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom/examples/BubbleChart.html)
-| chartScatterPlot()             | Scatter Plot & Axis                          | [View](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom/examples/ScatterPlot.html)
-| chartSurfaceArea()             | Surface Area Chart & Axis                    | [View](https://cdn.jsdelivr.net/gh/jamesleesaunders/d3-x3dom/examples/SurfaceArea.html)
+| chart.barChartMultiSeries()    | Multi series Bar Chart & Axis                | [View](https://jamesleesaunders.github.io/d3-x3dom/examples/BarChartMultiSeries.html)
+| chart.barChartVertical()       | Simple single series Bar Chart & Axis        | [View](https://jamesleesaunders.github.io/d3-x3dom/examples/BarChartVertical.html)
+| chart.bubbleChart()            | Multi series Bubble Chart & Axis             | [View](https://jamesleesaunders.github.io/d3-x3dom/examples/BubbleChart.html)
+| chart.scatterPlot()            | Scatter Plot & Axis                          | [View](https://jamesleesaunders.github.io/d3-x3dom/examples/ScatterPlot.html)
+| chart.surfaceArea()            | Surface Area Chart & Axis                    | [View](https://jamesleesaunders.github.io/d3-x3dom/examples/SurfaceArea.html)
 
 ### Data Structures
 
