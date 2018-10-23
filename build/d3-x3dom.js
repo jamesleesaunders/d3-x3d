@@ -1929,7 +1929,7 @@ function chartSurfaceArea () {
 	return my;
 }
 
-var version = "1.0.12";
+var version = "1.0.13";
 var license = "GPL-2.0";
 
 /**
