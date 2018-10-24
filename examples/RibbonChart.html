@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3dom : 3D Scatter Plot Example</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
+  <script src="../build/d3-x3dom.js"></script>
+  <script src="randomData.js"></script>
+</head>
+
+<body>
+  <div>
+    <x3d id="chartholder"></x3d>
+  </div>
+
+  <script>
+    var width = 500;
+    var height = 500;
+
+    // Select chartholder
+    var x3d = d3.select("#chartholder");
+    x3d.attr("width", width + "px").attr("height", height + "px");
+    var scene = x3d.append("scene");
+
+    // Generate some data
+    var myData = randomDataset1();
+
+    // Declare the chart components
+    var viewpoint = d3.x3dom.component.viewpoint();
+    var myChart = d3.x3dom.component.ribbon();
+
+    // Attach chart and data to the chartholder
+    scene.datum(myData)
+      .call(viewpoint)
+      .call(myChart);
+
+  </script>
+
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.</div>
+</body>
