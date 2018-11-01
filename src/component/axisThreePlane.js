@@ -61,7 +61,7 @@ export default function() {
 			.dir('y')
 			.tickDir('x')
 			.tickSize(xScale.range()[1] - xScale.range()[0])
-			.tickFormat(function() { return ''; })
+			.tickFormat(" ")
 			.color("red");
 
 		let zxAxis = componentAxis()
