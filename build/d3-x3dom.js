@@ -1777,37 +1777,21 @@ function componentRibbon () {
 				return d.values;
 			});
 
-			var ribbon = ribbonSelect.enter().append("transform").attr("translation", function (d, i) {
+			var ribbon = ribbonSelect.enter().append("transform").attr("translation", function (d) {
 				var x = xScale(d.key);
-				return x + " 0 0";
-			}).attr("rotation", function (d, i) {
-				return "0,-1,0,1.0472";
+				var y = yScale(d.value) / 2;
+				return x + " " + y + " 0";
+			}).attr("rotation", function () {
+				return "0,-1,0,1.57079633";
 			}).append("shape");
 
-			ribbon.append("rectangle2d").attr("size", "40 10").attr("solid", "true");
+			ribbon.append("rectangle2d").attr("size", function (d) {
+				var width = 5;
+				var height = yScale(d.value);
+				return width + " " + height;
+			}).attr("solid", "true");
 
 			ribbon.append("appearance").append("twosidedmaterial").attr("diffuseColor", color);
-
-			/*
-   	<transform translation="0 0 0" render="true" bboxCenter="0,0,0" bboxSize="-1,-1,-1" center="0,0,0" rotation="1,0,0,1.5708" scale="1,1,1" scaleOrientation="0,0,0,0">
-   			<transform translation="0 0 0" render="true" bboxCenter="0,0,0" bboxSize="-1,-1,-1" center="0,0,0" rotation="0,1,0,1.0472" scale="1,1,1" scaleOrientation="0,0,0,0">
-   		<shape render="true" bboxCenter="0,0,0" bboxSize="-1,-1,-1" isPickable="true">
-   			<rectangle2d size="40 10" solid="true" ccw="true" useGeoCache="true" lit="true" subdivision="1,1"></rectangle2d>
-   			<appearance>
-   				<twosidedmaterial diffuseColor="red"></twosidedmaterial>
-   			</appearance>
-   		</shape>
-   		</transform>
-   			<transform translation="20 0 0" render="true" bboxCenter="0,0,0" bboxSize="-1,-1,-1" center="0,0,0" rotation="0,-1,0,1.0472" scale="1,1,1" scaleOrientation="0,0,0,0">
-   			<shape render="true" bboxCenter="0,0,0" bboxSize="-1,-1,-1" isPickable="true">
-   				<rectangle2d size="40 10" solid="true" ccw="true" useGeoCache="true" lit="true" subdivision="1,1"></rectangle2d>
-   				<appearance>
-   					<twosidedmaterial diffuseColor="red"></twosidedmaterial>
-   				</appearance>
-   			</shape>
-   		</transform>
-   		</transform>
-   	*/
 		});
 	}
 
