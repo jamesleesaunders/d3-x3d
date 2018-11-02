@@ -43,31 +43,31 @@ export default function() {
 		// Construct Axis Components
 		let xzAxis = componentAxis()
 			.scale(xScale)
-			.dir('x')
-			.tickDir('z')
+			.dir("x")
+			.tickDir("z")
 			.tickSize(zScale.range()[1] - zScale.range()[0])
 			.tickPadding(xScale.range()[0])
 			.color("blue");
 
 		let yzAxis = componentAxis()
 			.scale(yScale)
-			.dir('y')
-			.tickDir('z')
+			.dir("y")
+			.tickDir("z")
 			.tickSize(zScale.range()[1] - zScale.range()[0])
 			.color("red");
 
 		let yxAxis = componentAxis()
 			.scale(yScale)
-			.dir('y')
-			.tickDir('x')
+			.dir("y")
+			.tickDir("x")
 			.tickSize(xScale.range()[1] - xScale.range()[0])
-			.tickFormat("")
+			.tickFormat("") // FIXME: GitHub Issue #14
 			.color("red");
 
 		let zxAxis = componentAxis()
 			.scale(zScale)
-			.dir('z')
-			.tickDir('x')
+			.dir("z")
+			.tickDir("x")
 			.tickSize(xScale.range()[1] - xScale.range()[0])
 			.color("black");
 

@@ -459,18 +459,21 @@ function componentAxis () {
 	function my(selection) {
 		selection.classed(classed, true);
 
-		var identity = function identity(x) {
-			return x;
-		};
-
 		var makeSolid = function makeSolid(selection, color) {
 			selection.append("appearance").append("material").attr("diffuseColor", color || "black");
 
 			return selection;
 		};
 
-		var values = tickValues === null ? scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain() : tickValues;
-		var format = tickFormat === null ? scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : identity : tickFormat;
+		var defaultValues = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
+		var values = tickValues === null ? defaultValues : tickValues;
+
+		var identity = function identity(x) {
+			return x;
+		};
+		var defaultFormat = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : identity;
+		var format = tickFormat === null ? defaultFormat : tickFormat;
+
 		var range = scale.range();
 		var range0 = range[0];
 		var range1 = range[range.length - 1];
@@ -674,15 +677,14 @@ function componentAxisThreePlane () {
 		});
 
 		// Construct Axis Components
-		var xzAxis = componentAxis().scale(xScale).dir('x').tickDir('z').tickSize(zScale.range()[1] - zScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
+		var xzAxis = componentAxis().scale(xScale).dir("x").tickDir("z").tickSize(zScale.range()[1] - zScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
 
-		var yzAxis = componentAxis().scale(yScale).dir('y').tickDir('z').tickSize(zScale.range()[1] - zScale.range()[0]).color("red");
+		var yzAxis = componentAxis().scale(yScale).dir("y").tickDir("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("red");
 
-		var yxAxis = componentAxis().scale(yScale).dir('y').tickDir('x').tickSize(xScale.range()[1] - xScale.range()[0]).tickFormat(function () {
-			return '';
-		}).color("red");
+		var yxAxis = componentAxis().scale(yScale).dir("y").tickDir("x").tickSize(xScale.range()[1] - xScale.range()[0]).tickFormat("") // FIXME: GitHub Issue #14
+		.color("red");
 
-		var zxAxis = componentAxis().scale(zScale).dir('z').tickDir('x').tickSize(xScale.range()[1] - xScale.range()[0]).color("black");
+		var zxAxis = componentAxis().scale(zScale).dir("z").tickDir("x").tickSize(xScale.range()[1] - xScale.range()[0]).color("black");
 
 		selection.select(".xzAxis").call(xzAxis);
 
