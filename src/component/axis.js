@@ -99,8 +99,7 @@ export default function() {
 		let defaultValues = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
 		let values = tickValues === null ? defaultValues : tickValues;
 
-		let identity = function(x) { return x; };
-		let defaultFormat = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : identity;
+		let defaultFormat = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : function(d) { return d; };
 		let format = tickFormat === null ? defaultFormat : tickFormat;
 
 		let range = scale.range();

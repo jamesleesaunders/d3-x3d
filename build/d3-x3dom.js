@@ -468,10 +468,9 @@ function componentAxis () {
 		var defaultValues = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
 		var values = tickValues === null ? defaultValues : tickValues;
 
-		var identity = function identity(x) {
-			return x;
+		var defaultFormat = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : function (d) {
+			return d;
 		};
-		var defaultFormat = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : identity;
 		var format = tickFormat === null ? defaultFormat : tickFormat;
 
 		var range = scale.range();
