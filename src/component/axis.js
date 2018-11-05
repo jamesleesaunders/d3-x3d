@@ -1,6 +1,18 @@
 import * as d3 from "d3";
 import { default as dataTransform } from "../dataTransform";
 
+const axisDirectionVectors = {
+	x: [1, 0, 0],
+	y: [0, 1, 0],
+	z: [0, 0, 1]
+}
+
+const axisRotationVectors = {
+	x: [1, 1, 0, Math.PI],
+	y: [0, 0, 0, 0],
+	z: [0, 1, 1, Math.PI]
+}
+
 /**
  * Reusable 3D Axis
  *
@@ -34,23 +46,7 @@ export default function() {
 	 * @returns {[{number}, {number}, {number}]}
 	 */
 	function getAxisDirectionVector(axisDir) {
-		let result;
-		switch (axisDir) {
-			case "x": {
-				result = [1, 0, 0];
-				break;
-			}
-			case "y": {
-				result = [0, 1, 0];
-				break;
-			}
-			case "z": {
-				result = [0, 0, 1];
-				break;
-			}
-		}
-
-		return result;
+		return axisDirectionVectors[axisDir];
 	}
 
 	/**
@@ -60,23 +56,7 @@ export default function() {
 	 * @returns {[{number}, {number}, {number}, {number}]}
 	 */
 	function getAxisRotationVector(axisDir) {
-		let result;
-		switch (axisDir) {
-			case "x": {
-				result = [1, 1, 0, Math.PI];
-				break;
-			}
-			case "y": {
-				result = [0, 0, 0, 0];
-				break;
-			}
-			case "z": {
-				result = [0, 1, 1, Math.PI];
-				break;
-			}
-		}
-
-		return result;
+		return axisRotationVectors[axisDir];
 	}
 
 	/**
