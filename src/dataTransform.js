@@ -12,13 +12,7 @@ export default function(data) {
 	/**
 	 * Row or Rows?
 	 */
-	let dataStructure = (function() {
-		if (data["key"] !== undefined) {
-			return SINGLE_SERIES;
-		} else {
-			return MULTI_SERIES;
-		}
-	})();
+	let dataStructure = data["key"] !== undefined ? SINGLE_SERIES : MULTI_SERIES;
 
 	/**
 	 * Row Key
