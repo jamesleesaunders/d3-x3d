@@ -1,13 +1,13 @@
-import { default as chartBarChartMultiSeries } from "./chart/barChartMultiSeries";
-import { default as chartBarChartVertical } from "./chart/barChartVertical";
-import { default as chartBubbleChart } from "./chart/bubbleChart";
-import { default as chartScatterPlot } from "./chart/scatterPlot";
-import { default as chartSurfaceArea } from "./chart/surfaceArea";
+import barChartMultiSeries from "./chart/barChartMultiSeries";
+import barChartVertical from "./chart/barChartVertical";
+import bubbleChart from "./chart/bubbleChart";
+import scatterPlot from "./chart/scatterPlot";
+import surfaceArea from "./chart/surfaceArea";
 
 export default {
-	barChartMultiSeries: chartBarChartMultiSeries,
-	barChartVertical: chartBarChartVertical,
-	bubbleChart: chartBubbleChart,
-	scatterPlot: chartScatterPlot,
-	surfaceArea: chartSurfaceArea
+	barChartMultiSeries,
+	barChartVertical,
+	bubbleChart,
+	scatterPlot,
+	surfaceArea
 };
