@@ -38,13 +38,7 @@ function dataTransform (data) {
 	/**
   * Row or Rows?
   */
-	var dataStructure = function () {
-		if (data["key"] !== undefined) {
-			return SINGLE_SERIES;
-		} else {
-			return MULTI_SERIES;
-		}
-	}();
+	var dataStructure = data["key"] !== undefined ? SINGLE_SERIES : MULTI_SERIES;
 
 	/**
   * Row Key
@@ -366,12 +360,23 @@ function dataTransform (data) {
 	};
 }
 
-/**
- * Reusable 3D Axis
- *
- * @module
- */
-function componentAxis () {
+var axisDirectionVectors = {
+	x: [1, 0, 0],
+	y: [0, 1, 0],
+	z: [0, 0, 1]
+};
+
+var axisRotationVectors = {
+	x: [1, 1, 0, Math.PI],
+	y: [0, 0, 0, 0],
+	z: [0, 1, 1, Math.PI]
+
+	/**
+  * Reusable 3D Axis
+  *
+  * @module
+  */
+};function componentAxis () {
 
 	/**
   * Default Properties
@@ -399,26 +404,7 @@ function componentAxis () {
   * @returns {[{number}, {number}, {number}]}
   */
 	function getAxisDirectionVector(axisDir) {
-		var result = void 0;
-		switch (axisDir) {
-			case "x":
-				{
-					result = [1, 0, 0];
-					break;
-				}
-			case "y":
-				{
-					result = [0, 1, 0];
-					break;
-				}
-			case "z":
-				{
-					result = [0, 0, 1];
-					break;
-				}
-		}
-
-		return result;
+		return axisDirectionVectors[axisDir];
 	}
 
 	/**
@@ -428,26 +414,7 @@ function componentAxis () {
   * @returns {[{number}, {number}, {number}, {number}]}
   */
 	function getAxisRotationVector(axisDir) {
-		var result = void 0;
-		switch (axisDir) {
-			case "x":
-				{
-					result = [1, 1, 0, Math.PI];
-					break;
-				}
-			case "y":
-				{
-					result = [0, 0, 0, 0];
-					break;
-				}
-			case "z":
-				{
-					result = [0, 1, 1, Math.PI];
-					break;
-				}
-		}
-
-		return result;
+		return axisRotationVectors[axisDir];
 	}
 
 	/**
@@ -645,7 +612,7 @@ function componentAxis () {
  *
  * @module
  */
-function componentAxisThreePlane () {
+function axisThreePlane () {
 
 	/**
   * Default Properties
@@ -924,7 +891,7 @@ function componentBars () {
  *
  * @module
  */
-function componentBarsMultiSeries () {
+function barsMultiSeries () {
 
 	/**
   * Default Properties
@@ -1251,7 +1218,7 @@ function componentBubbles () {
  *
  * @module
  */
-function componentBubblesMultiSeries () {
+function bubblesMultiSeries () {
 
 	/**
   * Default Properties
@@ -1428,7 +1395,7 @@ function componentBubblesMultiSeries () {
  *
  * @module
  */
-function componentSurfaceArea () {
+function surfaceArea () {
 
 	/**
   * Default Properties
@@ -1621,7 +1588,7 @@ function componentSurfaceArea () {
  *
  * @module
  */
-function componentViewpoint () {
+function viewpoint () {
 
 	/**
   * Default Properties
@@ -1731,7 +1698,7 @@ function componentViewpoint () {
  *
  * @module
  */
-function componentRibbon () {
+function ribbon () {
 
 	/**
   * Default Properties
@@ -1849,21 +1816,21 @@ function componentRibbon () {
 
 var component = {
 	axis: componentAxis,
-	axisThreePlane: componentAxisThreePlane,
+	axisThreePlane: axisThreePlane,
 	bars: componentBars,
-	barsMultiSeries: componentBarsMultiSeries,
+	barsMultiSeries: barsMultiSeries,
 	bubbles: componentBubbles,
-	bubblesMultiSeries: componentBubblesMultiSeries,
-	surfaceArea: componentSurfaceArea,
-	viewpoint: componentViewpoint,
-	ribbon: componentRibbon
+	bubblesMultiSeries: bubblesMultiSeries,
+	surfaceArea: surfaceArea,
+	viewpoint: viewpoint,
+	ribbon: ribbon
 };
 
 /**
  * Reusable 3D Surface Area
  * @see https://datavizproject.com/data-type/three-dimensional-stream-graph/
  */
-function chartSurfaceArea () {
+function surfaceArea$1 () {
 
 	/**
   * Default Properties
@@ -2061,7 +2028,7 @@ var license = "GPL-2.0";
  * @module
  * @see https://datavizproject.com/data-type/3d-bar-chart/
  */
-function chartBarChartMultiSeries () {
+function barChartMultiSeries () {
 
 	/**
   * Default Properties
@@ -2261,7 +2228,7 @@ function chartBarChartMultiSeries () {
  * @module
  * @see https://datavizproject.com/data-type/3d-bar-chart/
  */
-function chartBarChartVertical () {
+function barChartVertical () {
 
 	/**
   * Default Properties
@@ -2447,7 +2414,7 @@ function chartBarChartVertical () {
  * @module
  * @see https://datavizproject.com/data-type/bubble-chart/
  */
-function chartBubbleChart () {
+function bubbleChart () {
 
 	/**
   * Default Properties
@@ -2674,7 +2641,7 @@ function chartBubbleChart () {
  * @module
  * @see https://datavizproject.com/data-type/3d-scatterplot/
  */
-function chartScatterPlot () {
+function scatterPlot () {
 
 	/**
   * Default Properties
@@ -2849,11 +2816,11 @@ function chartScatterPlot () {
 }
 
 var chart = {
-	barChartMultiSeries: chartBarChartMultiSeries,
-	barChartVertical: chartBarChartVertical,
-	bubbleChart: chartBubbleChart,
-	scatterPlot: chartScatterPlot,
-	surfaceArea: chartSurfaceArea
+	barChartMultiSeries: barChartMultiSeries,
+	barChartVertical: barChartVertical,
+	bubbleChart: bubbleChart,
+	scatterPlot: scatterPlot,
+	surfaceArea: surfaceArea$1
 };
 
 /**
