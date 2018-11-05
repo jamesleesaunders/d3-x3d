@@ -12,7 +12,7 @@
 
 <body>
   <div>
-    <x3d id="chartholder"></x3d>
+    <div id="chartholder"></div>
   </div>
 
   <script>
@@ -20,8 +20,10 @@
     var height = 500;
 
     // Select chartholder
-    var x3d = d3.select("#chartholder");
-    x3d.attr("width", width + "px").attr("height", height + "px");
+    var chartHolder = d3.select("#chartholder");
+    var x3d = chartHolder.append("x3d")
+      .attr("width", width + "px")
+      .attr("height", height + "px");
     var scene = x3d.append("scene");
 
     // Generate some data
