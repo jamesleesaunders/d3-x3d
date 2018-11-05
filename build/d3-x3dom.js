@@ -1890,7 +1890,7 @@ function surfaceArea$1 () {
 			return d;
 		});
 
-		var viewpoint = component.viewpoint();
+		var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 		scene.call(viewpoint);
 
 		scene.each(function (data) {
@@ -2091,7 +2091,7 @@ function barChartMultiSeries () {
 			return d;
 		});
 
-		var viewpoint = component.viewpoint();
+		var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 		scene.call(viewpoint);
 
 		scene.append("directionallight").attr("direction", "1 0 -1").attr("on", "true").attr("intensity", "0.4").attr("shadowintensity", "0");
@@ -2480,7 +2480,7 @@ function bubbleChart () {
 			return d;
 		});
 
-		var viewpoint = component.viewpoint();
+		var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 		scene.call(viewpoint);
 
 		scene.append("directionallight").attr("direction", "1 0 -1").attr("on", "true").attr("intensity", "0.4").attr("shadowintensity", "0");
@@ -2698,7 +2698,7 @@ function scatterPlot () {
 			return d;
 		});
 
-		var viewpoint = component.viewpoint();
+		var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 		scene.call(viewpoint);
 
 		scene.each(function (data) {

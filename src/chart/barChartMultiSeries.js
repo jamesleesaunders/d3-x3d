@@ -84,7 +84,8 @@ export default function() {
 			.append("group")
 			.attr("class", function(d) { return d; });
 
-		let viewpoint = component.viewpoint();
+		let viewpoint = component.viewpoint()
+			.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 		scene.call(viewpoint);
 
 		scene.append("directionallight")
