@@ -68,10 +68,6 @@ export default function() {
 	function my(selection) {
 		selection.classed(classed, true);
 
-		let identity = function(x) {
-			return x;
-		};
-
 		let makeSolid = function(selection, color) {
 			selection.append("appearance")
 				.append("material")
@@ -80,8 +76,12 @@ export default function() {
 			return selection;
 		};
 
-		let values = tickValues === null ? (scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain()) : tickValues;
-		let format = tickFormat === null ? (scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : identity) : tickFormat;
+		let defaultValues = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
+		let values = tickValues === null ? defaultValues : tickValues;
+
+		let defaultFormat = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : function(d) { return d; };
+		let format = tickFormat === null ? defaultFormat : tickFormat;
+
 		let range = scale.range();
 		let range0 = range[0];
 		let range1 = range[range.length - 1];

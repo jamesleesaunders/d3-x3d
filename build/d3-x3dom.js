@@ -459,18 +459,20 @@ function componentAxis () {
 	function my(selection) {
 		selection.classed(classed, true);
 
-		var identity = function identity(x) {
-			return x;
-		};
-
 		var makeSolid = function makeSolid(selection, color) {
 			selection.append("appearance").append("material").attr("diffuseColor", color || "black");
 
 			return selection;
 		};
 
-		var values = tickValues === null ? scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain() : tickValues;
-		var format = tickFormat === null ? scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : identity : tickFormat;
+		var defaultValues = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
+		var values = tickValues === null ? defaultValues : tickValues;
+
+		var defaultFormat = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : function (d) {
+			return d;
+		};
+		var format = tickFormat === null ? defaultFormat : tickFormat;
+
 		var range = scale.range();
 		var range0 = range[0];
 		var range1 = range[range.length - 1];
@@ -674,15 +676,14 @@ function componentAxisThreePlane () {
 		});
 
 		// Construct Axis Components
-		var xzAxis = componentAxis().scale(xScale).dir('x').tickDir('z').tickSize(zScale.range()[1] - zScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
+		var xzAxis = componentAxis().scale(xScale).dir("x").tickDir("z").tickSize(zScale.range()[1] - zScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
 
-		var yzAxis = componentAxis().scale(yScale).dir('y').tickDir('z').tickSize(zScale.range()[1] - zScale.range()[0]).color("red");
+		var yzAxis = componentAxis().scale(yScale).dir("y").tickDir("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("red");
 
-		var yxAxis = componentAxis().scale(yScale).dir('y').tickDir('x').tickSize(xScale.range()[1] - xScale.range()[0]).tickFormat(function () {
-			return '';
-		}).color("red");
+		var yxAxis = componentAxis().scale(yScale).dir("y").tickDir("x").tickSize(xScale.range()[1] - xScale.range()[0]).tickFormat("") // FIXME: GitHub Issue #14
+		.color("red");
 
-		var zxAxis = componentAxis().scale(zScale).dir('z').tickDir('x').tickSize(xScale.range()[1] - xScale.range()[0]).color("black");
+		var zxAxis = componentAxis().scale(zScale).dir("z").tickDir("x").tickSize(xScale.range()[1] - xScale.range()[0]).color("black");
 
 		selection.select(".xzAxis").call(xzAxis);
 
@@ -1725,6 +1726,127 @@ function componentViewpoint () {
 	return my;
 }
 
+/**
+ * Reusable 3D Ribbon Chart
+ *
+ * @module
+ */
+function componentRibbon () {
+
+	/**
+  * Default Properties
+  */
+	var dimensions = { x: 40, y: 40, z: 40 };
+	var color = "red";
+	var classed = "x3dRibbon";
+
+	/**
+  * Scales
+  */
+	var xScale = void 0;
+	var yScale = void 0;
+
+	/**
+  * Initialise Data and Scales
+  *
+  * @param {Array} data - Chart data.
+  */
+	function init(data) {
+		var dataSummary = dataTransform(data).summary();
+		var seriesNames = dataSummary.columnKeys;
+		var maxValue = dataSummary.maxValue;
+
+		// Calculate Scales.
+		xScale = typeof xScale === "undefined" ? d3.scaleBand().domain(seriesNames).rangeRound([0, dimensions.x]).padding(0.3) : xScale;
+
+		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]) : yScale;
+	}
+
+	/**
+  * Constructor
+  *
+  * @constructor
+  * @param {d3.selection} selection
+  */
+	function my(selection) {
+		selection.classed(classed, true);
+
+		selection.each(function (data) {
+			init(data);
+
+			var ribbonSelect = selection.selectAll(".point").data(function (d) {
+				return d.values;
+			});
+
+			var ribbon = ribbonSelect.enter().append("transform").attr("translation", function (d) {
+				var x = xScale(d.key);
+				var y = yScale(d.value) / 2;
+				return x + " " + y + " 0";
+			}).attr("rotation", function () {
+				return "0,-1,0,1.57079633";
+			}).append("shape");
+
+			ribbon.append("rectangle2d").attr("size", function (d) {
+				var width = 5;
+				var height = yScale(d.value);
+				return width + " " + height;
+			}).attr("solid", "true");
+
+			ribbon.append("appearance").append("twosidedmaterial").attr("diffuseColor", color);
+		});
+	}
+
+	/**
+  * Dimensions Getter / Setter
+  *
+  * @param {{x: {number}, y: {number}, z: {number}}} _ - 3D Object dimensions.
+  * @returns {*}
+  */
+	my.dimensions = function (_) {
+		if (!arguments.length) return dimensions;
+		dimensions = _;
+		return this;
+	};
+
+	/**
+  * X Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
+	my.xScale = function (_) {
+		if (!arguments.length) return xScale;
+		xScale = _;
+		return my;
+	};
+
+	/**
+  * Y Scale Getter / Setter
+  *
+  * @param {d3.scale} _ - D3 Scale.
+  * @returns {*}
+  */
+	my.yScale = function (_) {
+		if (!arguments.length) return yScale;
+		yScale = _;
+		return my;
+	};
+
+	/**
+  * Color Getter / Setter
+  *
+  * @param {string} _ - Color 'red' or '#ff0000'.
+  * @returns {*}
+  */
+	my.color = function (_) {
+		if (!arguments.length) return color;
+		color = _;
+		return this;
+	};
+
+	return my;
+}
+
 var component = {
 	axis: componentAxis,
 	axisThreePlane: componentAxisThreePlane,
@@ -1733,7 +1855,8 @@ var component = {
 	bubbles: componentBubbles,
 	bubblesMultiSeries: componentBubblesMultiSeries,
 	surfaceArea: componentSurfaceArea,
-	viewpoint: componentViewpoint
+	viewpoint: componentViewpoint,
+	ribbon: componentRibbon
 };
 
 /**
@@ -1929,7 +2052,7 @@ function chartSurfaceArea () {
 	return my;
 }
 
-var version = "1.0.13";
+var version = "1.0.14";
 var license = "GPL-2.0";
 
 /**
