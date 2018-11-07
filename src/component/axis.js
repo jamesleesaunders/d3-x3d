@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-import { default as dataTransform } from "../dataTransform";
 
 const axisDirectionVectors = {
 	x: [1, 0, 0],
