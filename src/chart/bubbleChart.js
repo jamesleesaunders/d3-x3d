@@ -36,10 +36,10 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		let dataSummary = dataTransform(data).summary();
-		let seriesNames = dataSummary.rowKeys;
-		let maxCoordinates = dataSummary.maxCoordinates;
-		let maxValue = dataSummary.maxValue;
+		const dataSummary = dataTransform(data).summary();
+		const seriesNames = dataSummary.rowKeys;
+		const maxCoordinates = dataSummary.maxCoordinates;
+		const maxValue = dataSummary.maxValue;
 
 		// Calculate Scales.
 		xScale = (typeof xScale === "undefined") ?

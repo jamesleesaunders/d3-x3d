@@ -34,10 +34,10 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		let dataSummary = dataTransform(data).summary();
-		let categoryNames = dataSummary.rowKeys;
-		let seriesNames = dataSummary.columnKeys;
-		let maxValue = dataSummary.maxValue;
+		const dataSummary = dataTransform(data).summary();
+		const categoryNames = dataSummary.rowKeys;
+		const seriesNames = dataSummary.columnKeys;
+		const maxValue = dataSummary.maxValue;
 
 		// If the colorScale has not been passed then attempt to calculate.
 		colorScale = (typeof colorScale === "undefined") ?

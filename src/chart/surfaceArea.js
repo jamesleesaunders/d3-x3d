@@ -30,12 +30,12 @@ export default function() {
 	 * Initialise Data and Scales
 	 */
 	function init(data) {
-		let dataSummary = dataTransform(data).summary();
-		let seriesNames = dataSummary.rowKeys;
-		let groupNames = dataSummary.columnKeys;
-		let maxValue = dataSummary.maxValue;
+		const dataSummary = dataTransform(data).summary();
+		const seriesNames = dataSummary.rowKeys;
+		const groupNames = dataSummary.columnKeys;
+		const maxValue = dataSummary.maxValue;
 
-		let extent = [0, maxValue];
+		const extent = [0, maxValue];
 
 		// If the colorScale has not been passed then attempt to calculate.
 		colorScale = (typeof colorScale === "undefined") ?

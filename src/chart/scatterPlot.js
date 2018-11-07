@@ -34,8 +34,8 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		let dataSummary = dataTransform(data).summary();
-		let maxCoordinates = dataSummary.maxCoordinates;
+		const dataSummary = dataTransform(data).summary();
+		const maxCoordinates = dataSummary.maxCoordinates;
 
 		// Calculate Scales.
 		xScale = (typeof xScale === "undefined") ?
