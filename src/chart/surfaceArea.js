@@ -135,7 +135,7 @@ export default function() {
 	/**
 	 * Dimensions Getter / Setter
 	 *
-	 * @param {{x: {number}, y: {number}, z: {number}}} _ - 3D Object dimensions.
+	 * @param {{x: number, y: number, z: number}} _ - 3D Object dimensions.
 	 * @returns {*}
 	 */
 	my.dimensions = function(_) {
@@ -159,7 +159,7 @@ export default function() {
 	/**
 	 * Y Scale Getter / Setter
 	 *
-	 * @param {Object} _ - D3 Scale.
+	 * @param {d3.scale} _ - D3 Scale.
 	 * @returns {*}
 	 */
 	my.yScale = function(_) {
@@ -207,7 +207,7 @@ export default function() {
 	/**
 	 * Debug Getter / Setter
 	 *
-	 * @param {Boolean} _ - Show debug log and stats. True/False.
+	 * @param {boolean} _ - Show debug log and stats. True/False.
 	 * @returns {*}
 	 */
 	my.debug = function(_) {

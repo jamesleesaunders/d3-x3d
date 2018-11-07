@@ -42,7 +42,7 @@ export default function() {
 	 * Get Axis Direction Vector
 	 *
 	 * @param {string} axisDir
-	 * @returns {[{number}, {number}, {number}]}
+	 * @returns {[number, number, number]}
 	 */
 	function getAxisDirectionVector(axisDir) {
 		return axisDirectionVectors[axisDir];
@@ -52,7 +52,7 @@ export default function() {
 	 * Get Axis Rotation Vector
 	 *
 	 * @param {string} axisDir
-	 * @returns {[{number}, {number}, {number}, {number}]}
+	 * @returns {[number, number, number, number]}
 	 */
 	function getAxisRotationVector(axisDir) {
 		return axisRotationVectors[axisDir];
@@ -157,14 +157,14 @@ export default function() {
 	/**
 	 * Slice
 	 *
-	 * @type {(start?: number, end?: number) => T[]}
+	 * @type {<T>(start?: number, end?: number) => T[]}
 	 */
 	let slice = Array.prototype.slice;
 
 	/**
 	 * Dimensions Getter / Setter
 	 *
-	 * @param {{x: {number}, y: {number}, z: {number}}} _ - 3D Object dimensions.
+	 * @param {{x: number, y: number, z: number}} _ - 3D Object dimensions.
 	 * @returns {*}
 	 */
 	my.dimensions = function(_) {

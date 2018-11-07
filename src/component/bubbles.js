@@ -111,7 +111,7 @@ export default function() {
 	/**
 	 * Dimensions Getter / Setter
 	 *
-	 * @param {{x: {number}, y: {number}, z: {number}}} _ - 3D Object dimensions.
+	 * @param {{x: number, y: number, z: number}} _ - 3D Object dimensions.
 	 * @returns {*}
 	 */
 	my.dimensions = function(_) {
@@ -171,7 +171,7 @@ export default function() {
 	/**
 	 * Size Domain Getter / Setter
 	 *
-	 * @param {[{number}, {number}]} _ - Size min and max.
+	 * @param {[number, number]} _ - Size min and max.
 	 * @returns {*}
 	 */
 	my.sizeDomain = function(_) {
