@@ -65,7 +65,7 @@ export default function() {
 	 * @param {d3.selection} selection
 	 */
 	function my(selection) {
-		let x3d = selection.append("x3d")
+		const x3d = selection.append("x3d")
 			.attr("width", width + "px")
 			.attr("height", height + "px");
 
@@ -73,10 +73,10 @@ export default function() {
 			x3d.attr("showLog", "true").attr("showStat", "true")
 		}
 
-		let scene = x3d.append("scene");
+		const scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
-		let layers = ["axis", "chart"];
+		const layers = ["axis", "chart"];
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
@@ -84,7 +84,7 @@ export default function() {
 			.append("group")
 			.attr("class", function(d) { return d; });
 
-		let viewpoint = component.viewpoint()
+		const viewpoint = component.viewpoint()
 			.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 		scene.call(viewpoint);
 
@@ -98,13 +98,13 @@ export default function() {
 			init(data);
 
 			// Construct Axis Component
-			let axis = component.axisThreePlane()
+			const axis = component.axisThreePlane()
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale);
 
 			// Construct Bars Component
-			let chart = component.barsMultiSeries()
+			const chart = component.barsMultiSeries()
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
