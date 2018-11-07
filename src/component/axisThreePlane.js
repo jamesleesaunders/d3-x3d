@@ -31,7 +31,7 @@ export default function() {
 	 */
 	function my(selection) {
 
-		let layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
+		const layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
 		selection.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
@@ -40,7 +40,7 @@ export default function() {
 			.attr("class", function(d) { return d; });
 
 		// Construct Axis Components
-		let xzAxis = componentAxis()
+		const xzAxis = componentAxis()
 			.scale(xScale)
 			.dir("x")
 			.tickDir("z")
@@ -48,14 +48,14 @@ export default function() {
 			.tickPadding(xScale.range()[0])
 			.color("blue");
 
-		let yzAxis = componentAxis()
+		const yzAxis = componentAxis()
 			.scale(yScale)
 			.dir("y")
 			.tickDir("z")
 			.tickSize(zScale.range()[1] - zScale.range()[0])
 			.color("red");
 
-		let yxAxis = componentAxis()
+		const yxAxis = componentAxis()
 			.scale(yScale)
 			.dir("y")
 			.tickDir("x")
@@ -63,7 +63,7 @@ export default function() {
 			.tickFormat("") // FIXME: GitHub Issue #14
 			.color("red");
 
-		let zxAxis = componentAxis()
+		const zxAxis = componentAxis()
 			.scale(zScale)
 			.dir("z")
 			.tickDir("x")

@@ -41,10 +41,10 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		let dataSummary = dataTransform(data).summary();
-		let seriesNames = dataSummary.rowKeys;
-		let groupNames = dataSummary.columnKeys;
-		let maxValue = dataSummary.maxValue;
+		const dataSummary = dataTransform(data).summary();
+		const seriesNames = dataSummary.rowKeys;
+		const groupNames = dataSummary.columnKeys;
+		const maxValue = dataSummary.maxValue;
 
 		// If the colorScale has not been passed then attempt to calculate.
 		colorScale = (typeof colorScale === "undefined") ?
@@ -77,11 +77,11 @@ export default function() {
 		selection.each(function(data) {
 			init(data);
 
-			let ny = data.length;
-			let nx = data[0].values.length;
+			const ny = data.length;
+			const nx = data[0].values.length;
 
-			let coordinatePoints = function(data) {
-				let points = data.map(function(X) {
+			const coordinatePoints = function(data) {
+				const points = data.map(function(X) {
 					return X.values.map(function(d) {
 						return [xScale(X.key), yScale(d.value), zScale(d.key)];
 					})
@@ -89,36 +89,36 @@ export default function() {
 				return array2dToString(points);
 			};
 
-			let colorFaceSet = function(data) {
-				let colors = data.map(function(X) {
+			const colorFaceSet = function(data) {
+				const colors = data.map(function(X) {
 					return X.values.map(function(d) {
-						let col = d3.color(colorScale(d.value));
+						const col = d3.color(colorScale(d.value));
 						return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
 					})
 				});
 				return array2dToString(colors);
 			};
 
-			let coordIndex = Array.apply(0, Array(ny - 1)).map(function(_, j) {
+			const coordIndex = Array.apply(0, Array(ny - 1)).map(function(_, j) {
 				return Array.apply(0, Array(nx - 1)).map(function(_, i) {
-					let start = i + j * nx;
+					const start = i + j * nx;
 					return [start, start + nx, start + nx + 1, start + 1, start, -1];
 				});
 			});
 
-			let coordIndexBack = Array.apply(0, Array(ny - 1)).map(function(_, j) {
+			const coordIndexBack = Array.apply(0, Array(ny - 1)).map(function(_, j) {
 				return Array.apply(0, Array(nx - 1)).map(function(_, i) {
-					let start = i + j * nx;
+					const start = i + j * nx;
 					return [start, start + 1, start + nx + 1, start + nx, start, -1];
 				});
 			});
 
-			let coords = array2dToString(coordIndex.concat(coordIndexBack));
+			const coords = array2dToString(coordIndex.concat(coordIndexBack));
 
-			let surfaces = selection.selectAll(".surface")
+			const surfaces = selection.selectAll(".surface")
 				.data([data]);
 
-			let indexedfaceset = surfaces
+			const indexedfaceset = surfaces
 				.enter()
 				.append("shape")
 				.append("indexedfaceset")

@@ -33,9 +33,9 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		let dataSummary = dataTransform(data).summary();
-		let categoryNames = dataSummary.columnKeys;
-		let maxValue = dataSummary.maxValue;
+		const dataSummary = dataTransform(data).summary();
+		const categoryNames = dataSummary.columnKeys;
+		const maxValue = dataSummary.maxValue;
 
 		// If the colorScale has not been passed then attempt to calculate.
 		colorScale = (typeof colorScale === "undefined") ?
@@ -59,7 +59,7 @@ export default function() {
 	 * @param {d3.selection} selection
 	 */
 	function my(selection) {
-		let x3d = selection.append("x3d")
+		const x3d = selection.append("x3d")
 			.attr("width", width + "px")
 			.attr("height", height + "px");
 
@@ -67,10 +67,10 @@ export default function() {
 			x3d.attr("showLog", "true").attr("showStat", "true")
 		}
 
-		let scene = x3d.append("scene");
+		const scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
-		let layers = ["xAxis", "yAxis", "chart"];
+		const layers = ["xAxis", "yAxis", "chart"];
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
@@ -78,7 +78,7 @@ export default function() {
 			.append("group")
 			.attr("class", function(d) { return d; });
 
-		let viewpoint = component.viewpoint()
+		const viewpoint = component.viewpoint()
 			.quickView("left");
 		scene.call(viewpoint);
 
@@ -86,19 +86,19 @@ export default function() {
 			init(data);
 
 			// Construct Axis Components
-			let xAxis = component.axis()
+			const xAxis = component.axis()
 				.scale(xScale)
 				.dir('x')
 				.tickDir('y');
 
-			let yAxis = component.axis()
+			const yAxis = component.axis()
 				.scale(yScale)
 				.dir('y')
 				.tickDir('x')
 				.tickSize(yScale.range()[1] - yScale.range()[0]);
 
 			// Construct Bars Component
-			let chart = component.bars()
+			const chart = component.bars()
 				.xScale(xScale)
 				.yScale(yScale)
 				.colors(colors);

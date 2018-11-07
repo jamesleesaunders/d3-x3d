@@ -28,9 +28,9 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		let dataSummary = dataTransform(data).summary();
-		let seriesNames = dataSummary.columnKeys;
-		let maxValue = dataSummary.maxValue;
+		const dataSummary = dataTransform(data).summary();
+		const seriesNames = dataSummary.columnKeys;
+		const maxValue = dataSummary.maxValue;
 
 		// If the colorScale has not been passed then attempt to calculate.
 		colorScale = (typeof colorScale === "undefined") ?
@@ -59,10 +59,10 @@ export default function() {
 		selection.each(function(data) {
 			init(data);
 
-			let bars = selection.selectAll(".bar")
+			const bars = selection.selectAll(".bar")
 				.data(function(d) { return d.values; });
 
-			let barsEnter = bars.enter()
+			const barsEnter = bars.enter()
 				.append("transform")
 				.classed("bar", true)
 				.attr("scale", function(d) {
