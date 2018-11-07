@@ -1,6 +1,6 @@
 import * as d3 from "d3";
-import { default as dataTransform } from "../dataTransform";
-import { default as componentBubbles } from "./bubbles";
+import dataTransform from "../dataTransform";
+import componentBubbles from "./bubbles";
 
 /**
  * Reusable 3D Multi Series Bubble Chart

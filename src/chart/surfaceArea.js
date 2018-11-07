@@ -1,6 +1,6 @@
 import * as d3 from "d3";
-import { default as dataTransform } from "../dataTransform";
-import { default as component } from "../component";
+import dataTransform from "../dataTransform";
+import component from "../component";
 
 /**
  * Reusable 3D Surface Area

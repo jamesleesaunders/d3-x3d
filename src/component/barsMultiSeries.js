@@ -1,6 +1,6 @@
 import * as d3 from "d3";
-import { default as dataTransform } from "../dataTransform";
-import { default as componentBars } from "./bars";
+import dataTransform from "../dataTransform";
+import componentBars from "./bars";
 
 /**
  * Reusable 3D Multi Series Bar Chart

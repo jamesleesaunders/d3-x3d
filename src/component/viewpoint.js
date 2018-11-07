@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-import { default as dataTransform } from "../dataTransform";
 
 /**
  * Reusable X3DOM Viewpoint

@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { default as dataTransform } from "../dataTransform";
+import dataTransform from "../dataTransform";
 
 /**
  * Reusable 3D Bar Chart
