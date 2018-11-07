@@ -75,7 +75,7 @@ export default function() {
 	/**
 	 * View Position Getter / Setter
 	 *
-	 * @param {[{number}, {number}, {number}]} _
+	 * @param {[number, number, number]} _
 	 * @returns {*}
 	 */
 	my.centerOfRotation = function(_) {
@@ -93,7 +93,7 @@ export default function() {
 	/**
 	 * View Orientation Getter / Setter
 	 *
-	 * @param {[{number}, {number}, {number}, {number}]} _
+	 * @param {[number, number, number, number]} _
 	 * @returns {*}
 	 */
 	my.viewOrientation = function(_) {

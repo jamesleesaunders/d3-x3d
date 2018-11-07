@@ -88,7 +88,7 @@ export default function() {
 	/**
 	 * Dimensions Getter / Setter
 	 *
-	 * @param {{x: {number}, y: {number}, z: {number}}} _ - 3D Object dimensions.
+	 * @param {{x: number, y: number, z: number}} _ - 3D Object dimensions.
 	 * @returns {*}
 	 */
 	my.dimensions = function(_) {
