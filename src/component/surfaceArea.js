@@ -135,72 +135,72 @@ export default function() {
 	/**
 	 * Dimensions Getter / Setter
 	 *
-	 * @param {{x: number, y: number, z: number}} _ - 3D Object dimensions.
+	 * @param {{x: number, y: number, z: number}} value - 3D Object dimensions.
 	 * @returns {*}
 	 */
-	my.dimensions = function(_) {
+	my.dimensions = function(value) {
 		if (!arguments.length) return dimensions;
-		dimensions = _;
+		dimensions = value;
 		return this;
 	};
 
 	/**
 	 * X Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _ - D3 Scale.
+	 * @param {d3.scale} value - D3 Scale.
 	 * @returns {*}
 	 */
-	my.xScale = function(_) {
+	my.xScale = function(value) {
 		if (!arguments.length) return xScale;
-		xScale = _;
+		xScale = value;
 		return my;
 	};
 
 	/**
 	 * Y Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _ - D3 Scale.
+	 * @param {d3.scale} value - D3 Scale.
 	 * @returns {*}
 	 */
-	my.yScale = function(_) {
+	my.yScale = function(value) {
 		if (!arguments.length) return yScale;
-		yScale = _;
+		yScale = value;
 		return my;
 	};
 
 	/**
 	 * Z Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _ - D3 Scale.
+	 * @param {d3.scale} value - D3 Scale.
 	 * @returns {*}
 	 */
-	my.zScale = function(_) {
+	my.zScale = function(value) {
 		if (!arguments.length) return zScale;
-		zScale = _;
+		zScale = value;
 		return my;
 	};
 
 	/**
 	 * Color Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _ - D3 Color Scale.
+	 * @param {d3.scale} value - D3 Color Scale.
 	 * @returns {*}
 	 */
-	my.colorScale = function(_) {
+	my.colorScale = function(value) {
 		if (!arguments.length) return colorScale;
-		colorScale = _;
+		colorScale = value;
 		return my;
 	};
 
 	/**
 	 * Colors Getter / Setter
 	 *
-	 * @param {Array} _ - Array of colours used by color scale.
+	 * @param {Array} value - Array of colours used by color scale.
 	 * @returns {*}
 	 */
-	my.colors = function(_) {
+	my.colors = function(value) {
 		if (!arguments.length) return colors;
-		colors = _;
+		colors = value;
 		return my;
 	};
 

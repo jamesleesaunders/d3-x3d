@@ -4,13 +4,13 @@ const axisDirectionVectors = {
 	x: [1, 0, 0],
 	y: [0, 1, 0],
 	z: [0, 0, 1]
-}
+};
 
 const axisRotationVectors = {
 	x: [1, 1, 0, Math.PI],
 	y: [0, 0, 0, 0],
 	z: [0, 1, 1, Math.PI]
-}
+};
 
 /**
  * Reusable 3D Axis
@@ -164,57 +164,57 @@ export default function() {
 	/**
 	 * Dimensions Getter / Setter
 	 *
-	 * @param {{x: number, y: number, z: number}} _ - 3D Object dimensions.
+	 * @param {{x: number, y: number, z: number}} value - 3D Object dimensions.
 	 * @returns {*}
 	 */
-	my.dimensions = function(_) {
+	my.dimensions = function(value) {
 		if (!arguments.length) return dimensions;
-		dimensions = _;
+		dimensions = value;
 		return this;
 	};
 
 	/**
 	 * Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _ - D3 Scale.
+	 * @param {d3.scale} value - D3 Scale.
 	 * @returns {*}
 	 */
-	my.scale = function(_) {
+	my.scale = function(value) {
 		if (!arguments.length) return scale;
-		scale = _;
+		scale = value;
 		return my;
 	};
 
 	/**
 	 * Color Getter / Setter
 	 *
-	 * @param {string} _ - Color 'red' or '#ff0000'.
+	 * @param {string} value - Color 'red' or '#ff0000'.
 	 * @returns {*}
 	 */
-	my.color = function(_) {
+	my.color = function(value) {
 		if (!arguments.length) return color;
-		color = _;
+		color = value;
 		return my;
 	};
 
 	/**
 	 * Direction
 	 *
-	 * @param _
+	 * @param value
 	 * @returns {*}
 	 */
-	my.dir = function(_) {
-		return arguments.length ? (dir = _, my) : dir;
+	my.dir = function(value) {
+		return arguments.length ? (dir = value, my) : dir;
 	};
 
 	/**
 	 * Tick Direction
 	 *
-	 * @param _
+	 * @param value
 	 * @returns {*}
 	 */
-	my.tickDir = function(_) {
-		return arguments.length ? (tickDir = _, my) : tickDir;
+	my.tickDir = function(value) {
+		return arguments.length ? (tickDir = value, my) : tickDir;
 	};
 
 	/**
@@ -228,51 +228,51 @@ export default function() {
 	/**
 	 * Tick Arguments
 	 *
-	 * @param _
+	 * @param value
 	 * @returns {*[]}
 	 */
-	my.tickArguments = function(_) {
-		return arguments.length ? (tickArguments = _ === null ? [] : slice.call(_), my) : tickArguments.slice();
+	my.tickArguments = function(value) {
+		return arguments.length ? (tickArguments = value === null ? [] : slice.call(value), my) : tickArguments.slice();
 	};
 
 	/**
 	 * Tick Values
 	 *
-	 * @param _
+	 * @param value
 	 * @returns {*}
 	 */
-	my.tickValues = function(_) {
-		return arguments.length ? (tickValues = _ === null ? null : slice.call(_), my) : tickValues && tickValues.slice();
+	my.tickValues = function(value) {
+		return arguments.length ? (tickValues = value === null ? null : slice.call(value), my) : tickValues && tickValues.slice();
 	};
 
 	/**
 	 * Tick Format
 	 *
-	 * @param _
+	 * @param value
 	 * @returns {*}
 	 */
-	my.tickFormat = function(_) {
-		return arguments.length ? (tickFormat = _, my) : tickFormat;
+	my.tickFormat = function(value) {
+		return arguments.length ? (tickFormat = value, my) : tickFormat;
 	};
 
 	/**
 	 * Tick Size
 	 *
-	 * @param _
+	 * @param value
 	 * @returns {number}
 	 */
-	my.tickSize = function(_) {
-		return arguments.length ? (tickSize = +_, my) : tickSize;
+	my.tickSize = function(value) {
+		return arguments.length ? (tickSize = +value, my) : tickSize;
 	};
 
 	/**
 	 * Tick Padding
 	 *
-	 * @param _
+	 * @param value
 	 * @returns {number}
 	 */
-	my.tickPadding = function(_) {
-		return arguments.length ? (tickPadding = +_, my) : tickPadding;
+	my.tickPadding = function(value) {
+		return arguments.length ? (tickPadding = +value, my) : tickPadding;
 	};
 
 	return my;
