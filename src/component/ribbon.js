@@ -27,9 +27,9 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		let dataSummary = dataTransform(data).summary();
-		let seriesNames = dataSummary.columnKeys;
-		let maxValue = dataSummary.maxValue;
+		const dataSummary = dataTransform(data).summary();
+		const seriesNames = dataSummary.columnKeys;
+		const maxValue = dataSummary.maxValue;
 
 		// Calculate Scales.
 		xScale = (typeof xScale === "undefined") ?
@@ -53,14 +53,14 @@ export default function() {
 		selection.each(function(data) {
 			init(data);
 
-			let ribbonSelect = selection.selectAll(".point")
+			const ribbonSelect = selection.selectAll(".point")
 				.data(function(d) { return d.values; });
 
-			let ribbon = ribbonSelect.enter()
+			const ribbon = ribbonSelect.enter()
 				.append("transform")
 				.attr("translation", function(d) {
-					let x = xScale(d.key);
-					let y = yScale(d.value) / 2;
+					const x = xScale(d.key);
+					const y = yScale(d.value) / 2;
 					return x + " " + y + " 0";
 				})
 				.attr("rotation", function() {
@@ -70,8 +70,8 @@ export default function() {
 
 			ribbon.append("rectangle2d")
 				.attr("size", function(d) {
-					let width = 5;
-					let height = yScale(d.value);
+					const width = 5;
+					const height = yScale(d.value);
 					return width + " " + height;
 				})
 				.attr("solid", "true");

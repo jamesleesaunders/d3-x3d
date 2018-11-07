@@ -67,7 +67,7 @@ export default function() {
 	function my(selection) {
 		selection.classed(classed, true);
 
-		let makeSolid = function(selection, color) {
+		const makeSolid = function(selection, color) {
 			selection.append("appearance")
 				.append("material")
 				.attr("diffuseColor", color || "black");
@@ -75,20 +75,20 @@ export default function() {
 			return selection;
 		};
 
-		let defaultValues = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
-		let values = tickValues === null ? defaultValues : tickValues;
+		const defaultValues = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
+		const values = tickValues === null ? defaultValues : tickValues;
 
-		let defaultFormat = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : function(d) { return d; };
-		let format = tickFormat === null ? defaultFormat : tickFormat;
+		const defaultFormat = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : function(d) { return d; };
+		const format = tickFormat === null ? defaultFormat : tickFormat;
 
-		let range = scale.range();
-		let range0 = range[0];
-		let range1 = range[range.length - 1];
+		const range = scale.range();
+		const range0 = range[0];
+		const range1 = range[range.length - 1];
 
-		let dirVec = getAxisDirectionVector(dir);
-		let tickDirVec = getAxisDirectionVector(tickDir);
-		let rotVec = getAxisRotationVector(dir);
-		let tickRotVec = getAxisRotationVector(tickDir);
+		const dirVec = getAxisDirectionVector(dir);
+		const tickDirVec = getAxisDirectionVector(tickDir);
+		const rotVec = getAxisRotationVector(dir);
+		const tickRotVec = getAxisRotationVector(tickDir);
 
 		let path = selection.selectAll("transform")
 			.data([null]);
@@ -96,8 +96,8 @@ export default function() {
 		let tick = selection.selectAll(".tick")
 			.data(values, scale).order();
 
-		let tickExit = tick.exit();
-		let tickEnter = tick.enter()
+		const tickExit = tick.exit();
+		const tickEnter = tick.enter()
 			.append("transform")
 			.attr("translation", function(t) {
 				return dirVec.map(function(a) {

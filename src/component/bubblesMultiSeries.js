@@ -32,10 +32,10 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		let dataSummary = dataTransform(data).summary();
-		let seriesNames = dataSummary.rowKeys;
-		let maxCoordinates = dataSummary.maxCoordinates;
-		let maxValue = dataSummary.maxValue;
+		const dataSummary = dataTransform(data).summary();
+		const seriesNames = dataSummary.rowKeys;
+		const maxCoordinates = dataSummary.maxCoordinates;
+		const maxValue = dataSummary.maxValue;
 
 		// If the colorScale has not been passed then attempt to calculate.
 		colorScale = (typeof colorScale === "undefined") ?
@@ -73,7 +73,7 @@ export default function() {
 			init(data);
 
 			// Construct Bars Component
-			let bubbles = componentBubbles()
+			const bubbles = componentBubbles()
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
@@ -81,7 +81,7 @@ export default function() {
 				.color(function(d) { return colorScale(d.key); });
 
 			// Create Bar Groups
-			let bubbleGroup = selection.selectAll(".bubbleGroup")
+			const bubbleGroup = selection.selectAll(".bubbleGroup")
 				.data(data);
 
 			bubbleGroup.enter()

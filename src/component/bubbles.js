@@ -29,10 +29,10 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		let maxX = d3.max(data.values, function(d) { return +d.x; });
-		let maxY = d3.max(data.values, function(d) { return +d.y; });
-		let maxZ = d3.max(data.values, function(d) { return +d.z; });
-		let maxValue = d3.max(data.values, function(d) { return +d.value; });
+		const maxX = d3.max(data.values, function(d) { return +d.x; });
+		const maxY = d3.max(data.values, function(d) { return +d.y; });
+		const maxZ = d3.max(data.values, function(d) { return +d.z; });
+		const maxValue = d3.max(data.values, function(d) { return +d.value; });
 
 		// Calculate Scales.
 		xScale = (typeof xScale === "undefined") ?
@@ -64,7 +64,7 @@ export default function() {
 		selection.each(function(data) {
 			init(data);
 
-			let makeSolid = function(selection, color) {
+			const makeSolid = function(selection, color) {
 				selection
 					.append("appearance")
 					.append("material")
@@ -72,10 +72,10 @@ export default function() {
 				return selection;
 			};
 
-			let bubblesSelect = selection.selectAll(".point")
+			const bubblesSelect = selection.selectAll(".point")
 				.data(function(d) { return d.values; });
 
-			let bubbles = bubblesSelect.enter()
+			const bubbles = bubblesSelect.enter()
 				.append("transform")
 				.attr("class", "point")
 				.attr("translation", function(d) { return xScale(d.x) + ' ' + yScale(d.y) + ' ' + zScale(d.z); })
