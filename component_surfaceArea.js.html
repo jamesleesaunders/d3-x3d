@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: component/surfaceArea.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: component/surfaceArea.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as d3 from "d3";
+import dataTransform from "../dataTransform";
+
+/**
+ * Reusable 3D Surface Area
+ *
+ * @module
+ */
+export default function() {
+
+	/**
+	 * Default Properties
+	 */
+	let dimensions = { x: 40, y: 40, z: 40 };
+	let colors = ["blue", "red"];
+	let classed = "x3dSurfaceArea";
+
+	/**
+	 * Scales
+	 */
+	let xScale;
+	let yScale;
+	let zScale;
+	let colorScale;
+
+	/**
+	 * Array to String
+	 *
+	 * @param arr
+	 * @returns {*}
+	 */
+	function array2dToString(arr) {
+		return arr.reduce(function(a, b) { return a.concat(b); }, [])
+			.reduce(function(a, b) { return a.concat(b); }, [])
+			.join(' ');
+	}
+
+	/**
+	 * Initialise Data and Scales
+	 *
+	 * @param {Array} data - Chart data.
+	 */
+	function init(data) {
+		const dataSummary = dataTransform(data).summary();
+		const seriesNames = dataSummary.rowKeys;
+		const groupNames = dataSummary.columnKeys;
+		const maxValue = dataSummary.maxValue;
+
+		// If the colorScale has not been passed then attempt to calculate.
+		colorScale = (typeof colorScale === "undefined") ?
+			d3.scaleLinear().domain([0, maxValue]).range(colors).interpolate(d3.interpolateLab) :
+			colorScale;
+
+		// Calculate Scales.
+		xScale = (typeof xScale === "undefined") ?
+			d3.scalePoint().domain(seriesNames).range([0, dimensions.x]) :
+			xScale;
+
+		yScale = (typeof yScale === "undefined") ?
+			d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]) :
+			yScale;
+
+		zScale = (typeof zScale === "undefined") ?
+			d3.scalePoint().domain(groupNames).range([0, dimensions.z]) :
+			zScale;
+	}
+
+	/**
+	 * Constructor
+	 *
+	 * @constructor
+	 * @param {d3.selection} selection
+	 */
+	function my(selection) {
+		selection.classed(classed, true);
+
+		selection.each(function(data) {
+			init(data);
+
+			const ny = data.length;
+			const nx = data[0].values.length;
+
+			const coordinatePoints = function(data) {
+				const points = data.map(function(X) {
+					return X.values.map(function(d) {
+						return [xScale(X.key), yScale(d.value), zScale(d.key)];
+					})
+				});
+				return array2dToString(points);
+			};
+
+			const colorFaceSet = function(data) {
+				const colors = data.map(function(X) {
+					return X.values.map(function(d) {
+						const col = d3.color(colorScale(d.value));
+						return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
+					})
+				});
+				return array2dToString(colors);
+			};
+
+			const coordIndex = Array.apply(0, Array(ny - 1)).map(function(_, j) {
+				return Array.apply(0, Array(nx - 1)).map(function(_, i) {
+					const start = i + j * nx;
+					return [start, start + nx, start + nx + 1, start + 1, start, -1];
+				});
+			});
+
+			const coordIndexBack = Array.apply(0, Array(ny - 1)).map(function(_, j) {
+				return Array.apply(0, Array(nx - 1)).map(function(_, i) {
+					const start = i + j * nx;
+					return [start, start + 1, start + nx + 1, start + nx, start, -1];
+				});
+			});
+
+			const coords = array2dToString(coordIndex.concat(coordIndexBack));
+
+			const surfaces = selection.selectAll(".surface")
+				.data([data]);
+
+			const indexedfaceset = surfaces
+				.enter()
+				.append("shape")
+				.append("indexedfaceset")
+				.attr("coordIndex", coords);
+
+			indexedfaceset.append("coordinate")
+				.attr("point", coordinatePoints);
+
+			indexedfaceset.append("color")
+				.attr("color", colorFaceSet);
+		});
+	}
+
+	/**
+	 * Dimensions Getter / Setter
+	 *
+	 * @param {{x: number, y: number, z: number}} value - 3D Object dimensions.
+	 * @returns {*}
+	 */
+	my.dimensions = function(value) {
+		if (!arguments.length) return dimensions;
+		dimensions = value;
+		return this;
+	};
+
+	/**
+	 * X Scale Getter / Setter
+	 *
+	 * @param {d3.scale} value - D3 Scale.
+	 * @returns {*}
+	 */
+	my.xScale = function(value) {
+		if (!arguments.length) return xScale;
+		xScale = value;
+		return my;
+	};
+
+	/**
+	 * Y Scale Getter / Setter
+	 *
+	 * @param {d3.scale} value - D3 Scale.
+	 * @returns {*}
+	 */
+	my.yScale = function(value) {
+		if (!arguments.length) return yScale;
+		yScale = value;
+		return my;
+	};
+
+	/**
+	 * Z Scale Getter / Setter
+	 *
+	 * @param {d3.scale} value - D3 Scale.
+	 * @returns {*}
+	 */
+	my.zScale = function(value) {
+		if (!arguments.length) return zScale;
+		zScale = value;
+		return my;
+	};
+
+	/**
+	 * Color Scale Getter / Setter
+	 *
+	 * @param {d3.scale} value - D3 Color Scale.
+	 * @returns {*}
+	 */
+	my.colorScale = function(value) {
+		if (!arguments.length) return colorScale;
+		colorScale = value;
+		return my;
+	};
+
+	/**
+	 * Colors Getter / Setter
+	 *
+	 * @param {Array} value - Array of colours used by color scale.
+	 * @returns {*}
+	 */
+	my.colors = function(value) {
+		if (!arguments.length) return colors;
+		colors = value;
+		return my;
+	};
+
+	return my;
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-chart_barChartMultiSeries.html">chart/barChartMultiSeries</a></li><li><a href="module-chart_barChartVertical.html">chart/barChartVertical</a></li><li><a href="module-chart_bubbleChart.html">chart/bubbleChart</a></li><li><a href="module-chart_scatterPlot.html">chart/scatterPlot</a></li><li><a href="module-component_axis.html">component/axis</a></li><li><a href="module-component_axisThreePlane.html">component/axisThreePlane</a></li><li><a href="module-component_bars.html">component/bars</a></li><li><a href="module-component_barsMultiSeries.html">component/barsMultiSeries</a></li><li><a href="module-component_bubbles.html">component/bubbles</a></li><li><a href="module-component_bubblesMultiSeries.html">component/bubblesMultiSeries</a></li><li><a href="module-component_ribbon.html">component/ribbon</a></li><li><a href="module-component_surfaceArea.html">component/surfaceArea</a></li><li><a href="module-component_viewpoint.html">component/viewpoint</a></li></ul><h3>Classes</h3><ul><li><a href="module-chart_barChartMultiSeries-my.html">my</a></li><li><a href="module-chart_barChartVertical-my.html">my</a></li><li><a href="module-chart_bubbleChart-my.html">my</a></li><li><a href="module-chart_scatterPlot-my.html">my</a></li><li><a href="module-component_axisThreePlane-my.html">my</a></li><li><a href="module-component_axis-my.html">my</a></li><li><a href="module-component_barsMultiSeries-my.html">my</a></li><li><a href="module-component_bars-my.html">my</a></li><li><a href="module-component_bubblesMultiSeries-my.html">my</a></li><li><a href="module-component_bubbles-my.html">my</a></li><li><a href="module-component_ribbon-my.html">my</a></li><li><a href="module-component_surfaceArea-my.html">my</a></li><li><a href="module-component_viewpoint-my.html">my</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Nov 08 2018 22:02:44 GMT+0000 (GMT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

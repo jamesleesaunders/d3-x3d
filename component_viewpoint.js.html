@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: component/viewpoint.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: component/viewpoint.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as d3 from "d3";
+
+/**
+ * Reusable X3DOM Viewpoint
+ *
+ * @module
+ */
+export default function() {
+
+	/**
+	 * Default Properties
+	 */
+	let centerOfRotation = [0.0, 0.0, 0.0];
+	let viewPosition = [80.0, 15.0, 80.0];
+	let viewOrientation = [0.0, 1.0, 0.0, 0.8];
+	let fieldOfView = 0.8;
+	let classed = "x3dViewpoint";
+
+	/**
+	 * Constructor
+	 *
+	 * @constructor
+	 * @param {d3.selection} selection
+	 */
+	function my(selection) {
+		selection.append("viewpoint")
+			.classed(classed, true)
+			.attr("centerOfRotation", centerOfRotation.join(" "))
+			.attr("position", viewPosition.join(" "))
+			.attr("orientation", viewOrientation.join(" "))
+			.attr("fieldOfView", fieldOfView)
+			.attr("set_bind", "true");
+	}
+
+	/**
+	 * Set Quick Viewpoint
+	 *
+	 * @param {string} view - 'left', 'side', 'top', 'dimetric'
+	 * @returns {my}
+	 */
+	my.quickView = function(view) {
+		switch (view) {
+			case "left":
+				centerOfRotation = [0.0, 0.0, 0.0];
+				viewPosition = [37.10119, 18.70484, 51.01594];
+				viewOrientation = [0.06724, 0.99767, -0.01148, 0.33908];
+				fieldOfView = 1.0;
+				break;
+
+			case "side":
+				centerOfRotation = [20.0, 0.0, 0.0];
+				viewPosition = [20.00000, 20.00000, 50.00000];
+				viewOrientation = [0.00000, 0.00000, 0.00000, 0.00000];
+				fieldOfView = 1.0;
+				break;
+
+			case "top":
+				centerOfRotation = [0.0, 0.0, 0.0];
+				viewPosition = [27.12955, 106.67181, 31.65828];
+				viewOrientation = [-0.86241, 0.37490, 0.34013, 1.60141];
+				fieldOfView = 1.0;
+				break;
+
+			case "dimetric":
+			default:
+				centerOfRotation = [0.0, 0.0, 0.0];
+				viewPosition = [80.0, 15.0, 80.0];
+				viewOrientation = [0.0, 1.0, 0.0, 0.8];
+				fieldOfView = 0.8;
+		}
+		return my;
+	};
+
+	/**
+	 * Centre of Rotation Getter / Setter
+	 *
+	 * @param {number[]} value
+	 * @returns {*}
+	 */
+	my.centerOfRotation = function(value) {
+		if (!arguments.length) return centerOfRotation;
+		centerOfRotation = value;
+		return my;
+	};
+
+	/**
+	 * View Position Getter / Setter
+	 *
+	 * @param {[number, number, number]} value
+	 * @returns {*}
+	 */
+	my.viewPosition = function(value) {
+		if (!arguments.length) return viewPosition;
+		viewPosition = value;
+		return my;
+	};
+
+	/**
+	 * View Orientation Getter / Setter
+	 *
+	 * @param {number[]} value
+	 * @returns {*}
+	 */
+	my.viewOrientation = function(value) {
+		if (!arguments.length) return viewOrientation;
+		viewOrientation = value;
+		return my;
+	};
+
+	/**
+	 * Field of View Getter / Setter
+	 *
+	 * @param {number} value
+	 * @returns {*}
+	 */
+	my.fieldOfView = function(value) {
+		if (!arguments.length) return fieldOfView;
+		fieldOfView = value;
+		return my;
+	};
+
+	return my;
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-chart_barChartMultiSeries.html">chart/barChartMultiSeries</a></li><li><a href="module-chart_barChartVertical.html">chart/barChartVertical</a></li><li><a href="module-chart_bubbleChart.html">chart/bubbleChart</a></li><li><a href="module-chart_scatterPlot.html">chart/scatterPlot</a></li><li><a href="module-component_axis.html">component/axis</a></li><li><a href="module-component_axisThreePlane.html">component/axisThreePlane</a></li><li><a href="module-component_bars.html">component/bars</a></li><li><a href="module-component_barsMultiSeries.html">component/barsMultiSeries</a></li><li><a href="module-component_bubbles.html">component/bubbles</a></li><li><a href="module-component_bubblesMultiSeries.html">component/bubblesMultiSeries</a></li><li><a href="module-component_ribbon.html">component/ribbon</a></li><li><a href="module-component_surfaceArea.html">component/surfaceArea</a></li><li><a href="module-component_viewpoint.html">component/viewpoint</a></li></ul><h3>Classes</h3><ul><li><a href="module-chart_barChartMultiSeries-my.html">my</a></li><li><a href="module-chart_barChartVertical-my.html">my</a></li><li><a href="module-chart_bubbleChart-my.html">my</a></li><li><a href="module-chart_scatterPlot-my.html">my</a></li><li><a href="module-component_axisThreePlane-my.html">my</a></li><li><a href="module-component_axis-my.html">my</a></li><li><a href="module-component_barsMultiSeries-my.html">my</a></li><li><a href="module-component_bars-my.html">my</a></li><li><a href="module-component_bubblesMultiSeries-my.html">my</a></li><li><a href="module-component_bubbles-my.html">my</a></li><li><a href="module-component_ribbon-my.html">my</a></li><li><a href="module-component_surfaceArea-my.html">my</a></li><li><a href="module-component_viewpoint-my.html">my</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Nov 08 2018 22:02:44 GMT+0000 (GMT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
