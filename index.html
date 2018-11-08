@@ -42,6 +42,198 @@
 
 
 
+    <section>
+        <article><h1>d3-x3dom</h1><h2>D3 X3DOM Data Visualisation Library</h2><p><a href="https://badge.fury.io/js/d3-x3dom"><img src="https://badge.fury.io/js/d3-x3dom.svg" alt="npm version"></a>
+<a href="https://travis-ci.org/jamesleesaunders/d3-x3dom"><img src="https://travis-ci.org/jamesleesaunders/d3-x3dom.svg?branch=master" alt="Build Status"></a>
+<a href="https://snyk.io/test/github/jamesleesaunders/d3-x3dom?targetFile=package.json"><img src="https://snyk.io/test/github/jamesleesaunders/d3-x3dom/badge.svg?targetFile=package.json" alt="Known Vulnerabilities"></a></p>
+<p>Combining the power of the <a href="http://www.d3js.org/">D3.js</a> data-driven documents visualisation library, and the <a href="https://github.com/x3dom/x3dom">X3DOM</a> declarative 3D DOM framework, <strong>d3-x3dom</strong> makes it easy to quickly produce beautiful 3D data visualisations with minimal code.</p>
+<p>Inspired by Mike Bostock's <a href="http://bost.ocks.org/mike/chart/">reusable charts</a>, <strong>d3-x3dom</strong> is built on a foundation of building blocks, called components, which can be combined to create a variety of different data visualisations.</p>
+<h3>Examples</h3><ul>
+<li><a href="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartMultiSeries.html">Multi Series Bar Chart</a></li>
+<li><a href="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartVertical.html">Vertical Bar Chart</a></li>
+<li><a href="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BubbleChart.html">Bubble Chart</a></li>
+<li><a href="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/ScatterPlot.html">Scatter Plot</a></li>
+<li><a href="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/SurfaceArea.html">Surface Area</a></li>
+<li><a href="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html">Components Showcase</a></li>
+<li><a href="https://beta.observablehq.com/collection/@jamesleesaunders/d3-x3dom">Observable Examples</a></li>
+</ul>
+<h3>Getting Started</h3><p>Include D3.js, X3DOM and d3-x3dom js and css files in the <code>&lt;head&gt;</code> section of your page:</p>
+<pre class="prettyprint source lang-html"><code>&lt;head>
+   &lt;script src=&quot;https://d3js.org/d3.v5.min.js&quot;>&lt;/script>   
+   &lt;script src=&quot;https://x3dom.org/download/dev/x3dom-full.js&quot;>&lt;/script>
+   &lt;link rel=&quot;stylesheet&quot; href=&quot;https://x3dom.org/download/dev/x3dom.css&quot; />
+   &lt;script src=&quot;d3-x3dom.js&quot;>&lt;/script>
+&lt;/head></code></pre><p>Add a chartholder <code>&lt;div&gt;</code> and <code>&lt;script&gt;</code> tags to your page <code>&lt;body&gt;</code>:</p>
+<pre class="prettyprint source lang-html"><code>&lt;body>
+   &lt;div id=&quot;chartholder&quot;>&lt;/div>
+   &lt;script>&lt;/script>
+&lt;/body></code></pre><p>Place the following code between the <code>&lt;script&gt;&lt;/script&gt;</code> tags:</p>
+<p>Select chartholder:</p>
+<pre class="prettyprint source lang-javascript"><code>var chartHolder = d3.select(&quot;#chartholder&quot;);</code></pre><p>Generate some <a href="#data-structure">data</a>:</p>
+<pre class="prettyprint source lang-javascript"><code>var myData = [
+    {
+        key: &quot;Sainsburys&quot;,
+        values: [
+            { key: &quot;Apples&quot;, value: 9 },
+            { key: &quot;Oranges&quot;, value: 3 },
+            { key: &quot;Grapes&quot;, value: 5 },
+            { key: &quot;Bananas&quot;, value: 7 }
+        ]
+    },
+    {
+        key: &quot;Tesco&quot;,
+        values: [
+            { key: &quot;Apples&quot;, value: 5 },
+            { key: &quot;Oranges&quot;, value: 4 },
+            { key: &quot;Grapes&quot;, value: 6 },
+            { key: &quot;Bananas&quot;, value: 2 }
+        ]
+    }
+];</code></pre><p>Declare the <a href="#components-and-charts">chart</a> component:</p>
+<pre class="prettyprint source lang-javascript"><code>var myChart = d3.x3dom.chart.barChartMultiSeries();</code></pre><p>Attach chart and data to the chartholder:</p>
+<pre class="prettyprint source lang-javascript"><code>chartHolder.datum(myData).call(myChart);</code></pre><p>Thats all there is to it! View the page in a browser and you should see a basic 3D bar chart.</p>
+<h3>Import as ES6 module</h3><p>If your JS project is using ES6 modules you can also import d3-x3dom (for example from NPM):</p>
+<pre class="prettyprint source lang-javascript"><code>var d3X3dom = require(&quot;d3-x3dom&quot;);</code></pre><h3>Components and Charts</h3><p>d3-x3dom has two types of reusable modules: <code>component</code> and <code>chart</code>.</p>
+<h4>Components</h4><p>The `component` modules are lower level building blocks which can be used independently, or combined to build higher level `chart` modules. 
+For example, combining `component.bars()`, `component.axis()` and `component.viewpoint()` modules together we have built the `chart.barChartMultiSeries()`.
+Component modules do not generate a <code>x3d</code> tag, these should be attached to an exiting <code>x3d</code> tag.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+<th>Example     </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>component.axis()</td>
+<td>Single plane x/y Axis</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html">View</a></td>
+</tr>
+<tr>
+<td>component.axisThreePlane()</td>
+<td>Three plane x/y/z Axis</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html">View</a></td>
+</tr>
+<tr>
+<td>component.bars()</td>
+<td>Single series Bar Chart</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html">View</a></td>
+</tr>
+<tr>
+<td>component.barsMultiSeries()</td>
+<td>Multi series Bar Chart</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html">View</a></td>
+</tr>
+<tr>
+<td>component.bubbles()</td>
+<td>Bubble / Scatter Plot</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html">View</a></td>
+</tr>
+<tr>
+<td>component.bubblesMultiSeries()</td>
+<td>Multi series Bubbles / Scatter Plot</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html">View</a></td>
+</tr>
+<tr>
+<td>component.surfaceArea()</td>
+<td>Surface Area</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html">View</a></td>
+</tr>
+<tr>
+<td>component.viewpoint()</td>
+<td>User's location and viewing model parameters</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html">View</a></td>
+</tr>
+</tbody>
+</table>
+<h4>Charts</h4><p>The <code>chart</code> modules are higher level, pre-combined components, making it even simpler to quickly create charts. 
+All the charts are typically constructed of a viewpoint, axis and one or more of the other components above. 
+Chart modules also generate the <code>x3d</code> tag, these should be attached to a <code>div</code> tag.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+<th>Example </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>chart.barChartMultiSeries()</td>
+<td>Multi series Bar Chart &amp; Axis</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartMultiSeries.html">View</a></td>
+</tr>
+<tr>
+<td>chart.barChartVertical()</td>
+<td>Simple single series Bar Chart &amp; Axis</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartVertical.html">View</a></td>
+</tr>
+<tr>
+<td>chart.bubbleChart()</td>
+<td>Multi series Bubble Chart &amp; Axis</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BubbleChart.html">View</a></td>
+</tr>
+<tr>
+<td>chart.scatterPlot()</td>
+<td>Scatter Plot &amp; Axis</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/ScatterPlot.html">View</a></td>
+</tr>
+<tr>
+<td>chart.surfaceArea()</td>
+<td>Surface Area Chart &amp; Axis</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/SurfaceArea.html">View</a></td>
+</tr>
+</tbody>
+</table>
+<h3>Data Structures</h3><p>At its most basic description, the format of the d3-x3dom data is a series of key / value pairs. Depending on whether the chart is a single series or multi series chart the data structure differs slightly.</p>
+<h4>Single Series Data</h4><p>Used by charts such as a single series bar chart, the data structure is an object with the following structure:</p>
+<ul>
+<li><code>key</code> {string} - The series name</li>
+<li><code>values</code> {array} - An array of objects containing:<ul>
+<li><code>key</code> {string} - The value name</li>
+<li><code>value</code> {number} - The value</li>
+<li><code>x</code> {number} - X axis value*</li>
+<li><code>y</code> {number} - Y axis value*</li>
+<li><code>z</code> {number} - Z axis value*</li>
+</ul>
+</li>
+</ul>
+<p><em>*optional, <code>x</code>, <code>y</code> &amp; <code>z</code> values are used for cartesian coordinate type graphs such as the scatter plot.</em></p>
+<pre class="prettyprint source lang-javascript"><code>var myData = {
+    key: &quot;Sainsburys&quot;,
+    values: [
+        { key: &quot;Apples&quot;, value: 9, x: 1, y: 2, z: 5 },
+        /* ... */
+        { key: &quot;Oranges&quot;, value: 7, x: 6, y: 3, z: 8 }
+    ]
+};</code></pre><h4>Multi Series Data</h4><p>Used by charts such as the multi series scatter plot, the multi series data structure is simply an array of the single series data objects above.</p>
+<pre class="prettyprint source lang-javascript"><code>var myData = [
+    {
+        key: &quot;Sainsburys&quot;,
+        values: [
+            { key: &quot;Apples&quot;, value: 2 },
+            /* ... */
+            { key: &quot;Oranges&quot;, value: 3 }
+        ]
+    },
+    /* ... */
+    {
+        key: &quot;Tesco&quot;,
+        values: [
+            { key: &quot;Apples&quot;, value: 5 },
+            /* ... */
+            { key: &quot;Oranges&quot;, value: 9 }
+        ]
+    }
+];</code></pre><h3>Credits</h3><ul>
+<li>Fabian Dubois - For the original <a href="http://bl.ocks.org/fabid/61cbfe14de686cc25c47/">3D Axis</a>, <a href="https://github.com/fabid/d3-x3dom-shape">Surface Area</a> and <a href="http://bl.ocks.org/fabid/acb5dc4961ffa741b52b">Scatter Plot</a>.</li>
+<li>David Sankel - For the original <a href="http://bl.ocks.org/camio/5087116">Bar Chart</a>.</li>
+<li>Victor Glindås - Various contributions to JSDoc and ES6 standardisation.</li>
+</ul></article>
+    </section>
+
 
 
 
@@ -56,7 +248,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Nov 08 2018 22:02:44 GMT+0000 (GMT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Nov 08 2018 22:59:14 GMT+0000 (GMT)
 </footer>
 
 <script> prettyPrint(); </script>
