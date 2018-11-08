@@ -86,7 +86,7 @@ export default function() {
 	/**
 	 * View Position Getter / Setter
 	 *
-	 * @param {[number, number, number]} value
+	 * @param {number[]} value
 	 * @returns {*}
 	 */
 	my.viewPosition = function(value) {

@@ -29,7 +29,7 @@
 	"scripts": {
 		"pretest": "make",
 		"test": "tape 'test/**/*Test.js'",
-		"build:docs": "jsdoc --readme README.md src -r -d docs",
+		"build:docs": "jsdoc -c config/jsdoc.conf.json",
 		"deploy:docs": "npm run build:docs && gh-pages -d docs"
 	},
 	"peerDependencies": {

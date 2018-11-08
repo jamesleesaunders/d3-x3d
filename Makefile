@@ -11,7 +11,7 @@ all: js css min zip
 js:
 	@echo Compiling JS Files...
 	@rm -f build/d3-x3dom.js
-	@rollup -c
+	@rollup -c config/rollup.config.js
 
 min:
 	@echo Minifying...
