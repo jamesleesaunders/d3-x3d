@@ -30,7 +30,7 @@ var _extends = Object.assign || function (target) {
  * Data Analysis
  *
  */
-function dataTransform (data) {
+function dataTransform(data) {
 
 	var SINGLE_SERIES = 1;
 	var MULTI_SERIES = 2;
@@ -38,41 +38,34 @@ function dataTransform (data) {
 	/**
   * Row or Rows?
   */
-	var dataStructure = data["key"] !== undefined ? SINGLE_SERIES : MULTI_SERIES;
+	var dataStructure = data.key !== undefined ? SINGLE_SERIES : MULTI_SERIES;
 
 	/**
   * Row Key
   */
 	var rowKey = function () {
-		var ret = void 0;
-		if (SINGLE_SERIES === dataStructure) {
-			ret = d3.values(data)[0];
+		if (dataStructure === SINGLE_SERIES) {
+			return d3.values(data)[0];
 		}
-
-		return ret;
 	}();
 
 	/**
   * Row Keys
   */
 	var rowKeys = function () {
-		var ret = void 0;
-		if (MULTI_SERIES === dataStructure) {
-			ret = data.map(function (d) {
+		if (dataStructure === MULTI_SERIES) {
+			return data.map(function (d) {
 				return d.key;
 			});
 		}
-
-		return ret;
 	}();
 
 	/**
   * Row Totals
   */
 	var rowTotals = function () {
-		var ret = void 0;
 		if (MULTI_SERIES === dataStructure) {
-			ret = {};
+			var ret = {};
 			d3.map(data).values().forEach(function (d) {
 				var rowKey = d.key;
 				d.values.forEach(function (d) {
@@ -80,21 +73,17 @@ function dataTransform (data) {
 					ret[rowKey] += d.value;
 				});
 			});
+			return ret;
 		}
-
-		return ret;
 	}();
 
 	/**
   * Row Totals Max
   */
 	var rowTotalsMax = function () {
-		var ret = void 0;
-		if (MULTI_SERIES === dataStructure) {
-			ret = d3.max(d3.values(rowTotals));
+		if (dataStructure === MULTI_SERIES) {
+			return d3.max(d3.values(rowTotals));
 		}
-
-		return ret;
 	}();
 
 	/**
@@ -122,21 +111,20 @@ function dataTransform (data) {
   * Column Keys
   */
 	var columnKeys = function () {
-		var ret = [];
-		if (SINGLE_SERIES === dataStructure) {
-			ret = d3.values(data.values).map(function (d) {
+		if (dataStructure === SINGLE_SERIES) {
+			return d3.values(data.values).map(function (d) {
 				return d.key;
 			});
-		} else {
-			d3.map(data).values().forEach(function (d) {
-				var tmp = [];
-				d.values.forEach(function (d, i) {
-					tmp[i] = d.key;
-				});
-
-				ret = union(tmp, ret);
-			});
 		}
+
+		var ret = [];
+		d3.map(data).values().forEach(function (d) {
+			var tmp = [];
+			d.values.forEach(function (d, i) {
+				tmp[i] = d.key;
+			});
+			ret = union(tmp, ret);
+		});
 
 		return ret;
 	}();
@@ -145,31 +133,29 @@ function dataTransform (data) {
   * Row Totals
   */
 	var rowTotal = function () {
-		var ret = void 0;
-		if (SINGLE_SERIES === dataStructure) {
-			ret = d3.sum(data.values, function (d) {
+		if (dataStructure === SINGLE_SERIES) {
+			return d3.sum(data.values, function (d) {
 				return d.value;
 			});
 		}
-
-		return ret;
 	}();
 
 	/**
   * Column Totals
   */
 	var columnTotals = function () {
-		var ret = void 0;
-		if (MULTI_SERIES === dataStructure) {
-			ret = {};
-			d3.map(data).values().forEach(function (d) {
-				d.values.forEach(function (d) {
-					var columnName = d.key;
-					ret[columnName] = typeof ret[columnName] === "undefined" ? 0 : ret[columnName];
-					ret[columnName] += d.value;
-				});
-			});
+		if (dataStructure !== MULTI_SERIES) {
+			return;
 		}
+
+		var ret = {};
+		d3.map(data).values().forEach(function (d) {
+			d.values.forEach(function (d) {
+				var columnName = d.key;
+				ret[columnName] = typeof ret[columnName] === "undefined" ? 0 : ret[columnName];
+				ret[columnName] += d.value;
+			});
+		});
 
 		return ret;
 	}();
@@ -178,30 +164,27 @@ function dataTransform (data) {
   * Column Totals Max
   */
 	var columnTotalsMax = function () {
-		var ret = void 0;
-		if (MULTI_SERIES === dataStructure) {
-			ret = d3.max(d3.values(columnTotals));
+		if (dataStructure === MULTI_SERIES) {
+			return d3.max(d3.values(columnTotals));
 		}
-
-		return ret;
 	}();
 
 	/**
   * Min Value
   */
 	var minValue = function () {
-		var ret = void 0;
-		if (SINGLE_SERIES === dataStructure) {
-			ret = d3.min(data.values, function (d) {
+		if (dataStructure === SINGLE_SERIES) {
+			return d3.min(data.values, function (d) {
 				return +d.value;
 			});
-		} else {
-			d3.map(data).values().forEach(function (d) {
-				d.values.forEach(function (d) {
-					ret = typeof ret === "undefined" ? d.value : d3.min([ret, +d.value]);
-				});
-			});
 		}
+
+		var ret = void 0;
+		d3.map(data).values().forEach(function (d) {
+			d.values.forEach(function (d) {
+				ret = typeof ret === "undefined" ? d.value : d3.min([ret, +d.value]);
+			});
+		});
 
 		return +ret;
 	}();
@@ -210,18 +193,18 @@ function dataTransform (data) {
   * Max Value
   */
 	var maxValue = function () {
-		var ret = void 0;
-		if (SINGLE_SERIES === dataStructure) {
-			ret = d3.max(data.values, function (d) {
+		if (dataStructure === SINGLE_SERIES) {
+			return d3.max(data.values, function (d) {
 				return +d.value;
 			});
-		} else {
-			d3.map(data).values().forEach(function (d) {
-				d.values.forEach(function (d) {
-					ret = typeof ret === "undefined" ? d.value : d3.max([ret, +d.value]);
-				});
-			});
 		}
+
+		var ret = void 0;
+		d3.map(data).values().forEach(function (d) {
+			d.values.forEach(function (d) {
+				ret = typeof ret === "undefined" ? d.value : d3.max([ret, +d.value]);
+			});
+		});
 
 		return +ret;
 	}();
@@ -234,7 +217,7 @@ function dataTransform (data) {
 		    maxY = void 0,
 		    maxZ = void 0;
 
-		if (SINGLE_SERIES === dataStructure) {
+		if (dataStructure === SINGLE_SERIES) {
 			maxX = d3.max(data.values, function (d) {
 				return +d.x;
 			});
@@ -278,7 +261,7 @@ function dataTransform (data) {
   */
 	var maxDecimalPlace = function () {
 		var ret = 0;
-		if (MULTI_SERIES === dataStructure) {
+		if (dataStructure === MULTI_SERIES) {
 			d3.map(data).values().forEach(function (d) {
 				d.values.forEach(function (d) {
 					ret = d3.max([ret, decimalPlaces(d.value)]);
@@ -286,7 +269,8 @@ function dataTransform (data) {
 			});
 		}
 
-		return ret;
+		// toFixed must be between 0 and 20
+		return ret > 20 ? 20 : ret;
 	}();
 
 	/**
@@ -294,9 +278,6 @@ function dataTransform (data) {
   */
 	var thresholds = function () {
 		var distance = maxValue - minValue;
-
-		// toFixed must be between 0 and 20
-		maxDecimalPlace = maxDecimalPlace > 20 ? 20 : maxDecimalPlace;
 
 		return [+(minValue + 0.15 * distance).toFixed(maxDecimalPlace), +(minValue + 0.40 * distance).toFixed(maxDecimalPlace), +(minValue + 0.55 * distance).toFixed(maxDecimalPlace), +(minValue + 0.90 * distance).toFixed(maxDecimalPlace)];
 	}();
@@ -308,7 +289,6 @@ function dataTransform (data) {
 		var columnKeys = data.map(function (d) {
 			return d.key;
 		});
-
 		var rowKeys = data[0].values.map(function (d) {
 			return d.key;
 		});
@@ -402,7 +382,7 @@ function componentAxis () {
   * Get Axis Direction Vector
   *
   * @param {string} axisDir
-  * @returns {[number, number, number]}
+  * @returns {number[]}
   */
 	function getAxisDirectionVector(axisDir) {
 		return axisDirectionVectors[axisDir];
@@ -412,7 +392,7 @@ function componentAxis () {
   * Get Axis Rotation Vector
   *
   * @param {string} axisDir
-  * @returns {[number, number, number, number]}
+  * @returns {number[]}
   */
 	function getAxisRotationVector(axisDir) {
 		return axisRotationVectors[axisDir];
@@ -486,8 +466,6 @@ function componentAxis () {
 
 	/**
   * Slice
-  *
-  * @type {<T>(start?: number, end?: number) => T[]}
   */
 	var slice = Array.prototype.slice;
 
@@ -558,8 +536,8 @@ function componentAxis () {
 	/**
   * Tick Arguments
   *
-  * @param value
-  * @returns {*[]}
+ 	 * @param value
+  * @returns {Array<*>}
   */
 	my.tickArguments = function (value) {
 		return arguments.length ? (tickArguments = value === null ? [] : slice.call(value), my) : tickArguments.slice();
@@ -1190,7 +1168,7 @@ function componentBubbles () {
 	/**
   * Size Domain Getter / Setter
   *
-  * @param {[number, number]} value - Size min and max.
+  * @param {number[]} value - Size min and max.
   * @returns {*}
   */
 	my.sizeDomain = function (value) {
@@ -1367,7 +1345,7 @@ function bubblesMultiSeries () {
 	/**
   * Size Domain Getter / Setter
   *
-  * @param {[number, number]} value - Size min and max.
+  * @param {number[]} value - Size min and max.
   * @returns {*}
   */
 	my.sizeDomain = function (value) {
@@ -1652,7 +1630,7 @@ function viewpoint () {
 	/**
   * Centre of Rotation Getter / Setter
   *
-  * @param {[number, number, number]} value
+  * @param {number[]} value
   * @returns {*}
   */
 	my.centerOfRotation = function (value) {
@@ -1676,7 +1654,7 @@ function viewpoint () {
 	/**
   * View Orientation Getter / Setter
   *
-  * @param {[number, number, number, number]} value
+  * @param {number[]} value
   * @returns {*}
   */
 	my.viewOrientation = function (value) {
@@ -2618,7 +2596,7 @@ function bubbleChart () {
 	/**
   * Size Domain Getter / Setter
   *
-  * @param {[number, number]} value - Size min and max.
+  * @param {number[]} value - Size min and max.
   * @returns {*}
   */
 	my.sizeDomain = function (value) {
