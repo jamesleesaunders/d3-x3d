@@ -4,7 +4,7 @@ import * as d3 from "d3";
  * Data Analysis
  *
  */
-export default function(data) {
+export default function dataTransform(data) {
 
 	const SINGLE_SERIES = 1;
 	const MULTI_SERIES = 2;
@@ -12,76 +12,63 @@ export default function(data) {
 	/**
 	 * Row or Rows?
 	 */
-	let dataStructure = data["key"] !== undefined ? SINGLE_SERIES : MULTI_SERIES;
+	const dataStructure = data.key !== undefined ? SINGLE_SERIES : MULTI_SERIES;
 
 	/**
 	 * Row Key
 	 */
-	let rowKey = (function() {
-		let ret;
-		if (SINGLE_SERIES === dataStructure) {
-			ret = d3.values(data)[0];
+	const rowKey = (() => {
+		if (dataStructure === SINGLE_SERIES) {
+			return d3.values(data)[0];
 		}
-
-		return ret;
 	})();
 
 	/**
 	 * Row Keys
 	 */
-	let rowKeys = (function() {
-		let ret;
-		if (MULTI_SERIES === dataStructure) {
-			ret = data.map(function(d) {
-				return d.key;
-			});
+	const rowKeys = (() => {
+		if (dataStructure === MULTI_SERIES) {
+			return data.map(d => d.key);
 		}
-
-		return ret;
 	})();
 
 	/**
 	 * Row Totals
 	 */
-	let rowTotals = (function() {
-		let ret;
+	const rowTotals = (() => {
 		if (MULTI_SERIES === dataStructure) {
-			ret = {};
-			d3.map(data).values().forEach(function(d) {
-				let rowKey = d.key;
-				d.values.forEach(function(d) {
-					ret[rowKey] = (typeof(ret[rowKey]) === "undefined" ? 0 : ret[rowKey]);
+			const ret = {};
+			d3.map(data).values().forEach(d => {
+				const rowKey = d.key;
+				d.values.forEach(d => {
+					ret[rowKey] = (typeof ret[rowKey] === "undefined") ? 0 : ret[rowKey];
 					ret[rowKey] += d.value;
 				});
 			});
+			return ret;
 		}
-
-		return ret;
 	})();
 
 	/**
 	 * Row Totals Max
 	 */
-	let rowTotalsMax = (function() {
-		let ret;
-		if (MULTI_SERIES === dataStructure) {
-			ret = d3.max(d3.values(rowTotals));
+	const rowTotalsMax = (() => {
+		if (dataStructure === MULTI_SERIES) {
+			return d3.max(d3.values(rowTotals));
 		}
-
-		return ret;
 	})();
 
 	/**
 	 * Join two arrays
 	 */
-	let union = function(array1, array2) {
-		let ret = [];
-		let arr = array1.concat(array2);
+	const union = (array1, array2) => {
+		const ret = [];
+		const arr = array1.concat(array2);
 		let len = arr.length;
-		let assoc = {};
+		const assoc = {};
 
 		while (len--) {
-			let item = arr[len];
+			const item = arr[len];
 
 			if (!assoc[item]) {
 				ret.unshift(item);
@@ -95,23 +82,19 @@ export default function(data) {
 	/**
 	 * Column Keys
 	 */
-	let columnKeys = (function() {
-		let ret = [];
-		if (SINGLE_SERIES === dataStructure) {
-			ret = d3.values(data.values).map(function(d) {
-				return d.key;
-			});
-
-		} else {
-			d3.map(data).values().forEach(function(d) {
-				let tmp = [];
-				d.values.forEach(function(d, i) {
-					tmp[i] = d.key;
-				});
-
-				ret = union(tmp, ret);
-			});
+	const columnKeys = (() => {
+		if (dataStructure === SINGLE_SERIES) {
+			return d3.values(data.values).map(d => d.key);
 		}
+
+		let ret = [];
+		d3.map(data).values().forEach(d => {
+			const tmp = [];
+			d.values.forEach((d, i) => {
+				tmp[i] = d.key;
+			});
+			ret = union(tmp, ret);
+		});
 
 		return ret;
 	})();
@@ -119,32 +102,28 @@ export default function(data) {
 	/**
 	 * Row Totals
 	 */
-	let rowTotal = (function() {
-		let ret;
-		if (SINGLE_SERIES === dataStructure) {
-			ret = d3.sum(data.values, function(d) {
-				return d.value;
-			});
+	const rowTotal = (() => {
+		if (dataStructure === SINGLE_SERIES) {
+			return d3.sum(data.values, d => d.value);
 		}
-
-		return ret;
 	})();
 
 	/**
 	 * Column Totals
 	 */
-	let columnTotals = (function() {
-		let ret;
-		if (MULTI_SERIES === dataStructure) {
-			ret = {};
-			d3.map(data).values().forEach(function(d) {
-				d.values.forEach(function(d) {
-					let columnName = d.key;
-					ret[columnName] = (typeof(ret[columnName]) === "undefined" ? 0 : ret[columnName]);
-					ret[columnName] += d.value;
-				});
-			});
+	const columnTotals = (() => {
+		if (dataStructure !== MULTI_SERIES) {
+			return;
 		}
+
+		let ret = {};
+		d3.map(data).values().forEach(d => {
+			d.values.forEach(d => {
+				const columnName = d.key;
+				ret[columnName] = (typeof(ret[columnName]) === "undefined" ? 0 : ret[columnName]);
+				ret[columnName] += d.value;
+			});
+		});
 
 		return ret;
 	})();
@@ -152,31 +131,26 @@ export default function(data) {
 	/**
 	 * Column Totals Max
 	 */
-	let columnTotalsMax = (function() {
-		let ret;
-		if (MULTI_SERIES === dataStructure) {
-			ret = d3.max(d3.values(columnTotals));
+	const columnTotalsMax = (() => {
+		if (dataStructure === MULTI_SERIES) {
+			return d3.max(d3.values(columnTotals));
 		}
-
-		return ret;
 	})();
 
 	/**
 	 * Min Value
 	 */
-	let minValue = (function() {
-		let ret;
-		if (SINGLE_SERIES === dataStructure) {
-			ret = d3.min(data.values, function(d) {
-				return +d.value;
-			});
-		} else {
-			d3.map(data).values().forEach(function(d) {
-				d.values.forEach(function(d) {
-					ret = (typeof(ret) === "undefined" ? d.value : d3.min([ret, +d.value]));
-				});
-			});
+	const minValue = (() => {
+		if (dataStructure === SINGLE_SERIES) {
+			return d3.min(data.values, d => +d.value);
 		}
+
+		let ret;
+		d3.map(data).values().forEach(d => {
+			d.values.forEach(d => {
+				ret = (typeof(ret) === "undefined" ? d.value : d3.min([ret, +d.value]));
+			});
+		});
 
 		return +ret;
 	})();
@@ -184,20 +158,17 @@ export default function(data) {
 	/**
 	 * Max Value
 	 */
-	let maxValue = (function() {
-		let ret;
-		if (SINGLE_SERIES === dataStructure) {
-			ret = d3.max(data.values, function(d) {
-				return +d.value;
-			});
-
-		} else {
-			d3.map(data).values().forEach(function(d) {
-				d.values.forEach(function(d) {
-					ret = (typeof(ret) === "undefined" ? d.value : d3.max([ret, +d.value]));
-				});
-			});
+	const maxValue = (() => {
+		if (dataStructure === SINGLE_SERIES) {
+			return d3.max(data.values, d => +d.value);
 		}
+
+		let ret;
+		d3.map(data).values().forEach(d => {
+			d.values.forEach(d => {
+				ret = (typeof(ret) === "undefined" ? d.value : d3.max([ret, +d.value]));
+			});
+		});
 
 		return +ret;
 	})();
@@ -205,16 +176,16 @@ export default function(data) {
 	/**
 	 * Max Coordinates
 	 */
-	let maxCoordinates = (function() {
+	const maxCoordinates = (() => {
 		let maxX, maxY, maxZ;
 
-		if (SINGLE_SERIES === dataStructure) {
-			maxX = d3.max(data.values, function(d) { return +d.x; });
-			maxY = d3.max(data.values, function(d) { return +d.y; });
-			maxZ = d3.max(data.values, function(d) { return +d.z; });
+		if (dataStructure === SINGLE_SERIES) {
+			maxX = d3.max(data.values, d => +d.x);
+			maxY = d3.max(data.values, d => +d.y);
+			maxZ = d3.max(data.values, d => +d.z);
 		} else {
-			d3.map(data).values().forEach(function(d) {
-				d.values.forEach(function(d) {
+			d3.map(data).values().forEach(d => {
+				d.values.forEach(d => {
 					maxX = (typeof(maxX) === "undefined" ? d.x : d3.max([maxX, +d.x]));
 					maxY = (typeof(maxY) === "undefined" ? d.y : d3.max([maxY, +d.y]));
 					maxZ = (typeof(maxZ) === "undefined" ? d.z : d3.max([maxZ, +d.z]));
@@ -228,8 +199,8 @@ export default function(data) {
 	/**
 	 * How many decimal places?
 	 */
-	let decimalPlaces = function(num) {
-		let match = ("" + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+	const decimalPlaces = num => {
+		const match = ("" + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
 		if (!match) {
 			return 0;
 		}
@@ -240,34 +211,33 @@ export default function(data) {
 			(match[1] ? match[1].length : 0)
 			// Adjust for scientific notation.
 			-
-			(match[2] ? +match[2] : 0));
+			(match[2] ? +match[2] : 0)
+		);
 	};
 
 	/**
 	 * Max decimal place
 	 */
-	let maxDecimalPlace = (function() {
+	const maxDecimalPlace = (() => {
 		let ret = 0;
-		if (MULTI_SERIES === dataStructure) {
-			d3.map(data).values().forEach(function(d) {
-				d.values.forEach(function(d) {
+		if (dataStructure === MULTI_SERIES) {
+			d3.map(data).values().forEach(d => {
+				d.values.forEach(d => {
 					ret = d3.max([ret, decimalPlaces(d.value)])
 				});
 			});
 		}
 
-		return ret;
+		// toFixed must be between 0 and 20
+		return ret > 20 ? 20 : ret;
 	})();
 
 
 	/**
 	 * Attempt to auto-calculate some thresholds
 	 */
-	let thresholds = (function() {
-		let distance = maxValue - minValue;
-
-		// toFixed must be between 0 and 20
-		maxDecimalPlace = (maxDecimalPlace > 20 ? 20 : maxDecimalPlace);
+	const thresholds = (() => {
+		const distance = maxValue - minValue;
 
 		return [
 			+(minValue + (0.15 * distance)).toFixed(maxDecimalPlace),
@@ -280,19 +250,14 @@ export default function(data) {
 	/**
 	 * Rotate Data
 	 */
-	let rotate = function() {
-		let columnKeys = data.map(function(d) {
-			return d.key;
-		});
+	const rotate = () => {
+		const columnKeys = data.map(d => d.key);
+		const rowKeys = data[0].values.map(d => d.key);
 
-		let rowKeys = data[0].values.map(function(d) {
-			return d.key
-		});
-
-		let rotated = rowKeys.map(function(rowKey, rowIndex) {
-			let values = columnKeys.map(function(columnKey, columnIndex) {
+		const rotated = rowKeys.map((rowKey, rowIndex) => {
+			const values = columnKeys.map((columnKey, columnIndex) => {
 				// Copy the values from the original object
-				let values = Object.assign({}, data[columnIndex].values[rowIndex]);
+				const values = Object.assign({}, data[columnIndex].values[rowIndex]);
 				// Swap the key over
 				values.key = columnKey;
 
@@ -311,27 +276,25 @@ export default function(data) {
 	/**
 	 * Summary
 	 */
-	let summary = function() {
-		return {
-			dataStructure: dataStructure,
-			rowKey: rowKey,
-			rowTotal: rowTotal,
-			rowKeys: rowKeys,
-			rowTotals: rowTotals,
-			rowTotalsMax: rowTotalsMax,
-			columnKeys: columnKeys,
-			columnTotals: columnTotals,
-			columnTotalsMax: columnTotalsMax,
-			minValue: minValue,
-			maxValue: maxValue,
-			maxCoordinates: maxCoordinates,
-			maxDecimalPlace: maxDecimalPlace,
-			thresholds: thresholds
-		}
-	};
+	const summary = () => ({
+		dataStructure,
+		rowKey,
+		rowTotal,
+		rowKeys,
+		rowTotals,
+		rowTotalsMax,
+		columnKeys,
+		columnTotals,
+		columnTotalsMax,
+		minValue,
+		maxValue,
+		maxCoordinates,
+		maxDecimalPlace,
+		thresholds
+	});
 
 	return {
-		summary: summary,
-		rotate: rotate
+		summary,
+		rotate
 	};
 }
