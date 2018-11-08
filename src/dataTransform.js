@@ -45,6 +45,7 @@ export default function(data) {
 					ret[rowKey] += d.value;
 				});
 			});
+			return ret;
 		}
 	})();
 
