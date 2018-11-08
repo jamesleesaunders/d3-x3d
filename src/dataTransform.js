@@ -88,7 +88,7 @@ export default function dataTransform(data) {
 				return d.key;
 			});
 		}
-		
+
 		let ret = [];
 		d3.map(data).values().forEach(d => {
 			const tmp = [];
@@ -114,7 +114,7 @@ export default function dataTransform(data) {
 	 * Column Totals
 	 */
 	const columnTotals = (() => {
-		if (dataStructure === MULTI_SERIES) {
+		if (dataStructure !== MULTI_SERIES) {
 			return;
 		}
 
