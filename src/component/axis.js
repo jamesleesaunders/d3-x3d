@@ -42,7 +42,7 @@ export default function() {
 	 * Get Axis Direction Vector
 	 *
 	 * @param {string} axisDir
-	 * @returns {[number, number, number]}
+	 * @returns {number[]}
 	 */
 	function getAxisDirectionVector(axisDir) {
 		return axisDirectionVectors[axisDir];
@@ -52,7 +52,7 @@ export default function() {
 	 * Get Axis Rotation Vector
 	 *
 	 * @param {string} axisDir
-	 * @returns {[number, number, number, number]}
+	 * @returns {number[]}
 	 */
 	function getAxisRotationVector(axisDir) {
 		return axisRotationVectors[axisDir];
@@ -156,10 +156,8 @@ export default function() {
 
 	/**
 	 * Slice
-	 *
-	 * @type {<T>(start?: number, end?: number) => T[]}
 	 */
-	let slice = Array.prototype.slice;
+	const slice = Array.prototype.slice;
 
 	/**
 	 * Dimensions Getter / Setter
@@ -229,7 +227,7 @@ export default function() {
 	 * Tick Arguments
 	 *
 	 * @param _
-	 * @returns {*[]}
+	 * @returns {Array<*>}
 	 */
 	my.tickArguments = function(_) {
 		return arguments.length ? (tickArguments = _ === null ? [] : slice.call(_), my) : tickArguments.slice();

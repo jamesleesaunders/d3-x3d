@@ -28,7 +28,9 @@
 	"module": "index",
 	"scripts": {
 		"pretest": "make",
-		"test": "tape 'test/**/*Test.js'"
+		"test": "tape 'test/**/*Test.js'",
+		"build:docs": "jsdoc src -r -d docs",
+		"deploy:docs": "npm run build:docs && gh-pages -d docs"
 	},
 	"peerDependencies": {
 		"d3": "^5.0.0"
@@ -39,6 +41,8 @@
 		"babel-plugin-transform-object-assign": "^6.22.0",
 		"babel-preset-env": "^1.7.0",
 		"eslint": "^4.19.1",
+		"gh-pages": "^2.0.1",
+		"jsdoc": "^3.5.5",
 		"jsdom": "^11.11.0",
 		"rollup": "^0.56.2",
 		"rollup-plugin-babel": "^3.0.7",
