@@ -110,96 +110,96 @@ export default function() {
 	/**
 	 * Width Getter / Setter
 	 *
-	 * @param {number} _ - X3D Canvas Height in px.
+	 * @param {number} value - X3D Canvas Height in px.
 	 * @returns {*}
 	 */
-	my.width = function(_) {
+	my.width = function(value) {
 		if (!arguments.length) return width;
-		width = _;
+		width = value;
 		return this;
 	};
 
 	/**
 	 * Height Getter / Setter
 	 *
-	 * @param {number} _ - X3D Canvas Height in px.
+	 * @param {number} value - X3D Canvas Height in px.
 	 * @returns {*}
 	 */
-	my.height = function(_) {
+	my.height = function(value) {
 		if (!arguments.length) return height;
-		height = _;
+		height = value;
 		return this;
 	};
 
 	/**
 	 * Dimensions Getter / Setter
 	 *
-	 * @param {{x: number, y: number, z: number}} _ - 3D Object dimensions.
+	 * @param {{x: number, y: number, z: number}} value - 3D Object dimensions.
 	 * @returns {*}
 	 */
-	my.dimensions = function(_) {
+	my.dimensions = function(value) {
 		if (!arguments.length) return dimensions;
-		dimensions = _;
+		dimensions = value;
 		return this;
 	};
 
 	/**
 	 * X Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _ - D3 Scale.
+	 * @param {d3.scale} value - D3 Scale.
 	 * @returns {*}
 	 */
-	my.xScale = function(_) {
+	my.xScale = function(value) {
 		if (!arguments.length) return xScale;
-		xScale = _;
+		xScale = value;
 		return my;
 	};
 
 	/**
 	 * Y Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _ - D3 Scale.
+	 * @param {d3.scale} value - D3 Scale.
 	 * @returns {*}
 	 */
-	my.yScale = function(_) {
+	my.yScale = function(value) {
 		if (!arguments.length) return yScale;
-		yScale = _;
+		yScale = value;
 		return my;
 	};
 
 	/**
 	 * Z Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _ - D3 Scale.
+	 * @param {d3.scale} value - D3 Scale.
 	 * @returns {*}
 	 */
-	my.zScale = function(_) {
+	my.zScale = function(value) {
 		if (!arguments.length) return zScale;
-		zScale = _;
+		zScale = value;
 		return my;
 	};
 
 	/**
 	 * Color Getter / Setter
 	 *
-	 * @param {string} _ - Color 'red' or '#ff0000'.
+	 * @param {string} value - Color 'red' or '#ff0000'.
 	 * @returns {*}
 	 */
-	my.color = function(_) {
+	my.color = function(value) {
 		if (!arguments.length) return color;
-		color = _;
+		color = value;
 		return my;
 	};
 
 	/**
 	 * Debug Getter / Setter
 	 *
-	 * @param {boolean} _ - Show debug log and stats. True/False.
+	 * @param {boolean} value - Show debug log and stats. True/False.
 	 * @returns {*}
 	 */
-	my.debug = function(_) {
+	my.debug = function(value) {
 		if (!arguments.length) return debug;
-		debug = _;
+		debug = value;
 		return my;
 	};
 

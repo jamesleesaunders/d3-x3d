@@ -189,3 +189,4 @@ var myData = [
 
 * Fabian Dubois - For the original [3D Axis](http://bl.ocks.org/fabid/61cbfe14de686cc25c47/), [Surface Area](https://github.com/fabid/d3-x3dom-shape) and [Scatter Plot](http://bl.ocks.org/fabid/acb5dc4961ffa741b52b).
 * David Sankel - For the original [Bar Chart](http://bl.ocks.org/camio/5087116).
+* Victor Glindås - Various contributions to JSDoc and ES6 standardisation.

@@ -72,44 +72,50 @@ export default function() {
 	};
 
 	/**
-	 * View Position Getter / Setter
+	 * Centre of Rotation Getter / Setter
 	 *
-	 * @param {number[]} _
+	 * @param {number[]} value
 	 * @returns {*}
 	 */
-	my.centerOfRotation = function(_) {
+	my.centerOfRotation = function(value) {
 		if (!arguments.length) return centerOfRotation;
-		centerOfRotation = _;
+		centerOfRotation = value;
 		return my;
 	};
 
-	my.viewPosition = function(_) {
+	/**
+	 * View Position Getter / Setter
+	 *
+	 * @param {[number, number, number]} value
+	 * @returns {*}
+	 */
+	my.viewPosition = function(value) {
 		if (!arguments.length) return viewPosition;
-		viewPosition = _;
+		viewPosition = value;
 		return my;
 	};
 
 	/**
 	 * View Orientation Getter / Setter
 	 *
-	 * @param {number[]} _
+	 * @param {number[]} value
 	 * @returns {*}
 	 */
-	my.viewOrientation = function(_) {
+	my.viewOrientation = function(value) {
 		if (!arguments.length) return viewOrientation;
-		viewOrientation = _;
+		viewOrientation = value;
 		return my;
 	};
 
 	/**
 	 * Field of View Getter / Setter
 	 *
-	 * @param {number} _
+	 * @param {number} value
 	 * @returns {*}
 	 */
-	my.fieldOfView = function(_) {
+	my.fieldOfView = function(value) {
 		if (!arguments.length) return fieldOfView;
-		fieldOfView = _;
+		fieldOfView = value;
 		return my;
 	};
 
