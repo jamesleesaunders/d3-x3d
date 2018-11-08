@@ -84,9 +84,7 @@ export default function dataTransform(data) {
 	 */
 	const columnKeys = (() => {
 		if (dataStructure === SINGLE_SERIES) {
-			return d3.values(data.values).map(function(d) {
-				return d.key;
-			});
+			return d3.values(data.values).map(d => d.key);
 		}
 
 		let ret = [];
