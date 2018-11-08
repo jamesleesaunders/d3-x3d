@@ -41,7 +41,7 @@ export default function dataTransform(data) {
 			d3.map(data).values().forEach(d => {
 				const rowKey = d.key;
 				d.values.forEach(d => {
-					ret[rowKey] = (typeof(ret[rowKey]) === "undefined" ? 0 : ret[rowKey]);
+					ret[rowKey] = (typeof ret[rowKey] === "undefined") ? 0 : ret[rowKey];
 					ret[rowKey] += d.value;
 				});
 			});
