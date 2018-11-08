@@ -61,7 +61,7 @@ export default function dataTransform(data) {
 	/**
 	 * Join two arrays
 	 */
-	const union = function(array1, array2) {
+	const union = (array1, array2) => {
 		const ret = [];
 		const arr = array1.concat(array2);
 		let len = arr.length;
