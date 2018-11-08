@@ -4,7 +4,7 @@ import * as d3 from "d3";
  * Data Analysis
  *
  */
-export default function(data) {
+export default function dataTransform(data) {
 
 	const SINGLE_SERIES = 1;
 	const MULTI_SERIES = 2;
