@@ -219,7 +219,7 @@ export default function(data) {
 	/**
 	 * Max decimal place
 	 */
-	let maxDecimalPlace = (() => {
+	const maxDecimalPlace = (() => {
 		let ret = 0;
 		if (dataStructure === MULTI_SERIES) {
 			d3.map(data).values().forEach(d => {
@@ -229,7 +229,8 @@ export default function(data) {
 			});
 		}
 
-		return ret;
+		// toFixed must be between 0 and 20
+		return ret > 20 ? 20 : ret;
 	})();
 
 
@@ -238,9 +239,6 @@ export default function(data) {
 	 */
 	const thresholds = (() => {
 		const distance = maxValue - minValue;
-
-		// toFixed must be between 0 and 20
-		maxDecimalPlace = (maxDecimalPlace > 20 ? 20 : maxDecimalPlace);
 
 		return [
 			+(minValue + (0.15 * distance)).toFixed(maxDecimalPlace),
