@@ -51,6 +51,7 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
+	 * @alias bars
 	 * @param {d3.selection} selection
 	 */
 	function my(selection) {

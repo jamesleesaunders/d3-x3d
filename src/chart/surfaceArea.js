@@ -4,6 +4,8 @@ import component from "../component";
 
 /**
  * Reusable 3D Surface Area
+ *
+ * @module
  * @see https://datavizproject.com/data-type/three-dimensional-stream-graph/
  */
 export default function() {
@@ -28,6 +30,8 @@ export default function() {
 
 	/**
 	 * Initialise Data and Scales
+	 *
+	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
 		const dataSummary = dataTransform(data).summary();
@@ -58,6 +62,10 @@ export default function() {
 
 	/**
 	 * Constructor
+	 *
+	 * @constructor
+	 * @alias surfaceArea
+	 * @param {d3.selection} selection
 	 */
 	function my(selection) {
 		const x3d = selection.append("x3d")

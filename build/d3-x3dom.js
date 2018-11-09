@@ -402,6 +402,7 @@ function componentAxis () {
   * Constructor
   *
   * @constructor
+  * @alias axis
   * @param {d3.selection} selection
   */
 	function my(selection) {
@@ -612,6 +613,7 @@ function axisThreePlane () {
   * Constructor
   *
   * @constructor
+  * @alias axisThreePlane
   * @param {d3.selection} selection
   */
 	function my(selection) {
@@ -759,6 +761,7 @@ function componentBars () {
   * Constructor
   *
   * @constructor
+  * @alias bars
   * @param {d3.selection} selection
   */
 	function my(selection) {
@@ -913,6 +916,7 @@ function barsMultiSeries () {
   * Constructor
   *
   * @constructor
+  * @alias barsMultiSeries
   * @param {d3.selection} selection
   */
 	function my(selection) {
@@ -1073,6 +1077,7 @@ function componentBubbles () {
   * Constructor
   *
   * @constructor
+  * @alias bubbles
   * @param {d3.selection} selection
   */
 	function my(selection) {
@@ -1244,6 +1249,7 @@ function bubblesMultiSeries () {
   * Constructor
   *
   * @constructor
+  * @alias bubblesMultiSeries
   * @param {d3.selection} selection
   */
 	function my(selection) {
@@ -1431,6 +1437,7 @@ function surfaceArea () {
   * Constructor
   *
   * @constructor
+  * @alias surfaceArea
   * @param {d3.selection} selection
   */
 	function my(selection) {
@@ -1582,6 +1589,7 @@ function viewpoint () {
   * Constructor
   *
   * @constructor
+  * @alias viewpoint
   * @param {d3.selection} selection
   */
 	function my(selection) {
@@ -1718,6 +1726,7 @@ function ribbon () {
   * Constructor
   *
   * @constructor
+  * @alias ribbon
   * @param {d3.selection} selection
   */
 	function my(selection) {
@@ -1813,6 +1822,8 @@ var component = {
 
 /**
  * Reusable 3D Surface Area
+ *
+ * @module
  * @see https://datavizproject.com/data-type/three-dimensional-stream-graph/
  */
 function surfaceArea$1 () {
@@ -1837,6 +1848,8 @@ function surfaceArea$1 () {
 
 	/**
   * Initialise Data and Scales
+  *
+  * @param {Array} data - Chart data.
   */
 	function init(data) {
 		var dataSummary = dataTransform(data).summary();
@@ -1859,6 +1872,10 @@ function surfaceArea$1 () {
 
 	/**
   * Constructor
+  *
+  * @constructor
+  * @alias surfaceArea
+  * @param {d3.selection} selection
   */
 	function my(selection) {
 		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
@@ -2004,7 +2021,7 @@ function surfaceArea$1 () {
 	return my;
 }
 
-var version = "1.0.14";
+var version = "1.0.15";
 var license = "GPL-2.0";
 
 /**
@@ -2059,6 +2076,7 @@ function barChartMultiSeries () {
   * Constructor
   *
   * @constructor
+  * @alias barChartMultiSeries
   * @param {d3.selection} selection
   */
 	function my(selection) {
@@ -2255,6 +2273,7 @@ function barChartVertical () {
   * Constructor
   *
   * @constructor
+  * @alias barChartVertical
   * @param {d3.selection} selection
   */
 	function my(selection) {
@@ -2448,6 +2467,7 @@ function bubbleChart () {
   * Constructor
   *
   * @constructor
+  * @alias bubbleChart
   * @param {d3.selection} selection
   */
 	function my(selection) {
@@ -2666,6 +2686,7 @@ function scatterPlot () {
   * Constructor
   *
   * @constructor
+  * @alias scatterPlot
   * @param {d3.selection} selection
   */
 	function my(selection) {

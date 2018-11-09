@@ -9,6 +9,9 @@ Combining the power of the [D3.js](http://www.d3js.org/) data-driven documents v
 
 Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), **d3-x3dom** is built on a foundation of building blocks, called components, which can be combined to create a variety of different data visualisations.
 
+### Download
+Get the latest release of d3-x3dom from either [GitHub](https://github.com/jamesleesaunders/d3-x3dom) or [NPM](https://www.npmjs.com/package/d3-x3dom).
+
 ### Examples
 
 * [Multi Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartMultiSeries.html)
@@ -28,7 +31,7 @@ Include D3.js, X3DOM and d3-x3dom js and css files in the `<head>` section of yo
    <script src="https://d3js.org/d3.v5.min.js"></script>   
    <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
    <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
-   <script src="d3-x3dom.js"></script>
+   <script src="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/src/d3-x3dom.js"></script>
 </head>
 ```
 
@@ -102,8 +105,8 @@ d3-x3dom has two types of reusable modules: `component` and `chart`.
 
 #### Components
 
-The \`component\` modules are lower level building blocks which can be used independently, or combined to build higher level \`chart\` modules. 
-For example, combining \`component.bars()\`, \`component.axis()\` and \`component.viewpoint()\` modules together we have built the \`chart.barChartMultiSeries()\`.
+The `component` modules are lower level building blocks which can be used independently, or combined to build higher level `chart` modules. 
+For example, combining `component.bars()`, `component.axis()` and `component.viewpoint()` modules together we have built the `chart.barChartMultiSeries()`.
 Component modules do not generate a `x3d` tag, these should be attached to an exiting `x3d` tag.
 
 | Function                       | Description                                  | Example     

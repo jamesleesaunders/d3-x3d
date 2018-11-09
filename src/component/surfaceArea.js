@@ -69,6 +69,7 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
+	 * @alias surfaceArea
 	 * @param {d3.selection} selection
 	 */
 	function my(selection) {

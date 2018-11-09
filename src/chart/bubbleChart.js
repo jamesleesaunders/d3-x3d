@@ -67,6 +67,7 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
+	 * @alias bubbleChart
 	 * @param {d3.selection} selection
 	 */
 	function my(selection) {

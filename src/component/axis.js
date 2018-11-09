@@ -62,6 +62,7 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
+	 * @alias axis
 	 * @param {d3.selection} selection
 	 */
 	function my(selection) {
