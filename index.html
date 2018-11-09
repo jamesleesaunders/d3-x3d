@@ -71,31 +71,31 @@
 <p>Select chartholder:</p>
 <pre class="prettyprint source lang-javascript"><code>var chartHolder = d3.select(&quot;#chartholder&quot;);</code></pre><p>Generate some <a href="#data-structure">data</a>:</p>
 <pre class="prettyprint source lang-javascript"><code>var myData = [
-    {
-        key: &quot;Sainsburys&quot;,
-        values: [
-            { key: &quot;Apples&quot;, value: 9 },
-            { key: &quot;Oranges&quot;, value: 3 },
-            { key: &quot;Grapes&quot;, value: 5 },
-            { key: &quot;Bananas&quot;, value: 7 }
-        ]
-    },
-    {
-        key: &quot;Tesco&quot;,
-        values: [
-            { key: &quot;Apples&quot;, value: 5 },
-            { key: &quot;Oranges&quot;, value: 4 },
-            { key: &quot;Grapes&quot;, value: 6 },
-            { key: &quot;Bananas&quot;, value: 2 }
-        ]
-    }
+   {
+      key: &quot;Sainsburys&quot;,
+      values: [
+         { key: &quot;Apples&quot;, value: 9 },
+         { key: &quot;Oranges&quot;, value: 3 },
+         { key: &quot;Grapes&quot;, value: 5 },
+         { key: &quot;Bananas&quot;, value: 7 }
+         ]
+   },
+   {
+      key: &quot;Tesco&quot;,
+      values: [
+         { key: &quot;Apples&quot;, value: 5 },
+         { key: &quot;Oranges&quot;, value: 4 },
+         { key: &quot;Grapes&quot;, value: 6 },
+         { key: &quot;Bananas&quot;, value: 2 }
+      ]
+   }
 ];</code></pre><p>Declare the <a href="#components-and-charts">chart</a> component:</p>
 <pre class="prettyprint source lang-javascript"><code>var myChart = d3.x3dom.chart.barChartMultiSeries();</code></pre><p>Attach chart and data to the chartholder:</p>
 <pre class="prettyprint source lang-javascript"><code>chartHolder.datum(myData).call(myChart);</code></pre><p>Thats all there is to it! View the page in a browser and you should see a basic 3D bar chart.</p>
 <h3>Import as ES6 module</h3><p>If your JS project is using ES6 modules you can also import d3-x3dom (for example from NPM):</p>
 <pre class="prettyprint source lang-javascript"><code>var d3X3dom = require(&quot;d3-x3dom&quot;);</code></pre><h3>Components and Charts</h3><p>d3-x3dom has two types of reusable modules: <code>component</code> and <code>chart</code>.</p>
-<h4>Components</h4><p>The `component` modules are lower level building blocks which can be used independently, or combined to build higher level `chart` modules. 
-For example, combining `component.bars()`, `component.axis()` and `component.viewpoint()` modules together we have built the `chart.barChartMultiSeries()`.
+<h4>Components</h4><p>The <code>component</code> modules are lower level building blocks which can be used independently, or combined to build higher level <code>chart</code> modules. 
+For example, combining <code>component.bars()</code>, <code>component.axis()</code> and <code>component.viewpoint()</code> modules together we have built the <code>chart.barChartMultiSeries()</code>.
 Component modules do not generate a <code>x3d</code> tag, these should be attached to an exiting <code>x3d</code> tag.</p>
 <table>
 <thead>
@@ -202,31 +202,31 @@ Chart modules also generate the <code>x3d</code> tag, these should be attached t
 </ul>
 <p><em>*optional, <code>x</code>, <code>y</code> &amp; <code>z</code> values are used for cartesian coordinate type graphs such as the scatter plot.</em></p>
 <pre class="prettyprint source lang-javascript"><code>var myData = {
-    key: &quot;Sainsburys&quot;,
-    values: [
-        { key: &quot;Apples&quot;, value: 9, x: 1, y: 2, z: 5 },
-        /* ... */
-        { key: &quot;Oranges&quot;, value: 7, x: 6, y: 3, z: 8 }
-    ]
+   key: &quot;Sainsburys&quot;,
+   values: [
+      { key: &quot;Apples&quot;, value: 9, x: 1, y: 2, z: 5 },
+      /* ... */
+      { key: &quot;Oranges&quot;, value: 7, x: 6, y: 3, z: 8 }
+   ]
 };</code></pre><h4>Multi Series Data</h4><p>Used by charts such as the multi series scatter plot, the multi series data structure is simply an array of the single series data objects above.</p>
 <pre class="prettyprint source lang-javascript"><code>var myData = [
-    {
-        key: &quot;Sainsburys&quot;,
-        values: [
-            { key: &quot;Apples&quot;, value: 2 },
-            /* ... */
-            { key: &quot;Oranges&quot;, value: 3 }
-        ]
-    },
-    /* ... */
-    {
-        key: &quot;Tesco&quot;,
-        values: [
-            { key: &quot;Apples&quot;, value: 5 },
-            /* ... */
-            { key: &quot;Oranges&quot;, value: 9 }
-        ]
-    }
+   {
+      key: &quot;Sainsburys&quot;,
+      values: [
+         { key: &quot;Apples&quot;, value: 2 },
+         /* ... */
+         { key: &quot;Oranges&quot;, value: 3 }
+      ]
+   },
+   /* ... */
+   {
+      key: &quot;Tesco&quot;,
+      values: [
+         { key: &quot;Apples&quot;, value: 5 },
+         /* ... */
+         { key: &quot;Oranges&quot;, value: 9 }
+      ]
+   }
 ];</code></pre><h3>Credits</h3><ul>
 <li>Fabian Dubois - For the original <a href="http://bl.ocks.org/fabid/61cbfe14de686cc25c47/">3D Axis</a>, <a href="https://github.com/fabid/d3-x3dom-shape">Surface Area</a> and <a href="http://bl.ocks.org/fabid/acb5dc4961ffa741b52b">Scatter Plot</a>.</li>
 <li>David Sankel - For the original <a href="http://bl.ocks.org/camio/5087116">Bar Chart</a>.</li>
@@ -248,7 +248,7 @@ Chart modules also generate the <code>x3d</code> tag, these should be attached t
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Nov 09 2018 10:08:10 GMT+0000 (GMT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Nov 09 2018 13:32:57 GMT+0000 (GMT)
 </footer>
 
 <script> prettyPrint(); </script>
