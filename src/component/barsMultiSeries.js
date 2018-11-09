@@ -58,6 +58,7 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
+	 * @alias barsMultiSeries
 	 * @param {d3.selection} selection
 	 */
 	function my(selection) {

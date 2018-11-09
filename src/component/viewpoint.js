@@ -20,6 +20,7 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
+	 * @alias viewpoint
 	 * @param {d3.selection} selection
 	 */
 	function my(selection) {

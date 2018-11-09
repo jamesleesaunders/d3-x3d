@@ -56,6 +56,7 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
+	 * @alias barChartVertical
 	 * @param {d3.selection} selection
 	 */
 	function my(selection) {

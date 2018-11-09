@@ -27,6 +27,7 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
+	 * @alias axisThreePlane
 	 * @param {d3.selection} selection
 	 */
 	function my(selection) {

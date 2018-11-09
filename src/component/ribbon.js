@@ -45,6 +45,7 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
+	 * @alias ribbon
 	 * @param {d3.selection} selection
 	 */
 	function my(selection) {

@@ -55,6 +55,7 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
+	 * @alias scatterPlot
 	 * @param {d3.selection} selection
 	 */
 	function my(selection) {

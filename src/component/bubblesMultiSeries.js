@@ -64,6 +64,7 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
+	 * @alias bubblesMultiSeries
 	 * @param {d3.selection} selection
 	 */
 	function my(selection) {
