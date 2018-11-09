@@ -1,13 +1,13 @@
 {
-	"tags": {
-		"allowUnknownTags": true,
-		"dictionaries": [
-			"jsdoc",
-			"closure"
-		]
-	},
 	"source": {
-		"include": ["src"]
+		"include": ["src"],
+		"includePattern": ".+\\.js(doc|x)?$",
+		"excludePattern": "(^|\\/|\\\\)_"
+	},
+	"opts": {
+		"destination": "docs",
+		"recurse": true,
+		"readme": "README.md"
 	},
 	"plugins": [
 		"plugins/markdown"
@@ -16,9 +16,11 @@
 		"cleverLinks": true,
 		"monospaceLinks": true
 	},
-	"opts": {
-		"destination": "docs",
-		"recurse": true,
-		"readme": "README.md"
+	"tags": {
+		"allowUnknownTags": true,
+		"dictionaries": [
+			"jsdoc",
+			"closure"
+		]
 	}
 }
