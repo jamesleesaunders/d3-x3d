@@ -2021,7 +2021,7 @@ function surfaceArea$1 () {
 	return my;
 }
 
-var version = "1.0.14";
+var version = "1.0.15";
 var license = "GPL-2.0";
 
 /**
