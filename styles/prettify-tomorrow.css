@@ -4,52 +4,52 @@
 /* SPAN elements with the classes below are added by prettyprint. */
 /* plain text */
 .pln {
-  color: #4d4d4c; }
+  color: #1c1c1b; }
 
 @media screen {
   /* string content */
   .str {
-    color: #718c00; }
+    color: #489963; }
 
   /* a keyword */
   .kwd {
-    color: #8959a8; }
+    color: #06a9b9; }
 
   /* a comment */
   .com {
-    color: #8e908c; }
+    color: #78877d; }
 
   /* a type name */
   .typ {
-    color: #4271ae; }
+    color: #20bdaf; }
 
   /* a literal value */
   .lit {
-    color: #f5871f; }
+    color: #55859b; }
 
   /* punctuation */
   .pun {
-    color: #4d4d4c; }
+    color: #1c1c1b; }
 
   /* lisp open bracket */
   .opn {
-    color: #4d4d4c; }
+    color: #1c1c1b; }
 
   /* lisp close bracket */
   .clo {
-    color: #4d4d4c; }
+    color: #1c1c1b; }
 
   /* a markup tag name */
   .tag {
-    color: #c82829; }
+    color: #b16139; }
 
   /* a markup attribute name */
   .atn {
-    color: #f5871f; }
+    color: #55859b; }
 
   /* a markup attribute value */
   .atv {
-    color: #3e999f; }
+    color: #1c9aa0; }
 
   /* a declaration */
   .dec {
