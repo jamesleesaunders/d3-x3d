@@ -9,8 +9,10 @@ Combining the power of the [D3.js](http://www.d3js.org/) data-driven documents v
 
 Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), **d3-x3dom** is built on a foundation of building blocks, called components, which can be combined to create a variety of different data visualisations.
 
-### Download
-Get the latest release of d3-x3dom from either [GitHub](https://github.com/jamesleesaunders/d3-x3dom) or [NPM](https://www.npmjs.com/package/d3-x3dom).
+* [Examples](#examples)
+* [Getting Started](#getting-started)
+* [Reference](#reference)
+* [Download](https://github.com/jamesleesaunders/d3-x3dom)
 
 ### Examples
 
@@ -89,21 +91,28 @@ Attach chart and data to the chartholder:
 chartHolder.datum(myData).call(myChart);
 ```
 
-Thats all there is to it! View the page in a browser and you should see a basic 3D bar chart.
+That's all there is to it! View the page in a browser and you should see a basic 3D bar chart.
 
-### Import as ES6 module
+#### Install from NPM
+If your project is using ES6 modules you can also import d3-x3dom, for example [from NPM](https://www.npmjs.com/package/d3-x3dom):
 
-If your JS project is using ES6 modules you can also import d3-x3dom (for example from NPM):
-
+```bash
+npm install --save d3-x3dom
+```
+Then in your project:
 ```javascript
 var d3X3dom = require("d3-x3dom");
 ```
 
-### Components and Charts
+### Reference
+
+For more information see the [API documentation](https://jamesleesaunders.github.io/d3-x3dom/).
+
+#### Components and Charts
 
 d3-x3dom has two types of reusable modules: `component` and `chart`.
 
-#### Components
+##### Components
 
 The `component` modules are lower level building blocks which can be used independently, or combined to build higher level `chart` modules. 
 For example, combining `component.bars()`, `component.axis()` and `component.viewpoint()` modules together we have built the `chart.barChartMultiSeries()`.
@@ -120,7 +129,7 @@ Component modules do not generate a `x3d` tag, these should be attached to an ex
 | component.surfaceArea()        | Surface Area                                 | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
 | component.viewpoint()          | User's location and viewing model parameters | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
 
-#### Charts
+##### Charts
 
 The `chart` modules are higher level, pre-combined components, making it even simpler to quickly create charts. 
 All the charts are typically constructed of a viewpoint, axis and one or more of the other components above. 
@@ -134,11 +143,11 @@ Chart modules also generate the `x3d` tag, these should be attached to a `div` t
 | chart.scatterPlot()            | Scatter Plot & Axis                          | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/ScatterPlot.html)
 | chart.surfaceArea()            | Surface Area Chart & Axis                    | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/SurfaceArea.html)
 
-### Data Structures
+#### Data Structures
 
 At its most basic description, the format of the d3-x3dom data is a series of key / value pairs. Depending on whether the chart is a single series or multi series chart the data structure differs slightly.
 
-#### Single Series Data
+##### Single Series Data
 
 Used by charts such as a single series bar chart, the data structure is an object with the following structure:
 * `key` {string} - The series name
@@ -162,7 +171,7 @@ var myData = {
 };
 ```
 
-#### Multi Series Data
+##### Multi Series Data
 
 Used by charts such as the multi series scatter plot, the multi series data structure is simply an array of the single series data objects above.
 
