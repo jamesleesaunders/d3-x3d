@@ -51,7 +51,12 @@
 <a href="https://snyk.io/test/github/jamesleesaunders/d3-x3dom?targetFile=package.json"><img src="https://snyk.io/test/github/jamesleesaunders/d3-x3dom/badge.svg?targetFile=package.json" alt="Known Vulnerabilities"></a></p>
 <p>Combining the power of the <a href="http://www.d3js.org/">D3.js</a> data-driven documents visualisation library, and the <a href="https://github.com/x3dom/x3dom">X3DOM</a> declarative 3D DOM framework, <strong>d3-x3dom</strong> makes it easy to quickly produce beautiful 3D data visualisations with minimal code.</p>
 <p>Inspired by Mike Bostock's <a href="http://bost.ocks.org/mike/chart/">reusable charts</a>, <strong>d3-x3dom</strong> is built on a foundation of building blocks, called components, which can be combined to create a variety of different data visualisations.</p>
-<h3>Download</h3><p>Get the latest release of d3-x3dom from either <a href="https://github.com/jamesleesaunders/d3-x3dom">GitHub</a> or <a href="https://www.npmjs.com/package/d3-x3dom">NPM</a>.</p>
+<ul>
+<li><a href="#examples">Examples</a></li>
+<li><a href="#getting-started">Getting Started</a></li>
+<li><a href="#reference">Reference</a></li>
+<li><a href="https://github.com/jamesleesaunders/d3-x3dom">Download</a></li>
+</ul>
 <h3>Examples</h3><ul>
 <li><a href="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartMultiSeries.html">Multi Series Bar Chart</a></li>
 <li><a href="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartVertical.html">Vertical Bar Chart</a></li>
@@ -95,10 +100,12 @@
     }
 ];</code></pre><p>Declare the <a href="#components-and-charts">chart</a> component:</p>
 <pre class="prettyprint source lang-javascript"><code>var myChart = d3.x3dom.chart.barChartMultiSeries();</code></pre><p>Attach chart and data to the chartholder:</p>
-<pre class="prettyprint source lang-javascript"><code>chartHolder.datum(myData).call(myChart);</code></pre><p>Thats all there is to it! View the page in a browser and you should see a basic 3D bar chart.</p>
-<h3>Import as ES6 module</h3><p>If your JS project is using ES6 modules you can also import d3-x3dom (for example from NPM):</p>
-<pre class="prettyprint source lang-javascript"><code>var d3X3dom = require(&quot;d3-x3dom&quot;);</code></pre><h3>Components and Charts</h3><p>d3-x3dom has two types of reusable modules: <code>component</code> and <code>chart</code>.</p>
-<h4>Components</h4><p>The <code>component</code> modules are lower level building blocks which can be used independently, or combined to build higher level <code>chart</code> modules. 
+<pre class="prettyprint source lang-javascript"><code>chartHolder.datum(myData).call(myChart);</code></pre><p>That's all there is to it! View the page in a browser and you should see a basic 3D bar chart.</p>
+<h4>Install from NPM</h4><p>If your project is using ES6 modules you can also import d3-x3dom, for example <a href="https://www.npmjs.com/package/d3-x3dom">from NPM</a>:</p>
+<pre class="prettyprint source lang-bash"><code>npm install --save d3-x3dom</code></pre><p>Then in your project:</p>
+<pre class="prettyprint source lang-javascript"><code>var d3X3dom = require(&quot;d3-x3dom&quot;);</code></pre><h3>Reference</h3><p>For more information see the <a href="https://jamesleesaunders.github.io/d3-x3dom/">API documentation</a>.</p>
+<h4>Components and Charts</h4><p>d3-x3dom has two types of reusable modules: <code>component</code> and <code>chart</code>.</p>
+<h5>Components</h5><p>The <code>component</code> modules are lower level building blocks which can be used independently, or combined to build higher level <code>chart</code> modules. 
 For example, combining <code>component.bars()</code>, <code>component.axis()</code> and <code>component.viewpoint()</code> modules together we have built the <code>chart.barChartMultiSeries()</code>.
 Component modules do not generate a <code>x3d</code> tag, these should be attached to an exiting <code>x3d</code> tag.</p>
 <table>
@@ -152,7 +159,7 @@ Component modules do not generate a <code>x3d</code> tag, these should be attach
 </tr>
 </tbody>
 </table>
-<h4>Charts</h4><p>The <code>chart</code> modules are higher level, pre-combined components, making it even simpler to quickly create charts. 
+<h5>Charts</h5><p>The <code>chart</code> modules are higher level, pre-combined components, making it even simpler to quickly create charts. 
 All the charts are typically constructed of a viewpoint, axis and one or more of the other components above. 
 Chart modules also generate the <code>x3d</code> tag, these should be attached to a <code>div</code> tag.</p>
 <table>
@@ -191,8 +198,8 @@ Chart modules also generate the <code>x3d</code> tag, these should be attached t
 </tr>
 </tbody>
 </table>
-<h3>Data Structures</h3><p>At its most basic description, the format of the d3-x3dom data is a series of key / value pairs. Depending on whether the chart is a single series or multi series chart the data structure differs slightly.</p>
-<h4>Single Series Data</h4><p>Used by charts such as a single series bar chart, the data structure is an object with the following structure:</p>
+<h4>Data Structures</h4><p>At its most basic description, the format of the d3-x3dom data is a series of key / value pairs. Depending on whether the chart is a single series or multi series chart the data structure differs slightly.</p>
+<h5>Single Series Data</h5><p>Used by charts such as a single series bar chart, the data structure is an object with the following structure:</p>
 <ul>
 <li><code>key</code> {string} - The series name</li>
 <li><code>values</code> {array} - An array of objects containing:<ul>
@@ -212,7 +219,7 @@ Chart modules also generate the <code>x3d</code> tag, these should be attached t
         /* ... */
         { key: &quot;Oranges&quot;, value: 7, x: 6, y: 3, z: 8 }
     ]
-};</code></pre><h4>Multi Series Data</h4><p>Used by charts such as the multi series scatter plot, the multi series data structure is simply an array of the single series data objects above.</p>
+};</code></pre><h5>Multi Series Data</h5><p>Used by charts such as the multi series scatter plot, the multi series data structure is simply an array of the single series data objects above.</p>
 <pre class="prettyprint source lang-javascript"><code>var myData = [
     {
         key: &quot;Sainsburys&quot;,
@@ -248,7 +255,7 @@ Chart modules also generate the <code>x3d</code> tag, these should be attached t
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Nov 09 2018 20:36:09 GMT+0000 (GMT) using the Toast theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Nov 10 2018 11:05:46 GMT+0000 (GMT) using the Toast theme.
 </footer>
 
 <script>prettyPrint();</script>
