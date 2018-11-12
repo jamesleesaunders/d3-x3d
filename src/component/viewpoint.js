@@ -15,8 +15,10 @@ export default function() {
 	let classed = "x3dViewpoint";
 
 	/**
-	 * Main Export Function
+	 * Constructor
 	 *
+	 * @constructor
+	 * @alias viewpoint
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	function my(selection) {

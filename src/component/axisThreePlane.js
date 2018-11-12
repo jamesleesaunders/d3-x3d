@@ -20,8 +20,10 @@ export default function() {
 	let colorScale;
 
 	/**
-	 * Main Export Function
+	 * Constructor
 	 *
+	 * @constructor
+	 * @alias axisThreePlane
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	function my(selection) {

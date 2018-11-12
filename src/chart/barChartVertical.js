@@ -50,8 +50,10 @@ export default function() {
 	}
 
 	/**
-	 * Main Export Function
+	 * Constructor
 	 *
+	 * @constructor
+	 * @alias barChartVertical
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	function my(selection) {

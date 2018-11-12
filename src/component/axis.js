@@ -60,8 +60,10 @@ export default function() {
 	}
 
 	/**
-	 * Main Export Function
+	 * Constructor
 	 *
+	 * @constructor
+	 * @alias axis
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	function my(selection) {
@@ -181,7 +183,7 @@ export default function() {
 	/**
 	 * Color Getter / Setter
 	 *
-	 * @param {string} value - Color 'red' or '#ff0000'.
+	 * @param {string} value - Set/Set color e.g 'red' or '#ff0000'.
 	 * @returns {*}
 	 */
 	my.color = function(value) {
@@ -203,7 +205,7 @@ export default function() {
 	/**
 	 * Tick Direction
 	 *
-	 * @param value
+	 * @param value - Get/Set Tick Direction.
 	 * @returns {*}
 	 */
 	my.tickDir = function(value) {
@@ -211,8 +213,8 @@ export default function() {
 	};
 
 	/**
-	 * Ticks
-	 *
+	 * Get Ticks
+	 * @todo How is this used? Replace with tickArguments()?
 	 */
 	my.ticks = function() {
 		return tickArguments = slice.call(arguments), my;
@@ -221,8 +223,7 @@ export default function() {
 	/**
 	 * Tick Arguments
 	 *
-
-	 * @param value
+	 * @param value - Get/Set Tick Arguments.
 	 * @returns {Array<*>}
 	 */
 	my.tickArguments = function(value) {
@@ -232,7 +233,7 @@ export default function() {
 	/**
 	 * Tick Values
 	 *
-	 * @param value
+	 * @param value - Get/Set Tick Values.
 	 * @returns {*}
 	 */
 	my.tickValues = function(value) {
@@ -242,7 +243,7 @@ export default function() {
 	/**
 	 * Tick Format
 	 *
-	 * @param value
+	 * @param value - Get/Set Tick Format.
 	 * @returns {*}
 	 */
 	my.tickFormat = function(value) {
@@ -252,7 +253,7 @@ export default function() {
 	/**
 	 * Tick Size
 	 *
-	 * @param value
+	 * @param value - Get/Set Tick Length.
 	 * @returns {number}
 	 */
 	my.tickSize = function(value) {
@@ -262,7 +263,7 @@ export default function() {
 	/**
 	 * Tick Padding
 	 *
-	 * @param value
+	 * @param value - Get/Set Tick Padding Size.
 	 * @returns {number}
 	 */
 	my.tickPadding = function(value) {

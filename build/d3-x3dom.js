@@ -340,18 +340,6 @@ function dataTransform(data) {
 	};
 }
 
-var axisDirectionVectors = {
-	x: [1, 0, 0],
-	y: [0, 1, 0],
-	z: [0, 0, 1]
-};
-
-var axisRotationVectors = {
-	x: [1, 1, 0, Math.PI],
-	y: [0, 0, 0, 0],
-	z: [0, 1, 1, Math.PI]
-};
-
 /**
  * Reusable 3D Axis
  *
@@ -359,16 +347,12 @@ var axisRotationVectors = {
  */
 function componentAxis () {
 
-	/**
-  * Default Properties
-  */
+	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var color = "black";
 	var classed = "x3dAxis";
 
-	/**
-  * Scale and Axis Options
-  */
+	/* Scale and Axis Options */
 	var scale = void 0;
 	var dir = void 0;
 	var tickDir = void 0;
@@ -378,9 +362,25 @@ function componentAxis () {
 	var tickSize = 1;
 	var tickPadding = 1;
 
+	/* Slice */
+	var slice = Array.prototype.slice;
+
+	var axisDirectionVectors = {
+		x: [1, 0, 0],
+		y: [0, 1, 0],
+		z: [0, 0, 1]
+	};
+
+	var axisRotationVectors = {
+		x: [1, 1, 0, Math.PI],
+		y: [0, 0, 0, 0],
+		z: [0, 1, 1, Math.PI]
+	};
+
 	/**
   * Get Axis Direction Vector
   *
+  * @private
   * @param {string} axisDir
   * @returns {number[]}
   */
@@ -391,6 +391,7 @@ function componentAxis () {
 	/**
   * Get Axis Rotation Vector
   *
+  * @private
   * @param {string} axisDir
   * @returns {number[]}
   */
@@ -403,7 +404,7 @@ function componentAxis () {
   *
   * @constructor
   * @alias axis
-  * @param {d3.selection} selection
+  * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	function my(selection) {
 		selection.classed(classed, true);
@@ -466,11 +467,6 @@ function componentAxis () {
 	}
 
 	/**
-  * Slice
-  */
-	var slice = Array.prototype.slice;
-
-	/**
   * Dimensions Getter / Setter
   *
   * @param {{x: number, y: number, z: number}} value - 3D Object dimensions.
@@ -497,7 +493,7 @@ function componentAxis () {
 	/**
   * Color Getter / Setter
   *
-  * @param {string} value - Color 'red' or '#ff0000'.
+  * @param {string} value - Set/Set color e.g 'red' or '#ff0000'.
   * @returns {*}
   */
 	my.color = function (value) {
@@ -519,7 +515,7 @@ function componentAxis () {
 	/**
   * Tick Direction
   *
-  * @param value
+  * @param value - Get/Set Tick Direction.
   * @returns {*}
   */
 	my.tickDir = function (value) {
@@ -527,8 +523,8 @@ function componentAxis () {
 	};
 
 	/**
-  * Ticks
-  *
+  * Get Ticks
+  * @todo How is this used? Replace with tickArguments()?
   */
 	my.ticks = function () {
 		return tickArguments = slice.call(arguments), my;
@@ -537,7 +533,7 @@ function componentAxis () {
 	/**
   * Tick Arguments
   *
- 	 * @param value
+  * @param value - Get/Set Tick Arguments.
   * @returns {Array<*>}
   */
 	my.tickArguments = function (value) {
@@ -547,7 +543,7 @@ function componentAxis () {
 	/**
   * Tick Values
   *
-  * @param value
+  * @param value - Get/Set Tick Values.
   * @returns {*}
   */
 	my.tickValues = function (value) {
@@ -557,7 +553,7 @@ function componentAxis () {
 	/**
   * Tick Format
   *
-  * @param value
+  * @param value - Get/Set Tick Format.
   * @returns {*}
   */
 	my.tickFormat = function (value) {
@@ -567,7 +563,7 @@ function componentAxis () {
 	/**
   * Tick Size
   *
-  * @param value
+  * @param value - Get/Set Tick Length.
   * @returns {number}
   */
 	my.tickSize = function (value) {
@@ -577,7 +573,7 @@ function componentAxis () {
 	/**
   * Tick Padding
   *
-  * @param value
+  * @param value - Get/Set Tick Padding Size.
   * @returns {number}
   */
 	my.tickPadding = function (value) {
@@ -594,16 +590,12 @@ function componentAxis () {
  */
 function axisThreePlane () {
 
-	/**
-  * Default Properties
-  */
+	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["blue", "red", "green"];
 	var classed = "x3dAxisThreePlane";
 
-	/**
-  * Scales
-  */
+	/* Scales */
 	var xScale = void 0;
 	var yScale = void 0;
 	var zScale = void 0;
@@ -614,7 +606,7 @@ function axisThreePlane () {
   *
   * @constructor
   * @alias axisThreePlane
-  * @param {d3.selection} selection
+  * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	function my(selection) {
 
@@ -724,16 +716,12 @@ function axisThreePlane () {
  */
 function componentBars () {
 
-	/**
-  * Default Properties
-  */
+	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 2 };
 	var colors = ["orange", "red", "yellow", "steelblue", "green"];
 	var classed = "x3dBars";
 
-	/**
-  * Scales
-  */
+	/* Scales */
 	var xScale = void 0;
 	var yScale = void 0;
 	var colorScale = void 0;
@@ -741,6 +729,7 @@ function componentBars () {
 	/**
   * Initialise Data and Scales
   *
+  * @private
   * @param {Array} data - Chart data.
   */
 	function init(data) {
@@ -762,7 +751,7 @@ function componentBars () {
   *
   * @constructor
   * @alias bars
-  * @param {d3.selection} selection
+  * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	function my(selection) {
 		selection.classed(classed, true);
@@ -875,16 +864,12 @@ function componentBars () {
  */
 function barsMultiSeries () {
 
-	/**
-  * Default Properties
-  */
+	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["orange", "red", "yellow", "steelblue", "green"];
 	var classed = "x3dBarsMultiSeries";
 
-	/**
-  * Scales
-  */
+	/* Scales */
 	var xScale = void 0;
 	var yScale = void 0;
 	var zScale = void 0;
@@ -893,6 +878,7 @@ function barsMultiSeries () {
 	/**
   * Initialise Data and Scales
   *
+  * @private
   * @param {Array} data - Chart data.
   */
 	function init(data) {
@@ -917,7 +903,7 @@ function barsMultiSeries () {
   *
   * @constructor
   * @alias barsMultiSeries
-  * @param {d3.selection} selection
+  * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	function my(selection) {
 		selection.classed(classed, true);
@@ -1028,16 +1014,12 @@ function barsMultiSeries () {
  */
 function componentBubbles () {
 
-	/**
-  * Default Properties
-  */
+	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var color = "orange";
 	var classed = "x3dBubbles";
 
-	/**
-  * Scales
-  */
+	/* Scales */
 	var xScale = void 0;
 	var yScale = void 0;
 	var zScale = void 0;
@@ -1047,6 +1029,7 @@ function componentBubbles () {
 	/**
   * Initialise Data and Scales
   *
+  * @private
   * @param {Array} data - Chart data.
   */
 	function init(data) {
@@ -1078,7 +1061,7 @@ function componentBubbles () {
   *
   * @constructor
   * @alias bubbles
-  * @param {d3.selection} selection
+  * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	function my(selection) {
 		selection.classed(classed, true);
@@ -1204,16 +1187,12 @@ function componentBubbles () {
  */
 function bubblesMultiSeries () {
 
-	/**
-  * Default Properties
-  */
+	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["green", "red", "yellow", "steelblue", "orange"];
 	var classed = "x3dBubblesMultiSeries";
 
-	/**
-  * Scales
-  */
+	/* Scales */
 	var xScale = void 0;
 	var yScale = void 0;
 	var zScale = void 0;
@@ -1224,6 +1203,7 @@ function bubblesMultiSeries () {
 	/**
   * Initialise Data and Scales
   *
+  * @private
   * @param {Array} data - Chart data.
   */
 	function init(data) {
@@ -1250,7 +1230,7 @@ function bubblesMultiSeries () {
   *
   * @constructor
   * @alias bubblesMultiSeries
-  * @param {d3.selection} selection
+  * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	function my(selection) {
 		selection.classed(classed, true);
@@ -1382,16 +1362,12 @@ function bubblesMultiSeries () {
  */
 function surfaceArea () {
 
-	/**
-  * Default Properties
-  */
+	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["blue", "red"];
 	var classed = "x3dSurfaceArea";
 
-	/**
-  * Scales
-  */
+	/* Scales */
 	var xScale = void 0;
 	var yScale = void 0;
 	var zScale = void 0;
@@ -1400,6 +1376,7 @@ function surfaceArea () {
 	/**
   * Array to String
   *
+  * @private
   * @param arr
   * @returns {*}
   */
@@ -1414,6 +1391,7 @@ function surfaceArea () {
 	/**
   * Initialise Data and Scales
   *
+  * @private
   * @param {Array} data - Chart data.
   */
 	function init(data) {
@@ -1438,7 +1416,7 @@ function surfaceArea () {
   *
   * @constructor
   * @alias surfaceArea
-  * @param {d3.selection} selection
+  * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	function my(selection) {
 		selection.classed(classed, true);
@@ -1576,9 +1554,7 @@ function surfaceArea () {
  */
 function viewpoint () {
 
-	/**
-  * Default Properties
-  */
+	/* Default Properties */
 	var centerOfRotation = [0.0, 0.0, 0.0];
 	var viewPosition = [80.0, 15.0, 80.0];
 	var viewOrientation = [0.0, 1.0, 0.0, 0.8];
@@ -1590,7 +1566,7 @@ function viewpoint () {
   *
   * @constructor
   * @alias viewpoint
-  * @param {d3.selection} selection
+  * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	function my(selection) {
 		selection.append("viewpoint").classed(classed, true).attr("centerOfRotation", centerOfRotation.join(" ")).attr("position", viewPosition.join(" ")).attr("orientation", viewOrientation.join(" ")).attr("fieldOfView", fieldOfView).attr("set_bind", "true");
@@ -1693,22 +1669,19 @@ function viewpoint () {
  */
 function ribbon () {
 
-	/**
-  * Default Properties
-  */
+	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var color = "red";
 	var classed = "x3dRibbon";
 
-	/**
-  * Scales
-  */
+	/* Scales */
 	var xScale = void 0;
 	var yScale = void 0;
 
 	/**
   * Initialise Data and Scales
   *
+  * @private
   * @param {Array} data - Chart data.
   */
 	function init(data) {
@@ -1727,7 +1700,7 @@ function ribbon () {
   *
   * @constructor
   * @alias ribbon
-  * @param {d3.selection} selection
+  * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	function my(selection) {
 		selection.classed(classed, true);
@@ -1828,9 +1801,7 @@ var component = {
  */
 function surfaceArea$1 () {
 
-	/**
-  * Default Properties
-  */
+	/* Default Properties */
 	var width = 500;
 	var height = 500;
 	var dimensions = { x: 40, y: 40, z: 40 };
@@ -1838,9 +1809,7 @@ function surfaceArea$1 () {
 	var classed = "x3dSurfaceArea";
 	var debug = false;
 
-	/**
-  * Scales
-  */
+	/* Scales */
 	var xScale = void 0;
 	var yScale = void 0;
 	var zScale = void 0;
@@ -1849,6 +1818,7 @@ function surfaceArea$1 () {
 	/**
   * Initialise Data and Scales
   *
+  * @private
   * @param {Array} data - Chart data.
   */
 	function init(data) {
@@ -1875,7 +1845,7 @@ function surfaceArea$1 () {
   *
   * @constructor
   * @alias surfaceArea
-  * @param {d3.selection} selection
+  * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	function my(selection) {
 		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
@@ -2032,9 +2002,7 @@ var license = "GPL-2.0";
  */
 function barChartMultiSeries () {
 
-	/**
-  * Default Properties
-  */
+	/* Default Properties */
 	var width = 500;
 	var height = 500;
 	var dimensions = { x: 40, y: 40, z: 40 };
@@ -2042,9 +2010,7 @@ function barChartMultiSeries () {
 	var classed = "x3dBarChartMultiSeries";
 	var debug = false;
 
-	/**
-  * Scales
-  */
+	/* Scales */
 	var xScale = void 0;
 	var yScale = void 0;
 	var zScale = void 0;
@@ -2053,6 +2019,7 @@ function barChartMultiSeries () {
 	/**
   * Initialise Data and Scales
   *
+  * @private
   * @param {Array} data - Chart data.
   */
 	function init(data) {
@@ -2077,7 +2044,7 @@ function barChartMultiSeries () {
   *
   * @constructor
   * @alias barChartMultiSeries
-  * @param {d3.selection} selection
+  * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	function my(selection) {
 		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
@@ -2233,9 +2200,7 @@ function barChartMultiSeries () {
  */
 function barChartVertical () {
 
-	/**
-  * Default Properties
-  */
+	/* Default Properties */
 	var width = 500;
 	var height = 500;
 	var dimensions = { x: 40, y: 40, z: 40 };
@@ -2243,9 +2208,7 @@ function barChartVertical () {
 	var classed = "x3dBarChartVertical";
 	var debug = false;
 
-	/**
-  * Scales
-  */
+	/* Scales */
 	var xScale = void 0;
 	var yScale = void 0;
 	var colorScale = void 0;
@@ -2253,6 +2216,7 @@ function barChartVertical () {
 	/**
   * Initialise Data and Scales
   *
+  * @private
   * @param {Array} data - Chart data.
   */
 	function init(data) {
@@ -2274,7 +2238,7 @@ function barChartVertical () {
   *
   * @constructor
   * @alias barChartVertical
-  * @param {d3.selection} selection
+  * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	function my(selection) {
 		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
@@ -2420,9 +2384,7 @@ function barChartVertical () {
  */
 function bubbleChart () {
 
-	/**
-  * Default Properties
-  */
+	/* Default Properties */
 	var width = 500;
 	var height = 500;
 	var dimensions = { x: 40, y: 40, z: 40 };
@@ -2430,9 +2392,7 @@ function bubbleChart () {
 	var classed = "x3dBubbleChart";
 	var debug = false;
 
-	/**
-  * Scales
-  */
+	/* Scales */
 	var xScale = void 0;
 	var yScale = void 0;
 	var zScale = void 0;
@@ -2443,6 +2403,7 @@ function bubbleChart () {
 	/**
   * Initialise Data and Scales
   *
+  * @private
   * @param {Array} data - Chart data.
   */
 	function init(data) {
@@ -2468,7 +2429,7 @@ function bubbleChart () {
   *
   * @constructor
   * @alias bubbleChart
-  * @param {d3.selection} selection
+  * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	function my(selection) {
 		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
@@ -2648,9 +2609,7 @@ function bubbleChart () {
  */
 function scatterPlot () {
 
-	/**
-  * Default Properties
-  */
+	/* Default Properties */
 	var width = 500;
 	var height = 500;
 	var dimensions = { x: 40, y: 40, z: 40 };
@@ -2658,9 +2617,7 @@ function scatterPlot () {
 	var classed = "x3dScatterPlot";
 	var debug = false;
 
-	/**
-  * Scales
-  */
+	/* Scales */
 	var xScale = void 0;
 	var yScale = void 0;
 	var zScale = void 0;
@@ -2668,6 +2625,7 @@ function scatterPlot () {
 	/**
   * Initialise Data and Scales
   *
+  * @private
   * @param {Array} data - Chart data.
   */
 	function init(data) {
@@ -2687,7 +2645,7 @@ function scatterPlot () {
   *
   * @constructor
   * @alias scatterPlot
-  * @param {d3.selection} selection
+  * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	function my(selection) {
 		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
