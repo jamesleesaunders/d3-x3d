@@ -45,6 +45,7 @@
 		"jsdoc": "^3.5.5",
 		"toast-jsdoc": "^1.0.2",
 		"jsdom": "^11.11.0",
+		"minami": "^1.2.3",
 		"rollup": "^0.56.2",
 		"rollup-plugin-babel": "^3.0.7",
 		"rollup-plugin-json": "^2.3.1",

@@ -7,9 +7,7 @@ import * as d3 from "d3";
  */
 export default function() {
 
-	/**
-	 * Default Properties
-	 */
+	/* Default Properties */
 	let centerOfRotation = [0.0, 0.0, 0.0];
 	let viewPosition = [80.0, 15.0, 80.0];
 	let viewOrientation = [0.0, 1.0, 0.0, 0.8];
@@ -17,11 +15,9 @@ export default function() {
 	let classed = "x3dViewpoint";
 
 	/**
-	 * Constructor
+	 * Main Export Function
 	 *
-	 * @constructor
-	 * @alias viewpoint
-	 * @param {d3.selection} selection
+	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	function my(selection) {
 		selection.append("viewpoint")

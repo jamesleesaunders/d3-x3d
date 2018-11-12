@@ -1,17 +1,5 @@
 import * as d3 from "d3";
 
-const axisDirectionVectors = {
-	x: [1, 0, 0],
-	y: [0, 1, 0],
-	z: [0, 0, 1]
-};
-
-const axisRotationVectors = {
-	x: [1, 1, 0, Math.PI],
-	y: [0, 0, 0, 0],
-	z: [0, 1, 1, Math.PI]
-};
-
 /**
  * Reusable 3D Axis
  *
@@ -19,16 +7,12 @@ const axisRotationVectors = {
  */
 export default function() {
 
-	/**
-	 * Default Properties
-	 */
+	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let color = "black";
 	let classed = "x3dAxis";
 
-	/**
-	 * Scale and Axis Options
-	 */
+	/* Scale and Axis Options */
 	let scale;
 	let dir;
 	let tickDir;
@@ -38,9 +22,25 @@ export default function() {
 	let tickSize = 1;
 	let tickPadding = 1;
 
+	/* Slice */
+	const slice = Array.prototype.slice;
+
+	const axisDirectionVectors = {
+		x: [1, 0, 0],
+		y: [0, 1, 0],
+		z: [0, 0, 1]
+	};
+
+	const axisRotationVectors = {
+		x: [1, 1, 0, Math.PI],
+		y: [0, 0, 0, 0],
+		z: [0, 1, 1, Math.PI]
+	};
+
 	/**
 	 * Get Axis Direction Vector
 	 *
+	 * @private
 	 * @param {string} axisDir
 	 * @returns {number[]}
 	 */
@@ -51,6 +51,7 @@ export default function() {
 	/**
 	 * Get Axis Rotation Vector
 	 *
+	 * @private
 	 * @param {string} axisDir
 	 * @returns {number[]}
 	 */
@@ -59,11 +60,9 @@ export default function() {
 	}
 
 	/**
-	 * Constructor
+	 * Main Export Function
 	 *
-	 * @constructor
-	 * @alias axis
-	 * @param {d3.selection} selection
+	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	function my(selection) {
 		selection.classed(classed, true);
@@ -154,11 +153,6 @@ export default function() {
 			.attr("radius", 0.05)
 			.attr("height", tickSize);
 	}
-
-	/**
-	 * Slice
-	 */
-	const slice = Array.prototype.slice;
 
 	/**
 	 * Dimensions Getter / Setter

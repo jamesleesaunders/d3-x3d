@@ -8,22 +8,19 @@ import dataTransform from "../dataTransform";
  */
 export default function() {
 
-	/**
-	 * Default Properties
-	 */
+	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let color = "red";
 	let classed = "x3dRibbon";
 
-	/**
-	 * Scales
-	 */
+	/* Scales */
 	let xScale;
 	let yScale;
 
 	/**
 	 * Initialise Data and Scales
 	 *
+	 * @private
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
@@ -42,11 +39,9 @@ export default function() {
 	}
 
 	/**
-	 * Constructor
+	 * Main Export Function
 	 *
-	 * @constructor
-	 * @alias ribbon
-	 * @param {d3.selection} selection
+	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	function my(selection) {
 		selection.classed(classed, true);

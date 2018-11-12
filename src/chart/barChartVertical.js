@@ -10,9 +10,7 @@ import component from "../component";
  */
 export default function() {
 
-	/**
-	 * Default Properties
-	 */
+	/* Default Properties */
 	let width = 500;
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
@@ -20,9 +18,7 @@ export default function() {
 	let classed = "x3dBarChartVertical";
 	let debug = false;
 
-	/**
-	 * Scales
-	 */
+	/* Scales */
 	let xScale;
 	let yScale;
 	let colorScale;
@@ -30,6 +26,7 @@ export default function() {
 	/**
 	 * Initialise Data and Scales
 	 *
+	 * @private
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
@@ -53,11 +50,9 @@ export default function() {
 	}
 
 	/**
-	 * Constructor
+	 * Main Export Function
 	 *
-	 * @constructor
-	 * @alias barChartVertical
-	 * @param {d3.selection} selection
+	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	function my(selection) {
 		const x3d = selection.append("x3d")

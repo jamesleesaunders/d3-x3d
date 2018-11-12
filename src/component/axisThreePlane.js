@@ -8,27 +8,21 @@ import componentAxis from "./axis";
  */
 export default function() {
 
-	/**
-	 * Default Properties
-	 */
+	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["blue", "red", "green"];
 	let classed = "x3dAxisThreePlane";
 
-	/**
-	 * Scales
-	 */
+	/* Scales */
 	let xScale;
 	let yScale;
 	let zScale;
 	let colorScale;
 
 	/**
-	 * Constructor
+	 * Main Export Function
 	 *
-	 * @constructor
-	 * @alias axisThreePlane
-	 * @param {d3.selection} selection
+	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	function my(selection) {
 
