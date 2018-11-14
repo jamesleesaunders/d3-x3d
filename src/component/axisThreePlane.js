@@ -57,7 +57,7 @@ export default function() {
 			.dir("y")
 			.tickDir("x")
 			.tickSize(xScale.range()[1] - xScale.range()[0])
-			.tickFormat("") // FIXME: GitHub Issue #14
+			.tickFormat("")
 			.color("red");
 
 		const zxAxis = componentAxis()

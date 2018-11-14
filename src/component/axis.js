@@ -22,9 +22,6 @@ export default function() {
 	let tickSize = 1;
 	let tickPadding = 1;
 
-	/* Slice */
-	const slice = Array.prototype.slice;
-
 	const axisDirectionVectors = {
 		x: [1, 0, 0],
 		y: [0, 1, 0],
@@ -77,12 +74,6 @@ export default function() {
 			return selection;
 		};
 
-		const defaultValues = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
-		const values = tickValues === null ? defaultValues : tickValues;
-
-		const defaultFormat = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : function(d) { return d; };
-		const format = tickFormat === null ? defaultFormat : tickFormat;
-
 		const range = scale.range();
 		const range0 = range[0];
 		const range1 = range[range.length - 1];
@@ -95,8 +86,11 @@ export default function() {
 		let path = selection.selectAll("transform")
 			.data([null]);
 
+		const tickValuesDefault = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
+		tickValues = tickValues === null ? tickValuesDefault : tickValues;
+
 		let tick = selection.selectAll(".tick")
-			.data(values, scale).order();
+			.data(tickValues, scale).order();
 
 		const tickExit = tick.exit();
 		const tickEnter = tick.enter()
@@ -109,8 +103,6 @@ export default function() {
 			.attr("class", "tick");
 
 		let line = tick.select(".tickLine");
-		let text = tick.select("billboard");
-
 		path = path.merge(path.enter()
 			.append("transform")
 			.attr("rotation", rotVec.join(" "))
@@ -120,22 +112,28 @@ export default function() {
 			.attr("class", "domain"));
 		tick = tick.merge(tickEnter);
 		line = line.merge(tickEnter.append("transform"));
-		let newText = tickEnter.append("transform");
 
-		newText
-			.attr("translation", tickDirVec.map(function(d) { return -d * tickPadding; }))
-			.append("billboard")
-			.attr("axisOfRotation", "0 0 0")
-			.append("shape")
-			.call(makeSolid, "black")
-			.append("text")
-			.attr("string", format)
-			.append("fontstyle")
-			.attr("size", 1.3)
-			.attr("family", "SANS")
-			.attr("style", "BOLD")
-			.attr("justify", "MIDDLE");
-		text = text.merge(newText);
+		const tickFormatDefault = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : function(d) { return d; };
+		tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
+
+		if (tickFormat !== "") {
+			let text = tick.select("billboard");
+			let newText = tickEnter.append("transform");
+			newText
+				.attr("translation", tickDirVec.map(function(d) { return -d * tickPadding; }))
+				.append("billboard")
+				.attr("axisOfRotation", "0 0 0")
+				.append("shape")
+				.call(makeSolid, "black")
+				.append("text")
+				.attr("string", tickFormat)
+				.append("fontstyle")
+				.attr("size", 1.3)
+				.attr("family", "SANS")
+				.attr("style", "BOLD")
+				.attr("justify", "MIDDLE");
+			text = text.merge(newText);
+		}
 
 		tickExit.remove();
 		path
@@ -211,6 +209,9 @@ export default function() {
 	my.tickDir = function(value) {
 		return arguments.length ? (tickDir = value, my) : tickDir;
 	};
+
+	/* Slice */
+	const slice = Array.prototype.slice;
 
 	/**
 	 * Get Ticks

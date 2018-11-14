@@ -362,9 +362,6 @@ function componentAxis () {
 	var tickSize = 1;
 	var tickPadding = 1;
 
-	/* Slice */
-	var slice = Array.prototype.slice;
-
 	var axisDirectionVectors = {
 		x: [1, 0, 0],
 		y: [0, 1, 0],
@@ -415,14 +412,6 @@ function componentAxis () {
 			return selection;
 		};
 
-		var defaultValues = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
-		var values = tickValues === null ? defaultValues : tickValues;
-
-		var defaultFormat = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : function (d) {
-			return d;
-		};
-		var format = tickFormat === null ? defaultFormat : tickFormat;
-
 		var range = scale.range();
 		var range0 = range[0];
 		var range1 = range[range.length - 1];
@@ -434,7 +423,10 @@ function componentAxis () {
 
 		var path = selection.selectAll("transform").data([null]);
 
-		var tick = selection.selectAll(".tick").data(values, scale).order();
+		var tickValuesDefault = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
+		tickValues = tickValues === null ? tickValuesDefault : tickValues;
+
+		var tick = selection.selectAll(".tick").data(tickValues, scale).order();
 
 		var tickExit = tick.exit();
 		var tickEnter = tick.enter().append("transform").attr("translation", function (t) {
@@ -444,19 +436,25 @@ function componentAxis () {
 		}).attr("class", "tick");
 
 		var line = tick.select(".tickLine");
-		var text = tick.select("billboard");
-
 		path = path.merge(path.enter().append("transform").attr("rotation", rotVec.join(" ")).attr("translation", dirVec.map(function (d) {
 			return d * (range0 + range1) / 2;
 		}).join(" ")).append("shape").call(makeSolid, color).attr("class", "domain"));
 		tick = tick.merge(tickEnter);
 		line = line.merge(tickEnter.append("transform"));
-		var newText = tickEnter.append("transform");
 
-		newText.attr("translation", tickDirVec.map(function (d) {
-			return -d * tickPadding;
-		})).append("billboard").attr("axisOfRotation", "0 0 0").append("shape").call(makeSolid, "black").append("text").attr("string", format).append("fontstyle").attr("size", 1.3).attr("family", "SANS").attr("style", "BOLD").attr("justify", "MIDDLE");
-		text = text.merge(newText);
+		var tickFormatDefault = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : function (d) {
+			return d;
+		};
+		tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
+
+		if (tickFormat !== "") {
+			var text = tick.select("billboard");
+			var newText = tickEnter.append("transform");
+			newText.attr("translation", tickDirVec.map(function (d) {
+				return -d * tickPadding;
+			})).append("billboard").attr("axisOfRotation", "0 0 0").append("shape").call(makeSolid, "black").append("text").attr("string", tickFormat).append("fontstyle").attr("size", 1.3).attr("family", "SANS").attr("style", "BOLD").attr("justify", "MIDDLE");
+			text = text.merge(newText);
+		}
 
 		tickExit.remove();
 		path.append("cylinder").attr("radius", 0.1).attr("height", range1 - range0);
@@ -521,6 +519,9 @@ function componentAxis () {
 	my.tickDir = function (value) {
 		return arguments.length ? (tickDir = value, my) : tickDir;
 	};
+
+	/* Slice */
+	var slice = Array.prototype.slice;
 
 	/**
   * Get Ticks
@@ -620,8 +621,7 @@ function axisThreePlane () {
 
 		var yzAxis = componentAxis().scale(yScale).dir("y").tickDir("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("red");
 
-		var yxAxis = componentAxis().scale(yScale).dir("y").tickDir("x").tickSize(xScale.range()[1] - xScale.range()[0]).tickFormat("") // FIXME: GitHub Issue #14
-		.color("red");
+		var yxAxis = componentAxis().scale(yScale).dir("y").tickDir("x").tickSize(xScale.range()[1] - xScale.range()[0]).tickFormat("").color("red");
 
 		var zxAxis = componentAxis().scale(zScale).dir("z").tickDir("x").tickSize(xScale.range()[1] - xScale.range()[0]).color("black");
 
