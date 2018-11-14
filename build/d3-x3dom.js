@@ -1798,7 +1798,13 @@ var component = {
  * Reusable 3D Surface Area
  *
  * @module
+ *
  * @see https://datavizproject.com/data-type/three-dimensional-stream-graph/
+ * @example
+ * var chartHolder = d3.select("#chartholder");
+ * var myData = [...];
+ * var myChart = d3.x3dom.chart.surfaceArea();
+ * chartHolder.datum(myData).call(myChart);
  */
 function surfaceArea$1 () {
 
@@ -1999,7 +2005,13 @@ var license = "GPL-2.0";
  * Reusable 3D Bar Chart
  *
  * @module
+ *
  * @see https://datavizproject.com/data-type/3d-bar-chart/
+ * @example
+ * var chartHolder = d3.select("#chartholder");
+ * var myData = [...];
+ * var myChart = d3.x3dom.chart.barChartMultiSeries();
+ * chartHolder.datum(myData).call(myChart);
  */
 function barChartMultiSeries () {
 
@@ -2197,7 +2209,13 @@ function barChartMultiSeries () {
  * Reusable 3D Bar Chart
  *
  * @module
+ *
  * @see https://datavizproject.com/data-type/3d-bar-chart/
+ * @example
+ * var chartHolder = d3.select("#chartholder");
+ * var myData = [...];
+ * var myChart = d3.x3dom.chart.barChartVertical();
+ * chartHolder.datum(myData).call(myChart);
  */
 function barChartVertical () {
 
@@ -2381,7 +2399,13 @@ function barChartVertical () {
  * Reusable 3D Bubble Chart
  *
  * @module
+ *
  * @see https://datavizproject.com/data-type/bubble-chart/
+ * @example
+ * var chartHolder = d3.select("#chartholder");
+ * var myData = [...];
+ * var myChart = d3.x3dom.chart.bubbleChart();
+ * chartHolder.datum(myData).call(myChart);
  */
 function bubbleChart () {
 
@@ -2606,7 +2630,13 @@ function bubbleChart () {
  * Reusable 3D Scatter Plot
  *
  * @module
+ *
  * @see https://datavizproject.com/data-type/3d-scatterplot/
+ * @example
+ * var chartHolder = d3.select("#chartholder");
+ * var myData = [...];
+ * var myChart = d3.x3dom.chart.scatterPlot();
+ * chartHolder.datum(myData).call(myChart);
  */
 function scatterPlot () {
 

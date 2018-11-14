@@ -6,7 +6,13 @@ import component from "../component";
  * Reusable 3D Surface Area
  *
  * @module
+ *
  * @see https://datavizproject.com/data-type/three-dimensional-stream-graph/
+ * @example
+ * var chartHolder = d3.select("#chartholder");
+ * var myData = [...];
+ * var myChart = d3.x3dom.chart.surfaceArea();
+ * chartHolder.datum(myData).call(myChart);
  */
 export default function() {
 

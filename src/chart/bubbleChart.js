@@ -6,7 +6,13 @@ import component from "../component";
  * Reusable 3D Bubble Chart
  *
  * @module
+ *
  * @see https://datavizproject.com/data-type/bubble-chart/
+ * @example
+ * var chartHolder = d3.select("#chartholder");
+ * var myData = [...];
+ * var myChart = d3.x3dom.chart.bubbleChart();
+ * chartHolder.datum(myData).call(myChart);
  */
 export default function() {
 
