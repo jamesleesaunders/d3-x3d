@@ -109,85 +109,85 @@ export default function() {
 	/**
 	 * Dimensions Getter / Setter
 	 *
-	 * @param {{x: number, y: number, z: number}} value - 3D Object dimensions.
+	 * @param {{x: number, y: number, z: number}} _x - 3D object dimensions.
 	 * @returns {*}
 	 */
-	my.dimensions = function(value) {
+	my.dimensions = function(_x) {
 		if (!arguments.length) return dimensions;
-		dimensions = value;
+		dimensions = _x;
 		return this;
 	};
 
 	/**
 	 * X Scale Getter / Setter
 	 *
-	 * @param {d3.scale} value - D3 Scale.
+	 * @param {d3.scale} _x - D3 scale.
 	 * @returns {*}
 	 */
-	my.xScale = function(value) {
+	my.xScale = function(_x) {
 		if (!arguments.length) return xScale;
-		xScale = value;
+		xScale = _x;
 		return my;
 	};
 
 	/**
 	 * Y Scale Getter / Setter
 	 *
-	 * @param {d3.scale} value - D3 Scale.
+	 * @param {d3.scale} _x - D3 scale.
 	 * @returns {*}
 	 */
-	my.yScale = function(value) {
+	my.yScale = function(_x) {
 		if (!arguments.length) return yScale;
-		yScale = value;
+		yScale = _x;
 		return my;
 	};
 
 	/**
 	 * Z Scale Getter / Setter
 	 *
-	 * @param {d3.scale} value - D3 Scale.
+	 * @param {d3.scale} _x - D3 scale.
 	 * @returns {*}
 	 */
-	my.zScale = function(value) {
+	my.zScale = function(_x) {
 		if (!arguments.length) return zScale;
-		zScale = value;
+		zScale = _x;
 		return my;
 	};
 
 	/**
 	 * Size Scale Getter / Setter
 	 *
-	 * @param {d3.scale} value - D3 Color Scale.
+	 * @param {d3.scale} _x - D3 color scale.
 	 * @returns {*}
 	 */
-	my.sizeScale = function(value) {
+	my.sizeScale = function(_x) {
 		if (!arguments.length) return sizeScale;
-		sizeScale = value;
+		sizeScale = _x;
 		return my;
 	};
 
 	/**
 	 * Size Domain Getter / Setter
 	 *
-	 * @param {number[]} value - Size min and max.
+	 * @param {number[]} _x - Size min and max e.g. [1, 9].
 	 * @returns {*}
 	 */
-	my.sizeDomain = function(value) {
+	my.sizeDomain = function(_x) {
 		if (!arguments.length) return sizeDomain;
-		sizeDomain = value;
+		sizeDomain = _x;
 		return my;
 	};
 
 	/**
 	 * Color Getter / Setter
 	 *
-	 * @param {string} value - Color 'red' or '#ff0000'.
+	 * @param {string} _x - Color e.g. 'red' or '#ff0000'.
 	 * @returns {*}
 	 */
-	my.color = function(value) {
+	my.color = function(_x) {
 		if (!arguments.length) return color;
-		color = value;
-		return this;
+		color = _x;
+		return my;
 	};
 
 	return my;

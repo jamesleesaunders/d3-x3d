@@ -13,7 +13,7 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Getting Started](#getting-started)
 * [API Reference](https://jamesleesaunders.github.io/d3-x3dom/)
 * [Charts and Components](#components-and-charts)
-* [Data Structure](#data-structures)
+* [Data Structures](#data-structures)
 * [Download from GitHub](https://github.com/jamesleesaunders/d3-x3dom)
 * [Download from NPM](https://github.com/jamesleesaunders/d3-x3dom)
 
@@ -103,9 +103,11 @@ If your project is using ES6 modules you can also import d3-x3dom, for example [
 ```bash
 npm install --save d3-x3dom
 ```
+
 Then in your project:
+
 ```javascript
-var d3X3dom = require("d3-x3dom");
+let d3X3dom = require("d3-x3dom");
 ```
 
 ### Components and Charts

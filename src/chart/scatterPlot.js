@@ -107,96 +107,96 @@ export default function() {
 	/**
 	 * Width Getter / Setter
 	 *
-	 * @param {number} value - X3D Canvas Height in px.
+	 * @param {number} _x - X3D canvas width in px.
 	 * @returns {*}
 	 */
-	my.width = function(value) {
+	my.width = function(_x) {
 		if (!arguments.length) return width;
-		width = value;
+		width = _x;
 		return this;
 	};
 
 	/**
 	 * Height Getter / Setter
 	 *
-	 * @param {number} value - X3D Canvas Height in px.
+	 * @param {number} _x - X3D canvas height in px.
 	 * @returns {*}
 	 */
-	my.height = function(value) {
+	my.height = function(_x) {
 		if (!arguments.length) return height;
-		height = value;
+		height = _x;
 		return this;
 	};
 
 	/**
 	 * Dimensions Getter / Setter
 	 *
-	 * @param {{x: number, y: number, z: number}} value - 3D Object dimensions.
+	 * @param {{x: number, y: number, z: number}} _x - 3D object dimensions.
 	 * @returns {*}
 	 */
-	my.dimensions = function(value) {
+	my.dimensions = function(_x) {
 		if (!arguments.length) return dimensions;
-		dimensions = value;
+		dimensions = _x;
 		return this;
 	};
 
 	/**
 	 * X Scale Getter / Setter
 	 *
-	 * @param {d3.scale} value - D3 Scale.
+	 * @param {d3.scale} _x - D3 scale.
 	 * @returns {*}
 	 */
-	my.xScale = function(value) {
+	my.xScale = function(_x) {
 		if (!arguments.length) return xScale;
-		xScale = value;
+		xScale = _x;
 		return my;
 	};
 
 	/**
 	 * Y Scale Getter / Setter
 	 *
-	 * @param {d3.scale} value - D3 Scale.
+	 * @param {d3.scale} _x - D3 scale.
 	 * @returns {*}
 	 */
-	my.yScale = function(value) {
+	my.yScale = function(_x) {
 		if (!arguments.length) return yScale;
-		yScale = value;
+		yScale = _x;
 		return my;
 	};
 
 	/**
 	 * Z Scale Getter / Setter
 	 *
-	 * @param {d3.scale} value - D3 Scale.
+	 * @param {d3.scale} _x - D3 scale.
 	 * @returns {*}
 	 */
-	my.zScale = function(value) {
+	my.zScale = function(_x) {
 		if (!arguments.length) return zScale;
-		zScale = value;
+		zScale = _x;
 		return my;
 	};
 
 	/**
 	 * Color Getter / Setter
 	 *
-	 * @param {string} value - Color 'red' or '#ff0000'.
+	 * @param {string} _x - Color e.g. 'red' or '#ff0000'.
 	 * @returns {*}
 	 */
-	my.color = function(value) {
+	my.color = function(_x) {
 		if (!arguments.length) return color;
-		color = value;
+		color = _x;
 		return my;
 	};
 
 	/**
 	 * Debug Getter / Setter
 	 *
-	 * @param {boolean} value - Show debug log and stats. True/False.
+	 * @param {boolean} _x - Show debug log and stats. True/False.
 	 * @returns {*}
 	 */
-	my.debug = function(value) {
+	my.debug = function(_x) {
 		if (!arguments.length) return debug;
-		debug = value;
+		debug = _x;
 		return my;
 	};
 

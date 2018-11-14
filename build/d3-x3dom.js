@@ -467,57 +467,45 @@ function componentAxis () {
 	/**
   * Dimensions Getter / Setter
   *
-  * @param {{x: number, y: number, z: number}} value - 3D Object dimensions.
+  * @param {{x: number, y: number, z: number}} _x - 3D Object dimensions.
   * @returns {*}
   */
-	my.dimensions = function (value) {
+	my.dimensions = function (_x) {
 		if (!arguments.length) return dimensions;
-		dimensions = value;
+		dimensions = _x;
 		return this;
 	};
 
 	/**
   * Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 Scale.
   * @returns {*}
   */
-	my.scale = function (value) {
+	my.scale = function (_x) {
 		if (!arguments.length) return scale;
-		scale = value;
+		scale = _x;
 		return my;
 	};
 
 	/**
-  * Color Getter / Setter
+  * Direction Getter / Setter
   *
-  * @param {string} value - Set/Set color e.g 'red' or '#ff0000'.
+  * @param _x - Direction.
   * @returns {*}
   */
-	my.color = function (value) {
-		if (!arguments.length) return color;
-		color = value;
-		return my;
+	my.dir = function (_x) {
+		return arguments.length ? (dir = _x, my) : dir;
 	};
 
 	/**
-  * Direction
+  * Tick Direction Getter / Setter
   *
-  * @param value
+  * @param _x - Tick direction.
   * @returns {*}
   */
-	my.dir = function (value) {
-		return arguments.length ? (dir = value, my) : dir;
-	};
-
-	/**
-  * Tick Direction
-  *
-  * @param value - Get/Set Tick Direction.
-  * @returns {*}
-  */
-	my.tickDir = function (value) {
-		return arguments.length ? (tickDir = value, my) : tickDir;
+	my.tickDir = function (_x) {
+		return arguments.length ? (tickDir = _x, my) : tickDir;
 	};
 
 	/* Slice */
@@ -526,59 +514,72 @@ function componentAxis () {
 	/**
   * Get Ticks
   * @todo How is this used? Replace with tickArguments()?
+  * @private
   */
 	my.ticks = function () {
 		return tickArguments = slice.call(arguments), my;
 	};
 
 	/**
-  * Tick Arguments
+  * Tick Arguments Getter / Setter
   *
-  * @param value - Get/Set Tick Arguments.
+  * @param _x - Tick arguments.
   * @returns {Array<*>}
   */
-	my.tickArguments = function (value) {
-		return arguments.length ? (tickArguments = value === null ? [] : slice.call(value), my) : tickArguments.slice();
+	my.tickArguments = function (_x) {
+		return arguments.length ? (tickArguments = _x === null ? [] : slice.call(_x), my) : tickArguments.slice();
 	};
 
 	/**
-  * Tick Values
+  * Tick Values Getter / Setter
   *
-  * @param value - Get/Set Tick Values.
+  * @param _x - Tick values.
   * @returns {*}
   */
-	my.tickValues = function (value) {
-		return arguments.length ? (tickValues = value === null ? null : slice.call(value), my) : tickValues && tickValues.slice();
+	my.tickValues = function (_x) {
+		return arguments.length ? (tickValues = _x === null ? null : slice.call(_x), my) : tickValues && tickValues.slice();
 	};
 
 	/**
-  * Tick Format
+  * Tick Format Getter / Setter
   *
-  * @param value - Get/Set Tick Format.
+  * @param _x - Tick format.
   * @returns {*}
   */
-	my.tickFormat = function (value) {
-		return arguments.length ? (tickFormat = value, my) : tickFormat;
+	my.tickFormat = function (_x) {
+		return arguments.length ? (tickFormat = _x, my) : tickFormat;
 	};
 
 	/**
-  * Tick Size
+  * Tick Size Getter / Setter
   *
-  * @param value - Get/Set Tick Length.
+  * @param _x - Tick length.
   * @returns {number}
   */
-	my.tickSize = function (value) {
-		return arguments.length ? (tickSize = +value, my) : tickSize;
+	my.tickSize = function (_x) {
+		return arguments.length ? (tickSize = +_x, my) : tickSize;
 	};
 
 	/**
-  * Tick Padding
+  * Tick Padding Getter / Setter
   *
-  * @param value - Get/Set Tick Padding Size.
+  * @param _x - Tick padding size.
   * @returns {number}
   */
-	my.tickPadding = function (value) {
-		return arguments.length ? (tickPadding = +value, my) : tickPadding;
+	my.tickPadding = function (_x) {
+		return arguments.length ? (tickPadding = +_x, my) : tickPadding;
+	};
+
+	/**
+  * Color Getter / Setter
+  *
+  * @param {string} _x - Color e.g. 'red' or '#ff0000'.
+  * @returns {*}
+  */
+	my.color = function (_x) {
+		if (!arguments.length) return color;
+		color = _x;
+		return my;
 	};
 
 	return my;
@@ -637,72 +638,72 @@ function axisThreePlane () {
 	/**
   * Dimensions Getter / Setter
   *
-  * @param {{x: number, y: number, z: number}} value - 3D Object dimensions.
+  * @param {{x: number, y: number, z: number}} _x - 3D object dimensions.
   * @returns {*}
   */
-	my.dimensions = function (value) {
+	my.dimensions = function (_x) {
 		if (!arguments.length) return dimensions;
-		dimensions = value;
+		dimensions = _x;
 		return this;
 	};
 
 	/**
   * X Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.xScale = function (value) {
+	my.xScale = function (_x) {
 		if (!arguments.length) return xScale;
-		xScale = value;
+		xScale = _x;
 		return my;
 	};
 
 	/**
   * Y Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.yScale = function (value) {
+	my.yScale = function (_x) {
 		if (!arguments.length) return yScale;
-		yScale = value;
+		yScale = _x;
 		return my;
 	};
 
 	/**
   * Z Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.zScale = function (value) {
+	my.zScale = function (_x) {
 		if (!arguments.length) return zScale;
-		zScale = value;
+		zScale = _x;
 		return my;
 	};
 
 	/**
   * Color Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Color Scale.
+  * @param {d3.scale} _x - D3 color scale.
   * @returns {*}
   */
-	my.colorScale = function (value) {
+	my.colorScale = function (_x) {
 		if (!arguments.length) return colorScale;
-		colorScale = value;
+		colorScale = _x;
 		return my;
 	};
 
 	/**
   * Colors Getter / Setter
   *
-  * @param {Array} value - Array of colours used by color scale.
+  * @param {Array} _x - Array of colours used by color scale.
   * @returns {*}
   */
-	my.colors = function (value) {
+	my.colors = function (_x) {
 		if (!arguments.length) return colors;
-		colors = value;
+		colors = _x;
 		return my;
 	};
 
@@ -797,60 +798,60 @@ function componentBars () {
 	/**
   * Dimensions Getter / Setter
   *
-  * @param {{x: number, y: number, z: number}} value - 3D Object dimensions.
+  * @param {{x: number, y: number, z: number}} _x - 3D object dimensions.
   * @returns {*}
   */
-	my.dimensions = function (value) {
+	my.dimensions = function (_x) {
 		if (!arguments.length) return dimensions;
-		dimensions = value;
+		dimensions = _x;
 		return this;
 	};
 
 	/**
   * X Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.xScale = function (value) {
+	my.xScale = function (_x) {
 		if (!arguments.length) return xScale;
-		xScale = value;
+		xScale = _x;
 		return my;
 	};
 
 	/**
   * Y Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.yScale = function (value) {
+	my.yScale = function (_x) {
 		if (!arguments.length) return yScale;
-		yScale = value;
+		yScale = _x;
 		return my;
 	};
 
 	/**
   * Color Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.colorScale = function (value) {
+	my.colorScale = function (_x) {
 		if (!arguments.length) return colorScale;
-		colorScale = value;
+		colorScale = _x;
 		return my;
 	};
 
 	/**
   * Colors Getter / Setter
   *
-  * @param {Array} value - Array of colours used by color scale.
+  * @param {Array} _x - Array of colours used by color scale.
   * @returns {*}
   */
-	my.colors = function (value) {
+	my.colors = function (_x) {
 		if (!arguments.length) return colors;
-		colors = value;
+		colors = _x;
 		return my;
 	};
 
@@ -935,72 +936,72 @@ function barsMultiSeries () {
 	/**
   * Dimensions Getter / Setter
   *
-  * @param {{x: number, y: number, z: number}} value - 3D Object dimensions.
+  * @param {{x: number, y: number, z: number}} _x - 3D object dimensions.
   * @returns {*}
   */
-	my.dimensions = function (value) {
+	my.dimensions = function (_x) {
 		if (!arguments.length) return dimensions;
-		dimensions = value;
+		dimensions = _x;
 		return this;
 	};
 
 	/**
   * X Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.xScale = function (value) {
+	my.xScale = function (_x) {
 		if (!arguments.length) return xScale;
-		xScale = value;
+		xScale = _x;
 		return my;
 	};
 
 	/**
   * Y Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.yScale = function (value) {
+	my.yScale = function (_x) {
 		if (!arguments.length) return yScale;
-		yScale = value;
+		yScale = _x;
 		return my;
 	};
 
 	/**
   * Z Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.zScale = function (value) {
+	my.zScale = function (_x) {
 		if (!arguments.length) return zScale;
-		zScale = value;
+		zScale = _x;
 		return my;
 	};
 
 	/**
   * Color Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Color Scale.
+  * @param {d3.scale} _x - D3 color scale.
   * @returns {*}
   */
-	my.colorScale = function (value) {
+	my.colorScale = function (_x) {
 		if (!arguments.length) return colorScale;
-		colorScale = value;
+		colorScale = _x;
 		return my;
 	};
 
 	/**
   * Colors Getter / Setter
   *
-  * @param {Array} value - Array of colours used by color scale.
+  * @param {Array} _x - Array of colours used by color scale.
   * @returns {*}
   */
-	my.colors = function (value) {
+	my.colors = function (_x) {
 		if (!arguments.length) return colors;
-		colors = value;
+		colors = _x;
 		return my;
 	};
 
@@ -1096,85 +1097,85 @@ function componentBubbles () {
 	/**
   * Dimensions Getter / Setter
   *
-  * @param {{x: number, y: number, z: number}} value - 3D Object dimensions.
+  * @param {{x: number, y: number, z: number}} _x - 3D object dimensions.
   * @returns {*}
   */
-	my.dimensions = function (value) {
+	my.dimensions = function (_x) {
 		if (!arguments.length) return dimensions;
-		dimensions = value;
+		dimensions = _x;
 		return this;
 	};
 
 	/**
   * X Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.xScale = function (value) {
+	my.xScale = function (_x) {
 		if (!arguments.length) return xScale;
-		xScale = value;
+		xScale = _x;
 		return my;
 	};
 
 	/**
   * Y Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.yScale = function (value) {
+	my.yScale = function (_x) {
 		if (!arguments.length) return yScale;
-		yScale = value;
+		yScale = _x;
 		return my;
 	};
 
 	/**
   * Z Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.zScale = function (value) {
+	my.zScale = function (_x) {
 		if (!arguments.length) return zScale;
-		zScale = value;
+		zScale = _x;
 		return my;
 	};
 
 	/**
   * Size Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Color Scale.
+  * @param {d3.scale} _x - D3 color scale.
   * @returns {*}
   */
-	my.sizeScale = function (value) {
+	my.sizeScale = function (_x) {
 		if (!arguments.length) return sizeScale;
-		sizeScale = value;
+		sizeScale = _x;
 		return my;
 	};
 
 	/**
   * Size Domain Getter / Setter
   *
-  * @param {number[]} value - Size min and max.
+  * @param {number[]} _x - Size min and max e.g. [1, 9].
   * @returns {*}
   */
-	my.sizeDomain = function (value) {
+	my.sizeDomain = function (_x) {
 		if (!arguments.length) return sizeDomain;
-		sizeDomain = value;
+		sizeDomain = _x;
 		return my;
 	};
 
 	/**
   * Color Getter / Setter
   *
-  * @param {string} value - Color 'red' or '#ff0000'.
+  * @param {string} _x - Color e.g. 'red' or '#ff0000'.
   * @returns {*}
   */
-	my.color = function (value) {
+	my.color = function (_x) {
 		if (!arguments.length) return color;
-		color = value;
-		return this;
+		color = _x;
+		return my;
 	};
 
 	return my;
@@ -1259,96 +1260,96 @@ function bubblesMultiSeries () {
 	/**
   * Dimensions Getter / Setter
   *
-  * @param {{x: number, y: number, z: number}} value - 3D Object dimensions.
+  * @param {{x: number, y: number, z: number}} _x - 3D object dimensions.
   * @returns {*}
   */
-	my.dimensions = function (value) {
+	my.dimensions = function (_x) {
 		if (!arguments.length) return dimensions;
-		dimensions = value;
+		dimensions = _x;
 		return this;
 	};
 
 	/**
   * X Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 Scale.
   * @returns {*}
   */
-	my.xScale = function (value) {
+	my.xScale = function (_x) {
 		if (!arguments.length) return xScale;
-		xScale = value;
+		xScale = _x;
 		return my;
 	};
 
 	/**
   * Y Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.yScale = function (value) {
+	my.yScale = function (_x) {
 		if (!arguments.length) return yScale;
-		yScale = value;
+		yScale = _x;
 		return my;
 	};
 
 	/**
   * Z Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 Scale.
   * @returns {*}
   */
-	my.zScale = function (value) {
+	my.zScale = function (_x) {
 		if (!arguments.length) return zScale;
-		zScale = value;
+		zScale = _x;
 		return my;
 	};
 
 	/**
   * Color Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Color Scale.
+  * @param {d3.scale} _x - D3 color scale.
   * @returns {*}
   */
-	my.colorScale = function (value) {
+	my.colorScale = function (_x) {
 		if (!arguments.length) return colorScale;
-		colorScale = value;
+		colorScale = _x;
 		return my;
 	};
 
 	/**
   * Size Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Color Scale.
+  * @param {d3.scale} _x - D3 color scale.
   * @returns {*}
   */
-	my.sizeScale = function (value) {
+	my.sizeScale = function (_x) {
 		if (!arguments.length) return sizeScale;
-		sizeScale = value;
+		sizeScale = _x;
 		return my;
 	};
 
 	/**
   * Size Domain Getter / Setter
   *
-  * @param {number[]} value - Size min and max.
+  * @param {number[]} _x - Size min and max.
   * @returns {*}
   */
-	my.sizeDomain = function (value) {
+	my.sizeDomain = function (_x) {
 		if (!arguments.length) return sizeDomain;
-		sizeDomain = value;
+		sizeDomain = _x;
 		return my;
 	};
 
 	/**
   * Colors Getter / Setter
   *
-  * @param {Array} value - Array of colours used by color scale.
+  * @param {Array} _x - Array of colours used by color scale.
   * @returns {*}
   */
-	my.colors = function (value) {
+	my.colors = function (_x) {
 		if (!arguments.length) return colors;
-		colors = value;
+		colors = _x;
 		return my;
 	};
 
@@ -1475,72 +1476,72 @@ function surfaceArea () {
 	/**
   * Dimensions Getter / Setter
   *
-  * @param {{x: number, y: number, z: number}} value - 3D Object dimensions.
+  * @param {{x: number, y: number, z: number}} _x - 3D object dimensions.
   * @returns {*}
   */
-	my.dimensions = function (value) {
+	my.dimensions = function (_x) {
 		if (!arguments.length) return dimensions;
-		dimensions = value;
+		dimensions = _x;
 		return this;
 	};
 
 	/**
   * X Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.xScale = function (value) {
+	my.xScale = function (_x) {
 		if (!arguments.length) return xScale;
-		xScale = value;
+		xScale = _x;
 		return my;
 	};
 
 	/**
   * Y Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.yScale = function (value) {
+	my.yScale = function (_x) {
 		if (!arguments.length) return yScale;
-		yScale = value;
+		yScale = _x;
 		return my;
 	};
 
 	/**
   * Z Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.zScale = function (value) {
+	my.zScale = function (_x) {
 		if (!arguments.length) return zScale;
-		zScale = value;
+		zScale = _x;
 		return my;
 	};
 
 	/**
   * Color Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Color Scale.
+  * @param {d3.scale} _x - D3 color scale.
   * @returns {*}
   */
-	my.colorScale = function (value) {
+	my.colorScale = function (_x) {
 		if (!arguments.length) return colorScale;
-		colorScale = value;
+		colorScale = _x;
 		return my;
 	};
 
 	/**
   * Colors Getter / Setter
   *
-  * @param {Array} value - Array of colours used by color scale.
+  * @param {Array} _x - Array of colours used by color scale.
   * @returns {*}
   */
-	my.colors = function (value) {
+	my.colors = function (_x) {
 		if (!arguments.length) return colors;
-		colors = value;
+		colors = _x;
 		return my;
 	};
 
@@ -1614,48 +1615,48 @@ function viewpoint () {
 	/**
   * Centre of Rotation Getter / Setter
   *
-  * @param {number[]} value
+  * @param {number[]} _x - Centre of rotation.
   * @returns {*}
   */
-	my.centerOfRotation = function (value) {
+	my.centerOfRotation = function (_x) {
 		if (!arguments.length) return centerOfRotation;
-		centerOfRotation = value;
+		centerOfRotation = _x;
 		return my;
 	};
 
 	/**
   * View Position Getter / Setter
   *
-  * @param {number[]} value
+  * @param {number[]} _x - View position.
   * @returns {*}
   */
-	my.viewPosition = function (value) {
+	my.viewPosition = function (_x) {
 		if (!arguments.length) return viewPosition;
-		viewPosition = value;
+		viewPosition = _x;
 		return my;
 	};
 
 	/**
   * View Orientation Getter / Setter
   *
-  * @param {number[]} value
+  * @param {number[]} _x - View orientation.
   * @returns {*}
   */
-	my.viewOrientation = function (value) {
+	my.viewOrientation = function (_x) {
 		if (!arguments.length) return viewOrientation;
-		viewOrientation = value;
+		viewOrientation = _x;
 		return my;
 	};
 
 	/**
   * Field of View Getter / Setter
   *
-  * @param {number} value
+  * @param {number} _x - Field of view.
   * @returns {*}
   */
-	my.fieldOfView = function (value) {
+	my.fieldOfView = function (_x) {
 		if (!arguments.length) return fieldOfView;
-		fieldOfView = value;
+		fieldOfView = _x;
 		return my;
 	};
 
@@ -1733,49 +1734,49 @@ function ribbon () {
 	/**
   * Dimensions Getter / Setter
   *
-  * @param {{x: {number}, y: {number}, z: {number}}} value - 3D Object dimensions.
+  * @param {{x: {number}, y: {number}, z: {number}}} _x - 3D Object dimensions.
   * @returns {*}
   */
-	my.dimensions = function (value) {
+	my.dimensions = function (_x) {
 		if (!arguments.length) return dimensions;
-		dimensions = value;
+		dimensions = _x;
 		return this;
 	};
 
 	/**
   * X Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.xScale = function (value) {
+	my.xScale = function (_x) {
 		if (!arguments.length) return xScale;
-		xScale = value;
+		xScale = _x;
 		return my;
 	};
 
 	/**
   * Y Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.yScale = function (value) {
+	my.yScale = function (_x) {
 		if (!arguments.length) return yScale;
-		yScale = value;
+		yScale = _x;
 		return my;
 	};
 
 	/**
   * Color Getter / Setter
   *
-  * @param {string} value - Color 'red' or '#ff0000'.
+  * @param {string} _x - Color e.g. 'red' or '#ff0000'.
   * @returns {*}
   */
-	my.color = function (value) {
+	my.color = function (_x) {
 		if (!arguments.length) return color;
-		color = value;
-		return this;
+		color = _x;
+		return my;
 	};
 
 	return my;
@@ -1883,115 +1884,115 @@ function surfaceArea$1 () {
 	/**
   * Width Getter / Setter
   *
-  * @param {number} value - X3D Canvas Height in px.
+  * @param {number} _x - X3D canvas width in px.
   * @returns {*}
   */
-	my.width = function (value) {
+	my.width = function (_x) {
 		if (!arguments.length) return width;
-		width = value;
+		width = _x;
 		return this;
 	};
 
 	/**
   * Height Getter / Setter
   *
-  * @param {number} value - X3D Canvas Height in px.
+  * @param {number} _x - X3D canvas height in px.
   * @returns {*}
   */
-	my.height = function (value) {
+	my.height = function (_x) {
 		if (!arguments.length) return height;
-		height = value;
+		height = _x;
 		return this;
 	};
 
 	/**
   * Dimensions Getter / Setter
   *
-  * @param {{x: number, y: number, z: number}} value - 3D Object dimensions.
+  * @param {{x: number, y: number, z: number}} _x - 3D object dimensions.
   * @returns {*}
   */
-	my.dimensions = function (value) {
+	my.dimensions = function (_x) {
 		if (!arguments.length) return dimensions;
-		dimensions = value;
+		dimensions = _x;
 		return this;
 	};
 
 	/**
   * X Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.xScale = function (value) {
+	my.xScale = function (_x) {
 		if (!arguments.length) return xScale;
-		xScale = value;
+		xScale = _x;
 		return my;
 	};
 
 	/**
   * Y Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.yScale = function (value) {
+	my.yScale = function (_x) {
 		if (!arguments.length) return yScale;
-		yScale = value;
+		yScale = _x;
 		return my;
 	};
 
 	/**
   * Z Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.zScale = function (value) {
+	my.zScale = function (_x) {
 		if (!arguments.length) return zScale;
-		zScale = value;
+		zScale = _x;
 		return my;
 	};
 
 	/**
   * Color Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Color Scale.
+  * @param {d3.scale} _x - D3 color scale.
   * @returns {*}
   */
-	my.colorScale = function (value) {
+	my.colorScale = function (_x) {
 		if (!arguments.length) return colorScale;
-		colorScale = value;
+		colorScale = _x;
 		return my;
 	};
 
 	/**
   * Colors Getter / Setter
   *
-  * @param {Array} value - Array of colours used by color scale.
+  * @param {Array} _x - Array of colours used by color scale.
   * @returns {*}
   */
-	my.colors = function (value) {
+	my.colors = function (_x) {
 		if (!arguments.length) return colors;
-		colors = value;
+		colors = _x;
 		return my;
 	};
 
 	/**
   * Debug Getter / Setter
   *
-  * @param {boolean} value - Show debug log and stats. True/False.
+  * @param {boolean} _x - Show debug log and stats. True/False.
   * @returns {*}
   */
-	my.debug = function (value) {
+	my.debug = function (_x) {
 		if (!arguments.length) return debug;
-		debug = value;
+		debug = _x;
 		return my;
 	};
 
 	return my;
 }
 
-var version = "1.0.15";
+var version = "1.0.16";
 var license = "GPL-2.0";
 
 /**
@@ -2084,108 +2085,108 @@ function barChartMultiSeries () {
 	/**
   * Width Getter / Setter
   *
-  * @param {number} value - X3D Canvas Height in px.
+  * @param {number} _x - X3D canvas width in px.
   * @returns {*}
   */
-	my.width = function (value) {
+	my.width = function (_x) {
 		if (!arguments.length) return width;
-		width = value;
+		width = _x;
 		return this;
 	};
 
 	/**
   * Height Getter / Setter
   *
-  * @param {number} value - X3D Canvas Height in px.
+  * @param {number} _x - X3D canvas height in px.
   * @returns {*}
   */
-	my.height = function (value) {
+	my.height = function (_x) {
 		if (!arguments.length) return height;
-		height = value;
+		height = _x;
 		return this;
 	};
 
 	/**
   * Dimensions Getter / Setter
   *
-  * @param {{x: number, y: number, z: number}} value - 3D Object dimensions.
+  * @param {{x: number, y: number, z: number}} _x - 3D object dimensions.
   * @returns {*}
   */
-	my.dimensions = function (value) {
+	my.dimensions = function (_x) {
 		if (!arguments.length) return dimensions;
-		dimensions = value;
+		dimensions = _x;
 		return this;
 	};
 
 	/**
   * X Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.xScale = function (value) {
+	my.xScale = function (_x) {
 		if (!arguments.length) return xScale;
-		xScale = value;
+		xScale = _x;
 		return my;
 	};
 
 	/**
   * Y Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.yScale = function (value) {
+	my.yScale = function (_x) {
 		if (!arguments.length) return yScale;
-		yScale = value;
+		yScale = _x;
 		return my;
 	};
 
 	/**
   * Z Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.zScale = function (value) {
+	my.zScale = function (_x) {
 		if (!arguments.length) return zScale;
-		zScale = value;
+		zScale = _x;
 		return my;
 	};
 
 	/**
   * Color Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Color Scale.
+  * @param {d3.scale} _x - D3 color scale.
   * @returns {*}
   */
-	my.colorScale = function (value) {
+	my.colorScale = function (_x) {
 		if (!arguments.length) return colorScale;
-		colorScale = value;
+		colorScale = _x;
 		return my;
 	};
 
 	/**
   * Colors Getter / Setter
   *
-  * @param {Array} value - Array of colours used by color scale.
+  * @param {Array} _x - Array of colours used by color scale.
   * @returns {*}
   */
-	my.colors = function (value) {
+	my.colors = function (_x) {
 		if (!arguments.length) return colors;
-		colors = value;
+		colors = _x;
 		return my;
 	};
 
 	/**
   * Debug Getter / Setter
   *
-  * @param {boolean} value - Show debug log and stats. True/False.
+  * @param {boolean} _x - Show debug log and stats. True/False.
   * @returns {*}
   */
-	my.debug = function (value) {
+	my.debug = function (_x) {
 		if (!arguments.length) return debug;
-		debug = value;
+		debug = _x;
 		return my;
 	};
 
@@ -2280,96 +2281,96 @@ function barChartVertical () {
 	/**
   * Width Getter / Setter
   *
-  * @param {number} value - X3D Canvas Height in px.
+  * @param {number} _x - X3D canvas width in px.
   * @returns {*}
   */
-	my.width = function (value) {
+	my.width = function (_x) {
 		if (!arguments.length) return width;
-		width = value;
+		width = _x;
 		return this;
 	};
 
 	/**
   * Height Getter / Setter
   *
-  * @param {number} value - X3D Canvas Height in px.
+  * @param {number} _x - X3D canvas height in px.
   * @returns {*}
   */
-	my.height = function (value) {
+	my.height = function (_x) {
 		if (!arguments.length) return height;
-		height = value;
+		height = _x;
 		return this;
 	};
 
 	/**
   * Dimensions Getter / Setter
   *
-  * @param {{x: number, y: number, z: number}} value - 3D Object dimensions.
+  * @param {{x: number, y: number, z: number}} _x - 3D object dimensions.
   * @returns {*}
   */
-	my.dimensions = function (value) {
+	my.dimensions = function (_x) {
 		if (!arguments.length) return dimensions;
-		dimensions = value;
+		dimensions = _x;
 		return this;
 	};
 
 	/**
   * X Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.xScale = function (value) {
+	my.xScale = function (_x) {
 		if (!arguments.length) return xScale;
-		xScale = value;
+		xScale = _x;
 		return my;
 	};
 
 	/**
   * Y Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.yScale = function (value) {
+	my.yScale = function (_x) {
 		if (!arguments.length) return yScale;
-		yScale = value;
+		yScale = _x;
 		return my;
 	};
 
 	/**
   * Color Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Color Scale.
+  * @param {d3.scale} _x - D3 color scale.
   * @returns {*}
   */
-	my.colorScale = function (value) {
+	my.colorScale = function (_x) {
 		if (!arguments.length) return colorScale;
-		colorScale = value;
+		colorScale = _x;
 		return my;
 	};
 
 	/**
   * Colors Getter / Setter
   *
-  * @param {Array} value - Array of colours used by color scale.
+  * @param {Array} _x - Array of colours used by color scale.
   * @returns {*}
   */
-	my.colors = function (value) {
+	my.colors = function (_x) {
 		if (!arguments.length) return colors;
-		colors = value;
+		colors = _x;
 		return my;
 	};
 
 	/**
   * Debug Getter / Setter
   *
-  * @param {boolean} value - Show debug log and stats. True/False.
+  * @param {boolean} _x - Show debug log and stats. True/False.
   * @returns {*}
   */
-	my.debug = function (value) {
+	my.debug = function (_x) {
 		if (!arguments.length) return debug;
-		debug = value;
+		debug = _x;
 		return my;
 	};
 
@@ -2469,132 +2470,132 @@ function bubbleChart () {
 	/**
   * Width Getter / Setter
   *
-  * @param {number} value - X3D Canvas Height in px.
+  * @param {number} _x - X3D canvas width in px.
   * @returns {*}
   */
-	my.width = function (value) {
+	my.width = function (_x) {
 		if (!arguments.length) return width;
-		width = value;
+		width = _x;
 		return this;
 	};
 
 	/**
   * Height Getter / Setter
   *
-  * @param {number} value - X3D Canvas Height in px.
+  * @param {number} _x - X3D canvas height in px.
   * @returns {*}
   */
-	my.height = function (value) {
+	my.height = function (_x) {
 		if (!arguments.length) return height;
-		height = value;
+		height = _x;
 		return this;
 	};
 
 	/**
   * Dimensions Getter / Setter
   *
-  * @param {{x: number, y: number, z: number}} value - 3D Object dimensions.
+  * @param {{x: number, y: number, z: number}} _x - 3D object dimensions.
   * @returns {*}
   */
-	my.dimensions = function (value) {
+	my.dimensions = function (_x) {
 		if (!arguments.length) return dimensions;
-		dimensions = value;
+		dimensions = _x;
 		return this;
 	};
 
 	/**
   * X Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.xScale = function (value) {
+	my.xScale = function (_x) {
 		if (!arguments.length) return xScale;
-		xScale = value;
+		xScale = _x;
 		return my;
 	};
 
 	/**
   * Y Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.yScale = function (value) {
+	my.yScale = function (_x) {
 		if (!arguments.length) return yScale;
-		yScale = value;
+		yScale = _x;
 		return my;
 	};
 
 	/**
   * Z Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.zScale = function (value) {
+	my.zScale = function (_x) {
 		if (!arguments.length) return zScale;
-		zScale = value;
+		zScale = _x;
 		return my;
 	};
 
 	/**
   * Color Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Color Scale.
+  * @param {d3.scale} _x - D3 color scale.
   * @returns {*}
   */
-	my.colorScale = function (value) {
+	my.colorScale = function (_x) {
 		if (!arguments.length) return colorScale;
-		colorScale = value;
+		colorScale = _x;
 		return my;
 	};
 
 	/**
   * Colors Getter / Setter
   *
-  * @param {Array} value - Array of colours used by color scale.
+  * @param {Array} _x - Array of colours used by color scale.
   * @returns {*}
   */
-	my.colors = function (value) {
+	my.colors = function (_x) {
 		if (!arguments.length) return colors;
-		colors = value;
+		colors = _x;
 		return my;
 	};
 
 	/**
   * Size Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Color Scale.
+  * @param {d3.scale} _x - D3 color scale.
   * @returns {*}
   */
-	my.sizeScale = function (value) {
+	my.sizeScale = function (_x) {
 		if (!arguments.length) return sizeScale;
-		sizeScale = value;
+		sizeScale = _x;
 		return my;
 	};
 
 	/**
   * Size Domain Getter / Setter
   *
-  * @param {number[]} value - Size min and max.
+  * @param {number[]} _x - Size min and max.
   * @returns {*}
   */
-	my.sizeDomain = function (value) {
+	my.sizeDomain = function (_x) {
 		if (!arguments.length) return sizeDomain;
-		sizeDomain = value;
+		sizeDomain = _x;
 		return my;
 	};
 
 	/**
   * Debug Getter / Setter
   *
-  * @param {boolean} value - Show debug log and stats. True/False.
+  * @param {boolean} _x - Show debug log and stats. True/False.
   * @returns {*}
   */
-	my.debug = function (value) {
+	my.debug = function (_x) {
 		if (!arguments.length) return debug;
-		debug = value;
+		debug = _x;
 		return my;
 	};
 
@@ -2683,96 +2684,96 @@ function scatterPlot () {
 	/**
   * Width Getter / Setter
   *
-  * @param {number} value - X3D Canvas Height in px.
+  * @param {number} _x - X3D canvas width in px.
   * @returns {*}
   */
-	my.width = function (value) {
+	my.width = function (_x) {
 		if (!arguments.length) return width;
-		width = value;
+		width = _x;
 		return this;
 	};
 
 	/**
   * Height Getter / Setter
   *
-  * @param {number} value - X3D Canvas Height in px.
+  * @param {number} _x - X3D canvas height in px.
   * @returns {*}
   */
-	my.height = function (value) {
+	my.height = function (_x) {
 		if (!arguments.length) return height;
-		height = value;
+		height = _x;
 		return this;
 	};
 
 	/**
   * Dimensions Getter / Setter
   *
-  * @param {{x: number, y: number, z: number}} value - 3D Object dimensions.
+  * @param {{x: number, y: number, z: number}} _x - 3D object dimensions.
   * @returns {*}
   */
-	my.dimensions = function (value) {
+	my.dimensions = function (_x) {
 		if (!arguments.length) return dimensions;
-		dimensions = value;
+		dimensions = _x;
 		return this;
 	};
 
 	/**
   * X Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.xScale = function (value) {
+	my.xScale = function (_x) {
 		if (!arguments.length) return xScale;
-		xScale = value;
+		xScale = _x;
 		return my;
 	};
 
 	/**
   * Y Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.yScale = function (value) {
+	my.yScale = function (_x) {
 		if (!arguments.length) return yScale;
-		yScale = value;
+		yScale = _x;
 		return my;
 	};
 
 	/**
   * Z Scale Getter / Setter
   *
-  * @param {d3.scale} value - D3 Scale.
+  * @param {d3.scale} _x - D3 scale.
   * @returns {*}
   */
-	my.zScale = function (value) {
+	my.zScale = function (_x) {
 		if (!arguments.length) return zScale;
-		zScale = value;
+		zScale = _x;
 		return my;
 	};
 
 	/**
   * Color Getter / Setter
   *
-  * @param {string} value - Color 'red' or '#ff0000'.
+  * @param {string} _x - Color e.g. 'red' or '#ff0000'.
   * @returns {*}
   */
-	my.color = function (value) {
+	my.color = function (_x) {
 		if (!arguments.length) return color;
-		color = value;
+		color = _x;
 		return my;
 	};
 
 	/**
   * Debug Getter / Setter
   *
-  * @param {boolean} value - Show debug log and stats. True/False.
+  * @param {boolean} _x - Show debug log and stats. True/False.
   * @returns {*}
   */
-	my.debug = function (value) {
+	my.debug = function (_x) {
 		if (!arguments.length) return debug;
-		debug = value;
+		debug = _x;
 		return my;
 	};
 

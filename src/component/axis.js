@@ -157,57 +157,45 @@ export default function() {
 	/**
 	 * Dimensions Getter / Setter
 	 *
-	 * @param {{x: number, y: number, z: number}} value - 3D Object dimensions.
+	 * @param {{x: number, y: number, z: number}} _x - 3D Object dimensions.
 	 * @returns {*}
 	 */
-	my.dimensions = function(value) {
+	my.dimensions = function(_x) {
 		if (!arguments.length) return dimensions;
-		dimensions = value;
+		dimensions = _x;
 		return this;
 	};
 
 	/**
 	 * Scale Getter / Setter
 	 *
-	 * @param {d3.scale} value - D3 Scale.
+	 * @param {d3.scale} _x - D3 Scale.
 	 * @returns {*}
 	 */
-	my.scale = function(value) {
+	my.scale = function(_x) {
 		if (!arguments.length) return scale;
-		scale = value;
+		scale = _x;
 		return my;
 	};
 
 	/**
-	 * Color Getter / Setter
+	 * Direction Getter / Setter
 	 *
-	 * @param {string} value - Set/Set color e.g 'red' or '#ff0000'.
+	 * @param _x - Direction.
 	 * @returns {*}
 	 */
-	my.color = function(value) {
-		if (!arguments.length) return color;
-		color = value;
-		return my;
+	my.dir = function(_x) {
+		return arguments.length ? (dir = _x, my) : dir;
 	};
 
 	/**
-	 * Direction
+	 * Tick Direction Getter / Setter
 	 *
-	 * @param value
+	 * @param _x - Tick direction.
 	 * @returns {*}
 	 */
-	my.dir = function(value) {
-		return arguments.length ? (dir = value, my) : dir;
-	};
-
-	/**
-	 * Tick Direction
-	 *
-	 * @param value - Get/Set Tick Direction.
-	 * @returns {*}
-	 */
-	my.tickDir = function(value) {
-		return arguments.length ? (tickDir = value, my) : tickDir;
+	my.tickDir = function(_x) {
+		return arguments.length ? (tickDir = _x, my) : tickDir;
 	};
 
 	/* Slice */
@@ -216,59 +204,72 @@ export default function() {
 	/**
 	 * Get Ticks
 	 * @todo How is this used? Replace with tickArguments()?
+	 * @private
 	 */
 	my.ticks = function() {
 		return tickArguments = slice.call(arguments), my;
 	};
 
 	/**
-	 * Tick Arguments
+	 * Tick Arguments Getter / Setter
 	 *
-	 * @param value - Get/Set Tick Arguments.
+	 * @param _x - Tick arguments.
 	 * @returns {Array<*>}
 	 */
-	my.tickArguments = function(value) {
-		return arguments.length ? (tickArguments = value === null ? [] : slice.call(value), my) : tickArguments.slice();
+	my.tickArguments = function(_x) {
+		return arguments.length ? (tickArguments = _x === null ? [] : slice.call(_x), my) : tickArguments.slice();
 	};
 
 	/**
-	 * Tick Values
+	 * Tick Values Getter / Setter
 	 *
-	 * @param value - Get/Set Tick Values.
+	 * @param _x - Tick values.
 	 * @returns {*}
 	 */
-	my.tickValues = function(value) {
-		return arguments.length ? (tickValues = value === null ? null : slice.call(value), my) : tickValues && tickValues.slice();
+	my.tickValues = function(_x) {
+		return arguments.length ? (tickValues = _x === null ? null : slice.call(_x), my) : tickValues && tickValues.slice();
 	};
 
 	/**
-	 * Tick Format
+	 * Tick Format Getter / Setter
 	 *
-	 * @param value - Get/Set Tick Format.
+	 * @param _x - Tick format.
 	 * @returns {*}
 	 */
-	my.tickFormat = function(value) {
-		return arguments.length ? (tickFormat = value, my) : tickFormat;
+	my.tickFormat = function(_x) {
+		return arguments.length ? (tickFormat = _x, my) : tickFormat;
 	};
 
 	/**
-	 * Tick Size
+	 * Tick Size Getter / Setter
 	 *
-	 * @param value - Get/Set Tick Length.
+	 * @param _x - Tick length.
 	 * @returns {number}
 	 */
-	my.tickSize = function(value) {
-		return arguments.length ? (tickSize = +value, my) : tickSize;
+	my.tickSize = function(_x) {
+		return arguments.length ? (tickSize = +_x, my) : tickSize;
 	};
 
 	/**
-	 * Tick Padding
+	 * Tick Padding Getter / Setter
 	 *
-	 * @param value - Get/Set Tick Padding Size.
+	 * @param _x - Tick padding size.
 	 * @returns {number}
 	 */
-	my.tickPadding = function(value) {
-		return arguments.length ? (tickPadding = +value, my) : tickPadding;
+	my.tickPadding = function(_x) {
+		return arguments.length ? (tickPadding = +_x, my) : tickPadding;
+	};
+
+	/**
+	 * Color Getter / Setter
+	 *
+	 * @param {string} _x - Color e.g. 'red' or '#ff0000'.
+	 * @returns {*}
+	 */
+	my.color = function(_x) {
+		if (!arguments.length) return color;
+		color = _x;
+		return my;
 	};
 
 	return my;
