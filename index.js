@@ -1,5 +1,3 @@
-import { default as chartSurfaceArea } from "./src/chart/surfaceArea";
-
 /**
  * d3-x3dom
  *
