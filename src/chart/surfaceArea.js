@@ -37,15 +37,11 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		const dataSummary = dataTransform(data).summary();
-		const seriesNames = dataSummary.rowKeys;
-		const groupNames = dataSummary.columnKeys;
-		const maxValue = dataSummary.maxValue;
-
+		const { rowKeys, columnKeys, maxValue } = dataTransform(data).summary();
 		const extent = [0, maxValue];
 
 		if (typeof xScale === "undefined") {
-			xScale = d3.scalePoint().domain(seriesNames).range([0, dimensions.x]);
+			xScale = d3.scalePoint().domain(rowKeys).range([0, dimensions.x]);
 		}
 
 		if (typeof yScale === "undefined") {
@@ -53,7 +49,7 @@ export default function() {
 		}
 
 		if (typeof zScale === "undefined") {
-			zScale = d3.scalePoint().domain(groupNames).range([0, dimensions.z]);
+			zScale = d3.scalePoint().domain(columnKeys).range([0, dimensions.z]);
 		}
 
 		if (typeof colorScale === "undefined") {

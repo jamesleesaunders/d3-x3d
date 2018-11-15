@@ -36,17 +36,16 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		const dataSummary = dataTransform(data).summary();
-		const maxCoordinates = dataSummary.maxCoordinates;
+		const { maxCoordinates } = dataTransform(data).summary();
 
 		if (typeof xScale === "undefined") {
 			xScale = d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]);
 		}
-		
+
 		if (typeof yScale === "undefined") {
 			yScale = d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, dimensions.y]);
 		}
-	
+
 		if (typeof zScale === "undefined") {
 			zScale = d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]);
 		}

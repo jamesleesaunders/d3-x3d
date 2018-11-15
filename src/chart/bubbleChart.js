@@ -39,10 +39,8 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		const dataSummary = dataTransform(data).summary();
-		const maxCoordinates = dataSummary.maxCoordinates;
-		const seriesNames = dataSummary.rowKeys;
-		const maxValue = dataSummary.maxValue;
+		const { maxCoordinates, rowKeys, maxValue } = dataTransform(data).summary();
+		const extent = [0, maxValue];
 
 		if (typeof xScale === "undefined") {
 			xScale = d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]);
@@ -57,11 +55,11 @@ export default function() {
 		}
 
 		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal().domain(seriesNames).range(colors);
+			colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
 		}
 
 		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear().domain([0, maxValue]).range(sizeDomain);
+			sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
 		}
 	}
 
