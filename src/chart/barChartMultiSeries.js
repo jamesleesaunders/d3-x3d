@@ -29,7 +29,7 @@ export default function() {
 	let yScale;
 	let zScale;
 	let colorScale;
-
+	
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -42,23 +42,21 @@ export default function() {
 		const seriesNames = dataSummary.columnKeys;
 		const maxValue = dataSummary.maxValue;
 
-		// If the colorScale has not been passed then attempt to calculate.
-		colorScale = (typeof colorScale === "undefined") ?
-			d3.scaleOrdinal().domain(seriesNames).range(colors) :
-			colorScale;
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleBand().domain(seriesNames).rangeRound([0, dimensions.x]).padding(0.5);
+		}
 
-		// Calculate Scales.
-		xScale = (typeof xScale === "undefined") ?
-			d3.scaleBand().domain(seriesNames).rangeRound([0, dimensions.x]).padding(0.5) :
-			xScale;
+		if (typeof yScale === "undefined") {
+			d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]).nice();
+		}
 
-		yScale = (typeof yScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]).nice() :
-			yScale;
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleBand().domain(categoryNames).range([0, dimensions.z]).padding(0.7);
+		}
 
-		zScale = (typeof zScale === "undefined") ?
-			d3.scaleBand().domain(categoryNames).range([0, dimensions.z]).padding(0.7) :
-			zScale;
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleOrdinal().domain(seriesNames).range(colors);
+		}
 	}
 
 	/**
@@ -86,7 +84,7 @@ export default function() {
 			.data(layers)
 			.enter()
 			.append("group")
-			.attr("class", function(d) { return d; });
+			.attr("class", d => d);
 
 		const viewpoint = component.viewpoint()
 			.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
@@ -98,7 +96,7 @@ export default function() {
 			.attr("intensity", "0.4")
 			.attr("shadowintensity", "0");
 
-		scene.each(function(data) {
+		scene.each(data => {
 			init(data);
 
 			// Construct Axis Component

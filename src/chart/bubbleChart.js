@@ -40,30 +40,29 @@ export default function() {
 	 */
 	function init(data) {
 		const dataSummary = dataTransform(data).summary();
-		const seriesNames = dataSummary.rowKeys;
 		const maxCoordinates = dataSummary.maxCoordinates;
+		const seriesNames = dataSummary.rowKeys;
 		const maxValue = dataSummary.maxValue;
 
-		// Calculate Scales.
-		xScale = (typeof xScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]) :
-			xScale;
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]);
+		}
 
-		yScale = (typeof yScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, dimensions.y]) :
-			yScale;
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, dimensions.y]);
+		}
 
-		zScale = (typeof zScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]) :
-			zScale;
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]);
+		}
 
-		colorScale = (typeof colorScale === "undefined") ?
-			d3.scaleOrdinal().domain(seriesNames).range(colors) :
-			colorScale;
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleOrdinal().domain(seriesNames).range(colors);
+		}
 
-		sizeScale = (typeof sizeScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxValue]).range(sizeDomain) :
-			sizeScale;
+		if (typeof sizeScale === "undefined") {
+			sizeScale = d3.scaleLinear().domain([0, maxValue]).range(sizeDomain);
+		}
 	}
 
 	/**
@@ -91,7 +90,7 @@ export default function() {
 			.data(layers)
 			.enter()
 			.append("group")
-			.attr("class", function(d) { return d; });
+			.attr("class", d => d);
 
 		const viewpoint = component.viewpoint()
 			.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
