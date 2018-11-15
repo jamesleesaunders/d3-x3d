@@ -14,7 +14,7 @@ import component from "../component";
  * var myChart = d3.x3dom.chart.barChartVertical();
  * chartHolder.datum(myData).call(myChart);
  */
-export default function() {
+export default function barChartVertical() {
 
 	/* Default Properties */
 	let width = 500;
