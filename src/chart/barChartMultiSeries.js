@@ -29,7 +29,7 @@ export default function() {
 	let yScale;
 	let zScale;
 	let colorScale;
-
+	
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -37,28 +37,24 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		const dataSummary = dataTransform(data).summary();
-		const categoryNames = dataSummary.rowKeys;
-		const seriesNames = dataSummary.columnKeys;
-		const maxValue = dataSummary.maxValue;
+		const { rowKeys, columnKeys, maxValue } = dataTransform(data).summary();
+		const extent = [0, maxValue];
+	
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensions.x]).padding(0.5);
+		}
 
-		// If the colorScale has not been passed then attempt to calculate.
-		colorScale = (typeof colorScale === "undefined") ?
-			d3.scaleOrdinal().domain(seriesNames).range(colors) :
-			colorScale;
+		if (typeof yScale === "undefined") {
+			d3.scaleLinear().domain(extent).range([0, dimensions.y]).nice();
+		}
 
-		// Calculate Scales.
-		xScale = (typeof xScale === "undefined") ?
-			d3.scaleBand().domain(seriesNames).rangeRound([0, dimensions.x]).padding(0.5) :
-			xScale;
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleBand().domain(rowKeys).range([0, dimensions.z]).padding(0.7);
+		}
 
-		yScale = (typeof yScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]).nice() :
-			yScale;
-
-		zScale = (typeof zScale === "undefined") ?
-			d3.scaleBand().domain(categoryNames).range([0, dimensions.z]).padding(0.7) :
-			zScale;
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+		}
 	}
 
 	/**
@@ -86,7 +82,7 @@ export default function() {
 			.data(layers)
 			.enter()
 			.append("group")
-			.attr("class", function(d) { return d; });
+			.attr("class", d => d);
 
 		const viewpoint = component.viewpoint()
 			.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
@@ -98,7 +94,7 @@ export default function() {
 			.attr("intensity", "0.4")
 			.attr("shadowintensity", "0");
 
-		scene.each(function(data) {
+		scene.each(data => {
 			init(data);
 
 			// Construct Axis Component

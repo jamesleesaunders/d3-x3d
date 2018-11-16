@@ -36,21 +36,19 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		const dataSummary = dataTransform(data).summary();
-		const maxCoordinates = dataSummary.maxCoordinates;
+		const { maxCoordinates } = dataTransform(data).summary();
 
-		// Calculate Scales.
-		xScale = (typeof xScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]) :
-			xScale;
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]);
+		}
 
-		yScale = (typeof yScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, dimensions.y]) :
-			yScale;
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, dimensions.y]);
+		}
 
-		zScale = (typeof zScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]) :
-			zScale;
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]);
+		}
 	}
 
 	/**

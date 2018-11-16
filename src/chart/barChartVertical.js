@@ -36,23 +36,20 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		const dataSummary = dataTransform(data).summary();
-		const categoryNames = dataSummary.columnKeys;
-		const maxValue = dataSummary.maxValue;
+		const { columnKeys, maxValue } = dataTransform(data).summary();
+		const extent = [0, maxValue];
 
-		// If the colorScale has not been passed then attempt to calculate.
-		colorScale = (typeof colorScale === "undefined") ?
-			d3.scaleOrdinal().domain(categoryNames).range(colors) :
-			colorScale;
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensions.x]).padding(0.5);
+		}
 
-		// Calculate Scales.
-		xScale = (typeof xScale === "undefined") ?
-			d3.scaleBand().domain(categoryNames).rangeRound([0, dimensions.x]).padding(0.5) :
-			xScale;
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain(extent).range([0, dimensions.y]).nice();
+		}
 
-		yScale = (typeof yScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]).nice() :
-			yScale;
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+		}
 	}
 
 	/**
@@ -80,7 +77,7 @@ export default function() {
 			.data(layers)
 			.enter()
 			.append("group")
-			.attr("class", function(d) { return d; });
+			.attr("class", d => d);
 
 		const viewpoint = component.viewpoint()
 			.quickView("left");
