@@ -1844,7 +1844,7 @@ function chartBarChartMultiSeries () {
 		}
 
 		if (typeof yScale === "undefined") {
-			d3.scaleLinear().domain(extent).range([0, dimensions.y]).nice();
+			yScale = d3.scaleLinear().domain(extent).range([0, dimensions.y]).nice();
 		}
 
 		if (typeof zScale === "undefined") {

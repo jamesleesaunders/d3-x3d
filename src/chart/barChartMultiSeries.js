@@ -29,7 +29,7 @@ export default function() {
 	let yScale;
 	let zScale;
 	let colorScale;
-	
+
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -39,13 +39,13 @@ export default function() {
 	function init(data) {
 		const { rowKeys, columnKeys, maxValue } = dataTransform(data).summary();
 		const extent = [0, maxValue];
-	
+
 		if (typeof xScale === "undefined") {
 			xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensions.x]).padding(0.5);
 		}
 
 		if (typeof yScale === "undefined") {
-			d3.scaleLinear().domain(extent).range([0, dimensions.y]).nice();
+			yScale = d3.scaleLinear().domain(extent).range([0, dimensions.y]).nice();
 		}
 
 		if (typeof zScale === "undefined") {
