@@ -1832,20 +1832,28 @@ function chartBarChartMultiSeries () {
   * @param {Array} data - Chart data.
   */
 	function init(data) {
-		var dataSummary = dataTransform(data).summary();
-		var categoryNames = dataSummary.rowKeys;
-		var seriesNames = dataSummary.columnKeys;
-		var maxValue = dataSummary.maxValue;
+		var _dataTransform$summar = dataTransform(data).summary(),
+		    rowKeys = _dataTransform$summar.rowKeys,
+		    columnKeys = _dataTransform$summar.columnKeys,
+		    maxValue = _dataTransform$summar.maxValue;
 
-		// If the colorScale has not been passed then attempt to calculate.
-		colorScale = typeof colorScale === "undefined" ? d3.scaleOrdinal().domain(seriesNames).range(colors) : colorScale;
+		var extent = [0, maxValue];
 
-		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleBand().domain(seriesNames).rangeRound([0, dimensions.x]).padding(0.5) : xScale;
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensions.x]).padding(0.5);
+		}
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]).nice() : yScale;
+		if (typeof yScale === "undefined") {
+			d3.scaleLinear().domain(extent).range([0, dimensions.y]).nice();
+		}
 
-		zScale = typeof zScale === "undefined" ? d3.scaleBand().domain(categoryNames).range([0, dimensions.z]).padding(0.7) : zScale;
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleBand().domain(rowKeys).range([0, dimensions.z]).padding(0.7);
+		}
+
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+		}
 	}
 
 	/**
@@ -2035,17 +2043,23 @@ function chartBarChartVertical () {
   * @param {Array} data - Chart data.
   */
 	function init(data) {
-		var dataSummary = dataTransform(data).summary();
-		var categoryNames = dataSummary.columnKeys;
-		var maxValue = dataSummary.maxValue;
+		var _dataTransform$summar = dataTransform(data).summary(),
+		    columnKeys = _dataTransform$summar.columnKeys,
+		    maxValue = _dataTransform$summar.maxValue;
 
-		// If the colorScale has not been passed then attempt to calculate.
-		colorScale = typeof colorScale === "undefined" ? d3.scaleOrdinal().domain(categoryNames).range(colors) : colorScale;
+		var extent = [0, maxValue];
 
-		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleBand().domain(categoryNames).rangeRound([0, dimensions.x]).padding(0.5) : xScale;
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensions.x]).padding(0.5);
+		}
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]).nice() : yScale;
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain(extent).range([0, dimensions.y]).nice();
+		}
+
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+		}
 	}
 
 	/**
@@ -2228,21 +2242,32 @@ function chartBubbleChart () {
   * @param {Array} data - Chart data.
   */
 	function init(data) {
-		var dataSummary = dataTransform(data).summary();
-		var seriesNames = dataSummary.rowKeys;
-		var maxCoordinates = dataSummary.maxCoordinates;
-		var maxValue = dataSummary.maxValue;
+		var _dataTransform$summar = dataTransform(data).summary(),
+		    maxCoordinates = _dataTransform$summar.maxCoordinates,
+		    rowKeys = _dataTransform$summar.rowKeys,
+		    maxValue = _dataTransform$summar.maxValue;
 
-		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]) : xScale;
+		var extent = [0, maxValue];
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, dimensions.y]) : yScale;
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]);
+		}
 
-		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]) : zScale;
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, dimensions.y]);
+		}
 
-		colorScale = typeof colorScale === "undefined" ? d3.scaleOrdinal().domain(seriesNames).range(colors) : colorScale;
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]);
+		}
 
-		sizeScale = typeof sizeScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range(sizeDomain) : sizeScale;
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
+		}
+
+		if (typeof sizeScale === "undefined") {
+			sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
+		}
 	}
 
 	/**
@@ -2456,15 +2481,20 @@ function chartScatterPlot () {
   * @param {Array} data - Chart data.
   */
 	function init(data) {
-		var dataSummary = dataTransform(data).summary();
-		var maxCoordinates = dataSummary.maxCoordinates;
+		var _dataTransform$summar = dataTransform(data).summary(),
+		    maxCoordinates = _dataTransform$summar.maxCoordinates;
 
-		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]) : xScale;
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]);
+		}
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, dimensions.y]) : yScale;
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, dimensions.y]);
+		}
 
-		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]) : zScale;
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]);
+		}
 	}
 
 	/**
@@ -2641,22 +2671,28 @@ function chartSurfaceArea () {
   * @param {Array} data - Chart data.
   */
 	function init(data) {
-		var dataSummary = dataTransform(data).summary();
-		var seriesNames = dataSummary.rowKeys;
-		var groupNames = dataSummary.columnKeys;
-		var maxValue = dataSummary.maxValue;
+		var _dataTransform$summar = dataTransform(data).summary(),
+		    rowKeys = _dataTransform$summar.rowKeys,
+		    columnKeys = _dataTransform$summar.columnKeys,
+		    maxValue = _dataTransform$summar.maxValue;
 
 		var extent = [0, maxValue];
 
-		// If the colorScale has not been passed then attempt to calculate.
-		colorScale = typeof colorScale === "undefined" ? d3.scaleLinear().domain(extent).range(colors).interpolate(d3.interpolateLab) : colorScale;
+		if (typeof xScale === "undefined") {
+			xScale = d3.scalePoint().domain(rowKeys).range([0, dimensions.x]);
+		}
 
-		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scalePoint().domain(seriesNames).range([0, dimensions.x]) : xScale;
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain(extent).range([0, dimensions.y]).nice();
+		}
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain(extent).range([0, dimensions.y]).nice() : yScale;
+		if (typeof zScale === "undefined") {
+			zScale = d3.scalePoint().domain(columnKeys).range([0, dimensions.z]);
+		}
 
-		zScale = typeof zScale === "undefined" ? d3.scalePoint().domain(groupNames).range([0, dimensions.z]) : zScale;
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleLinear().domain(extent).range(colors).interpolate(d3.interpolateLab);
+		}
 	}
 
 	/**
