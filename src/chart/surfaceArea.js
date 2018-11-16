@@ -14,7 +14,7 @@ import component from "../component";
  * var myChart = d3.x3dom.chart.surfaceArea();
  * chartHolder.datum(myData).call(myChart);
  */
-export default function surfaceArea() {
+export default function() {
 
 	/* Default Properties */
 	let width = 500;
