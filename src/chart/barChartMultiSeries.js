@@ -14,7 +14,7 @@ import component from "../component";
  * var myChart = d3.x3dom.chart.barChartMultiSeries();
  * chartHolder.datum(myData).call(myChart);
  */
-export default function barChartMultiSeries() {
+export default function() {
 
 	/* Default Properties */
 	let width = 500;
