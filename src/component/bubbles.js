@@ -169,7 +169,7 @@ export default function() {
 	/**
 	 * Size Domain Getter / Setter
 	 *
-	 * @param {number[]} _x - Size min and max e.g. [1, 9].
+	 * @param {number[]} _x - Size min and max (e.g. [1, 9]).
 	 * @returns {*}
 	 */
 	my.sizeDomain = function(_x) {
@@ -181,7 +181,7 @@ export default function() {
 	/**
 	 * Color Getter / Setter
 	 *
-	 * @param {string} _x - Color e.g. 'red' or '#ff0000'.
+	 * @param {string} _x - Color (e.g. 'red' or '#ff0000').
 	 * @returns {*}
 	 */
 	my.color = function(_x) {

@@ -161,7 +161,9 @@ export default function() {
 	 * @returns {*}
 	 */
 	my.dimensions = function(_x) {
-		return arguments.length ? (dimensions = _x, my) : dimensions;
+		if (!arguments.length) return dimensions;
+		dimensions = _x;
+		return my;
 	};
 
 	/**
@@ -171,87 +173,105 @@ export default function() {
 	 * @returns {*}
 	 */
 	my.scale = function(_x) {
-		return arguments.length ? (scale = _x, my) : scale;
+		if (!arguments.length) return scale;
+		scale = _x;
+		return my;
 	};
 
 	/**
 	 * Direction Getter / Setter
 	 *
-	 * @param _x - Direction.
+	 * @param {string} _x - Direction of Axis (e.g. 'x', 'y', 'z').
 	 * @returns {*}
 	 */
 	my.dir = function(_x) {
-		return arguments.length ? (dir = _x, my) : dir;
+		if (!arguments.length) return dir;
+		dir = _x;
+		return my;
 	};
 
 	/**
 	 * Tick Direction Getter / Setter
 	 *
-	 * @param _x - Tick direction.
+	 * @param {string} _x - Direction of Ticks (e.g. 'x', 'y', 'z').
 	 * @returns {*}
 	 */
 	my.tickDir = function(_x) {
-		return arguments.length ? (tickDir = _x, my) : tickDir;
+		if (!arguments.length) return tickDir;
+		tickDir = _x;
+		return my;
 	};
 
 	/**
 	 * Tick Arguments Getter / Setter
 	 *
-	 * @param _x - Tick arguments.
+	 * @param {Array} _x - Tick arguments.
 	 * @returns {Array<*>}
 	 */
 	my.tickArguments = function(_x) {
-		return arguments.length ? (tickArguments = _x, my) : tickArguments;
+		if (!arguments.length) return tickArguments;
+		tickArguments = _x;
+		return my;
 	};
 
 	/**
 	 * Tick Values Getter / Setter
 	 *
-	 * @param _x - Tick values.
+	 * @param {Array} _x - Tick values.
 	 * @returns {*}
 	 */
 	my.tickValues = function(_x) {
-		return arguments.length ? (tickValues = _x, my) : tickValues;
+		if (!arguments.length) return tickValues;
+		tickValues = _x;
+		return my;
 	};
 
 	/**
 	 * Tick Format Getter / Setter
 	 *
-	 * @param _x - Tick format.
+	 * @param {string} _x - Tick format.
 	 * @returns {*}
 	 */
 	my.tickFormat = function(_x) {
-		return arguments.length ? (tickFormat = _x, my) : tickFormat;
+		if (!arguments.length) return tickFormat;
+		tickFormat = _x;
+		return my;
 	};
 
 	/**
 	 * Tick Size Getter / Setter
 	 *
-	 * @param _x - Tick length.
-	 * @returns {number}
+	 * @param {number} _x - Tick length.
+	 * @returns {*}
 	 */
 	my.tickSize = function(_x) {
-		return arguments.length ? (tickSize = _x, my) : tickSize;
+		if (!arguments.length) return tickSize;
+		tickSize = _x;
+		return my;
 	};
 
 	/**
 	 * Tick Padding Getter / Setter
 	 *
-	 * @param _x - Tick padding size.
-	 * @returns {number}
+	 * @param {number} _x - Tick padding size.
+	 * @returns {*}
 	 */
 	my.tickPadding = function(_x) {
-		return arguments.length ? (tickPadding = _x, my) : tickPadding;
+		if (!arguments.length) return tickPadding;
+		tickPadding = _x;
+		return my;
 	};
 
 	/**
 	 * Color Getter / Setter
 	 *
-	 * @param {string} _x - Color e.g. 'red' or '#ff0000'.
+	 * @param {string} _x - Color (e.g. 'red' or '#ff0000').
 	 * @returns {*}
 	 */
 	my.color = function(_x) {
-		return arguments.length ? (color = _x, my) : color;
+		if (!arguments.length) return color;
+		color = _x;
+		return my;
 	};
 
 	return my;

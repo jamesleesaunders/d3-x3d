@@ -237,7 +237,7 @@ export default function() {
 	/**
 	 * Size Domain Getter / Setter
 	 *
-	 * @param {number[]} _x - Size min and max.
+	 * @param {number[]} _x - Size min and max (e.g. [0.5, 3.0]).
 	 * @returns {*}
 	 */
 	my.sizeDomain = function(_x) {

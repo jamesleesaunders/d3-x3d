@@ -20,7 +20,7 @@ export default function() {
 	let zScale;
 	let colorScale;
 	let sizeScale;
-	let sizeDomain = [0.5, 4.0];
+	let sizeDomain = [0.5, 3.0];
 
 	/**
 	 * Initialise Data and Scales
@@ -31,7 +31,6 @@ export default function() {
 	function init(data) {
 		const { rowKeys, maxCoordinates, maxValue } = dataTransform(data).summary();
 		const extent = [0, maxValue];
-		const sizeRange = [0.5, 3.0];
 
 		if (typeof xScale === "undefined") {
 			xScale = d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]);
@@ -50,7 +49,7 @@ export default function() {
 		}
 
 		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear().domain(extent).range(sizeRange);
+			sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
 		}
 	}
 
@@ -170,7 +169,7 @@ export default function() {
 	/**
 	 * Size Domain Getter / Setter
 	 *
-	 * @param {number[]} _x - Size min and max.
+	 * @param {number[]} _x - Size min and max (e.g. [0.5, 3.0]).
 	 * @returns {*}
 	 */
 	my.sizeDomain = function(_x) {
