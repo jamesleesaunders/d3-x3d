@@ -157,13 +157,11 @@ export default function() {
 	/**
 	 * Dimensions Getter / Setter
 	 *
-	 * @param {{x: number, y: number, z: number}} _x - 3D Object dimensions.
+	 * @param {{x: number, y: number, z: number}} _x - 3D object dimensions.
 	 * @returns {*}
 	 */
 	my.dimensions = function(_x) {
-		if (!arguments.length) return dimensions;
-		dimensions = _x;
-		return this;
+		return arguments.length ? (dimensions = _x, my) : dimensions;
 	};
 
 	/**
@@ -173,9 +171,7 @@ export default function() {
 	 * @returns {*}
 	 */
 	my.scale = function(_x) {
-		if (!arguments.length) return scale;
-		scale = _x;
-		return my;
+		return arguments.length ? (scale = _x, my) : scale;
 	};
 
 	/**
@@ -198,18 +194,6 @@ export default function() {
 		return arguments.length ? (tickDir = _x, my) : tickDir;
 	};
 
-	/* Slice */
-	const slice = Array.prototype.slice;
-
-	/**
-	 * Get Ticks
-	 * @todo How is this used? Replace with tickArguments()?
-	 * @private
-	 */
-	my.ticks = function() {
-		return tickArguments = slice.call(arguments), my;
-	};
-
 	/**
 	 * Tick Arguments Getter / Setter
 	 *
@@ -217,7 +201,7 @@ export default function() {
 	 * @returns {Array<*>}
 	 */
 	my.tickArguments = function(_x) {
-		return arguments.length ? (tickArguments = _x === null ? [] : slice.call(_x), my) : tickArguments.slice();
+		return arguments.length ? (tickArguments = _x, my) : tickArguments;
 	};
 
 	/**
@@ -227,7 +211,7 @@ export default function() {
 	 * @returns {*}
 	 */
 	my.tickValues = function(_x) {
-		return arguments.length ? (tickValues = _x === null ? null : slice.call(_x), my) : tickValues && tickValues.slice();
+		return arguments.length ? (tickValues = _x, my) : tickValues;
 	};
 
 	/**
@@ -247,7 +231,7 @@ export default function() {
 	 * @returns {number}
 	 */
 	my.tickSize = function(_x) {
-		return arguments.length ? (tickSize = +_x, my) : tickSize;
+		return arguments.length ? (tickSize = _x, my) : tickSize;
 	};
 
 	/**
@@ -257,7 +241,7 @@ export default function() {
 	 * @returns {number}
 	 */
 	my.tickPadding = function(_x) {
-		return arguments.length ? (tickPadding = +_x, my) : tickPadding;
+		return arguments.length ? (tickPadding = _x, my) : tickPadding;
 	};
 
 	/**
@@ -267,9 +251,7 @@ export default function() {
 	 * @returns {*}
 	 */
 	my.color = function(_x) {
-		if (!arguments.length) return color;
-		color = _x;
-		return my;
+		return arguments.length ? (color = _x, my) : color;
 	};
 
 	return my;

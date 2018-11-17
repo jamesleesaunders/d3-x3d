@@ -104,6 +104,7 @@ let dataset3 = [{
 }];
 
 tape("Test Summary 1", function(t) {
+	let actual = d3X3dom.dataTransform(dataset1).summary();
 	let expected = {
 		dataStructure: 1,
 		rowKey: "Fruit",
@@ -120,13 +121,13 @@ tape("Test Summary 1", function(t) {
 		maxDecimalPlace: 0,
 		thresholds: [4, 5, 6, 8]
 	};
-	let actual = d3X3dom.dataTransform(dataset1).summary();
 	t.deepEqual(actual, expected);
 
 	t.end();
 });
 
 tape("Test Summary 2", function(t) {
+	let actual = d3X3dom.dataTransform(dataset2).summary();
 	let expected = {
 		dataStructure: 2,
 		rowKey: undefined,
@@ -143,7 +144,6 @@ tape("Test Summary 2", function(t) {
 		maxDecimalPlace: 0,
 		thresholds: [3, 7, 10, 16]
 	};
-	let actual = d3X3dom.dataTransform(dataset2).summary();
 	t.deepEqual(actual, expected);
 
 	t.end();
