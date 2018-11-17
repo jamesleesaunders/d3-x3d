@@ -39,28 +39,24 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		const dataSummary = dataTransform(data).summary();
-		const seriesNames = dataSummary.rowKeys;
-		const groupNames = dataSummary.columnKeys;
-		const maxValue = dataSummary.maxValue;
+		const { rowKeys, columnKeys, maxValue } = dataTransform(data).summary();
+		const extent = [0, maxValue];
 
-		// If the colorScale has not been passed then attempt to calculate.
-		colorScale = (typeof colorScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxValue]).range(colors).interpolate(d3.interpolateLab) :
-			colorScale;
+		if (typeof xScale === "undefined") {
+			xScale = d3.scalePoint().domain(rowKeys).range([0, dimensions.x]);
+		}
 
-		// Calculate Scales.
-		xScale = (typeof xScale === "undefined") ?
-			d3.scalePoint().domain(seriesNames).range([0, dimensions.x]) :
-			xScale;
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain(extent).range([0, dimensions.y]);
+		}
 
-		yScale = (typeof yScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]) :
-			yScale;
+		if (typeof zScale === "undefined") {
+			zScale = d3.scalePoint().domain(columnKeys).range([0, dimensions.z]);
+		}
 
-		zScale = (typeof zScale === "undefined") ?
-			d3.scalePoint().domain(groupNames).range([0, dimensions.z]) :
-			zScale;
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleLinear().domain(extent).range(colors).interpolate(d3.interpolateLab);
+		}
 	}
 
 	/**

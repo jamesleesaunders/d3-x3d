@@ -30,23 +30,23 @@ export default function() {
 		const maxY = d3.max(data.values, function(d) { return +d.y; });
 		const maxZ = d3.max(data.values, function(d) { return +d.z; });
 		const maxValue = d3.max(data.values, function(d) { return +d.value; });
+		const extent = [0, maxValue];
 
-		// Calculate Scales.
-		xScale = (typeof xScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxX]).range([0, dimensions.x]) :
-			xScale;
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensions.x]);
+		}
 
-		yScale = (typeof yScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxY]).range([0, dimensions.y]) :
-			yScale;
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensions.y]);
+		}
 
-		zScale = (typeof zScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxZ]).range([0, dimensions.z]) :
-			zScale;
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensions.z]);
+		}
 
-		sizeScale = (typeof sizeScale === "undefined") ?
-			d3.scaleLinear().domain([0, maxValue]).range(sizeDomain) :
-			sizeScale;
+		if (typeof sizeScale === "undefined") {
+			sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
+		}
 	}
 
 	/**
