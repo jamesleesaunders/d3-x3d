@@ -470,13 +470,13 @@ function componentAxis () {
 	/**
   * Dimensions Getter / Setter
   *
-  * @param {{x: number, y: number, z: number}} _x - 3D Object dimensions.
+  * @param {{x: number, y: number, z: number}} _x - 3D object dimensions.
   * @returns {*}
   */
 	my.dimensions = function (_x) {
 		if (!arguments.length) return dimensions;
 		dimensions = _x;
-		return this;
+		return my;
 	};
 
 	/**
@@ -494,89 +494,91 @@ function componentAxis () {
 	/**
   * Direction Getter / Setter
   *
-  * @param _x - Direction.
+  * @param {string} _x - Direction of Axis (e.g. 'x', 'y', 'z').
   * @returns {*}
   */
 	my.dir = function (_x) {
-		return arguments.length ? (dir = _x, my) : dir;
+		if (!arguments.length) return dir;
+		dir = _x;
+		return my;
 	};
 
 	/**
   * Tick Direction Getter / Setter
   *
-  * @param _x - Tick direction.
+  * @param {string} _x - Direction of Ticks (e.g. 'x', 'y', 'z').
   * @returns {*}
   */
 	my.tickDir = function (_x) {
-		return arguments.length ? (tickDir = _x, my) : tickDir;
-	};
-
-	/* Slice */
-	var slice = Array.prototype.slice;
-
-	/**
-  * Get Ticks
-  * @todo How is this used? Replace with tickArguments()?
-  * @private
-  */
-	my.ticks = function () {
-		return tickArguments = slice.call(arguments), my;
+		if (!arguments.length) return tickDir;
+		tickDir = _x;
+		return my;
 	};
 
 	/**
   * Tick Arguments Getter / Setter
   *
-  * @param _x - Tick arguments.
+  * @param {Array} _x - Tick arguments.
   * @returns {Array<*>}
   */
 	my.tickArguments = function (_x) {
-		return arguments.length ? (tickArguments = _x === null ? [] : slice.call(_x), my) : tickArguments.slice();
+		if (!arguments.length) return tickArguments;
+		tickArguments = _x;
+		return my;
 	};
 
 	/**
   * Tick Values Getter / Setter
   *
-  * @param _x - Tick values.
+  * @param {Array} _x - Tick values.
   * @returns {*}
   */
 	my.tickValues = function (_x) {
-		return arguments.length ? (tickValues = _x === null ? null : slice.call(_x), my) : tickValues && tickValues.slice();
+		if (!arguments.length) return tickValues;
+		tickValues = _x;
+		return my;
 	};
 
 	/**
   * Tick Format Getter / Setter
   *
-  * @param _x - Tick format.
+  * @param {string} _x - Tick format.
   * @returns {*}
   */
 	my.tickFormat = function (_x) {
-		return arguments.length ? (tickFormat = _x, my) : tickFormat;
+		if (!arguments.length) return tickFormat;
+		tickFormat = _x;
+		return my;
 	};
 
 	/**
   * Tick Size Getter / Setter
   *
-  * @param _x - Tick length.
-  * @returns {number}
+  * @param {number} _x - Tick length.
+  * @returns {*}
   */
 	my.tickSize = function (_x) {
-		return arguments.length ? (tickSize = +_x, my) : tickSize;
+		if (!arguments.length) return tickSize;
+		tickSize = _x;
+		return my;
 	};
 
 	/**
   * Tick Padding Getter / Setter
   *
-  * @param _x - Tick padding size.
-  * @returns {number}
+  * @param {number} _x - Tick padding size.
+  * @returns {*}
   */
 	my.tickPadding = function (_x) {
-		return arguments.length ? (tickPadding = +_x, my) : tickPadding;
+		if (!arguments.length) return tickPadding;
+		tickPadding = _x;
+		return my;
 	};
 
 	/**
   * Color Getter / Setter
   *
-  * @param {string} _x - Color e.g. 'red' or '#ff0000'.
+  * @param {string} _x - Color (e.g. 'red' or '#ff0000').
   * @returns {*}
   */
 	my.color = function (_x) {
@@ -737,17 +739,23 @@ function componentBars () {
   * @param {Array} data - Chart data.
   */
 	function init(data) {
-		var dataSummary = dataTransform(data).summary();
-		var seriesNames = dataSummary.columnKeys;
-		var maxValue = dataSummary.maxValue;
+		var _dataTransform$summar = dataTransform(data).summary(),
+		    columnKeys = _dataTransform$summar.columnKeys,
+		    maxValue = _dataTransform$summar.maxValue;
 
-		// If the colorScale has not been passed then attempt to calculate.
-		colorScale = typeof colorScale === "undefined" ? d3.scaleOrdinal().domain(seriesNames).range(colors) : colorScale;
+		var extent = [0, maxValue];
 
-		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleBand().domain(seriesNames).rangeRound([0, dimensions.x]).padding(0.3) : xScale;
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensions.x]).padding(0.3);
+		}
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]) : yScale;
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain(extent).range([0, dimensions.y]);
+		}
+
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+		}
 	}
 
 	/**
@@ -886,20 +894,28 @@ function componentBarsMultiSeries () {
   * @param {Array} data - Chart data.
   */
 	function init(data) {
-		var dataSummary = dataTransform(data).summary();
-		var categoryNames = dataSummary.rowKeys;
-		var seriesNames = dataSummary.columnKeys;
-		var maxValue = dataSummary.maxValue;
+		var _dataTransform$summar = dataTransform(data).summary(),
+		    rowKeys = _dataTransform$summar.rowKeys,
+		    columnKeys = _dataTransform$summar.columnKeys,
+		    maxValue = _dataTransform$summar.maxValue;
 
-		// If the colorScale has not been passed then attempt to calculate.
-		colorScale = typeof colorScale === "undefined" ? d3.scaleOrdinal().domain(seriesNames).range(colors) : colorScale;
+		var extent = [0, maxValue];
 
-		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleBand().domain(seriesNames).rangeRound([0, dimensions.x]).padding(0.5) : xScale;
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensions.x]).padding(0.5);
+		}
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]) : yScale;
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain(extent).range([0, dimensions.y]).nice();
+		}
 
-		zScale = typeof zScale === "undefined" ? d3.scaleBand().domain(categoryNames).range([0, dimensions.z]).padding(0.7) : zScale;
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleBand().domain(rowKeys).range([0, dimensions.z]).padding(0.7);
+		}
+
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+		}
 	}
 
 	/**
@@ -1049,15 +1065,23 @@ function componentBubbles () {
 		var maxValue = d3.max(data.values, function (d) {
 			return +d.value;
 		});
+		var extent = [0, maxValue];
 
-		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxX]).range([0, dimensions.x]) : xScale;
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensions.x]);
+		}
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxY]).range([0, dimensions.y]) : yScale;
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensions.y]);
+		}
 
-		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxZ]).range([0, dimensions.z]) : zScale;
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensions.z]);
+		}
 
-		sizeScale = typeof sizeScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range(sizeDomain) : sizeScale;
+		if (typeof sizeScale === "undefined") {
+			sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
+		}
 	}
 
 	/**
@@ -1160,7 +1184,7 @@ function componentBubbles () {
 	/**
   * Size Domain Getter / Setter
   *
-  * @param {number[]} _x - Size min and max e.g. [1, 9].
+  * @param {number[]} _x - Size min and max (e.g. [1, 9]).
   * @returns {*}
   */
 	my.sizeDomain = function (_x) {
@@ -1172,7 +1196,7 @@ function componentBubbles () {
 	/**
   * Color Getter / Setter
   *
-  * @param {string} _x - Color e.g. 'red' or '#ff0000'.
+  * @param {string} _x - Color (e.g. 'red' or '#ff0000').
   * @returns {*}
   */
 	my.color = function (_x) {
@@ -1202,7 +1226,7 @@ function componentBubblesMultiSeries () {
 	var zScale = void 0;
 	var colorScale = void 0;
 	var sizeScale = void 0;
-	var sizeDomain = [0.5, 4.0];
+	var sizeDomain = [0.5, 3.0];
 
 	/**
   * Initialise Data and Scales
@@ -1211,22 +1235,32 @@ function componentBubblesMultiSeries () {
   * @param {Array} data - Chart data.
   */
 	function init(data) {
-		var dataSummary = dataTransform(data).summary();
-		var seriesNames = dataSummary.rowKeys;
-		var maxCoordinates = dataSummary.maxCoordinates;
-		var maxValue = dataSummary.maxValue;
+		var _dataTransform$summar = dataTransform(data).summary(),
+		    rowKeys = _dataTransform$summar.rowKeys,
+		    maxCoordinates = _dataTransform$summar.maxCoordinates,
+		    maxValue = _dataTransform$summar.maxValue;
 
-		// If the colorScale has not been passed then attempt to calculate.
-		colorScale = typeof colorScale === "undefined" ? d3.scaleOrdinal().domain(seriesNames).range(colors) : colorScale;
+		var extent = [0, maxValue];
 
-		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]) : xScale;
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]);
+		}
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, dimensions.y]) : yScale;
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, dimensions.y]);
+		}
 
-		zScale = typeof zScale === "undefined" ? d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]) : zScale;
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]);
+		}
 
-		sizeScale = typeof sizeScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0.5, 3.0]) : sizeScale;
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
+		}
+
+		if (typeof sizeScale === "undefined") {
+			sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
+		}
 	}
 
 	/**
@@ -1335,7 +1369,7 @@ function componentBubblesMultiSeries () {
 	/**
   * Size Domain Getter / Setter
   *
-  * @param {number[]} _x - Size min and max.
+  * @param {number[]} _x - Size min and max (e.g. [0.5, 3.0]).
   * @returns {*}
   */
 	my.sizeDomain = function (_x) {
@@ -1399,20 +1433,28 @@ function componentSurfaceArea () {
   * @param {Array} data - Chart data.
   */
 	function init(data) {
-		var dataSummary = dataTransform(data).summary();
-		var seriesNames = dataSummary.rowKeys;
-		var groupNames = dataSummary.columnKeys;
-		var maxValue = dataSummary.maxValue;
+		var _dataTransform$summar = dataTransform(data).summary(),
+		    rowKeys = _dataTransform$summar.rowKeys,
+		    columnKeys = _dataTransform$summar.columnKeys,
+		    maxValue = _dataTransform$summar.maxValue;
 
-		// If the colorScale has not been passed then attempt to calculate.
-		colorScale = typeof colorScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range(colors).interpolate(d3.interpolateLab) : colorScale;
+		var extent = [0, maxValue];
 
-		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scalePoint().domain(seriesNames).range([0, dimensions.x]) : xScale;
+		if (typeof xScale === "undefined") {
+			xScale = d3.scalePoint().domain(rowKeys).range([0, dimensions.x]);
+		}
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]) : yScale;
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain(extent).range([0, dimensions.y]);
+		}
 
-		zScale = typeof zScale === "undefined" ? d3.scalePoint().domain(groupNames).range([0, dimensions.z]) : zScale;
+		if (typeof zScale === "undefined") {
+			zScale = d3.scalePoint().domain(columnKeys).range([0, dimensions.z]);
+		}
+
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleLinear().domain(extent).range(colors).interpolate(d3.interpolateLab);
+		}
 	}
 
 	/**
@@ -1689,14 +1731,19 @@ function componentRibbon () {
   * @param {Array} data - Chart data.
   */
 	function init(data) {
-		var dataSummary = dataTransform(data).summary();
-		var seriesNames = dataSummary.columnKeys;
-		var maxValue = dataSummary.maxValue;
+		var _dataTransform$summar = dataTransform(data).summary(),
+		    columnKeys = _dataTransform$summar.columnKeys,
+		    maxValue = _dataTransform$summar.maxValue;
 
-		// Calculate Scales.
-		xScale = typeof xScale === "undefined" ? d3.scaleBand().domain(seriesNames).rangeRound([0, dimensions.x]).padding(0.3) : xScale;
+		var extent = [0, maxValue];
 
-		yScale = typeof yScale === "undefined" ? d3.scaleLinear().domain([0, maxValue]).range([0, dimensions.y]) : yScale;
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensions.x]).padding(0.3);
+		}
+
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain(extent).range([0, dimensions.y]);
+		}
 	}
 
 	/**
@@ -1773,7 +1820,7 @@ function componentRibbon () {
 	/**
   * Color Getter / Setter
   *
-  * @param {string} _x - Color e.g. 'red' or '#ff0000'.
+  * @param {string} _x - Color (e.g. 'red' or '#ff0000').
   * @returns {*}
   */
 	my.color = function (_x) {
@@ -2423,7 +2470,7 @@ function chartBubbleChart () {
 	/**
   * Size Domain Getter / Setter
   *
-  * @param {number[]} _x - Size min and max.
+  * @param {number[]} _x - Size min and max (e.g. [0.5, 3.0]).
   * @returns {*}
   */
 	my.sizeDomain = function (_x) {
@@ -2612,7 +2659,7 @@ function chartScatterPlot () {
 	/**
   * Color Getter / Setter
   *
-  * @param {string} _x - Color e.g. 'red' or '#ff0000'.
+  * @param {string} _x - Color (e.g. 'red' or '#ff0000').
   * @returns {*}
   */
 	my.color = function (_x) {
