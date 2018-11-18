@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import componentAxis from "./axis";
 
 /**
- * Reusable 3D Multi Plane Axis
+ * Reusable 3D Multi Plane Axis Component
  *
  * @module
  */

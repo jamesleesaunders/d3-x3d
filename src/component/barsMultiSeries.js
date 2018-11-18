@@ -3,7 +3,7 @@ import dataTransform from "../dataTransform";
 import componentBars from "./bars";
 
 /**
- * Reusable 3D Multi Series Bar Chart
+ * Reusable 3D Multi Series Bar Chart Component
  *
  * @module
  */

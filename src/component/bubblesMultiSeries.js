@@ -3,7 +3,7 @@ import dataTransform from "../dataTransform";
 import componentBubbles from "./bubbles";
 
 /**
- * Reusable 3D Multi Series Bubble Chart
+ * Reusable 3D Multi Series Bubble Chart Component
  *
  * @module
  */

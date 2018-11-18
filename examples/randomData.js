@@ -89,7 +89,7 @@ function randomDataset3() {
 }
 
 /**
- * Random Dataset - Surface Area 2
+ * Random Dataset - Surface Plot 2
  *
  * @returns {*}
  */
@@ -147,7 +147,7 @@ function randomDataset4() {
 }
 
 /**
- * Random Dataset - Surface Area
+ * Random Dataset - Surface Plot
  *
  * @returns {*}
  */

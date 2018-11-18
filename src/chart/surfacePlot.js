@@ -1,36 +1,34 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
+import component from "../component";
 
 /**
- * Reusable 3D Surface Area
+ * Reusable 3D Surface Plot Chart
  *
  * @module
+ *
+ * @see https://datavizproject.com/data-type/three-dimensional-stream-graph/
+ * @example
+ * var chartHolder = d3.select("#chartholder");
+ * var myData = [...];
+ * var myChart = d3.x3dom.chart.surfacePlot();
+ * chartHolder.datum(myData).call(myChart);
  */
 export default function() {
 
 	/* Default Properties */
+	let width = 500;
+	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["blue", "red"];
-	let classed = "x3dSurfaceArea";
+	let classed = "x3dSurfacePlot";
+	let debug = false;
 
 	/* Scales */
 	let xScale;
 	let yScale;
 	let zScale;
 	let colorScale;
-
-	/**
-	 * Array to String
-	 *
-	 * @private
-	 * @param arr
-	 * @returns {*}
-	 */
-	function array2dToString(arr) {
-		return arr.reduce(function(a, b) { return a.concat(b); }, [])
-			.reduce(function(a, b) { return a.concat(b); }, [])
-			.join(' ');
-	}
 
 	/**
 	 * Initialise Data and Scales
@@ -47,7 +45,7 @@ export default function() {
 		}
 
 		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain(extent).range([0, dimensions.y]);
+			yScale = d3.scaleLinear().domain(extent).range([0, dimensions.y]).nice();
 		}
 
 		if (typeof zScale === "undefined") {
@@ -63,69 +61,81 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
-	 * @alias surfaceArea
+	 * @alias surfacePlot
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	function my(selection) {
-		selection.classed(classed, true);
+		const x3d = selection.append("x3d")
+			.attr("width", width + "px")
+			.attr("height", height + "px");
 
-		selection.each(function(data) {
+		if (debug) {
+			x3d.attr("showLog", "true").attr("showStat", "true")
+		}
+
+		const scene = x3d.append("scene");
+
+		// Update the chart dimensions and add layer groups
+		const layers = ["axis", "chart"];
+		scene.classed(classed, true)
+			.selectAll("group")
+			.data(layers)
+			.enter()
+			.append("group")
+			.attr("class", d => d);
+
+		const viewpoint = component.viewpoint()
+			.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
+		scene.call(viewpoint);
+
+		scene.each(function(data) {
 			init(data);
 
-			const ny = data.length;
-			const nx = data[0].values.length;
+			// Construct Axis Component
+			const axis = component.axisThreePlane()
+				.xScale(xScale)
+				.yScale(yScale)
+				.zScale(zScale);
 
-			const coordinatePoints = function(data) {
-				const points = data.map(function(X) {
-					return X.values.map(function(d) {
-						return [xScale(X.key), yScale(d.value), zScale(d.key)];
-					})
-				});
-				return array2dToString(points);
-			};
+			// Construct Surface Component
+			const chart = component.surface()
+				.xScale(xScale)
+				.yScale(yScale)
+				.zScale(zScale)
+				.colors(colors);
 
-			const colorFaceSet = function(data) {
-				const colors = data.map(function(X) {
-					return X.values.map(function(d) {
-						const col = d3.color(colorScale(d.value));
-						return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
-					})
-				});
-				return array2dToString(colors);
-			};
+			scene.select(".axis")
+				.call(axis);
 
-			const coordIndex = Array.apply(0, Array(ny - 1)).map(function(_, j) {
-				return Array.apply(0, Array(nx - 1)).map(function(_, i) {
-					const start = i + j * nx;
-					return [start, start + nx, start + nx + 1, start + 1, start, -1];
-				});
-			});
-
-			const coordIndexBack = Array.apply(0, Array(ny - 1)).map(function(_, j) {
-				return Array.apply(0, Array(nx - 1)).map(function(_, i) {
-					const start = i + j * nx;
-					return [start, start + 1, start + nx + 1, start + nx, start, -1];
-				});
-			});
-
-			const coords = array2dToString(coordIndex.concat(coordIndexBack));
-
-			const surfaces = selection.selectAll(".surface")
-				.data([data]);
-
-			const indexedfaceset = surfaces
-				.enter()
-				.append("shape")
-				.append("indexedfaceset")
-				.attr("coordIndex", coords);
-
-			indexedfaceset.append("coordinate")
-				.attr("point", coordinatePoints);
-
-			indexedfaceset.append("color")
-				.attr("color", colorFaceSet);
+			scene.select(".chart")
+				.datum(data)
+				.call(chart);
 		});
 	}
+
+	/**
+	 * Width Getter / Setter
+	 *
+	 * @param {number} _x - X3D canvas width in px.
+	 * @returns {*}
+	 */
+	my.width = function(_x) {
+		if (!arguments.length) return width;
+		width = _x;
+		return this;
+	};
+
+	/**
+	 * Height Getter / Setter
+	 *
+	 * @param {number} _x - X3D canvas height in px.
+	 * @returns {*}
+	 */
+	my.height = function(_x) {
+		if (!arguments.length) return height;
+		height = _x;
+		return this;
+	};
 
 	/**
 	 * Dimensions Getter / Setter
@@ -196,6 +206,18 @@ export default function() {
 	my.colors = function(_x) {
 		if (!arguments.length) return colors;
 		colors = _x;
+		return my;
+	};
+
+	/**
+	 * Debug Getter / Setter
+	 *
+	 * @param {boolean} _x - Show debug log and stats. True/False.
+	 * @returns {*}
+	 */
+	my.debug = function(_x) {
+		if (!arguments.length) return debug;
+		debug = _x;
 		return my;
 	};
 
