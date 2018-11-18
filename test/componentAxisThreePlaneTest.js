@@ -1,13 +1,5 @@
-/*
- * *
- *  @Joe N Ngigi <joenyugoh at gmail dot com>
- *  @copyright Copyright (C) 2018
- *  @QueBase Tech
- * /
- */
-
-let test = require('tape'),
-	d3X3dom = require("../");
+let test = require('tape');
+let d3X3dom = require("../");
 
 test("componentAxisThreePlane()", function(test) {
 	let axisThreePlane = d3X3dom.component.axisThreePlane();
