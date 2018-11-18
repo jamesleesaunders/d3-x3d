@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>d3-x3dom : 3D Surface Area Example</title>
+  <title>d3-x3dom : 3D Surface Plot Example</title>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
   <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
@@ -21,7 +21,7 @@
     var myData = randomDataset5();
 
     // Declare the chart component
-    var myChart = d3.x3dom.chart.surfaceArea();
+    var myChart = d3.x3dom.chart.surfacePlot();
 
     // Attach chart and data to the chartholder
     chartHolder.datum(myData).call(myChart);

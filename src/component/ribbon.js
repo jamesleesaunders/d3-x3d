@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 
 /**
- * Reusable 3D Ribbon Chart
+ * Reusable 3D Ribbon Chart Component
  *
  * @module
  */
