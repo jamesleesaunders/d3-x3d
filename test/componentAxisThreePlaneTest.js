@@ -1,7 +1,7 @@
 let test = require('tape'),
 	d3X3dom = require("../");
 
-test("componentAxisThreePlane()", function(test) {
+test("Test three axis plane, componentAxisThreePlane()", function(test) {
 	let axisThreePlane = d3X3dom.component.axisThreePlane();
 
 	// Test for Getter and setter function for dimensions
@@ -30,7 +30,7 @@ test("componentAxisThreePlane()", function(test) {
 	test.deepEqual(axisThreePlane.colorScale(), 2, "colorScale changed");
 
 	// Test for Getter and setter function for colors
-	test.deepEqual(axisThreePlane.colors(), ["blue", "red", "green"], "Returns default color");
+	test.deepEqual(axisThreePlane.colors(), ["blue", "red", "green"], "Returns default colors");
 	axisThreePlane.colors(["yellow", "blue", "green"]);
 	test.deepEqual(axisThreePlane.colors(), ["yellow", "blue", "green"], "Axis colors changed");
 

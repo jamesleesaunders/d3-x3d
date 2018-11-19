@@ -1,7 +1,7 @@
 let d3X3dom = require("../");
 let tape = require("tape");
 
-tape("Test Bubbles Component Base", function(test) {
+tape("Test Bubbles Component Base, bubbles()", function(test) {
 	let bubbles = d3X3dom.component.bubbles();
 
 	// Test for Getter and setter function for dimensions
@@ -37,7 +37,7 @@ tape("Test Bubbles Component Base", function(test) {
 	// Test for Getter and setter function for color
 	test.deepEqual(bubbles.color(), "orange", "Returns default color");
 	bubbles.color("yellow");
-	test.deepEqual(bubbles.color(), "yellow", "Axis colors changed");
+	test.deepEqual(bubbles.color(), "yellow", "Bubbles color changed");
 
 	test.end()
 });

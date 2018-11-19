@@ -1,7 +1,7 @@
 let d3X3dom = require("../");
 let tape = require("tape");
 
-tape("Test Ribbon Base", function(test) {
+tape("Test Ribbon Base, ribbon()", function(test) {
 	let ribbon = d3X3dom.component.ribbon();
 
 	// Test for Getter and setter function for dimensions

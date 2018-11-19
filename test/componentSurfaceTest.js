@@ -1,7 +1,7 @@
 let d3X3dom = require("../");
 let tape = require("tape");
 
-tape("Test Surface Area Base", function(test) {
+tape("Test Surface Area Base, surface()", function(test) {
 	let surfaceArea = d3X3dom.component.surface();
 
 	// Test for Getter and setter function for dimensions

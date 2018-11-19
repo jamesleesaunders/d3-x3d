@@ -1,11 +1,11 @@
 let d3X3dom = require("../");
 let tape = require("tape");
 
-tape("Test Axis Component Default Values", function(test) {
+tape("Test Axis Component Default Values, axis()", function(test) {
 	let axis = d3X3dom.component.axis();
 
 	// Test for Getter and setter function for color
-	test.equal(axis.color(), "black", "Returns default color");
+	test.equal(axis.color(), "black", "Returns default color, black");
 	axis.color("red");
 	test.deepEqual(axis.color(), "red", "Axis color changed");
 
@@ -35,12 +35,12 @@ tape("Test Axis Component Default Values", function(test) {
 	test.deepEqual(axis.tickFormat(), '', "tickFormat() is populated");
 
 	// Test for Getter and setter function for tick size
-	test.deepEqual(axis.tickSize(), 1, "tickSize() is 1");
+	test.deepEqual(axis.tickSize(), 1, "default tick size is 1");
 	axis.tickSize(5);
 	test.deepEqual(axis.tickSize(), 5, "tickSize() is populated");
 
 	// Test for Getter and setter function for tick padding
-	test.deepEqual(axis.tickPadding(), 1, "tickPadding() is 1");
+	test.deepEqual(axis.tickPadding(), 1, "default tick padding is 1");
 	axis.tickPadding(5);
 	test.deepEqual(axis.tickPadding(), 5, "tickPadding() is populated");
 

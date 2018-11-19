@@ -1,7 +1,7 @@
 let d3X3dom = require("../");
 let tape = require("tape");
 
-tape("Test Bars Base", function(test) {
+tape("Test Bars Base, bars()", function(test) {
 	let bars = d3X3dom.component.bars();
 
 	// Test for Getter and setter function for dimensions
@@ -27,7 +27,7 @@ tape("Test Bars Base", function(test) {
 	// Test for Getter and setter function for colors
 	test.deepEqual(bars.colors(), ["orange", "red", "yellow", "steelblue", "green"], "Returns default colors");
 	bars.colors(["red", "blue", "orange", "cyna", "green"]);
-	test.deepEqual(bars.colors(), ["red", "blue", "orange", "cyna", "green"], "Bar color changed");
+	test.deepEqual(bars.colors(), ["red", "blue", "orange", "cyna", "green"], "Bars color changed");
 
 	test.end();
 });

@@ -1,7 +1,7 @@
 let d3X3dom = require("../");
 let tape = require("tape");
 
-tape("Text viewpoint quickView", function(test) {
+tape("Text viewpoint quickView, viewpoint.quickView(), ", function(test) {
 	let viewPoint = d3X3dom.component.viewpoint();
 	let viewPoints = {
 		left: {
@@ -61,7 +61,7 @@ tape("Text viewpoint quickView", function(test) {
 
 		t.deepEqual(viewPoint.centerOfRotation(), side.centerOfRotation);
 		t.deepEqual(viewPoint.viewPosition(), side.viewPosition);
-		t.deepEqual(viewPoint.viewOrientation(), side.viewOrientation);
+		t.deepEqual(viewPoint.viewOrientation(), top.viewOrientation);
 		t.deepEqual(viewPoint.fieldOfView(), side.fieldOfView);
 
 		t.end();
@@ -82,7 +82,7 @@ tape("Text viewpoint quickView", function(test) {
 	test.end()
 });
 
-tape("Test ViewPoint Base", function(test) {
+tape("Test ViewPoint Base, viewpoint()", function(test) {
 	let viewPoint = d3X3dom.component.viewpoint();
 
 	// Test Getter and Setter functions for Center of Rotation
