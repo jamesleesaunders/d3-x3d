@@ -3,7 +3,7 @@ import dataTransform from "../dataTransform";
 import component from "../component";
 
 /**
- * Reusable 3D Scatter Plot
+ * Reusable 3D Scatter Plot Chart
  *
  * @module
  *

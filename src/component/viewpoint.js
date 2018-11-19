@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 
 /**
- * Reusable X3DOM Viewpoint
+ * Reusable X3DOM Viewpoint Component
  *
  * @module
  */

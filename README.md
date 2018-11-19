@@ -23,7 +23,7 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Vertical Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartVertical.html)
 * [Bubble Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BubbleChart.html)
 * [Scatter Plot](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/ScatterPlot.html)
-* [Surface Area](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/SurfaceArea.html)
+* [Surface Plot](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/SurfacePlot.html)
 * [Components Showcase](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
 * [Observable Examples](https://www.npmjs.com/package/d3-x3dom)
 
@@ -36,7 +36,7 @@ Include D3.js, X3DOM and d3-x3dom js and css files in the `<head>` section of yo
    <script src="https://d3js.org/d3.v5.min.js"></script>   
    <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
    <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
-   <script src="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/src/d3-x3dom.js"></script>
+   <script src="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/build/d3-x3dom.js"></script>
 </head>
 ```
 
@@ -128,7 +128,7 @@ Component modules do not generate a `x3d` tag, these should be attached to an ex
 | component.barsMultiSeries()    | Multi series Bar Chart                       | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
 | component.bubbles()            | Bubble / Scatter Plot                        | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
 | component.bubblesMultiSeries() | Multi series Bubbles / Scatter Plot          | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
-| component.surfaceArea()        | Surface Area                                 | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
+| component.surface()            | Surface Area                                 | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
 | component.viewpoint()          | User's location and viewing model parameters | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
 
 #### Charts
@@ -143,7 +143,7 @@ Chart modules also generate the `x3d` tag, these should be attached to a `div` t
 | chart.barChartVertical()       | Simple single series Bar Chart & Axis        | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartVertical.html)
 | chart.bubbleChart()            | Multi series Bubble Chart & Axis             | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BubbleChart.html)
 | chart.scatterPlot()            | Scatter Plot & Axis                          | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/ScatterPlot.html)
-| chart.surfaceArea()            | Surface Area Chart & Axis                    | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/SurfaceArea.html)
+| chart.surfacePlot()            | Surface Plot & Axis                          | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/SurfacePlot.html)
 
 ### Data Structures
 

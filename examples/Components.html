@@ -64,8 +64,8 @@
       .call(bubblesMultiSeriesComponent);
 
     // ========== Surface Component ==========
-    var surfaceAreaData = randomDataset5();
-    var surfaceAreaComponent = d3.x3dom.component.surfaceArea();
+    var surfaceData = randomDataset5();
+    var surfaceComponent = d3.x3dom.component.surface();
 
     // Create scene
     var scene3 = d3.select("#chartholder3")
@@ -79,8 +79,8 @@
     scene3.call(viewpoint)
       .append("group")
       .attr("class", "chart")
-      .datum(surfaceAreaData)
-      .call(surfaceAreaComponent);
+      .datum(surfaceData)
+      .call(surfaceComponent);
 
     // ========== Bars Multi Component ==========
     var barsMultiSeriesData = randomDataset2();

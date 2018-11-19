@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 
 /**
- * Reusable 3D Bar Chart
+ * Reusable 3D Bar Chart Component
  *
  * @module
  */

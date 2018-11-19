@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.0.16";
+var version = "1.0.17";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -344,7 +344,7 @@ function dataTransform(data) {
 }
 
 /**
- * Reusable 3D Axis
+ * Reusable 3D Axis Component
  *
  * @module
  */
@@ -591,7 +591,7 @@ function componentAxis () {
 }
 
 /**
- * Reusable 3D Multi Plane Axis
+ * Reusable 3D Multi Plane Axis Component
  *
  * @module
  */
@@ -716,7 +716,7 @@ function componentAxisThreePlane () {
 }
 
 /**
- * Reusable 3D Bar Chart
+ * Reusable 3D Bar Chart Component
  *
  * @module
  */
@@ -870,7 +870,7 @@ function componentBars () {
 }
 
 /**
- * Reusable 3D Multi Series Bar Chart
+ * Reusable 3D Multi Series Bar Chart Component
  *
  * @module
  */
@@ -1028,7 +1028,7 @@ function componentBarsMultiSeries () {
 }
 
 /**
- * Reusable 3D Bubble Chart
+ * Reusable 3D Bubble Chart Component
  *
  * @module
  */
@@ -1209,7 +1209,7 @@ function componentBubbles () {
 }
 
 /**
- * Reusable 3D Multi Series Bubble Chart
+ * Reusable 3D Multi Series Bubble Chart Component
  *
  * @module
  */
@@ -1394,16 +1394,16 @@ function componentBubblesMultiSeries () {
 }
 
 /**
- * Reusable 3D Surface Area
+ * Reusable 3D Surface Area Component
  *
  * @module
  */
-function componentSurfaceArea () {
+function componentSurface () {
 
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["blue", "red"];
-	var classed = "x3dSurfaceArea";
+	var classed = "x3dSurface";
 
 	/* Scales */
 	var xScale = void 0;
@@ -1461,7 +1461,7 @@ function componentSurfaceArea () {
   * Constructor
   *
   * @constructor
-  * @alias surfaceArea
+  * @alias surface
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	function my(selection) {
@@ -1594,7 +1594,7 @@ function componentSurfaceArea () {
 }
 
 /**
- * Reusable X3DOM Viewpoint
+ * Reusable X3DOM Viewpoint Component
  *
  * @module
  */
@@ -1709,7 +1709,7 @@ function componentViewpoint () {
 }
 
 /**
- * Reusable 3D Ribbon Chart
+ * Reusable 3D Ribbon Chart Component
  *
  * @module
  */
@@ -1839,7 +1839,7 @@ var component = {
 	barsMultiSeries: componentBarsMultiSeries,
 	bubbles: componentBubbles,
 	bubblesMultiSeries: componentBubblesMultiSeries,
-	surfaceArea: componentSurfaceArea,
+	surface: componentSurface,
 	viewpoint: componentViewpoint,
 	ribbon: componentRibbon
 };
@@ -2495,7 +2495,7 @@ function chartBubbleChart () {
 }
 
 /**
- * Reusable 3D Scatter Plot
+ * Reusable 3D Scatter Plot Chart
  *
  * @module
  *
@@ -2684,7 +2684,7 @@ function chartScatterPlot () {
 }
 
 /**
- * Reusable 3D Surface Area
+ * Reusable 3D Surface Plot Chart
  *
  * @module
  *
@@ -2692,17 +2692,17 @@ function chartScatterPlot () {
  * @example
  * var chartHolder = d3.select("#chartholder");
  * var myData = [...];
- * var myChart = d3.x3dom.chart.surfaceArea();
+ * var myChart = d3.x3dom.chart.surfacePlot();
  * chartHolder.datum(myData).call(myChart);
  */
-function chartSurfaceArea () {
+function chartSurfacePlot () {
 
 	/* Default Properties */
 	var width = 500;
 	var height = 500;
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["blue", "red"];
-	var classed = "x3dSurfaceArea";
+	var classed = "x3dSurfacePlot";
 	var debug = false;
 
 	/* Scales */
@@ -2746,7 +2746,7 @@ function chartSurfaceArea () {
   * Constructor
   *
   * @constructor
-  * @alias surfaceArea
+  * @alias surfacePlot
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	function my(selection) {
@@ -2773,8 +2773,8 @@ function chartSurfaceArea () {
 			// Construct Axis Component
 			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
 
-			// Construct Surface Area Component
-			var chart = component.surfaceArea().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
+			// Construct Surface Component
+			var chart = component.surface().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
 
 			scene.select(".axis").call(axis);
 
@@ -2898,7 +2898,7 @@ var chart = {
 	barChartVertical: chartBarChartVertical,
 	bubbleChart: chartBubbleChart,
 	scatterPlot: chartScatterPlot,
-	surfaceArea: chartSurfaceArea
+	surfacePlot: chartSurfacePlot
 };
 
 /**

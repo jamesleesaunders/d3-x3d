@@ -2,7 +2,7 @@ let d3X3dom = require("../");
 let tape = require("tape");
 
 tape("Test Surface Area Base", function(test) {
-	let surfaceArea = d3X3dom.component.surfaceArea();
+	let surfaceArea = d3X3dom.component.surface();
 
 	// Test for Getter and setter function for dimensions
 	test.deepEqual(surfaceArea.dimensions(), { x: 40, y: 40, z: 40 }, "Returns default dimensions");

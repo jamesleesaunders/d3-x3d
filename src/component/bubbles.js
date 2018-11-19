@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 
 /**
- * Reusable 3D Bubble Chart
+ * Reusable 3D Bubble Chart Component
  *
  * @module
  */

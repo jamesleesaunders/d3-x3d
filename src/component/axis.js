@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 
 /**
- * Reusable 3D Axis
+ * Reusable 3D Axis Component
  *
  * @module
  */
