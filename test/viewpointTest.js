@@ -61,7 +61,7 @@ tape("Text viewpoint quickView, viewpoint.quickView(), ", function(test) {
 
 		t.deepEqual(viewPoint.centerOfRotation(), side.centerOfRotation);
 		t.deepEqual(viewPoint.viewPosition(), side.viewPosition);
-		t.deepEqual(viewPoint.viewOrientation(), top.viewOrientation);
+		t.deepEqual(viewPoint.viewOrientation(), side.viewOrientation);
 		t.deepEqual(viewPoint.fieldOfView(), side.fieldOfView);
 
 		t.end();
