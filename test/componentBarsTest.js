@@ -26,8 +26,8 @@ tape("Test Bars Base, bars()", function(test) {
 
 	// Test for Getter and setter function for colors
 	test.deepEqual(bars.colors(), ["orange", "red", "yellow", "steelblue", "green"], "Returns default colors");
-	bars.colors(["red", "blue", "orange", "cyna", "green"]);
-	test.deepEqual(bars.colors(), ["red", "blue", "orange", "cyna", "green"], "Bars color changed");
+	bars.colors(["red", "blue", "orange", "cyan", "green"]);
+	test.deepEqual(bars.colors(), ["red", "blue", "orange", "cyan", "green"], "Bars color changed");
 
 	test.end();
 });

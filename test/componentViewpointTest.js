@@ -1,7 +1,7 @@
 let d3X3dom = require("../");
 let tape = require("tape");
 
-tape("Text viewpoint quickView, viewpoint.quickView(), ", function(test) {
+tape("Test viewpoint quickView, viewpoint.quickView(), ", function(test) {
 	let viewPoint = d3X3dom.component.viewpoint();
 	let viewPoints = {
 		left: {
