@@ -1,7 +1,7 @@
+let test = require('tape');
 let d3X3dom = require("../");
-let tape = require("tape");
 
-tape("Test Index", function(t) {
+test("Test Index", function(t) {
 	let author = "James Saunders";
 	let license = "GPL-2.0";
 	let year = new Date().getFullYear();

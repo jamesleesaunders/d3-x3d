@@ -1,7 +1,7 @@
-let d3X3dom = require("../../build/d3-x3dom");
-let tape = require("tape");
+let test = require('tape');
+let d3X3dom = require("../../");
 
-tape("Text viewpoint quickView, viewpoint.quickView(), ", function(test) {
+test("Test viewpoint quickView, viewpoint.quickView(), ", function(t) {
 	let viewPoint = d3X3dom.component.viewpoint();
 	let viewPoints = {
 		left: {
@@ -31,7 +31,7 @@ tape("Text viewpoint quickView, viewpoint.quickView(), ", function(test) {
 	};
 	let { left, side, top, dimetric } = viewPoints;
 
-	tape("Test default values for left side view", (t) => {
+	test("Test default values for left side view", function(t) {
 		viewPoint = d3X3dom.component.viewpoint();
 		viewPoint.quickView('left');
 
@@ -43,7 +43,7 @@ tape("Text viewpoint quickView, viewpoint.quickView(), ", function(test) {
 		t.end();
 	});
 
-	tape("Test default values for top side view", (t) => {
+	test("Test default values for top side view", function(t) {
 		viewPoint = d3X3dom.component.viewpoint();
 		viewPoint.quickView('top');
 
@@ -55,7 +55,7 @@ tape("Text viewpoint quickView, viewpoint.quickView(), ", function(test) {
 		t.end();
 	});
 
-	tape("Test default values for side view", (t) => {
+	test("Test default values for side view", function(t) {
 		viewPoint = d3X3dom.component.viewpoint();
 		viewPoint.quickView('side');
 
@@ -67,7 +67,7 @@ tape("Text viewpoint quickView, viewpoint.quickView(), ", function(test) {
 		t.end();
 	});
 
-	tape("Test default values for dimetric and default view option side", (t) => {
+	test("Test default values for dimetric and default view option side", function(t) {
 		viewPoint = d3X3dom.component.viewpoint();
 		viewPoint.quickView('dimetric');
 
@@ -79,32 +79,32 @@ tape("Text viewpoint quickView, viewpoint.quickView(), ", function(test) {
 		t.end();
 	});
 
-	test.end()
+	t.end()
 });
 
-tape("Test ViewPoint Base, viewpoint()", function(test) {
+test("Test viewpoint base, viewpoint()", function(t) {
 	let viewPoint = d3X3dom.component.viewpoint();
 
 	// Test Getter and Setter functions for Center of Rotation
-	test.deepEqual(viewPoint.centerOfRotation(), [0.0, 0.0, 0.0], "Center of rotation should [0.0, 0.0, 0.0]");
+	t.deepEqual(viewPoint.centerOfRotation(), [0.0, 0.0, 0.0], "Center of rotation should [0.0, 0.0, 0.0]");
 	viewPoint.centerOfRotation([1.0, 1.0, 1.0]);
-	test.deepEqual(viewPoint.centerOfRotation(), [1.0, 1.0, 1.0]);
+	t.deepEqual(viewPoint.centerOfRotation(), [1.0, 1.0, 1.0]);
 
 	// Test Getter and Setter functions for view position
-	test.deepEqual(viewPoint.viewPosition(), [80.0, 15.0, 80.0], "View position should be [80.0, 15.0, 80.0]");
+	t.deepEqual(viewPoint.viewPosition(), [80.0, 15.0, 80.0], "View position should be [80.0, 15.0, 80.0]");
 	viewPoint.viewPosition([100.0, 100.0, 100.0]);
-	test.deepEqual(viewPoint.viewPosition(), [100.0, 100.0, 100.0]);
+	t.deepEqual(viewPoint.viewPosition(), [100.0, 100.0, 100.0]);
 
 	// Test Getter and Setter functions for view orientation
-	test.deepEqual(viewPoint.viewOrientation(), [0.0, 1.0, 0.0, 0.8], "View orientation should be [0.0, 1.0, 0.0, 0.8]");
+	t.deepEqual(viewPoint.viewOrientation(), [0.0, 1.0, 0.0, 0.8], "View orientation should be [0.0, 1.0, 0.0, 0.8]");
 	viewPoint.viewOrientation([1.0, 0.0, 0.0, 0.8]);
-	test.deepEqual(viewPoint.viewOrientation(), [1.0, 0.0, 0.0, 0.8]);
+	t.deepEqual(viewPoint.viewOrientation(), [1.0, 0.0, 0.0, 0.8]);
 
 	// Test Getter and Setter functions for field of view
-	test.deepEqual(viewPoint.fieldOfView(), 0.8, "Field of view should be 0.8");
+	t.deepEqual(viewPoint.fieldOfView(), 0.8, "Field of view should be 0.8");
 	viewPoint.fieldOfView(1.0);
-	test.deepEqual(viewPoint.fieldOfView(), 1.0);
+	t.deepEqual(viewPoint.fieldOfView(), 1.0);
 
-	test.end()
+	t.end()
 });
 
