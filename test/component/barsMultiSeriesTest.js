@@ -1,4 +1,4 @@
-let d3X3dom = require("../");
+let d3X3dom = require("../../build/d3-x3dom");
 let tape = require("tape");
 
 tape("Test Bars MultiSeries Component Base, barMultiSeries()", function(test) {

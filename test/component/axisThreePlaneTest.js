@@ -1,5 +1,5 @@
 let test = require('tape'),
-	d3X3dom = require("../");
+	d3X3dom = require("../../build/d3-x3dom");
 
 test("Test three axis plane, componentAxisThreePlane()", function(test) {
 	let axisThreePlane = d3X3dom.component.axisThreePlane();
