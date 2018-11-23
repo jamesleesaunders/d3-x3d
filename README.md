@@ -25,7 +25,7 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Scatter Plot](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/ScatterPlot.html)
 * [Surface Plot](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/SurfacePlot.html)
 * [Components Showcase](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
-* [Observable Examples](https://www.npmjs.com/package/d3-x3dom)
+* [Observable Examples](https://beta.observablehq.com/collection/@jamesleesaunders/d3-x3dom)
 
 ### Getting Started
 
