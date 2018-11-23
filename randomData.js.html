@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>chart/bubbleChart.js - Documentation</title>
+    <title>randomData.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">chart/bubbleChart.js</h1>
+    <h1 class="page-title">randomData.js</h1>
     
 
     
@@ -40,266 +40,206 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import * as d3 from "d3";
-import dataTransform from "../dataTransform";
-import component from "../component";
 
 /**
- * Reusable 3D Bubble Chart
+ * Generate Random Data
  *
  * @module
- *
- * @see https://datavizproject.com/data-type/bubble-chart/
- * @example
- * var chartHolder = d3.select("#chartholder");
- * var myData = [...];
- * var myChart = d3.x3dom.chart.bubbleChart();
- * chartHolder.datum(myData).call(myChart);
  */
-export default function() {
+export default function randomData() {
 
-	/* Default Properties */
-	let width = 500;
-	let height = 500;
-	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = ["green", "red", "yellow", "steelblue", "orange"];
-	let classed = "x3dBubbleChart";
-	let debug = false;
-
-	/* Scales */
-	let xScale;
-	let yScale;
-	let zScale;
-	let colorScale;
-	let sizeScale;
-	let sizeDomain = [0.5, 4.0];
+	const countries = ["UK", "France", "Spain", "Germany", "Italy", "Portugal"];
+	const fruit = ["Apples", "Oranges", "Pears", "Bananas"];
 
 	/**
-	 * Initialise Data and Scales
+	 * Random Number Generator between 1 and 10
 	 *
 	 * @private
-	 * @param {Array} data - Chart data.
+	 * @returns {number}
 	 */
-	function init(data) {
-		const { maxCoordinates, rowKeys, maxValue } = dataTransform(data).summary();
-		const extent = [0, maxValue];
-
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]);
-		}
-
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, dimensions.y]);
-		}
-
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]);
-		}
-
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
-		}
-
-		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
-		}
+	function randomNum() {
+		return Math.floor(Math.random() * 10) + 1;
 	}
+
+	/**
+	 * Random Dataset - Single Series
+	 *
+	 * @returns {Array}
+	 */
+	const randomDataset1 = function() {
+		let data = {
+			key: "Fruit",
+			values: fruit.map(function(d) {
+				return {
+					key: d,
+					value: randomNum(),
+					x: randomNum(),
+					y: randomNum(),
+					z: randomNum()
+				};
+			})
+		};
+
+		return data;
+	}();
+
+	/**
+	 * Random Dataset - Multi Series
+	 *
+	 * @returns {Array}
+	 */
+	const randomDataset2 = function() {
+		let data = countries.map(function(d) {
+			return {
+				key: d,
+				values: fruit.map(function(d) {
+					return {
+						key: d,
+						value: randomNum(),
+						x: randomNum(),
+						y: randomNum(),
+						z: randomNum()
+					};
+				})
+			}
+		});
+
+		return data;
+	}();
+
+	/**
+	 * Random Dataset - Single Series ScatterPlot
+	 *
+	 * @returns {Array}
+	 */
+	const randomDataset3 = function() {
+		let n = 100;
+		let data = {
+			key: "Fruit",
+			values: d3.range(n).map(function(d, i) {
+				return {
+					key: i,
+					value: randomNum(),
+					x: randomNum(),
+					y: randomNum(),
+					z: randomNum()
+				};
+			})
+		};
+
+		return data;
+	}();
+
+	/**
+	 * Random Dataset - Surface Plot 2
+	 *
+	 * @returns {Array}
+	 */
+	const randomDataset4 = function() {
+		let data = [
+			{
+				key: 'a',
+				values: [
+					{ key: '1', value: 4 },
+					{ key: '2', value: 0 },
+					{ key: '3', value: 2 },
+					{ key: '4', value: 0 },
+					{ key: '5', value: 0 }
+				]
+			}, {
+				key: 'b',
+				values: [
+					{ key: '1', value: 4 },
+					{ key: '2', value: 0 },
+					{ key: '3', value: 2 },
+					{ key: '4', value: 0 },
+					{ key: '5', value: 0 }
+				]
+			}, {
+				key: 'c',
+				values: [
+					{ key: '1', value: 1 },
+					{ key: '2', value: 0 },
+					{ key: '3', value: 1 },
+					{ key: '4', value: 0 },
+					{ key: '5', value: 0 }
+				]
+			}, {
+				key: 'd',
+				values: [
+					{ key: '1', value: 4 },
+					{ key: '2', value: 0 },
+					{ key: '3', value: 2 },
+					{ key: '4', value: 0 },
+					{ key: '5', value: 0 }
+				]
+			}, {
+				key: 'e',
+				values: [
+					{ key: '1', value: 1 },
+					{ key: '2', value: 1 },
+					{ key: '3', value: 1 },
+					{ key: '4', value: 1 },
+					{ key: '5', value: 1 }
+				]
+			}
+		];
+
+		return data;
+	}();
+
+	/**
+	 * Random Dataset - Surface Plot
+	 *
+	 * @returns {Array}
+	 */
+	const randomDataset5 = function() {
+		let cx = 0.8;
+		let cy = 0.3;
+		let f = function(vx, vz) {
+			return ((vx - cx) * (vx - cx) + (vz - cy) * (vx - cx)) * Math.random();
+		};
+
+		let xRange = d3.range(0, 1.05, 0.1);
+		let zRange = d3.range(0, 1.05, 0.1);
+		let nx = xRange.length;
+		let nz = zRange.length;
+
+		let data = d3.range(nx).map(function(i) {
+
+			let values = d3.range(nz).map(
+				function(j) {
+					return {
+						key: j,
+						value: f(xRange[i], zRange[j])
+					};
+				});
+
+			return {
+				key: i,
+				values: values
+			};
+		});
+
+		return data;
+	}();
 
 	/**
 	 * Constructor
 	 *
 	 * @constructor
-	 * @alias bubbleChart
-	 * @param {d3.selection} selection - The chart holder D3 selection.
+	 * @alias randomData
 	 */
-	function my(selection) {
-		const x3d = selection.append("x3d")
-			.attr("width", width + "px")
-			.attr("height", height + "px");
-
-		if (debug) {
-			x3d.attr("showLog", "true").attr("showStat", "true")
-		}
-
-		const scene = x3d.append("scene");
-
-		// Update the chart dimensions and add layer groups
-		const layers = ["axis", "chart"];
-		scene.classed(classed, true)
-			.selectAll("group")
-			.data(layers)
-			.enter()
-			.append("group")
-			.attr("class", d => d);
-
-		const viewpoint = component.viewpoint()
-			.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-		scene.call(viewpoint);
-
-		scene.append("directionallight")
-			.attr("direction", "1 0 -1")
-			.attr("on", "true")
-			.attr("intensity", "0.4")
-			.attr("shadowintensity", "0");
-
-		scene.each(function(data) {
-			init(data);
-
-			// Construct Axis Component
-			const axis = component.axisThreePlane()
-				.xScale(xScale)
-				.yScale(yScale)
-				.zScale(zScale);
-
-			// Construct Bubbles Component
-			const chart = component.bubblesMultiSeries()
-				.xScale(xScale)
-				.yScale(yScale)
-				.zScale(zScale)
-				.sizeScale(sizeScale)
-				.colorScale(colorScale);
-
-			scene.select(".axis")
-				.call(axis);
-
-			scene.select(".chart")
-				.datum(data)
-				.call(chart);
-		});
-	}
-
-	/**
-	 * Width Getter / Setter
-	 *
-	 * @param {number} _x - X3D canvas width in px.
-	 * @returns {*}
-	 */
-	my.width = function(_x) {
-		if (!arguments.length) return width;
-		width = _x;
-		return this;
+	return {
+		randomDataset1: randomDataset1,
+		randomDataset2: randomDataset2,
+		randomDataset3: randomDataset3,
+		randomDataset4: randomDataset4,
+		randomDataset5: randomDataset5,
+		countries: countries,
+		fruit: fruit
 	};
 
-	/**
-	 * Height Getter / Setter
-	 *
-	 * @param {number} _x - X3D canvas height in px.
-	 * @returns {*}
-	 */
-	my.height = function(_x) {
-		if (!arguments.length) return height;
-		height = _x;
-		return this;
-	};
-
-	/**
-	 * Dimensions Getter / Setter
-	 *
-	 * @param {{x: number, y: number, z: number}} _x - 3D object dimensions.
-	 * @returns {*}
-	 */
-	my.dimensions = function(_x) {
-		if (!arguments.length) return dimensions;
-		dimensions = _x;
-		return this;
-	};
-
-	/**
-	 * X Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _x - D3 scale.
-	 * @returns {*}
-	 */
-	my.xScale = function(_x) {
-		if (!arguments.length) return xScale;
-		xScale = _x;
-		return my;
-	};
-
-	/**
-	 * Y Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _x - D3 scale.
-	 * @returns {*}
-	 */
-	my.yScale = function(_x) {
-		if (!arguments.length) return yScale;
-		yScale = _x;
-		return my;
-	};
-
-	/**
-	 * Z Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _x - D3 scale.
-	 * @returns {*}
-	 */
-	my.zScale = function(_x) {
-		if (!arguments.length) return zScale;
-		zScale = _x;
-		return my;
-	};
-
-	/**
-	 * Color Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _x - D3 color scale.
-	 * @returns {*}
-	 */
-	my.colorScale = function(_x) {
-		if (!arguments.length) return colorScale;
-		colorScale = _x;
-		return my;
-	};
-
-	/**
-	 * Colors Getter / Setter
-	 *
-	 * @param {Array} _x - Array of colours used by color scale.
-	 * @returns {*}
-	 */
-	my.colors = function(_x) {
-		if (!arguments.length) return colors;
-		colors = _x;
-		return my;
-	};
-
-	/**
-	 * Size Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _x - D3 color scale.
-	 * @returns {*}
-	 */
-	my.sizeScale = function(_x) {
-		if (!arguments.length) return sizeScale;
-		sizeScale = _x;
-		return my;
-	};
-
-	/**
-	 * Size Domain Getter / Setter
-	 *
-	 * @param {number[]} _x - Size min and max (e.g. [0.5, 3.0]).
-	 * @returns {*}
-	 */
-	my.sizeDomain = function(_x) {
-		if (!arguments.length) return sizeDomain;
-		sizeDomain = _x;
-		return my;
-	};
-
-	/**
-	 * Debug Getter / Setter
-	 *
-	 * @param {boolean} _x - Show debug log and stats. True/False.
-	 * @returns {*}
-	 */
-	my.debug = function(_x) {
-		if (!arguments.length) return debug;
-		debug = _x;
-		return my;
-	};
-
-	return my;
 }
 </code></pre>
         </article>
