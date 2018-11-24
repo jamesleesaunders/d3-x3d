@@ -11,16 +11,18 @@ let date = new Date();
 let copyright = "Copyright (C) " + date.getFullYear() + " " + author;
 import { version, license } from "./package.json";
 
-import { default as dataTransform } from "./src/dataTransform";
-import { default as chart } from "./src/chart";
-import { default as component } from "./src/component";
+import chart from "./src/chart";
+import component from "./src/component";
+import dataTransform from "./src/dataTransform";
+import * as randomData from "./src/randomData";
 
 export default {
 	version: version,
 	author: author,
 	copyright: copyright,
 	license: license,
-	dataTransform: dataTransform,
 	chart: chart,
-	component: component
+	component: component,
+	dataTransform: dataTransform,
+	randomData: randomData
 };
