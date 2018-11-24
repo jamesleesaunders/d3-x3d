@@ -6,13 +6,13 @@ let dataset1 = {
 	values: [
 		{ key: "Apples", value: 9, x: 1, y: 1, z: 1 },
 		{ key: "Oranges", value: 3, x: 1, y: 1, z: 1 },
-		{ key: "Grapes", value: 5, x: 1, y: 1, z: 1 },
+		{ key: "Pears", value: 5, x: 1, y: 1, z: 1 },
 		{ key: "Bananas", value: 7, x: 1, y: 1, z: 1 }
 	]
 };
 
 let dataset2 = [{
-	key: "2000",
+	key: "Apples",
 	values: [
 		{ key: "UK", value: 9, x: 1, y: 1, z: 1 },
 		{ key: "France", value: 2, x: 1, y: 1, z: 1 },
@@ -22,7 +22,7 @@ let dataset2 = [{
 		{ key: "Portugal", value: 2, x: 1, y: 1, z: 1 }
 	]
 }, {
-	key: "2001",
+	key: "Oranges",
 	values: [
 		{ key: "UK", value: 10, x: 1, y: 1, z: 1 },
 		{ key: "France", value: 10, x: 1, y: 1, z: 1 },
@@ -32,7 +32,7 @@ let dataset2 = [{
 		{ key: "Portugal", value: 5, x: 1, y: 1, z: 1 }
 	]
 }, {
-	key: "2002",
+	key: "Pears",
 	values: [
 		{ key: "UK", value: 18, x: 1, y: 1, z: 1 },
 		{ key: "France", value: 0, x: 1, y: 1, z: 1 },
@@ -42,7 +42,7 @@ let dataset2 = [{
 		{ key: "Portugal", value: 10, x: 1, y: 1, z: 1 }
 	]
 }, {
-	key: "2003",
+	key: "Bananas",
 	values: [
 		{ key: "UK", value: 13, x: 1, y: 1, z: 1 },
 		{ key: "France", value: 12, x: 1, y: 1, z: 1 },
@@ -54,52 +54,52 @@ let dataset2 = [{
 }];
 
 let dataset3 = [{
-	key: 'UK',
+	key: "UK",
 	values: [
-		{ key: '2000', value: 9, x: 1, y: 1, z: 1 },
-		{ key: '2001', value: 10, x: 1, y: 1, z: 1 },
-		{ key: '2002', value: 18, x: 1, y: 1, z: 1 },
-		{ key: '2003', value: 13, x: 1, y: 1, z: 1 }
+		{ key: "Apples", value: 9, x: 1, y: 1, z: 1 },
+		{ key: "Oranges", value: 10, x: 1, y: 1, z: 1 },
+		{ key: "Pears", value: 18, x: 1, y: 1, z: 1 },
+		{ key: "Bananas", value: 13, x: 1, y: 1, z: 1 }
 	]
 }, {
-	key: 'France',
+	key: "France",
 	values: [
-		{ key: '2000', value: 2, x: 1, y: 1, z: 1 },
-		{ key: '2001', value: 10, x: 1, y: 1, z: 1 },
-		{ key: '2002', value: 0, x: 1, y: 1, z: 1 },
-		{ key: '2003', value: 12, x: 1, y: 1, z: 1 }
+		{ key: "Apples", value: 2, x: 1, y: 1, z: 1 },
+		{ key: "Oranges", value: 10, x: 1, y: 1, z: 1 },
+		{ key: "Pears", value: 0, x: 1, y: 1, z: 1 },
+		{ key: "Bananas", value: 12, x: 1, y: 1, z: 1 }
 	]
 }, {
-	key: 'Spain',
+	key: "Spain",
 	values: [
-		{ key: '2000', value: 18, x: 1, y: 1, z: 1 },
-		{ key: '2001', value: 2, x: 1, y: 1, z: 1 },
-		{ key: '2002', value: 8, x: 1, y: 1, z: 1 },
-		{ key: '2003', value: 2, x: 1, y: 1, z: 1 }
+		{ key: "Apples", value: 18, x: 1, y: 1, z: 1 },
+		{ key: "Oranges", value: 2, x: 1, y: 1, z: 1 },
+		{ key: "Pears", value: 8, x: 1, y: 1, z: 1 },
+		{ key: "Bananas", value: 2, x: 1, y: 1, z: 1 }
 	]
 }, {
-	key: 'Germany',
+	key: "Germany",
 	values: [
-		{ key: '2000', value: 5, x: 1, y: 1, z: 1 },
-		{ key: '2001', value: 3, x: 1, y: 1, z: 1 },
-		{ key: '2002', value: 3, x: 1, y: 1, z: 1 },
-		{ key: '2003', value: 9, x: 1, y: 1, z: 1 }
+		{ key: "Apples", value: 5, x: 1, y: 1, z: 1 },
+		{ key: "Oranges", value: 3, x: 1, y: 1, z: 1 },
+		{ key: "Pears", value: 3, x: 1, y: 1, z: 1 },
+		{ key: "Bananas", value: 9, x: 1, y: 1, z: 1 }
 	]
 }, {
-	key: 'Italy',
+	key: "Italy",
 	values: [
-		{ key: '2000', value: 7, x: 1, y: 1, z: 1 },
-		{ key: '2001', value: 4, x: 1, y: 1, z: 1 },
-		{ key: '2002', value: 6, x: 1, y: 1, z: 1 },
-		{ key: '2003', value: 7, x: 1, y: 1, z: 1 }
+		{ key: "Apples", value: 7, x: 1, y: 1, z: 1 },
+		{ key: "Oranges", value: 4, x: 1, y: 1, z: 1 },
+		{ key: "Pears", value: 6, x: 1, y: 1, z: 1 },
+		{ key: "Bananas", value: 7, x: 1, y: 1, z: 1 }
 	]
 }, {
-	key: 'Portugal',
+	key: "Portugal",
 	values: [
-		{ key: '2000', value: 2, x: 1, y: 1, z: 1 },
-		{ key: '2001', value: 5, x: 1, y: 1, z: 1 },
-		{ key: '2002', value: 10, x: 1, y: 1, z: 1 },
-		{ key: '2003', value: 4, x: 1, y: 1, z: 1 }
+		{ key: "Apples", value: 2, x: 1, y: 1, z: 1 },
+		{ key: "Oranges", value: 5, x: 1, y: 1, z: 1 },
+		{ key: "Pears", value: 10, x: 1, y: 1, z: 1 },
+		{ key: "Bananas", value: 4, x: 1, y: 1, z: 1 }
 	]
 }];
 
@@ -112,7 +112,7 @@ test("Test Summary 1", function(t) {
 		rowKeys: undefined,
 		rowTotals: undefined,
 		rowTotalsMax: undefined,
-		columnKeys: ["Apples", "Oranges", "Grapes", "Bananas"],
+		columnKeys: ["Apples", "Oranges", "Pears", "Bananas"],
 		columnTotals: undefined,
 		columnTotalsMax: undefined,
 		minValue: 3,
@@ -132,8 +132,8 @@ test("Test Summary 2", function(t) {
 		dataStructure: 2,
 		rowKey: undefined,
 		rowTotal: undefined,
-		rowKeys: ["2000", "2001", "2002", "2003"],
-		rowTotals: { 2000: 43, 2001: 34, 2002: 45, 2003: 47 },
+		rowKeys: ["Apples", "Oranges", "Pears", "Bananas"],
+		rowTotals: { Apples: 43, Oranges: 34, Pears: 45, Bananas: 47 },
 		rowTotalsMax: 47,
 		columnKeys: ["UK", "France", "Spain", "Germany", "Italy", "Portugal"],
 		columnTotals: { UK: 50, France: 24, Spain: 30, Germany: 20, Italy: 24, Portugal: 21 },
