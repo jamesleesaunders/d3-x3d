@@ -1,24 +1,29 @@
 # d3-x3dom Makefile
 
-GENERATED_FILES := build/d3-x3dom.js \
-                   build/d3-x3dom.min.js \
-                   README.md \
-                   LICENSE.md
+COMPRESS_FILES := build/d3-x3dom.js \
+                  build/d3-x3dom.min.js \
+                  README.md \
+                  LICENSE.md
 
-all: js css min zip
-.PHONY: js css min zip
+all: js css min zip docs
+.PHONY: js css min zip docs
 
 js:
 	@echo Compiling JS Files...
 	@rm -f build/d3-x3dom.js
-	@rollup -c config/rollup.config.js
+	@./node_modules/rollup/bin/rollup -c config/rollup.config.js
 
 min:
 	@echo Minifying...
 	@rm -f build/d3-x3dom.min.js
-	@uglifyjs build/d3-x3dom.js > build/d3-x3dom.min.js
+	@./node_modules/uglify-es/bin/uglifyjs build/d3-x3dom.js > build/d3-x3dom.min.js
 
-zip: $(GENERATED_FILES)
+zip: $(COMPRESS_FILES)
 	@echo Zipping...
 	@rm -f build/d3-x3dom.zip
 	@zip -qj build/d3-x3dom.zip $^
+
+docs:
+	@echo Generating Docs...
+	@rm -rf docs
+	@node ./node_modules/jsdoc/jsdoc.js -c config/jsdoc.conf.json
