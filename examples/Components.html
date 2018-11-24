@@ -7,7 +7,6 @@
   <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
   <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
   <script src="../build/d3-x3dom.js"></script>
-  <script src="randomData.js"></script>
 </head>
 
 <body>
@@ -26,7 +25,7 @@
     var viewpoint = d3.x3dom.component.viewpoint();
 
     // ========== Bubbles Component ==========
-    var bubblesData = randomDataset3();
+    var bubblesData = d3.x3dom.randomData.dataset3();
     var bubblesComponent = d3.x3dom.component.bubbles();
 
     // Create scene
@@ -45,7 +44,7 @@
       .call(bubblesComponent);
 
     // ========== Bubbles Multi Component ==========
-    var bubblesMultiSeriesData = randomDataset2();
+    var bubblesMultiSeriesData = d3.x3dom.randomData.dataset2();
     var bubblesMultiSeriesComponent = d3.x3dom.component.bubblesMultiSeries();
 
     // Create scene
@@ -64,7 +63,7 @@
       .call(bubblesMultiSeriesComponent);
 
     // ========== Surface Component ==========
-    var surfaceData = randomDataset5();
+    var surfaceData = d3.x3dom.randomData.dataset5();
     var surfaceComponent = d3.x3dom.component.surface();
 
     // Create scene
@@ -83,7 +82,7 @@
       .call(surfaceComponent);
 
     // ========== Bars Multi Component ==========
-    var barsMultiSeriesData = randomDataset2();
+    var barsMultiSeriesData = d3.x3dom.randomData.dataset2();
     var barsMultiSeriesComponent = d3.x3dom.component.barsMultiSeries();
 
     // Create scene
@@ -102,7 +101,9 @@
       .call(barsMultiSeriesComponent);
 
     // ========== Axis Component ==========
-    var xScale = d3.scaleBand().domain(stores).rangeRound([0, 40]);
+    var countries = d3.x3dom.randomData.countries;
+    var fruit = d3.x3dom.randomData.fruit;
+    var xScale = d3.scaleBand().domain(countries).rangeRound([0, 40]);
     var yScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
     var zScale = d3.scaleBand().domain(fruit).range([0, 40]);
     var axisThreePlaneComponent = d3.x3dom.component.axisThreePlane()
@@ -125,7 +126,7 @@
       .call(axisThreePlaneComponent);
 
     // ========== Bars Multi Component ==========
-    var barsData = randomDataset1();
+    var barsData = d3.x3dom.randomData.dataset1();
     var barsComponent = d3.x3dom.component.bars();
 
     // Create scene
