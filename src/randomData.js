@@ -1,31 +1,35 @@
-/**
- * d3-x3dom
- *
- * @author James Saunders [james@saunders-family.net]
- * @copyright Copyright (C) 2018 James Saunders
- * @license GPLv3
- */
-"use strict";
+import * as d3 from "d3";
 
-var stores = ["Sainsburys", "Tesco", "Asda", "Waitrose", "Morrisons", "Lidl"];
-var fruit = ["Apples", "Oranges", "Pears", "Kiwis"];
+/**
+ * List of Countries
+ *
+ * @type {Array}
+ */
+export const countries = ["UK", "France", "Spain", "Germany", "Italy", "Portugal"];
+
+/**
+ * List of Fruit
+ *
+ * @type {Array}
+ */
+export const fruit = ["Apples", "Oranges", "Pears", "Bananas"];
 
 /**
  * Random Number Generator between 1 and 10
  *
  * @returns {number}
  */
-function randomNum() {
+export function randomNum() {
 	return Math.floor(Math.random() * 10) + 1;
 }
 
 /**
  * Random Dataset - Single Series
  *
- * @returns {{key: string, values: (Array|{key: string, value: number, x: number, y: number, z: number}[])}}
+ * @returns {Array}
  */
-function randomDataset1() {
-	var data = {
+export function dataset1() {
+	let data = {
 		key: "Fruit",
 		values: fruit.map(function(d) {
 			return {
@@ -44,10 +48,10 @@ function randomDataset1() {
 /**
  * Random Dataset - Multi Series
  *
- * @returns {Array|{key: string, values: (Array|{key: string, value: number, x: number, y: number, z: number}[])}[]}
+ * @returns {Array}
  */
-function randomDataset2() {
-	var data = stores.map(function(d) {
+export function dataset2() {
+	let data = countries.map(function(d) {
 		return {
 			key: d,
 			values: fruit.map(function(d) {
@@ -66,15 +70,15 @@ function randomDataset2() {
 }
 
 /**
- * Random Dataset - Single Series ScatterPlot
+ * Random Dataset - Single Series Scatter Plot
  *
- * @returns {{key: string, values: (Array|{key: string, value: number, x: number, y: number, z: number}[])}[]}
+ * @returns {Array}
  */
-function randomDataset3() {
-	var n = 100;
-	var data = {
-		key: "Fruit",
-		values: d3.range(n).map(function(d, i) {
+export function dataset3() {
+	let points = 100;
+	let data = {
+		key: "Bubbles",
+		values: d3.range(points).map(function(d, i) {
 			return {
 				key: i,
 				value: randomNum(),
@@ -89,12 +93,12 @@ function randomDataset3() {
 }
 
 /**
- * Random Dataset - Surface Plot 2
+ * Random Dataset - Surface Plot 1
  *
- * @returns {*}
+ * @returns {Array}
  */
-function randomDataset4() {
-	var data = [
+export function dataset4() {
+	let data = [
 		{
 			key: 'a',
 			values: [
@@ -147,25 +151,25 @@ function randomDataset4() {
 }
 
 /**
- * Random Dataset - Surface Plot
+ * Random Dataset - Surface Plot 2
  *
- * @returns {*}
+ * @returns {Array}
  */
-function randomDataset5() {
-	var cx = 0.8;
-	var cy = 0.3;
-	var f = function(vx, vz) {
+export function dataset5() {
+	let cx = 0.8;
+	let cy = 0.3;
+	let f = function(vx, vz) {
 		return ((vx - cx) * (vx - cx) + (vz - cy) * (vx - cx)) * Math.random();
 	};
 
-	var xRange = d3.range(0, 1.05, 0.1);
-	var zRange = d3.range(0, 1.05, 0.1);
-	var nx = xRange.length;
-	var nz = zRange.length;
+	let xRange = d3.range(0, 1.05, 0.1);
+	let zRange = d3.range(0, 1.05, 0.1);
+	let nx = xRange.length;
+	let nz = zRange.length;
 
-	var data = d3.range(nx).map(function(i) {
+	let data = d3.range(nx).map(function(i) {
 
-		var values = d3.range(nz).map(
+		let values = d3.range(nz).map(
 			function(j) {
 				return {
 					key: j,
@@ -181,3 +185,4 @@ function randomDataset5() {
 
 	return data;
 }
+

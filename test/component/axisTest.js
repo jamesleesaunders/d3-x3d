@@ -16,8 +16,8 @@ test("Test Axis Component Default Values, axis()", function(t) {
 
 	// Test for Getter and setter function for tickValues
 	t.deepEqual(axis.tickValues(), null, "Test tickValues() Empty");
-	axis.tickValues(["Apples", "Oranges", "Pears", "Kiwis"]);
-	t.deepEqual(axis.tickValues(), ["Apples", "Oranges", "Pears", "Kiwis"], "Test tickValues() Populated");
+	axis.tickValues(["Apples", "Oranges", "Pears", "Bananas"]);
+	t.deepEqual(axis.tickValues(), ["Apples", "Oranges", "Pears", "Bananas"], "Test tickValues() Populated");
 
 	// Test for Getter and setter function for tick direction
 	t.deepEqual(axis.tickDir(), undefined, "tickDir() is empty");

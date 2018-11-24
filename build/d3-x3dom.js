@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.0.17";
+var version = "1.0.18";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -32,6 +32,8 @@ var _extends = Object.assign || function (target) {
 /**
  * Data Analysis
  *
+ * @module
+ * @returns {Array}
  */
 function dataTransform(data) {
 
@@ -40,11 +42,15 @@ function dataTransform(data) {
 
 	/**
   * Row or Rows?
+  *
+  * @type {Number}
   */
 	var dataStructure = data.key !== undefined ? SINGLE_SERIES : MULTI_SERIES;
 
 	/**
   * Row Key
+  *
+  * @returns {Array}
   */
 	var rowKey = function () {
 		if (dataStructure === SINGLE_SERIES) {
@@ -54,6 +60,8 @@ function dataTransform(data) {
 
 	/**
   * Row Keys
+  *
+  * @returns {Array}
   */
 	var rowKeys = function () {
 		if (dataStructure === MULTI_SERIES) {
@@ -65,6 +73,8 @@ function dataTransform(data) {
 
 	/**
   * Row Totals
+  *
+  * @returns {Array}
   */
 	var rowTotals = function () {
 		if (MULTI_SERIES === dataStructure) {
@@ -82,6 +92,8 @@ function dataTransform(data) {
 
 	/**
   * Row Totals Max
+  *
+  * @returns {number}
   */
 	var rowTotalsMax = function () {
 		if (dataStructure === MULTI_SERIES) {
@@ -91,6 +103,11 @@ function dataTransform(data) {
 
 	/**
   * Join two arrays
+  *
+  * @private
+  * @param {Array} array1 - First Array.
+  * @param {Array} array2 - First Array.
+  * @returns {Array}
   */
 	var union = function union(array1, array2) {
 		var ret = [];
@@ -112,6 +129,8 @@ function dataTransform(data) {
 
 	/**
   * Column Keys
+  *
+  * @returns {Array}
   */
 	var columnKeys = function () {
 		if (dataStructure === SINGLE_SERIES) {
@@ -134,6 +153,8 @@ function dataTransform(data) {
 
 	/**
   * Row Totals
+  *
+  * @returns {Array}
   */
 	var rowTotal = function () {
 		if (dataStructure === SINGLE_SERIES) {
@@ -145,6 +166,8 @@ function dataTransform(data) {
 
 	/**
   * Column Totals
+  *
+  * @returns {Array}
   */
 	var columnTotals = function () {
 		if (dataStructure !== MULTI_SERIES) {
@@ -165,6 +188,8 @@ function dataTransform(data) {
 
 	/**
   * Column Totals Max
+  *
+  * @returns {Array}
   */
 	var columnTotalsMax = function () {
 		if (dataStructure === MULTI_SERIES) {
@@ -174,6 +199,8 @@ function dataTransform(data) {
 
 	/**
   * Min Value
+  *
+  * @returns {number}
   */
 	var minValue = function () {
 		if (dataStructure === SINGLE_SERIES) {
@@ -194,6 +221,8 @@ function dataTransform(data) {
 
 	/**
   * Max Value
+  *
+  * @returns {number}
   */
 	var maxValue = function () {
 		if (dataStructure === SINGLE_SERIES) {
@@ -214,6 +243,8 @@ function dataTransform(data) {
 
 	/**
   * Max Coordinates
+  *
+  * @returns {Array}
   */
 	var maxCoordinates = function () {
 		var maxX = void 0,
@@ -245,6 +276,10 @@ function dataTransform(data) {
 
 	/**
   * How many decimal places?
+  *
+  * @private
+  * @param {number} num - Float.
+  * @returns {number}
   */
 	var decimalPlaces = function decimalPlaces(num) {
 		var match = ("" + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
@@ -261,6 +296,8 @@ function dataTransform(data) {
 
 	/**
   * Max decimal place
+  *
+  * @returns {number}
   */
 	var maxDecimalPlace = function () {
 		var ret = 0;
@@ -278,6 +315,8 @@ function dataTransform(data) {
 
 	/**
   * Attempt to auto-calculate some thresholds
+  *
+  * @returns {Array}
   */
 	var thresholds = function () {
 		var distance = maxValue - minValue;
@@ -287,6 +326,8 @@ function dataTransform(data) {
 
 	/**
   * Rotate Data
+  *
+  * @returns {Array}
   */
 	var rotate = function rotate() {
 		var columnKeys = data.map(function (d) {
@@ -317,6 +358,8 @@ function dataTransform(data) {
 
 	/**
   * Summary
+  *
+  * @returns {Array}
   */
 	var summary = function summary() {
 		return {
@@ -2902,6 +2945,170 @@ var chart = {
 };
 
 /**
+ * List of Countries
+ *
+ * @type {Array}
+ */
+var countries = ["UK", "France", "Spain", "Germany", "Italy", "Portugal"];
+
+/**
+ * List of Fruit
+ *
+ * @type {Array}
+ */
+var fruit = ["Apples", "Oranges", "Pears", "Bananas"];
+
+/**
+ * Random Number Generator between 1 and 10
+ *
+ * @returns {number}
+ */
+function randomNum() {
+	return Math.floor(Math.random() * 10) + 1;
+}
+
+/**
+ * Random Dataset - Single Series
+ *
+ * @returns {Array}
+ */
+function dataset1() {
+	var data = {
+		key: "Fruit",
+		values: fruit.map(function (d) {
+			return {
+				key: d,
+				value: randomNum(),
+				x: randomNum(),
+				y: randomNum(),
+				z: randomNum()
+			};
+		})
+	};
+
+	return data;
+}
+
+/**
+ * Random Dataset - Multi Series
+ *
+ * @returns {Array}
+ */
+function dataset2() {
+	var data = countries.map(function (d) {
+		return {
+			key: d,
+			values: fruit.map(function (d) {
+				return {
+					key: d,
+					value: randomNum(),
+					x: randomNum(),
+					y: randomNum(),
+					z: randomNum()
+				};
+			})
+		};
+	});
+
+	return data;
+}
+
+/**
+ * Random Dataset - Single Series Scatter Plot
+ *
+ * @returns {Array}
+ */
+function dataset3() {
+	var points = 100;
+	var data = {
+		key: "Bubbles",
+		values: d3.range(points).map(function (d, i) {
+			return {
+				key: i,
+				value: randomNum(),
+				x: randomNum(),
+				y: randomNum(),
+				z: randomNum()
+			};
+		})
+	};
+
+	return data;
+}
+
+/**
+ * Random Dataset - Surface Plot 1
+ *
+ * @returns {Array}
+ */
+function dataset4() {
+	var data = [{
+		key: 'a',
+		values: [{ key: '1', value: 4 }, { key: '2', value: 0 }, { key: '3', value: 2 }, { key: '4', value: 0 }, { key: '5', value: 0 }]
+	}, {
+		key: 'b',
+		values: [{ key: '1', value: 4 }, { key: '2', value: 0 }, { key: '3', value: 2 }, { key: '4', value: 0 }, { key: '5', value: 0 }]
+	}, {
+		key: 'c',
+		values: [{ key: '1', value: 1 }, { key: '2', value: 0 }, { key: '3', value: 1 }, { key: '4', value: 0 }, { key: '5', value: 0 }]
+	}, {
+		key: 'd',
+		values: [{ key: '1', value: 4 }, { key: '2', value: 0 }, { key: '3', value: 2 }, { key: '4', value: 0 }, { key: '5', value: 0 }]
+	}, {
+		key: 'e',
+		values: [{ key: '1', value: 1 }, { key: '2', value: 1 }, { key: '3', value: 1 }, { key: '4', value: 1 }, { key: '5', value: 1 }]
+	}];
+
+	return data;
+}
+
+/**
+ * Random Dataset - Surface Plot 2
+ *
+ * @returns {Array}
+ */
+function dataset5() {
+	var cx = 0.8;
+	var cy = 0.3;
+	var f = function f(vx, vz) {
+		return ((vx - cx) * (vx - cx) + (vz - cy) * (vx - cx)) * Math.random();
+	};
+
+	var xRange = d3.range(0, 1.05, 0.1);
+	var zRange = d3.range(0, 1.05, 0.1);
+	var nx = xRange.length;
+	var nz = zRange.length;
+
+	var data = d3.range(nx).map(function (i) {
+
+		var values = d3.range(nz).map(function (j) {
+			return {
+				key: j,
+				value: f(xRange[i], zRange[j])
+			};
+		});
+
+		return {
+			key: i,
+			values: values
+		};
+	});
+
+	return data;
+}
+
+var randomData = Object.freeze({
+	countries: countries,
+	fruit: fruit,
+	randomNum: randomNum,
+	dataset1: dataset1,
+	dataset2: dataset2,
+	dataset3: dataset3,
+	dataset4: dataset4,
+	dataset5: dataset5
+});
+
+/**
  * d3-x3dom
  *
  * @author James Saunders [james@saunders-family.net]
@@ -2918,9 +3125,10 @@ var index = {
 	author: author$1,
 	copyright: copyright,
 	license: license,
-	dataTransform: dataTransform,
 	chart: chart,
-	component: component
+	component: component,
+	dataTransform: dataTransform,
+	randomData: randomData
 };
 
 return index;

@@ -62,20 +62,20 @@ Generate some [data](#data-structure):
 ```javascript
 var myData = [
 	{
-		key: "Sainsburys",
+		key: "UK",
 		values: [
 			{ key: "Apples", value: 9 },
 			{ key: "Oranges", value: 3 },
-			{ key: "Grapes", value: 5 },
+			{ key: "Pears", value: 5 },
 			{ key: "Bananas", value: 7 }
 		]
 	},
 	{
-		key: "Tesco",
+		key: "France",
 		values: [
 			{ key: "Apples", value: 5 },
 			{ key: "Oranges", value: 4 },
-			{ key: "Grapes", value: 6 },
+			{ key: "Pears", value: 6 },
 			{ key: "Bananas", value: 2 }
 		]
 	}
@@ -164,11 +164,11 @@ _\*optional, `x`, `y` & `z` values are used for cartesian coordinate type graphs
 
 ```javascript
 var myData = {
-	key: "Sainsburys",
+	key: "UK",
 	values: [
 		{ key: "Apples", value: 9, x: 1, y: 2, z: 5 },
 		/* ... */
-		{ key: "Oranges", value: 7, x: 6, y: 3, z: 8 }
+		{ key: "Bananas", value: 7, x: 6, y: 3, z: 8 }
 	]
 };
 ```
@@ -180,20 +180,20 @@ Used by charts such as the multi series scatter plot, the multi series data stru
 ```javascript
 var myData = [
 	{
-		key: "Sainsburys",
+		key: "UK",
 		values: [
 			{ key: "Apples", value: 2 },
 			/* ... */
-			{ key: "Oranges", value: 3 }
+			{ key: "Bananas", value: 3 }
 		]
 	},
 	/* ... */
 	{
-		key: "Tesco",
+		key: "France",
 		values: [
 			{ key: "Apples", value: 5 },
 			/* ... */
-			{ key: "Oranges", value: 9 }
+			{ key: "Bananas", value: 9 }
 		]
 	}
 ];
