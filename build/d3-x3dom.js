@@ -1157,8 +1157,10 @@ function componentBubbles () {
 				return sizeScale(d.value);
 			});
 
-			bubbles.append("transform").attr('translation', "0.8 0.8 0.8") // FIXME: transation should be proportional to the sphere radius.
-			.append("billboard").attr('render', false).attr("axisOfRotation", "0 0 0").append("shape").call(makeSolid, "blue").append("text").attr('class', "labelText").attr('string', function (d) {
+			bubbles.append("transform").attr("translation", function (d) {
+				var r = sizeScale(d.value) + 0.8;
+				return r + " " + r + " " + r;
+			}).append("billboard").attr('render', false).attr("axisOfRotation", "0 0 0").append("shape").call(makeSolid, "blue").append("text").attr('class', "labelText").attr('string', function (d) {
 				return d.key;
 			}).append("fontstyle").attr("size", 1).attr("family", "SANS").attr("style", "BOLD").attr("justify", "START").attr('render', false);
 		});

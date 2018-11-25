@@ -57,7 +57,7 @@ export default function() {
 	function my(selection) {
 		selection.classed(classed, true);
 
-		selection.each(function(data) {
+		selection.each((data) => {
 			init(data);
 
 			// Construct Bars Component
@@ -78,7 +78,7 @@ export default function() {
 			barGroup.enter()
 				.append("transform")
 				.classed("barGroup", true)
-				.attr("translation", function(d) {
+				.attr("translation", (d) => {
 					let x = 0;
 					let y = 0;
 					let z = zScale(d.key);

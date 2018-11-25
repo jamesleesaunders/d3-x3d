@@ -34,7 +34,7 @@ export default function() {
 			.data(layers)
 			.enter()
 			.append("group")
-			.attr("class", function(d) { return d; });
+			.attr("class", (d) => d);
 
 		// Construct Axis Components
 		const xzAxis = componentAxis()

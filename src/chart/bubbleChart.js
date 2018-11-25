@@ -88,7 +88,7 @@ export default function() {
 			.data(layers)
 			.enter()
 			.append("group")
-			.attr("class", d => d);
+			.attr("class", (d) => d);
 
 		const viewpoint = component.viewpoint()
 			.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
@@ -100,7 +100,7 @@ export default function() {
 			.attr("intensity", "0.4")
 			.attr("shadowintensity", "0");
 
-		scene.each(function(data) {
+		scene.each((data) => {
 			init(data);
 
 			// Construct Axis Component

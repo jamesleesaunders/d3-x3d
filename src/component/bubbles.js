@@ -26,10 +26,10 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		const maxX = d3.max(data.values, function(d) { return +d.x; });
-		const maxY = d3.max(data.values, function(d) { return +d.y; });
-		const maxZ = d3.max(data.values, function(d) { return +d.z; });
-		const maxValue = d3.max(data.values, function(d) { return +d.value; });
+		const maxX = d3.max(data.values, (d) => +d.x);
+		const maxY = d3.max(data.values, (d) => +d.y);
+		const maxZ = d3.max(data.values, (d) => +d.z);
+		const maxValue = d3.max(data.values, (d) => +d.value);
 		const extent = [0, maxValue];
 
 		if (typeof xScale === "undefined") {
@@ -59,10 +59,10 @@ export default function() {
 	function my(selection) {
 		selection.classed(classed, true);
 
-		selection.each(function(data) {
+		selection.each((data) => {
 			init(data);
 
-			const makeSolid = function(selection, color) {
+			const makeSolid = (selection, color) => {
 				selection
 					.append("appearance")
 					.append("material")
@@ -71,12 +71,12 @@ export default function() {
 			};
 
 			const bubblesSelect = selection.selectAll(".point")
-				.data(function(d) { return d.values; });
+				.data((d) => d.values);
 
 			const bubbles = bubblesSelect.enter()
 				.append("transform")
 				.attr("class", "point")
-				.attr("translation", function(d) { return xScale(d.x) + ' ' + yScale(d.y) + ' ' + zScale(d.z); })
+				.attr("translation", (d) => (xScale(d.x) + ' ' + yScale(d.y) + ' ' + zScale(d.z)))
 				.attr("onmouseover", "d3.select(this).select('billboard').attr('render', true);")
 				.attr("onmouseout", "d3.select(this).select('transform').select('billboard').attr('render', false);")
 				.merge(bubblesSelect);
@@ -84,11 +84,14 @@ export default function() {
 			bubbles.append("shape")
 				.call(makeSolid, color)
 				.append("sphere")
-				.attr("radius", function(d) { return sizeScale(d.value); });
+				.attr("radius", (d) => sizeScale(d.value));
 
 			bubbles
 				.append("transform")
-				.attr('translation', "0.8 0.8 0.8") // FIXME: transation should be proportional to the sphere radius.
+				.attr("translation", (d) => {
+					let r = sizeScale(d.value) + 0.8;
+					return r + " " + r + " " + r;
+				})
 				.append("billboard")
 				.attr('render', false)
 				.attr("axisOfRotation", "0 0 0")
@@ -96,7 +99,7 @@ export default function() {
 				.call(makeSolid, "blue")
 				.append("text")
 				.attr('class', "labelText")
-				.attr('string', function(d) { return d.key; })
+				.attr('string', (d) => d.key)
 				.append("fontstyle")
 				.attr("size", 1)
 				.attr("family", "SANS")

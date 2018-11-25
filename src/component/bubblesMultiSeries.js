@@ -63,7 +63,7 @@ export default function() {
 	function my(selection) {
 		selection.classed(classed, true);
 
-		selection.each(function(data) {
+		selection.each((data) => {
 			init(data);
 
 			// Construct Bars Component
@@ -72,7 +72,7 @@ export default function() {
 				.yScale(yScale)
 				.zScale(zScale)
 				.sizeScale(sizeScale)
-				.color(function(d) { return colorScale(d.key); });
+				.color((d) => colorScale(d.key));
 
 			// Create Bar Groups
 			const bubbleGroup = selection.selectAll(".bubbleGroup")

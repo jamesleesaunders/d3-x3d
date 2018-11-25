@@ -51,22 +51,22 @@ export default function() {
 	function my(selection) {
 		selection.classed(classed, true);
 
-		selection.each(function(data) {
+		selection.each((data) => {
 			init(data);
 
 			const bars = selection.selectAll(".bar")
-				.data(function(d) { return d.values; });
+				.data((d) => d.values);
 
 			const barsEnter = bars.enter()
 				.append("transform")
 				.classed("bar", true)
-				.attr("scale", function(d) {
+				.attr("scale", (d) => {
 					let x = xScale.bandwidth();
 					let y = yScale(d.value);
 					let z = dimensions.z;
 					return x + " " + y + " " + z;
 				})
-				.attr("translation", function(d) {
+				.attr("translation", (d) => {
 					let x = xScale(d.key);
 					let y = yScale(d.value) / 2;
 					let z = 0.0;
@@ -79,19 +79,17 @@ export default function() {
 				.attr("size", "1.0 1.0 1.0");
 			barsEnter.append("appearance")
 				.append("material")
-				.attr("diffuseColor", function(d) {
-					return colorScale(d.key);
-				})
+				.attr("diffuseColor", (d) => colorScale(d.key))
 				.attr("ambientIntensity", "0.1");
 
 			bars.transition()
-				.attr("scale", function(d) {
+				.attr("scale", (d) => {
 					let x = xScale.bandwidth();
 					let y = yScale(d.value);
 					let z = dimensions.z;
 					return x + " " + y + " " + z;
 				})
-				.attr("translation", function(d) {
+				.attr("translation", (d) => {
 					let x = xScale(d.key);
 					let y = yScale(d.value) / 2;
 					let z = 0.0;

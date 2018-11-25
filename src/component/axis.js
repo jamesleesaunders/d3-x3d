@@ -66,7 +66,7 @@ export default function() {
 	function my(selection) {
 		selection.classed(classed, true);
 
-		const makeSolid = function(selection, color) {
+		const makeSolid = (selection, color) => {
 			selection.append("appearance")
 				.append("material")
 				.attr("diffuseColor", color || "black");
@@ -95,32 +95,28 @@ export default function() {
 		const tickExit = tick.exit();
 		const tickEnter = tick.enter()
 			.append("transform")
-			.attr("translation", function(t) {
-				return dirVec.map(function(a) {
-					return scale(t) * a;
-				}).join(" ");
-			})
+			.attr("translation", (t) => (dirVec.map((a) => (scale(t) * a)).join(" ")))
 			.attr("class", "tick");
 
 		let line = tick.select(".tickLine");
 		path = path.merge(path.enter()
 			.append("transform")
 			.attr("rotation", rotVec.join(" "))
-			.attr("translation", dirVec.map(function(d) { return d * (range0 + range1) / 2; }).join(" "))
+			.attr("translation", dirVec.map((d) => (d * (range0 + range1) / 2)).join(" "))
 			.append("shape")
 			.call(makeSolid, color)
 			.attr("class", "domain"));
 		tick = tick.merge(tickEnter);
 		line = line.merge(tickEnter.append("transform"));
 
-		const tickFormatDefault = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : function(d) { return d; };
+		const tickFormatDefault = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : (d) => d;
 		tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
 
 		if (tickFormat !== "") {
 			let text = tick.select("billboard");
 			let newText = tickEnter.append("transform");
 			newText
-				.attr("translation", tickDirVec.map(function(d) { return -d * tickPadding; }))
+				.attr("translation", tickDirVec.map((d) => (-d * tickPadding)))
 				.append("billboard")
 				.attr("axisOfRotation", "0 0 0")
 				.append("shape")
@@ -142,9 +138,7 @@ export default function() {
 			.attr("height", range1 - range0);
 
 		line
-			.attr("translation", tickDirVec.map(function(d) {
-				return d * tickSize / 2;
-			}).join(" "))
+			.attr("translation", tickDirVec.map((d) => (d * tickSize / 2)).join(" "))
 			.attr("rotation", tickRotVec.join(" "))
 			.attr("class", "tickLine")
 			.append("shape")

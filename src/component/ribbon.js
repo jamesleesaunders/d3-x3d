@@ -46,26 +46,24 @@ export default function() {
 	function my(selection) {
 		selection.classed(classed, true);
 
-		selection.each(function(data) {
+		selection.each((data) => {
 			init(data);
 
 			const ribbonSelect = selection.selectAll(".point")
-				.data(function(d) { return d.values; });
+				.data((d) => d.values);
 
 			const ribbon = ribbonSelect.enter()
 				.append("transform")
-				.attr("translation", function(d) {
+				.attr("translation", (d) => {
 					const x = xScale(d.key);
 					const y = yScale(d.value) / 2;
 					return x + " " + y + " 0";
 				})
-				.attr("rotation", function() {
-					return "0,-1,0,1.57079633";
-				})
+				.attr("rotation", () => "0,-1,0,1.57079633")
 				.append("shape");
 
 			ribbon.append("rectangle2d")
-				.attr("size", function(d) {
+				.attr("size", (d) => {
 					const width = 5;
 					const height = yScale(d.value);
 					return width + " " + height;

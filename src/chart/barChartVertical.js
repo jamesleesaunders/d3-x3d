@@ -77,13 +77,13 @@ export default function() {
 			.data(layers)
 			.enter()
 			.append("group")
-			.attr("class", d => d);
+			.attr("class", (d) => d);
 
 		const viewpoint = component.viewpoint()
 			.quickView("left");
 		scene.call(viewpoint);
 
-		scene.each(function(data) {
+		scene.each((data) => {
 			init(data);
 
 			// Construct Axis Components

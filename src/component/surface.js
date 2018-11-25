@@ -27,8 +27,8 @@ export default function() {
 	 * @returns {*}
 	 */
 	function array2dToString(arr) {
-		return arr.reduce(function(a, b) { return a.concat(b); }, [])
-			.reduce(function(a, b) { return a.concat(b); }, [])
+		return arr.reduce((a, b) => a.concat(b), [])
+			.reduce((a, b) => a.concat(b), [])
 			.join(' ');
 	}
 
@@ -69,7 +69,7 @@ export default function() {
 	function my(selection) {
 		selection.classed(classed, true);
 
-		selection.each(function(data) {
+		selection.each((data) => {
 			init(data);
 
 			const ny = data.length;
