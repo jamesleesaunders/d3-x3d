@@ -49,25 +49,33 @@ export default function() {
 		selection.each((data) => {
 			init(data);
 
-			const ribbonSelect = selection.selectAll(".point")
-				.data((d) => d.values);
+			let ribbonData = data.values.map((d) => {
+				const x = xScale(d.key);
+				const y = yScale(d.value) / 2;
+				const width = 5;
+				const height = yScale(d.value);
+
+				return {
+					key: d.key,
+					value: d.value,
+					translation: x + " " + y + " 0",
+					rotation: "0,-1,0,1.57079633",
+					size: width + " " + height
+				}
+			});
+
+			const ribbonSelect = selection.selectAll(".ribbon")
+				.data(ribbonData);
 
 			const ribbon = ribbonSelect.enter()
 				.append("transform")
-				.attr("translation", (d) => {
-					const x = xScale(d.key);
-					const y = yScale(d.value) / 2;
-					return x + " " + y + " 0";
-				})
-				.attr("rotation", () => "0,-1,0,1.57079633")
+				.classed("ribbon", true)
+				.attr("translation", (d) => d.translation)
+				.attr("rotation", (d) => d.rotation)
 				.append("shape");
 
 			ribbon.append("rectangle2d")
-				.attr("size", (d) => {
-					const width = 5;
-					const height = yScale(d.value);
-					return width + " " + height;
-				})
+				.attr("size", (d) => d.size)
 				.attr("solid", "true");
 
 			ribbon.append("appearance")

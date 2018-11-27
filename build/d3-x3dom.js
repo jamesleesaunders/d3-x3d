@@ -1804,22 +1804,31 @@ function componentRibbon () {
 		selection.each(function (data) {
 			init(data);
 
-			var ribbonSelect = selection.selectAll(".point").data(function (d) {
-				return d.values;
-			});
-
-			var ribbon = ribbonSelect.enter().append("transform").attr("translation", function (d) {
+			var ribbonData = data.values.map(function (d) {
 				var x = xScale(d.key);
 				var y = yScale(d.value) / 2;
-				return x + " " + y + " 0";
-			}).attr("rotation", function () {
-				return "0,-1,0,1.57079633";
+				var width = 5;
+				var height = yScale(d.value);
+
+				return {
+					key: d.key,
+					value: d.value,
+					translation: x + " " + y + " 0",
+					rotation: "0,-1,0,1.57079633",
+					size: width + " " + height
+				};
+			});
+
+			var ribbonSelect = selection.selectAll(".ribbon").data(ribbonData);
+
+			var ribbon = ribbonSelect.enter().append("transform").classed("ribbon", true).attr("translation", function (d) {
+				return d.translation;
+			}).attr("rotation", function (d) {
+				return d.rotation;
 			}).append("shape");
 
 			ribbon.append("rectangle2d").attr("size", function (d) {
-				var width = 5;
-				var height = yScale(d.value);
-				return width + " " + height;
+				return d.size;
 			}).attr("solid", "true");
 
 			ribbon.append("appearance").append("twosidedmaterial").attr("diffuseColor", color);
