@@ -56,11 +56,20 @@ export default function() {
 				const height = yScale(d.value);
 
 				return {
-					key: d.key,
-					value: d.value,
-					translation: x + " " + y + " 0",
-					rotation: "0,-1,0,1.57079633",
-					size: width + " " + height
+					up: {
+						key: d.key,
+						value: d.value,
+						translation: x + " " + y + " 0",
+						rotation: "0,-1,0,1.57079633",
+						size: width + " " + height
+					},
+					down: {
+						key: d.key,
+						value: d.value,
+						translation: x + " " + y + " 0",
+						rotation: "0,-1,0,1.57079633",
+						size: width + " " + height
+					}
 				}
 			});
 
@@ -70,12 +79,12 @@ export default function() {
 			const ribbon = ribbonSelect.enter()
 				.append("transform")
 				.classed("ribbon", true)
-				.attr("translation", (d) => d.translation)
-				.attr("rotation", (d) => d.rotation)
+				.attr("translation", (d) => d.up.translation)
+				.attr("rotation", (d) => d.up.rotation)
 				.append("shape");
 
 			ribbon.append("rectangle2d")
-				.attr("size", (d) => d.size)
+				.attr("size", (d) => d.up.size)
 				.attr("solid", "true");
 
 			ribbon.append("appearance")
