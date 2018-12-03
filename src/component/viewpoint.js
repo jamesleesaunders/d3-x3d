@@ -73,48 +73,48 @@ export default function() {
 	/**
 	 * Centre of Rotation Getter / Setter
 	 *
-	 * @param {number[]} _x - Centre of rotation.
+	 * @param {number[]} _v - Centre of rotation.
 	 * @returns {*}
 	 */
-	my.centerOfRotation = function(_x) {
+	my.centerOfRotation = function(_v) {
 		if (!arguments.length) return centerOfRotation;
-		centerOfRotation = _x;
+		centerOfRotation = _v;
 		return my;
 	};
 
 	/**
 	 * View Position Getter / Setter
 	 *
-	 * @param {number[]} _x - View position.
+	 * @param {number[]} _v - View position.
 	 * @returns {*}
 	 */
-	my.viewPosition = function(_x) {
+	my.viewPosition = function(_v) {
 		if (!arguments.length) return viewPosition;
-		viewPosition = _x;
+		viewPosition = _v;
 		return my;
 	};
 
 	/**
 	 * View Orientation Getter / Setter
 	 *
-	 * @param {number[]} _x - View orientation.
+	 * @param {number[]} _v - View orientation.
 	 * @returns {*}
 	 */
-	my.viewOrientation = function(_x) {
+	my.viewOrientation = function(_v) {
 		if (!arguments.length) return viewOrientation;
-		viewOrientation = _x;
+		viewOrientation = _v;
 		return my;
 	};
 
 	/**
 	 * Field of View Getter / Setter
 	 *
-	 * @param {number} _x - Field of view.
+	 * @param {number} _v - Field of view.
 	 * @returns {*}
 	 */
-	my.fieldOfView = function(_x) {
+	my.fieldOfView = function(_v) {
 		if (!arguments.length) return fieldOfView;
-		fieldOfView = _x;
+		fieldOfView = _v;
 		return my;
 	};
 

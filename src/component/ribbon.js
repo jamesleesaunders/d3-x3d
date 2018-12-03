@@ -96,48 +96,48 @@ export default function() {
 	/**
 	 * Dimensions Getter / Setter
 	 *
-	 * @param {{x: {number}, y: {number}, z: {number}}} _x - 3D Object dimensions.
+	 * @param {{x: {number}, y: {number}, z: {number}}} _v - 3D Object dimensions.
 	 * @returns {*}
 	 */
-	my.dimensions = function(_x) {
+	my.dimensions = function(_v) {
 		if (!arguments.length) return dimensions;
-		dimensions = _x;
+		dimensions = _v;
 		return this;
 	};
 
 	/**
 	 * X Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _x - D3 scale.
+	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.xScale = function(_x) {
+	my.xScale = function(_v) {
 		if (!arguments.length) return xScale;
-		xScale = _x;
+		xScale = _v;
 		return my;
 	};
 
 	/**
 	 * Y Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _x - D3 scale.
+	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.yScale = function(_x) {
+	my.yScale = function(_v) {
 		if (!arguments.length) return yScale;
-		yScale = _x;
+		yScale = _v;
 		return my;
 	};
 
 	/**
 	 * Color Getter / Setter
 	 *
-	 * @param {string} _x - Color (e.g. 'red' or '#ff0000').
+	 * @param {string} _v - Color (e.g. 'red' or '#ff0000').
 	 * @returns {*}
 	 */
-	my.color = function(_x) {
+	my.color = function(_v) {
 		if (!arguments.length) return color;
-		color = _x;
+		color = _v;
 		return my;
 	};
 
