@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import dataTransform from "../dataTransform";
 
 /**
  * Reusable 3D Bubble Chart Component
@@ -26,26 +27,31 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		const maxX = d3.max(data.values, (d) => +d.x);
-		const maxY = d3.max(data.values, (d) => +d.y);
-		const maxZ = d3.max(data.values, (d) => +d.z);
-		const maxValue = d3.max(data.values, (d) => +d.value);
+		const { maxValue, maxCoordinates: { x: maxX, y: maxY, z: maxZ } } = dataTransform(data).summary();
 		const extent = [0, maxValue];
 
 		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensions.x]);
+			xScale = d3.scaleLinear()
+				.domain([0, maxX])
+				.range([0, dimensions.x]);
 		}
 
 		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensions.y]);
+			yScale = d3.scaleLinear()
+				.domain([0, maxY])
+				.range([0, dimensions.y]);
 		}
 
 		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensions.z]);
+			zScale = d3.scaleLinear()
+				.domain([0, maxZ])
+				.range([0, dimensions.z]);
 		}
 
 		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
+			sizeScale = d3.scaleLinear()
+				.domain(extent)
+				.range(sizeDomain);
 		}
 	}
 

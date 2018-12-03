@@ -106,7 +106,7 @@ let dataset3 = [{
 test("Test Summary 1", function(t) {
 	let actual = d3X3dom.dataTransform(dataset1).summary();
 	let expected = {
-		dataStructure: 1,
+		dataType: 1,
 		rowKey: "Fruit",
 		rowTotal: 24,
 		rowKeys: undefined,
@@ -129,7 +129,7 @@ test("Test Summary 1", function(t) {
 test("Test Summary 2", function(t) {
 	let actual = d3X3dom.dataTransform(dataset2).summary();
 	let expected = {
-		dataStructure: 2,
+		dataType: 2,
 		rowKey: undefined,
 		rowTotal: undefined,
 		rowKeys: ["Apples", "Oranges", "Pears", "Bananas"],

@@ -29,27 +29,37 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		const { rowKeys, maxCoordinates, maxValue } = dataTransform(data).summary();
+		const { rowKeys, maxValue, maxCoordinates: { x: maxX, y: maxY, z: maxZ } } = dataTransform(data).summary();
 		const extent = [0, maxValue];
 
 		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]);
+			xScale = d3.scaleLinear()
+				.domain([0, maxX])
+				.range([0, dimensions.x]);
 		}
 
 		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, dimensions.y]);
+			yScale = d3.scaleLinear()
+				.domain([0, maxY])
+				.range([0, dimensions.y]);
 		}
 
 		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]);
+			zScale = d3.scaleLinear()
+				.domain([0, maxZ])
+				.range([0, dimensions.z]);
 		}
 
 		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
+			colorScale = d3.scaleOrdinal()
+				.domain(rowKeys)
+				.range(colors);
 		}
 
 		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
+			sizeScale = d3.scaleLinear()
+				.domain(extent)
+				.range(sizeDomain);
 		}
 	}
 

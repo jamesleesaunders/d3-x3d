@@ -43,19 +43,28 @@ export default function() {
 		const extent = [0, maxValue];
 
 		if (typeof xScale === "undefined") {
-			xScale = d3.scalePoint().domain(rowKeys).range([0, dimensions.x]);
+			xScale = d3.scalePoint()
+				.domain(rowKeys)
+				.range([0, dimensions.x]);
 		}
 
 		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain(extent).range([0, dimensions.y]);
+			yScale = d3.scaleLinear()
+				.domain(extent)
+				.range([0, dimensions.y]);
 		}
 
 		if (typeof zScale === "undefined") {
-			zScale = d3.scalePoint().domain(columnKeys).range([0, dimensions.z]);
+			zScale = d3.scalePoint()
+				.domain(columnKeys)
+				.range([0, dimensions.z]);
 		}
 
 		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleLinear().domain(extent).range(colors).interpolate(d3.interpolateLab);
+			colorScale = d3.scaleLinear()
+				.domain(extent)
+				.range(colors)
+				.interpolate(d3.interpolateLab);
 		}
 	}
 

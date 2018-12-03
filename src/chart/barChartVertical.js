@@ -40,15 +40,23 @@ export default function() {
 		const extent = [0, maxValue];
 
 		if (typeof xScale === "undefined") {
-			xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensions.x]).padding(0.5);
+			xScale = d3.scaleBand()
+				.domain(columnKeys)
+				.rangeRound([0, dimensions.x])
+				.padding(0.5);
 		}
 
 		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain(extent).range([0, dimensions.y]).nice();
+			yScale = d3.scaleLinear()
+				.domain(extent)
+				.range([0, dimensions.y])
+				.nice();
 		}
 
 		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+			colorScale = d3.scaleOrdinal()
+				.domain(columnKeys)
+				.range(colors);
 		}
 	}
 

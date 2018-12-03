@@ -39,15 +39,21 @@ export default function() {
 		const { maxCoordinates } = dataTransform(data).summary();
 
 		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]);
+			xScale = d3.scaleLinear()
+				.domain([0, maxCoordinates.x])
+				.range([0, dimensions.x]);
 		}
 
 		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, dimensions.y]);
+			yScale = d3.scaleLinear()
+				.domain([0, maxCoordinates.y])
+				.range([0, dimensions.y]);
 		}
 
 		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]);
+			zScale = d3.scaleLinear()
+				.domain([0, maxCoordinates.z])
+				.range([0, dimensions.z]);
 		}
 	}
 
