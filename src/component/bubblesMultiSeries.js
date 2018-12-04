@@ -29,25 +29,26 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		const { rowKeys, maxValue, maxCoordinates: { x: maxX, y: maxY, z: maxZ } } = dataTransform(data).summary();
-		const extent = [0, maxValue];
+		const { rowKeys, valueExtent, coordinatesMax } = dataTransform(data).summary();
+		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
+		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
 		if (typeof xScale === "undefined") {
 			xScale = d3.scaleLinear()
 				.domain([0, maxX])
-				.range([0, dimensions.x]);
+				.range([0, dimensionX]);
 		}
 
 		if (typeof yScale === "undefined") {
 			yScale = d3.scaleLinear()
 				.domain([0, maxY])
-				.range([0, dimensions.y]);
+				.range([0, dimensionY]);
 		}
 
 		if (typeof zScale === "undefined") {
 			zScale = d3.scaleLinear()
 				.domain([0, maxZ])
-				.range([0, dimensions.z]);
+				.range([0, dimensionZ]);
 		}
 
 		if (typeof colorScale === "undefined") {
@@ -58,7 +59,7 @@ export default function() {
 
 		if (typeof sizeScale === "undefined") {
 			sizeScale = d3.scaleLinear()
-				.domain(extent)
+				.domain(valueExtent)
 				.range(sizeDomain);
 		}
 	}

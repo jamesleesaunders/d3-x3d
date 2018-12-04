@@ -40,7 +40,7 @@ test("Test Bubble Chart, bubbleChart()", function(t) {
 	t.deepEqual(bubbleChart.sizeScale(), 2, "size scale changed");
 
 	// Test for Getter and setter function for size domain
-	t.deepEqual(bubbleChart.sizeDomain(), [0.5, 4.0], "size domain default is [0.5, 4.0]");
+	t.deepEqual(bubbleChart.sizeDomain(), [0.5, 3.5], "size domain default is [0.5, 3.5]");
 	bubbleChart.sizeDomain([0.2, 5.0]);
 	t.deepEqual(bubbleChart.sizeDomain(), [0.2, 5.0], "size domain changed");
 

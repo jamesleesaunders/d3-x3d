@@ -37,27 +37,28 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		const { rowKeys, columnKeys, maxValue } = dataTransform(data).summary();
-		const extent = [0, maxValue];
+		const { rowKeys, columnKeys, valueMax } = dataTransform(data).summary();
+		const valueExtent = [0, valueMax];
+		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
 		if (typeof xScale === "undefined") {
 			xScale = d3.scaleBand()
 				.domain(columnKeys)
-				.rangeRound([0, dimensions.x])
+				.rangeRound([0, dimensionX])
 				.padding(0.5);
 		}
 
 		if (typeof yScale === "undefined") {
 			yScale = d3.scaleLinear()
-				.domain(extent)
-				.range([0, dimensions.y])
+				.domain(valueExtent)
+				.range([0, dimensionY])
 				.nice();
 		}
 
 		if (typeof zScale === "undefined") {
 			zScale = d3.scaleBand()
 				.domain(rowKeys)
-				.range([0, dimensions.z])
+				.range([0, dimensionZ])
 				.padding(0.7);
 		}
 

@@ -37,30 +37,31 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		const { rowKeys, columnKeys, maxValue } = dataTransform(data).summary();
-		const extent = [0, maxValue];
+		const { rowKeys, columnKeys, valueMax } = dataTransform(data).summary();
+		const valueExtent = [0, valueMax];
+		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
 		if (typeof xScale === "undefined") {
 			xScale = d3.scalePoint()
 				.domain(rowKeys)
-				.range([0, dimensions.x]);
+				.range([0, dimensionX]);
 		}
 
 		if (typeof yScale === "undefined") {
 			yScale = d3.scaleLinear()
-				.domain(extent)
-				.range([0, dimensions.y]).nice();
+				.domain(valueExtent)
+				.range([0, dimensionY]).nice();
 		}
 
 		if (typeof zScale === "undefined") {
 			zScale = d3.scalePoint()
 				.domain(columnKeys)
-				.range([0, dimensions.z]);
+				.range([0, dimensionZ]);
 		}
 
 		if (typeof colorScale === "undefined") {
 			colorScale = d3.scaleLinear()
-				.domain(extent)
+				.domain(valueExtent)
 				.range(colors)
 				.interpolate(d3.interpolateLab);
 		}
