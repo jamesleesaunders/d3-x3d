@@ -6,9 +6,9 @@
  * @license GPLv2
  */
 
-let author = "James Saunders";
-let date = new Date();
-let copyright = "Copyright (C) " + date.getFullYear() + " " + author;
+const author = "James Saunders";
+const date = new Date();
+const copyright = "Copyright (C) " + date.getFullYear() + " " + author;
 import { version, license } from "./package.json";
 
 import chart from "./src/chart";
