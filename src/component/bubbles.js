@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import dataTransform from "../dataTransform";
 
 /**
  * Reusable 3D Bubble Chart Component
@@ -26,26 +27,32 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		const maxX = d3.max(data.values, (d) => +d.x);
-		const maxY = d3.max(data.values, (d) => +d.y);
-		const maxZ = d3.max(data.values, (d) => +d.z);
-		const maxValue = d3.max(data.values, (d) => +d.value);
-		const extent = [0, maxValue];
+		const { valueExtent, coordinatesMax } = dataTransform(data).summary();
+		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
+		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
 		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensions.x]);
+			xScale = d3.scaleLinear()
+				.domain([0, maxX])
+				.range([0, dimensionX]);
 		}
 
 		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensions.y]);
+			yScale = d3.scaleLinear()
+				.domain([0, maxY])
+				.range([0, dimensionY]);
 		}
 
 		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensions.z]);
+			zScale = d3.scaleLinear()
+				.domain([0, maxZ])
+				.range([0, dimensionZ]);
 		}
 
 		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
+			sizeScale = d3.scaleLinear()
+				.domain(valueExtent)
+				.range(sizeDomain);
 		}
 	}
 
@@ -112,84 +119,84 @@ export default function() {
 	/**
 	 * Dimensions Getter / Setter
 	 *
-	 * @param {{x: number, y: number, z: number}} _x - 3D object dimensions.
+	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
 	 * @returns {*}
 	 */
-	my.dimensions = function(_x) {
+	my.dimensions = function(_v) {
 		if (!arguments.length) return dimensions;
-		dimensions = _x;
+		dimensions = _v;
 		return this;
 	};
 
 	/**
 	 * X Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _x - D3 scale.
+	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.xScale = function(_x) {
+	my.xScale = function(_v) {
 		if (!arguments.length) return xScale;
-		xScale = _x;
+		xScale = _v;
 		return my;
 	};
 
 	/**
 	 * Y Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _x - D3 scale.
+	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.yScale = function(_x) {
+	my.yScale = function(_v) {
 		if (!arguments.length) return yScale;
-		yScale = _x;
+		yScale = _v;
 		return my;
 	};
 
 	/**
 	 * Z Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _x - D3 scale.
+	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.zScale = function(_x) {
+	my.zScale = function(_v) {
 		if (!arguments.length) return zScale;
-		zScale = _x;
+		zScale = _v;
 		return my;
 	};
 
 	/**
 	 * Size Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _x - D3 color scale.
+	 * @param {d3.scale} _v - D3 color scale.
 	 * @returns {*}
 	 */
-	my.sizeScale = function(_x) {
+	my.sizeScale = function(_v) {
 		if (!arguments.length) return sizeScale;
-		sizeScale = _x;
+		sizeScale = _v;
 		return my;
 	};
 
 	/**
 	 * Size Domain Getter / Setter
 	 *
-	 * @param {number[]} _x - Size min and max (e.g. [1, 9]).
+	 * @param {number[]} _v - Size min and max (e.g. [1, 9]).
 	 * @returns {*}
 	 */
-	my.sizeDomain = function(_x) {
+	my.sizeDomain = function(_v) {
 		if (!arguments.length) return sizeDomain;
-		sizeDomain = _x;
+		sizeDomain = _v;
 		return my;
 	};
 
 	/**
 	 * Color Getter / Setter
 	 *
-	 * @param {string} _x - Color (e.g. 'red' or '#ff0000').
+	 * @param {string} _v - Color (e.g. 'red' or '#ff0000').
 	 * @returns {*}
 	 */
-	my.color = function(_x) {
+	my.color = function(_v) {
 		if (!arguments.length) return color;
-		color = _x;
+		color = _v;
 		return my;
 	};
 

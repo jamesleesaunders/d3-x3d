@@ -36,18 +36,26 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		const { maxCoordinates } = dataTransform(data).summary();
+		const { coordinatesMax } = dataTransform(data).summary();
+		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
+		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
 		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear().domain([0, maxCoordinates.x]).range([0, dimensions.x]);
+			xScale = d3.scaleLinear()
+				.domain([0, maxX])
+				.range([0, dimensionX]);
 		}
 
 		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain([0, maxCoordinates.y]).range([0, dimensions.y]);
+			yScale = d3.scaleLinear()
+				.domain([0, maxY])
+				.range([0, dimensionY]);
 		}
 
 		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear().domain([0, maxCoordinates.z]).range([0, dimensions.z]);
+			zScale = d3.scaleLinear()
+				.domain([0, maxZ])
+				.range([0, dimensionZ]);
 		}
 	}
 
@@ -111,96 +119,96 @@ export default function() {
 	/**
 	 * Width Getter / Setter
 	 *
-	 * @param {number} _x - X3D canvas width in px.
+	 * @param {number} _v - X3D canvas width in px.
 	 * @returns {*}
 	 */
-	my.width = function(_x) {
+	my.width = function(_v) {
 		if (!arguments.length) return width;
-		width = _x;
+		width = _v;
 		return this;
 	};
 
 	/**
 	 * Height Getter / Setter
 	 *
-	 * @param {number} _x - X3D canvas height in px.
+	 * @param {number} _v - X3D canvas height in px.
 	 * @returns {*}
 	 */
-	my.height = function(_x) {
+	my.height = function(_v) {
 		if (!arguments.length) return height;
-		height = _x;
+		height = _v;
 		return this;
 	};
 
 	/**
 	 * Dimensions Getter / Setter
 	 *
-	 * @param {{x: number, y: number, z: number}} _x - 3D object dimensions.
+	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
 	 * @returns {*}
 	 */
-	my.dimensions = function(_x) {
+	my.dimensions = function(_v) {
 		if (!arguments.length) return dimensions;
-		dimensions = _x;
+		dimensions = _v;
 		return this;
 	};
 
 	/**
 	 * X Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _x - D3 scale.
+	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.xScale = function(_x) {
+	my.xScale = function(_v) {
 		if (!arguments.length) return xScale;
-		xScale = _x;
+		xScale = _v;
 		return my;
 	};
 
 	/**
 	 * Y Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _x - D3 scale.
+	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.yScale = function(_x) {
+	my.yScale = function(_v) {
 		if (!arguments.length) return yScale;
-		yScale = _x;
+		yScale = _v;
 		return my;
 	};
 
 	/**
 	 * Z Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _x - D3 scale.
+	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.zScale = function(_x) {
+	my.zScale = function(_v) {
 		if (!arguments.length) return zScale;
-		zScale = _x;
+		zScale = _v;
 		return my;
 	};
 
 	/**
 	 * Color Getter / Setter
 	 *
-	 * @param {string} _x - Color (e.g. 'red' or '#ff0000').
+	 * @param {string} _v - Color (e.g. 'red' or '#ff0000').
 	 * @returns {*}
 	 */
-	my.color = function(_x) {
+	my.color = function(_v) {
 		if (!arguments.length) return color;
-		color = _x;
+		color = _v;
 		return my;
 	};
 
 	/**
 	 * Debug Getter / Setter
 	 *
-	 * @param {boolean} _x - Show debug log and stats. True/False.
+	 * @param {boolean} _v - Show debug log and stats. True/False.
 	 * @returns {*}
 	 */
-	my.debug = function(_x) {
+	my.debug = function(_v) {
 		if (!arguments.length) return debug;
-		debug = _x;
+		debug = _v;
 		return my;
 	};
 
