@@ -40,6 +40,7 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import * as d3 from "d3";
+import dataTransform from "../dataTransform";
 
 /**
  * Reusable 3D Bubble Chart Component
@@ -67,26 +68,32 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		const maxX = d3.max(data.values, function(d) { return +d.x; });
-		const maxY = d3.max(data.values, function(d) { return +d.y; });
-		const maxZ = d3.max(data.values, function(d) { return +d.z; });
-		const maxValue = d3.max(data.values, function(d) { return +d.value; });
-		const extent = [0, maxValue];
+		const { valueExtent, coordinatesMax } = dataTransform(data).summary();
+		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
+		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
 		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensions.x]);
+			xScale = d3.scaleLinear()
+				.domain([0, maxX])
+				.range([0, dimensionX]);
 		}
 
 		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensions.y]);
+			yScale = d3.scaleLinear()
+				.domain([0, maxY])
+				.range([0, dimensionY]);
 		}
 
 		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensions.z]);
+			zScale = d3.scaleLinear()
+				.domain([0, maxZ])
+				.range([0, dimensionZ]);
 		}
 
 		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
+			sizeScale = d3.scaleLinear()
+				.domain(valueExtent)
+				.range(sizeDomain);
 		}
 	}
 
@@ -100,10 +107,10 @@ export default function() {
 	function my(selection) {
 		selection.classed(classed, true);
 
-		selection.each(function(data) {
+		selection.each((data) => {
 			init(data);
 
-			const makeSolid = function(selection, color) {
+			const makeSolid = (selection, color) => {
 				selection
 					.append("appearance")
 					.append("material")
@@ -112,12 +119,12 @@ export default function() {
 			};
 
 			const bubblesSelect = selection.selectAll(".point")
-				.data(function(d) { return d.values; });
+				.data((d) => d.values);
 
 			const bubbles = bubblesSelect.enter()
 				.append("transform")
 				.attr("class", "point")
-				.attr("translation", function(d) { return xScale(d.x) + ' ' + yScale(d.y) + ' ' + zScale(d.z); })
+				.attr("translation", (d) => (xScale(d.x) + ' ' + yScale(d.y) + ' ' + zScale(d.z)))
 				.attr("onmouseover", "d3.select(this).select('billboard').attr('render', true);")
 				.attr("onmouseout", "d3.select(this).select('transform').select('billboard').attr('render', false);")
 				.merge(bubblesSelect);
@@ -125,11 +132,14 @@ export default function() {
 			bubbles.append("shape")
 				.call(makeSolid, color)
 				.append("sphere")
-				.attr("radius", function(d) { return sizeScale(d.value); });
+				.attr("radius", (d) => sizeScale(d.value));
 
 			bubbles
 				.append("transform")
-				.attr('translation', "0.8 0.8 0.8") // FIXME: transation should be proportional to the sphere radius.
+				.attr("translation", (d) => {
+					let r = sizeScale(d.value) + 0.8;
+					return r + " " + r + " " + r;
+				})
 				.append("billboard")
 				.attr('render', false)
 				.attr("axisOfRotation", "0 0 0")
@@ -137,7 +147,7 @@ export default function() {
 				.call(makeSolid, "blue")
 				.append("text")
 				.attr('class', "labelText")
-				.attr('string', function(d) { return d.key; })
+				.attr('string', (d) => d.key)
 				.append("fontstyle")
 				.attr("size", 1)
 				.attr("family", "SANS")
@@ -150,84 +160,84 @@ export default function() {
 	/**
 	 * Dimensions Getter / Setter
 	 *
-	 * @param {{x: number, y: number, z: number}} _x - 3D object dimensions.
+	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
 	 * @returns {*}
 	 */
-	my.dimensions = function(_x) {
+	my.dimensions = function(_v) {
 		if (!arguments.length) return dimensions;
-		dimensions = _x;
+		dimensions = _v;
 		return this;
 	};
 
 	/**
 	 * X Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _x - D3 scale.
+	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.xScale = function(_x) {
+	my.xScale = function(_v) {
 		if (!arguments.length) return xScale;
-		xScale = _x;
+		xScale = _v;
 		return my;
 	};
 
 	/**
 	 * Y Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _x - D3 scale.
+	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.yScale = function(_x) {
+	my.yScale = function(_v) {
 		if (!arguments.length) return yScale;
-		yScale = _x;
+		yScale = _v;
 		return my;
 	};
 
 	/**
 	 * Z Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _x - D3 scale.
+	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.zScale = function(_x) {
+	my.zScale = function(_v) {
 		if (!arguments.length) return zScale;
-		zScale = _x;
+		zScale = _v;
 		return my;
 	};
 
 	/**
 	 * Size Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _x - D3 color scale.
+	 * @param {d3.scale} _v - D3 color scale.
 	 * @returns {*}
 	 */
-	my.sizeScale = function(_x) {
+	my.sizeScale = function(_v) {
 		if (!arguments.length) return sizeScale;
-		sizeScale = _x;
+		sizeScale = _v;
 		return my;
 	};
 
 	/**
 	 * Size Domain Getter / Setter
 	 *
-	 * @param {number[]} _x - Size min and max (e.g. [1, 9]).
+	 * @param {number[]} _v - Size min and max (e.g. [1, 9]).
 	 * @returns {*}
 	 */
-	my.sizeDomain = function(_x) {
+	my.sizeDomain = function(_v) {
 		if (!arguments.length) return sizeDomain;
-		sizeDomain = _x;
+		sizeDomain = _v;
 		return my;
 	};
 
 	/**
 	 * Color Getter / Setter
 	 *
-	 * @param {string} _x - Color (e.g. 'red' or '#ff0000').
+	 * @param {string} _v - Color (e.g. 'red' or '#ff0000').
 	 * @returns {*}
 	 */
-	my.color = function(_x) {
+	my.color = function(_v) {
 		if (!arguments.length) return color;
-		color = _x;
+		color = _v;
 		return my;
 	};
 
@@ -245,7 +255,7 @@ export default function() {
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Nov 24 2018 23:06:24 GMT+0000 (GMT) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Dec 05 2018 10:39:22 GMT+0000 (GMT) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
