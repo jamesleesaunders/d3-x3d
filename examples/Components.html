@@ -16,6 +16,8 @@
   <div id="chartholder4"></div>
   <div id="chartholder5"></div>
   <div id="chartholder6"></div>
+  <div id="chartholder7"></div>
+  <div id="chartholder8"></div>
 
   <script>
     // Chart dimensions
@@ -24,7 +26,9 @@
 
     var viewpoint = d3.x3dom.component.viewpoint();
 
-    // ========== Bubbles Component ==========
+    /**
+     * Bubbles Component
+     */
     var bubblesData = d3.x3dom.randomData.dataset3();
     var bubblesComponent = d3.x3dom.component.bubbles();
 
@@ -43,7 +47,9 @@
       .datum(bubblesData)
       .call(bubblesComponent);
 
-    // ========== Bubbles Multi Component ==========
+    /**
+     * Bubbles Multi Component
+     */
     var bubblesMultiSeriesData = d3.x3dom.randomData.dataset2();
     var bubblesMultiSeriesComponent = d3.x3dom.component.bubblesMultiSeries();
 
@@ -62,14 +68,16 @@
       .datum(bubblesMultiSeriesData)
       .call(bubblesMultiSeriesComponent);
 
-    // ========== Surface Component ==========
-    var surfaceData = d3.x3dom.randomData.dataset5();
-    var surfaceComponent = d3.x3dom.component.surface();
+    /**
+     * Bars Component
+     */
+    var barsData = d3.x3dom.randomData.dataset1();
+    var barsComponent = d3.x3dom.component.bars();
 
     // Create scene
     var scene3 = d3.select("#chartholder3")
       .append("x3d")
-      .attr("id", "surface")
+      .attr("id", "bars")
       .attr("width", width + "px")
       .attr("height", height + "px")
       .append("scene");
@@ -78,10 +86,12 @@
     scene3.call(viewpoint)
       .append("group")
       .attr("class", "chart")
-      .datum(surfaceData)
-      .call(surfaceComponent);
+      .datum(barsData)
+      .call(barsComponent);
 
-    // ========== Bars Multi Component ==========
+    /**
+     * Bars Multi Component
+     */
     var barsMultiSeriesData = d3.x3dom.randomData.dataset2();
     var barsMultiSeriesComponent = d3.x3dom.component.barsMultiSeries();
 
@@ -100,21 +110,16 @@
       .datum(barsMultiSeriesData)
       .call(barsMultiSeriesComponent);
 
-    // ========== Axis Component ==========
-    var countries = d3.x3dom.randomData.countries;
-    var fruit = d3.x3dom.randomData.fruit;
-    var xScale = d3.scaleBand().domain(countries).rangeRound([0, 40]);
-    var yScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
-    var zScale = d3.scaleBand().domain(fruit).range([0, 40]);
-    var axisThreePlaneComponent = d3.x3dom.component.axisThreePlane()
-      .xScale(xScale)
-      .yScale(yScale)
-      .zScale(zScale);
+    /**
+     * Surface Component
+     */
+    var surfaceData = d3.x3dom.randomData.dataset5();
+    var surfaceComponent = d3.x3dom.component.surface();
 
     // Create scene
     var scene5 = d3.select("#chartholder5")
       .append("x3d")
-      .attr("id", "axis")
+      .attr("id", "surface")
       .attr("width", width + "px")
       .attr("height", height + "px")
       .append("scene");
@@ -123,11 +128,14 @@
     scene5.call(viewpoint)
       .append("group")
       .attr("class", "chart")
-      .call(axisThreePlaneComponent);
+      .datum(surfaceData)
+      .call(surfaceComponent);
 
-    // ========== Bars Multi Component ==========
-    var barsData = d3.x3dom.randomData.dataset1();
-    var barsComponent = d3.x3dom.component.bars();
+    /**
+     * Ribbon Component
+     */
+    var ribbonData = d3.x3dom.randomData.dataset3(20);
+    var ribbonComponent = d3.x3dom.component.ribbon();
 
     // Create scene
     var scene6 = d3.select("#chartholder6")
@@ -141,10 +149,67 @@
     scene6.call(viewpoint)
       .append("group")
       .attr("class", "chart")
-      .datum(barsData)
-      .call(barsComponent);
+      .datum(ribbonData)
+      .call(ribbonComponent);
 
-    // ========== Sync Viewpoints ==========
+    /**
+     * Ribbon Multi Component
+     */
+    var ribbonMultiSeriesData = d3.x3dom.randomData.dataset5();
+    var ribbonMultiSeriesComponent = d3.x3dom.component.ribbonMultiSeries();
+
+    // Create scene
+    var scene7 = d3.select("#chartholder7")
+      .append("x3d")
+      .attr("id", "bars")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("scene");
+
+    // Add chart component
+    scene7.call(viewpoint)
+      .append("group")
+      .attr("class", "chart")
+      .datum(ribbonMultiSeriesData)
+      .call(ribbonMultiSeriesComponent);
+
+    /**
+     * Axis Component
+     */
+    var countries = d3.x3dom.randomData.countries;
+    var fruit = d3.x3dom.randomData.fruit;
+    var xScale = d3.scaleBand().domain(countries).rangeRound([0, 40]);
+    var yScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
+    var zScale = d3.scaleBand().domain(fruit).range([0, 40]);
+    var axisThreePlaneComponent = d3.x3dom.component.axisThreePlane()
+      .xScale(xScale)
+      .yScale(yScale)
+      .zScale(zScale);
+
+    // Create scene
+    var scene8 = d3.select("#chartholder8")
+      .append("x3d")
+      .attr("id", "axis")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("scene");
+
+    // Add chart component
+    scene8.call(viewpoint)
+      .append("group")
+      .attr("class", "chart")
+      .call(axisThreePlaneComponent);
+
+    /**
+     * Sync Viewpoints
+     */
+    function syncViewpoints(e) {
+      viewpoints.forEach(function(viewpoint) {
+        viewpoint.setFieldValue("orientation", x3dom.fields.Quaternion.axisAngle(e.orientation[0], e.orientation[1]));
+        viewpoint.setFieldValue("position", e.position);
+      });
+    }
+
     var viewpoints = document.querySelectorAll("viewpoint");
     document.onload = function() {
       viewpoints.forEach(function(viewpoint) {
@@ -152,13 +217,6 @@
       });
     };
 
-    function syncViewpoints(e) {
-      viewpoints.forEach(function(viewpoint) {
-        viewpoint.setFieldValue("orientation", x3dom.fields.Quaternion.axisAngle(e.orientation[0], e.orientation[1]));
-        viewpoint.setFieldValue("position", e.position);
-      });
-
-    }
   </script>
 
   <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.</div>

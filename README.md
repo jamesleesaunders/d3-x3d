@@ -1,5 +1,5 @@
 # d3-x3dom
-## D3 X3DOM Data Visualisation Library
+## 3D Data Visualisation Library
 
 [![npm version](https://badge.fury.io/js/d3-x3dom.svg)](https://badge.fury.io/js/d3-x3dom)
 [![Build Status](https://travis-ci.org/jamesleesaunders/d3-x3dom.svg?branch=master)](https://travis-ci.org/jamesleesaunders/d3-x3dom)
@@ -15,7 +15,7 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Charts and Components](#components-and-charts)
 * [Data Structures](#data-structures)
 * [Download from GitHub](https://github.com/jamesleesaunders/d3-x3dom)
-* [Download from NPM](https://github.com/jamesleesaunders/d3-x3dom)
+* [Download from NPM](https://www.npmjs.com/package/d3-x3dom)
 
 ### Examples
 
@@ -24,6 +24,7 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Bubble Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BubbleChart.html)
 * [Scatter Plot](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/ScatterPlot.html)
 * [Surface Plot](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/SurfacePlot.html)
+* [Ribbon Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/RibbonChart.html)
 * [Components Showcase](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
 * [Observable Examples](https://beta.observablehq.com/collection/@jamesleesaunders/d3-x3dom)
 
@@ -91,10 +92,12 @@ var myChart = d3.x3dom.chart.barChartMultiSeries();
 Attach chart and data to the chartholder:
 
 ```javascript
-chartHolder.datum(myData).call(myChart);
+chartHolder
+	.datum(myData)
+	.call(myChart);
 ```
 
-That's all there is to it! View the page in a browser and you should see a basic 3D bar chart.
+That's all there is to it! View the page in your browser and you should see a basic 3D bar chart.
 
 #### Install from NPM
 
@@ -128,6 +131,8 @@ Component modules do not generate a `x3d` tag, these should be attached to an ex
 | component.barsMultiSeries()    | Multi series Bar Chart                       | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
 | component.bubbles()            | Bubble / Scatter Plot                        | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
 | component.bubblesMultiSeries() | Multi series Bubbles / Scatter Plot          | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
+| component.ribbon()             | Ribbon Chart / Line Chart                    | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
+| component.ribbonMultiSeries()  | Multi series Ribbon Chart                    | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
 | component.surface()            | Surface Area                                 | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
 | component.viewpoint()          | User's location and viewing model parameters | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
 
@@ -140,8 +145,9 @@ Chart modules also generate the `x3d` tag, these should be attached to a `div` t
 | Function                       | Description                                  | Example 
 | ------------------------------ | -------------------------------------------- | ------- 
 | chart.barChartMultiSeries()    | Multi series Bar Chart & Axis                | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartMultiSeries.html)
-| chart.barChartVertical()       | Simple single series Bar Chart & Axis        | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartVertical.html)
+| chart.barChartVertical()       | Single series Bar Chart & Axis               | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartVertical.html)
 | chart.bubbleChart()            | Multi series Bubble Chart & Axis             | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BubbleChart.html)
+| chart.ribbonChartMultiSeries() | Multi series Ribbon Chart                    | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/RibbonChart.html)
 | chart.scatterPlot()            | Scatter Plot & Axis                          | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/ScatterPlot.html)
 | chart.surfacePlot()            | Surface Plot & Axis                          | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/SurfacePlot.html)
 
@@ -204,3 +210,4 @@ var myData = [
 * Fabian Dubois - For the original [3D Axis](http://bl.ocks.org/fabid/61cbfe14de686cc25c47/), [Surface Area](https://github.com/fabid/d3-x3dom-shape) and [Scatter Plot](http://bl.ocks.org/fabid/acb5dc4961ffa741b52b).
 * David Sankel - For the original [Bar Chart](http://bl.ocks.org/camio/5087116).
 * Victor Glindås - Various contributions to JSDoc and ES6 standardisation.
+* You may also be interested in the sister project [d3-ez](https://github.com/jamesleesaunders/d3-ez) Reusable 2D Charts Library.
