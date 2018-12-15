@@ -72,15 +72,15 @@ export function dataset2() {
 /**
  * Random Dataset - Single Series Scatter Plot
  *
+ * @param {number} points - Number of data points.
  * @returns {Array}
  */
-export function dataset3() {
-	let points = 100;
+export function dataset3(points = 10) {
 	let data = {
 		key: "Bubbles",
 		values: d3.range(points).map(function(d, i) {
 			return {
-				key: i,
+				key: "Point" + i,
 				value: randomNum(),
 				x: randomNum(),
 				y: randomNum(),

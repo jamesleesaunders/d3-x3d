@@ -29,7 +29,7 @@ export default function() {
 	function array2dToString(arr) {
 		return arr.reduce((a, b) => a.concat(b), [])
 			.reduce((a, b) => a.concat(b), [])
-			.join(' ');
+			.join(" ");
 	}
 
 	/**

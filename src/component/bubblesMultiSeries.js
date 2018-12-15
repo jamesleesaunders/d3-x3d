@@ -82,8 +82,7 @@ export default function() {
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
-				.sizeScale(sizeScale)
-				.color((d) => colorScale(d.key));
+				.sizeScale(sizeScale);
 
 			// Create Bar Groups
 			const bubbleGroup = selection.selectAll(".bubbleGroup")
@@ -93,7 +92,7 @@ export default function() {
 				.append("group")
 				.classed("bubbleGroup", true)
 				.each(function(d) {
-					let color = colorScale(d.key);
+					const color = colorScale(d.key);
 					bubbles.color(color);
 					d3.select(this).call(bubbles);
 				})

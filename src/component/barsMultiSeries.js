@@ -91,9 +91,9 @@ export default function() {
 				.append("transform")
 				.classed("barGroup", true)
 				.attr("translation", (d) => {
-					let x = 0;
-					let y = 0;
-					let z = zScale(d.key);
+					const x = 0;
+					const y = 0;
+					const z = zScale(d.key);
 					return x + " " + y + " " + z;
 				})
 				.append("group")
