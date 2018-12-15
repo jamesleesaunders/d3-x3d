@@ -2,3 +2,4 @@ build/*.zip
 test/
 .DS_Store
 .idea
+.vscode
