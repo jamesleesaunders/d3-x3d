@@ -1,7 +1,7 @@
 let test = require('tape');
 let d3X3dom = require("../../");
 
-test("Test Bubbles MultiSeries Base, bubbleMultiSeries()", function(t) {
+test("Test Multi Series Bubbles Component, component.bubbleMultiSeries()", function(t) {
 	let bubblesMultiSeries = d3X3dom.component.bubblesMultiSeries();
 
 	// Test for Getter and setter function for dimensions
@@ -44,5 +44,5 @@ test("Test Bubbles MultiSeries Base, bubbleMultiSeries()", function(t) {
 	bubblesMultiSeries.colors(["steelblue", "green", "red", "yellow", "orange"]);
 	t.deepEqual(bubblesMultiSeries.colors(), ["steelblue", "green", "red", "yellow", "orange"], "Bubbles color changed");
 
-	t.end()
+	t.end();
 });

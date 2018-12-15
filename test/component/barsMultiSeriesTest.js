@@ -1,7 +1,7 @@
 let test = require('tape');
 let d3X3dom = require("../../");
 
-test("Test Bars MultiSeries Component Base, barMultiSeries()", function(t) {
+test("Test Multi Series Bars Component, component.barMultiSeries()", function(t) {
 	let barsMultiSeries = d3X3dom.component.barsMultiSeries();
 
 	// Test for Getter and setter function for dimensions

@@ -1,9 +1,9 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
-import componentBubbles from "./bubbles";
+import componentRibbon from "./ribbon";
 
 /**
- * Reusable 3D Multi Series Bubble Chart Component
+ * Reusable 3D Multi Series Ribbon Chart Component
  *
  * @module
  */
@@ -11,16 +11,14 @@ export default function() {
 
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = ["green", "red", "yellow", "steelblue", "orange"];
-	let classed = "x3dBubblesMultiSeries";
+	let colors = ["orange", "red", "yellow", "steelblue", "green"];
+	let classed = "x3dRibbonMultiSeries";
 
 	/* Scales */
 	let xScale;
 	let yScale;
 	let zScale;
 	let colorScale;
-	let sizeScale;
-	let sizeDomain = [0.5, 3.0];
 
 	/**
 	 * Initialise Data and Scales
@@ -29,26 +27,27 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		const { rowKeys, valueExtent, coordinatesMax } = dataTransform(data).summary();
-		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
+		const { rowKeys, columnKeys, valueMax } = dataTransform(data).summary();
+		const valueExtent = [0, valueMax];
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
 		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear()
-				.domain([0, maxX])
+			xScale = d3.scalePoint()
+				.domain(columnKeys)
 				.range([0, dimensionX]);
 		}
 
 		if (typeof yScale === "undefined") {
 			yScale = d3.scaleLinear()
-				.domain([0, maxY])
+				.domain(valueExtent)
 				.range([0, dimensionY]);
 		}
 
 		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear()
-				.domain([0, maxZ])
-				.range([0, dimensionZ]);
+			zScale = d3.scaleBand()
+				.domain(rowKeys)
+				.range([0, dimensionZ])
+				.padding(0.4);
 		}
 
 		if (typeof colorScale === "undefined") {
@@ -56,19 +55,13 @@ export default function() {
 				.domain(rowKeys)
 				.range(colors);
 		}
-
-		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear()
-				.domain(valueExtent)
-				.range(sizeDomain);
-		}
 	}
 
 	/**
 	 * Constructor
 	 *
 	 * @constructor
-	 * @alias bubblesMultiSeries
+	 * @alias ribbonMultiSeries
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	function my(selection) {
@@ -77,28 +70,38 @@ export default function() {
 		selection.each((data) => {
 			init(data);
 
-			// Construct Bars Component
-			const bubbles = componentBubbles()
+			// Construct Ribbon Component
+			const ribbon = componentRibbon()
 				.xScale(xScale)
 				.yScale(yScale)
-				.zScale(zScale)
-				.sizeScale(sizeScale);
+				.dimensions({
+					x: dimensions.x,
+					y: dimensions.y,
+					z: zScale.bandwidth()
+				});
 
 			// Create Bar Groups
-			const bubbleGroup = selection.selectAll(".bubbleGroup")
+			const ribbonGroup = selection.selectAll(".ribbonGroup")
 				.data(data);
 
-			bubbleGroup.enter()
+			ribbonGroup.enter()
+				.append("transform")
+				.classed("ribbonGroup", true)
+				.attr("translation", (d) => {
+					const x = 0;
+					const y = 0;
+					const z = zScale(d.key);
+					return x + " " + y + " " + z;
+				})
 				.append("group")
-				.classed("bubbleGroup", true)
 				.each(function(d) {
 					const color = colorScale(d.key);
-					bubbles.color(color);
-					d3.select(this).call(bubbles);
+					ribbon.color(color);
+					d3.select(this).call(ribbon);
 				})
-				.merge(bubbleGroup);
+				.merge(ribbonGroup);
 
-			bubbleGroup.exit()
+			ribbonGroup.exit()
 				.remove();
 
 		});
@@ -119,7 +122,7 @@ export default function() {
 	/**
 	 * X Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _v - D3 Scale.
+	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
 	my.xScale = function(_v) {
@@ -143,7 +146,7 @@ export default function() {
 	/**
 	 * Z Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _v - D3 Scale.
+	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
 	my.zScale = function(_v) {
@@ -161,30 +164,6 @@ export default function() {
 	my.colorScale = function(_v) {
 		if (!arguments.length) return colorScale;
 		colorScale = _v;
-		return my;
-	};
-
-	/**
-	 * Size Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 color scale.
-	 * @returns {*}
-	 */
-	my.sizeScale = function(_v) {
-		if (!arguments.length) return sizeScale;
-		sizeScale = _v;
-		return my;
-	};
-
-	/**
-	 * Size Domain Getter / Setter
-	 *
-	 * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
-	 * @returns {*}
-	 */
-	my.sizeDomain = function(_v) {
-		if (!arguments.length) return sizeDomain;
-		sizeDomain = _v;
 		return my;
 	};
 

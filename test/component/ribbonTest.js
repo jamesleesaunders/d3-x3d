@@ -1,13 +1,13 @@
 let test = require('tape');
 let d3X3dom = require("../../");
 
-test("Test Ribbon Base, ribbon()", function(t) {
+test("Test Ribbon Component, component.ribbon()", function(t) {
 	let ribbon = d3X3dom.component.ribbon();
 
 	// Test for Getter and setter function for dimensions
-	t.deepEqual(ribbon.dimensions(), { x: 40, y: 40, z: 40 }, "Returns default dimensions");
-	ribbon.dimensions({ x: 10, y: 20, z: 30 });
-	t.deepEqual(ribbon.dimensions(), { x: 10, y: 20, z: 30 }, "Dimensions changed");
+	t.deepEqual(ribbon.dimensions(), { x: 40, y: 40, z: 5 }, "Returns default dimensions");
+	ribbon.dimensions({ x: 80, y: 40, z: 10 });
+	t.deepEqual(ribbon.dimensions(), { x: 80, y: 40, z: 10 }, "Dimensions changed");
 
 	// Test for Getter and setter function for xScale
 	t.deepEqual(ribbon.xScale(), undefined, "xScale is undefined");
@@ -24,5 +24,5 @@ test("Test Ribbon Base, ribbon()", function(t) {
 	ribbon.color("steelblue");
 	t.deepEqual(ribbon.color(), "steelblue", "Default color changed to steelblue");
 
-	t.end()
+	t.end();
 });

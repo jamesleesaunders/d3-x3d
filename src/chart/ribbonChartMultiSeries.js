@@ -1,18 +1,28 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
-import componentBars from "./bars";
+import component from "../component";
 
 /**
- * Reusable 3D Multi Series Bar Chart Component
+ * Reusable 3D Multi Series Ribbon Chart
  *
  * @module
+ *
+ * @see https://datavizproject.com/data-type/waterfall-plot/
+ * @example
+ * var chartHolder = d3.select("#chartholder");
+ * var myData = [...];
+ * var myChart = d3.x3dom.chart.ribbonChartMultiSeries();
+ * chartHolder.datum(myData).call(myChart);
  */
 export default function() {
 
 	/* Default Properties */
-	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = ["orange", "red", "yellow", "steelblue", "green"];
-	let classed = "x3dBarsMultiSeries";
+	let width = 500;
+	let height = 500;
+	let dimensions = { x: 60, y: 40, z: 40 };
+	let colors = ["green", "red", "yellow", "steelblue", "orange"];
+	let classed = "x3dRibbonChartMultiSeries";
+	let debug = false;
 
 	/* Scales */
 	let xScale;
@@ -32,10 +42,9 @@ export default function() {
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
 		if (typeof xScale === "undefined") {
-			xScale = d3.scaleBand()
+			xScale = d3.scalePoint()
 				.domain(columnKeys)
-				.rangeRound([0, dimensionX])
-				.padding(0.5);
+				.range([0, dimensionX]);
 		}
 
 		if (typeof yScale === "undefined") {
@@ -49,7 +58,7 @@ export default function() {
 			zScale = d3.scaleBand()
 				.domain(rowKeys)
 				.range([0, dimensionZ])
-				.padding(0.7);
+				.padding(0.4);
 		}
 
 		if (typeof colorScale === "undefined") {
@@ -63,48 +72,89 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
-	 * @alias barsMultiSeries
+	 * @alias ribbonChartMultiSeries
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	function my(selection) {
-		selection.classed(classed, true);
+		const x3d = selection.append("x3d")
+			.attr("width", width + "px")
+			.attr("height", height + "px");
 
-		selection.each((data) => {
+		if (debug) {
+			x3d.attr("showLog", "true").attr("showStat", "true")
+		}
+
+		const scene = x3d.append("scene");
+
+		// Update the chart dimensions and add layer groups
+		const layers = ["axis", "chart"];
+		scene.classed(classed, true)
+			.selectAll("group")
+			.data(layers)
+			.enter()
+			.append("group")
+			.attr("class", (d) => d);
+
+		const viewpoint = component.viewpoint()
+			.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2])
+			.viewOrientation([-0.61021, 0.77568, 0.16115, 0.65629])
+			.viewPosition([77.63865, 54.69470, 104.38314]);
+		scene.call(viewpoint);
+
+		scene.append("directionallight")
+			.attr("direction", "1 0 -1")
+			.attr("on", "true")
+			.attr("intensity", "0.4")
+			.attr("shadowintensity", "0");
+
+		scene.each((data) => {
 			init(data);
 
-			// Construct Bars Component
-			const bars = componentBars()
+			// Construct Axis Component
+			const axis = component.axisThreePlane()
 				.xScale(xScale)
 				.yScale(yScale)
-				.dimensions({
-					x: dimensions.x,
-					y: dimensions.y,
-					z: zScale.bandwidth()
-				})
+				.zScale(zScale);
+
+			// Construct Bars Component
+			const chart = component.ribbonMultiSeries()
+				.xScale(xScale)
+				.yScale(yScale)
+				.zScale(zScale)
 				.colors(colors);
 
-			// Create Bar Groups
-			const barGroup = selection.selectAll(".barGroup")
-				.data(data);
+			scene.select(".axis")
+				.call(axis);
 
-			barGroup.enter()
-				.append("transform")
-				.classed("barGroup", true)
-				.attr("translation", (d) => {
-					const x = 0;
-					const y = 0;
-					const z = zScale(d.key);
-					return x + " " + y + " " + z;
-				})
-				.append("group")
-				.call(bars)
-				.merge(barGroup);
-
-			barGroup.exit()
-				.remove();
-
+			scene.select(".chart")
+				.datum(data)
+				.call(chart);
 		});
 	}
+
+	/**
+	 * Width Getter / Setter
+	 *
+	 * @param {number} _v - X3D canvas width in px.
+	 * @returns {*}
+	 */
+	my.width = function(_v) {
+		if (!arguments.length) return width;
+		width = _v;
+		return this;
+	};
+
+	/**
+	 * Height Getter / Setter
+	 *
+	 * @param {number} _v - X3D canvas height in px.
+	 * @returns {*}
+	 */
+	my.height = function(_v) {
+		if (!arguments.length) return height;
+		height = _v;
+		return this;
+	};
 
 	/**
 	 * Dimensions Getter / Setter
@@ -175,6 +225,18 @@ export default function() {
 	my.colors = function(_v) {
 		if (!arguments.length) return colors;
 		colors = _v;
+		return my;
+	};
+
+	/**
+	 * Debug Getter / Setter
+	 *
+	 * @param {boolean} _v - Show debug log and stats. True/False.
+	 * @returns {*}
+	 */
+	my.debug = function(_v) {
+		if (!arguments.length) return debug;
+		debug = _v;
 		return my;
 	};
 

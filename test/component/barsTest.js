@@ -1,7 +1,7 @@
 let test = require('tape');
 let d3X3dom = require("../../");
 
-test("Test Bars Base, bars()", function(t) {
+test("Test Bars Component, component.bars()", function(t) {
 	let bars = d3X3dom.component.bars();
 
 	// Test for Getter and setter function for dimensions

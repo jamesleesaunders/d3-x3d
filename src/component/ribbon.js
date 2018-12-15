@@ -9,7 +9,7 @@ import dataTransform from "../dataTransform";
 export default function() {
 
 	/* Default Properties */
-	let dimensions = { x: 40, y: 40, z: 40 };
+	let dimensions = { x: 40, y: 40, z: 5 };
 	let color = "red";
 	let classed = "x3dRibbon";
 
@@ -29,10 +29,9 @@ export default function() {
 		const { x: dimensionX, y: dimensionY } = dimensions;
 
 		if (typeof xScale === "undefined") {
-			xScale = d3.scaleBand()
+			xScale = d3.scalePoint()
 				.domain(columnKeys)
-				.rangeRound([0, dimensionX])
-				.padding(0.3);
+				.range([0, dimensionX]);
 		}
 
 		if (typeof yScale === "undefined") {
@@ -55,47 +54,70 @@ export default function() {
 		selection.each((data) => {
 			init(data);
 
-			let ribbonData = data.values.map((d) => {
-				const x = xScale(d.key);
-				const y = yScale(d.value) / 2;
-				const width = 5;
-				const height = yScale(d.value);
-
-				return {
-					up: {
-						key: d.key,
-						value: d.value,
-						translation: x + " " + y + " 0",
-						rotation: "0,-1,0,1.57079633",
-						size: width + " " + height
-					},
-					down: {
-						key: d.key,
-						value: d.value,
-						translation: x + " " + y + " 0",
-						rotation: "0,-1,0,1.57079633",
-						size: width + " " + height
+			const ribbonData = function(d) {
+				return d.values.map((pointThis, indexThis, array) => {
+					let indexNext = indexThis + 1;
+					if (indexNext >= array.length) {
+						return null;
 					}
-				}
-			});
+					let pointNext = array[indexNext];
 
-			const ribbonSelect = selection.selectAll(".ribbon")
+					const x1 = xScale(pointThis.key);
+					const x2 = xScale(pointNext.key);
+					const y1 = yScale(pointThis.value);
+					const y2 = yScale(pointNext.value);
+					const z1 = 1 - (dimensions.z) / 2;
+					const z2 = (dimensions.z) / 2;
+
+					const points = [
+						[x1, y1, z1],
+						[x1, y1, z2],
+						[x2, y2, z2],
+						[x2, y2, z1],
+						[x1, y1, z1]
+					];
+
+					function array2dToString(arr) {
+						return arr.reduce((a, b) => a.concat(b), [])
+							.reduce((a, b) => a.concat(b), [])
+							.join(" ");
+					}
+
+					function arrayToCoordIndex(arr) {
+						return arr.map((d, i) => i)
+							.join(" ")
+							.concat(" -1");
+					}
+
+					return {
+						key: pointThis.key,
+						value: pointThis.value,
+						color: color,
+						transparency: 0.2,
+						coordindex: arrayToCoordIndex(points),
+						point: array2dToString(points)
+					}
+				}).filter((d) => d !== null);
+			};
+
+			let ribbonSelect = selection.selectAll(".ribbon")
 				.data(ribbonData);
 
-			const ribbon = ribbonSelect.enter()
-				.append("transform")
-				.classed("ribbon", true)
-				.attr("translation", (d) => d.up.translation)
-				.attr("rotation", (d) => d.up.rotation)
-				.append("shape");
+			let ribbon = ribbonSelect.enter()
+				.append("shape")
+				.classed("ribbon", true);
 
-			ribbon.append("rectangle2d")
-				.attr("size", (d) => d.up.size)
-				.attr("solid", "true");
+			ribbon.append("indexedfaceset")
+				.attr("coordindex", (d) => d.coordindex)
+				.attr("solid", true)
+				.append("coordinate")
+				.attr("point", (d) => d.point);
 
 			ribbon.append("appearance")
 				.append("twosidedmaterial")
-				.attr("diffuseColor", color);
+				.attr("diffuseColor", (d) => d.color)
+				.attr("transparency", (d) => d.transparency);
+
 		});
 	}
 

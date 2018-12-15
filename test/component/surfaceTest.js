@@ -1,7 +1,7 @@
 let test = require('tape');
 let d3X3dom = require("../../");
 
-test("Test Surface Area Base, surface()", function(t) {
+test("Test Surface Area Component, component.surface()", function(t) {
 	let surfaceArea = d3X3dom.component.surface();
 
 	// Test for Getter and setter function for dimensions
@@ -34,5 +34,5 @@ test("Test Surface Area Base, surface()", function(t) {
 	surfaceArea.colors(["orange", "green"]);
 	t.deepEqual(surfaceArea.colors(), ["orange", "green"], "default color changed");
 
-	t.end()
+	t.end();
 });

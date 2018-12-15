@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.0.19";
+var version = "1.0.20";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -1405,9 +1405,7 @@ function componentBubblesMultiSeries () {
 			init(data);
 
 			// Construct Bars Component
-			var bubbles = componentBubbles().xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).color(function (d) {
-				return colorScale(d.key);
-			});
+			var bubbles = componentBubbles().xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale);
 
 			// Create Bar Groups
 			var bubbleGroup = selection.selectAll(".bubbleGroup").data(data);
@@ -1522,6 +1520,341 @@ function componentBubblesMultiSeries () {
 }
 
 /**
+ * Reusable 3D Ribbon Chart Component
+ *
+ * @module
+ */
+function componentRibbon () {
+
+	/* Default Properties */
+	var dimensions = { x: 40, y: 40, z: 5 };
+	var color = "red";
+	var classed = "x3dRibbon";
+
+	/* Scales */
+	var xScale = void 0;
+	var yScale = void 0;
+
+	/**
+  * Initialise Data and Scales
+  *
+  * @private
+  * @param {Array} data - Chart data.
+  */
+	function init(data) {
+		var _dataTransform$summar = dataTransform(data).summary(),
+		    columnKeys = _dataTransform$summar.columnKeys,
+		    valueMax = _dataTransform$summar.valueMax;
+
+		var valueExtent = [0, valueMax];
+		var _dimensions = dimensions,
+		    dimensionX = _dimensions.x,
+		    dimensionY = _dimensions.y;
+
+
+		if (typeof xScale === "undefined") {
+			xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
+		}
+
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+		}
+	}
+
+	/**
+  * Constructor
+  *
+  * @constructor
+  * @alias ribbon
+  * @param {d3.selection} selection - The chart holder D3 selection.
+  */
+	function my(selection) {
+		selection.classed(classed, true);
+
+		selection.each(function (data) {
+			init(data);
+
+			var ribbonData = function ribbonData(d) {
+				return d.values.map(function (pointThis, indexThis, array) {
+					var indexNext = indexThis + 1;
+					if (indexNext >= array.length) {
+						return null;
+					}
+					var pointNext = array[indexNext];
+
+					var x1 = xScale(pointThis.key);
+					var x2 = xScale(pointNext.key);
+					var y1 = yScale(pointThis.value);
+					var y2 = yScale(pointNext.value);
+					var z1 = 1 - dimensions.z / 2;
+					var z2 = dimensions.z / 2;
+
+					var points = [[x1, y1, z1], [x1, y1, z2], [x2, y2, z2], [x2, y2, z1], [x1, y1, z1]];
+
+					function array2dToString(arr) {
+						return arr.reduce(function (a, b) {
+							return a.concat(b);
+						}, []).reduce(function (a, b) {
+							return a.concat(b);
+						}, []).join(" ");
+					}
+
+					function arrayToCoordIndex(arr) {
+						return arr.map(function (d, i) {
+							return i;
+						}).join(" ").concat(" -1");
+					}
+
+					return {
+						key: pointThis.key,
+						value: pointThis.value,
+						color: color,
+						transparency: 0.2,
+						coordindex: arrayToCoordIndex(points),
+						point: array2dToString(points)
+					};
+				}).filter(function (d) {
+					return d !== null;
+				});
+			};
+
+			var ribbonSelect = selection.selectAll(".ribbon").data(ribbonData);
+
+			var ribbon = ribbonSelect.enter().append("shape").classed("ribbon", true);
+
+			ribbon.append("indexedfaceset").attr("coordindex", function (d) {
+				return d.coordindex;
+			}).attr("solid", true).append("coordinate").attr("point", function (d) {
+				return d.point;
+			});
+
+			ribbon.append("appearance").append("twosidedmaterial").attr("diffuseColor", function (d) {
+				return d.color;
+			}).attr("transparency", function (d) {
+				return d.transparency;
+			});
+		});
+	}
+
+	/**
+  * Dimensions Getter / Setter
+  *
+  * @param {{x: {number}, y: {number}, z: {number}}} _v - 3D Object dimensions.
+  * @returns {*}
+  */
+	my.dimensions = function (_v) {
+		if (!arguments.length) return dimensions;
+		dimensions = _v;
+		return this;
+	};
+
+	/**
+  * X Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.xScale = function (_v) {
+		if (!arguments.length) return xScale;
+		xScale = _v;
+		return my;
+	};
+
+	/**
+  * Y Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.yScale = function (_v) {
+		if (!arguments.length) return yScale;
+		yScale = _v;
+		return my;
+	};
+
+	/**
+  * Color Getter / Setter
+  *
+  * @param {string} _v - Color (e.g. 'red' or '#ff0000').
+  * @returns {*}
+  */
+	my.color = function (_v) {
+		if (!arguments.length) return color;
+		color = _v;
+		return my;
+	};
+
+	return my;
+}
+
+/**
+ * Reusable 3D Multi Series Ribbon Chart Component
+ *
+ * @module
+ */
+function componentRibbonMultiSeries () {
+
+	/* Default Properties */
+	var dimensions = { x: 40, y: 40, z: 40 };
+	var colors = ["orange", "red", "yellow", "steelblue", "green"];
+	var classed = "x3dRibbonMultiSeries";
+
+	/* Scales */
+	var xScale = void 0;
+	var yScale = void 0;
+	var zScale = void 0;
+	var colorScale = void 0;
+
+	/**
+  * Initialise Data and Scales
+  *
+  * @private
+  * @param {Array} data - Chart data.
+  */
+	function init(data) {
+		var _dataTransform$summar = dataTransform(data).summary(),
+		    rowKeys = _dataTransform$summar.rowKeys,
+		    columnKeys = _dataTransform$summar.columnKeys,
+		    valueMax = _dataTransform$summar.valueMax;
+
+		var valueExtent = [0, valueMax];
+		var _dimensions = dimensions,
+		    dimensionX = _dimensions.x,
+		    dimensionY = _dimensions.y,
+		    dimensionZ = _dimensions.z;
+
+
+		if (typeof xScale === "undefined") {
+			xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
+		}
+
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+		}
+
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
+		}
+
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
+		}
+	}
+
+	/**
+  * Constructor
+  *
+  * @constructor
+  * @alias ribbonMultiSeries
+  * @param {d3.selection} selection - The chart holder D3 selection.
+  */
+	function my(selection) {
+		selection.classed(classed, true);
+
+		selection.each(function (data) {
+			init(data);
+
+			// Construct Ribbon Component
+			var ribbon = componentRibbon().xScale(xScale).yScale(yScale).dimensions({
+				x: dimensions.x,
+				y: dimensions.y,
+				z: zScale.bandwidth()
+			});
+
+			// Create Bar Groups
+			var ribbonGroup = selection.selectAll(".ribbonGroup").data(data);
+
+			ribbonGroup.enter().append("transform").classed("ribbonGroup", true).attr("translation", function (d) {
+				var x = 0;
+				var y = 0;
+				var z = zScale(d.key);
+				return x + " " + y + " " + z;
+			}).append("group").each(function (d) {
+				var color = colorScale(d.key);
+				ribbon.color(color);
+				d3.select(this).call(ribbon);
+			}).merge(ribbonGroup);
+
+			ribbonGroup.exit().remove();
+		});
+	}
+
+	/**
+  * Dimensions Getter / Setter
+  *
+  * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+  * @returns {*}
+  */
+	my.dimensions = function (_v) {
+		if (!arguments.length) return dimensions;
+		dimensions = _v;
+		return this;
+	};
+
+	/**
+  * X Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.xScale = function (_v) {
+		if (!arguments.length) return xScale;
+		xScale = _v;
+		return my;
+	};
+
+	/**
+  * Y Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.yScale = function (_v) {
+		if (!arguments.length) return yScale;
+		yScale = _v;
+		return my;
+	};
+
+	/**
+  * Z Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.zScale = function (_v) {
+		if (!arguments.length) return zScale;
+		zScale = _v;
+		return my;
+	};
+
+	/**
+  * Color Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 color scale.
+  * @returns {*}
+  */
+	my.colorScale = function (_v) {
+		if (!arguments.length) return colorScale;
+		colorScale = _v;
+		return my;
+	};
+
+	/**
+  * Colors Getter / Setter
+  *
+  * @param {Array} _v - Array of colours used by color scale.
+  * @returns {*}
+  */
+	my.colors = function (_v) {
+		if (!arguments.length) return colors;
+		colors = _v;
+		return my;
+	};
+
+	return my;
+}
+
+/**
  * Reusable 3D Surface Area Component
  *
  * @module
@@ -1551,7 +1884,7 @@ function componentSurface () {
 			return a.concat(b);
 		}, []).reduce(function (a, b) {
 			return a.concat(b);
-		}, []).join(' ');
+		}, []).join(" ");
 	}
 
 	/**
@@ -1841,152 +2174,6 @@ function componentViewpoint () {
 	return my;
 }
 
-/**
- * Reusable 3D Ribbon Chart Component
- *
- * @module
- */
-function componentRibbon () {
-
-	/* Default Properties */
-	var dimensions = { x: 40, y: 40, z: 40 };
-	var color = "red";
-	var classed = "x3dRibbon";
-
-	/* Scales */
-	var xScale = void 0;
-	var yScale = void 0;
-
-	/**
-  * Initialise Data and Scales
-  *
-  * @private
-  * @param {Array} data - Chart data.
-  */
-	function init(data) {
-		var _dataTransform$summar = dataTransform(data).summary(),
-		    columnKeys = _dataTransform$summar.columnKeys,
-		    valueMax = _dataTransform$summar.valueMax;
-
-		var valueExtent = [0, valueMax];
-		var _dimensions = dimensions,
-		    dimensionX = _dimensions.x,
-		    dimensionY = _dimensions.y;
-
-
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.3);
-		}
-
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
-		}
-	}
-
-	/**
-  * Constructor
-  *
-  * @constructor
-  * @alias ribbon
-  * @param {d3.selection} selection - The chart holder D3 selection.
-  */
-	function my(selection) {
-		selection.classed(classed, true);
-
-		selection.each(function (data) {
-			init(data);
-
-			var ribbonData = data.values.map(function (d) {
-				var x = xScale(d.key);
-				var y = yScale(d.value) / 2;
-				var width = 5;
-				var height = yScale(d.value);
-
-				return {
-					up: {
-						key: d.key,
-						value: d.value,
-						translation: x + " " + y + " 0",
-						rotation: "0,-1,0,1.57079633",
-						size: width + " " + height
-					},
-					down: {
-						key: d.key,
-						value: d.value,
-						translation: x + " " + y + " 0",
-						rotation: "0,-1,0,1.57079633",
-						size: width + " " + height
-					}
-				};
-			});
-
-			var ribbonSelect = selection.selectAll(".ribbon").data(ribbonData);
-
-			var ribbon = ribbonSelect.enter().append("transform").classed("ribbon", true).attr("translation", function (d) {
-				return d.up.translation;
-			}).attr("rotation", function (d) {
-				return d.up.rotation;
-			}).append("shape");
-
-			ribbon.append("rectangle2d").attr("size", function (d) {
-				return d.up.size;
-			}).attr("solid", "true");
-
-			ribbon.append("appearance").append("twosidedmaterial").attr("diffuseColor", color);
-		});
-	}
-
-	/**
-  * Dimensions Getter / Setter
-  *
-  * @param {{x: {number}, y: {number}, z: {number}}} _v - 3D Object dimensions.
-  * @returns {*}
-  */
-	my.dimensions = function (_v) {
-		if (!arguments.length) return dimensions;
-		dimensions = _v;
-		return this;
-	};
-
-	/**
-  * X Scale Getter / Setter
-  *
-  * @param {d3.scale} _v - D3 scale.
-  * @returns {*}
-  */
-	my.xScale = function (_v) {
-		if (!arguments.length) return xScale;
-		xScale = _v;
-		return my;
-	};
-
-	/**
-  * Y Scale Getter / Setter
-  *
-  * @param {d3.scale} _v - D3 scale.
-  * @returns {*}
-  */
-	my.yScale = function (_v) {
-		if (!arguments.length) return yScale;
-		yScale = _v;
-		return my;
-	};
-
-	/**
-  * Color Getter / Setter
-  *
-  * @param {string} _v - Color (e.g. 'red' or '#ff0000').
-  * @returns {*}
-  */
-	my.color = function (_v) {
-		if (!arguments.length) return color;
-		color = _v;
-		return my;
-	};
-
-	return my;
-}
-
 var component = {
 	axis: componentAxis,
 	axisThreePlane: componentAxisThreePlane,
@@ -1994,9 +2181,10 @@ var component = {
 	barsMultiSeries: componentBarsMultiSeries,
 	bubbles: componentBubbles,
 	bubblesMultiSeries: componentBubblesMultiSeries,
+	ribbon: componentRibbon,
+	ribbonMultiSeries: componentRibbonMultiSeries,
 	surface: componentSurface,
-	viewpoint: componentViewpoint,
-	ribbon: componentRibbon
+	viewpoint: componentViewpoint
 };
 
 /**
@@ -2666,6 +2854,223 @@ function chartBubbleChart () {
 }
 
 /**
+ * Reusable 3D Multi Series Ribbon Chart
+ *
+ * @module
+ *
+ * @see https://datavizproject.com/data-type/waterfall-plot/
+ * @example
+ * var chartHolder = d3.select("#chartholder");
+ * var myData = [...];
+ * var myChart = d3.x3dom.chart.ribbonChartMultiSeries();
+ * chartHolder.datum(myData).call(myChart);
+ */
+function chartRibbonChartMultiSeries () {
+
+	/* Default Properties */
+	var width = 500;
+	var height = 500;
+	var dimensions = { x: 60, y: 40, z: 40 };
+	var colors = ["green", "red", "yellow", "steelblue", "orange"];
+	var classed = "x3dRibbonChartMultiSeries";
+	var debug = false;
+
+	/* Scales */
+	var xScale = void 0;
+	var yScale = void 0;
+	var zScale = void 0;
+	var colorScale = void 0;
+
+	/**
+  * Initialise Data and Scales
+  *
+  * @private
+  * @param {Array} data - Chart data.
+  */
+	function init(data) {
+		var _dataTransform$summar = dataTransform(data).summary(),
+		    rowKeys = _dataTransform$summar.rowKeys,
+		    columnKeys = _dataTransform$summar.columnKeys,
+		    valueMax = _dataTransform$summar.valueMax;
+
+		var valueExtent = [0, valueMax];
+		var _dimensions = dimensions,
+		    dimensionX = _dimensions.x,
+		    dimensionY = _dimensions.y,
+		    dimensionZ = _dimensions.z;
+
+
+		if (typeof xScale === "undefined") {
+			xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
+		}
+
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+		}
+
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
+		}
+
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+		}
+	}
+
+	/**
+  * Constructor
+  *
+  * @constructor
+  * @alias ribbonChartMultiSeries
+  * @param {d3.selection} selection - The chart holder D3 selection.
+  */
+	function my(selection) {
+		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
+
+		if (debug) {
+			x3d.attr("showLog", "true").attr("showStat", "true");
+		}
+
+		var scene = x3d.append("scene");
+
+		// Update the chart dimensions and add layer groups
+		var layers = ["axis", "chart"];
+		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+			return d;
+		});
+
+		var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]).viewOrientation([-0.61021, 0.77568, 0.16115, 0.65629]).viewPosition([77.63865, 54.69470, 104.38314]);
+		scene.call(viewpoint);
+
+		scene.append("directionallight").attr("direction", "1 0 -1").attr("on", "true").attr("intensity", "0.4").attr("shadowintensity", "0");
+
+		scene.each(function (data) {
+			init(data);
+
+			// Construct Axis Component
+			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
+
+			// Construct Bars Component
+			var chart = component.ribbonMultiSeries().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
+
+			scene.select(".axis").call(axis);
+
+			scene.select(".chart").datum(data).call(chart);
+		});
+	}
+
+	/**
+  * Width Getter / Setter
+  *
+  * @param {number} _v - X3D canvas width in px.
+  * @returns {*}
+  */
+	my.width = function (_v) {
+		if (!arguments.length) return width;
+		width = _v;
+		return this;
+	};
+
+	/**
+  * Height Getter / Setter
+  *
+  * @param {number} _v - X3D canvas height in px.
+  * @returns {*}
+  */
+	my.height = function (_v) {
+		if (!arguments.length) return height;
+		height = _v;
+		return this;
+	};
+
+	/**
+  * Dimensions Getter / Setter
+  *
+  * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+  * @returns {*}
+  */
+	my.dimensions = function (_v) {
+		if (!arguments.length) return dimensions;
+		dimensions = _v;
+		return this;
+	};
+
+	/**
+  * X Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.xScale = function (_v) {
+		if (!arguments.length) return xScale;
+		xScale = _v;
+		return my;
+	};
+
+	/**
+  * Y Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.yScale = function (_v) {
+		if (!arguments.length) return yScale;
+		yScale = _v;
+		return my;
+	};
+
+	/**
+  * Z Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.zScale = function (_v) {
+		if (!arguments.length) return zScale;
+		zScale = _v;
+		return my;
+	};
+
+	/**
+  * Color Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 color scale.
+  * @returns {*}
+  */
+	my.colorScale = function (_v) {
+		if (!arguments.length) return colorScale;
+		colorScale = _v;
+		return my;
+	};
+
+	/**
+  * Colors Getter / Setter
+  *
+  * @param {Array} _v - Array of colours used by color scale.
+  * @returns {*}
+  */
+	my.colors = function (_v) {
+		if (!arguments.length) return colors;
+		colors = _v;
+		return my;
+	};
+
+	/**
+  * Debug Getter / Setter
+  *
+  * @param {boolean} _v - Show debug log and stats. True/False.
+  * @returns {*}
+  */
+	my.debug = function (_v) {
+		if (!arguments.length) return debug;
+		debug = _v;
+		return my;
+	};
+
+	return my;
+}
+
+/**
  * Reusable 3D Scatter Plot Chart
  *
  * @module
@@ -3082,6 +3487,7 @@ var chart = {
 	barChartMultiSeries: chartBarChartMultiSeries,
 	barChartVertical: chartBarChartVertical,
 	bubbleChart: chartBubbleChart,
+	ribbonChartMultiSeries: chartRibbonChartMultiSeries,
 	scatterPlot: chartScatterPlot,
 	surfacePlot: chartSurfacePlot
 };
@@ -3158,15 +3564,17 @@ function dataset2() {
 /**
  * Random Dataset - Single Series Scatter Plot
  *
+ * @param {number} points - Number of data points.
  * @returns {Array}
  */
 function dataset3() {
-	var points = 100;
+	var points = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 10;
+
 	var data = {
 		key: "Bubbles",
 		values: d3.range(points).map(function (d, i) {
 			return {
-				key: i,
+				key: "Point" + i,
 				value: randomNum(),
 				x: randomNum(),
 				y: randomNum(),
