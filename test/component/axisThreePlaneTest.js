@@ -1,7 +1,7 @@
 let test = require('tape');
 let d3X3dom = require("../../");
 
-test("Test three axis plane, componentAxisThreePlane()", function(t) {
+test("Test Three Plane Axis Component, component.axisThreePlane()", function(t) {
 	let axisThreePlane = d3X3dom.component.axisThreePlane();
 
 	// Test for Getter and setter function for dimensions

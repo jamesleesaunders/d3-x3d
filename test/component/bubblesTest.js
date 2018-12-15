@@ -1,7 +1,7 @@
 let test = require('tape');
 let d3X3dom = require("../../");
 
-test("Test Bubbles Component Base, bubbles()", function(t) {
+test("Test Bubbles Component, component.bubbles()", function(t) {
 	let bubbles = d3X3dom.component.bubbles();
 
 	// Test for Getter and setter function for dimensions
@@ -39,5 +39,5 @@ test("Test Bubbles Component Base, bubbles()", function(t) {
 	bubbles.color("yellow");
 	t.deepEqual(bubbles.color(), "yellow", "Bubbles color changed");
 
-	t.end()
+	t.end();
 });

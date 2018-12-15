@@ -1,7 +1,7 @@
 let test = require('tape');
 let d3X3dom = require("../../");
 
-test("Test Axis Component Default Values, axis()", function(t) {
+test("Test Axis Component, component.axis()", function(t) {
 	let axis = d3X3dom.component.axis();
 
 	// Test for Getter and setter function for color

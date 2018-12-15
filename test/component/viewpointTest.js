@@ -1,7 +1,33 @@
 let test = require('tape');
 let d3X3dom = require("../../");
 
-test("Test viewpoint quickView, viewpoint.quickView(), ", function(t) {
+test("Test Viewpoint Base Component, component.viewpoint()", function(t) {
+	let viewPoint = d3X3dom.component.viewpoint();
+
+	// Test Getter and Setter functions for Center of Rotation
+	t.deepEqual(viewPoint.centerOfRotation(), [0.0, 0.0, 0.0], "Center of rotation should [0.0, 0.0, 0.0]");
+	viewPoint.centerOfRotation([1.0, 1.0, 1.0]);
+	t.deepEqual(viewPoint.centerOfRotation(), [1.0, 1.0, 1.0]);
+
+	// Test Getter and Setter functions for view position
+	t.deepEqual(viewPoint.viewPosition(), [80.0, 15.0, 80.0], "View position should be [80.0, 15.0, 80.0]");
+	viewPoint.viewPosition([100.0, 100.0, 100.0]);
+	t.deepEqual(viewPoint.viewPosition(), [100.0, 100.0, 100.0]);
+
+	// Test Getter and Setter functions for view orientation
+	t.deepEqual(viewPoint.viewOrientation(), [0.0, 1.0, 0.0, 0.8], "View orientation should be [0.0, 1.0, 0.0, 0.8]");
+	viewPoint.viewOrientation([1.0, 0.0, 0.0, 0.8]);
+	t.deepEqual(viewPoint.viewOrientation(), [1.0, 0.0, 0.0, 0.8]);
+
+	// Test Getter and Setter functions for field of view
+	t.deepEqual(viewPoint.fieldOfView(), 0.8, "Field of view should be 0.8");
+	viewPoint.fieldOfView(1.0);
+	t.deepEqual(viewPoint.fieldOfView(), 1.0);
+
+	t.end();
+});
+
+test("Test Component Viewpoint Quick View, viewpoint.quickView(), ", function(t) {
 	let viewPoint = d3X3dom.component.viewpoint();
 	let viewPoints = {
 		left: {
@@ -81,30 +107,3 @@ test("Test viewpoint quickView, viewpoint.quickView(), ", function(t) {
 
 	t.end()
 });
-
-test("Test viewpoint base, viewpoint()", function(t) {
-	let viewPoint = d3X3dom.component.viewpoint();
-
-	// Test Getter and Setter functions for Center of Rotation
-	t.deepEqual(viewPoint.centerOfRotation(), [0.0, 0.0, 0.0], "Center of rotation should [0.0, 0.0, 0.0]");
-	viewPoint.centerOfRotation([1.0, 1.0, 1.0]);
-	t.deepEqual(viewPoint.centerOfRotation(), [1.0, 1.0, 1.0]);
-
-	// Test Getter and Setter functions for view position
-	t.deepEqual(viewPoint.viewPosition(), [80.0, 15.0, 80.0], "View position should be [80.0, 15.0, 80.0]");
-	viewPoint.viewPosition([100.0, 100.0, 100.0]);
-	t.deepEqual(viewPoint.viewPosition(), [100.0, 100.0, 100.0]);
-
-	// Test Getter and Setter functions for view orientation
-	t.deepEqual(viewPoint.viewOrientation(), [0.0, 1.0, 0.0, 0.8], "View orientation should be [0.0, 1.0, 0.0, 0.8]");
-	viewPoint.viewOrientation([1.0, 0.0, 0.0, 0.8]);
-	t.deepEqual(viewPoint.viewOrientation(), [1.0, 0.0, 0.0, 0.8]);
-
-	// Test Getter and Setter functions for field of view
-	t.deepEqual(viewPoint.fieldOfView(), 0.8, "Field of view should be 0.8");
-	viewPoint.fieldOfView(1.0);
-	t.deepEqual(viewPoint.fieldOfView(), 1.0);
-
-	t.end()
-});
-
