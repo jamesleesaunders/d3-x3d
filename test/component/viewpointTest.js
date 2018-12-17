@@ -4,25 +4,25 @@ let d3X3dom = require("../../");
 test("Test Viewpoint Base Component, component.viewpoint()", function(t) {
 	let viewPoint = d3X3dom.component.viewpoint();
 
-	// Test Getter and Setter functions for Center of Rotation
-	t.deepEqual(viewPoint.centerOfRotation(), [0.0, 0.0, 0.0], "Center of rotation should [0.0, 0.0, 0.0]");
+	// Test centerOfRotation getter / setter function
+	t.deepEqual(viewPoint.centerOfRotation(), [0.0, 0.0, 0.0], "Default centerOfRotation");
 	viewPoint.centerOfRotation([1.0, 1.0, 1.0]);
-	t.deepEqual(viewPoint.centerOfRotation(), [1.0, 1.0, 1.0]);
+	t.deepEqual(viewPoint.centerOfRotation(), [1.0, 1.0, 1.0], "Changed centreOfRotation");
 
-	// Test Getter and Setter functions for view position
-	t.deepEqual(viewPoint.viewPosition(), [80.0, 15.0, 80.0], "View position should be [80.0, 15.0, 80.0]");
+	// Test viewPosition getter / setter function
+	t.deepEqual(viewPoint.viewPosition(), [80.0, 15.0, 80.0], "Default viewPosition");
 	viewPoint.viewPosition([100.0, 100.0, 100.0]);
-	t.deepEqual(viewPoint.viewPosition(), [100.0, 100.0, 100.0]);
+	t.deepEqual(viewPoint.viewPosition(), [100.0, 100.0, 100.0], "Changed viewPosition");
 
-	// Test Getter and Setter functions for view orientation
-	t.deepEqual(viewPoint.viewOrientation(), [0.0, 1.0, 0.0, 0.8], "View orientation should be [0.0, 1.0, 0.0, 0.8]");
+	// Test viewOrientation getter / setter function
+	t.deepEqual(viewPoint.viewOrientation(), [0.0, 1.0, 0.0, 0.8], "Default viewOrientation");
 	viewPoint.viewOrientation([1.0, 0.0, 0.0, 0.8]);
-	t.deepEqual(viewPoint.viewOrientation(), [1.0, 0.0, 0.0, 0.8]);
+	t.deepEqual(viewPoint.viewOrientation(), [1.0, 0.0, 0.0, 0.8], "Changed viewOrientation");
 
-	// Test Getter and Setter functions for field of view
-	t.deepEqual(viewPoint.fieldOfView(), 0.8, "Field of view should be 0.8");
+	// Test fieldOfView getter / setter function
+	t.deepEqual(viewPoint.fieldOfView(), 0.8, "Default fieldOfView");
 	viewPoint.fieldOfView(1.0);
-	t.deepEqual(viewPoint.fieldOfView(), 1.0);
+	t.deepEqual(viewPoint.fieldOfView(), 1.0, "Changed fieldOfView");
 
 	t.end();
 });
@@ -57,7 +57,7 @@ test("Test Component Viewpoint Quick View, viewpoint.quickView(), ", function(t)
 	};
 	let { left, side, top, dimetric } = viewPoints;
 
-	test("Test default values for left side view", function(t) {
+	test("Test default values for left view", function(t) {
 		viewPoint = d3X3dom.component.viewpoint();
 		viewPoint.quickView('left');
 
@@ -69,7 +69,7 @@ test("Test Component Viewpoint Quick View, viewpoint.quickView(), ", function(t)
 		t.end();
 	});
 
-	test("Test default values for top side view", function(t) {
+	test("Test default values for top view", function(t) {
 		viewPoint = d3X3dom.component.viewpoint();
 		viewPoint.quickView('top');
 
@@ -93,7 +93,7 @@ test("Test Component Viewpoint Quick View, viewpoint.quickView(), ", function(t)
 		t.end();
 	});
 
-	test("Test default values for dimetric and default view option side", function(t) {
+	test("Test default values for dimetric view", function(t) {
 		viewPoint = d3X3dom.component.viewpoint();
 		viewPoint.quickView('dimetric');
 

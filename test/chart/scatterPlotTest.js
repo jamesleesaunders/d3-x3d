@@ -4,42 +4,42 @@ let d3X3dom = require("../../");
 test("Test Scatter Plot Chart, chart.scatterPlot()", function(t) {
 	let scatterPlot = d3X3dom.chart.scatterPlot();
 
-	// Test Getter/ Setter functions for width
+	// Test width getter / setter function
 	t.deepEqual(scatterPlot.width(), 500, "Default width");
 	scatterPlot.width(300);
 	t.deepEqual(scatterPlot.width(), 300, "Changed width");
 
-	// Test Getter/ Setter functions for height
+	// Test height getter / setter function
 	t.deepEqual(scatterPlot.height(), 500, "Default height");
 	scatterPlot.height(300);
 	t.deepEqual(scatterPlot.height(), 300, "Changed height");
 
-	// Test for Getter and setter function for dimensions
+	// Test dimensions getter / setter function
 	t.deepEqual(scatterPlot.dimensions(), { x: 40, y: 40, z: 40 }, "Default dimensions");
 	scatterPlot.dimensions({ x: 10, y: 20, z: 30 });
 	t.deepEqual(scatterPlot.dimensions(), { x: 10, y: 20, z: 30 }, "Changed dimensions");
 
-	// Test for Getter and setter function for xScale
+	// Test xScale getter / setter function
 	t.deepEqual(scatterPlot.xScale(), undefined, "Default xScale is undefined");
 	scatterPlot.xScale(0.2);
-	t.deepEqual(scatterPlot.xScale(), 0.2, "Changed xScale set");
+	t.deepEqual(scatterPlot.xScale(), 0.2, "Changed xScale is set");
 
-	// Test for Getter and setter function for yScale
+	// Test yScale getter / setter function
 	t.deepEqual(scatterPlot.yScale(), undefined, "Default yScale is undefined");
 	scatterPlot.yScale(0.1);
-	t.deepEqual(scatterPlot.yScale(), 0.1, "Changed yScale set");
+	t.deepEqual(scatterPlot.yScale(), 0.1, "Changed yScale is set");
 
-	// Test for Getter and setter function for zScale
+	// Test zScale getter / setter function
 	t.deepEqual(scatterPlot.zScale(), undefined, "Default zScale is undefined");
 	scatterPlot.zScale(0.1);
-	t.deepEqual(scatterPlot.zScale(), 0.1, "Changed zScale set");
+	t.deepEqual(scatterPlot.zScale(), 0.1, "Changed zScale is set");
 
-	// Test for Getter and setter function for color
+	// Test color getter / setter function
 	t.deepEqual(scatterPlot.color(), "orange", "Default color");
 	scatterPlot.color("red");
 	t.deepEqual(scatterPlot.color(), "red", "Changed color");
 
-	// Test for Getter and Setter function for debug
+	// Test debug getter / setter function
 	t.deepEqual(scatterPlot.debug(), false, "Debug mode is false");
 	scatterPlot.debug(true);
 	t.deepEqual(scatterPlot.debug(), true, "Debug mode is true");

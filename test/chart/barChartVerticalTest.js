@@ -4,42 +4,42 @@ let d3X3dom = require("../../");
 test("Test Vertical Bar Chart, chart.barChartVertical()", function(t) {
 	let barChartVertical = d3X3dom.chart.barChartVertical();
 
-	// Test Getter/ Setter functions for width
+	// Test width getter / setter function
 	t.deepEqual(barChartVertical.width(), 500, "Default width");
 	barChartVertical.width(300);
 	t.deepEqual(barChartVertical.width(), 300, "Changed width");
 
-	// Test Getter/ Setter functions for height
+	// Test height getter / setter function
 	t.deepEqual(barChartVertical.height(), 500, "Default height");
 	barChartVertical.height(300);
 	t.deepEqual(barChartVertical.height(), 300, "Changed height");
 
-	// Test Getter/ Setter functions for dimensions
+	// Test dimensions getter / setter function
 	t.deepEqual(barChartVertical.dimensions(), { x: 40, y: 40, z: 40 }, "Default dimensions");
 	barChartVertical.dimensions({ x: 20, y: 20, z: 20 });
 	t.deepEqual(barChartVertical.dimensions(), { x: 20, y: 20, z: 20 }, "Changed dimensions");
 
-	// Test for Getter and setter function for xScale
+	// Test xScale getter / setter function
 	t.deepEqual(barChartVertical.xScale(), undefined, "Default xScale is undefined");
 	barChartVertical.xScale(0.2);
-	t.deepEqual(barChartVertical.xScale(), 0.2, "Changed xScale set");
+	t.deepEqual(barChartVertical.xScale(), 0.2, "Changed xScale is set");
 
-	// Test for Getter and setter function for yScale
+	// Test yScale getter / setter function
 	t.deepEqual(barChartVertical.yScale(), undefined, "Default yScale is undefined");
 	barChartVertical.yScale(0.1);
-	t.deepEqual(barChartVertical.yScale(), 0.1, "Changed yScale set");
+	t.deepEqual(barChartVertical.yScale(), 0.1, "Changed yScale is set");
 
-	// Test for Getter and setter function for color Scale
+	// Test colorScale getter / setter function
 	t.deepEqual(barChartVertical.colorScale(), undefined, "Default colorScale is undefined");
 	barChartVertical.colorScale(2);
-	t.deepEqual(barChartVertical.colorScale(), 2, "Changed colorScale set");
+	t.deepEqual(barChartVertical.colorScale(), 2, "Changed colorScale is set");
 
-	// Test Getter/ Setter functions for colors
+	// Test colors getter / setter function
 	t.deepEqual(barChartVertical.colors(), ["green", "red", "yellow", "steelblue", "orange"], "Default colors");
 	barChartVertical.colors(["orange", "yellow", "red", "steelblue", "green"]);
 	t.deepEqual(barChartVertical.colors(), ["orange", "yellow", "red", "steelblue", "green"], "Changed colors");
 
-	// Test for Getter / Setter function for debug
+	// Test debug getter / setter function
 	t.deepEqual(barChartVertical.debug(), false, "Debug mode is false");
 	barChartVertical.debug(true);
 	t.deepEqual(barChartVertical.debug(), true, "Debug mode is true");
