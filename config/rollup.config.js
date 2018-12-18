@@ -5,7 +5,7 @@ let banner = `/**
  * d3-x3dom
  *
  * @author James Saunders [james@saunders-family.net]
- * @copyright Copyright (C) 2018 James Saunders
+ * @copyright Copyright (C) 2019 James Saunders
  * @license GPLv2
  */
 `;
