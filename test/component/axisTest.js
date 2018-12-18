@@ -19,15 +19,15 @@ test("Test Axis Component, component.axis()", function(t) {
 	axis.color("red");
 	t.deepEqual(axis.color(), "red", "Changed color");
 
-	// Test tickDir getter / setter function
-	t.deepEqual(axis.tickDir(), undefined, "Default tickDir is undefined");
-	axis.tickDir("x");
-	t.deepEqual(axis.tickDir(), "x", "Changed tickDir is set");
+	// Test direction getter / setter function
+	t.deepEqual(axis.direction(), undefined, "Default direction is undefined");
+	axis.direction('z');
+	t.deepEqual(axis.direction(), 'z', "Changed direction is set");
 
-	// Test dir getter / setter function
-	t.deepEqual(axis.dir(), undefined, "Default dir is undefined");
-	axis.dir('z');
-	t.deepEqual(axis.dir(), 'z', "Changed dir is set");
+	// Test tickDirection getter / setter function
+	t.deepEqual(axis.tickDirection(), undefined, "Default tickDirection is undefined");
+	axis.tickDirection("x");
+	t.deepEqual(axis.tickDirection(), "x", "Changed tickDirection is set");
 
 	// Test tickValues getter / setter function
 	t.deepEqual(axis.tickValues(), null, "Default tickValues is null");

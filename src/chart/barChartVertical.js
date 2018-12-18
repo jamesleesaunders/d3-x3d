@@ -98,13 +98,13 @@ export default function() {
 			// Construct Axis Components
 			const xAxis = component.axis()
 				.scale(xScale)
-				.dir('x')
-				.tickDir('y');
+				.direction('x')
+				.tickDirection('y');
 
 			const yAxis = component.axis()
 				.scale(yScale)
-				.dir('y')
-				.tickDir('x')
+				.direction('y')
+				.tickDirection('x')
 				.tickSize(yScale.range()[1] - yScale.range()[0]);
 
 			// Construct Bars Component

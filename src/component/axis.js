@@ -14,8 +14,8 @@ export default function() {
 
 	/* Scale and Axis Options */
 	let scale;
-	let dir;
-	let tickDir;
+	let direction;
+	let tickDirection;
 	let tickArguments = [];
 	let tickValues = null;
 	let tickFormat = null;
@@ -78,10 +78,10 @@ export default function() {
 		const range0 = range[0];
 		const range1 = range[range.length - 1];
 
-		const dirVec = getAxisDirectionVector(dir);
-		const tickDirVec = getAxisDirectionVector(tickDir);
-		const rotVec = getAxisRotationVector(dir);
-		const tickRotVec = getAxisRotationVector(tickDir);
+		const axisDirectionVector = getAxisDirectionVector(direction);
+		const tickDirectionVector = getAxisDirectionVector(tickDirection);
+		const axisRotationVector = getAxisRotationVector(direction);
+		const tickRotationVector = getAxisRotationVector(tickDirection);
 
 		let path = selection.selectAll("transform")
 			.data([null]);
@@ -95,14 +95,14 @@ export default function() {
 		const tickExit = tick.exit();
 		const tickEnter = tick.enter()
 			.append("transform")
-			.attr("translation", (t) => (dirVec.map((a) => (scale(t) * a)).join(" ")))
+			.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
 			.attr("class", "tick");
 
 		let line = tick.select(".tickLine");
 		path = path.merge(path.enter()
 			.append("transform")
-			.attr("rotation", rotVec.join(" "))
-			.attr("translation", dirVec.map((d) => (d * (range0 + range1) / 2)).join(" "))
+			.attr("rotation", axisRotationVector.join(" "))
+			.attr("translation", axisDirectionVector.map((d) => (d * (range0 + range1) / 2)).join(" "))
 			.append("shape")
 			.call(makeSolid, color)
 			.attr("class", "domain"));
@@ -116,7 +116,7 @@ export default function() {
 			let text = tick.select("billboard");
 			let newText = tickEnter.append("transform");
 			newText
-				.attr("translation", tickDirVec.map((d) => (-d * tickPadding)))
+				.attr("translation", tickDirectionVector.map((d) => (-d * tickPadding)))
 				.append("billboard")
 				.attr("axisOfRotation", "0 0 0")
 				.append("shape")
@@ -138,8 +138,8 @@ export default function() {
 			.attr("height", range1 - range0);
 
 		line
-			.attr("translation", tickDirVec.map((d) => (d * tickSize / 2)).join(" "))
-			.attr("rotation", tickRotVec.join(" "))
+			.attr("translation", tickDirectionVector.map((d) => (d * tickSize / 2)).join(" "))
+			.attr("rotation", tickRotationVector.join(" "))
 			.attr("class", "tickLine")
 			.append("shape")
 			.call(makeSolid)
@@ -178,9 +178,9 @@ export default function() {
 	 * @param {string} _v - Direction of Axis (e.g. 'x', 'y', 'z').
 	 * @returns {*}
 	 */
-	my.dir = function(_v) {
-		if (!arguments.length) return dir;
-		dir = _v;
+	my.direction = function(_v) {
+		if (!arguments.length) return direction;
+		direction = _v;
 		return my;
 	};
 
@@ -190,9 +190,9 @@ export default function() {
 	 * @param {string} _v - Direction of Ticks (e.g. 'x', 'y', 'z').
 	 * @returns {*}
 	 */
-	my.tickDir = function(_v) {
-		if (!arguments.length) return tickDir;
-		tickDir = _v;
+	my.tickDirection = function(_v) {
+		if (!arguments.length) return tickDirection;
+		tickDirection = _v;
 		return my;
 	};
 

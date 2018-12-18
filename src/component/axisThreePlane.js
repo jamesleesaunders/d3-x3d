@@ -39,31 +39,31 @@ export default function() {
 		// Construct Axis Components
 		const xzAxis = componentAxis()
 			.scale(xScale)
-			.dir("x")
-			.tickDir("z")
+			.direction("x")
+			.tickDirection("z")
 			.tickSize(zScale.range()[1] - zScale.range()[0])
 			.tickPadding(xScale.range()[0])
 			.color("blue");
 
 		const yzAxis = componentAxis()
 			.scale(yScale)
-			.dir("y")
-			.tickDir("z")
+			.direction("y")
+			.tickDirection("z")
 			.tickSize(zScale.range()[1] - zScale.range()[0])
 			.color("red");
 
 		const yxAxis = componentAxis()
 			.scale(yScale)
-			.dir("y")
-			.tickDir("x")
+			.direction("y")
+			.tickDirection("x")
 			.tickSize(xScale.range()[1] - xScale.range()[0])
 			.tickFormat("")
 			.color("red");
 
 		const zxAxis = componentAxis()
 			.scale(zScale)
-			.dir("z")
-			.tickDir("x")
+			.direction("z")
+			.tickDirection("x")
 			.tickSize(xScale.range()[1] - xScale.range()[0])
 			.color("black");
 

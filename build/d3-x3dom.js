@@ -468,8 +468,8 @@ function componentAxis () {
 
 	/* Scale and Axis Options */
 	var scale = void 0;
-	var dir = void 0;
-	var tickDir = void 0;
+	var direction = void 0;
+	var tickDirection = void 0;
 	var tickArguments = [];
 	var tickValues = null;
 	var tickFormat = null;
@@ -530,10 +530,10 @@ function componentAxis () {
 		var range0 = range[0];
 		var range1 = range[range.length - 1];
 
-		var dirVec = getAxisDirectionVector(dir);
-		var tickDirVec = getAxisDirectionVector(tickDir);
-		var rotVec = getAxisRotationVector(dir);
-		var tickRotVec = getAxisRotationVector(tickDir);
+		var axisDirectionVector = getAxisDirectionVector(direction);
+		var tickDirectionVector = getAxisDirectionVector(tickDirection);
+		var axisRotationVector = getAxisRotationVector(direction);
+		var tickRotationVector = getAxisRotationVector(tickDirection);
 
 		var path = selection.selectAll("transform").data([null]);
 
@@ -544,13 +544,13 @@ function componentAxis () {
 
 		var tickExit = tick.exit();
 		var tickEnter = tick.enter().append("transform").attr("translation", function (t) {
-			return dirVec.map(function (a) {
+			return axisDirectionVector.map(function (a) {
 				return scale(t) * a;
 			}).join(" ");
 		}).attr("class", "tick");
 
 		var line = tick.select(".tickLine");
-		path = path.merge(path.enter().append("transform").attr("rotation", rotVec.join(" ")).attr("translation", dirVec.map(function (d) {
+		path = path.merge(path.enter().append("transform").attr("rotation", axisRotationVector.join(" ")).attr("translation", axisDirectionVector.map(function (d) {
 			return d * (range0 + range1) / 2;
 		}).join(" ")).append("shape").call(makeSolid, color).attr("class", "domain"));
 		tick = tick.merge(tickEnter);
@@ -564,7 +564,7 @@ function componentAxis () {
 		if (tickFormat !== "") {
 			var text = tick.select("billboard");
 			var newText = tickEnter.append("transform");
-			newText.attr("translation", tickDirVec.map(function (d) {
+			newText.attr("translation", tickDirectionVector.map(function (d) {
 				return -d * tickPadding;
 			})).append("billboard").attr("axisOfRotation", "0 0 0").append("shape").call(makeSolid, "black").append("text").attr("string", tickFormat).append("fontstyle").attr("size", 1.3).attr("family", "SANS").attr("style", "BOLD").attr("justify", "MIDDLE");
 			text = text.merge(newText);
@@ -573,9 +573,9 @@ function componentAxis () {
 		tickExit.remove();
 		path.append("cylinder").attr("radius", 0.1).attr("height", range1 - range0);
 
-		line.attr("translation", tickDirVec.map(function (d) {
+		line.attr("translation", tickDirectionVector.map(function (d) {
 			return d * tickSize / 2;
-		}).join(" ")).attr("rotation", tickRotVec.join(" ")).attr("class", "tickLine").append("shape").call(makeSolid).append("cylinder").attr("radius", 0.05).attr("height", tickSize);
+		}).join(" ")).attr("rotation", tickRotationVector.join(" ")).attr("class", "tickLine").append("shape").call(makeSolid).append("cylinder").attr("radius", 0.05).attr("height", tickSize);
 	}
 
 	/**
@@ -608,9 +608,9 @@ function componentAxis () {
   * @param {string} _v - Direction of Axis (e.g. 'x', 'y', 'z').
   * @returns {*}
   */
-	my.dir = function (_v) {
-		if (!arguments.length) return dir;
-		dir = _v;
+	my.direction = function (_v) {
+		if (!arguments.length) return direction;
+		direction = _v;
 		return my;
 	};
 
@@ -620,9 +620,9 @@ function componentAxis () {
   * @param {string} _v - Direction of Ticks (e.g. 'x', 'y', 'z').
   * @returns {*}
   */
-	my.tickDir = function (_v) {
-		if (!arguments.length) return tickDir;
-		tickDir = _v;
+	my.tickDirection = function (_v) {
+		if (!arguments.length) return tickDirection;
+		tickDirection = _v;
 		return my;
 	};
 
@@ -734,13 +734,13 @@ function componentAxisThreePlane () {
 		});
 
 		// Construct Axis Components
-		var xzAxis = componentAxis().scale(xScale).dir("x").tickDir("z").tickSize(zScale.range()[1] - zScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
+		var xzAxis = componentAxis().scale(xScale).direction("x").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
 
-		var yzAxis = componentAxis().scale(yScale).dir("y").tickDir("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("red");
+		var yzAxis = componentAxis().scale(yScale).direction("y").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("red");
 
-		var yxAxis = componentAxis().scale(yScale).dir("y").tickDir("x").tickSize(xScale.range()[1] - xScale.range()[0]).tickFormat("").color("red");
+		var yxAxis = componentAxis().scale(yScale).direction("y").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).tickFormat("").color("red");
 
-		var zxAxis = componentAxis().scale(zScale).dir("z").tickDir("x").tickSize(xScale.range()[1] - xScale.range()[0]).color("black");
+		var zxAxis = componentAxis().scale(zScale).direction("z").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color("black");
 
 		selection.select(".xzAxis").call(xzAxis);
 
@@ -2490,9 +2490,9 @@ function chartBarChartVertical () {
 			init(data);
 
 			// Construct Axis Components
-			var xAxis = component.axis().scale(xScale).dir('x').tickDir('y');
+			var xAxis = component.axis().scale(xScale).direction('x').tickDirection('y');
 
-			var yAxis = component.axis().scale(yScale).dir('y').tickDir('x').tickSize(yScale.range()[1] - yScale.range()[0]);
+			var yAxis = component.axis().scale(yScale).direction('y').tickDirection('x').tickSize(yScale.range()[1] - yScale.range()[0]);
 
 			// Construct Bars Component
 			var chart = component.bars().xScale(xScale).yScale(yScale).colors(colors);
