@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3dom : 3D Crosshair Example</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
+  <script src="../build/d3-x3dom.js"></script>
+  <script src="../src/component/crosshair.js"></script>
+</head>
+
+<body>
+  <div id="chartholder"></div>
+
+  <script>
+    // Chart dimensions
+    var width = 500;
+    var height = 500;
+
+    var xScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
+    var yScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
+    var zScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
+
+    var axisThreePlaneComponent = d3.x3dom.component.axisThreePlane()
+      .xScale(xScale)
+      .yScale(yScale)
+      .zScale(zScale);
+
+    var crosshairComponent = crosshair();
+
+    var viewpoint = d3.x3dom.component.viewpoint();
+
+    // Create scene
+    var chartHolder = d3.select("#chartholder")
+      .append("x3d")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("scene");
+
+    // Add chart component
+    chartHolder.call(viewpoint)
+      .append("group")
+      .attr("class", "chart")
+      .call(crosshairComponent)
+      .call(axisThreePlaneComponent);
+
+  </script>
+
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.</div>
+</body>

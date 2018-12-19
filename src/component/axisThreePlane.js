@@ -17,7 +17,6 @@ export default function() {
 	let xScale;
 	let yScale;
 	let zScale;
-	let colorScale;
 
 	/**
 	 * Constructor
@@ -126,18 +125,6 @@ export default function() {
 	my.zScale = function(_v) {
 		if (!arguments.length) return zScale;
 		zScale = _v;
-		return my;
-	};
-
-	/**
-	 * Color Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 color scale.
-	 * @returns {*}
-	 */
-	my.colorScale = function(_v) {
-		if (!arguments.length) return colorScale;
-		colorScale = _v;
 		return my;
 	};
 
