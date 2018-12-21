@@ -22,14 +22,18 @@
     var yScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
     var zScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
 
+    var viewpointComponent = d3.x3dom.component.viewpoint();
+
     var axisThreePlaneComponent = d3.x3dom.component.axisThreePlane()
       .xScale(xScale)
       .yScale(yScale)
       .zScale(zScale);
 
-    var crosshairComponent = crosshair();
+    var crosshairComponent = crosshair()
+      .xScale(xScale)
+      .yScale(yScale)
+      .zScale(zScale);
 
-    var viewpoint = d3.x3dom.component.viewpoint();
 
     // Create scene
     var chartHolder = d3.select("#chartholder")
@@ -38,14 +42,28 @@
       .attr("height", height + "px")
       .append("scene");
 
-    // Add chart component
-    chartHolder.call(viewpoint)
-      .append("group")
-      .attr("class", "chart")
-      .call(crosshairComponent)
+    var ranNum = () => d3.x3dom.randomData.randomNum();
+
+    // Add to page
+    chartHolder.call(viewpointComponent);
+
+    chartHolder.append("group")
       .call(axisThreePlaneComponent);
+
+    var crossHolder = chartHolder.append("group");
+
+    function update() {
+      var data = { x: ranNum(), y: ranNum(), z: ranNum() };
+      crossHolder.datum(data)
+        .call(crosshairComponent);
+    }
+
+    update();
+    setInterval(update, 1000);
 
   </script>
 
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.</div>
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM
+    Data Visualization Library.
+  </div>
 </body>
