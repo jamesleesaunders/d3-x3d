@@ -1,17 +1,17 @@
-// import * as d3 from "d3";
+import * as d3 from "d3";
 
 /**
  * Reusable 3D Crosshair Component
  *
  * @module
  */
-function crosshair() {
+export default function() {
 
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["blue", "red", "green"];
-	let radius = 0.1;
 	let classed = "x3dCrosshair";
+	let radius = 0.1;
 
 	/* Scales */
 	let xScale;
