@@ -7,8 +7,8 @@
  */
 
 const author = "James Saunders";
-const date = new Date();
-const copyright = "Copyright (C) " + date.getFullYear() + " " + author;
+const year = new Date().getFullYear();
+const copyright = `Copyright (C) ${year} ${author}`;
 import { version, license } from "./package.json";
 
 import chart from "./src/chart";
