@@ -142,7 +142,7 @@ export default function() {
 			.attr("rotation", tickRotationVector.join(" "))
 			.attr("class", "tickLine")
 			.append("shape")
-			.call(makeSolid)
+			.call(makeSolid, "#d3d3d3")
 			.append("cylinder")
 			.attr("radius", 0.05)
 			.attr("height", tickSize);

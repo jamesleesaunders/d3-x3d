@@ -575,7 +575,7 @@ function componentAxis () {
 
 		line.attr("translation", tickDirectionVector.map(function (d) {
 			return d * tickSize / 2;
-		}).join(" ")).attr("rotation", tickRotationVector.join(" ")).attr("class", "tickLine").append("shape").call(makeSolid).append("cylinder").attr("radius", 0.05).attr("height", tickSize);
+		}).join(" ")).attr("rotation", tickRotationVector.join(" ")).attr("class", "tickLine").append("shape").call(makeSolid, "#d3d3d3").append("cylinder").attr("radius", 0.05).attr("height", tickSize);
 	}
 
 	/**
