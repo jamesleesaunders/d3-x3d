@@ -59,7 +59,7 @@ Select chartholder:
 var chartHolder = d3.select("#chartholder");
 ```
 
-Generate some [data](#data-structure):
+Generate some [data](#data-structures):
 
 ```javascript
 var myData = [
