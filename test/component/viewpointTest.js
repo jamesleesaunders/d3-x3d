@@ -27,7 +27,7 @@ test("Test Viewpoint Base Component, component.viewpoint()", function(t) {
 	t.end();
 });
 
-test("Test Component Viewpoint Quick View, viewpoint.quickView(), ", function(t) {
+test("Test Component Viewpoint Quick View, viewpoint.quickView()", function(t) {
 	let viewPoint = d3X3dom.component.viewpoint();
 	let viewPoints = {
 		left: {

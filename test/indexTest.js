@@ -10,5 +10,8 @@ test("Test Index", function(t) {
 	t.equal(d3X3dom.license, license, "Returns license");
 	t.equal(d3X3dom.copyright, `Copyright (C) ${year} ${author}`, "Returns copyright");
 
+	t.equal(typeof d3X3dom.chart === 'object', true, "Returns chart object");
+	t.equal(typeof d3X3dom.component === 'object', true, "Returns component object");
+
 	t.end();
 });
