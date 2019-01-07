@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>axis - Documentation</title>
+    <title>crosshair - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">axis</h1>
+    <h1 class="page-title">crosshair</h1>
     
 
     
@@ -42,7 +42,7 @@
 <header>
     
         <h2>
-        axis
+        crosshair
         </h2>
         
     
@@ -56,7 +56,7 @@
 
     
 
-    <h4 class="name" id="axis"><span class="type-signature"></span>new axis<span class="signature">(selection)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="crosshair"><span class="type-signature"></span>new crosshair<span class="signature">(selection)</span><span class="type-signature"></span></h4>
 
     
 
@@ -99,7 +99,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_axis.js.html">component/axis.js</a>, <a href="component_axis.js.html#line66">line 66</a>
+        <a href="component_crosshair.js.html">component/crosshair.js</a>, <a href="component_crosshair.js.html#line28">line 28</a>
     </li></ul></dd>
     
 
@@ -209,14 +209,14 @@
 
     
 
-    <h4 class="name" id=".color"><span class="type-signature">(static) </span>color<span class="signature">(_v)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    <h4 class="name" id=".colors"><span class="type-signature">(static) </span>colors<span class="signature">(_v)</span><span class="type-signature"> &rarr; {*}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Color Getter / Setter</p>
+    <p>Colors Getter / Setter</p>
 </div>
 
 
@@ -252,7 +252,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_axis.js.html">component/axis.js</a>, <a href="component_axis.js.html#line265">line 265</a>
+        <a href="component_crosshair.js.html">component/crosshair.js</a>, <a href="component_crosshair.js.html#line142">line 142</a>
     </li></ul></dd>
     
 
@@ -302,7 +302,7 @@
             <td class="type">
             
                 
-<span class="param-type"><code>string</code></span>
+<span class="param-type"><code>Array</code></span>
 
 
             
@@ -313,7 +313,7 @@
             
 
             <td class="description last">
-                <p>Color (e.g. 'red' or '#ff0000').</p>
+                <p>Array of colours used by color scale.</p>
                 
             </td>
         </tr>
@@ -408,7 +408,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_axis.js.html">component/axis.js</a>, <a href="component_axis.js.html#line157">line 157</a>
+        <a href="component_crosshair.js.html">component/crosshair.js</a>, <a href="component_crosshair.js.html#line94">line 94</a>
     </li></ul></dd>
     
 
@@ -521,14 +521,14 @@
 
     
 
-    <h4 class="name" id=".direction"><span class="type-signature">(static) </span>direction<span class="signature">(_v)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    <h4 class="name" id=".xScale"><span class="type-signature">(static) </span>xScale<span class="signature">(_v)</span><span class="type-signature"> &rarr; {*}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Direction Getter / Setter</p>
+    <p>X Scale Getter / Setter</p>
 </div>
 
 
@@ -564,163 +564,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_axis.js.html">component/axis.js</a>, <a href="component_axis.js.html#line181">line 181</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>_v</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>string</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Direction of Axis (e.g. 'x', 'y', 'z').</p>
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-<dl class="param-type">
-    <dt>
-        Type:
-    </dt>
-    <dd>
-        
-<span class="param-type"><code>*</code></span>
-
-
-    </dd>
-</dl>
-
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id=".scale"><span class="type-signature">(static) </span>scale<span class="signature">(_v)</span><span class="type-signature"> &rarr; {*}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Scale Getter / Setter</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_axis.js.html">component/axis.js</a>, <a href="component_axis.js.html#line169">line 169</a>
+        <a href="component_crosshair.js.html">component/crosshair.js</a>, <a href="component_crosshair.js.html#line106">line 106</a>
     </li></ul></dd>
     
 
@@ -781,7 +625,7 @@
             
 
             <td class="description last">
-                <p>D3 Scale.</p>
+                <p>D3 scale.</p>
                 
             </td>
         </tr>
@@ -833,14 +677,14 @@
 
     
 
-    <h4 class="name" id=".tickArguments"><span class="type-signature">(static) </span>tickArguments<span class="signature">(_v)</span><span class="type-signature"> &rarr; {Array.&lt;*>}</span></h4>
+    <h4 class="name" id=".yScale"><span class="type-signature">(static) </span>yScale<span class="signature">(_v)</span><span class="type-signature"> &rarr; {*}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Tick Arguments Getter / Setter</p>
+    <p>Y Scale Getter / Setter</p>
 </div>
 
 
@@ -876,7 +720,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_axis.js.html">component/axis.js</a>, <a href="component_axis.js.html#line205">line 205</a>
+        <a href="component_crosshair.js.html">component/crosshair.js</a>, <a href="component_crosshair.js.html#line118">line 118</a>
     </li></ul></dd>
     
 
@@ -926,7 +770,7 @@
             <td class="type">
             
                 
-<span class="param-type"><code>Array</code></span>
+<span class="param-type"><code>d3.scale</code></span>
 
 
             
@@ -937,163 +781,7 @@
             
 
             <td class="description last">
-                <p>Tick arguments.</p>
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-<dl class="param-type">
-    <dt>
-        Type:
-    </dt>
-    <dd>
-        
-<span class="param-type"><code>Array.&lt;*></code></span>
-
-
-    </dd>
-</dl>
-
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id=".tickDirection"><span class="type-signature">(static) </span>tickDirection<span class="signature">(_v)</span><span class="type-signature"> &rarr; {*}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Tick Direction Getter / Setter</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_axis.js.html">component/axis.js</a>, <a href="component_axis.js.html#line193">line 193</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>_v</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>string</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Direction of Ticks (e.g. 'x', 'y', 'z').</p>
+                <p>D3 scale.</p>
                 
             </td>
         </tr>
@@ -1145,14 +833,14 @@
 
     
 
-    <h4 class="name" id=".tickFormat"><span class="type-signature">(static) </span>tickFormat<span class="signature">(_v)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    <h4 class="name" id=".zScale"><span class="type-signature">(static) </span>zScale<span class="signature">(_v)</span><span class="type-signature"> &rarr; {*}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Tick Format Getter / Setter</p>
+    <p>Z Scale Getter / Setter</p>
 </div>
 
 
@@ -1188,7 +876,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_axis.js.html">component/axis.js</a>, <a href="component_axis.js.html#line229">line 229</a>
+        <a href="component_crosshair.js.html">component/crosshair.js</a>, <a href="component_crosshair.js.html#line130">line 130</a>
     </li></ul></dd>
     
 
@@ -1238,7 +926,7 @@
             <td class="type">
             
                 
-<span class="param-type"><code>string</code></span>
+<span class="param-type"><code>d3.scale</code></span>
 
 
             
@@ -1249,475 +937,7 @@
             
 
             <td class="description last">
-                <p>Tick format.</p>
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-<dl class="param-type">
-    <dt>
-        Type:
-    </dt>
-    <dd>
-        
-<span class="param-type"><code>*</code></span>
-
-
-    </dd>
-</dl>
-
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id=".tickPadding"><span class="type-signature">(static) </span>tickPadding<span class="signature">(_v)</span><span class="type-signature"> &rarr; {*}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Tick Padding Getter / Setter</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_axis.js.html">component/axis.js</a>, <a href="component_axis.js.html#line253">line 253</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>_v</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>number</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Tick padding size.</p>
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-<dl class="param-type">
-    <dt>
-        Type:
-    </dt>
-    <dd>
-        
-<span class="param-type"><code>*</code></span>
-
-
-    </dd>
-</dl>
-
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id=".tickSize"><span class="type-signature">(static) </span>tickSize<span class="signature">(_v)</span><span class="type-signature"> &rarr; {*}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Tick Size Getter / Setter</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_axis.js.html">component/axis.js</a>, <a href="component_axis.js.html#line241">line 241</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>_v</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>number</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Tick length.</p>
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-<dl class="param-type">
-    <dt>
-        Type:
-    </dt>
-    <dd>
-        
-<span class="param-type"><code>*</code></span>
-
-
-    </dd>
-</dl>
-
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id=".tickValues"><span class="type-signature">(static) </span>tickValues<span class="signature">(_v)</span><span class="type-signature"> &rarr; {*}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Tick Values Getter / Setter</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_axis.js.html">component/axis.js</a>, <a href="component_axis.js.html#line217">line 217</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>_v</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Array</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Tick values.</p>
+                <p>D3 scale.</p>
                 
             </td>
         </tr>
