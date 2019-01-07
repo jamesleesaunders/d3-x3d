@@ -25,6 +25,7 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Scatter Plot](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/ScatterPlot.html)
 * [Surface Plot](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/SurfacePlot.html)
 * [Ribbon Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/RibbonChart.html)
+* [Crosshair Component](https://raw.githack.com/jamesleesaunders/d3-x3dom/Crosshair/examples/Crosshair.html)
 * [Components Showcase](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
 * [Observable Examples](https://beta.observablehq.com/collection/@jamesleesaunders/d3-x3dom)
 
@@ -58,7 +59,7 @@ Select chartholder:
 var chartHolder = d3.select("#chartholder");
 ```
 
-Generate some [data](#data-structure):
+Generate some [data](#data-structures):
 
 ```javascript
 var myData = [

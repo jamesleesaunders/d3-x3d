@@ -12,7 +12,7 @@ test("Test Axis Component, component.axis()", function(t) {
 	// Test scale getter / setter function
 	t.deepEqual(axis.scale(), undefined, "Default scale is undefined");
 	axis.scale(5);
-	t.deepEqual(axis.scale(), 5, "Changed yScale is set");
+	t.deepEqual(axis.scale(), 5, "Changed scale is set");
 
 	// Test color getter / setter function
 	t.equal(axis.color(), "black", "Default color");

@@ -2,7 +2,7 @@
  * d3-x3dom
  *
  * @author James Saunders [james@saunders-family.net]
- * @copyright Copyright (C) 2018 James Saunders
+ * @copyright Copyright (C) 2019 James Saunders
  * @license GPLv2
  */
 
@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.0.20";
+var version = "1.0.21";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -575,7 +575,7 @@ function componentAxis () {
 
 		line.attr("translation", tickDirectionVector.map(function (d) {
 			return d * tickSize / 2;
-		}).join(" ")).attr("rotation", tickRotationVector.join(" ")).attr("class", "tickLine").append("shape").call(makeSolid).append("cylinder").attr("radius", 0.05).attr("height", tickSize);
+		}).join(" ")).attr("rotation", tickRotationVector.join(" ")).attr("class", "tickLine").append("shape").call(makeSolid, "#d3d3d3").append("cylinder").attr("radius", 0.05).attr("height", tickSize);
 	}
 
 	/**
@@ -717,7 +717,6 @@ function componentAxisThreePlane () {
 	var xScale = void 0;
 	var yScale = void 0;
 	var zScale = void 0;
-	var colorScale = void 0;
 
 	/**
   * Constructor
@@ -796,18 +795,6 @@ function componentAxisThreePlane () {
 	my.zScale = function (_v) {
 		if (!arguments.length) return zScale;
 		zScale = _v;
-		return my;
-	};
-
-	/**
-  * Color Scale Getter / Setter
-  *
-  * @param {d3.scale} _v - D3 color scale.
-  * @returns {*}
-  */
-	my.colorScale = function (_v) {
-		if (!arguments.length) return colorScale;
-		colorScale = _v;
 		return my;
 	};
 
@@ -1520,6 +1507,152 @@ function componentBubblesMultiSeries () {
 }
 
 /**
+ * Reusable 3D Crosshair Component
+ *
+ * @module
+ */
+function componentCrosshair () {
+
+	/* Default Properties */
+	var dimensions = { x: 40, y: 40, z: 40 };
+	var colors = ["blue", "red", "green"];
+	var classed = "x3dCrosshair";
+	var radius = 0.1;
+
+	/* Scales */
+	var xScale = void 0;
+	var yScale = void 0;
+	var zScale = void 0;
+
+	/**
+  * Constructor
+  *
+  * @constructor
+  * @alias crosshair
+  * @param {d3.selection} selection - The chart holder D3 selection.
+  */
+	function my(selection) {
+		selection.classed(classed, true);
+
+		selection.each(function (data) {
+
+			var xOff = dimensions["x"] / 2;
+			var yOff = dimensions["y"] / 2;
+			var zOff = dimensions["z"] / 2;
+			var xVal = xScale(data.x);
+			var yVal = yScale(data.y);
+			var zVal = zScale(data.z);
+
+			var positionVectors = {
+				x: [xOff, yVal, zVal],
+				y: [xVal, yOff, zVal],
+				z: [xVal, yVal, zOff]
+			};
+
+			function getPositionVector(axisDir) {
+				return positionVectors[axisDir].join(" ");
+			}
+
+			var rotationVectors = {
+				x: [1, 1, 0, Math.PI],
+				y: [0, 0, 0, 0],
+				z: [0, 1, 1, Math.PI]
+			};
+
+			function getRotationVector(axisDir) {
+				return rotationVectors[axisDir].join(" ");
+			}
+
+			var colorScale = d3.scaleOrdinal().domain(Object.keys(dimensions)).range(colors);
+
+			var lineSelect = selection.selectAll(".line").data(Object.keys(dimensions));
+
+			var line = lineSelect.enter().append("transform").classed("line", true).attr("translation", function (d) {
+				return getPositionVector(d);
+			}).attr("rotation", function (d) {
+				return getRotationVector(d);
+			}).append("shape");
+
+			line.append("cylinder").attr("radius", radius).attr("height", function (d) {
+				return dimensions[d];
+			});
+
+			line.append("appearance").append("material").attr("diffuseColor", function (d) {
+				return colorScale(d);
+			});
+
+			lineSelect.transition().attr("translation", function (d) {
+				return getPositionVector(d);
+			}).attr("rotation", function (d) {
+				return getRotationVector(d);
+			});
+		});
+	}
+
+	/**
+  * Dimensions Getter / Setter
+  *
+  * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+  * @returns {*}
+  */
+	my.dimensions = function (_v) {
+		if (!arguments.length) return dimensions;
+		dimensions = _v;
+		return this;
+	};
+
+	/**
+  * X Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.xScale = function (_v) {
+		if (!arguments.length) return xScale;
+		xScale = _v;
+		return my;
+	};
+
+	/**
+  * Y Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.yScale = function (_v) {
+		if (!arguments.length) return yScale;
+		yScale = _v;
+		return my;
+	};
+
+	/**
+  * Z Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.zScale = function (_v) {
+		if (!arguments.length) return zScale;
+		zScale = _v;
+		return my;
+	};
+
+	/**
+  * Colors Getter / Setter
+  *
+  * @param {Array} _v - Array of colours used by color scale.
+  * @returns {*}
+  */
+	my.colors = function (_v) {
+		if (!arguments.length) return colors;
+		colors = _v;
+		return my;
+	};
+
+	return my;
+}
+
+/**
  * Reusable 3D Ribbon Chart Component
  *
  * @module
@@ -2181,6 +2314,7 @@ var component = {
 	barsMultiSeries: componentBarsMultiSeries,
 	bubbles: componentBubbles,
 	bubblesMultiSeries: componentBubblesMultiSeries,
+	crosshair: componentCrosshair,
 	ribbon: componentRibbon,
 	ribbonMultiSeries: componentRibbonMultiSeries,
 	surface: componentSurface,
@@ -3662,13 +3796,13 @@ var randomData = Object.freeze({
  * d3-x3dom
  *
  * @author James Saunders [james@saunders-family.net]
- * @copyright Copyright (C) 2018 James Saunders
+ * @copyright Copyright (C) 2019 James Saunders
  * @license GPLv2
  */
 
 var author$1 = "James Saunders";
-var date = new Date();
-var copyright = "Copyright (C) " + date.getFullYear() + " " + author$1;
+var year = new Date().getFullYear();
+var copyright = "Copyright (C) " + year + " " + author$1;
 
 var index = {
 	version: version,

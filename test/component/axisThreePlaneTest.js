@@ -24,11 +24,6 @@ test("Test Three Plane Axis Component, component.axisThreePlane()", function(t) 
 	axisThreePlane.zScale(0.2);
 	t.deepEqual(axisThreePlane.zScale(), 0.2, "Changed zScale is set");
 
-	// Test colorScale getter / setter function
-	t.deepEqual(axisThreePlane.colorScale(), undefined, "Default colorScale is undefined");
-	axisThreePlane.colorScale(2);
-	t.deepEqual(axisThreePlane.colorScale(), 2, "Changed colorScale is set");
-
 	// Test colors getter / setter function
 	t.deepEqual(axisThreePlane.colors(), ["blue", "red", "green"], "Default colors");
 	axisThreePlane.colors(["yellow", "blue", "green"]);
