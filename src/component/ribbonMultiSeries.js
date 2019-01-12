@@ -94,12 +94,13 @@ export default function() {
 					return x + " " + y + " " + z;
 				})
 				.append("group")
+				.merge(ribbonGroup)
+				.transition()
 				.each(function(d) {
 					const color = colorScale(d.key);
 					ribbon.color(color);
 					d3.select(this).call(ribbon);
-				})
-				.merge(ribbonGroup);
+				});
 
 			ribbonGroup.exit()
 				.remove();

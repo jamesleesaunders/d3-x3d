@@ -120,20 +120,36 @@ export default function() {
 
 			const coords = array2dToString(coordIndex.concat(coordIndexBack));
 
-			const surfaces = selection.selectAll(".surface")
-				.data([data]);
+			const surface = selection.selectAll(".surface")
+				.data((d) => [d]);
 
-			const indexedfaceset = surfaces
+			const surfaceSelect = surface
 				.enter()
 				.append("shape")
+				.classed("surface", true)
 				.append("indexedfaceset")
-				.attr("coordIndex", coords);
+				.attr("coordindex", coords);
 
-			indexedfaceset.append("coordinate")
+			surfaceSelect.append("coordinate")
 				.attr("point", coordinatePoints);
 
-			indexedfaceset.append("color")
+			surfaceSelect.append("color")
 				.attr("color", colorFaceSet);
+
+			surfaceSelect.merge(surface);
+
+			const surfaceTransition = surface.transition()
+				.select("indexedfaceset")
+				.attr("coordindex", coords);
+
+			surfaceTransition.select("coordinate")
+				.attr("point", coordinatePoints);
+
+			surfaceTransition.select("color")
+				.attr("color", colorFaceSet);
+
+			surface.exit()
+				.remove();
 		});
 	}
 

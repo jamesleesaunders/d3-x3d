@@ -77,23 +77,22 @@ export default function() {
 				return selection;
 			};
 
-			const bubblesSelect = selection.selectAll(".point")
+			const bubbles = selection.selectAll(".bubble")
 				.data((d) => d.values);
 
-			const bubbles = bubblesSelect.enter()
+			const bubblesEnter = bubbles.enter()
 				.append("transform")
-				.attr("class", "point")
+				.attr("class", "bubble")
 				.attr("translation", (d) => (xScale(d.x) + ' ' + yScale(d.y) + ' ' + zScale(d.z)))
 				.attr("onmouseover", "d3.select(this).select('billboard').attr('render', true);")
-				.attr("onmouseout", "d3.select(this).select('transform').select('billboard').attr('render', false);")
-				.merge(bubblesSelect);
+				.attr("onmouseout", "d3.select(this).select('transform').select('billboard').attr('render', false);");
 
-			bubbles.append("shape")
+			bubblesEnter.append("shape")
 				.call(makeSolid, color)
 				.append("sphere")
 				.attr("radius", (d) => sizeScale(d.value));
 
-			bubbles
+			bubblesEnter
 				.append("transform")
 				.attr("translation", (d) => {
 					let r = sizeScale(d.value) + 0.8;
@@ -113,6 +112,14 @@ export default function() {
 				.attr("style", "BOLD")
 				.attr("justify", "START")
 				.attr('render', false);
+
+			bubblesEnter.merge(bubbles);
+
+			bubbles.transition()
+				.attr("translation", (d) => (xScale(d.x) + ' ' + yScale(d.y) + ' ' + zScale(d.z)));
+
+			bubbles.exit()
+				.remove();
 		});
 	}
 

@@ -887,12 +887,15 @@ function componentBars () {
 				var y = yScale(d.value) / 2;
 				var z = 0.0;
 				return x + " " + y + " " + z;
-			}).append("shape").merge(bars);
+			}).append("shape");
 
 			barsEnter.append("box").attr("size", "1.0 1.0 1.0");
+
 			barsEnter.append("appearance").append("material").attr("diffuseColor", function (d) {
 				return colorScale(d.key);
 			}).attr("ambientIntensity", "0.1");
+
+			barsEnter.merge(bars);
 
 			bars.transition().attr("scale", function (d) {
 				var x = xScale.bandwidth();
@@ -905,6 +908,8 @@ function componentBars () {
 				var z = 0.0;
 				return x + " " + y + " " + z;
 			});
+
+			bars.exit().remove();
 		});
 	}
 
@@ -1053,7 +1058,9 @@ function componentBarsMultiSeries () {
 				var y = 0;
 				var z = zScale(d.key);
 				return x + " " + y + " " + z;
-			}).append("group").call(bars).merge(barGroup);
+			}).merge(barGroup).transition().each(function () {
+				d3.select(this).call(bars);
+			});
 
 			barGroup.exit().remove();
 		});
@@ -1208,24 +1215,32 @@ function componentBubbles () {
 				return selection;
 			};
 
-			var bubblesSelect = selection.selectAll(".point").data(function (d) {
+			var bubbles = selection.selectAll(".bubble").data(function (d) {
 				return d.values;
 			});
 
-			var bubbles = bubblesSelect.enter().append("transform").attr("class", "point").attr("translation", function (d) {
+			var bubblesEnter = bubbles.enter().append("transform").attr("class", "bubble").attr("translation", function (d) {
 				return xScale(d.x) + ' ' + yScale(d.y) + ' ' + zScale(d.z);
-			}).attr("onmouseover", "d3.select(this).select('billboard').attr('render', true);").attr("onmouseout", "d3.select(this).select('transform').select('billboard').attr('render', false);").merge(bubblesSelect);
+			}).attr("onmouseover", "d3.select(this).select('billboard').attr('render', true);").attr("onmouseout", "d3.select(this).select('transform').select('billboard').attr('render', false);");
 
-			bubbles.append("shape").call(makeSolid, color).append("sphere").attr("radius", function (d) {
+			bubblesEnter.append("shape").call(makeSolid, color).append("sphere").attr("radius", function (d) {
 				return sizeScale(d.value);
 			});
 
-			bubbles.append("transform").attr("translation", function (d) {
+			bubblesEnter.append("transform").attr("translation", function (d) {
 				var r = sizeScale(d.value) + 0.8;
 				return r + " " + r + " " + r;
 			}).append("billboard").attr('render', false).attr("axisOfRotation", "0 0 0").append("shape").call(makeSolid, "blue").append("text").attr('class', "labelText").attr('string', function (d) {
 				return d.key;
 			}).append("fontstyle").attr("size", 1).attr("family", "SANS").attr("style", "BOLD").attr("justify", "START").attr('render', false);
+
+			bubblesEnter.merge(bubbles);
+
+			bubbles.transition().attr("translation", function (d) {
+				return xScale(d.x) + ' ' + yScale(d.y) + ' ' + zScale(d.z);
+			});
+
+			bubbles.exit().remove();
 		});
 	}
 
@@ -1397,11 +1412,11 @@ function componentBubblesMultiSeries () {
 			// Create Bar Groups
 			var bubbleGroup = selection.selectAll(".bubbleGroup").data(data);
 
-			bubbleGroup.enter().append("group").classed("bubbleGroup", true).each(function (d) {
+			bubbleGroup.enter().append("group").classed("bubbleGroup", true).merge(bubbleGroup).transition().each(function (d) {
 				var color = colorScale(d.key);
 				bubbles.color(color);
 				d3.select(this).call(bubbles);
-			}).merge(bubbleGroup);
+			});
 
 			bubbleGroup.exit().remove();
 		});
@@ -1751,21 +1766,31 @@ function componentRibbon () {
 				});
 			};
 
-			var ribbonSelect = selection.selectAll(".ribbon").data(ribbonData);
+			var ribbon = selection.selectAll(".ribbon").data(ribbonData);
 
-			var ribbon = ribbonSelect.enter().append("shape").classed("ribbon", true);
+			var ribbonEnter = ribbon.enter().append("shape").classed("ribbon", true);
 
-			ribbon.append("indexedfaceset").attr("coordindex", function (d) {
+			ribbonEnter.append("indexedfaceset").attr("coordindex", function (d) {
 				return d.coordindex;
 			}).attr("solid", true).append("coordinate").attr("point", function (d) {
 				return d.point;
 			});
 
-			ribbon.append("appearance").append("twosidedmaterial").attr("diffuseColor", function (d) {
+			ribbonEnter.append("appearance").append("twosidedmaterial").attr("diffuseColor", function (d) {
 				return d.color;
 			}).attr("transparency", function (d) {
 				return d.transparency;
 			});
+
+			ribbonEnter.merge(ribbon);
+
+			ribbon.transition().select("indexedfaceset").attr("coordindex", function (d) {
+				return d.coordindex;
+			}).select("coordinate").attr("point", function (d) {
+				return d.point;
+			});
+
+			ribbon.exit().remove();
 		});
 	}
 
@@ -1902,11 +1927,11 @@ function componentRibbonMultiSeries () {
 				var y = 0;
 				var z = zScale(d.key);
 				return x + " " + y + " " + z;
-			}).append("group").each(function (d) {
+			}).append("group").merge(ribbonGroup).transition().each(function (d) {
 				var color = colorScale(d.key);
 				ribbon.color(color);
 				d3.select(this).call(ribbon);
-			}).merge(ribbonGroup);
+			});
 
 			ribbonGroup.exit().remove();
 		});
@@ -2107,13 +2132,25 @@ function componentSurface () {
 
 			var coords = array2dToString(coordIndex.concat(coordIndexBack));
 
-			var surfaces = selection.selectAll(".surface").data([data]);
+			var surface = selection.selectAll(".surface").data(function (d) {
+				return [d];
+			});
 
-			var indexedfaceset = surfaces.enter().append("shape").append("indexedfaceset").attr("coordIndex", coords);
+			var surfaceSelect = surface.enter().append("shape").classed("surface", true).append("indexedfaceset").attr("coordindex", coords);
 
-			indexedfaceset.append("coordinate").attr("point", coordinatePoints);
+			surfaceSelect.append("coordinate").attr("point", coordinatePoints);
 
-			indexedfaceset.append("color").attr("color", colorFaceSet);
+			surfaceSelect.append("color").attr("color", colorFaceSet);
+
+			surfaceSelect.merge(surface);
+
+			var surfaceTransition = surface.transition().select("indexedfaceset").attr("coordindex", coords);
+
+			surfaceTransition.select("coordinate").attr("point", coordinatePoints);
+
+			surfaceTransition.select("color").attr("color", colorFaceSet);
+
+			surface.exit().remove();
 		});
 	}
 

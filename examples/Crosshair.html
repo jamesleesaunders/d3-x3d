@@ -7,7 +7,6 @@
   <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
   <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
   <script src="../build/d3-x3dom.js"></script>
-  <script src="../src/component/crosshair.js"></script>
 </head>
 
 <body>
@@ -49,11 +48,11 @@
     chartHolder.append("group")
       .call(axisThreePlaneComponent);
 
-    var crossHolder = chartHolder.append("group");
+    var crosshairGroup = chartHolder.append("group");
 
     function update() {
       var data = { x: ranNum(), y: ranNum(), z: ranNum() };
-      crossHolder.datum(data)
+      crosshairGroup.datum(data)
         .call(crosshairComponent);
     }
 
@@ -62,7 +61,6 @@
 
   </script>
 
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM
-    Data Visualization Library.
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.
   </div>
 </body>

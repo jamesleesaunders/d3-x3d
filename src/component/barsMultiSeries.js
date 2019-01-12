@@ -96,9 +96,11 @@ export default function() {
 					const z = zScale(d.key);
 					return x + " " + y + " " + z;
 				})
-				.append("group")
-				.call(bars)
-				.merge(barGroup);
+				.merge(barGroup)
+				.transition()
+				.each(function() {
+					d3.select(this).call(bars);
+				});
 
 			barGroup.exit()
 				.remove();

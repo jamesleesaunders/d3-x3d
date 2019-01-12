@@ -100,23 +100,34 @@ export default function() {
 				}).filter((d) => d !== null);
 			};
 
-			let ribbonSelect = selection.selectAll(".ribbon")
+			const ribbon = selection.selectAll(".ribbon")
 				.data(ribbonData);
 
-			let ribbon = ribbonSelect.enter()
+			const ribbonEnter = ribbon.enter()
 				.append("shape")
 				.classed("ribbon", true);
 
-			ribbon.append("indexedfaceset")
+			ribbonEnter.append("indexedfaceset")
 				.attr("coordindex", (d) => d.coordindex)
 				.attr("solid", true)
 				.append("coordinate")
 				.attr("point", (d) => d.point);
 
-			ribbon.append("appearance")
+			ribbonEnter.append("appearance")
 				.append("twosidedmaterial")
 				.attr("diffuseColor", (d) => d.color)
 				.attr("transparency", (d) => d.transparency);
+
+			ribbonEnter.merge(ribbon);
+
+			ribbon.transition()
+				.select("indexedfaceset")
+				.attr("coordindex", (d) => d.coordindex)
+				.select("coordinate")
+				.attr("point", (d) => d.point);
+
+			ribbon.exit()
+				.remove();
 
 		});
 	}

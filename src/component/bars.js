@@ -80,15 +80,17 @@ export default function() {
 					let z = 0.0;
 					return x + " " + y + " " + z;
 				})
-				.append("shape")
-				.merge(bars);
+				.append("shape");
 
 			barsEnter.append("box")
 				.attr("size", "1.0 1.0 1.0");
+
 			barsEnter.append("appearance")
 				.append("material")
 				.attr("diffuseColor", (d) => colorScale(d.key))
 				.attr("ambientIntensity", "0.1");
+
+			barsEnter.merge(bars);
 
 			bars.transition()
 				.attr("scale", (d) => {
@@ -103,6 +105,9 @@ export default function() {
 					let z = 0.0;
 					return x + " " + y + " " + z;
 				});
+
+			bars.exit()
+				.remove();
 		});
 	}
 

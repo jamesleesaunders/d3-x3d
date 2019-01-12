@@ -91,12 +91,13 @@ export default function() {
 			bubbleGroup.enter()
 				.append("group")
 				.classed("bubbleGroup", true)
+				.merge(bubbleGroup)
+				.transition()
 				.each(function(d) {
 					const color = colorScale(d.key);
 					bubbles.color(color);
 					d3.select(this).call(bubbles);
-				})
-				.merge(bubbleGroup);
+				});
 
 			bubbleGroup.exit()
 				.remove();
