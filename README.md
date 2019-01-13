@@ -124,18 +124,18 @@ The `component` modules are lower level building blocks which can be used indepe
 For example, combining `component.bars()`, `component.axis()` and `component.viewpoint()` modules together we have built the `chart.barChartMultiSeries()`.
 Component modules do not generate a `x3d` tag, these should be attached to an exiting `x3d` tag.
 
-| Function                       | Description                                  | Example                                                                                   | Documentation                                                               |
-| ------------------------------ | -------------------------------------------- | ------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
-| component.axis()               | Single plane x/y Axis                        | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/axis.html)               |
-| component.axisThreePlane()     | Three plane x/y/z Axis                       | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/axisThreePlane.html)     |
-| component.bars()               | Single series Bar Chart                      | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/bars.html)               |
-| component.barsMultiSeries()    | Multi series Bar Chart                       | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/barsMultiSeries.html)    |
-| component.bubbles()            | Bubble / Scatter Plot                        | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/bars.html)               |
-| component.bubblesMultiSeries() | Multi series Bubbles / Scatter Plot          | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/bubbles.html)            |
-| component.ribbon()             | Ribbon Chart / Line Chart                    | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/bubblesMultiSeries.html) |
-| component.ribbonMultiSeries()  | Multi series Ribbon Chart                    | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/ribbonMultiSeries.html)  |
-| component.surface()            | Surface Area                                 | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/surface.html)            |
-| component.viewpoint()          | User's location and viewing model parameters | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/viewpoint.html)          |
+| Function                       | Description                         | Example                                                                                   | Documentation                                                               |
+|--------------------------------| ------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
+| component.axis()               | Single plane x/y Axis               | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/axis.html)               |
+| component.axisThreePlane()     | Three plane x/y/z Axis              | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/axisThreePlane.html)     |
+| component.bars()               | Single series Bar Chart             | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/bars.html)               |
+| component.barsMultiSeries()    | Multi series Bar Chart              | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/barsMultiSeries.html)    |
+| component.bubbles()            | Bubble / Scatter Plot               | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/bars.html)               |
+| component.bubblesMultiSeries() | Multi series Bubbles / Scatter Plot | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/bubbles.html)            |
+| component.ribbon()             | Ribbon Chart / Line Chart           | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/bubblesMultiSeries.html) |
+| component.ribbonMultiSeries()  | Multi series Ribbon Chart           | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/ribbonMultiSeries.html)  |
+| component.surface()            | Surface Area                        | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/surface.html)            |
+| component.viewpoint()          | Camera position                     | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/viewpoint.html)          |
 
 #### Charts
 
@@ -143,14 +143,14 @@ The `chart` modules are higher level, pre-combined components, making it even si
 All the charts are typically constructed of a viewpoint, axis and one or more of the other components above. 
 Chart modules also generate the `x3d` tag, these should be attached to a `div` tag.
 
-| Function                       | Description                                  | Example 
-| ------------------------------ | -------------------------------------------- | ------- 
-| chart.barChartMultiSeries()    | Multi series Bar Chart & Axis                | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartMultiSeries.html)
-| chart.barChartVertical()       | Single series Bar Chart & Axis               | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartVertical.html)
-| chart.bubbleChart()            | Multi series Bubble Chart & Axis             | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BubbleChart.html)
-| chart.ribbonChartMultiSeries() | Multi series Ribbon Chart                    | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/RibbonChart.html)
-| chart.scatterPlot()            | Scatter Plot & Axis                          | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/ScatterPlot.html)
-| chart.surfacePlot()            | Surface Plot & Axis                          | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/SurfacePlot.html)
+| Function                       | Description                   | Example                                                                                            | Documentation                                                                |
+|--------------------------------| ------------------------------|----------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------|
+| chart.barChartMultiSeries()    | Multi series Bar Chart & Axis | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartMultiSeries.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/barChartMultiSeries.html) |
+| chart.barChartVertical()       | Vertical Bar Chart & Axis     | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartVertical.html)    | [View](https://jamesleesaunders.github.io/d3-x3dom/barChartVertical.html)    |
+| chart.bubbleChart()            | Bubble Chart & Axis           | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BubbleChart.html)         | [View](https://jamesleesaunders.github.io/d3-x3dom/bubbleChart.html)         |
+| chart.ribbonChartMultiSeries() | Multi series Ribbon Chart     | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/RibbonChart.html)         | [View](https://jamesleesaunders.github.io/d3-x3dom/ribbonChart.html)         |
+| chart.scatterPlot()            | Scatter Plot & Axis           | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/ScatterPlot.html)         | [View](https://jamesleesaunders.github.io/d3-x3dom/scatterPlot.html)         |
+| chart.surfacePlot()            | Surface Plot & Axis           | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/SurfacePlot.html)         | [View](https://jamesleesaunders.github.io/d3-x3dom/surfacePlot.html)         |
 
 ### Data Structures
 
