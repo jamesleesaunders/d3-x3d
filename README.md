@@ -132,6 +132,7 @@ Component modules do not generate a `x3d` tag, these should be attached to an ex
 | component.barsMultiSeries()    | Multi series Bar Chart              | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/barsMultiSeries.html)    |
 | component.bubbles()            | Bubble / Scatter Plot               | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/bubbles.html)            |
 | component.bubblesMultiSeries() | Multi series Bubbles / Scatter Plot | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/bubblesMultiSeries.html) |
+| component.crosshair()          | Crosshair                           | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Crosshair.html)  | [View](https://jamesleesaunders.github.io/d3-x3dom/crosshair.html)          |
 | component.ribbon()             | Ribbon Chart / Line Chart           | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/ribbon.html)             |
 | component.ribbonMultiSeries()  | Multi series Ribbon Chart           | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/ribbonMultiSeries.html)  |
 | component.surface()            | Surface Area                        | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/surface.html)            |
@@ -140,7 +141,7 @@ Component modules do not generate a `x3d` tag, these should be attached to an ex
 #### Charts
 
 The `chart` modules are higher level, pre-combined components, making it even simpler to quickly create charts.
-All the charts are typically constructed of a viewpoint, axis and one or more of the other components above. 
+All the charts are typically constructed of a viewpoint, axis and one or more of the other components above.
 Chart modules also generate the `x3d` tag, these should be attached to a `div` tag.
 
 | Function                       | Description                   | Example                                                                                            | Documentation                                                                   |
