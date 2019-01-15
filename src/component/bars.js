@@ -18,6 +18,8 @@ export default function() {
 	let yScale;
 	let colorScale;
 
+	let transition = { ease: d3.easeBounce, duration: 500 };
+
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -80,20 +82,23 @@ export default function() {
 					let y = yScale(d.value) / 2;
 					let z = 0.0;
 					return x + " " + y + " " + z;
-				})
-				.append("shape");
+				});
 
-			barsEnter.append("box")
+			const shape = barsEnter.append("shape");
+
+			shape.append("box")
 				.attr("size", "1.0 1.0 1.0");
 
-			barsEnter.append("appearance")
+			shape.append("appearance")
 				.append("material")
 				.attr("diffusecolor", (d) => colorScale(d.key))
-				.attr("ambientintensity", "0.1");
+				.attr("ambientintensity", 0.1);
 
 			barsEnter.merge(bars);
 
 			bars.transition()
+				.ease(transition.ease)
+				.duration(transition.duration)
 				.attr("scale", (d) => {
 					let x = xScale.bandwidth();
 					let y = yScale(d.value);

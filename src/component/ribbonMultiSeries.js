@@ -81,22 +81,20 @@ export default function() {
 					z: zScale.bandwidth()
 				});
 
-			// Create Bar Groups
+			// Create Ribbon Groups
 			const ribbonGroup = element.selectAll(".ribbonGroup")
-				.data(data);
+				.data((d) => d);
 
 			ribbonGroup.enter()
 				.append("transform")
 				.classed("ribbonGroup", true)
+				.merge(ribbonGroup)
 				.attr("translation", (d) => {
 					const x = 0;
 					const y = 0;
 					const z = zScale(d.key);
 					return x + " " + y + " " + z;
 				})
-				.append("group")
-				.merge(ribbonGroup)
-				.transition()
 				.each(function(d) {
 					const color = colorScale(d.key);
 					ribbon.color(color);

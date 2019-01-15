@@ -88,9 +88,9 @@ export default function() {
 				.zScale(zScale)
 				.sizeScale(sizeScale);
 
-			// Create Bar Groups
+			// Create Bubble Groups
 			const bubbleGroup = element.selectAll(".bubbleGroup")
-				.data(data);
+				.data((d) => d);
 
 			bubbleGroup.enter()
 				.append("group")

@@ -86,20 +86,20 @@ export default function() {
 
 			// Create Bar Groups
 			const barGroup = element.selectAll(".barGroup")
-				.data(data);
+				.data((d) => d);
 
 			barGroup.enter()
 				.append("transform")
 				.classed("barGroup", true)
+				.merge(barGroup)
 				.attr("translation", (d) => {
 					const x = 0;
 					const y = 0;
 					const z = zScale(d.key);
 					return x + " " + y + " " + z;
-				})
-				.merge(barGroup)
-				.transition()
-				.each(function() {
+				});
+
+			d3.selectAll(".barGroup").each(function(d) {
 					d3.select(this).call(bars);
 				});
 

@@ -574,47 +574,53 @@ function componentAxis () {
 			var axisRotationVector = getAxisRotationVector(direction);
 			var tickRotationVector = getAxisRotationVector(tickDirection);
 
-			var path = element.selectAll("transform").data([null]);
-
 			var tickValuesDefault = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
 			tickValues = tickValues === null ? tickValuesDefault : tickValues;
-
-			var tick = selection.selectAll(".tick").data(tickValues, scale).order();
-
-			var tickExit = tick.exit();
-			var tickEnter = tick.enter().append("transform").attr("translation", function (t) {
-				return axisDirectionVector.map(function (a) {
-					return scale(t) * a;
-				}).join(" ");
-			}).attr("class", "tick");
-
-			var line = tick.select(".tickLine");
-			path = path.merge(path.enter().append("transform").attr("rotation", axisRotationVector.join(" ")).attr("translation", axisDirectionVector.map(function (d) {
-				return d * (range0 + range1) / 2;
-			}).join(" ")).append("shape").call(makeSolid, color).attr("class", "domain"));
-			tick = tick.merge(tickEnter);
-			line = line.merge(tickEnter.append("transform"));
 
 			var tickFormatDefault = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : function (d) {
 				return d;
 			};
 			tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
 
-			if (tickFormat !== "") {
-				var text = tick.select("billboard");
-				var newText = tickEnter.append("transform");
-				newText.attr("translation", tickDirectionVector.map(function (d) {
-					return -d * tickPadding;
-				})).append("billboard").attr("axisofrotation", "0 0 0").append("shape").call(makeSolid, "black").append("text").attr("string", tickFormat).append("fontstyle").attr("size", 1.3).attr("family", "SANS").attr("style", "BOLD").attr("justify", "MIDDLE");
-				text = text.merge(newText);
-			}
+			// Main Lines
+			var domain = element.selectAll(".domain").data([null]);
 
-			tickExit.remove();
-			path.append("cylinder").attr("radius", 0.1).attr("height", range1 - range0);
+			var domainEnter = domain.enter().append("transform").attr("class", "domain").attr("rotation", axisRotationVector.join(" ")).attr("translation", axisDirectionVector.map(function (d) {
+				return d * (range0 + range1) / 2;
+			}).join(" ")).append("shape").call(makeSolid, color).append("cylinder").attr("radius", 0.1).attr("height", range1 - range0);
 
-			line.attr("translation", tickDirectionVector.map(function (d) {
+			// Tick Lines
+			var tick = element.selectAll(".tick").data(tickValues, scale).order();
+
+			var tickEnter = tick.enter().append("transform").attr("class", "tick").attr("translation", function (t) {
+				return axisDirectionVector.map(function (a) {
+					return scale(t) * a;
+				}).join(" ");
+			});
+
+			tickEnter.append("transform").attr("translation", tickDirectionVector.map(function (d) {
 				return d * tickSize / 2;
 			}).join(" ")).attr("rotation", tickRotationVector.join(" ")).attr("class", "tickLine").append("shape").call(makeSolid, "#d3d3d3").append("cylinder").attr("radius", 0.05).attr("height", tickSize);
+
+			if (tickFormat !== "") {
+				tickEnter.append("transform").attr("translation", tickDirectionVector.map(function (d) {
+					return -d * tickPadding;
+				})).append("billboard").attr("axisofrotation", "0 0 0").append("shape").call(makeSolid, "black").append("text").attr("string", tickFormat).append("fontstyle").attr("size", 1.3).attr("family", "SANS").attr("style", "BOLD").attr("justify", "MIDDLE");
+			}
+
+			tick.transition().attr("translation", function (t) {
+				return axisDirectionVector.map(function (a) {
+					return scale(t) * a;
+				}).join(" ");
+			});
+
+			domainEnter.merge(domain);
+
+			tickEnter.merge(tick);
+
+			tick.exit().remove();
+
+			domain.exit().remove();
 		});
 	};
 
@@ -875,6 +881,8 @@ function componentBars () {
 	var yScale = void 0;
 	var colorScale = void 0;
 
+	var transition = { ease: d3.easeBounce, duration: 500 };
+
 	/**
   * Initialise Data and Scales
   *
@@ -932,17 +940,19 @@ function componentBars () {
 				var y = yScale(d.value) / 2;
 				var z = 0.0;
 				return x + " " + y + " " + z;
-			}).append("shape");
+			});
 
-			barsEnter.append("box").attr("size", "1.0 1.0 1.0");
+			var shape = barsEnter.append("shape");
 
-			barsEnter.append("appearance").append("material").attr("diffusecolor", function (d) {
+			shape.append("box").attr("size", "1.0 1.0 1.0");
+
+			shape.append("appearance").append("material").attr("diffusecolor", function (d) {
 				return colorScale(d.key);
-			}).attr("ambientintensity", "0.1");
+			}).attr("ambientintensity", 0.1);
 
 			barsEnter.merge(bars);
 
-			bars.transition().attr("scale", function (d) {
+			bars.transition().ease(transition.ease).duration(transition.duration).attr("scale", function (d) {
 				var x = xScale.bandwidth();
 				var y = yScale(d.value);
 				var z = dimensions.z;
@@ -1096,14 +1106,18 @@ function componentBarsMultiSeries () {
 			}).colors(colors);
 
 			// Create Bar Groups
-			var barGroup = element.selectAll(".barGroup").data(data);
+			var barGroup = element.selectAll(".barGroup").data(function (d) {
+				return d;
+			});
 
-			barGroup.enter().append("transform").classed("barGroup", true).attr("translation", function (d) {
+			barGroup.enter().append("transform").classed("barGroup", true).merge(barGroup).attr("translation", function (d) {
 				var x = 0;
 				var y = 0;
 				var z = zScale(d.key);
 				return x + " " + y + " " + z;
-			}).merge(barGroup).transition().each(function () {
+			});
+
+			d3.selectAll(".barGroup").each(function (d) {
 				d3.select(this).call(bars);
 			});
 
@@ -1573,8 +1587,10 @@ function componentBubblesMultiSeries () {
 			// Construct Bars Component
 			var bubbles = componentBubbles().xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale);
 
-			// Create Bar Groups
-			var bubbleGroup = element.selectAll(".bubbleGroup").data(data);
+			// Create Bubble Groups
+			var bubbleGroup = element.selectAll(".bubbleGroup").data(function (d) {
+				return d;
+			});
 
 			bubbleGroup.enter().append("group").classed("bubbleGroup", true).merge(bubbleGroup).transition().each(function (d) {
 				var color = colorScale(d.key);
@@ -2103,9 +2119,9 @@ function componentRibbon () {
 
 			var ribbonEnter = ribbon.enter().append("shape").classed("ribbon", true);
 
-			ribbonEnter.append("indexedfaceset").attr("coordindex", function (d) {
+			ribbonEnter.append("indexedfaceset").attr("solid", "true").attr("coordindex", function (d) {
 				return d.coordindex;
-			}).attr("solid", true).append("coordinate").attr("point", function (d) {
+			}).append("coordinate").attr("point", function (d) {
 				return d.point;
 			});
 
@@ -2117,10 +2133,18 @@ function componentRibbon () {
 
 			ribbonEnter.merge(ribbon);
 
-			ribbon.transition().select("indexedfaceset").attr("coordindex", function (d) {
+			var ribbonTrans = ribbon.transition();
+
+			ribbonTrans.select("indexedfaceset").attr("coordindex", function (d) {
 				return d.coordindex;
 			}).select("coordinate").attr("point", function (d) {
 				return d.point;
+			});
+
+			ribbonTrans.select("appearance").select("twosidedmaterial").attr("diffusecolor", function (d) {
+				return d.color;
+			}).attr("transparency", function (d) {
+				return d.transparency;
 			});
 
 			ribbon.exit().remove();
@@ -2252,15 +2276,17 @@ function componentRibbonMultiSeries () {
 				z: zScale.bandwidth()
 			});
 
-			// Create Bar Groups
-			var ribbonGroup = element.selectAll(".ribbonGroup").data(data);
+			// Create Ribbon Groups
+			var ribbonGroup = element.selectAll(".ribbonGroup").data(function (d) {
+				return d;
+			});
 
-			ribbonGroup.enter().append("transform").classed("ribbonGroup", true).attr("translation", function (d) {
+			ribbonGroup.enter().append("transform").classed("ribbonGroup", true).merge(ribbonGroup).attr("translation", function (d) {
 				var x = 0;
 				var y = 0;
 				var z = zScale(d.key);
 				return x + " " + y + " " + z;
-			}).append("group").merge(ribbonGroup).transition().each(function (d) {
+			}).each(function (d) {
 				var color = colorScale(d.key);
 				ribbon.color(color);
 				d3.select(this).call(ribbon);
@@ -3241,6 +3267,9 @@ var component = {
  */
 function chartBarChartMultiSeries () {
 
+	var x3d = void 0;
+	var scene = void 0;
+
 	/* Default Properties */
 	var width = 500;
 	var height = 500;
@@ -3274,21 +3303,13 @@ function chartBarChartMultiSeries () {
 		    dimensionZ = _dimensions.z;
 
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
-		}
+		xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-		}
+		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.7);
-		}
+		zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.7);
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
-		}
+		colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
 	};
 
 	/**
@@ -3299,21 +3320,22 @@ function chartBarChartMultiSeries () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
-		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
-
-		if (debug) {
-			x3d.attr("showLog", "true").attr("showStat", "true");
+		// Create x3d element (if it does not exist already)
+		if (!x3d) {
+			x3d = selection.append("x3d");
+			scene = x3d.append("scene");
 		}
 
-		var scene = x3d.append("scene");
+		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "bars"];
+
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
 
-		scene.each(function (data) {
+		selection.each(function (data) {
 			init(data);
 
 			// Construct Viewpoint Component
@@ -3329,9 +3351,7 @@ function chartBarChartMultiSeries () {
 
 			scene.select(".axis").call(axis);
 
-			scene.select(".bars").datum(function (d) {
-				return d;
-			}).call(bars);
+			scene.select(".bars").datum(data).call(bars);
 
 			scene.append("directionallight").attr("direction", "1 0 -1").attr("on", "true").attr("intensity", "0.4").attr("shadowintensity", "0");
 		});
@@ -3466,6 +3486,9 @@ function chartBarChartMultiSeries () {
  */
 function chartBarChartVertical () {
 
+	var x3d = void 0;
+	var scene = void 0;
+
 	/* Default Properties */
 	var width = 500;
 	var height = 500;
@@ -3496,17 +3519,11 @@ function chartBarChartVertical () {
 		    dimensionY = _dimensions.y;
 
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
-		}
+		xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-		}
+		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
-		}
+		colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
 	};
 
 	/**
@@ -3517,21 +3534,22 @@ function chartBarChartVertical () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
-		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
-
-		if (debug) {
-			x3d.attr("showLog", "true").attr("showStat", "true");
+		// Create x3d element (if it does not exist already)
+		if (!x3d) {
+			x3d = selection.append("x3d");
+			scene = x3d.append("scene");
 		}
 
-		var scene = x3d.append("scene");
+		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["xAxis", "yAxis", "bars"];
+
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
 
-		scene.each(function (data) {
+		selection.each(function (data) {
 			init(data);
 
 			// Construct Viewpoint Component
@@ -3551,9 +3569,7 @@ function chartBarChartVertical () {
 
 			scene.select(".yAxis").call(yAxis);
 
-			scene.select(".bars").datum(function (d) {
-				return d;
-			}).call(bars);
+			scene.select(".bars").datum(data).call(bars);
 		});
 	};
 
@@ -3674,6 +3690,9 @@ function chartBarChartVertical () {
  */
 function chartBubbleChart () {
 
+	var x3d = void 0;
+	var scene = void 0;
+
 	/* Default Properties */
 	var width = 500;
 	var height = 500;
@@ -3711,25 +3730,15 @@ function chartBubbleChart () {
 		    dimensionZ = _dimensions.z;
 
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
-		}
+		xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
-		}
+		yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
-		}
+		zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
-		}
+		colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
 
-		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeDomain);
-		}
+		sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeDomain);
 	};
 
 	/**
@@ -3740,21 +3749,22 @@ function chartBubbleChart () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
-		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
-
-		if (debug) {
-			x3d.attr("showLog", "true").attr("showStat", "true");
+		// Create x3d element (if it does not exist already)
+		if (!x3d) {
+			x3d = selection.append("x3d");
+			scene = x3d.append("scene");
 		}
 
-		var scene = x3d.append("scene");
+		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "bubbles"];
+
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
 
-		scene.each(function (data) {
+		selection.each(function (data) {
 			init(data);
 
 			// Construct Viewpoint Component
@@ -3770,9 +3780,7 @@ function chartBubbleChart () {
 
 			scene.select(".axis").call(axis);
 
-			scene.select(".bubbles").datum(function (d) {
-				return d;
-			}).call(bubbles);
+			scene.select(".bubbles").datum(data).call(bubbles);
 
 			scene.append("directionallight").attr("direction", "1 0 -1").attr("on", "true").attr("intensity", "0.4").attr("shadowintensity", "0");
 		});
@@ -3995,7 +4003,7 @@ function chartCrosshairPlot () {
 			return d;
 		});
 
-		scene.each(function (data) {
+		selection.each(function (data) {
 			init(data);
 
 			// Construct Viewpoint Component
@@ -4124,6 +4132,9 @@ function chartCrosshairPlot () {
  */
 function chartRibbonChartMultiSeries () {
 
+	var x3d = void 0;
+	var scene = void 0;
+
 	/* Default Properties */
 	var width = 500;
 	var height = 500;
@@ -4157,21 +4168,13 @@ function chartRibbonChartMultiSeries () {
 		    dimensionZ = _dimensions.z;
 
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
-		}
+		xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-		}
+		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
-		}
+		zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
-		}
+		colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
 	};
 
 	/**
@@ -4182,21 +4185,22 @@ function chartRibbonChartMultiSeries () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
-		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
-
-		if (debug) {
-			x3d.attr("showLog", "true").attr("showStat", "true");
+		// Create x3d element (if it does not exist already)
+		if (!x3d) {
+			x3d = selection.append("x3d");
+			scene = x3d.append("scene");
 		}
 
-		var scene = x3d.append("scene");
+		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "ribbons"];
+
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
 
-		scene.each(function (data) {
+		selection.each(function (data) {
 			init(data);
 
 			// Construct Viewpoint Component
@@ -4212,9 +4216,7 @@ function chartRibbonChartMultiSeries () {
 
 			scene.select(".axis").call(axis);
 
-			scene.select(".ribbons").datum(function (d) {
-				return d;
-			}).call(ribbons);
+			scene.select(".ribbons").datum(data).call(ribbons);
 
 			scene.append("directionallight").attr("direction", "1 0 -1").attr("on", "true").attr("intensity", "0.4").attr("shadowintensity", "0");
 		});
@@ -4416,7 +4418,7 @@ function chartScatterPlot () {
 			return d;
 		});
 
-		scene.each(function (data) {
+		selection.each(function (data) {
 			init(data);
 
 			// Construct Viewpoint Component
@@ -4655,7 +4657,7 @@ function chartSurfacePlot () {
 			return d;
 		});
 
-		scene.each(function (data) {
+		selection.each(function (data) {
 			init(data);
 
 			// Construct Viewpoint Component
@@ -4943,7 +4945,7 @@ function chartVectorField () {
 			return d;
 		});
 
-		scene.each(function (data) {
+		selection.each(function (data) {
 			init(data);
 
 			// Construct Viewpoint Component
@@ -5173,7 +5175,7 @@ function chartVolumeSlice () {
 			return d;
 		});
 
-		scene.each(function (data) {
+		selection.each(function (data) {
 
 			// Construct Viewpoint Component
 			var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);

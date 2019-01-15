@@ -85,39 +85,46 @@ export default function() {
 			const axisRotationVector = getAxisRotationVector(direction);
 			const tickRotationVector = getAxisRotationVector(tickDirection);
 
-			let path = element.selectAll("transform")
-				.data([null]);
-
 			const tickValuesDefault = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
 			tickValues = tickValues === null ? tickValuesDefault : tickValues;
-
-			let tick = selection.selectAll(".tick")
-				.data(tickValues, scale).order();
-
-			const tickExit = tick.exit();
-			const tickEnter = tick.enter()
-				.append("transform")
-				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
-				.attr("class", "tick");
-
-			let line = tick.select(".tickLine");
-			path = path.merge(path.enter()
-				.append("transform")
-				.attr("rotation", axisRotationVector.join(" "))
-				.attr("translation", axisDirectionVector.map((d) => (d * (range0 + range1) / 2)).join(" "))
-				.append("shape")
-				.call(makeSolid, color)
-				.attr("class", "domain"));
-			tick = tick.merge(tickEnter);
-			line = line.merge(tickEnter.append("transform"));
 
 			const tickFormatDefault = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : (d) => d;
 			tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
 
+			// Main Lines
+			const domain = element.selectAll(".domain")
+				.data([null]);
+
+			const domainEnter = domain.enter().append("transform")
+				.attr("class", "domain")
+				.attr("rotation", axisRotationVector.join(" "))
+				.attr("translation", axisDirectionVector.map((d) => (d * (range0 + range1) / 2)).join(" "))
+				.append("shape")
+				.call(makeSolid, color)
+				.append("cylinder")
+				.attr("radius", 0.1)
+				.attr("height", range1 - range0);
+
+			// Tick Lines
+			const tick = element.selectAll(".tick")
+				.data(tickValues, scale).order();
+
+			const tickEnter = tick.enter().append("transform")
+				.attr("class", "tick")
+				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")));
+
+			tickEnter.append("transform")
+				.attr("translation", tickDirectionVector.map((d) => (d * tickSize / 2)).join(" "))
+				.attr("rotation", tickRotationVector.join(" "))
+				.attr("class", "tickLine")
+				.append("shape")
+				.call(makeSolid, "#d3d3d3")
+				.append("cylinder")
+				.attr("radius", 0.05)
+				.attr("height", tickSize);
+
 			if (tickFormat !== "") {
-				let text = tick.select("billboard");
-				let newText = tickEnter.append("transform");
-				newText
+				tickEnter.append("transform")
 					.attr("translation", tickDirectionVector.map((d) => (-d * tickPadding)))
 					.append("billboard")
 					.attr("axisofrotation", "0 0 0")
@@ -130,24 +137,19 @@ export default function() {
 					.attr("family", "SANS")
 					.attr("style", "BOLD")
 					.attr("justify", "MIDDLE");
-				text = text.merge(newText);
 			}
 
-			tickExit.remove();
-			path
-				.append("cylinder")
-				.attr("radius", 0.1)
-				.attr("height", range1 - range0);
+			tick.transition()
+				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")));
 
-			line
-				.attr("translation", tickDirectionVector.map((d) => (d * tickSize / 2)).join(" "))
-				.attr("rotation", tickRotationVector.join(" "))
-				.attr("class", "tickLine")
-				.append("shape")
-				.call(makeSolid, "#d3d3d3")
-				.append("cylinder")
-				.attr("radius", 0.05)
-				.attr("height", tickSize);
+			domainEnter.merge(domain);
+
+			tickEnter.merge(tick);
+
+			tick.exit().remove();
+
+			domain.exit().remove();
+
 		});
 	};
 

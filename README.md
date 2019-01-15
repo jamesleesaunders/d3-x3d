@@ -17,8 +17,12 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Download from GitHub](https://github.com/jamesleesaunders/d3-x3dom)
 * [Download from NPM](https://www.npmjs.com/package/d3-x3dom)
 
-### Examples
+### Tests
+* [Test 1](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/TestFiltering1.html)
+* [Test 2](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/TestFiltering2.html)
+* [Test 3](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/TestFiltering3.html)
 
+### Examples
 * [Multi Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartMultiSeries.html)
 * [Vertical Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartVertical.html)
 * [Bubble Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BubbleChart.html)

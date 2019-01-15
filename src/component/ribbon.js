@@ -111,7 +111,7 @@ export default function() {
 						point: array2dToString(points),
 						color: color,
 						transparency: 0.2
-					}
+					};
 				}).filter((d) => d !== null);
 			};
 
@@ -123,8 +123,8 @@ export default function() {
 				.classed("ribbon", true);
 
 			ribbonEnter.append("indexedfaceset")
+				.attr("solid", "true")
 				.attr("coordindex", (d) => d.coordindex)
-				.attr("solid", true)
 				.append("coordinate")
 				.attr("point", (d) => d.point);
 
@@ -135,11 +135,17 @@ export default function() {
 
 			ribbonEnter.merge(ribbon);
 
-			ribbon.transition()
-				.select("indexedfaceset")
+			const ribbonTrans = ribbon.transition();
+
+			ribbonTrans.select("indexedfaceset")
 				.attr("coordindex", (d) => d.coordindex)
 				.select("coordinate")
 				.attr("point", (d) => d.point);
+
+			ribbonTrans.select("appearance")
+				.select("twosidedmaterial")
+				.attr("diffusecolor", (d) => d.color)
+				.attr("transparency", (d) => d.transparency);
 
 			ribbon.exit()
 				.remove();

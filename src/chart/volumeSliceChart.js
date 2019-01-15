@@ -67,7 +67,7 @@ export default function() {
 			.append("group")
 			.attr("class", (d) => d);
 
-		scene.each((data) => {
+		selection.each((data) => {
 
 			// Construct Viewpoint Component
 			const viewpoint = component.viewpoint()
