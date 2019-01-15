@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 
 /**
- * Reusable 3D Bubble Chart Component
+ * Reusable 3D Vector Fields Component
  *
  * @module
  */
@@ -11,7 +11,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let color = "orange";
-	let classed = "x3dBubbles";
+	let classed = "x3dVectorFields";
 
 	/* Scales */
 	let xScale;
@@ -60,7 +60,7 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
-	 * @alias bubbles
+	 * @alias vectorFields
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	function my(selection) {
@@ -69,56 +69,49 @@ export default function() {
 		selection.each((data) => {
 			init(data);
 
-			const makeSolid = (selection, color) => {
-				selection
-					.append("appearance")
-					.append("material")
-					.attr("diffuseColor", color || "black");
-				return selection;
+			let calcVectorAngles = function(d) {
+				// https://stackoverflow.com/questions/19729831/angle-between-3-points-in-3d-space
+				let vector = { x: (d.x - d.dx), y: (d.y - d.dy), z: (d.z - d.dz) };
+				let mag = Math.sqrt((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
+				let norm = [(vector.x / mag), (vector.y / mag), (vector.z / mag)];
+
+				return {
+					yaw: "0 1 0 " + norm[0],
+					pitch: "0 0 1 " + norm[1],
+					roll: "1 0 0 " + norm[2]
+				};
 			};
 
-			const bubbles = selection.selectAll(".bubble")
+			const arrows = selection.selectAll(".arrow")
 				.data((d) => d.values);
 
-			const bubblesEnter = bubbles.enter()
+			const arrowsEnter = arrows.enter()
 				.append("transform")
-				.attr("class", "bubble")
+				.attr("class", "arrow")
 				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
-				.attr("onmouseover", "d3.select(this).select('billboard').attr('render', true);")
-				.attr("onmouseout", "d3.select(this).select('transform').select('billboard').attr('render', false);");
-
-			bubblesEnter.append("shape")
-				.call(makeSolid, color)
-				.append("sphere")
-				.attr("radius", (d) => sizeScale(d.value));
-
-			bubblesEnter
 				.append("transform")
-				.attr("translation", (d) => {
-					let r = sizeScale(d.value) + 0.8;
-					return r + " " + r + " " + r;
-				})
-				.append("billboard")
-				.attr("render", false)
-				.attr("axisofrotation", "0 0 0")
-				.append("shape")
-				.call(makeSolid, "blue")
-				.append("text")
-				.attr("class", "labelText")
-				.attr("string", (d) => d.key)
-				.append("fontstyle")
-				.attr("size", 1)
-				.attr("family", "SANS")
-				.attr("style", "BOLD")
-				.attr("justify", "START")
-				.attr("render", false);
+				.attr("rotation", (d) => calcVectorAngles(d).yaw)
+				.append("transform")
+				.attr("rotation", (d) => calcVectorAngles(d).pitch)
+				.append("transform")
+				.attr("rotation", (d) => calcVectorAngles(d).roll);
 
-			bubblesEnter.merge(bubbles);
+			let shape = arrowsEnter.append("shape");
 
-			bubbles.transition()
+			shape.append("appearance")
+				.append("material")
+				.attr("diffusecolor", color);
+
+			shape.append("cone")
+				.attr("height", (d) => sizeScale(d.value) * 4)
+				.attr("bottomradius", "0.5");
+
+			arrowsEnter.merge(arrows);
+
+			arrows.transition()
 				.attr("translation", (d) => (xScale(d.x) + ' ' + yScale(d.y) + ' ' + zScale(d.z)));
 
-			bubbles.exit()
+			arrows.exit()
 				.remove();
 		});
 	}

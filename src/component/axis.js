@@ -118,7 +118,7 @@ export default function() {
 			newText
 				.attr("translation", tickDirectionVector.map((d) => (-d * tickPadding)))
 				.append("billboard")
-				.attr("axisOfRotation", "0 0 0")
+				.attr("axisofrotation", "0 0 0")
 				.append("shape")
 				.call(makeSolid, "black")
 				.append("text")

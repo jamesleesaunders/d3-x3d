@@ -115,7 +115,7 @@ export default function() {
 
 			ribbonEnter.append("appearance")
 				.append("twosidedmaterial")
-				.attr("diffuseColor", (d) => d.color)
+				.attr("diffusecolor", (d) => d.color)
 				.attr("transparency", (d) => d.transparency);
 
 			ribbonEnter.merge(ribbon);

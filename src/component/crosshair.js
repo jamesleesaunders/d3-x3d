@@ -77,7 +77,7 @@ export default function() {
 
 			line.append("appearance")
 				.append("material")
-				.attr("diffuseColor", (d) => colorScale(d));
+				.attr("diffusecolor", (d) => colorScale(d));
 
 			lineSelect.transition()
 				.attr("translation", (d) => getPositionVector(d))

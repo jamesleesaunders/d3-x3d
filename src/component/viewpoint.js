@@ -24,10 +24,10 @@ export default function() {
 	function my(selection) {
 		selection.append("viewpoint")
 			.classed(classed, true)
-			.attr("centerOfRotation", centerOfRotation.join(" "))
+			.attr("centerofrotation", centerOfRotation.join(" "))
 			.attr("position", viewPosition.join(" "))
 			.attr("orientation", viewOrientation.join(" "))
-			.attr("fieldOfView", fieldOfView)
+			.attr("fieldofview", fieldOfView)
 			.attr("set_bind", "true");
 	}
 

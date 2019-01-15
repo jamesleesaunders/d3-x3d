@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3dom : 3D Vector Field Chart Example</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
+  <script src="../build/d3-x3dom.js"></script>
+</head>
+
+<body>
+  <div id="chartholder"></div>
+
+  <script>
+    // Chart dimensions
+    var width = 500;
+    var height = 500;
+
+    // Create scene
+    var chartHolder = d3.select("#chartholder")
+      .append("x3d")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("scene");
+
+    var viewpointComponent = d3.x3dom.component.viewpoint();
+    var chartComponent = d3.x3dom.component.vectorFields();
+
+    var data = {
+      key: 'VectorFields',
+      values: [
+        { key: "Point0", value: 2, x: 1, y: 7, z: 3, dx: 3, dy: 4, dz: 1 },
+        { key: "Point1", value: 6, x: 9, y: 5, z: 1, dx: 4, dy: 7, dz: 3 },
+        { key: "Point2", value: 1, x: 5, y: 2, z: 1, dx: 6, dy: 2, dz: 5 },
+        { key: "Point3", value: 8, x: 2, y: 3, z: 8, dx: 4, dy: 1, dz: 2 },
+        { key: "Point4", value: 2, x: 8, y: 4, z: 7, dx: 7, dy: 1, dz: 7 },
+        { key: "Point5", value: 6, x: 3, y: 3, z: 3, dx: 5, dy: 4, dz: 1 },
+        { key: "Point6", value: 4, x: 9, y: 4, z: 1, dx: 7, dy: 2, dz: 2 },
+        { key: "Point7", value: 3, x: 4, y: 5, z: 1, dx: 3, dy: 1, dz: 1 },
+        { key: "Point8", value: 2, x: 1, y: 6, z: 2, dx: 8, dy: 7, dz: 2 },
+        { key: "Point9", value: 2, x: 3, y: 7, z: 1, dx: 1, dy: 2, dz: 1 }
+      ]
+    };
+
+    chartHolder
+      .append("group")
+      .attr("class", "chart")
+      .datum(data)
+      .call(chartComponent);
+
+    chartHolder
+      .call(viewpointComponent);
+
+  </script>
+
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.
+  </div>
+</body>

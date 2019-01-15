@@ -87,8 +87,8 @@ export default function() {
 
 			barsEnter.append("appearance")
 				.append("material")
-				.attr("diffuseColor", (d) => colorScale(d.key))
-				.attr("ambientIntensity", "0.1");
+				.attr("diffusecolor", (d) => colorScale(d.key))
+				.attr("ambientintensity", "0.1");
 
 			barsEnter.merge(bars);
 

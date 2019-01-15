@@ -26,6 +26,7 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Surface Plot](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/SurfacePlot.html)
 * [Ribbon Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/RibbonChart.html)
 * [Crosshair Component](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Crosshair.html)
+* [Vector Field Component](https://raw.githack.com/jamesleesaunders/d3-x3dom/VectorField/examples/VectorFieldChart.html)
 * [Components Showcase](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
 * [Observable Examples](https://beta.observablehq.com/collection/@jamesleesaunders/d3-x3dom)
 
