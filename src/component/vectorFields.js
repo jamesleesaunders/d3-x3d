@@ -69,6 +69,22 @@ export default function() {
 		selection.each((data) => {
 			init(data);
 
+			const vectorData = function(d) {
+				return d.values.map((value) => {
+					let p1 = [value.x, value.y, value.z];
+					let p2 = [value.dx, value.dy, value.dz];
+
+					let point1 = new x3dom.fields.SFVec3f(...p1);
+					let point2 = new x3dom.fields.SFVec3f(...p2);
+					let qDir = x3dom.fields.Quaternion.rotateFromTo(point1, point2);
+
+					value.axisAngle = qDir.toAxisAngle();
+					value.matrix = qDir.toMatrix();
+
+					return value;
+				});
+			};
+
 			let calcVectorAngles = function(d) {
 				// https://stackoverflow.com/questions/19729831/angle-between-3-points-in-3d-space
 				let vector = { x: (d.x - d.dx), y: (d.y - d.dy), z: (d.z - d.dz) };
@@ -83,11 +99,15 @@ export default function() {
 			};
 
 			const arrows = selection.selectAll(".arrow")
-				.data((d) => d.values);
+				.data(vectorData);
 
 			const arrowsEnter = arrows.enter()
 				.append("transform")
 				.attr("class", "arrow")
+				.attr("foo", function(d) {
+					console.log(d);
+					return "bar";
+				})
 				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
 				.append("transform")
 				.attr("rotation", (d) => calcVectorAngles(d).yaw)
