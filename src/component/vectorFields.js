@@ -70,32 +70,21 @@ export default function() {
 			init(data);
 
 			const vectorData = function(d) {
-				return d.values.map((value) => {
-					let p1 = [value.x, value.y, value.z];
-					let p2 = [value.dx, value.dy, value.dz];
+				return d.values.map((field) => {
+					// let point1 = [value.x, value.y, value.z];
+					let point1 = [0, 1, 0]; // By default cone is point in the y direction.
+					let point2 = [field.u, field.v, field.w];
+					let vector1 = new x3dom.fields.SFVec3f(...point1);
+					let vector2 = new x3dom.fields.SFVec3f(...point2);
+					let vector3 = vector1.subtract(vector2);
+					let qDir = x3dom.fields.Quaternion.rotateFromTo(vector1, vector3);
+					let rot = qDir.toAxisAngle();
 
-					let point1 = new x3dom.fields.SFVec3f(...p1);
-					let point2 = new x3dom.fields.SFVec3f(...p2);
-					let qDir = x3dom.fields.Quaternion.rotateFromTo(point1, point2);
+					// Calculate transform rotation string and add to data
+					field.rotation = rot[0].x + ' ' + rot[0].y + ' ' + rot[0].z + ' ' + rot[1];
 
-					value.axisAngle = qDir.toAxisAngle();
-					value.matrix = qDir.toMatrix();
-
-					return value;
+					return field;
 				});
-			};
-
-			let calcVectorAngles = function(d) {
-				// https://stackoverflow.com/questions/19729831/angle-between-3-points-in-3d-space
-				let vector = { x: (d.x - d.dx), y: (d.y - d.dy), z: (d.z - d.dz) };
-				let mag = Math.sqrt((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
-				let norm = [(vector.x / mag), (vector.y / mag), (vector.z / mag)];
-
-				return {
-					yaw: "0 1 0 " + norm[0],
-					pitch: "0 0 1 " + norm[1],
-					roll: "1 0 0 " + norm[2]
-				};
 			};
 
 			const arrows = selection.selectAll(".arrow")
@@ -104,17 +93,9 @@ export default function() {
 			const arrowsEnter = arrows.enter()
 				.append("transform")
 				.attr("class", "arrow")
-				.attr("foo", function(d) {
-					console.log(d);
-					return "bar";
-				})
 				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
 				.append("transform")
-				.attr("rotation", (d) => calcVectorAngles(d).yaw)
-				.append("transform")
-				.attr("rotation", (d) => calcVectorAngles(d).pitch)
-				.append("transform")
-				.attr("rotation", (d) => calcVectorAngles(d).roll);
+				.attr("rotation", (d) => d.rotation);
 
 			let shape = arrowsEnter.append("shape");
 

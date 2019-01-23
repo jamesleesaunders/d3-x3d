@@ -2298,31 +2298,29 @@ function componentVectorFields () {
 		selection.each(function (data) {
 			init(data);
 
-			var calcVectorAngles = function calcVectorAngles(d) {
-				// https://stackoverflow.com/questions/19729831/angle-between-3-points-in-3d-space
-				var vector = { x: d.x - d.dx, y: d.y - d.dy, z: d.z - d.dz };
-				var mag = Math.sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
-				var norm = [vector.x / mag, vector.y / mag, vector.z / mag];
+			var vectorData = function vectorData(d) {
+				return d.values.map(function (field) {
+					// let point1 = [value.x, value.y, value.z];
+					var point1 = [0, 1, 0]; // By default cone is point in the y direction.
+					var point2 = [field.u, field.v, field.w];
+					var vector1 = new (Function.prototype.bind.apply(x3dom.fields.SFVec3f, [null].concat(point1)))();
+					var vector2 = new (Function.prototype.bind.apply(x3dom.fields.SFVec3f, [null].concat(point2)))();
+					var vector3 = vector1.subtract(vector2);
+					var qDir = x3dom.fields.Quaternion.rotateFromTo(vector1, vector3);
+					var rot = qDir.toAxisAngle();
 
-				return {
-					yaw: "0 1 0 " + norm[0],
-					pitch: "0 0 1 " + norm[1],
-					roll: "1 0 0 " + norm[2]
-				};
+					field.rotation = rot[0].x + ' ' + rot[0].y + ' ' + rot[0].z + ' ' + rot[1];
+
+					return field;
+				});
 			};
 
-			var arrows = selection.selectAll(".arrow").data(function (d) {
-				return d.values;
-			});
+			var arrows = selection.selectAll(".arrow").data(vectorData);
 
 			var arrowsEnter = arrows.enter().append("transform").attr("class", "arrow").attr("translation", function (d) {
 				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
 			}).append("transform").attr("rotation", function (d) {
-				return calcVectorAngles(d).yaw;
-			}).append("transform").attr("rotation", function (d) {
-				return calcVectorAngles(d).pitch;
-			}).append("transform").attr("rotation", function (d) {
-				return calcVectorAngles(d).roll;
+				return d.rotation;
 			});
 
 			var shape = arrowsEnter.append("shape");
