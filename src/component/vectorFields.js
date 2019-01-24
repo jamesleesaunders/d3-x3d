@@ -18,7 +18,6 @@ export default function() {
 	let yScale;
 	let zScale;
 	let sizeScale;
-	let sizeDomain = [0.5, 4.0];
 
 	/**
 	 * Initialise Data and Scales
@@ -48,12 +47,6 @@ export default function() {
 				.domain([0, maxZ])
 				.range([0, dimensionZ]);
 		}
-
-		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear()
-				.domain(valueExtent)
-				.range(sizeDomain);
-		}
 	}
 
 	/**
@@ -71,20 +64,24 @@ export default function() {
 
 			const vectorData = function(d) {
 				return d.values.map((field) => {
-					// Calculate transform-translation attr
-					field.translation = xScale(field.x) + " " + yScale(field.y) + " " + zScale(field.z);
-
-					let point1 = [field.x, field.y, field.z];
-					// let point1 = [0, 1, 0]; // By default cone is point in the y direction.
+					let point1 = [0, 1, 0];
 					let point2 = [field.u, field.v, field.w];
 					let vector1 = new x3dom.fields.SFVec3f(...point1);
 					let vector2 = new x3dom.fields.SFVec3f(...point2);
-					let vector3 = vector2.subtract(vector1);
-					console.log(vector1);
-					console.log(vector2);
-					console.log(vector3);
-					let qDir = x3dom.fields.Quaternion.rotateFromTo(vector1, vector3);
+
+					let qDir = x3dom.fields.Quaternion.rotateFromTo(vector1, vector2);
 					let rot = qDir.toAxisAngle();
+					let len = vector2.length();
+					// let len = field.value;
+
+					// Calculate transform-translation attr
+					field.translation = xScale(field.x) + " " + yScale(field.y) + " " + zScale(field.z);
+
+					// Calculate vector length
+					field.length = len;
+
+					// Calculate transform-center attr
+					field.center = "0 " + -(len / 2) + " 0";
 
 					// Calculate transform-rotation attr
 					field.rotation = rot[0].x + ' ' + rot[0].y + ' ' + rot[0].z + ' ' + rot[1];
@@ -99,8 +96,8 @@ export default function() {
 			const arrowsEnter = arrows.enter()
 				.append("transform")
 				.attr("class", "arrow")
+				//.attr("center", (d) => d.center)
 				.attr("translation", (d) => d.translation)
-				.append("transform")
 				.attr("rotation", (d) => d.rotation);
 
 			let shape = arrowsEnter.append("shape");
@@ -110,7 +107,7 @@ export default function() {
 				.attr("diffusecolor", color);
 
 			shape.append("cone")
-				.attr("height", (d) => sizeScale(d.value) * 4)
+				.attr("height", (d) => d.length)
 				.attr("bottomradius", "0.5");
 
 			arrowsEnter.merge(arrows);

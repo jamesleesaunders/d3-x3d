@@ -2246,7 +2246,6 @@ function componentVectorFields () {
 	var yScale = void 0;
 	var zScale = void 0;
 	var sizeScale = void 0;
-	var sizeDomain = [0.5, 4.0];
 
 	/**
   * Initialise Data and Scales
@@ -2256,7 +2255,6 @@ function componentVectorFields () {
   */
 	function init(data) {
 		var _dataTransform$summar = dataTransform(data).summary(),
-		    valueExtent = _dataTransform$summar.valueExtent,
 		    coordinatesMax = _dataTransform$summar.coordinatesMax;
 
 		var maxX = coordinatesMax.x,
@@ -2279,10 +2277,6 @@ function componentVectorFields () {
 		if (typeof zScale === "undefined") {
 			zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
 		}
-
-		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeDomain);
-		}
 	}
 
 	/**
@@ -2300,15 +2294,26 @@ function componentVectorFields () {
 
 			var vectorData = function vectorData(d) {
 				return d.values.map(function (field) {
-					// let point1 = [value.x, value.y, value.z];
-					var point1 = [0, 1, 0]; // By default cone is point in the y direction.
+					var point1 = [0, 1, 0];
 					var point2 = [field.u, field.v, field.w];
 					var vector1 = new (Function.prototype.bind.apply(x3dom.fields.SFVec3f, [null].concat(point1)))();
 					var vector2 = new (Function.prototype.bind.apply(x3dom.fields.SFVec3f, [null].concat(point2)))();
-					var vector3 = vector1.subtract(vector2);
-					var qDir = x3dom.fields.Quaternion.rotateFromTo(vector1, vector3);
-					var rot = qDir.toAxisAngle();
 
+					var qDir = x3dom.fields.Quaternion.rotateFromTo(vector1, vector2);
+					var rot = qDir.toAxisAngle();
+					var len = vector2.length();
+					// let len = field.value;
+
+					// Calculate transform-translation attr
+					field.translation = xScale(field.x) + " " + yScale(field.y) + " " + zScale(field.z);
+
+					// Calculate vector length
+					field.length = len;
+
+					// Calculate transform-center attr
+					field.center = "0 " + -(len / 2) + " 0";
+
+					// Calculate transform-rotation attr
 					field.rotation = rot[0].x + ' ' + rot[0].y + ' ' + rot[0].z + ' ' + rot[1];
 
 					return field;
@@ -2317,9 +2322,11 @@ function componentVectorFields () {
 
 			var arrows = selection.selectAll(".arrow").data(vectorData);
 
-			var arrowsEnter = arrows.enter().append("transform").attr("class", "arrow").attr("translation", function (d) {
-				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-			}).append("transform").attr("rotation", function (d) {
+			var arrowsEnter = arrows.enter().append("transform").attr("class", "arrow")
+			//.attr("center", (d) => d.center)
+			.attr("translation", function (d) {
+				return d.translation;
+			}).attr("rotation", function (d) {
 				return d.rotation;
 			});
 
@@ -2328,7 +2335,7 @@ function componentVectorFields () {
 			shape.append("appearance").append("material").attr("diffusecolor", color);
 
 			shape.append("cone").attr("height", function (d) {
-				return sizeScale(d.value) * 4;
+				return d.length;
 			}).attr("bottomradius", "0.5");
 
 			arrowsEnter.merge(arrows);

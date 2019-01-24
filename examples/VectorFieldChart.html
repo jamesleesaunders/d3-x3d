@@ -25,14 +25,23 @@
       .attr("height", height + "px")
       .append("scene");
 
+    var xScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
+    var yScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
+    var zScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
+
     var viewpointComponent = d3.x3dom.component.viewpoint();
-    var chartComponent = d3.x3dom.component.vectorFields();
+    var chartComponent = d3.x3dom.component.vectorFields()
+      .xScale(xScale)
+      .yScale(yScale)
+      .zScale(zScale);
 
     var data = {
       key: 'VectorFields',
       values: [
-        { key: "Point0", value: 8, x: 1, y: 1, z: 1, u: 4, v: 4, w: 4 },
-        { key: "Point1", value: 8, x: 4, y: 4, z: 4, u: 1, v: 1, w: 1 }
+        { key: "Point0", value: 8, x: 1, y: 1, z: 1, u: 10, v: 1, w: 1 },
+        { key: "Point1", value: 8, x: 2, y: 1, z: 1, u: 0, v: 4, w: 1 },
+        { key: "Point2", value: 8, x: 3, y: 1, z: 1, u: 0, v: 0, w: 1 },
+        { key: "Point3", value: 8, x: 4, y: 1, z: 1, u: 1, v: 0, w: 1 }
       ]
     };
 
