@@ -71,16 +71,22 @@ export default function() {
 
 			const vectorData = function(d) {
 				return d.values.map((field) => {
-					// let point1 = [value.x, value.y, value.z];
-					let point1 = [0, 1, 0]; // By default cone is point in the y direction.
+					// Calculate transform-translation attr
+					field.translation = xScale(field.x) + " " + yScale(field.y) + " " + zScale(field.z);
+
+					let point1 = [field.x, field.y, field.z];
+					// let point1 = [0, 1, 0]; // By default cone is point in the y direction.
 					let point2 = [field.u, field.v, field.w];
 					let vector1 = new x3dom.fields.SFVec3f(...point1);
 					let vector2 = new x3dom.fields.SFVec3f(...point2);
-					let vector3 = vector1.subtract(vector2);
+					let vector3 = vector2.subtract(vector1);
+					console.log(vector1);
+					console.log(vector2);
+					console.log(vector3);
 					let qDir = x3dom.fields.Quaternion.rotateFromTo(vector1, vector3);
 					let rot = qDir.toAxisAngle();
 
-					// Calculate transform rotation string and add to data
+					// Calculate transform-rotation attr
 					field.rotation = rot[0].x + ' ' + rot[0].y + ' ' + rot[0].z + ' ' + rot[1];
 
 					return field;
@@ -93,7 +99,7 @@ export default function() {
 			const arrowsEnter = arrows.enter()
 				.append("transform")
 				.attr("class", "arrow")
-				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
+				.attr("translation", (d) => d.translation)
 				.append("transform")
 				.attr("rotation", (d) => d.rotation);
 
