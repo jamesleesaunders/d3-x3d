@@ -10,7 +10,7 @@ export default function() {
 
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let color = "orange";
+	let color = "teal";
 	let classed = "x3dVectorFields";
 
 	/* Scales */
@@ -65,14 +65,12 @@ export default function() {
 			const vectorData = function(d) {
 				return d.values.map((field) => {
 					let point1 = [0, 1, 0];
-					let point2 = [field.u, field.v, field.w];
+					let point2 = [field.vx, field.vy, field.vz];
 					let vector1 = new x3dom.fields.SFVec3f(...point1);
 					let vector2 = new x3dom.fields.SFVec3f(...point2);
-
 					let qDir = x3dom.fields.Quaternion.rotateFromTo(vector1, vector2);
 					let rot = qDir.toAxisAngle();
 					let len = vector2.length();
-					// let len = field.value;
 
 					// Calculate transform-translation attr
 					field.translation = xScale(field.x) + " " + yScale(field.y) + " " + zScale(field.z);
@@ -81,10 +79,10 @@ export default function() {
 					field.length = len;
 
 					// Calculate transform-center attr
-					field.center = "0 " + -(len / 2) + " 0";
+					field.offset = "0 " + (len / 2) + " 0";
 
 					// Calculate transform-rotation attr
-					field.rotation = rot[0].x + ' ' + rot[0].y + ' ' + rot[0].z + ' ' + rot[1];
+					field.rotation = rot[0].x + " " + rot[0].y + " " + rot[0].z + " " + rot[1];
 
 					return field;
 				});
@@ -96,9 +94,10 @@ export default function() {
 			const arrowsEnter = arrows.enter()
 				.append("transform")
 				.attr("class", "arrow")
-				//.attr("center", (d) => d.center)
 				.attr("translation", (d) => d.translation)
-				.attr("rotation", (d) => d.rotation);
+				.attr("rotation", (d) => d.rotation)
+				.append("transform")
+				.attr("translation", (d) => d.offset);
 
 			let shape = arrowsEnter.append("shape");
 
@@ -108,12 +107,12 @@ export default function() {
 
 			shape.append("cone")
 				.attr("height", (d) => d.length)
-				.attr("bottomradius", "0.5");
+				.attr("bottomradius", "0.4");
 
 			arrowsEnter.merge(arrows);
 
 			arrows.transition()
-				.attr("translation", (d) => (xScale(d.x) + ' ' + yScale(d.y) + ' ' + zScale(d.z)));
+				.attr("translation", (d) => d.translation);
 
 			arrows.exit()
 				.remove();

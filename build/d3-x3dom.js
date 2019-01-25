@@ -2238,7 +2238,7 @@ function componentVectorFields () {
 
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
-	var color = "orange";
+	var color = "teal";
 	var classed = "x3dVectorFields";
 
 	/* Scales */
@@ -2295,14 +2295,12 @@ function componentVectorFields () {
 			var vectorData = function vectorData(d) {
 				return d.values.map(function (field) {
 					var point1 = [0, 1, 0];
-					var point2 = [field.u, field.v, field.w];
+					var point2 = [field.vx, field.vy, field.vz];
 					var vector1 = new (Function.prototype.bind.apply(x3dom.fields.SFVec3f, [null].concat(point1)))();
 					var vector2 = new (Function.prototype.bind.apply(x3dom.fields.SFVec3f, [null].concat(point2)))();
-
 					var qDir = x3dom.fields.Quaternion.rotateFromTo(vector1, vector2);
 					var rot = qDir.toAxisAngle();
 					var len = vector2.length();
-					// let len = field.value;
 
 					// Calculate transform-translation attr
 					field.translation = xScale(field.x) + " " + yScale(field.y) + " " + zScale(field.z);
@@ -2311,10 +2309,10 @@ function componentVectorFields () {
 					field.length = len;
 
 					// Calculate transform-center attr
-					field.center = "0 " + -(len / 2) + " 0";
+					field.offset = "0 " + len / 2 + " 0";
 
 					// Calculate transform-rotation attr
-					field.rotation = rot[0].x + ' ' + rot[0].y + ' ' + rot[0].z + ' ' + rot[1];
+					field.rotation = rot[0].x + " " + rot[0].y + " " + rot[0].z + " " + rot[1];
 
 					return field;
 				});
@@ -2322,12 +2320,12 @@ function componentVectorFields () {
 
 			var arrows = selection.selectAll(".arrow").data(vectorData);
 
-			var arrowsEnter = arrows.enter().append("transform").attr("class", "arrow")
-			//.attr("center", (d) => d.center)
-			.attr("translation", function (d) {
+			var arrowsEnter = arrows.enter().append("transform").attr("class", "arrow").attr("translation", function (d) {
 				return d.translation;
 			}).attr("rotation", function (d) {
 				return d.rotation;
+			}).append("transform").attr("translation", function (d) {
+				return d.offset;
 			});
 
 			var shape = arrowsEnter.append("shape");
@@ -2336,12 +2334,12 @@ function componentVectorFields () {
 
 			shape.append("cone").attr("height", function (d) {
 				return d.length;
-			}).attr("bottomradius", "0.5");
+			}).attr("bottomradius", "0.4");
 
 			arrowsEnter.merge(arrows);
 
 			arrows.transition().attr("translation", function (d) {
-				return xScale(d.x) + ' ' + yScale(d.y) + ' ' + zScale(d.z);
+				return d.translation;
 			});
 
 			arrows.exit().remove();
