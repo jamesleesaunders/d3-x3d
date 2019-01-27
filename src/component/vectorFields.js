@@ -10,7 +10,7 @@ export default function() {
 
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let color = "teal";
+	let color = "blue";
 	let classed = "x3dVectorFields";
 
 	/* Scales */
@@ -18,6 +18,7 @@ export default function() {
 	let yScale;
 	let zScale;
 	let sizeScale;
+	let sizeDomain = [1, 6];
 
 	/**
 	 * Initialise Data and Scales
@@ -26,9 +27,14 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	function init(data) {
-		const { valueExtent, coordinatesMax } = dataTransform(data).summary();
+		const { coordinatesMax } = dataTransform(data).summary();
 		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
+
+		const extent = d3.extent(data.values.map((d) => {
+			let vector = new x3dom.fields.SFVec3f(d.vx, d.vy, d.vz);
+			return vector.length();
+		}));
 
 		if (typeof xScale === "undefined") {
 			xScale = d3.scaleLinear()
@@ -46,6 +52,12 @@ export default function() {
 			zScale = d3.scaleLinear()
 				.domain([0, maxZ])
 				.range([0, dimensionZ]);
+		}
+
+		if (typeof sizeScale === "undefined") {
+			sizeScale = d3.scaleLinear()
+				.domain(extent)
+				.range(sizeDomain);
 		}
 	}
 
@@ -70,7 +82,7 @@ export default function() {
 					let vector2 = new x3dom.fields.SFVec3f(...point2);
 					let qDir = x3dom.fields.Quaternion.rotateFromTo(vector1, vector2);
 					let rot = qDir.toAxisAngle();
-					let len = vector2.length();
+					let len = sizeScale(vector2.length());
 
 					// Calculate transform-translation attr
 					field.translation = xScale(field.x) + " " + yScale(field.y) + " " + zScale(field.z);
@@ -107,7 +119,7 @@ export default function() {
 
 			shape.append("cone")
 				.attr("height", (d) => d.length)
-				.attr("bottomradius", "0.4");
+				.attr("bottomradius", 0.4);
 
 			arrowsEnter.merge(arrows);
 

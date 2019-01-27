@@ -2238,7 +2238,7 @@ function componentVectorFields () {
 
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
-	var color = "teal";
+	var color = "blue";
 	var classed = "x3dVectorFields";
 
 	/* Scales */
@@ -2246,6 +2246,7 @@ function componentVectorFields () {
 	var yScale = void 0;
 	var zScale = void 0;
 	var sizeScale = void 0;
+	var sizeDomain = [1, 6];
 
 	/**
   * Initialise Data and Scales
@@ -2266,6 +2267,11 @@ function componentVectorFields () {
 		    dimensionZ = _dimensions.z;
 
 
+		var extent = d3.extent(data.values.map(function (d) {
+			var vector = new x3dom.fields.SFVec3f(d.vx, d.vy, d.vz);
+			return vector.length();
+		}));
+
 		if (typeof xScale === "undefined") {
 			xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
 		}
@@ -2276,6 +2282,10 @@ function componentVectorFields () {
 
 		if (typeof zScale === "undefined") {
 			zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
+		}
+
+		if (typeof sizeScale === "undefined") {
+			sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
 		}
 	}
 
@@ -2300,7 +2310,7 @@ function componentVectorFields () {
 					var vector2 = new (Function.prototype.bind.apply(x3dom.fields.SFVec3f, [null].concat(point2)))();
 					var qDir = x3dom.fields.Quaternion.rotateFromTo(vector1, vector2);
 					var rot = qDir.toAxisAngle();
-					var len = vector2.length();
+					var len = sizeScale(vector2.length());
 
 					// Calculate transform-translation attr
 					field.translation = xScale(field.x) + " " + yScale(field.y) + " " + zScale(field.z);
@@ -2334,7 +2344,7 @@ function componentVectorFields () {
 
 			shape.append("cone").attr("height", function (d) {
 				return d.length;
-			}).attr("bottomradius", "0.4");
+			}).attr("bottomradius", 0.4);
 
 			arrowsEnter.merge(arrows);
 
