@@ -24,13 +24,13 @@
       .attr("height", height + "px")
       .append("scene");
 
-    var xMin = -5, xMax = 5;
-    var yMin = -5, yMax = 5;
-    var zMin = -5, zMax = 5;
+    var xRange = d3.range(-5, 5, 1);
+    var yRange = d3.range(-5, 5, 1);
+    var zRange = d3.range(-5, 5, 1);
 
-    var xScale = d3.scaleLinear().domain([xMin, xMax]).range([0, 40]);
-    var yScale = d3.scaleLinear().domain([yMin, yMax]).range([0, 40]);
-    var zScale = d3.scaleLinear().domain([xMin, zMax]).range([0, 40]);
+    var xScale = d3.scaleLinear().domain(d3.extent(xRange)).range([0, 40]);
+    var yScale = d3.scaleLinear().domain(d3.extent(yRange)).range([0, 40]);
+    var zScale = d3.scaleLinear().domain(d3.extent(zRange)).range([0, 40]);
 
     var viewpoint = d3.x3dom.component.viewpoint();
     var vectorFields = d3.x3dom.component.vectorFields()
@@ -39,13 +39,13 @@
       .zScale(zScale);
 
     var values = [];
-    for (var x = xMin; x < xMax; x++) {
-      for (var y = yMin; y < yMax; y++) {
-        for (var z = zMin; z < zMax; z++) {
+    xRange.forEach(function(x) {
+      yRange.forEach(function(y) {
+        zRange.forEach(function(z) {
           values.push({ key: null, value: 4, x: x, y: y, z: z, vx: x, vy: y, vz: z });
-        }
-      }
-    }
+        });
+      });
+    });
 
     var data = {
       key: 'VectorFields',
