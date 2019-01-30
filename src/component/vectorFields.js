@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import * as x3dom from "x3dom";
 import dataTransform from "../dataTransform";
 
 /**

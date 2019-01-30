@@ -42,7 +42,16 @@
     xRange.forEach(function(x) {
       yRange.forEach(function(y) {
         zRange.forEach(function(z) {
-          values.push({ key: null, value: 4, x: x, y: y, z: z, vx: x, vy: y, vz: z });
+          values.push({
+            key: null,
+            value: 4,
+            x: x,
+            y: y,
+            z: z,
+            vx: (1/x),
+            vy: (1/y),
+            vz: (1/x)
+          });
         });
       });
     });
