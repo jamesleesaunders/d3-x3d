@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.0.21";
+var version = "1.0.22";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -566,7 +566,7 @@ function componentAxis () {
 			var newText = tickEnter.append("transform");
 			newText.attr("translation", tickDirectionVector.map(function (d) {
 				return -d * tickPadding;
-			})).append("billboard").attr("axisOfRotation", "0 0 0").append("shape").call(makeSolid, "black").append("text").attr("string", tickFormat).append("fontstyle").attr("size", 1.3).attr("family", "SANS").attr("style", "BOLD").attr("justify", "MIDDLE");
+			})).append("billboard").attr("axisofrotation", "0 0 0").append("shape").call(makeSolid, "black").append("text").attr("string", tickFormat).append("fontstyle").attr("size", 1.3).attr("family", "SANS").attr("style", "BOLD").attr("justify", "MIDDLE");
 			text = text.merge(newText);
 		}
 
@@ -891,9 +891,9 @@ function componentBars () {
 
 			barsEnter.append("box").attr("size", "1.0 1.0 1.0");
 
-			barsEnter.append("appearance").append("material").attr("diffuseColor", function (d) {
+			barsEnter.append("appearance").append("material").attr("diffusecolor", function (d) {
 				return colorScale(d.key);
-			}).attr("ambientIntensity", "0.1");
+			}).attr("ambientintensity", "0.1");
 
 			barsEnter.merge(bars);
 
@@ -1220,7 +1220,7 @@ function componentBubbles () {
 			});
 
 			var bubblesEnter = bubbles.enter().append("transform").attr("class", "bubble").attr("translation", function (d) {
-				return xScale(d.x) + ' ' + yScale(d.y) + ' ' + zScale(d.z);
+				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
 			}).attr("onmouseover", "d3.select(this).select('billboard').attr('render', true);").attr("onmouseout", "d3.select(this).select('transform').select('billboard').attr('render', false);");
 
 			bubblesEnter.append("shape").call(makeSolid, color).append("sphere").attr("radius", function (d) {
@@ -1230,9 +1230,9 @@ function componentBubbles () {
 			bubblesEnter.append("transform").attr("translation", function (d) {
 				var r = sizeScale(d.value) + 0.8;
 				return r + " " + r + " " + r;
-			}).append("billboard").attr('render', false).attr("axisOfRotation", "0 0 0").append("shape").call(makeSolid, "blue").append("text").attr('class', "labelText").attr('string', function (d) {
+			}).append("billboard").attr("render", false).attr("axisofrotation", "0 0 0").append("shape").call(makeSolid, "blue").append("text").attr("class", "labelText").attr("string", function (d) {
 				return d.key;
-			}).append("fontstyle").attr("size", 1).attr("family", "SANS").attr("style", "BOLD").attr("justify", "START").attr('render', false);
+			}).append("fontstyle").attr("size", 1).attr("family", "SANS").attr("style", "BOLD").attr("justify", "START").attr("render", false);
 
 			bubblesEnter.merge(bubbles);
 
@@ -1592,7 +1592,7 @@ function componentCrosshair () {
 				return dimensions[d];
 			});
 
-			line.append("appearance").append("material").attr("diffuseColor", function (d) {
+			line.append("appearance").append("material").attr("diffusecolor", function (d) {
 				return colorScale(d);
 			});
 
@@ -1776,7 +1776,7 @@ function componentRibbon () {
 				return d.point;
 			});
 
-			ribbonEnter.append("appearance").append("twosidedmaterial").attr("diffuseColor", function (d) {
+			ribbonEnter.append("appearance").append("twosidedmaterial").attr("diffusecolor", function (d) {
 				return d.color;
 			}).attr("transparency", function (d) {
 				return d.transparency;
@@ -2230,6 +2230,276 @@ function componentSurface () {
 }
 
 /**
+ * Reusable 3D Vector Fields Component
+ *
+ * @module
+ */
+function componentVectorFields () {
+
+  /* Default Properties */
+  var dimensions = { x: 40, y: 40, z: 40 };
+  var color = "blue";
+  var classed = "x3dVectorFields";
+
+  /* Scales */
+  var xScale = void 0;
+  var yScale = void 0;
+  var zScale = void 0;
+  var sizeScale = void 0;
+  var sizeDomain = [1, 6];
+
+  /**
+   * Vector Field Function
+   *
+   * @param x
+   * @param y
+   * @param z
+   * @returns {{x: number, y: number, z: number}}
+   */
+  var vectorFunction = function vectorFunction(x, y, z) {
+    return {
+      x: x,
+      y: y,
+      z: z
+    };
+  };
+
+  /**
+   * Initialise Data and Scales
+   *
+   * @private
+   * @param {Array} data - Chart data.
+   */
+  function init(data) {
+    var _dataTransform$summar = dataTransform(data).summary(),
+        coordinatesMax = _dataTransform$summar.coordinatesMax;
+
+    var maxX = coordinatesMax.x,
+        maxY = coordinatesMax.y,
+        maxZ = coordinatesMax.z;
+    var _dimensions = dimensions,
+        dimensionX = _dimensions.x,
+        dimensionY = _dimensions.y,
+        dimensionZ = _dimensions.z;
+
+
+    var extent = d3.extent(data.values.map(function (f) {
+      var vx = void 0,
+          vy = void 0,
+          vz = void 0;
+      if ('vx' in f) {
+        vx = f.vx;
+        vy = f.vy;
+        vz = f.vz;
+      } else {
+        var _vectorFunction = vectorFunction(f.x, f.y, f.z);
+
+        vx = _vectorFunction.x;
+        vy = _vectorFunction.y;
+        vz = _vectorFunction.z;
+      }
+
+      return new x3dom.fields.SFVec3f(vx, vy, vz).length();
+    }));
+
+    if (typeof xScale === "undefined") {
+      xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
+    }
+
+    if (typeof yScale === "undefined") {
+      yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
+    }
+
+    if (typeof zScale === "undefined") {
+      zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
+    }
+
+    if (typeof sizeScale === "undefined") {
+      sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
+    }
+  }
+
+  /**
+   * Constructor
+   *
+   * @constructor
+   * @alias vectorFields
+   * @param {d3.selection} selection - The chart holder D3 selection.
+   */
+  function my(selection) {
+    selection.classed(classed, true);
+
+    selection.each(function (data) {
+      init(data);
+
+      var vectorData = function vectorData(d) {
+        return d.values.map(function (f) {
+
+          var vx = void 0,
+              vy = void 0,
+              vz = void 0;
+          if ('vx' in f) {
+            vx = f.vx;
+            vy = f.vy;
+            vz = f.vz;
+          } else {
+            var _vectorFunction2 = vectorFunction(f.x, f.y, f.z);
+
+            vx = _vectorFunction2.x;
+            vy = _vectorFunction2.y;
+            vz = _vectorFunction2.z;
+          }
+
+          var fromVector = new x3dom.fields.SFVec3f(0, 1, 0);
+          var toVector = new x3dom.fields.SFVec3f(vx, vy, vz);
+          var qDir = x3dom.fields.Quaternion.rotateFromTo(fromVector, toVector);
+          var rot = qDir.toAxisAngle();
+          var len = sizeScale(toVector.length());
+
+          // Calculate transform-translation attr
+          f.translation = xScale(f.x) + " " + yScale(f.y) + " " + zScale(f.z);
+
+          // Calculate vector length
+          f.length = len;
+
+          // Calculate transform-center attr
+          f.offset = "0 " + len / 2 + " 0";
+
+          // Calculate transform-rotation attr
+          f.rotation = rot[0].x + " " + rot[0].y + " " + rot[0].z + " " + rot[1];
+
+          return f;
+        });
+      };
+
+      var arrows = selection.selectAll(".arrow").data(vectorData);
+
+      var arrowsEnter = arrows.enter().append("transform").attr("class", "arrow").attr("translation", function (d) {
+        return d.translation;
+      }).attr("rotation", function (d) {
+        return d.rotation;
+      }).append("transform").attr("translation", function (d) {
+        return d.offset;
+      });
+
+      var shape = arrowsEnter.append("shape");
+
+      shape.append("appearance").append("material").attr("diffusecolor", color);
+
+      shape.append("cone").attr("height", function (d) {
+        return d.length;
+      }).attr("bottomradius", 0.4);
+
+      arrowsEnter.merge(arrows);
+
+      arrows.transition().attr("translation", function (d) {
+        return d.translation;
+      });
+
+      arrows.exit().remove();
+    });
+  }
+
+  /**
+   * Dimensions Getter / Setter
+   *
+   * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+   * @returns {*}
+   */
+  my.dimensions = function (_v) {
+    if (!arguments.length) return dimensions;
+    dimensions = _v;
+    return this;
+  };
+
+  /**
+   * X Scale Getter / Setter
+   *
+   * @param {d3.scale} _v - D3 scale.
+   * @returns {*}
+   */
+  my.xScale = function (_v) {
+    if (!arguments.length) return xScale;
+    xScale = _v;
+    return my;
+  };
+
+  /**
+   * Y Scale Getter / Setter
+   *
+   * @param {d3.scale} _v - D3 scale.
+   * @returns {*}
+   */
+  my.yScale = function (_v) {
+    if (!arguments.length) return yScale;
+    yScale = _v;
+    return my;
+  };
+
+  /**
+   * Z Scale Getter / Setter
+   *
+   * @param {d3.scale} _v - D3 scale.
+   * @returns {*}
+   */
+  my.zScale = function (_v) {
+    if (!arguments.length) return zScale;
+    zScale = _v;
+    return my;
+  };
+
+  /**
+   * Size Scale Getter / Setter
+   *
+   * @param {d3.scale} _v - D3 color scale.
+   * @returns {*}
+   */
+  my.sizeScale = function (_v) {
+    if (!arguments.length) return sizeScale;
+    sizeScale = _v;
+    return my;
+  };
+
+  /**
+   * Size Domain Getter / Setter
+   *
+   * @param {number[]} _v - Size min and max (e.g. [1, 9]).
+   * @returns {*}
+   */
+  my.sizeDomain = function (_v) {
+    if (!arguments.length) return sizeDomain;
+    sizeDomain = _v;
+    return my;
+  };
+
+  /**
+   * Color Getter / Setter
+   *
+   * @param {string} _v - Color (e.g. 'red' or '#ff0000').
+   * @returns {*}
+   */
+  my.color = function (_v) {
+    if (!arguments.length) return color;
+    color = _v;
+    return my;
+  };
+
+  /**
+   * Vector Function Getter / Setter
+   *
+   * @param {string} _v - Vector Function.
+   * @returns {*}
+   */
+  my.vectorFunction = function (_v) {
+    if (!arguments.length) return vectorFunction;
+    vectorFunction = _v;
+    return my;
+  };
+
+  return my;
+}
+
+/**
  * Reusable X3DOM Viewpoint Component
  *
  * @module
@@ -2251,7 +2521,7 @@ function componentViewpoint () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	function my(selection) {
-		selection.append("viewpoint").classed(classed, true).attr("centerOfRotation", centerOfRotation.join(" ")).attr("position", viewPosition.join(" ")).attr("orientation", viewOrientation.join(" ")).attr("fieldOfView", fieldOfView).attr("set_bind", "true");
+		selection.append("viewpoint").classed(classed, true).attr("centerofrotation", centerOfRotation.join(" ")).attr("position", viewPosition.join(" ")).attr("orientation", viewOrientation.join(" ")).attr("fieldofview", fieldOfView).attr("set_bind", "true");
 	}
 
 	/**
@@ -2355,6 +2625,7 @@ var component = {
 	ribbon: componentRibbon,
 	ribbonMultiSeries: componentRibbonMultiSeries,
 	surface: componentSurface,
+	vectorFields: componentVectorFields,
 	viewpoint: componentViewpoint
 };
 

@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import * as x3dom from "x3dom";
+// import * as x3dom from "x3dom";
 import dataTransform from "../dataTransform";
 
 /**
@@ -9,212 +9,252 @@ import dataTransform from "../dataTransform";
  */
 export default function() {
 
-	/* Default Properties */
-	let dimensions = { x: 40, y: 40, z: 40 };
-	let color = "blue";
-	let classed = "x3dVectorFields";
+  /* Default Properties */
+  let dimensions = { x: 40, y: 40, z: 40 };
+  let color = "blue";
+  let classed = "x3dVectorFields";
 
-	/* Scales */
-	let xScale;
-	let yScale;
-	let zScale;
-	let sizeScale;
-	let sizeDomain = [1, 6];
+  /* Scales */
+  let xScale;
+  let yScale;
+  let zScale;
+  let sizeScale;
+  let sizeDomain = [1, 6];
 
-	/**
-	 * Initialise Data and Scales
-	 *
-	 * @private
-	 * @param {Array} data - Chart data.
-	 */
-	function init(data) {
-		const { coordinatesMax } = dataTransform(data).summary();
-		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
-		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
+  /**
+   * Vector Field Function
+   *
+   * @param x
+   * @param y
+   * @param z
+   * @returns {{x: number, y: number, z: number}}
+   */
+  let vectorFunction = function(x, y, z) {
+    return {
+      x: x,
+      y: y,
+      z: z
+    };
+  };
 
-		const extent = d3.extent(data.values.map((d) => {
-			let vector = new x3dom.fields.SFVec3f(d.vx, d.vy, d.vz);
-			return vector.length();
-		}));
+  /**
+   * Initialise Data and Scales
+   *
+   * @private
+   * @param {Array} data - Chart data.
+   */
+  function init(data) {
+    const { coordinatesMax } = dataTransform(data).summary();
+    const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
+    const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear()
-				.domain([0, maxX])
-				.range([0, dimensionX]);
-		}
+    const extent = d3.extent(data.values.map((f) => {
+      let vx, vy, vz;
+      if ('vx' in f) {
+        ({ vx, vy, vz } = f);
+      } else {
+        ({ x: vx, y: vy, z: vz } = vectorFunction(f.x, f.y, f.z));
+      }
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
-				.domain([0, maxY])
-				.range([0, dimensionY]);
-		}
+      return new x3dom.fields.SFVec3f(vx, vy, vz).length();
+    }));
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear()
-				.domain([0, maxZ])
-				.range([0, dimensionZ]);
-		}
+    if (typeof xScale === "undefined") {
+      xScale = d3.scaleLinear()
+        .domain([0, maxX])
+        .range([0, dimensionX]);
+    }
 
-		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear()
-				.domain(extent)
-				.range(sizeDomain);
-		}
-	}
+    if (typeof yScale === "undefined") {
+      yScale = d3.scaleLinear()
+        .domain([0, maxY])
+        .range([0, dimensionY]);
+    }
 
-	/**
-	 * Constructor
-	 *
-	 * @constructor
-	 * @alias vectorFields
-	 * @param {d3.selection} selection - The chart holder D3 selection.
-	 */
-	function my(selection) {
-		selection.classed(classed, true);
+    if (typeof zScale === "undefined") {
+      zScale = d3.scaleLinear()
+        .domain([0, maxZ])
+        .range([0, dimensionZ]);
+    }
 
-		selection.each((data) => {
-			init(data);
+    if (typeof sizeScale === "undefined") {
+      sizeScale = d3.scaleLinear()
+        .domain(extent)
+        .range(sizeDomain);
+    }
+  }
 
-			const vectorData = function(d) {
-				return d.values.map((field) => {
-					let point1 = [0, 1, 0];
-					let point2 = [field.vx, field.vy, field.vz];
-					let vector1 = new x3dom.fields.SFVec3f(...point1);
-					let vector2 = new x3dom.fields.SFVec3f(...point2);
-					let qDir = x3dom.fields.Quaternion.rotateFromTo(vector1, vector2);
-					let rot = qDir.toAxisAngle();
-					let len = sizeScale(vector2.length());
+  /**
+   * Constructor
+   *
+   * @constructor
+   * @alias vectorFields
+   * @param {d3.selection} selection - The chart holder D3 selection.
+   */
+  function my(selection) {
+    selection.classed(classed, true);
 
-					// Calculate transform-translation attr
-					field.translation = xScale(field.x) + " " + yScale(field.y) + " " + zScale(field.z);
+    selection.each((data) => {
+      init(data);
 
-					// Calculate vector length
-					field.length = len;
+      const vectorData = function(d) {
+        return d.values.map((f) => {
 
-					// Calculate transform-center attr
-					field.offset = "0 " + (len / 2) + " 0";
+          let vx, vy, vz;
+          if ('vx' in f) {
+            ({ vx, vy, vz } = f);
+          } else {
+            ({ x: vx, y: vy, z: vz } = vectorFunction(f.x, f.y, f.z));
+          }
 
-					// Calculate transform-rotation attr
-					field.rotation = rot[0].x + " " + rot[0].y + " " + rot[0].z + " " + rot[1];
+          let fromVector = new x3dom.fields.SFVec3f(0, 1, 0);
+          let toVector = new x3dom.fields.SFVec3f(vx, vy, vz);
+          let qDir = x3dom.fields.Quaternion.rotateFromTo(fromVector, toVector);
+          let rot = qDir.toAxisAngle();
+          let len = sizeScale(toVector.length());
 
-					return field;
-				});
-			};
+          // Calculate transform-translation attr
+          f.translation = xScale(f.x) + " " + yScale(f.y) + " " + zScale(f.z);
 
-			const arrows = selection.selectAll(".arrow")
-				.data(vectorData);
+          // Calculate vector length
+          f.length = len;
 
-			const arrowsEnter = arrows.enter()
-				.append("transform")
-				.attr("class", "arrow")
-				.attr("translation", (d) => d.translation)
-				.attr("rotation", (d) => d.rotation)
-				.append("transform")
-				.attr("translation", (d) => d.offset);
+          // Calculate transform-center attr
+          f.offset = "0 " + (len / 2) + " 0";
 
-			let shape = arrowsEnter.append("shape");
+          // Calculate transform-rotation attr
+          f.rotation = rot[0].x + " " + rot[0].y + " " + rot[0].z + " " + rot[1];
 
-			shape.append("appearance")
-				.append("material")
-				.attr("diffusecolor", color);
+          return f;
+        });
+      };
 
-			shape.append("cone")
-				.attr("height", (d) => d.length)
-				.attr("bottomradius", 0.4);
+      const arrows = selection.selectAll(".arrow")
+        .data(vectorData);
 
-			arrowsEnter.merge(arrows);
+      const arrowsEnter = arrows.enter()
+        .append("transform")
+        .attr("class", "arrow")
+        .attr("translation", (d) => d.translation)
+        .attr("rotation", (d) => d.rotation)
+        .append("transform")
+        .attr("translation", (d) => d.offset);
 
-			arrows.transition()
-				.attr("translation", (d) => d.translation);
+      let shape = arrowsEnter.append("shape");
 
-			arrows.exit()
-				.remove();
-		});
-	}
+      shape.append("appearance")
+        .append("material")
+        .attr("diffusecolor", color);
 
-	/**
-	 * Dimensions Getter / Setter
-	 *
-	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-	 * @returns {*}
-	 */
-	my.dimensions = function(_v) {
-		if (!arguments.length) return dimensions;
-		dimensions = _v;
-		return this;
-	};
+      shape.append("cone")
+        .attr("height", (d) => d.length)
+        .attr("bottomradius", 0.4);
 
-	/**
-	 * X Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.xScale = function(_v) {
-		if (!arguments.length) return xScale;
-		xScale = _v;
-		return my;
-	};
+      arrowsEnter.merge(arrows);
 
-	/**
-	 * Y Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.yScale = function(_v) {
-		if (!arguments.length) return yScale;
-		yScale = _v;
-		return my;
-	};
+      arrows.transition()
+        .attr("translation", (d) => d.translation);
 
-	/**
-	 * Z Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.zScale = function(_v) {
-		if (!arguments.length) return zScale;
-		zScale = _v;
-		return my;
-	};
+      arrows.exit()
+        .remove();
+    });
+  }
 
-	/**
-	 * Size Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 color scale.
-	 * @returns {*}
-	 */
-	my.sizeScale = function(_v) {
-		if (!arguments.length) return sizeScale;
-		sizeScale = _v;
-		return my;
-	};
+  /**
+   * Dimensions Getter / Setter
+   *
+   * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+   * @returns {*}
+   */
+  my.dimensions = function(_v) {
+    if (!arguments.length) return dimensions;
+    dimensions = _v;
+    return this;
+  };
 
-	/**
-	 * Size Domain Getter / Setter
-	 *
-	 * @param {number[]} _v - Size min and max (e.g. [1, 9]).
-	 * @returns {*}
-	 */
-	my.sizeDomain = function(_v) {
-		if (!arguments.length) return sizeDomain;
-		sizeDomain = _v;
-		return my;
-	};
+  /**
+   * X Scale Getter / Setter
+   *
+   * @param {d3.scale} _v - D3 scale.
+   * @returns {*}
+   */
+  my.xScale = function(_v) {
+    if (!arguments.length) return xScale;
+    xScale = _v;
+    return my;
+  };
 
-	/**
-	 * Color Getter / Setter
-	 *
-	 * @param {string} _v - Color (e.g. 'red' or '#ff0000').
-	 * @returns {*}
-	 */
-	my.color = function(_v) {
-		if (!arguments.length) return color;
-		color = _v;
-		return my;
-	};
+  /**
+   * Y Scale Getter / Setter
+   *
+   * @param {d3.scale} _v - D3 scale.
+   * @returns {*}
+   */
+  my.yScale = function(_v) {
+    if (!arguments.length) return yScale;
+    yScale = _v;
+    return my;
+  };
 
-	return my;
+  /**
+   * Z Scale Getter / Setter
+   *
+   * @param {d3.scale} _v - D3 scale.
+   * @returns {*}
+   */
+  my.zScale = function(_v) {
+    if (!arguments.length) return zScale;
+    zScale = _v;
+    return my;
+  };
+
+  /**
+   * Size Scale Getter / Setter
+   *
+   * @param {d3.scale} _v - D3 color scale.
+   * @returns {*}
+   */
+  my.sizeScale = function(_v) {
+    if (!arguments.length) return sizeScale;
+    sizeScale = _v;
+    return my;
+  };
+
+  /**
+   * Size Domain Getter / Setter
+   *
+   * @param {number[]} _v - Size min and max (e.g. [1, 9]).
+   * @returns {*}
+   */
+  my.sizeDomain = function(_v) {
+    if (!arguments.length) return sizeDomain;
+    sizeDomain = _v;
+    return my;
+  };
+
+  /**
+   * Color Getter / Setter
+   *
+   * @param {string} _v - Color (e.g. 'red' or '#ff0000').
+   * @returns {*}
+   */
+  my.color = function(_v) {
+    if (!arguments.length) return color;
+    color = _v;
+    return my;
+  };
+
+  /**
+   * Vector Function Getter / Setter
+   *
+   * @param {string} _v - Vector Function.
+   * @returns {*}
+   */
+  my.vectorFunction = function(_v) {
+    if (!arguments.length) return vectorFunction;
+    vectorFunction = _v;
+    return my;
+  };
+
+  return my;
 }

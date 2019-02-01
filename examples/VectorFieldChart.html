@@ -32,11 +32,20 @@
     var yScale = d3.scaleLinear().domain(d3.extent(yRange)).range([0, 40]);
     var zScale = d3.scaleLinear().domain(d3.extent(zRange)).range([0, 40]);
 
+    vectorFunction = function(x, y, z) {
+      return {
+        x: 1/x,
+        y: 1/y,
+        z: 1/z
+      };
+    };
+
     var viewpoint = d3.x3dom.component.viewpoint();
     var vectorFields = d3.x3dom.component.vectorFields()
       .xScale(xScale)
       .yScale(yScale)
-      .zScale(zScale);
+      .zScale(zScale)
+      .vectorFunction(vectorFunction);
 
     var values = [];
     xRange.forEach(function(x) {
@@ -48,9 +57,9 @@
             x: x,
             y: y,
             z: z,
-            vx: (1/x),
-            vy: (1/y),
-            vz: (1/x)
+            vx: x,
+            vy: y,
+            vz: z
           });
         });
       });
