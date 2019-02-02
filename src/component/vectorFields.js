@@ -43,7 +43,7 @@ export default function() {
    * @private
    * @param {Array} data - Chart data.
    */
-  function init(data) {
+  const init = function(data) {
     const { coordinatesMax } = dataTransform(data).summary();
     const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
     const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
@@ -82,7 +82,7 @@ export default function() {
         .domain(extent)
         .range(sizeDomain);
     }
-  }
+  };
 
   /**
    * Constructor
@@ -91,7 +91,7 @@ export default function() {
    * @alias vectorFields
    * @param {d3.selection} selection - The chart holder D3 selection.
    */
-  function my(selection) {
+  const my = function(selection) {
     selection.classed(classed, true);
 
     selection.each((data) => {
@@ -158,7 +158,7 @@ export default function() {
       arrows.exit()
         .remove();
     });
-  }
+  };
 
   /**
    * Dimensions Getter / Setter

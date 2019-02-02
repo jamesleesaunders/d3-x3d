@@ -36,7 +36,7 @@ export default function() {
 	 * @private
 	 * @param {Array} data - Chart data.
 	 */
-	function init(data) {
+  const init = function(data) {
 		const { rowKeys, columnKeys, valueMax } = dataTransform(data).summary();
 		const valueExtent = [0, valueMax];
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
@@ -66,7 +66,7 @@ export default function() {
 				.domain(columnKeys)
 				.range(colors);
 		}
-	}
+	};
 
 	/**
 	 * Constructor
@@ -75,7 +75,7 @@ export default function() {
 	 * @alias ribbonChartMultiSeries
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
-	function my(selection) {
+  const my = function(selection) {
 		const x3d = selection.append("x3d")
 			.attr("width", width + "px")
 			.attr("height", height + "px");
@@ -130,7 +130,7 @@ export default function() {
 				.datum(data)
 				.call(chart);
 		});
-	}
+	};
 
 	/**
 	 * Width Getter / Setter

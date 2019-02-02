@@ -41,9 +41,9 @@ export default function() {
 	 * @param {string} axisDir
 	 * @returns {number[]}
 	 */
-	function getAxisDirectionVector(axisDir) {
+	const getAxisDirectionVector = function(axisDir) {
 		return axisDirectionVectors[axisDir];
-	}
+	};
 
 	/**
 	 * Get Axis Rotation Vector
@@ -52,9 +52,9 @@ export default function() {
 	 * @param {string} axisDir
 	 * @returns {number[]}
 	 */
-	function getAxisRotationVector(axisDir) {
+  const getAxisRotationVector = function(axisDir) {
 		return axisRotationVectors[axisDir];
-	}
+	};
 
 	/**
 	 * Constructor
@@ -63,7 +63,7 @@ export default function() {
 	 * @alias axis
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
-	function my(selection) {
+  const my = function(selection) {
 		selection.classed(classed, true);
 
 		const makeSolid = (selection, color) => {
@@ -146,7 +146,7 @@ export default function() {
 			.append("cylinder")
 			.attr("radius", 0.05)
 			.attr("height", tickSize);
-	}
+	};
 
 	/**
 	 * Dimensions Getter / Setter

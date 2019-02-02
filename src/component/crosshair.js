@@ -25,7 +25,7 @@ export default function() {
 	 * @alias crosshair
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
-	function my(selection) {
+  const my = function(selection) {
 		selection.classed(classed, true);
 
 		selection.each((data) => {
@@ -83,7 +83,7 @@ export default function() {
 				.attr("translation", (d) => getPositionVector(d))
 				.attr("rotation", (d) => getRotationVector(d));
 		});
-	}
+	};
 
 	/**
 	 * Dimensions Getter / Setter

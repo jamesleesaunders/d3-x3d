@@ -24,7 +24,7 @@ export default function() {
 	 * @private
 	 * @param {Array} data - Chart data.
 	 */
-	function init(data) {
+  const init = function(data) {
 		const { columnKeys, valueMax } = dataTransform(data).summary();
 		const valueExtent = [0, valueMax];
 		const { x: dimensionX, y: dimensionY } = dimensions;
@@ -47,7 +47,7 @@ export default function() {
 				.domain(columnKeys)
 				.range(colors);
 		}
-	}
+	};
 
 	/**
 	 * Constructor
@@ -56,7 +56,7 @@ export default function() {
 	 * @alias bars
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
-	function my(selection) {
+  const my = function(selection) {
 		selection.classed(classed, true);
 
 		selection.each((data) => {
@@ -109,7 +109,7 @@ export default function() {
 			bars.exit()
 				.remove();
 		});
-	}
+	};
 
 	/**
 	 * Dimensions Getter / Setter

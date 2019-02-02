@@ -495,9 +495,9 @@ function componentAxis () {
   * @param {string} axisDir
   * @returns {number[]}
   */
-	function getAxisDirectionVector(axisDir) {
+	var getAxisDirectionVector = function getAxisDirectionVector(axisDir) {
 		return axisDirectionVectors[axisDir];
-	}
+	};
 
 	/**
   * Get Axis Rotation Vector
@@ -506,9 +506,9 @@ function componentAxis () {
   * @param {string} axisDir
   * @returns {number[]}
   */
-	function getAxisRotationVector(axisDir) {
+	var getAxisRotationVector = function getAxisRotationVector(axisDir) {
 		return axisRotationVectors[axisDir];
-	}
+	};
 
 	/**
   * Constructor
@@ -517,7 +517,7 @@ function componentAxis () {
   * @alias axis
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
-	function my(selection) {
+	var my = function my(selection) {
 		selection.classed(classed, true);
 
 		var makeSolid = function makeSolid(selection, color) {
@@ -576,7 +576,7 @@ function componentAxis () {
 		line.attr("translation", tickDirectionVector.map(function (d) {
 			return d * tickSize / 2;
 		}).join(" ")).attr("rotation", tickRotationVector.join(" ")).attr("class", "tickLine").append("shape").call(makeSolid, "#d3d3d3").append("cylinder").attr("radius", 0.05).attr("height", tickSize);
-	}
+	};
 
 	/**
   * Dimensions Getter / Setter
@@ -708,109 +708,109 @@ function componentAxis () {
  */
 function componentAxisThreePlane () {
 
-	/* Default Properties */
-	var dimensions = { x: 40, y: 40, z: 40 };
-	var colors = ["blue", "red", "green"];
-	var classed = "x3dAxisThreePlane";
+  /* Default Properties */
+  var dimensions = { x: 40, y: 40, z: 40 };
+  var colors = ["blue", "red", "green"];
+  var classed = "x3dAxisThreePlane";
 
-	/* Scales */
-	var xScale = void 0;
-	var yScale = void 0;
-	var zScale = void 0;
+  /* Scales */
+  var xScale = void 0;
+  var yScale = void 0;
+  var zScale = void 0;
 
-	/**
-  * Constructor
-  *
-  * @constructor
-  * @alias axisThreePlane
-  * @param {d3.selection} selection - The chart holder D3 selection.
-  */
-	function my(selection) {
+  /**
+   * Constructor
+   *
+   * @constructor
+   * @alias axisThreePlane
+   * @param {d3.selection} selection - The chart holder D3 selection.
+   */
+  var my = function my(selection) {
+    var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
 
-		var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
-		selection.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
-			return d;
-		});
+    selection.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+      return d;
+    });
 
-		// Construct Axis Components
-		var xzAxis = componentAxis().scale(xScale).direction("x").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
+    // Construct Axis Components
+    var xzAxis = componentAxis().scale(xScale).direction("x").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
 
-		var yzAxis = componentAxis().scale(yScale).direction("y").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("red");
+    var yzAxis = componentAxis().scale(yScale).direction("y").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("red");
 
-		var yxAxis = componentAxis().scale(yScale).direction("y").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).tickFormat("").color("red");
+    var yxAxis = componentAxis().scale(yScale).direction("y").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).tickFormat("").color("red");
 
-		var zxAxis = componentAxis().scale(zScale).direction("z").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color("black");
+    var zxAxis = componentAxis().scale(zScale).direction("z").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color("black");
 
-		selection.select(".xzAxis").call(xzAxis);
+    selection.select(".xzAxis").call(xzAxis);
 
-		selection.select(".yzAxis").call(yzAxis);
+    selection.select(".yzAxis").call(yzAxis);
 
-		selection.select(".yxAxis").call(yxAxis);
+    selection.select(".yxAxis").call(yxAxis);
 
-		selection.select(".zxAxis").call(zxAxis);
-	}
+    selection.select(".zxAxis").call(zxAxis);
+  };
 
-	/**
-  * Dimensions Getter / Setter
-  *
-  * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-  * @returns {*}
-  */
-	my.dimensions = function (_v) {
-		if (!arguments.length) return dimensions;
-		dimensions = _v;
-		return this;
-	};
+  /**
+   * Dimensions Getter / Setter
+   *
+   * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+   * @returns {*}
+   */
+  my.dimensions = function (_v) {
+    if (!arguments.length) return dimensions;
+    dimensions = _v;
+    return this;
+  };
 
-	/**
-  * X Scale Getter / Setter
-  *
-  * @param {d3.scale} _v - D3 scale.
-  * @returns {*}
-  */
-	my.xScale = function (_v) {
-		if (!arguments.length) return xScale;
-		xScale = _v;
-		return my;
-	};
+  /**
+   * X Scale Getter / Setter
+   *
+   * @param {d3.scale} _v - D3 scale.
+   * @returns {*}
+   */
+  my.xScale = function (_v) {
+    if (!arguments.length) return xScale;
+    xScale = _v;
+    return my;
+  };
 
-	/**
-  * Y Scale Getter / Setter
-  *
-  * @param {d3.scale} _v - D3 scale.
-  * @returns {*}
-  */
-	my.yScale = function (_v) {
-		if (!arguments.length) return yScale;
-		yScale = _v;
-		return my;
-	};
+  /**
+   * Y Scale Getter / Setter
+   *
+   * @param {d3.scale} _v - D3 scale.
+   * @returns {*}
+   */
+  my.yScale = function (_v) {
+    if (!arguments.length) return yScale;
+    yScale = _v;
+    return my;
+  };
 
-	/**
-  * Z Scale Getter / Setter
-  *
-  * @param {d3.scale} _v - D3 scale.
-  * @returns {*}
-  */
-	my.zScale = function (_v) {
-		if (!arguments.length) return zScale;
-		zScale = _v;
-		return my;
-	};
+  /**
+   * Z Scale Getter / Setter
+   *
+   * @param {d3.scale} _v - D3 scale.
+   * @returns {*}
+   */
+  my.zScale = function (_v) {
+    if (!arguments.length) return zScale;
+    zScale = _v;
+    return my;
+  };
 
-	/**
-  * Colors Getter / Setter
-  *
-  * @param {Array} _v - Array of colours used by color scale.
-  * @returns {*}
-  */
-	my.colors = function (_v) {
-		if (!arguments.length) return colors;
-		colors = _v;
-		return my;
-	};
+  /**
+   * Colors Getter / Setter
+   *
+   * @param {Array} _v - Array of colours used by color scale.
+   * @returns {*}
+   */
+  my.colors = function (_v) {
+    if (!arguments.length) return colors;
+    colors = _v;
+    return my;
+  };
 
-	return my;
+  return my;
 }
 
 /**
@@ -836,7 +836,7 @@ function componentBars () {
   * @private
   * @param {Array} data - Chart data.
   */
-	function init(data) {
+	var init = function init(data) {
 		var _dataTransform$summar = dataTransform(data).summary(),
 		    columnKeys = _dataTransform$summar.columnKeys,
 		    valueMax = _dataTransform$summar.valueMax;
@@ -858,7 +858,7 @@ function componentBars () {
 		if (typeof colorScale === "undefined") {
 			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
 		}
-	}
+	};
 
 	/**
   * Constructor
@@ -867,7 +867,7 @@ function componentBars () {
   * @alias bars
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
-	function my(selection) {
+	var my = function my(selection) {
 		selection.classed(classed, true);
 
 		selection.each(function (data) {
@@ -911,7 +911,7 @@ function componentBars () {
 
 			bars.exit().remove();
 		});
-	}
+	};
 
 	/**
   * Dimensions Getter / Setter
@@ -1000,7 +1000,7 @@ function componentBarsMultiSeries () {
   * @private
   * @param {Array} data - Chart data.
   */
-	function init(data) {
+	var init = function init(data) {
 		var _dataTransform$summar = dataTransform(data).summary(),
 		    rowKeys = _dataTransform$summar.rowKeys,
 		    columnKeys = _dataTransform$summar.columnKeys,
@@ -1028,7 +1028,7 @@ function componentBarsMultiSeries () {
 		if (typeof colorScale === "undefined") {
 			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
 		}
-	}
+	};
 
 	/**
   * Constructor
@@ -1037,7 +1037,7 @@ function componentBarsMultiSeries () {
   * @alias barsMultiSeries
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
-	function my(selection) {
+	var my = function my(selection) {
 		selection.classed(classed, true);
 
 		selection.each(function (data) {
@@ -1064,7 +1064,7 @@ function componentBarsMultiSeries () {
 
 			barGroup.exit().remove();
 		});
-	}
+	};
 
 	/**
   * Dimensions Getter / Setter
@@ -1166,7 +1166,7 @@ function componentBubbles () {
   * @private
   * @param {Array} data - Chart data.
   */
-	function init(data) {
+	var init = function init(data) {
 		var _dataTransform$summar = dataTransform(data).summary(),
 		    valueExtent = _dataTransform$summar.valueExtent,
 		    coordinatesMax = _dataTransform$summar.coordinatesMax;
@@ -1195,7 +1195,7 @@ function componentBubbles () {
 		if (typeof sizeScale === "undefined") {
 			sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeDomain);
 		}
-	}
+	};
 
 	/**
   * Constructor
@@ -1204,7 +1204,7 @@ function componentBubbles () {
   * @alias bubbles
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
-	function my(selection) {
+	var my = function my(selection) {
 		selection.classed(classed, true);
 
 		selection.each(function (data) {
@@ -1242,7 +1242,7 @@ function componentBubbles () {
 
 			bubbles.exit().remove();
 		});
-	}
+	};
 
 	/**
   * Dimensions Getter / Setter
@@ -1357,7 +1357,7 @@ function componentBubblesMultiSeries () {
   * @private
   * @param {Array} data - Chart data.
   */
-	function init(data) {
+	var init = function init(data) {
 		var _dataTransform$summar = dataTransform(data).summary(),
 		    rowKeys = _dataTransform$summar.rowKeys,
 		    valueExtent = _dataTransform$summar.valueExtent,
@@ -1391,7 +1391,7 @@ function componentBubblesMultiSeries () {
 		if (typeof sizeScale === "undefined") {
 			sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeDomain);
 		}
-	}
+	};
 
 	/**
   * Constructor
@@ -1400,7 +1400,7 @@ function componentBubblesMultiSeries () {
   * @alias bubblesMultiSeries
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
-	function my(selection) {
+	var my = function my(selection) {
 		selection.classed(classed, true);
 
 		selection.each(function (data) {
@@ -1420,7 +1420,7 @@ function componentBubblesMultiSeries () {
 
 			bubbleGroup.exit().remove();
 		});
-	}
+	};
 
 	/**
   * Dimensions Getter / Setter
@@ -1546,7 +1546,7 @@ function componentCrosshair () {
   * @alias crosshair
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
-	function my(selection) {
+	var my = function my(selection) {
 		selection.classed(classed, true);
 
 		selection.each(function (data) {
@@ -1602,7 +1602,7 @@ function componentCrosshair () {
 				return getRotationVector(d);
 			});
 		});
-	}
+	};
 
 	/**
   * Dimensions Getter / Setter
@@ -1689,7 +1689,7 @@ function componentRibbon () {
   * @private
   * @param {Array} data - Chart data.
   */
-	function init(data) {
+	var init = function init(data) {
 		var _dataTransform$summar = dataTransform(data).summary(),
 		    columnKeys = _dataTransform$summar.columnKeys,
 		    valueMax = _dataTransform$summar.valueMax;
@@ -1707,7 +1707,7 @@ function componentRibbon () {
 		if (typeof yScale === "undefined") {
 			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
 		}
-	}
+	};
 
 	/**
   * Constructor
@@ -1716,7 +1716,7 @@ function componentRibbon () {
   * @alias ribbon
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
-	function my(selection) {
+	var my = function my(selection) {
 		selection.classed(classed, true);
 
 		selection.each(function (data) {
@@ -1792,7 +1792,7 @@ function componentRibbon () {
 
 			ribbon.exit().remove();
 		});
-	}
+	};
 
 	/**
   * Dimensions Getter / Setter
@@ -1869,7 +1869,7 @@ function componentRibbonMultiSeries () {
   * @private
   * @param {Array} data - Chart data.
   */
-	function init(data) {
+	var init = function init(data) {
 		var _dataTransform$summar = dataTransform(data).summary(),
 		    rowKeys = _dataTransform$summar.rowKeys,
 		    columnKeys = _dataTransform$summar.columnKeys,
@@ -1897,7 +1897,7 @@ function componentRibbonMultiSeries () {
 		if (typeof colorScale === "undefined") {
 			colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
 		}
-	}
+	};
 
 	/**
   * Constructor
@@ -1906,7 +1906,7 @@ function componentRibbonMultiSeries () {
   * @alias ribbonMultiSeries
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
-	function my(selection) {
+	var my = function my(selection) {
 		selection.classed(classed, true);
 
 		selection.each(function (data) {
@@ -1935,7 +1935,7 @@ function componentRibbonMultiSeries () {
 
 			ribbonGroup.exit().remove();
 		});
-	}
+	};
 
 	/**
   * Dimensions Getter / Setter
@@ -2037,13 +2037,13 @@ function componentSurface () {
   * @param arr
   * @returns {*}
   */
-	function array2dToString(arr) {
+	var array2dToString = function array2dToString(arr) {
 		return arr.reduce(function (a, b) {
 			return a.concat(b);
 		}, []).reduce(function (a, b) {
 			return a.concat(b);
 		}, []).join(" ");
-	}
+	};
 
 	/**
   * Initialise Data and Scales
@@ -2051,7 +2051,7 @@ function componentSurface () {
   * @private
   * @param {Array} data - Chart data.
   */
-	function init(data) {
+	var init = function init(data) {
 		var _dataTransform$summar = dataTransform(data).summary(),
 		    rowKeys = _dataTransform$summar.rowKeys,
 		    columnKeys = _dataTransform$summar.columnKeys,
@@ -2079,7 +2079,7 @@ function componentSurface () {
 		if (typeof colorScale === "undefined") {
 			colorScale = d3.scaleLinear().domain(valueExtent).range(colors).interpolate(d3.interpolateLab);
 		}
-	}
+	};
 
 	/**
   * Constructor
@@ -2088,7 +2088,7 @@ function componentSurface () {
   * @alias surface
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
-	function my(selection) {
+	var my = function my(selection) {
 		selection.classed(classed, true);
 
 		selection.each(function (data) {
@@ -2152,7 +2152,7 @@ function componentSurface () {
 
 			surface.exit().remove();
 		});
-	}
+	};
 
 	/**
   * Dimensions Getter / Setter
@@ -2270,7 +2270,7 @@ function componentVectorFields () {
    * @private
    * @param {Array} data - Chart data.
    */
-  function init(data) {
+  var init = function init(data) {
     var _dataTransform$summar = dataTransform(data).summary(),
         coordinatesMax = _dataTransform$summar.coordinatesMax;
 
@@ -2317,7 +2317,7 @@ function componentVectorFields () {
     if (typeof sizeScale === "undefined") {
       sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
     }
-  }
+  };
 
   /**
    * Constructor
@@ -2326,7 +2326,7 @@ function componentVectorFields () {
    * @alias vectorFields
    * @param {d3.selection} selection - The chart holder D3 selection.
    */
-  function my(selection) {
+  var my = function my(selection) {
     selection.classed(classed, true);
 
     selection.each(function (data) {
@@ -2398,7 +2398,7 @@ function componentVectorFields () {
 
       arrows.exit().remove();
     });
-  }
+  };
 
   /**
    * Dimensions Getter / Setter
@@ -2520,9 +2520,9 @@ function componentViewpoint () {
   * @alias viewpoint
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
-	function my(selection) {
+	var my = function my(selection) {
 		selection.append("viewpoint").classed(classed, true).attr("centerofrotation", centerOfRotation.join(" ")).attr("position", viewPosition.join(" ")).attr("orientation", viewOrientation.join(" ")).attr("fieldofview", fieldOfView).attr("set_bind", "true");
-	}
+	};
 
 	/**
   * Set Quick Viewpoint
@@ -2663,7 +2663,7 @@ function chartBarChartMultiSeries () {
   * @private
   * @param {Array} data - Chart data.
   */
-	function init(data) {
+	var init = function init(data) {
 		var _dataTransform$summar = dataTransform(data).summary(),
 		    rowKeys = _dataTransform$summar.rowKeys,
 		    columnKeys = _dataTransform$summar.columnKeys,
@@ -2691,7 +2691,7 @@ function chartBarChartMultiSeries () {
 		if (typeof colorScale === "undefined") {
 			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
 		}
-	}
+	};
 
 	/**
   * Constructor
@@ -2700,7 +2700,7 @@ function chartBarChartMultiSeries () {
   * @alias barChartMultiSeries
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
-	function my(selection) {
+	var my = function my(selection) {
 		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
 
 		if (debug) {
@@ -2733,7 +2733,7 @@ function chartBarChartMultiSeries () {
 
 			scene.select(".chart").datum(data).call(chart);
 		});
-	}
+	};
 
 	/**
   * Width Getter / Setter
@@ -2879,7 +2879,7 @@ function chartBarChartVertical () {
   * @private
   * @param {Array} data - Chart data.
   */
-	function init(data) {
+	var init = function init(data) {
 		var _dataTransform$summar = dataTransform(data).summary(),
 		    columnKeys = _dataTransform$summar.columnKeys,
 		    valueMax = _dataTransform$summar.valueMax;
@@ -2901,7 +2901,7 @@ function chartBarChartVertical () {
 		if (typeof colorScale === "undefined") {
 			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
 		}
-	}
+	};
 
 	/**
   * Constructor
@@ -2910,7 +2910,7 @@ function chartBarChartVertical () {
   * @alias barChartVertical
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
-	function my(selection) {
+	var my = function my(selection) {
 		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
 
 		if (debug) {
@@ -2945,7 +2945,7 @@ function chartBarChartVertical () {
 
 			scene.select(".chart").datum(data).call(chart);
 		});
-	}
+	};
 
 	/**
   * Width Getter / Setter
@@ -3082,7 +3082,7 @@ function chartBubbleChart () {
   * @private
   * @param {Array} data - Chart data.
   */
-	function init(data) {
+	var init = function init(data) {
 		var _dataTransform$summar = dataTransform(data).summary(),
 		    valueExtent = _dataTransform$summar.valueExtent,
 		    coordinatesMax = _dataTransform$summar.coordinatesMax,
@@ -3116,7 +3116,7 @@ function chartBubbleChart () {
 		if (typeof sizeScale === "undefined") {
 			sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeDomain);
 		}
-	}
+	};
 
 	/**
   * Constructor
@@ -3125,7 +3125,7 @@ function chartBubbleChart () {
   * @alias bubbleChart
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
-	function my(selection) {
+	var my = function my(selection) {
 		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
 
 		if (debug) {
@@ -3158,7 +3158,7 @@ function chartBubbleChart () {
 
 			scene.select(".chart").datum(data).call(chart);
 		});
-	}
+	};
 
 	/**
   * Width Getter / Setter
@@ -3329,7 +3329,7 @@ function chartRibbonChartMultiSeries () {
   * @private
   * @param {Array} data - Chart data.
   */
-	function init(data) {
+	var init = function init(data) {
 		var _dataTransform$summar = dataTransform(data).summary(),
 		    rowKeys = _dataTransform$summar.rowKeys,
 		    columnKeys = _dataTransform$summar.columnKeys,
@@ -3357,7 +3357,7 @@ function chartRibbonChartMultiSeries () {
 		if (typeof colorScale === "undefined") {
 			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
 		}
-	}
+	};
 
 	/**
   * Constructor
@@ -3366,7 +3366,7 @@ function chartRibbonChartMultiSeries () {
   * @alias ribbonChartMultiSeries
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
-	function my(selection) {
+	var my = function my(selection) {
 		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
 
 		if (debug) {
@@ -3399,7 +3399,7 @@ function chartRibbonChartMultiSeries () {
 
 			scene.select(".chart").datum(data).call(chart);
 		});
-	}
+	};
 
 	/**
   * Width Getter / Setter
@@ -3545,7 +3545,7 @@ function chartScatterPlot () {
   * @private
   * @param {Array} data - Chart data.
   */
-	function init(data) {
+	var init = function init(data) {
 		var _dataTransform$summar = dataTransform(data).summary(),
 		    coordinatesMax = _dataTransform$summar.coordinatesMax;
 
@@ -3569,7 +3569,7 @@ function chartScatterPlot () {
 		if (typeof zScale === "undefined") {
 			zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
 		}
-	}
+	};
 
 	/**
   * Constructor
@@ -3578,7 +3578,7 @@ function chartScatterPlot () {
   * @alias scatterPlot
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
-	function my(selection) {
+	var my = function my(selection) {
 		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
 
 		if (debug) {
@@ -3609,7 +3609,7 @@ function chartScatterPlot () {
 
 			scene.select(".chart").datum(data).call(chart);
 		});
-	}
+	};
 
 	/**
   * Width Getter / Setter
@@ -3744,7 +3744,7 @@ function chartSurfacePlot () {
   * @private
   * @param {Array} data - Chart data.
   */
-	function init(data) {
+	var init = function init(data) {
 		var _dataTransform$summar = dataTransform(data).summary(),
 		    rowKeys = _dataTransform$summar.rowKeys,
 		    columnKeys = _dataTransform$summar.columnKeys,
@@ -3772,7 +3772,7 @@ function chartSurfacePlot () {
 		if (typeof colorScale === "undefined") {
 			colorScale = d3.scaleLinear().domain(valueExtent).range(colors).interpolate(d3.interpolateLab);
 		}
-	}
+	};
 
 	/**
   * Constructor
@@ -3781,7 +3781,7 @@ function chartSurfacePlot () {
   * @alias surfacePlot
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
-	function my(selection) {
+	var my = function my(selection) {
 		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
 
 		if (debug) {
@@ -3812,7 +3812,7 @@ function chartSurfacePlot () {
 
 			scene.select(".chart").datum(data).call(chart);
 		});
-	}
+	};
 
 	/**
   * Width Getter / Setter
@@ -3974,7 +3974,7 @@ function chartVectorField () {
   * @private
   * @param {Array} data - Chart data.
   */
-	function init(data) {
+	var init = function init(data) {
 		var _dataTransform$summar = dataTransform(data).summary(),
 		    coordinatesMax = _dataTransform$summar.coordinatesMax;
 
@@ -3998,7 +3998,7 @@ function chartVectorField () {
 		if (typeof zScale === "undefined") {
 			zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
 		}
-	}
+	};
 
 	/**
   * Constructor
@@ -4007,7 +4007,7 @@ function chartVectorField () {
   * @alias vectorFieldChart
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
-	function my(selection) {
+	var my = function my(selection) {
 		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
 
 		if (debug) {
@@ -4038,7 +4038,7 @@ function chartVectorField () {
 
 			scene.select(".chart").datum(data).call(chart);
 		});
-	}
+	};
 
 	/**
   * Width Getter / Setter
