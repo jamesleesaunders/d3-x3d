@@ -29,21 +29,21 @@ export default function() {
 	let yScale;
 	let zScale;
 
-  /**
-   * Vector Field Function
-   *
-   * @param x
-   * @param y
-   * @param z
-   * @returns {{x: number, y: number, z: number}}
-   */
-  let vectorFunction = function(x, y, z) {
-    return {
-      x: x,
-      y: y,
-      z: z
-    };
-  };
+	/**
+	 * Vector Field Function
+	 *
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @returns {{x: number, y: number, z: number}}
+	 */
+	let vectorFunction = function(x, y, z) {
+		return {
+			x: x,
+			y: y,
+			z: z
+		};
+	};
 
 	/**
 	 * Initialise Data and Scales
@@ -51,7 +51,7 @@ export default function() {
 	 * @private
 	 * @param {Array} data - Chart data.
 	 */
-  const init = function(data) {
+	const init = function(data) {
 		const { coordinatesMax } = dataTransform(data).summary();
 		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
@@ -82,7 +82,7 @@ export default function() {
 	 * @alias vectorFieldChart
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
-  const my = function(selection) {
+	const my = function(selection) {
 		const x3d = selection.append("x3d")
 			.attr("width", width + "px")
 			.attr("height", height + "px");
@@ -110,7 +110,7 @@ export default function() {
 			init(data);
 
 			// Construct Axis Component
-			const axis = component.axisThreePlane()
+			const axis = component.crosshair()
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale);
@@ -124,6 +124,7 @@ export default function() {
 				.sizeDomain([1, 6]);
 
 			scene.select(".axis")
+				.datum({ x: 0, y: 0, z: 0 })
 				.call(axis);
 
 			scene.select(".chart")
@@ -228,17 +229,17 @@ export default function() {
 		return my;
 	};
 
-  /**
-   * Vector Function Getter / Setter
-   *
-   * @param {string} _v - Vector Function.
-   * @returns {*}
-   */
-  my.vectorFunction = function(_v) {
-    if (!arguments.length) return vectorFunction;
-    vectorFunction = _v;
-    return my;
-  };
+	/**
+	 * Vector Function Getter / Setter
+	 *
+	 * @param {string} _v - Vector Function.
+	 * @returns {*}
+	 */
+	my.vectorFunction = function(_v) {
+		if (!arguments.length) return vectorFunction;
+		vectorFunction = _v;
+		return my;
+	};
 
 	return my;
 }

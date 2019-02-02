@@ -708,109 +708,109 @@ function componentAxis () {
  */
 function componentAxisThreePlane () {
 
-  /* Default Properties */
-  var dimensions = { x: 40, y: 40, z: 40 };
-  var colors = ["blue", "red", "green"];
-  var classed = "x3dAxisThreePlane";
+	/* Default Properties */
+	var dimensions = { x: 40, y: 40, z: 40 };
+	var colors = ["blue", "red", "green"];
+	var classed = "x3dAxisThreePlane";
 
-  /* Scales */
-  var xScale = void 0;
-  var yScale = void 0;
-  var zScale = void 0;
+	/* Scales */
+	var xScale = void 0;
+	var yScale = void 0;
+	var zScale = void 0;
 
-  /**
-   * Constructor
-   *
-   * @constructor
-   * @alias axisThreePlane
-   * @param {d3.selection} selection - The chart holder D3 selection.
-   */
-  var my = function my(selection) {
-    var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
+	/**
+  * Constructor
+  *
+  * @constructor
+  * @alias axisThreePlane
+  * @param {d3.selection} selection - The chart holder D3 selection.
+  */
+	var my = function my(selection) {
+		var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
 
-    selection.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
-      return d;
-    });
+		selection.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+			return d;
+		});
 
-    // Construct Axis Components
-    var xzAxis = componentAxis().scale(xScale).direction("x").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
+		// Construct Axis Components
+		var xzAxis = componentAxis().scale(xScale).direction("x").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
 
-    var yzAxis = componentAxis().scale(yScale).direction("y").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("red");
+		var yzAxis = componentAxis().scale(yScale).direction("y").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("red");
 
-    var yxAxis = componentAxis().scale(yScale).direction("y").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).tickFormat("").color("red");
+		var yxAxis = componentAxis().scale(yScale).direction("y").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).tickFormat("").color("red");
 
-    var zxAxis = componentAxis().scale(zScale).direction("z").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color("black");
+		var zxAxis = componentAxis().scale(zScale).direction("z").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color("black");
 
-    selection.select(".xzAxis").call(xzAxis);
+		selection.select(".xzAxis").call(xzAxis);
 
-    selection.select(".yzAxis").call(yzAxis);
+		selection.select(".yzAxis").call(yzAxis);
 
-    selection.select(".yxAxis").call(yxAxis);
+		selection.select(".yxAxis").call(yxAxis);
 
-    selection.select(".zxAxis").call(zxAxis);
-  };
+		selection.select(".zxAxis").call(zxAxis);
+	};
 
-  /**
-   * Dimensions Getter / Setter
-   *
-   * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-   * @returns {*}
-   */
-  my.dimensions = function (_v) {
-    if (!arguments.length) return dimensions;
-    dimensions = _v;
-    return this;
-  };
+	/**
+  * Dimensions Getter / Setter
+  *
+  * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+  * @returns {*}
+  */
+	my.dimensions = function (_v) {
+		if (!arguments.length) return dimensions;
+		dimensions = _v;
+		return this;
+	};
 
-  /**
-   * X Scale Getter / Setter
-   *
-   * @param {d3.scale} _v - D3 scale.
-   * @returns {*}
-   */
-  my.xScale = function (_v) {
-    if (!arguments.length) return xScale;
-    xScale = _v;
-    return my;
-  };
+	/**
+  * X Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.xScale = function (_v) {
+		if (!arguments.length) return xScale;
+		xScale = _v;
+		return my;
+	};
 
-  /**
-   * Y Scale Getter / Setter
-   *
-   * @param {d3.scale} _v - D3 scale.
-   * @returns {*}
-   */
-  my.yScale = function (_v) {
-    if (!arguments.length) return yScale;
-    yScale = _v;
-    return my;
-  };
+	/**
+  * Y Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.yScale = function (_v) {
+		if (!arguments.length) return yScale;
+		yScale = _v;
+		return my;
+	};
 
-  /**
-   * Z Scale Getter / Setter
-   *
-   * @param {d3.scale} _v - D3 scale.
-   * @returns {*}
-   */
-  my.zScale = function (_v) {
-    if (!arguments.length) return zScale;
-    zScale = _v;
-    return my;
-  };
+	/**
+  * Z Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.zScale = function (_v) {
+		if (!arguments.length) return zScale;
+		zScale = _v;
+		return my;
+	};
 
-  /**
-   * Colors Getter / Setter
-   *
-   * @param {Array} _v - Array of colours used by color scale.
-   * @returns {*}
-   */
-  my.colors = function (_v) {
-    if (!arguments.length) return colors;
-    colors = _v;
-    return my;
-  };
+	/**
+  * Colors Getter / Setter
+  *
+  * @param {Array} _v - Array of colours used by color scale.
+  * @returns {*}
+  */
+	my.colors = function (_v) {
+		if (!arguments.length) return colors;
+		colors = _v;
+		return my;
+	};
 
-  return my;
+	return my;
 }
 
 /**
@@ -2236,267 +2236,267 @@ function componentSurface () {
  */
 function componentVectorFields () {
 
-  /* Default Properties */
-  var dimensions = { x: 40, y: 40, z: 40 };
-  var color = "blue";
-  var classed = "x3dVectorFields";
+	/* Default Properties */
+	var dimensions = { x: 40, y: 40, z: 40 };
+	var color = "blue";
+	var classed = "x3dVectorFields";
 
-  /* Scales */
-  var xScale = void 0;
-  var yScale = void 0;
-  var zScale = void 0;
-  var sizeScale = void 0;
-  var sizeDomain = [1, 6];
+	/* Scales */
+	var xScale = void 0;
+	var yScale = void 0;
+	var zScale = void 0;
+	var sizeScale = void 0;
+	var sizeDomain = [1, 6];
 
-  /**
-   * Vector Field Function
-   *
-   * @param x
-   * @param y
-   * @param z
-   * @returns {{x: number, y: number, z: number}}
-   */
-  var vectorFunction = function vectorFunction(x, y, z) {
-    return {
-      x: x,
-      y: y,
-      z: z
-    };
-  };
+	/**
+  * Vector Field Function
+  *
+  * @param x
+  * @param y
+  * @param z
+  * @returns {{x: number, y: number, z: number}}
+  */
+	var vectorFunction = function vectorFunction(x, y, z) {
+		return {
+			x: x,
+			y: y,
+			z: z
+		};
+	};
 
-  /**
-   * Initialise Data and Scales
-   *
-   * @private
-   * @param {Array} data - Chart data.
-   */
-  var init = function init(data) {
-    var _dataTransform$summar = dataTransform(data).summary(),
-        coordinatesMax = _dataTransform$summar.coordinatesMax;
+	/**
+  * Initialise Data and Scales
+  *
+  * @private
+  * @param {Array} data - Chart data.
+  */
+	var init = function init(data) {
+		var _dataTransform$summar = dataTransform(data).summary(),
+		    coordinatesMax = _dataTransform$summar.coordinatesMax;
 
-    var maxX = coordinatesMax.x,
-        maxY = coordinatesMax.y,
-        maxZ = coordinatesMax.z;
-    var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y,
-        dimensionZ = _dimensions.z;
+		var maxX = coordinatesMax.x,
+		    maxY = coordinatesMax.y,
+		    maxZ = coordinatesMax.z;
+		var _dimensions = dimensions,
+		    dimensionX = _dimensions.x,
+		    dimensionY = _dimensions.y,
+		    dimensionZ = _dimensions.z;
 
 
-    var extent = d3.extent(data.values.map(function (f) {
-      var vx = void 0,
-          vy = void 0,
-          vz = void 0;
-      if ('vx' in f) {
-        vx = f.vx;
-        vy = f.vy;
-        vz = f.vz;
-      } else {
-        var _vectorFunction = vectorFunction(f.x, f.y, f.z);
+		var extent = d3.extent(data.values.map(function (f) {
+			var vx = void 0,
+			    vy = void 0,
+			    vz = void 0;
+			if ('vx' in f) {
+				vx = f.vx;
+				vy = f.vy;
+				vz = f.vz;
+			} else {
+				var _vectorFunction = vectorFunction(f.x, f.y, f.z);
 
-        vx = _vectorFunction.x;
-        vy = _vectorFunction.y;
-        vz = _vectorFunction.z;
-      }
+				vx = _vectorFunction.x;
+				vy = _vectorFunction.y;
+				vz = _vectorFunction.z;
+			}
 
-      return new x3dom.fields.SFVec3f(vx, vy, vz).length();
-    }));
+			return new x3dom.fields.SFVec3f(vx, vy, vz).length();
+		}));
 
-    if (typeof xScale === "undefined") {
-      xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
-    }
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
+		}
 
-    if (typeof yScale === "undefined") {
-      yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
-    }
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
+		}
 
-    if (typeof zScale === "undefined") {
-      zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
-    }
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
+		}
 
-    if (typeof sizeScale === "undefined") {
-      sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
-    }
-  };
+		if (typeof sizeScale === "undefined") {
+			sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
+		}
+	};
 
-  /**
-   * Constructor
-   *
-   * @constructor
-   * @alias vectorFields
-   * @param {d3.selection} selection - The chart holder D3 selection.
-   */
-  var my = function my(selection) {
-    selection.classed(classed, true);
+	/**
+  * Constructor
+  *
+  * @constructor
+  * @alias vectorFields
+  * @param {d3.selection} selection - The chart holder D3 selection.
+  */
+	var my = function my(selection) {
+		selection.classed(classed, true);
 
-    selection.each(function (data) {
-      init(data);
+		selection.each(function (data) {
+			init(data);
 
-      var vectorData = function vectorData(d) {
-        return d.values.map(function (f) {
+			var vectorData = function vectorData(d) {
+				return d.values.map(function (f) {
 
-          var vx = void 0,
-              vy = void 0,
-              vz = void 0;
-          if ('vx' in f) {
-            vx = f.vx;
-            vy = f.vy;
-            vz = f.vz;
-          } else {
-            var _vectorFunction2 = vectorFunction(f.x, f.y, f.z);
+					var vx = void 0,
+					    vy = void 0,
+					    vz = void 0;
+					if ('vx' in f) {
+						vx = f.vx;
+						vy = f.vy;
+						vz = f.vz;
+					} else {
+						var _vectorFunction2 = vectorFunction(f.x, f.y, f.z);
 
-            vx = _vectorFunction2.x;
-            vy = _vectorFunction2.y;
-            vz = _vectorFunction2.z;
-          }
+						vx = _vectorFunction2.x;
+						vy = _vectorFunction2.y;
+						vz = _vectorFunction2.z;
+					}
 
-          var fromVector = new x3dom.fields.SFVec3f(0, 1, 0);
-          var toVector = new x3dom.fields.SFVec3f(vx, vy, vz);
-          var qDir = x3dom.fields.Quaternion.rotateFromTo(fromVector, toVector);
-          var rot = qDir.toAxisAngle();
-          var len = sizeScale(toVector.length());
+					var fromVector = new x3dom.fields.SFVec3f(0, 1, 0);
+					var toVector = new x3dom.fields.SFVec3f(vx, vy, vz);
+					var qDir = x3dom.fields.Quaternion.rotateFromTo(fromVector, toVector);
+					var rot = qDir.toAxisAngle();
+					var len = sizeScale(toVector.length());
 
-          // Calculate transform-translation attr
-          f.translation = xScale(f.x) + " " + yScale(f.y) + " " + zScale(f.z);
+					// Calculate transform-translation attr
+					f.translation = xScale(f.x) + " " + yScale(f.y) + " " + zScale(f.z);
 
-          // Calculate vector length
-          f.length = len;
+					// Calculate vector length
+					f.length = len;
 
-          // Calculate transform-center attr
-          f.offset = "0 " + len / 2 + " 0";
+					// Calculate transform-center attr
+					f.offset = "0 " + len / 2 + " 0";
 
-          // Calculate transform-rotation attr
-          f.rotation = rot[0].x + " " + rot[0].y + " " + rot[0].z + " " + rot[1];
+					// Calculate transform-rotation attr
+					f.rotation = rot[0].x + " " + rot[0].y + " " + rot[0].z + " " + rot[1];
 
-          return f;
-        });
-      };
+					return f;
+				});
+			};
 
-      var arrows = selection.selectAll(".arrow").data(vectorData);
+			var arrows = selection.selectAll(".arrow").data(vectorData);
 
-      var arrowsEnter = arrows.enter().append("transform").attr("class", "arrow").attr("translation", function (d) {
-        return d.translation;
-      }).attr("rotation", function (d) {
-        return d.rotation;
-      }).append("transform").attr("translation", function (d) {
-        return d.offset;
-      });
+			var arrowsEnter = arrows.enter().append("transform").attr("class", "arrow").attr("translation", function (d) {
+				return d.translation;
+			}).attr("rotation", function (d) {
+				return d.rotation;
+			}).append("transform").attr("translation", function (d) {
+				return d.offset;
+			});
 
-      var shape = arrowsEnter.append("shape");
+			var shape = arrowsEnter.append("shape");
 
-      shape.append("appearance").append("material").attr("diffusecolor", color);
+			shape.append("appearance").append("material").attr("diffusecolor", color);
 
-      shape.append("cone").attr("height", function (d) {
-        return d.length;
-      }).attr("bottomradius", 0.4);
+			shape.append("cone").attr("height", function (d) {
+				return d.length;
+			}).attr("bottomradius", 0.4);
 
-      arrowsEnter.merge(arrows);
+			arrowsEnter.merge(arrows);
 
-      arrows.transition().attr("translation", function (d) {
-        return d.translation;
-      });
+			arrows.transition().attr("translation", function (d) {
+				return d.translation;
+			});
 
-      arrows.exit().remove();
-    });
-  };
+			arrows.exit().remove();
+		});
+	};
 
-  /**
-   * Dimensions Getter / Setter
-   *
-   * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-   * @returns {*}
-   */
-  my.dimensions = function (_v) {
-    if (!arguments.length) return dimensions;
-    dimensions = _v;
-    return this;
-  };
+	/**
+  * Dimensions Getter / Setter
+  *
+  * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+  * @returns {*}
+  */
+	my.dimensions = function (_v) {
+		if (!arguments.length) return dimensions;
+		dimensions = _v;
+		return this;
+	};
 
-  /**
-   * X Scale Getter / Setter
-   *
-   * @param {d3.scale} _v - D3 scale.
-   * @returns {*}
-   */
-  my.xScale = function (_v) {
-    if (!arguments.length) return xScale;
-    xScale = _v;
-    return my;
-  };
+	/**
+  * X Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.xScale = function (_v) {
+		if (!arguments.length) return xScale;
+		xScale = _v;
+		return my;
+	};
 
-  /**
-   * Y Scale Getter / Setter
-   *
-   * @param {d3.scale} _v - D3 scale.
-   * @returns {*}
-   */
-  my.yScale = function (_v) {
-    if (!arguments.length) return yScale;
-    yScale = _v;
-    return my;
-  };
+	/**
+  * Y Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.yScale = function (_v) {
+		if (!arguments.length) return yScale;
+		yScale = _v;
+		return my;
+	};
 
-  /**
-   * Z Scale Getter / Setter
-   *
-   * @param {d3.scale} _v - D3 scale.
-   * @returns {*}
-   */
-  my.zScale = function (_v) {
-    if (!arguments.length) return zScale;
-    zScale = _v;
-    return my;
-  };
+	/**
+  * Z Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.zScale = function (_v) {
+		if (!arguments.length) return zScale;
+		zScale = _v;
+		return my;
+	};
 
-  /**
-   * Size Scale Getter / Setter
-   *
-   * @param {d3.scale} _v - D3 color scale.
-   * @returns {*}
-   */
-  my.sizeScale = function (_v) {
-    if (!arguments.length) return sizeScale;
-    sizeScale = _v;
-    return my;
-  };
+	/**
+  * Size Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 color scale.
+  * @returns {*}
+  */
+	my.sizeScale = function (_v) {
+		if (!arguments.length) return sizeScale;
+		sizeScale = _v;
+		return my;
+	};
 
-  /**
-   * Size Domain Getter / Setter
-   *
-   * @param {number[]} _v - Size min and max (e.g. [1, 9]).
-   * @returns {*}
-   */
-  my.sizeDomain = function (_v) {
-    if (!arguments.length) return sizeDomain;
-    sizeDomain = _v;
-    return my;
-  };
+	/**
+  * Size Domain Getter / Setter
+  *
+  * @param {number[]} _v - Size min and max (e.g. [1, 9]).
+  * @returns {*}
+  */
+	my.sizeDomain = function (_v) {
+		if (!arguments.length) return sizeDomain;
+		sizeDomain = _v;
+		return my;
+	};
 
-  /**
-   * Color Getter / Setter
-   *
-   * @param {string} _v - Color (e.g. 'red' or '#ff0000').
-   * @returns {*}
-   */
-  my.color = function (_v) {
-    if (!arguments.length) return color;
-    color = _v;
-    return my;
-  };
+	/**
+  * Color Getter / Setter
+  *
+  * @param {string} _v - Color (e.g. 'red' or '#ff0000').
+  * @returns {*}
+  */
+	my.color = function (_v) {
+		if (!arguments.length) return color;
+		color = _v;
+		return my;
+	};
 
-  /**
-   * Vector Function Getter / Setter
-   *
-   * @param {string} _v - Vector Function.
-   * @returns {*}
-   */
-  my.vectorFunction = function (_v) {
-    if (!arguments.length) return vectorFunction;
-    vectorFunction = _v;
-    return my;
-  };
+	/**
+  * Vector Function Getter / Setter
+  *
+  * @param {string} _v - Vector Function.
+  * @returns {*}
+  */
+	my.vectorFunction = function (_v) {
+		if (!arguments.length) return vectorFunction;
+		vectorFunction = _v;
+		return my;
+	};
 
-  return my;
+	return my;
 }
 
 /**
@@ -4029,12 +4029,12 @@ function chartVectorField () {
 			init(data);
 
 			// Construct Axis Component
-			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
+			var axis = component.crosshair().xScale(xScale).yScale(yScale).zScale(zScale);
 
 			// Construct Vector Field Component
 			var chart = component.vectorFields().xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([1, 6]);
 
-			scene.select(".axis").call(axis);
+			scene.select(".axis").datum({ x: 0, y: 0, z: 0 }).call(axis);
 
 			scene.select(".chart").datum(data).call(chart);
 		});

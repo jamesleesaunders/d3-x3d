@@ -38,7 +38,7 @@ export default function() {
 	 * @private
 	 * @param {Array} data - Chart data.
 	 */
-  const init = function(data) {
+	const init = function(data) {
 		const { valueExtent, coordinatesMax, rowKeys } = dataTransform(data).summary();
 		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
@@ -81,7 +81,7 @@ export default function() {
 	 * @alias bubbleChart
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
-  const my = function(selection) {
+	const my = function(selection) {
 		const x3d = selection.append("x3d")
 			.attr("width", width + "px")
 			.attr("height", height + "px");

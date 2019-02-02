@@ -26,7 +26,7 @@ export default function() {
 	 * @param arr
 	 * @returns {*}
 	 */
-  const array2dToString = function(arr) {
+	const array2dToString = function(arr) {
 		return arr.reduce((a, b) => a.concat(b), [])
 			.reduce((a, b) => a.concat(b), [])
 			.join(" ");
@@ -38,7 +38,7 @@ export default function() {
 	 * @private
 	 * @param {Array} data - Chart data.
 	 */
-  const init = function(data) {
+	const init = function(data) {
 		const { rowKeys, columnKeys, valueMax } = dataTransform(data).summary();
 		const valueExtent = [0, valueMax];
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
@@ -76,7 +76,7 @@ export default function() {
 	 * @alias surface
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
-  const my = function(selection) {
+	const my = function(selection) {
 		selection.classed(classed, true);
 
 		selection.each((data) => {

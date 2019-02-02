@@ -24,7 +24,7 @@ export default function() {
 	 * @private
 	 * @param {Array} data - Chart data.
 	 */
-  const init = function(data) {
+	const init = function(data) {
 		const { columnKeys, valueMax } = dataTransform(data).summary();
 		const valueExtent = [0, valueMax];
 		const { x: dimensionX, y: dimensionY } = dimensions;
@@ -56,7 +56,7 @@ export default function() {
 	 * @alias bars
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
-  const my = function(selection) {
+	const my = function(selection) {
 		selection.classed(classed, true);
 
 		selection.each((data) => {

@@ -52,7 +52,7 @@ export default function() {
 	 * @param {string} axisDir
 	 * @returns {number[]}
 	 */
-  const getAxisRotationVector = function(axisDir) {
+	const getAxisRotationVector = function(axisDir) {
 		return axisRotationVectors[axisDir];
 	};
 
@@ -63,7 +63,7 @@ export default function() {
 	 * @alias axis
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
-  const my = function(selection) {
+	const my = function(selection) {
 		selection.classed(classed, true);
 
 		const makeSolid = (selection, color) => {

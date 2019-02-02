@@ -13,5 +13,5 @@ export default {
 	ribbonChartMultiSeries: chartRibbonChartMultiSeries,
 	scatterPlot: chartScatterPlot,
 	surfacePlot: chartSurfacePlot,
-  vectorFieldChart: chartVectorField
+	vectorFieldChart: chartVectorField
 };

@@ -21,7 +21,7 @@ export default function() {
 	 * @alias viewpoint
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
-  const my = function(selection) {
+	const my = function(selection) {
 		selection.append("viewpoint")
 			.classed(classed, true)
 			.attr("centerofrotation", centerOfRotation.join(" "))
