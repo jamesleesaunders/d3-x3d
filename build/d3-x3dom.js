@@ -4032,7 +4032,7 @@ function chartVectorField () {
 			var axis = component.crosshair().xScale(xScale).yScale(yScale).zScale(zScale);
 
 			// Construct Vector Field Component
-			var chart = component.vectorFields().xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([1, 6]);
+			var chart = component.vectorFields().xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([1, 6]).vectorFunction(vectorFunction);
 
 			scene.select(".axis").datum({ x: 0, y: 0, z: 0 }).call(axis);
 

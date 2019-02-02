@@ -121,7 +121,8 @@ export default function() {
 				.yScale(yScale)
 				.zScale(zScale)
 				.color(color)
-				.sizeDomain([1, 6]);
+				.sizeDomain([1, 6])
+				.vectorFunction(vectorFunction);
 
 			scene.select(".axis")
 				.datum({ x: 0, y: 0, z: 0 })
