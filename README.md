@@ -25,7 +25,7 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Scatter Plot](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/ScatterPlot.html)
 * [Surface Plot](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/SurfacePlot.html)
 * [Ribbon Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/RibbonChart.html)
-* [Vector Field Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/VectorField/examples/VectorFieldChart.html)
+* [Vector Field Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/VectorFieldChart.html)
 * [Crosshair Component](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Crosshair.html)
 * [Components Showcase](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
 * [Observable Examples](https://beta.observablehq.com/collection/@jamesleesaunders/d3-x3dom)
@@ -154,6 +154,7 @@ Chart modules also generate the `x3d` tag, these should be attached to a `div` t
 | chart.ribbonChartMultiSeries() | Multi series Ribbon Chart     | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/RibbonChart.html)         | [View](https://jamesleesaunders.github.io/d3-x3dom/ribbonChartMultiSeries.html) |
 | chart.scatterPlot()            | Scatter Plot & Axis           | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/ScatterPlot.html)         | [View](https://jamesleesaunders.github.io/d3-x3dom/scatterPlot.html)            |
 | chart.surfacePlot()            | Surface Plot & Axis           | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/SurfacePlot.html)         | [View](https://jamesleesaunders.github.io/d3-x3dom/surfacePlot.html)            |
+| chart.vectorFieldChart()       | Vector Field Chart            | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/VectorFieldChart.html)    | [View](https://jamesleesaunders.github.io/d3-x3dom/vectorFieldChart.html)      |
 
 ### Data Structures
 
