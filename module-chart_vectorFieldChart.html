@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>component/bubblesMultiSeries - Documentation</title>
+    <title>chart/vectorFieldChart - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">component/bubblesMultiSeries</h1>
+    <h1 class="page-title">chart/vectorFieldChart</h1>
     
 
     
@@ -51,7 +51,7 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Reusable 3D Multi Series Bubble Chart Component</p></div>
+            <div class="description"><p>Reusable 3D Vector Field Chart</p></div>
         
 
         
@@ -93,12 +93,19 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_bubblesMultiSeries.js.html">component/bubblesMultiSeries.js</a>, <a href="component_bubblesMultiSeries.js.html#line5">line 5</a>
+        <a href="chart_vectorFieldChart.js.html">chart/vectorFieldChart.js</a>, <a href="chart_vectorFieldChart.js.html#line5">line 5</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://mathinsight.org/vector_field_overview">https://mathinsight.org/vector_field_overview</a></li>
+        </ul>
+    </dd>
     
 
     
@@ -126,6 +133,16 @@
 
 
 
+<div class="section-examples">
+<h5>Example</h5>
+
+    <pre class="prettyprint"><code>var chartHolder = d3.select("#chartholder");
+var myData = [...];
+var myChart = d3.x3dom.chart.vectorFieldChart();
+chartHolder.datum(myData).call(myChart);</code></pre>
+
+</div>
+
 </div>
         
     
@@ -143,6 +160,203 @@
 
     
 
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="~vectorFunction"><span class="type-signature">(inner) </span>vectorFunction<span class="signature">(x, y, z)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Vector Field Function</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="chart_vectorFieldChart.js.html">chart/vectorFieldChart.js</a>, <a href="chart_vectorFieldChart.js.html#line40">line 40</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>z</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>Object</code></span>
+
+
+    </dd>
+</dl>
+
+
+    
+</div>
+
+
+
+</div>
+        
     
 
     
