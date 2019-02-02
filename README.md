@@ -137,7 +137,7 @@ Component modules do not generate a `x3d` tag, these should be attached to an ex
 | component.ribbon()             | Ribbon Chart / Line Chart           | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/ribbon.html)             |
 | component.ribbonMultiSeries()  | Multi series Ribbon Chart           | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/ribbonMultiSeries.html)  |
 | component.surface()            | Surface Area                        | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/surface.html)            |
-| component.vectorFields()       | Vector Field Chart                  | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/vectorField.html)        |
+| component.vectorFields()       | Vector Field Chart                  | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/vectorFields.html)        |
 | component.viewpoint()          | Camera position                     | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/viewpoint.html)          |
 
 #### Charts
