@@ -18,6 +18,7 @@
   <div id="chartholder6"></div>
   <div id="chartholder7"></div>
   <div id="chartholder8"></div>
+  <div id="chartholder9"></div>
 
   <script>
     // Chart dimensions
@@ -199,6 +200,27 @@
       .append("group")
       .attr("class", "chart")
       .call(axisThreePlaneComponent);
+
+    /**
+     * Vector Field Component
+     */
+    var vectorData = d3.x3dom.randomData.dataset3(300);
+    var vectorComponent = d3.x3dom.component.vectorFields();
+
+    // Create scene
+    var scene9 = d3.select("#chartholder9")
+      .append("x3d")
+      .attr("id", "vectorFields")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("scene");
+
+    // Add chart component
+    scene9.call(viewpoint)
+      .append("group")
+      .attr("class", "chart")
+      .datum(vectorData)
+      .call(vectorComponent);
 
     /**
      * Sync Viewpoints

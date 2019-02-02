@@ -3925,13 +3925,240 @@ function chartSurfacePlot () {
 	return my;
 }
 
+/**
+ * Reusable 3D Vector Field Chart
+ *
+ * @module
+ *
+ * @see https://mathinsight.org/vector_field_overview
+ * @example
+ * var chartHolder = d3.select("#chartholder");
+ * var myData = [...];
+ * var myChart = d3.x3dom.chart.vectorFieldChart();
+ * chartHolder.datum(myData).call(myChart);
+ */
+function chartVectorField () {
+
+	/* Default Properties */
+	var width = 500;
+	var height = 500;
+	var dimensions = { x: 40, y: 40, z: 40 };
+	var color = "blue";
+	var classed = "x3dVectorFieldChart";
+	var debug = false;
+
+	/* Scales */
+	var xScale = void 0;
+	var yScale = void 0;
+	var zScale = void 0;
+
+	/**
+  * Vector Field Function
+  *
+  * @param x
+  * @param y
+  * @param z
+  * @returns {{x: number, y: number, z: number}}
+  */
+	var vectorFunction = function vectorFunction(x, y, z) {
+		return {
+			x: x,
+			y: y,
+			z: z
+		};
+	};
+
+	/**
+  * Initialise Data and Scales
+  *
+  * @private
+  * @param {Array} data - Chart data.
+  */
+	function init(data) {
+		var _dataTransform$summar = dataTransform(data).summary(),
+		    coordinatesMax = _dataTransform$summar.coordinatesMax;
+
+		var maxX = coordinatesMax.x,
+		    maxY = coordinatesMax.y,
+		    maxZ = coordinatesMax.z;
+		var _dimensions = dimensions,
+		    dimensionX = _dimensions.x,
+		    dimensionY = _dimensions.y,
+		    dimensionZ = _dimensions.z;
+
+
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
+		}
+
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
+		}
+
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
+		}
+	}
+
+	/**
+  * Constructor
+  *
+  * @constructor
+  * @alias vectorFieldChart
+  * @param {d3.selection} selection - The chart holder D3 selection.
+  */
+	function my(selection) {
+		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
+
+		if (debug) {
+			x3d.attr("showLog", "true").attr("showStat", "true");
+		}
+
+		var scene = x3d.append("scene");
+
+		// Update the chart dimensions and add layer groups
+		var layers = ["axis", "chart"];
+		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+			return d;
+		});
+
+		var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
+		scene.call(viewpoint);
+
+		scene.each(function (data) {
+			init(data);
+
+			// Construct Axis Component
+			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
+
+			// Construct Vector Field Component
+			var chart = component.vectorFields().xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([1, 6]);
+
+			scene.select(".axis").call(axis);
+
+			scene.select(".chart").datum(data).call(chart);
+		});
+	}
+
+	/**
+  * Width Getter / Setter
+  *
+  * @param {number} _v - X3D canvas width in px.
+  * @returns {*}
+  */
+	my.width = function (_v) {
+		if (!arguments.length) return width;
+		width = _v;
+		return this;
+	};
+
+	/**
+  * Height Getter / Setter
+  *
+  * @param {number} _v - X3D canvas height in px.
+  * @returns {*}
+  */
+	my.height = function (_v) {
+		if (!arguments.length) return height;
+		height = _v;
+		return this;
+	};
+
+	/**
+  * Dimensions Getter / Setter
+  *
+  * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+  * @returns {*}
+  */
+	my.dimensions = function (_v) {
+		if (!arguments.length) return dimensions;
+		dimensions = _v;
+		return this;
+	};
+
+	/**
+  * X Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.xScale = function (_v) {
+		if (!arguments.length) return xScale;
+		xScale = _v;
+		return my;
+	};
+
+	/**
+  * Y Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.yScale = function (_v) {
+		if (!arguments.length) return yScale;
+		yScale = _v;
+		return my;
+	};
+
+	/**
+  * Z Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.zScale = function (_v) {
+		if (!arguments.length) return zScale;
+		zScale = _v;
+		return my;
+	};
+
+	/**
+  * Color Getter / Setter
+  *
+  * @param {string} _v - Color (e.g. 'red' or '#ff0000').
+  * @returns {*}
+  */
+	my.color = function (_v) {
+		if (!arguments.length) return color;
+		color = _v;
+		return my;
+	};
+
+	/**
+  * Debug Getter / Setter
+  *
+  * @param {boolean} _v - Show debug log and stats. True/False.
+  * @returns {*}
+  */
+	my.debug = function (_v) {
+		if (!arguments.length) return debug;
+		debug = _v;
+		return my;
+	};
+
+	/**
+  * Vector Function Getter / Setter
+  *
+  * @param {string} _v - Vector Function.
+  * @returns {*}
+  */
+	my.vectorFunction = function (_v) {
+		if (!arguments.length) return vectorFunction;
+		vectorFunction = _v;
+		return my;
+	};
+
+	return my;
+}
+
 var chart = {
 	barChartMultiSeries: chartBarChartMultiSeries,
 	barChartVertical: chartBarChartVertical,
 	bubbleChart: chartBubbleChart,
 	ribbonChartMultiSeries: chartRibbonChartMultiSeries,
 	scatterPlot: chartScatterPlot,
-	surfacePlot: chartSurfacePlot
+	surfacePlot: chartSurfacePlot,
+	vectorFieldChart: chartVectorField
 };
 
 /**
