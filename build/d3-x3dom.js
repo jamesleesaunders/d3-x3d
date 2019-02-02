@@ -2272,8 +2272,12 @@ function componentVectorFields () {
   */
 	var init = function init(data) {
 		var _dataTransform$summar = dataTransform(data).summary(),
-		    coordinatesMax = _dataTransform$summar.coordinatesMax;
+		    coordinatesMax = _dataTransform$summar.coordinatesMax,
+		    coordinatesMin = _dataTransform$summar.coordinatesMin;
 
+		var minX = coordinatesMin.x,
+		    minY = coordinatesMin.y,
+		    minZ = coordinatesMin.z;
 		var maxX = coordinatesMax.x,
 		    maxY = coordinatesMax.y,
 		    maxZ = coordinatesMax.z;
@@ -2303,15 +2307,15 @@ function componentVectorFields () {
 		}));
 
 		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
+			xScale = d3.scaleLinear().domain([minX, maxX]).range([0, dimensionX]);
 		}
 
 		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
+			yScale = d3.scaleLinear().domain([minY, maxY]).range([0, dimensionY]);
 		}
 
 		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
+			zScale = d3.scaleLinear().domain([minZ, maxZ]).range([0, dimensionZ]);
 		}
 
 		if (typeof sizeScale === "undefined") {
@@ -2388,7 +2392,7 @@ function componentVectorFields () {
 
 			shape.append("cone").attr("height", function (d) {
 				return d.length;
-			}).attr("bottomradius", 0.4);
+			}).attr("bottomradius", 0.3);
 
 			arrowsEnter.merge(arrows);
 
@@ -3951,6 +3955,8 @@ function chartVectorField () {
 	var xScale = void 0;
 	var yScale = void 0;
 	var zScale = void 0;
+	var sizeScale = void 0;
+	var sizeDomain = [1, 6];
 
 	/**
   * Vector Field Function
@@ -3976,8 +3982,12 @@ function chartVectorField () {
   */
 	var init = function init(data) {
 		var _dataTransform$summar = dataTransform(data).summary(),
-		    coordinatesMax = _dataTransform$summar.coordinatesMax;
+		    coordinatesMax = _dataTransform$summar.coordinatesMax,
+		    coordinatesMin = _dataTransform$summar.coordinatesMin;
 
+		var minX = coordinatesMin.x,
+		    minY = coordinatesMin.y,
+		    minZ = coordinatesMin.z;
 		var maxX = coordinatesMax.x,
 		    maxY = coordinatesMax.y,
 		    maxZ = coordinatesMax.z;
@@ -3987,16 +3997,39 @@ function chartVectorField () {
 		    dimensionZ = _dimensions.z;
 
 
+		var extent = d3.extent(data.values.map(function (f) {
+			var vx = void 0,
+			    vy = void 0,
+			    vz = void 0;
+			if ('vx' in f) {
+				vx = f.vx;
+				vy = f.vy;
+				vz = f.vz;
+			} else {
+				var _vectorFunction = vectorFunction(f.x, f.y, f.z);
+
+				vx = _vectorFunction.x;
+				vy = _vectorFunction.y;
+				vz = _vectorFunction.z;
+			}
+
+			return new x3dom.fields.SFVec3f(vx, vy, vz).length();
+		}));
+
 		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
+			xScale = d3.scaleLinear().domain([minX, maxX]).range([0, dimensionX]);
 		}
 
 		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
+			yScale = d3.scaleLinear().domain([minY, maxY]).range([0, dimensionY]);
 		}
 
 		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
+			zScale = d3.scaleLinear().domain([minZ, maxZ]).range([0, dimensionZ]);
+		}
+
+		if (typeof sizeScale === "undefined") {
+			sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
 		}
 	};
 
@@ -4032,7 +4065,7 @@ function chartVectorField () {
 			var axis = component.crosshair().xScale(xScale).yScale(yScale).zScale(zScale);
 
 			// Construct Vector Field Component
-			var chart = component.vectorFields().xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([1, 6]).vectorFunction(vectorFunction);
+			var chart = component.vectorFields().color(color).xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).vectorFunction(vectorFunction);
 
 			scene.select(".axis").datum({ x: 0, y: 0, z: 0 }).call(axis);
 

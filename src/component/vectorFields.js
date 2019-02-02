@@ -44,7 +44,8 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	const init = function(data) {
-		const { coordinatesMax } = dataTransform(data).summary();
+		const { coordinatesMax, coordinatesMin } = dataTransform(data).summary();
+		const { x: minX, y: minY, z: minZ } = coordinatesMin;
 		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
@@ -61,19 +62,19 @@ export default function() {
 
 		if (typeof xScale === "undefined") {
 			xScale = d3.scaleLinear()
-				.domain([0, maxX])
+				.domain([minX, maxX])
 				.range([0, dimensionX]);
 		}
 
 		if (typeof yScale === "undefined") {
 			yScale = d3.scaleLinear()
-				.domain([0, maxY])
+				.domain([minY, maxY])
 				.range([0, dimensionY]);
 		}
 
 		if (typeof zScale === "undefined") {
 			zScale = d3.scaleLinear()
-				.domain([0, maxZ])
+				.domain([minZ, maxZ])
 				.range([0, dimensionZ]);
 		}
 
@@ -148,7 +149,7 @@ export default function() {
 
 			shape.append("cone")
 				.attr("height", (d) => d.length)
-				.attr("bottomradius", 0.4);
+				.attr("bottomradius", 0.3);
 
 			arrowsEnter.merge(arrows);
 
