@@ -3957,6 +3957,7 @@ function chartVectorField () {
 	var zScale = void 0;
 	var sizeScale = void 0;
 	var sizeDomain = [1, 6];
+	var origin = { x: 0, y: 0, z: 0 };
 
 	/**
   * Vector Field Function
@@ -3996,6 +3997,8 @@ function chartVectorField () {
 		    dimensionY = _dimensions.y,
 		    dimensionZ = _dimensions.z;
 
+
+		origin = { x: minX, y: minY, z: minZ };
 
 		var extent = d3.extent(data.values.map(function (f) {
 			var vx = void 0,
@@ -4067,7 +4070,7 @@ function chartVectorField () {
 			// Construct Vector Field Component
 			var chart = component.vectorFields().color(color).xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).vectorFunction(vectorFunction);
 
-			scene.select(".axis").datum({ x: 0, y: 0, z: 0 }).call(axis);
+			scene.select(".axis").datum(origin).call(axis);
 
 			scene.select(".chart").datum(data).call(chart);
 		});

@@ -30,6 +30,7 @@ export default function() {
 	let zScale;
 	let sizeScale;
 	let sizeDomain = [1, 6];
+	let origin = { x: 0, y: 0, z: 0 };
 
 	/**
 	 * Vector Field Function
@@ -93,6 +94,8 @@ export default function() {
 				.domain(extent)
 				.range(sizeDomain);
 		}
+
+		origin = { x: minX, y: minY, z: minZ };
 	};
 
 	/**
@@ -145,7 +148,7 @@ export default function() {
 				.vectorFunction(vectorFunction);
 
 			scene.select(".axis")
-				.datum({ x: 0, y: 0, z: 0 })
+				.datum(origin)
 				.call(axis);
 
 			scene.select(".chart")
