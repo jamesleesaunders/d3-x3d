@@ -1,4 +1,5 @@
 let test = require('tape');
+let window = require('browser-env')();
 let d3X3dom = require("../../");
 
 test("Test Viewpoint Base Component, component.viewpoint()", function(t) {

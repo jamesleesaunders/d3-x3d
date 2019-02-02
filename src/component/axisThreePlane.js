@@ -25,9 +25,9 @@ export default function() {
 	 * @alias axisThreePlane
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
-	function my(selection) {
-
+	const my = function(selection) {
 		const layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
+
 		selection.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
@@ -78,7 +78,7 @@ export default function() {
 		selection.select(".zxAxis")
 			.call(zxAxis);
 
-	}
+	};
 
 	/**
 	 * Dimensions Getter / Setter

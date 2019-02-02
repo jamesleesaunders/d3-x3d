@@ -8,6 +8,7 @@ import componentCrosshair from "./component/crosshair";
 import componentRibbon from "./component/ribbon";
 import componentRibbonMultiSeries from "./component/ribbonMultiSeries";
 import componentSurface from "./component/surface";
+import componentVectorFields from "./component/vectorFields";
 import componentViewpoint from "./component/viewpoint";
 
 export default {
@@ -21,5 +22,6 @@ export default {
 	ribbon: componentRibbon,
 	ribbonMultiSeries: componentRibbonMultiSeries,
 	surface: componentSurface,
+	vectorFields: componentVectorFields,
 	viewpoint: componentViewpoint
 };

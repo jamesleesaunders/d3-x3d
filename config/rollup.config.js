@@ -19,9 +19,9 @@ export default {
 		name: "d3.x3dom",
 		banner: banner,
 		strict: true,
-		globals: { d3: "d3" }
+		globals: { d3: "d3", x3dom: "x3dom" }
 	},
-	external: ["d3"],
+	external: ["d3", "x3dom"],
 	plugins: [
 		babel({
 			exclude: ["node_modules/**", "*.json"],

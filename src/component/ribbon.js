@@ -23,7 +23,7 @@ export default function() {
 	 * @private
 	 * @param {Array} data - Chart data.
 	 */
-	function init(data) {
+	const init = function(data) {
 		const { columnKeys, valueMax } = dataTransform(data).summary();
 		const valueExtent = [0, valueMax];
 		const { x: dimensionX, y: dimensionY } = dimensions;
@@ -39,7 +39,7 @@ export default function() {
 				.domain(valueExtent)
 				.range([0, dimensionY]);
 		}
-	}
+	};
 
 	/**
 	 * Constructor
@@ -48,7 +48,7 @@ export default function() {
 	 * @alias ribbon
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
-	function my(selection) {
+	const my = function(selection) {
 		selection.classed(classed, true);
 
 		selection.each((data) => {
@@ -115,7 +115,7 @@ export default function() {
 
 			ribbonEnter.append("appearance")
 				.append("twosidedmaterial")
-				.attr("diffuseColor", (d) => d.color)
+				.attr("diffusecolor", (d) => d.color)
 				.attr("transparency", (d) => d.transparency);
 
 			ribbonEnter.merge(ribbon);
@@ -130,7 +130,7 @@ export default function() {
 				.remove();
 
 		});
-	}
+	};
 
 	/**
 	 * Dimensions Getter / Setter

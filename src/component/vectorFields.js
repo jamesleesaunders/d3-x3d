@@ -1,8 +1,9 @@
 import * as d3 from "d3";
+// import * as x3dom from "x3dom";
 import dataTransform from "../dataTransform";
 
 /**
- * Reusable 3D Bubble Chart Component
+ * Reusable 3D Vector Fields Component
  *
  * @module
  */
@@ -10,15 +11,31 @@ export default function() {
 
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let color = "orange";
-	let classed = "x3dBubbles";
+	let color = "blue";
+	let classed = "x3dVectorFields";
 
 	/* Scales */
 	let xScale;
 	let yScale;
 	let zScale;
 	let sizeScale;
-	let sizeDomain = [0.5, 4.0];
+	let sizeDomain = [1, 6];
+
+	/**
+	 * Vector Field Function
+	 *
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @returns {{x: number, y: number, z: number}}
+	 */
+	let vectorFunction = function(x, y, z) {
+		return {
+			x: x,
+			y: y,
+			z: z
+		};
+	};
 
 	/**
 	 * Initialise Data and Scales
@@ -27,9 +44,20 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	const init = function(data) {
-		const { valueExtent, coordinatesMax } = dataTransform(data).summary();
+		const { coordinatesMax } = dataTransform(data).summary();
 		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
+
+		const extent = d3.extent(data.values.map((f) => {
+			let vx, vy, vz;
+			if ('vx' in f) {
+				({ vx, vy, vz } = f);
+			} else {
+				({ x: vx, y: vy, z: vz } = vectorFunction(f.x, f.y, f.z));
+			}
+
+			return new x3dom.fields.SFVec3f(vx, vy, vz).length();
+		}));
 
 		if (typeof xScale === "undefined") {
 			xScale = d3.scaleLinear()
@@ -51,7 +79,7 @@ export default function() {
 
 		if (typeof sizeScale === "undefined") {
 			sizeScale = d3.scaleLinear()
-				.domain(valueExtent)
+				.domain(extent)
 				.range(sizeDomain);
 		}
 	};
@@ -60,7 +88,7 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
-	 * @alias bubbles
+	 * @alias vectorFields
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
@@ -69,56 +97,65 @@ export default function() {
 		selection.each((data) => {
 			init(data);
 
-			const makeSolid = (selection, color) => {
-				selection
-					.append("appearance")
-					.append("material")
-					.attr("diffuseColor", color || "black");
-				return selection;
+			const vectorData = function(d) {
+				return d.values.map((f) => {
+
+					let vx, vy, vz;
+					if ('vx' in f) {
+						({ vx, vy, vz } = f);
+					} else {
+						({ x: vx, y: vy, z: vz } = vectorFunction(f.x, f.y, f.z));
+					}
+
+					let fromVector = new x3dom.fields.SFVec3f(0, 1, 0);
+					let toVector = new x3dom.fields.SFVec3f(vx, vy, vz);
+					let qDir = x3dom.fields.Quaternion.rotateFromTo(fromVector, toVector);
+					let rot = qDir.toAxisAngle();
+					let len = sizeScale(toVector.length());
+
+					// Calculate transform-translation attr
+					f.translation = xScale(f.x) + " " + yScale(f.y) + " " + zScale(f.z);
+
+					// Calculate vector length
+					f.length = len;
+
+					// Calculate transform-center attr
+					f.offset = "0 " + (len / 2) + " 0";
+
+					// Calculate transform-rotation attr
+					f.rotation = rot[0].x + " " + rot[0].y + " " + rot[0].z + " " + rot[1];
+
+					return f;
+				});
 			};
 
-			const bubbles = selection.selectAll(".bubble")
-				.data((d) => d.values);
+			const arrows = selection.selectAll(".arrow")
+				.data(vectorData);
 
-			const bubblesEnter = bubbles.enter()
+			const arrowsEnter = arrows.enter()
 				.append("transform")
-				.attr("class", "bubble")
-				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
-				.attr("onmouseover", "d3.select(this).select('billboard').attr('render', true);")
-				.attr("onmouseout", "d3.select(this).select('transform').select('billboard').attr('render', false);");
-
-			bubblesEnter.append("shape")
-				.call(makeSolid, color)
-				.append("sphere")
-				.attr("radius", (d) => sizeScale(d.value));
-
-			bubblesEnter
+				.attr("class", "arrow")
+				.attr("translation", (d) => d.translation)
+				.attr("rotation", (d) => d.rotation)
 				.append("transform")
-				.attr("translation", (d) => {
-					let r = sizeScale(d.value) + 0.8;
-					return r + " " + r + " " + r;
-				})
-				.append("billboard")
-				.attr("render", false)
-				.attr("axisofrotation", "0 0 0")
-				.append("shape")
-				.call(makeSolid, "blue")
-				.append("text")
-				.attr("class", "labelText")
-				.attr("string", (d) => d.key)
-				.append("fontstyle")
-				.attr("size", 1)
-				.attr("family", "SANS")
-				.attr("style", "BOLD")
-				.attr("justify", "START")
-				.attr("render", false);
+				.attr("translation", (d) => d.offset);
 
-			bubblesEnter.merge(bubbles);
+			let shape = arrowsEnter.append("shape");
 
-			bubbles.transition()
-				.attr("translation", (d) => (xScale(d.x) + ' ' + yScale(d.y) + ' ' + zScale(d.z)));
+			shape.append("appearance")
+				.append("material")
+				.attr("diffusecolor", color);
 
-			bubbles.exit()
+			shape.append("cone")
+				.attr("height", (d) => d.length)
+				.attr("bottomradius", 0.4);
+
+			arrowsEnter.merge(arrows);
+
+			arrows.transition()
+				.attr("translation", (d) => d.translation);
+
+			arrows.exit()
 				.remove();
 		});
 	};
@@ -204,6 +241,18 @@ export default function() {
 	my.color = function(_v) {
 		if (!arguments.length) return color;
 		color = _v;
+		return my;
+	};
+
+	/**
+	 * Vector Function Getter / Setter
+	 *
+	 * @param {string} _v - Vector Function.
+	 * @returns {*}
+	 */
+	my.vectorFunction = function(_v) {
+		if (!arguments.length) return vectorFunction;
+		vectorFunction = _v;
 		return my;
 	};
 

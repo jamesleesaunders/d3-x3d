@@ -26,11 +26,11 @@ export default function() {
 	 * @param arr
 	 * @returns {*}
 	 */
-	function array2dToString(arr) {
+	const array2dToString = function(arr) {
 		return arr.reduce((a, b) => a.concat(b), [])
 			.reduce((a, b) => a.concat(b), [])
 			.join(" ");
-	}
+	};
 
 	/**
 	 * Initialise Data and Scales
@@ -38,7 +38,7 @@ export default function() {
 	 * @private
 	 * @param {Array} data - Chart data.
 	 */
-	function init(data) {
+	const init = function(data) {
 		const { rowKeys, columnKeys, valueMax } = dataTransform(data).summary();
 		const valueExtent = [0, valueMax];
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
@@ -67,7 +67,7 @@ export default function() {
 				.range(colors)
 				.interpolate(d3.interpolateLab);
 		}
-	}
+	};
 
 	/**
 	 * Constructor
@@ -76,7 +76,7 @@ export default function() {
 	 * @alias surface
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
-	function my(selection) {
+	const my = function(selection) {
 		selection.classed(classed, true);
 
 		selection.each((data) => {
@@ -151,7 +151,7 @@ export default function() {
 			surface.exit()
 				.remove();
 		});
-	}
+	};
 
 	/**
 	 * Dimensions Getter / Setter

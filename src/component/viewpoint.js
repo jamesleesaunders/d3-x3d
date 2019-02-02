@@ -21,15 +21,15 @@ export default function() {
 	 * @alias viewpoint
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
-	function my(selection) {
+	const my = function(selection) {
 		selection.append("viewpoint")
 			.classed(classed, true)
-			.attr("centerOfRotation", centerOfRotation.join(" "))
+			.attr("centerofrotation", centerOfRotation.join(" "))
 			.attr("position", viewPosition.join(" "))
 			.attr("orientation", viewOrientation.join(" "))
-			.attr("fieldOfView", fieldOfView)
+			.attr("fieldofview", fieldOfView)
 			.attr("set_bind", "true");
-	}
+	};
 
 	/**
 	 * Set Quick Viewpoint

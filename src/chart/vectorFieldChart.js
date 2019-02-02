@@ -3,15 +3,15 @@ import dataTransform from "../dataTransform";
 import component from "../component";
 
 /**
- * Reusable 3D Bar Chart
+ * Reusable 3D Vector Field Chart
  *
  * @module
  *
- * @see https://datavizproject.com/data-type/3d-bar-chart/
+ * @see https://mathinsight.org/vector_field_overview
  * @example
  * var chartHolder = d3.select("#chartholder");
  * var myData = [...];
- * var myChart = d3.x3dom.chart.barChartVertical();
+ * var myChart = d3.x3dom.chart.vectorFieldChart();
  * chartHolder.datum(myData).call(myChart);
  */
 export default function() {
@@ -20,14 +20,30 @@ export default function() {
 	let width = 500;
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = ["green", "red", "yellow", "steelblue", "orange"];
-	let classed = "x3dBarChartVertical";
+	let color = "blue";
+	let classed = "x3dVectorFieldChart";
 	let debug = false;
 
 	/* Scales */
 	let xScale;
 	let yScale;
-	let colorScale;
+	let zScale;
+
+	/**
+	 * Vector Field Function
+	 *
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @returns {{x: number, y: number, z: number}}
+	 */
+	let vectorFunction = function(x, y, z) {
+		return {
+			x: x,
+			y: y,
+			z: z
+		};
+	};
 
 	/**
 	 * Initialise Data and Scales
@@ -36,28 +52,26 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	const init = function(data) {
-		const { columnKeys, valueMax } = dataTransform(data).summary();
-		const valueExtent = [0, valueMax];
-		const { x: dimensionX, y: dimensionY } = dimensions;
+		const { coordinatesMax } = dataTransform(data).summary();
+		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
+		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
 		if (typeof xScale === "undefined") {
-			xScale = d3.scaleBand()
-				.domain(columnKeys)
-				.rangeRound([0, dimensionX])
-				.padding(0.5);
+			xScale = d3.scaleLinear()
+				.domain([0, maxX])
+				.range([0, dimensionX]);
 		}
 
 		if (typeof yScale === "undefined") {
 			yScale = d3.scaleLinear()
-				.domain(valueExtent)
-				.range([0, dimensionY])
-				.nice();
+				.domain([0, maxY])
+				.range([0, dimensionY]);
 		}
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal()
-				.domain(columnKeys)
-				.range(colors);
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleLinear()
+				.domain([0, maxZ])
+				.range([0, dimensionZ]);
 		}
 	};
 
@@ -65,7 +79,7 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
-	 * @alias barChartVertical
+	 * @alias vectorFieldChart
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
@@ -77,10 +91,10 @@ export default function() {
 			x3d.attr("showLog", "true").attr("showStat", "true")
 		}
 
-		const scene = x3d.append("scene");
+		let scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
-		const layers = ["xAxis", "yAxis", "chart"];
+		const layers = ["axis", "chart"];
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
@@ -89,35 +103,29 @@ export default function() {
 			.attr("class", (d) => d);
 
 		const viewpoint = component.viewpoint()
-			.quickView("left");
+			.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 		scene.call(viewpoint);
 
 		scene.each((data) => {
 			init(data);
 
-			// Construct Axis Components
-			const xAxis = component.axis()
-				.scale(xScale)
-				.direction('x')
-				.tickDirection('y');
-
-			const yAxis = component.axis()
-				.scale(yScale)
-				.direction('y')
-				.tickDirection('x')
-				.tickSize(yScale.range()[1] - yScale.range()[0]);
-
-			// Construct Bars Component
-			const chart = component.bars()
+			// Construct Axis Component
+			const axis = component.crosshair()
 				.xScale(xScale)
 				.yScale(yScale)
-				.colors(colors);
+				.zScale(zScale);
 
-			scene.select(".xAxis")
-				.call(xAxis);
+			// Construct Vector Field Component
+			const chart = component.vectorFields()
+				.xScale(xScale)
+				.yScale(yScale)
+				.zScale(zScale)
+				.color(color)
+				.sizeDomain([1, 6]);
 
-			scene.select(".yAxis")
-				.call(yAxis);
+			scene.select(".axis")
+				.datum({ x: 0, y: 0, z: 0 })
+				.call(axis);
 
 			scene.select(".chart")
 				.datum(data)
@@ -186,26 +194,26 @@ export default function() {
 	};
 
 	/**
-	 * Color Scale Getter / Setter
+	 * Z Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _v - D3 color scale.
+	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.colorScale = function(_v) {
-		if (!arguments.length) return colorScale;
-		colorScale = _v;
+	my.zScale = function(_v) {
+		if (!arguments.length) return zScale;
+		zScale = _v;
 		return my;
 	};
 
 	/**
-	 * Colors Getter / Setter
+	 * Color Getter / Setter
 	 *
-	 * @param {Array} _v - Array of colours used by color scale.
+	 * @param {string} _v - Color (e.g. 'red' or '#ff0000').
 	 * @returns {*}
 	 */
-	my.colors = function(_v) {
-		if (!arguments.length) return colors;
-		colors = _v;
+	my.color = function(_v) {
+		if (!arguments.length) return color;
+		color = _v;
 		return my;
 	};
 
@@ -218,6 +226,18 @@ export default function() {
 	my.debug = function(_v) {
 		if (!arguments.length) return debug;
 		debug = _v;
+		return my;
+	};
+
+	/**
+	 * Vector Function Getter / Setter
+	 *
+	 * @param {string} _v - Vector Function.
+	 * @returns {*}
+	 */
+	my.vectorFunction = function(_v) {
+		if (!arguments.length) return vectorFunction;
+		vectorFunction = _v;
 		return my;
 	};
 

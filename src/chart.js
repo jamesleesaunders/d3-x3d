@@ -4,6 +4,7 @@ import chartBubbleChart from "./chart/bubbleChart";
 import chartRibbonChartMultiSeries from "./chart/ribbonChartMultiSeries";
 import chartScatterPlot from "./chart/scatterPlot";
 import chartSurfacePlot from "./chart/surfacePlot";
+import chartVectorField from "./chart/vectorFieldChart";
 
 export default {
 	barChartMultiSeries: chartBarChartMultiSeries,
@@ -11,5 +12,6 @@ export default {
 	bubbleChart: chartBubbleChart,
 	ribbonChartMultiSeries: chartRibbonChartMultiSeries,
 	scatterPlot: chartScatterPlot,
-	surfacePlot: chartSurfacePlot
+	surfacePlot: chartSurfacePlot,
+	vectorFieldChart: chartVectorField
 };
