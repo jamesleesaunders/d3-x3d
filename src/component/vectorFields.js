@@ -11,15 +11,16 @@ export default function() {
 
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let color = "blue";
+	let colors = d3.interpolateRdYlGn;
 	let classed = "x3dVectorFields";
 
 	/* Scales */
 	let xScale;
 	let yScale;
 	let zScale;
+	let colorScale;
 	let sizeScale;
-	let sizeDomain = [1, 6];
+	let sizeDomain = [1, 8];
 
 	/**
 	 * Vector Field Function
@@ -78,9 +79,15 @@ export default function() {
 				.range([0, dimensionZ]);
 		}
 
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleSequential()
+				.domain(extent)
+				.interpolator(colors);
+		}
+
 		if (typeof sizeScale === "undefined") {
 			sizeScale = d3.scaleLinear()
-				.domain(extent)
+				.domain(extent.reverse())
 				.range(sizeDomain);
 		}
 	};
@@ -112,16 +119,12 @@ export default function() {
 					let toVector = new x3dom.fields.SFVec3f(vx, vy, vz);
 					let qDir = x3dom.fields.Quaternion.rotateFromTo(fromVector, toVector);
 					let rot = qDir.toAxisAngle();
-					let len = sizeScale(toVector.length());
 
 					// Calculate transform-translation attr
 					f.translation = xScale(f.x) + " " + yScale(f.y) + " " + zScale(f.z);
 
 					// Calculate vector length
-					f.length = len;
-
-					// Calculate transform-center attr
-					f.offset = "0 " + (len / 2) + " 0";
+					f.value = toVector.length();
 
 					// Calculate transform-rotation attr
 					f.rotation = rot[0].x + " " + rot[0].y + " " + rot[0].z + " " + rot[1];
@@ -139,26 +142,32 @@ export default function() {
 				.attr("translation", (d) => d.translation)
 				.attr("rotation", (d) => d.rotation)
 				.append("transform")
-				.attr("translation", (d) => d.offset);
+				.attr("translation", (d) => {
+					let offset = sizeScale(d.value) / 2;
+					return "0 " + offset + " 0";
+				});
 
 			let arrowHead = arrowsEnter.append("shape");
 
 			arrowHead.append("appearance")
 				.append("material")
-				.attr("diffusecolor", color);
+				.attr("diffusecolor", (d) => rgb2hex(colorScale(d.value)));
 
 			arrowHead.append("cylinder")
-				.attr("height", (d) => d.length)
+				.attr("height", (d) => sizeScale(d.value))
 				.attr("radius", 0.1);
 
 			let arrowShaft = arrowsEnter
 				.append("transform")
-				.attr("translation", (d) => d.offset)
+				.attr("translation", (d) => {
+					let offset = sizeScale(d.value) / 2;
+					return "0 " + offset + " 0";
+				})
 				.append("shape");
 
 			arrowShaft.append("appearance")
 				.append("material")
-				.attr("diffusecolor", color);
+				.attr("diffusecolor", (d) => rgb2hex(colorScale(d.value)));
 
 			arrowShaft
 				.append("cone")
@@ -173,6 +182,21 @@ export default function() {
 			arrows.exit()
 				.remove();
 		});
+	};
+
+	/**
+	 * RGB Colour to Hex Converter
+	 *
+	 * @param {string} rgb - RGB colour string.
+	 * @returns {string}
+	 */
+	const rgb2hex = function(rgb) {
+		rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+
+		return (rgb && rgb.length === 4) ? "#" +
+			("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) +
+			("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) +
+			("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : '';
 	};
 
 	/**
@@ -224,6 +248,30 @@ export default function() {
 	};
 
 	/**
+	 * Color Scale Getter / Setter
+	 *
+	 * @param {d3.scale} _v - D3 color scale.
+	 * @returns {*}
+	 */
+	my.colorScale = function(_v) {
+		if (!arguments.length) return colorScale;
+		colorScale = _v;
+		return my;
+	};
+
+	/**
+	 * Colors Getter / Setter
+	 *
+	 * @param {Array} _v - Array of colours used by color scale.
+	 * @returns {*}
+	 */
+	my.colors = function(_v) {
+		if (!arguments.length) return colors;
+		colors = _v;
+		return my;
+	};
+
+	/**
 	 * Size Scale Getter / Setter
 	 *
 	 * @param {d3.scale} _v - D3 color scale.
@@ -244,18 +292,6 @@ export default function() {
 	my.sizeDomain = function(_v) {
 		if (!arguments.length) return sizeDomain;
 		sizeDomain = _v;
-		return my;
-	};
-
-	/**
-	 * Color Getter / Setter
-	 *
-	 * @param {string} _v - Color (e.g. 'red' or '#ff0000').
-	 * @returns {*}
-	 */
-	my.color = function(_v) {
-		if (!arguments.length) return color;
-		color = _v;
 		return my;
 	};
 

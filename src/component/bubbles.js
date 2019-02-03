@@ -174,7 +174,7 @@ export default function() {
 	/**
 	 * Size Scale Getter / Setter
 	 *
-	 * @param {d3.scale} _v - D3 color scale.
+	 * @param {d3.scale} _v - D3 size scale.
 	 * @returns {*}
 	 */
 	my.sizeScale = function(_v) {

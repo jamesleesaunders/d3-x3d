@@ -1295,7 +1295,7 @@ function componentBubbles () {
 	/**
   * Size Scale Getter / Setter
   *
-  * @param {d3.scale} _v - D3 color scale.
+  * @param {d3.scale} _v - D3 size scale.
   * @returns {*}
   */
 	my.sizeScale = function (_v) {
@@ -1485,7 +1485,7 @@ function componentBubblesMultiSeries () {
 	/**
   * Size Scale Getter / Setter
   *
-  * @param {d3.scale} _v - D3 color scale.
+  * @param {d3.scale} _v - D3 size scale.
   * @returns {*}
   */
 	my.sizeScale = function (_v) {
@@ -2238,15 +2238,16 @@ function componentVectorFields () {
 
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
-	var color = "blue";
+	var colors = d3.interpolateRdYlGn;
 	var classed = "x3dVectorFields";
 
 	/* Scales */
 	var xScale = void 0;
 	var yScale = void 0;
 	var zScale = void 0;
+	var colorScale = void 0;
 	var sizeScale = void 0;
-	var sizeDomain = [1, 6];
+	var sizeDomain = [1, 8];
 
 	/**
   * Vector Field Function
@@ -2318,8 +2319,12 @@ function componentVectorFields () {
 			zScale = d3.scaleLinear().domain([minZ, maxZ]).range([0, dimensionZ]);
 		}
 
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleSequential().domain(extent).interpolator(colors);
+		}
+
 		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
+			sizeScale = d3.scaleLinear().domain(extent.reverse()).range(sizeDomain);
 		}
 	};
 
@@ -2358,16 +2363,12 @@ function componentVectorFields () {
 					var toVector = new x3dom.fields.SFVec3f(vx, vy, vz);
 					var qDir = x3dom.fields.Quaternion.rotateFromTo(fromVector, toVector);
 					var rot = qDir.toAxisAngle();
-					var len = sizeScale(toVector.length());
 
 					// Calculate transform-translation attr
 					f.translation = xScale(f.x) + " " + yScale(f.y) + " " + zScale(f.z);
 
 					// Calculate vector length
-					f.length = len;
-
-					// Calculate transform-center attr
-					f.offset = "0 " + len / 2 + " 0";
+					f.value = toVector.length();
 
 					// Calculate transform-rotation attr
 					f.rotation = rot[0].x + " " + rot[0].y + " " + rot[0].z + " " + rot[1];
@@ -2383,22 +2384,28 @@ function componentVectorFields () {
 			}).attr("rotation", function (d) {
 				return d.rotation;
 			}).append("transform").attr("translation", function (d) {
-				return d.offset;
+				var offset = sizeScale(d.value) / 2;
+				return "0 " + offset + " 0";
 			});
 
 			var arrowHead = arrowsEnter.append("shape");
 
-			arrowHead.append("appearance").append("material").attr("diffusecolor", color);
+			arrowHead.append("appearance").append("material").attr("diffusecolor", function (d) {
+				return rgb2hex(colorScale(d.value));
+			});
 
 			arrowHead.append("cylinder").attr("height", function (d) {
-				return d.length;
+				return sizeScale(d.value);
 			}).attr("radius", 0.1);
 
 			var arrowShaft = arrowsEnter.append("transform").attr("translation", function (d) {
-				return d.offset;
+				var offset = sizeScale(d.value) / 2;
+				return "0 " + offset + " 0";
 			}).append("shape");
 
-			arrowShaft.append("appearance").append("material").attr("diffusecolor", color);
+			arrowShaft.append("appearance").append("material").attr("diffusecolor", function (d) {
+				return rgb2hex(colorScale(d.value));
+			});
 
 			arrowShaft.append("cone").attr("height", 1).attr("bottomradius", 0.4);
 
@@ -2410,6 +2417,18 @@ function componentVectorFields () {
 
 			arrows.exit().remove();
 		});
+	};
+
+	/**
+  * RGB Colour to Hex Converter
+  *
+  * @param {string} rgb - RGB colour string.
+  * @returns {string}
+  */
+	var rgb2hex = function rgb2hex(rgb) {
+		rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+
+		return rgb && rgb.length === 4 ? "#" + ("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) + ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) + ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : '';
 	};
 
 	/**
@@ -2461,6 +2480,30 @@ function componentVectorFields () {
 	};
 
 	/**
+  * Color Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 color scale.
+  * @returns {*}
+  */
+	my.colorScale = function (_v) {
+		if (!arguments.length) return colorScale;
+		colorScale = _v;
+		return my;
+	};
+
+	/**
+  * Colors Getter / Setter
+  *
+  * @param {Array} _v - Array of colours used by color scale.
+  * @returns {*}
+  */
+	my.colors = function (_v) {
+		if (!arguments.length) return colors;
+		colors = _v;
+		return my;
+	};
+
+	/**
   * Size Scale Getter / Setter
   *
   * @param {d3.scale} _v - D3 color scale.
@@ -2481,18 +2524,6 @@ function componentVectorFields () {
 	my.sizeDomain = function (_v) {
 		if (!arguments.length) return sizeDomain;
 		sizeDomain = _v;
-		return my;
-	};
-
-	/**
-  * Color Getter / Setter
-  *
-  * @param {string} _v - Color (e.g. 'red' or '#ff0000').
-  * @returns {*}
-  */
-	my.color = function (_v) {
-		if (!arguments.length) return color;
-		color = _v;
 		return my;
 	};
 
@@ -3955,7 +3986,7 @@ function chartVectorField () {
 	var width = 500;
 	var height = 500;
 	var dimensions = { x: 40, y: 40, z: 40 };
-	var color = "blue";
+	var colors = d3.interpolateRdYlGn;
 	var classed = "x3dVectorFieldChart";
 	var debug = false;
 
@@ -3963,8 +3994,9 @@ function chartVectorField () {
 	var xScale = void 0;
 	var yScale = void 0;
 	var zScale = void 0;
+	var colorScale = void 0;
 	var sizeScale = void 0;
-	var sizeDomain = [1, 6];
+	var sizeDomain = [1, 8];
 	var origin = { x: 0, y: 0, z: 0 };
 
 	/**
@@ -4037,6 +4069,10 @@ function chartVectorField () {
 			zScale = d3.scaleLinear().domain([minZ, maxZ]).range([0, dimensionZ]);
 		}
 
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleSequential().domain(extent.reverse()).interpolator(colors);
+		}
+
 		if (typeof sizeScale === "undefined") {
 			sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
 		}
@@ -4076,7 +4112,7 @@ function chartVectorField () {
 			var axis = component.crosshair().xScale(xScale).yScale(yScale).zScale(zScale);
 
 			// Construct Vector Field Component
-			var chart = component.vectorFields().color(color).xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).vectorFunction(vectorFunction);
+			var chart = component.vectorFields().xScale(xScale).yScale(yScale).zScale(zScale).colorScale(colorScale).sizeScale(sizeScale).vectorFunction(vectorFunction);
 
 			scene.select(".axis").datum(origin).call(axis);
 
@@ -4157,14 +4193,26 @@ function chartVectorField () {
 	};
 
 	/**
-  * Color Getter / Setter
+  * Color Scale Getter / Setter
   *
-  * @param {string} _v - Color (e.g. 'red' or '#ff0000').
+  * @param {d3.scale} _v - D3 color scale.
   * @returns {*}
   */
-	my.color = function (_v) {
-		if (!arguments.length) return color;
-		color = _v;
+	my.colorScale = function (_v) {
+		if (!arguments.length) return colorScale;
+		colorScale = _v;
+		return my;
+	};
+
+	/**
+  * Colors Getter / Setter
+  *
+  * @param {Array} _v - Array of colours used by color scale.
+  * @returns {*}
+  */
+	my.colors = function (_v) {
+		if (!arguments.length) return colors;
+		colors = _v;
 		return my;
 	};
 

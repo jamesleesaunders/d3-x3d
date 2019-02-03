@@ -20,7 +20,7 @@ export default function() {
 	let width = 500;
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let color = "blue";
+	let colors = d3.interpolateRdYlGn;
 	let classed = "x3dVectorFieldChart";
 	let debug = false;
 
@@ -28,8 +28,9 @@ export default function() {
 	let xScale;
 	let yScale;
 	let zScale;
+	let colorScale;
 	let sizeScale;
-	let sizeDomain = [1, 6];
+	let sizeDomain = [1, 8];
 	let origin = { x: 0, y: 0, z: 0 };
 
 	/**
@@ -89,6 +90,12 @@ export default function() {
 				.range([0, dimensionZ]);
 		}
 
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleSequential()
+				.domain(extent.reverse())
+				.interpolator(colors);
+		}
+
 		if (typeof sizeScale === "undefined") {
 			sizeScale = d3.scaleLinear()
 				.domain(extent)
@@ -140,10 +147,10 @@ export default function() {
 
 			// Construct Vector Field Component
 			const chart = component.vectorFields()
-				.color(color)
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
+				.colorScale(colorScale)
 				.sizeScale(sizeScale)
 				.vectorFunction(vectorFunction);
 
@@ -230,14 +237,26 @@ export default function() {
 	};
 
 	/**
-	 * Color Getter / Setter
+	 * Color Scale Getter / Setter
 	 *
-	 * @param {string} _v - Color (e.g. 'red' or '#ff0000').
+	 * @param {d3.scale} _v - D3 color scale.
 	 * @returns {*}
 	 */
-	my.color = function(_v) {
-		if (!arguments.length) return color;
-		color = _v;
+	my.colorScale = function(_v) {
+		if (!arguments.length) return colorScale;
+		colorScale = _v;
+		return my;
+	};
+
+	/**
+	 * Colors Getter / Setter
+	 *
+	 * @param {Array} _v - Array of colours used by color scale.
+	 * @returns {*}
+	 */
+	my.colors = function(_v) {
+		if (!arguments.length) return colors;
+		colors = _v;
 		return my;
 	};
 
