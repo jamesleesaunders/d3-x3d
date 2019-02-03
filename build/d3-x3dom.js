@@ -4041,7 +4041,7 @@ function chartVectorField () {
 			sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
 		}
 
-		origin = { x: minX, y: minY, z: minZ };
+		// origin = { x: minX, y: minY, z: minZ };
 	};
 
 	/**
