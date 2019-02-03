@@ -81,13 +81,13 @@ export default function() {
 
 		if (typeof colorScale === "undefined") {
 			colorScale = d3.scaleSequential()
-				.domain(extent)
+				.domain(extent.reverse())
 				.interpolator(colors);
 		}
 
 		if (typeof sizeScale === "undefined") {
 			sizeScale = d3.scaleLinear()
-				.domain(extent.reverse())
+				.domain(extent)
 				.range(sizeDomain);
 		}
 	};
