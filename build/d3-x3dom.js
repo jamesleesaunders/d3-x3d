@@ -2386,13 +2386,21 @@ function componentVectorFields () {
 				return d.offset;
 			});
 
-			var shape = arrowsEnter.append("shape");
+			var arrowHead = arrowsEnter.append("shape");
 
-			shape.append("appearance").append("material").attr("diffusecolor", color);
+			arrowHead.append("appearance").append("material").attr("diffusecolor", color);
 
-			shape.append("cone").attr("height", function (d) {
+			arrowHead.append("cylinder").attr("height", function (d) {
 				return d.length;
-			}).attr("bottomradius", 0.3);
+			}).attr("radius", 0.1);
+
+			var arrowShaft = arrowsEnter.append("transform").attr("translation", function (d) {
+				return d.offset;
+			}).append("shape");
+
+			arrowShaft.append("appearance").append("material").attr("diffusecolor", color);
+
+			arrowShaft.append("cone").attr("height", 1).attr("bottomradius", 0.4);
 
 			arrowsEnter.merge(arrows);
 
@@ -3998,8 +4006,6 @@ function chartVectorField () {
 		    dimensionZ = _dimensions.z;
 
 
-		origin = { x: minX, y: minY, z: minZ };
-
 		var extent = d3.extent(data.values.map(function (f) {
 			var vx = void 0,
 			    vy = void 0,
@@ -4034,6 +4040,8 @@ function chartVectorField () {
 		if (typeof sizeScale === "undefined") {
 			sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
 		}
+
+		origin = { x: minX, y: minY, z: minZ };
 	};
 
 	/**

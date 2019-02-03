@@ -141,15 +141,29 @@ export default function() {
 				.append("transform")
 				.attr("translation", (d) => d.offset);
 
-			let shape = arrowsEnter.append("shape");
+			let arrowHead = arrowsEnter.append("shape");
 
-			shape.append("appearance")
+			arrowHead.append("appearance")
 				.append("material")
 				.attr("diffusecolor", color);
 
-			shape.append("cone")
+			arrowHead.append("cylinder")
 				.attr("height", (d) => d.length)
-				.attr("bottomradius", 0.3);
+				.attr("radius", 0.1);
+
+			let arrowShaft = arrowsEnter
+				.append("transform")
+				.attr("translation", (d) => d.offset)
+				.append("shape");
+
+			arrowShaft.append("appearance")
+				.append("material")
+				.attr("diffusecolor", color);
+
+			arrowShaft
+				.append("cone")
+				.attr("height", 1)
+				.attr("bottomradius", 0.4);
 
 			arrowsEnter.merge(arrows);
 
