@@ -30,7 +30,7 @@ export default function() {
 	let zScale;
 	let colorScale;
 	let sizeScale;
-	let sizeDomain = [1, 8];
+	let sizeDomain = [2, 7];
 	let origin = { x: 0, y: 0, z: 0 };
 
 	/**

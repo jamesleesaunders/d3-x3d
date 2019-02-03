@@ -20,7 +20,7 @@ export default function() {
 	let zScale;
 	let colorScale;
 	let sizeScale;
-	let sizeDomain = [1, 8];
+	let sizeDomain = [2, 7];
 
 	/**
 	 * Vector Field Function
@@ -151,7 +151,7 @@ export default function() {
 
 			arrowHead.append("appearance")
 				.append("material")
-				.attr("diffusecolor", (d) => rgb2hex(colorScale(d.value)));
+				.attr("diffusecolor", (d) => rgb2Hex(colorScale(d.value)));
 
 			arrowHead.append("cylinder")
 				.attr("height", (d) => sizeScale(d.value))
@@ -167,7 +167,7 @@ export default function() {
 
 			arrowShaft.append("appearance")
 				.append("material")
-				.attr("diffusecolor", (d) => rgb2hex(colorScale(d.value)));
+				.attr("diffusecolor", (d) => rgb2Hex(colorScale(d.value)));
 
 			arrowShaft
 				.append("cone")
@@ -190,7 +190,7 @@ export default function() {
 	 * @param {string} rgb - RGB colour string.
 	 * @returns {string}
 	 */
-	const rgb2hex = function(rgb) {
+	const rgb2Hex = function(rgb) {
 		rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
 
 		return (rgb && rgb.length === 4) ? "#" +

@@ -2247,7 +2247,7 @@ function componentVectorFields () {
 	var zScale = void 0;
 	var colorScale = void 0;
 	var sizeScale = void 0;
-	var sizeDomain = [1, 8];
+	var sizeDomain = [2, 7];
 
 	/**
   * Vector Field Function
@@ -2391,7 +2391,7 @@ function componentVectorFields () {
 			var arrowHead = arrowsEnter.append("shape");
 
 			arrowHead.append("appearance").append("material").attr("diffusecolor", function (d) {
-				return rgb2hex(colorScale(d.value));
+				return rgb2Hex(colorScale(d.value));
 			});
 
 			arrowHead.append("cylinder").attr("height", function (d) {
@@ -2404,7 +2404,7 @@ function componentVectorFields () {
 			}).append("shape");
 
 			arrowShaft.append("appearance").append("material").attr("diffusecolor", function (d) {
-				return rgb2hex(colorScale(d.value));
+				return rgb2Hex(colorScale(d.value));
 			});
 
 			arrowShaft.append("cone").attr("height", 1).attr("bottomradius", 0.4);
@@ -2425,7 +2425,7 @@ function componentVectorFields () {
   * @param {string} rgb - RGB colour string.
   * @returns {string}
   */
-	var rgb2hex = function rgb2hex(rgb) {
+	var rgb2Hex = function rgb2Hex(rgb) {
 		rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
 
 		return rgb && rgb.length === 4 ? "#" + ("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) + ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) + ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : '';
@@ -3996,7 +3996,7 @@ function chartVectorField () {
 	var zScale = void 0;
 	var colorScale = void 0;
 	var sizeScale = void 0;
-	var sizeDomain = [1, 8];
+	var sizeDomain = [2, 7];
 	var origin = { x: 0, y: 0, z: 0 };
 
 	/**
