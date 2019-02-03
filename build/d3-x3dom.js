@@ -2320,11 +2320,11 @@ function componentVectorFields () {
 		}
 
 		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleSequential().domain(extent).interpolator(colors);
+			colorScale = d3.scaleSequential().domain(extent.slice().reverse()).interpolator(colors);
 		}
 
 		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear().domain(extent.reverse()).range(sizeDomain);
+			sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
 		}
 	};
 
@@ -4070,7 +4070,7 @@ function chartVectorField () {
 		}
 
 		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleSequential().domain(extent.reverse()).interpolator(colors);
+			colorScale = d3.scaleSequential().domain(extent.slice().reverse()).interpolator(colors);
 		}
 
 		if (typeof sizeScale === "undefined") {

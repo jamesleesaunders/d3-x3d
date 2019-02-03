@@ -92,7 +92,7 @@ export default function() {
 
 		if (typeof colorScale === "undefined") {
 			colorScale = d3.scaleSequential()
-				.domain(extent.reverse())
+				.domain(extent.slice().reverse())
 				.interpolator(colors);
 		}
 
