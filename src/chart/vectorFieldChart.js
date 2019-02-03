@@ -95,7 +95,7 @@ export default function() {
 				.range(sizeDomain);
 		}
 
-		origin = { x: minX, y: minY, z: minZ };
+		// origin = { x: minX, y: minY, z: minZ };
 	};
 
 	/**
