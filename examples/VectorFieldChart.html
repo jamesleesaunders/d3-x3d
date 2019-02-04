@@ -13,31 +13,24 @@
   <div id="chartholder"></div>
 
   <script>
-    var xRange = d3.range(-5, 5, 1);
-    var yRange = d3.range(-5, 5, 1);
-    var zRange = d3.range(-5, 5, 1);
-
-    var xScale = d3.scaleLinear().domain(d3.extent(xRange)).range([0, 40]);
-    var yScale = d3.scaleLinear().domain(d3.extent(yRange)).range([0, 40]);
-    var zScale = d3.scaleLinear().domain(d3.extent(zRange)).range([0, 40]);
-
     // Select chartholder
     var chartHolder = d3.select("#chartholder");
 
     // Generate some data
+    var xRange = d3.range(-4, 5, 1);
+    var yRange = d3.range(-4, 5, 1);
+    var zRange = d3.range(-4, 5, 1);
+
     var values = [];
     xRange.forEach(function(x) {
       yRange.forEach(function(y) {
         zRange.forEach(function(z) {
           values.push({
             key: null,
-            value: 4,
+            value: null,
             x: x,
             y: y,
-            z: z,
-            vx: x,
-            vy: y,
-            vz: z
+            z: z
           });
         });
       });
@@ -48,11 +41,17 @@
       values: values
     };
 
+    var vectorFunction = function(x, y, z) {
+      return {
+        x: Math.pow(x, 2) + y * Math.pow(x, 2),
+        y: Math.pow(y, 2) - x * Math.pow(z, 2),
+        z: Math.pow(z, 2)
+      };
+    };
+
     // Declare the chart component
     var myChart = d3.x3dom.chart.vectorFieldChart()
-      .xScale(xScale)
-      .yScale(yScale)
-      .zScale(zScale);
+     .vectorFunction(vectorFunction);
 
     // Attach chart and data to the chartholder
     chartHolder.datum(myData).call(myChart);
