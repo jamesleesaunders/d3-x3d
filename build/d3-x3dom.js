@@ -2247,7 +2247,7 @@ function componentVectorFields () {
 	var zScale = void 0;
 	var colorScale = void 0;
 	var sizeScale = void 0;
-	var sizeDomain = [2, 7];
+	var sizeDomain = [2.0, 7.0];
 
 	/**
   * Vector Field Function
@@ -2492,18 +2492,6 @@ function componentVectorFields () {
 	};
 
 	/**
-  * Colors Getter / Setter
-  *
-  * @param {Array} _v - Array of colours used by color scale.
-  * @returns {*}
-  */
-	my.colors = function (_v) {
-		if (!arguments.length) return colors;
-		colors = _v;
-		return my;
-	};
-
-	/**
   * Size Scale Getter / Setter
   *
   * @param {d3.scale} _v - D3 color scale.
@@ -2528,14 +2516,38 @@ function componentVectorFields () {
 	};
 
 	/**
-  * Vector Function Getter / Setter
+  * Color Scale Getter / Setter
   *
-  * @param {string} _v - Vector Function.
+  * @param {d3.scale} _v - D3 color scale.
   * @returns {*}
   */
-	my.vectorFunction = function (_v) {
+	my.colorScale = function (_v) {
+		if (!arguments.length) return colorScale;
+		colorScale = _v;
+		return my;
+	};
+
+	/**
+  * Colors Getter / Setter
+  *
+  * @param {Array} _v - Array of colours used by color scale.
+  * @returns {*}
+  */
+	my.colors = function (_v) {
+		if (!arguments.length) return colors;
+		colors = _v;
+		return my;
+	};
+
+	/**
+  * Vector Function Getter / Setter
+  *
+  * @param {function} _f - Vector Function.
+  * @returns {*}
+  */
+	my.vectorFunction = function (_f) {
 		if (!arguments.length) return vectorFunction;
-		vectorFunction = _v;
+		vectorFunction = _f;
 		return my;
 	};
 
@@ -3996,7 +4008,7 @@ function chartVectorField () {
 	var zScale = void 0;
 	var colorScale = void 0;
 	var sizeScale = void 0;
-	var sizeDomain = [2, 7];
+	var sizeDomain = [2.0, 7.0];
 	var origin = { x: 0, y: 0, z: 0 };
 
 	/**
@@ -4217,6 +4229,30 @@ function chartVectorField () {
 	};
 
 	/**
+  * Size Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 color scale.
+  * @returns {*}
+  */
+	my.sizeScale = function (_v) {
+		if (!arguments.length) return sizeScale;
+		sizeScale = _v;
+		return my;
+	};
+
+	/**
+  * Size Domain Getter / Setter
+  *
+  * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
+  * @returns {*}
+  */
+	my.sizeDomain = function (_v) {
+		if (!arguments.length) return sizeDomain;
+		sizeDomain = _v;
+		return my;
+	};
+
+	/**
   * Debug Getter / Setter
   *
   * @param {boolean} _v - Show debug log and stats. True/False.
@@ -4231,12 +4267,12 @@ function chartVectorField () {
 	/**
   * Vector Function Getter / Setter
   *
-  * @param {string} _v - Vector Function.
+  * @param {function} _f - Vector Function.
   * @returns {*}
   */
-	my.vectorFunction = function (_v) {
+	my.vectorFunction = function (_f) {
 		if (!arguments.length) return vectorFunction;
-		vectorFunction = _v;
+		vectorFunction = _f;
 		return my;
 	};
 

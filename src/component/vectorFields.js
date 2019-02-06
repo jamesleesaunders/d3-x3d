@@ -20,7 +20,7 @@ export default function() {
 	let zScale;
 	let colorScale;
 	let sizeScale;
-	let sizeDomain = [2, 7];
+	let sizeDomain = [2.0, 7.0];
 
 	/**
 	 * Vector Field Function
@@ -260,18 +260,6 @@ export default function() {
 	};
 
 	/**
-	 * Colors Getter / Setter
-	 *
-	 * @param {Array} _v - Array of colours used by color scale.
-	 * @returns {*}
-	 */
-	my.colors = function(_v) {
-		if (!arguments.length) return colors;
-		colors = _v;
-		return my;
-	};
-
-	/**
 	 * Size Scale Getter / Setter
 	 *
 	 * @param {d3.scale} _v - D3 color scale.
@@ -296,14 +284,38 @@ export default function() {
 	};
 
 	/**
-	 * Vector Function Getter / Setter
+	 * Color Scale Getter / Setter
 	 *
-	 * @param {string} _v - Vector Function.
+	 * @param {d3.scale} _v - D3 color scale.
 	 * @returns {*}
 	 */
-	my.vectorFunction = function(_v) {
+	my.colorScale = function(_v) {
+		if (!arguments.length) return colorScale;
+		colorScale = _v;
+		return my;
+	};
+
+	/**
+	 * Colors Getter / Setter
+	 *
+	 * @param {Array} _v - Array of colours used by color scale.
+	 * @returns {*}
+	 */
+	my.colors = function(_v) {
+		if (!arguments.length) return colors;
+		colors = _v;
+		return my;
+	};
+
+	/**
+	 * Vector Function Getter / Setter
+	 *
+	 * @param {function} _f - Vector Function.
+	 * @returns {*}
+	 */
+	my.vectorFunction = function(_f) {
 		if (!arguments.length) return vectorFunction;
-		vectorFunction = _v;
+		vectorFunction = _f;
 		return my;
 	};
 

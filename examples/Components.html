@@ -175,6 +175,41 @@
       .call(ribbonMultiSeriesComponent);
 
     /**
+     * Vector Field Component
+     */
+    var vectorValues = [];
+
+    // Generate some data
+    d3.range(-4, 5, 1).forEach(function(x) {
+      d3.range(-4, 5, 1).forEach(function(y) {
+        d3.range(-4, 5, 1).forEach(function(z) {
+          vectorValues.push({ key: null, value: null, x: x, y: y, z: z });
+        });
+      });
+    });
+
+    var vectorData = {
+      key: 'VectorFields',
+      values: vectorValues
+    };
+    var vectorComponent = d3.x3dom.component.vectorFields();
+
+    // Create scene
+    var scene8 = d3.select("#chartholder8")
+      .append("x3d")
+      .attr("id", "vectorFields")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("scene");
+
+    // Add chart component
+    scene8.call(viewpoint)
+      .append("group")
+      .attr("class", "chart")
+      .datum(vectorData)
+      .call(vectorComponent);
+
+    /**
      * Axis Component
      */
     var countries = d3.x3dom.randomData.countries;
@@ -188,29 +223,9 @@
       .zScale(zScale);
 
     // Create scene
-    var scene8 = d3.select("#chartholder8")
-      .append("x3d")
-      .attr("id", "axis")
-      .attr("width", width + "px")
-      .attr("height", height + "px")
-      .append("scene");
-
-    // Add chart component
-    scene8.call(viewpoint)
-      .append("group")
-      .attr("class", "chart")
-      .call(axisThreePlaneComponent);
-
-    /**
-     * Vector Field Component
-     */
-    var vectorData = d3.x3dom.randomData.dataset3(300);
-    var vectorComponent = d3.x3dom.component.vectorFields();
-
-    // Create scene
     var scene9 = d3.select("#chartholder9")
       .append("x3d")
-      .attr("id", "vectorFields")
+      .attr("id", "axis")
       .attr("width", width + "px")
       .attr("height", height + "px")
       .append("scene");
@@ -219,8 +234,7 @@
     scene9.call(viewpoint)
       .append("group")
       .attr("class", "chart")
-      .datum(vectorData)
-      .call(vectorComponent);
+      .call(axisThreePlaneComponent);
 
     /**
      * Sync Viewpoints

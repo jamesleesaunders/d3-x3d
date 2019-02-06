@@ -30,7 +30,7 @@ export default function() {
 	let zScale;
 	let colorScale;
 	let sizeScale;
-	let sizeDomain = [2, 7];
+	let sizeDomain = [2.0, 7.0];
 	let origin = { x: 0, y: 0, z: 0 };
 
 	/**
@@ -261,6 +261,30 @@ export default function() {
 	};
 
 	/**
+	 * Size Scale Getter / Setter
+	 *
+	 * @param {d3.scale} _v - D3 color scale.
+	 * @returns {*}
+	 */
+	my.sizeScale = function(_v) {
+		if (!arguments.length) return sizeScale;
+		sizeScale = _v;
+		return my;
+	};
+
+	/**
+	 * Size Domain Getter / Setter
+	 *
+	 * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
+	 * @returns {*}
+	 */
+	my.sizeDomain = function(_v) {
+		if (!arguments.length) return sizeDomain;
+		sizeDomain = _v;
+		return my;
+	};
+
+	/**
 	 * Debug Getter / Setter
 	 *
 	 * @param {boolean} _v - Show debug log and stats. True/False.
@@ -275,12 +299,12 @@ export default function() {
 	/**
 	 * Vector Function Getter / Setter
 	 *
-	 * @param {string} _v - Vector Function.
+	 * @param {function} _f - Vector Function.
 	 * @returns {*}
 	 */
-	my.vectorFunction = function(_v) {
+	my.vectorFunction = function(_f) {
 		if (!arguments.length) return vectorFunction;
-		vectorFunction = _v;
+		vectorFunction = _f;
 		return my;
 	};
 
