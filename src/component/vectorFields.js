@@ -187,8 +187,8 @@ export default function() {
 	/**
 	 * RGB Colour to Hex Converter
 	 *
-	 * @param {string} rgb - RGB colour string.
-	 * @returns {string}
+	 * @param {string} rgb - RGB colour string (e.g. 'rgb(155, 102, 102)').
+	 * @returns {string} - Hex Color (e.g. '#9b6666').
 	 */
 	const rgb2Hex = function(rgb) {
 		rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);

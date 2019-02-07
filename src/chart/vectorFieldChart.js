@@ -9,9 +9,10 @@ import component from "../component";
  *
  * @see https://mathinsight.org/vector_field_overview
  * @example
- * var chartHolder = d3.select("#chartholder");
- * var myData = [...];
- * var myChart = d3.x3dom.chart.vectorFieldChart();
+ * let chartHolder = d3.select("#chartholder");
+ * let myData = [...];
+ * let myChart = d3.x3dom.chart.vectorFieldChart();
+ * myChart.vectorFunction((x, y, z) => ({ x: -x, y: -y, z: -z }));
  * chartHolder.datum(myData).call(myChart);
  */
 export default function() {
