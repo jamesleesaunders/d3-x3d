@@ -7,12 +7,13 @@ import component from "../component";
  *
  * @module
  *
- * @see https://datavizproject.com/data-type/bubble-chart/
  * @example
- * var chartHolder = d3.select("#chartholder");
- * var myData = [...];
- * var myChart = d3.x3dom.chart.bubbleChart();
+ * let chartHolder = d3.select("#chartholder");
+ * let myData = [...];
+ * let myChart = d3.x3dom.chart.bubbleChart();
  * chartHolder.datum(myData).call(myChart);
+ *
+ * @see https://datavizproject.com/data-type/bubble-chart/
  */
 export default function() {
 

@@ -7,12 +7,13 @@ import component from "../component";
  *
  * @module
  *
- * @see https://datavizproject.com/data-type/waterfall-plot/
  * @example
- * var chartHolder = d3.select("#chartholder");
- * var myData = [...];
- * var myChart = d3.x3dom.chart.ribbonChartMultiSeries();
+ * let chartHolder = d3.select("#chartholder");
+ * let myData = [...];
+ * let myChart = d3.x3dom.chart.ribbonChartMultiSeries();
  * chartHolder.datum(myData).call(myChart);
+ *
+ * @see https://datavizproject.com/data-type/waterfall-plot/
  */
 export default function() {
 

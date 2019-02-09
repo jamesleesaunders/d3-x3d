@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+// import * as x3dom from "x3dom";
 import dataTransform from "../dataTransform";
 import component from "../component";
 
@@ -7,13 +8,14 @@ import component from "../component";
  *
  * @module
  *
- * @see https://mathinsight.org/vector_field_overview
  * @example
  * let chartHolder = d3.select("#chartholder");
  * let myData = [...];
  * let myChart = d3.x3dom.chart.vectorFieldChart();
  * myChart.vectorFunction((x, y, z) => ({ x: -x, y: -y, z: -z }));
  * chartHolder.datum(myData).call(myChart);
+ *
+ * @see https://mathinsight.org/vector_field_overview
  */
 export default function() {
 

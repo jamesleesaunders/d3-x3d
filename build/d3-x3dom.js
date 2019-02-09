@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.0.22";
+var version = "1.0.23";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -2422,8 +2422,8 @@ function componentVectorFields () {
 	/**
   * RGB Colour to Hex Converter
   *
-  * @param {string} rgb - RGB colour string.
-  * @returns {string}
+  * @param {string} rgb - RGB colour string (e.g. 'rgb(155, 102, 102)').
+  * @returns {string} - Hex Color (e.g. '#9b6666').
   */
 	var rgb2Hex = function rgb2Hex(rgb) {
 		rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
@@ -2689,12 +2689,13 @@ var component = {
  *
  * @module
  *
- * @see https://datavizproject.com/data-type/3d-bar-chart/
  * @example
- * var chartHolder = d3.select("#chartholder");
- * var myData = [...];
- * var myChart = d3.x3dom.chart.barChartMultiSeries();
+ * let chartHolder = d3.select("#chartholder");
+ * let myData = [...];
+ * let myChart = d3.x3dom.chart.barChartMultiSeries();
  * chartHolder.datum(myData).call(myChart);
+ *
+ * @see https://datavizproject.com/data-type/3d-bar-chart/
  */
 function chartBarChartMultiSeries () {
 
@@ -2906,12 +2907,13 @@ function chartBarChartMultiSeries () {
  *
  * @module
  *
- * @see https://datavizproject.com/data-type/3d-bar-chart/
  * @example
- * var chartHolder = d3.select("#chartholder");
- * var myData = [...];
- * var myChart = d3.x3dom.chart.barChartVertical();
+ * let chartHolder = d3.select("#chartholder");
+ * let myData = [...];
+ * let myChart = d3.x3dom.chart.barChartVertical();
  * chartHolder.datum(myData).call(myChart);
+ *
+ * @see https://datavizproject.com/data-type/3d-bar-chart/
  */
 function chartBarChartVertical () {
 
@@ -3106,12 +3108,13 @@ function chartBarChartVertical () {
  *
  * @module
  *
- * @see https://datavizproject.com/data-type/bubble-chart/
  * @example
- * var chartHolder = d3.select("#chartholder");
- * var myData = [...];
- * var myChart = d3.x3dom.chart.bubbleChart();
+ * let chartHolder = d3.select("#chartholder");
+ * let myData = [...];
+ * let myChart = d3.x3dom.chart.bubbleChart();
  * chartHolder.datum(myData).call(myChart);
+ *
+ * @see https://datavizproject.com/data-type/bubble-chart/
  */
 function chartBubbleChart () {
 
@@ -3355,12 +3358,13 @@ function chartBubbleChart () {
  *
  * @module
  *
- * @see https://datavizproject.com/data-type/waterfall-plot/
  * @example
- * var chartHolder = d3.select("#chartholder");
- * var myData = [...];
- * var myChart = d3.x3dom.chart.ribbonChartMultiSeries();
+ * let chartHolder = d3.select("#chartholder");
+ * let myData = [...];
+ * let myChart = d3.x3dom.chart.ribbonChartMultiSeries();
  * chartHolder.datum(myData).call(myChart);
+ *
+ * @see https://datavizproject.com/data-type/waterfall-plot/
  */
 function chartRibbonChartMultiSeries () {
 
@@ -3572,12 +3576,13 @@ function chartRibbonChartMultiSeries () {
  *
  * @module
  *
- * @see https://datavizproject.com/data-type/3d-scatterplot/
  * @example
- * var chartHolder = d3.select("#chartholder");
- * var myData = [...];
- * var myChart = d3.x3dom.chart.scatterPlot();
+ * let chartHolder = d3.select("#chartholder");
+ * let myData = [...];
+ * let myChart = d3.x3dom.chart.scatterPlot();
  * chartHolder.datum(myData).call(myChart);
+ *
+ * @see https://datavizproject.com/data-type/3d-scatterplot/
  */
 function chartScatterPlot () {
 
@@ -3770,12 +3775,13 @@ function chartScatterPlot () {
  *
  * @module
  *
- * @see https://datavizproject.com/data-type/three-dimensional-stream-graph/
  * @example
- * var chartHolder = d3.select("#chartholder");
- * var myData = [...];
- * var myChart = d3.x3dom.chart.surfacePlot();
+ * let chartHolder = d3.select("#chartholder");
+ * let myData = [...];
+ * let myChart = d3.x3dom.chart.surfacePlot();
  * chartHolder.datum(myData).call(myChart);
+ *
+ * @see https://datavizproject.com/data-type/three-dimensional-stream-graph/
  */
 function chartSurfacePlot () {
 
@@ -3985,12 +3991,14 @@ function chartSurfacePlot () {
  *
  * @module
  *
- * @see https://mathinsight.org/vector_field_overview
  * @example
- * var chartHolder = d3.select("#chartholder");
- * var myData = [...];
- * var myChart = d3.x3dom.chart.vectorFieldChart();
+ * let chartHolder = d3.select("#chartholder");
+ * let myData = [...];
+ * let myChart = d3.x3dom.chart.vectorFieldChart();
+ * myChart.vectorFunction((x, y, z) => ({ x: -x, y: -y, z: -z }));
  * chartHolder.datum(myData).call(myChart);
+ *
+ * @see https://mathinsight.org/vector_field_overview
  */
 function chartVectorField () {
 

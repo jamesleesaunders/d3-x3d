@@ -7,12 +7,13 @@ import component from "../component";
  *
  * @module
  *
- * @see https://datavizproject.com/data-type/three-dimensional-stream-graph/
  * @example
- * var chartHolder = d3.select("#chartholder");
- * var myData = [...];
- * var myChart = d3.x3dom.chart.surfacePlot();
+ * let chartHolder = d3.select("#chartholder");
+ * let myData = [...];
+ * let myChart = d3.x3dom.chart.surfacePlot();
  * chartHolder.datum(myData).call(myChart);
+ *
+ * @see https://datavizproject.com/data-type/three-dimensional-stream-graph/
  */
 export default function() {
 
