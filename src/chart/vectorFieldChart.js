@@ -105,7 +105,13 @@ export default function() {
 				.range(sizeDomain);
 		}
 
-		// origin = { x: minX, y: minY, z: minZ };
+		// TODO: Have a think about whether this is appropriate?
+		// Or, do we always want the origin to be 0,0,0 ?
+		origin = {
+			x: (minX < 0) ? 0 : minX,
+			y: (minY < 0) ? 0 : minY,
+			z: (minZ < 0) ? 0 : minZ
+		};
 	};
 
 	/**
