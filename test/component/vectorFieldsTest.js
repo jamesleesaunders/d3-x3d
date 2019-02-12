@@ -32,9 +32,9 @@ test("Test Vector Fields Component, component.vectorFields()", function(t) {
 	t.equal(vectorFields.sizeScale(), 2, "Changed sizeScale is set");
 
 	// Test sizeDomain getter / setter function
-	t.deepEqual(vectorFields.sizeDomain(), [2.0, 7.0], "Default sizeDomain");
-	vectorFields.sizeDomain([3.5, 5.0]);
-	t.deepEqual(vectorFields.sizeDomain(), [3.5, 5.0], "Changed sizeDomain");
+	t.deepEqual(vectorFields.sizeDomain(), [2.0, 5.0], "Default sizeDomain");
+	vectorFields.sizeDomain([3.5, 7.0]);
+	t.deepEqual(vectorFields.sizeDomain(), [3.5, 7.0], "Changed sizeDomain");
 
 	// Test colorScale getter / setter function
 	t.equal(vectorFields.colorScale(), undefined, "Default colorScale is undefined");
