@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+// import * as x3dom from "x3dom";
 import dataTransform from "../dataTransform";
 import component from "../component";
 
@@ -7,13 +8,14 @@ import component from "../component";
  *
  * @module
  *
- * @see https://mathinsight.org/vector_field_overview
  * @example
  * let chartHolder = d3.select("#chartholder");
  * let myData = [...];
  * let myChart = d3.x3dom.chart.vectorFieldChart();
  * myChart.vectorFunction((x, y, z) => ({ x: -x, y: -y, z: -z }));
  * chartHolder.datum(myData).call(myChart);
+ *
+ * @see https://mathinsight.org/vector_field_overview
  */
 export default function() {
 
@@ -31,7 +33,7 @@ export default function() {
 	let zScale;
 	let colorScale;
 	let sizeScale;
-	let sizeDomain = [2.0, 7.0];
+	let sizeDomain = [2.0, 5.0];
 	let origin = { x: 0, y: 0, z: 0 };
 
 	/**
@@ -103,7 +105,13 @@ export default function() {
 				.range(sizeDomain);
 		}
 
-		// origin = { x: minX, y: minY, z: minZ };
+		// TODO: Have a think about whether this is appropriate?
+		// Or, do we always want the origin to be 0,0,0 ?
+		origin = {
+			x: (minX < 0) ? 0 : minX,
+			y: (minY < 0) ? 0 : minY,
+			z: (minZ < 0) ? 0 : minZ
+		};
 	};
 
 	/**

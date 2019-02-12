@@ -43,15 +43,15 @@
 
     var vectorFunction = function(x, y, z) {
       return {
-        x: Math.pow(x, 2) + y * Math.pow(x, 2),
-        y: Math.pow(y, 2) - x * Math.pow(z, 2),
-        z: Math.pow(z, 2)
+        x: z / (Math.pow(x, 2) + Math.pow(z, 2)),
+        y: 0,
+        z: -x / (Math.pow(x, 2) + Math.pow(z, 2))
       };
     };
 
     // Declare the chart component
     var myChart = d3.x3dom.chart.vectorFieldChart()
-     .vectorFunction(vectorFunction);
+      .vectorFunction(vectorFunction);
 
     // Attach chart and data to the chartholder
     chartHolder.datum(myData).call(myChart);

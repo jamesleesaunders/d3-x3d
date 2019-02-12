@@ -20,7 +20,7 @@ export default function() {
 	let zScale;
 	let colorScale;
 	let sizeScale;
-	let sizeDomain = [2.0, 7.0];
+	let sizeDomain = [2.0, 5.0];
 
 	/**
 	 * Vector Field Function
@@ -120,6 +120,11 @@ export default function() {
 					let qDir = x3dom.fields.Quaternion.rotateFromTo(fromVector, toVector);
 					let rot = qDir.toAxisAngle();
 
+					if (!toVector.length()) {
+						// If there is no vector length return null (and filter them out after)
+						return null;
+					}
+
 					// Calculate transform-translation attr
 					f.translation = xScale(f.x) + " " + yScale(f.y) + " " + zScale(f.z);
 
@@ -130,6 +135,8 @@ export default function() {
 					f.rotation = rot[0].x + " " + rot[0].y + " " + rot[0].z + " " + rot[1];
 
 					return f;
+				}).filter(function(f) {
+					return f !== null;
 				});
 			};
 
@@ -187,17 +194,14 @@ export default function() {
 	/**
 	 * RGB Colour to Hex Converter
 	 *
-	 * @param {string} rgb - RGB colour string (e.g. 'rgb(155, 102, 102)').
+	 * @param {string} rgbStr - RGB colour string (e.g. 'rgb(155, 102, 102)').
 	 * @returns {string} - Hex Color (e.g. '#9b6666').
 	 */
-	const rgb2Hex = function(rgb) {
-		rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
-
-		return (rgb && rgb.length === 4) ? "#" +
-			("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) +
-			("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) +
-			("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : '';
-	};
+	function rgb2Hex(rgbStr) {
+		const [red, green, blue] = rgbStr.substring(4, rgbStr.length - 1).replace(/ /g, '').split(',');
+		let rgb = blue | (green << 8) | (red << 16);
+		return '#' + (0x1000000 + rgb).toString(16).slice(1);
+	}
 
 	/**
 	 * Dimensions Getter / Setter

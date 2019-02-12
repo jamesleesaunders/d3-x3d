@@ -7,12 +7,13 @@ import component from "../component";
  *
  * @module
  *
- * @see https://datavizproject.com/data-type/3d-bar-chart/
  * @example
- * var chartHolder = d3.select("#chartholder");
- * var myData = [...];
- * var myChart = d3.x3dom.chart.barChartMultiSeries();
+ * let chartHolder = d3.select("#chartholder");
+ * let myData = [...];
+ * let myChart = d3.x3dom.chart.barChartMultiSeries();
  * chartHolder.datum(myData).call(myChart);
+ *
+ * @see https://datavizproject.com/data-type/3d-bar-chart/
  */
 export default function() {
 
