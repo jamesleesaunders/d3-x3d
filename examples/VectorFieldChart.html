@@ -43,9 +43,9 @@
 
     var vectorFunction = function(x, y, z) {
       return {
-        x: z / (Math.pow(x, 2) + Math.pow(z, 2)),
-        y: 0,
-        z: -x / (Math.pow(x, 2) + Math.pow(z, 2))
+        x: -y / (Math.pow(x, 2) + Math.pow(y, 2)),
+        y: x / (Math.pow(x, 2) + Math.pow(y, 2)),
+        z: 0
       };
     };
 
