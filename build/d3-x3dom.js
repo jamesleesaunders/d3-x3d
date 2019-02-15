@@ -1634,7 +1634,7 @@ function componentCrosshair () {
 				return colorScale(d);
 			});
 
-			lineSelect.transition().attr("translation", function (d) {
+			lineSelect.transition().ease(d3.easeQuadOut).attr("translation", function (d) {
 				return getPositionVector(d);
 			}).attr("rotation", function (d) {
 				return getRotationVector(d);

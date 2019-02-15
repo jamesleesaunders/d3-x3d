@@ -80,6 +80,7 @@ export default function() {
 				.attr("diffusecolor", (d) => colorScale(d));
 
 			lineSelect.transition()
+				.ease(d3.easeQuadOut)
 				.attr("translation", (d) => getPositionVector(d))
 				.attr("rotation", (d) => getRotationVector(d));
 		});
