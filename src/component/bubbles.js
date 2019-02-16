@@ -81,37 +81,37 @@ export default function() {
 				.data((d) => d.values);
 
 			const bubblesEnter = bubbles.enter()
-				.append("transform")
+				.append("group")
 				.attr("class", "bubble")
+				.append("transform")
 				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
 				.attr("onmouseover", "d3.select(this).select('billboard').attr('render', true);")
-				.attr("onmouseout", "d3.select(this).select('transform').select('billboard').attr('render', false);");
+				.attr("onmouseout", "d3.select(this).select('billboard').attr('render', false);");
 
-			bubblesEnter.append("shape")
+			bubblesEnter
+				.append("shape")
 				.call(makeSolid, color)
 				.append("sphere")
 				.attr("radius", (d) => sizeScale(d.value));
 
 			bubblesEnter
-				.append("transform")
-				.attr("translation", (d) => {
-					let r = sizeScale(d.value) + 0.8;
-					return r + " " + r + " " + r;
-				})
 				.append("billboard")
 				.attr("render", false)
 				.attr("axisofrotation", "0 0 0")
+				.append("transform")
+				.attr("translation", (d) => {
+					let r = (sizeScale(d.value) / 2) + 0.6;
+					return r + " " + r + " " + r;
+				})
 				.append("shape")
 				.call(makeSolid, "blue")
 				.append("text")
-				.attr("class", "labelText")
 				.attr("string", (d) => d.key)
 				.append("fontstyle")
 				.attr("size", 1)
 				.attr("family", "SANS")
 				.attr("style", "BOLD")
-				.attr("justify", "START")
-				.attr("render", false);
+				.attr("justify", "START");
 
 			bubblesEnter.merge(bubbles);
 

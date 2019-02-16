@@ -199,7 +199,7 @@ export default function() {
 	 */
 	function rgb2Hex(rgbStr) {
 		const [red, green, blue] = rgbStr.substring(4, rgbStr.length - 1).replace(/ /g, '').split(',');
-		let rgb = blue | (green << 8) | (red << 16);
+		let rgb = blue | (green << 8) | (red << 16); // eslint-disable-line no-bitwise
 		return '#' + (0x1000000 + rgb).toString(16).slice(1);
 	}
 

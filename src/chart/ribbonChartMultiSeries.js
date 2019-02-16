@@ -96,20 +96,14 @@ export default function() {
 			.append("group")
 			.attr("class", (d) => d);
 
-		const viewpoint = component.viewpoint()
-			.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2])
-			.viewOrientation([-0.61021, 0.77568, 0.16115, 0.65629])
-			.viewPosition([77.63865, 54.69470, 104.38314]);
-		scene.call(viewpoint);
-
-		scene.append("directionallight")
-			.attr("direction", "1 0 -1")
-			.attr("on", "true")
-			.attr("intensity", "0.4")
-			.attr("shadowintensity", "0");
-
 		scene.each((data) => {
 			init(data);
+
+			// Construct Viewpoint Component
+			const viewpoint = component.viewpoint()
+				.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2])
+				.viewOrientation([-0.61021, 0.77568, 0.16115, 0.65629])
+				.viewPosition([77.63865, 54.69470, 104.38314]);
 
 			// Construct Axis Component
 			const axis = component.axisThreePlane()
@@ -124,12 +118,20 @@ export default function() {
 				.zScale(zScale)
 				.colors(colors);
 
+			scene.call(viewpoint);
+
 			scene.select(".axis")
 				.call(axis);
 
 			scene.select(".chart")
-				.datum(data)
+				.datum((d) => d)
 				.call(chart);
+
+			scene.append("directionallight")
+				.attr("direction", "1 0 -1")
+				.attr("on", "true")
+				.attr("intensity", "0.4")
+				.attr("shadowintensity", "0");
 		});
 	};
 

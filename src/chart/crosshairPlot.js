@@ -3,7 +3,7 @@ import dataTransform from "../dataTransform";
 import component from "../component";
 
 /**
- * Reusable 3D Crosshair Plot Chart (Experimental)
+ * Reusable 3D Crosshair Plot (Experimental) Chart
  *
  * @module
  *
@@ -84,12 +84,12 @@ export default function() {
 			.append("group")
 			.attr("class", (d) => d);
 
-		const viewpoint = component.viewpoint()
-			.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-		scene.call(viewpoint);
-
 		scene.each((data) => {
 			init(data);
+
+			// Construct Viewpoint Component
+			const viewpoint = component.viewpoint()
+				.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
 			// Construct Axis Component
 			const axis = component.axisThreePlane()
@@ -103,10 +103,11 @@ export default function() {
 				.yScale(yScale)
 				.zScale(zScale);
 
+			scene.call(viewpoint);
+
 			scene.select(".axis")
 				.call(axis);
 
-			// Generate Crosshair Plot
 			scene.select(".chart")
 				.selectAll(".crosshair")
 				.data((d) => d.values)
