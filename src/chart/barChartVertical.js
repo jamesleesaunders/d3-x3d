@@ -3,7 +3,7 @@ import dataTransform from "../dataTransform";
 import component from "../component";
 
 /**
- * Reusable 3D Bar Chart
+ * Reusable 3D Vertical Bar Chart
  *
  * @module
  *
@@ -89,12 +89,12 @@ export default function() {
 			.append("group")
 			.attr("class", (d) => d);
 
-		const viewpoint = component.viewpoint()
-			.quickView("left");
-		scene.call(viewpoint);
-
 		scene.each((data) => {
 			init(data);
+
+			// Construct Viewpoint Component
+			const viewpoint = component.viewpoint()
+				.quickView("left");
 
 			// Construct Axis Components
 			const xAxis = component.axis()
@@ -114,6 +114,8 @@ export default function() {
 				.yScale(yScale)
 				.colors(colors);
 
+			scene.call(viewpoint);
+
 			scene.select(".xAxis")
 				.call(xAxis);
 
@@ -121,7 +123,7 @@ export default function() {
 				.call(yAxis);
 
 			scene.select(".chart")
-				.datum(data)
+				.datum((d) => d)
 				.call(chart);
 		});
 	};

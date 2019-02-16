@@ -95,12 +95,12 @@ export default function() {
 			.append("group")
 			.attr("class", (d) => d);
 
-		const viewpoint = component.viewpoint()
-			.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-		scene.call(viewpoint);
-
 		scene.each((data) => {
 			init(data);
+
+			// Construct Viewpoint Component
+			const viewpoint = component.viewpoint()
+				.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
 			// Construct Axis Component
 			const axis = component.axisThreePlane()
@@ -115,11 +115,13 @@ export default function() {
 				.zScale(zScale)
 				.colors(colors);
 
+			scene.call(viewpoint);
+
 			scene.select(".axis")
 				.call(axis);
 
 			scene.select(".chart")
-				.datum(data)
+				.datum((d) => d)
 				.call(chart);
 		});
 	};

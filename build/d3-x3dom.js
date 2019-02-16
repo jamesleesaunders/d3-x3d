@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.0.23";
+var version = "1.1.0";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -1257,20 +1257,20 @@ function componentBubbles () {
 				return d.values;
 			});
 
-			var bubblesEnter = bubbles.enter().append("transform").attr("class", "bubble").attr("translation", function (d) {
+			var bubblesEnter = bubbles.enter().append("group").attr("class", "bubble").append("transform").attr("translation", function (d) {
 				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-			}).attr("onmouseover", "d3.select(this).select('billboard').attr('render', true);").attr("onmouseout", "d3.select(this).select('transform').select('billboard').attr('render', false);");
+			}).attr("onmouseover", "d3.select(this).select('billboard').attr('render', true);").attr("onmouseout", "d3.select(this).select('billboard').attr('render', false);");
 
 			bubblesEnter.append("shape").call(makeSolid, color).append("sphere").attr("radius", function (d) {
 				return sizeScale(d.value);
 			});
 
-			bubblesEnter.append("transform").attr("translation", function (d) {
-				var r = sizeScale(d.value) + 0.8;
+			bubblesEnter.append("billboard").attr("render", false).attr("axisofrotation", "0 0 0").append("transform").attr("translation", function (d) {
+				var r = sizeScale(d.value) / 2 + 0.6;
 				return r + " " + r + " " + r;
-			}).append("billboard").attr("render", false).attr("axisofrotation", "0 0 0").append("shape").call(makeSolid, "blue").append("text").attr("class", "labelText").attr("string", function (d) {
+			}).append("shape").call(makeSolid, "blue").append("text").attr("string", function (d) {
 				return d.key;
-			}).append("fontstyle").attr("size", 1).attr("family", "SANS").attr("style", "BOLD").attr("justify", "START").attr("render", false);
+			}).append("fontstyle").attr("size", 1).attr("family", "SANS").attr("style", "BOLD").attr("justify", "START");
 
 			bubblesEnter.merge(bubbles);
 
@@ -1634,7 +1634,7 @@ function componentCrosshair () {
 				return colorScale(d);
 			});
 
-			lineSelect.transition().attr("translation", function (d) {
+			lineSelect.transition().ease(d3.easeQuadOut).attr("translation", function (d) {
 				return getPositionVector(d);
 			}).attr("rotation", function (d) {
 				return getRotationVector(d);
@@ -2477,7 +2477,7 @@ function componentVectorFields () {
 		    green = _rgbStr$substring$rep2[1],
 		    blue = _rgbStr$substring$rep2[2];
 
-		var rgb = blue | green << 8 | red << 16;
+		var rgb = blue | green << 8 | red << 16; // eslint-disable-line no-bitwise
 		return '#' + (0x1000000 + rgb).toString(16).slice(1);
 	}
 
@@ -2735,7 +2735,7 @@ var component = {
 };
 
 /**
- * Reusable 3D Bar Chart
+ * Reusable 3D Multi Series Bar Chart
  *
  * @module
  *
@@ -2821,13 +2821,11 @@ function chartBarChartMultiSeries () {
 			return d;
 		});
 
-		var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-		scene.call(viewpoint);
-
-		scene.append("directionallight").attr("direction", "1 0 -1").attr("on", "true").attr("intensity", "0.4").attr("shadowintensity", "0");
-
 		scene.each(function (data) {
 			init(data);
+
+			// Construct Viewpoint Component
+			var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
 			// Construct Axis Component
 			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
@@ -2835,9 +2833,15 @@ function chartBarChartMultiSeries () {
 			// Construct Bars Component
 			var chart = component.barsMultiSeries().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
 
+			scene.call(viewpoint);
+
 			scene.select(".axis").call(axis);
 
-			scene.select(".chart").datum(data).call(chart);
+			scene.select(".chart").datum(function (d) {
+				return d;
+			}).call(chart);
+
+			scene.append("directionallight").attr("direction", "1 0 -1").attr("on", "true").attr("intensity", "0.4").attr("shadowintensity", "0");
 		});
 	};
 
@@ -2953,7 +2957,7 @@ function chartBarChartMultiSeries () {
 }
 
 /**
- * Reusable 3D Bar Chart
+ * Reusable 3D Vertical Bar Chart
  *
  * @module
  *
@@ -3032,11 +3036,11 @@ function chartBarChartVertical () {
 			return d;
 		});
 
-		var viewpoint = component.viewpoint().quickView("left");
-		scene.call(viewpoint);
-
 		scene.each(function (data) {
 			init(data);
+
+			// Construct Viewpoint Component
+			var viewpoint = component.viewpoint().quickView("left");
 
 			// Construct Axis Components
 			var xAxis = component.axis().scale(xScale).direction('x').tickDirection('y');
@@ -3046,11 +3050,15 @@ function chartBarChartVertical () {
 			// Construct Bars Component
 			var chart = component.bars().xScale(xScale).yScale(yScale).colors(colors);
 
+			scene.call(viewpoint);
+
 			scene.select(".xAxis").call(xAxis);
 
 			scene.select(".yAxis").call(yAxis);
 
-			scene.select(".chart").datum(data).call(chart);
+			scene.select(".chart").datum(function (d) {
+				return d;
+			}).call(chart);
 		});
 	};
 
@@ -3248,13 +3256,11 @@ function chartBubbleChart () {
 			return d;
 		});
 
-		var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-		scene.call(viewpoint);
-
-		scene.append("directionallight").attr("direction", "1 0 -1").attr("on", "true").attr("intensity", "0.4").attr("shadowintensity", "0");
-
 		scene.each(function (data) {
 			init(data);
+
+			// Construct Viewpoint Component
+			var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
 			// Construct Axis Component
 			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
@@ -3262,9 +3268,15 @@ function chartBubbleChart () {
 			// Construct Bubbles Component
 			var chart = component.bubblesMultiSeries().xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).colorScale(colorScale);
 
+			scene.call(viewpoint);
+
 			scene.select(".axis").call(axis);
 
-			scene.select(".chart").datum(data).call(chart);
+			scene.select(".chart").datum(function (d) {
+				return d;
+			}).call(chart);
+
+			scene.append("directionallight").attr("direction", "1 0 -1").attr("on", "true").attr("intensity", "0.4").attr("shadowintensity", "0");
 		});
 	};
 
@@ -3404,6 +3416,196 @@ function chartBubbleChart () {
 }
 
 /**
+ * Reusable 3D Crosshair Plot (Experimental) Chart 
+ *
+ * @module
+ *
+ * @example
+ * let chartHolder = d3.select("#chartholder");
+ * let myData = [...];
+ * let myChart = d3.x3dom.chart.crosshairPlot();
+ * chartHolder.datum(myData).call(myChart);
+ */
+function chartCrosshairPlot () {
+
+	/* Default Properties */
+	var width = 500;
+	var height = 500;
+	var dimensions = { x: 40, y: 40, z: 40 };
+	var classed = "x3dCrosshairPlot";
+	var debug = false;
+
+	/* Scales */
+	var xScale = void 0;
+	var yScale = void 0;
+	var zScale = void 0;
+
+	/**
+  * Initialise Data and Scales
+  *
+  * @private
+  * @param {Array} data - Chart data.
+  */
+	var init = function init(data) {
+		var _dataTransform$summar = dataTransform(data).summary(),
+		    coordinatesMax = _dataTransform$summar.coordinatesMax;
+
+		var maxX = coordinatesMax.x,
+		    maxY = coordinatesMax.y,
+		    maxZ = coordinatesMax.z;
+		var _dimensions = dimensions,
+		    dimensionX = _dimensions.x,
+		    dimensionY = _dimensions.y,
+		    dimensionZ = _dimensions.z;
+
+
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
+		}
+
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
+		}
+
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
+		}
+	};
+
+	/**
+  * Constructor
+  *
+  * @constructor
+  * @alias crosshairPlot
+  * @param {d3.selection} selection - The chart holder D3 selection.
+  */
+	var my = function my(selection) {
+		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
+
+		if (debug) {
+			x3d.attr("showLog", "true").attr("showStat", "true");
+		}
+
+		var scene = x3d.append("scene");
+
+		// Update the chart dimensions and add layer groups
+		var layers = ["axis", "chart"];
+		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+			return d;
+		});
+
+		scene.each(function (data) {
+			init(data);
+
+			// Construct Viewpoint Component
+			var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
+
+			// Construct Axis Component
+			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
+
+			// Construct Crosshair Component
+			var crosshair = component.crosshair().xScale(xScale).yScale(yScale).zScale(zScale);
+
+			scene.call(viewpoint);
+
+			scene.select(".axis").call(axis);
+
+			scene.select(".chart").selectAll(".crosshair").data(function (d) {
+				return d.values;
+			}).enter().append("group").classed("crosshair", true).each(function () {
+				d3.select(this).call(crosshair);
+			});
+		});
+	};
+
+	/**
+  * Width Getter / Setter
+  *
+  * @param {number} _v - X3D canvas width in px.
+  * @returns {*}
+  */
+	my.width = function (_v) {
+		if (!arguments.length) return width;
+		width = _v;
+		return this;
+	};
+
+	/**
+  * Height Getter / Setter
+  *
+  * @param {number} _v - X3D canvas height in px.
+  * @returns {*}
+  */
+	my.height = function (_v) {
+		if (!arguments.length) return height;
+		height = _v;
+		return this;
+	};
+
+	/**
+  * Dimensions Getter / Setter
+  *
+  * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+  * @returns {*}
+  */
+	my.dimensions = function (_v) {
+		if (!arguments.length) return dimensions;
+		dimensions = _v;
+		return this;
+	};
+
+	/**
+  * X Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.xScale = function (_v) {
+		if (!arguments.length) return xScale;
+		xScale = _v;
+		return my;
+	};
+
+	/**
+  * Y Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.yScale = function (_v) {
+		if (!arguments.length) return yScale;
+		yScale = _v;
+		return my;
+	};
+
+	/**
+  * Z Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.zScale = function (_v) {
+		if (!arguments.length) return zScale;
+		zScale = _v;
+		return my;
+	};
+
+	/**
+  * Debug Getter / Setter
+  *
+  * @param {boolean} _v - Show debug log and stats. True/False.
+  * @returns {*}
+  */
+	my.debug = function (_v) {
+		if (!arguments.length) return debug;
+		debug = _v;
+		return my;
+	};
+
+	return my;
+}
+
+/**
  * Reusable 3D Multi Series Ribbon Chart
  *
  * @module
@@ -3490,13 +3692,11 @@ function chartRibbonChartMultiSeries () {
 			return d;
 		});
 
-		var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]).viewOrientation([-0.61021, 0.77568, 0.16115, 0.65629]).viewPosition([77.63865, 54.69470, 104.38314]);
-		scene.call(viewpoint);
-
-		scene.append("directionallight").attr("direction", "1 0 -1").attr("on", "true").attr("intensity", "0.4").attr("shadowintensity", "0");
-
 		scene.each(function (data) {
 			init(data);
+
+			// Construct Viewpoint Component
+			var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]).viewOrientation([-0.61021, 0.77568, 0.16115, 0.65629]).viewPosition([77.63865, 54.69470, 104.38314]);
 
 			// Construct Axis Component
 			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
@@ -3504,9 +3704,15 @@ function chartRibbonChartMultiSeries () {
 			// Construct Bars Component
 			var chart = component.ribbonMultiSeries().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
 
+			scene.call(viewpoint);
+
 			scene.select(".axis").call(axis);
 
-			scene.select(".chart").datum(data).call(chart);
+			scene.select(".chart").datum(function (d) {
+				return d;
+			}).call(chart);
+
+			scene.append("directionallight").attr("direction", "1 0 -1").attr("on", "true").attr("intensity", "0.4").attr("shadowintensity", "0");
 		});
 	};
 
@@ -3703,11 +3909,11 @@ function chartScatterPlot () {
 			return d;
 		});
 
-		var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-		scene.call(viewpoint);
-
 		scene.each(function (data) {
 			init(data);
+
+			// Construct Viewpoint Component
+			var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
 			// Construct Axis Component
 			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
@@ -3715,9 +3921,13 @@ function chartScatterPlot () {
 			// Construct Bubbles Component
 			var chart = component.bubbles().xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([0.5, 0.5]);
 
+			scene.call(viewpoint);
+
 			scene.select(".axis").call(axis);
 
-			scene.select(".chart").datum(data).call(chart);
+			scene.select(".chart").datum(function (d) {
+				return d;
+			}).call(chart);
 		});
 	};
 
@@ -3907,11 +4117,11 @@ function chartSurfacePlot () {
 			return d;
 		});
 
-		var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-		scene.call(viewpoint);
-
 		scene.each(function (data) {
 			init(data);
+
+			// Construct Viewpoint Component
+			var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
 			// Construct Axis Component
 			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
@@ -3919,9 +4129,13 @@ function chartSurfacePlot () {
 			// Construct Surface Component
 			var chart = component.surface().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
 
+			scene.call(viewpoint);
+
 			scene.select(".axis").call(axis);
 
-			scene.select(".chart").datum(data).call(chart);
+			scene.select(".chart").datum(function (d) {
+				return d;
+			}).call(chart);
 		});
 	};
 
@@ -4178,11 +4392,11 @@ function chartVectorField () {
 			return d;
 		});
 
-		var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-		scene.call(viewpoint);
-
 		scene.each(function (data) {
 			init(data);
+
+			// Construct Viewpoint Component
+			var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
 			// Construct Axis Component
 			var axis = component.crosshair().xScale(xScale).yScale(yScale).zScale(zScale);
@@ -4190,9 +4404,13 @@ function chartVectorField () {
 			// Construct Vector Field Component
 			var chart = component.vectorFields().xScale(xScale).yScale(yScale).zScale(zScale).colorScale(colorScale).sizeScale(sizeScale).vectorFunction(vectorFunction);
 
+			scene.call(viewpoint);
+
 			scene.select(".axis").datum(origin).call(axis);
 
-			scene.select(".chart").datum(data).call(chart);
+			scene.select(".chart").datum(function (d) {
+				return d;
+			}).call(chart);
 		});
 	};
 
@@ -4347,6 +4565,7 @@ var chart = {
 	barChartMultiSeries: chartBarChartMultiSeries,
 	barChartVertical: chartBarChartVertical,
 	bubbleChart: chartBubbleChart,
+	crosshairPlot: chartCrosshairPlot,
 	ribbonChartMultiSeries: chartRibbonChartMultiSeries,
 	scatterPlot: chartScatterPlot,
 	surfacePlot: chartSurfacePlot,

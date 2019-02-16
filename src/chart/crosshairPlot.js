@@ -3,17 +3,15 @@ import dataTransform from "../dataTransform";
 import component from "../component";
 
 /**
- * Reusable 3D Multi Series Bar Chart
+ * Reusable 3D Crosshair Plot (Experimental) Chart
  *
  * @module
  *
  * @example
  * let chartHolder = d3.select("#chartholder");
  * let myData = [...];
- * let myChart = d3.x3dom.chart.barChartMultiSeries();
+ * let myChart = d3.x3dom.chart.crosshairPlot();
  * chartHolder.datum(myData).call(myChart);
- *
- * @see https://datavizproject.com/data-type/3d-bar-chart/
  */
 export default function() {
 
@@ -21,15 +19,13 @@ export default function() {
 	let width = 500;
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = ["green", "red", "yellow", "steelblue", "orange"];
-	let classed = "x3dBarChartMultiSeries";
+	let classed = "x3dCrosshairPlot";
 	let debug = false;
 
 	/* Scales */
 	let xScale;
 	let yScale;
 	let zScale;
-	let colorScale;
 
 	/**
 	 * Initialise Data and Scales
@@ -38,35 +34,26 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	const init = function(data) {
-		const { rowKeys, columnKeys, valueMax } = dataTransform(data).summary();
-		const valueExtent = [0, valueMax];
+		const { coordinatesMax } = dataTransform(data).summary();
+		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
 		if (typeof xScale === "undefined") {
-			xScale = d3.scaleBand()
-				.domain(columnKeys)
-				.rangeRound([0, dimensionX])
-				.padding(0.5);
+			xScale = d3.scaleLinear()
+				.domain([0, maxX])
+				.range([0, dimensionX]);
 		}
 
 		if (typeof yScale === "undefined") {
 			yScale = d3.scaleLinear()
-				.domain(valueExtent)
-				.range([0, dimensionY])
-				.nice();
+				.domain([0, maxY])
+				.range([0, dimensionY]);
 		}
 
 		if (typeof zScale === "undefined") {
-			zScale = d3.scaleBand()
-				.domain(rowKeys)
-				.range([0, dimensionZ])
-				.padding(0.7);
-		}
-
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal()
-				.domain(columnKeys)
-				.range(colors);
+			zScale = d3.scaleLinear()
+				.domain([0, maxZ])
+				.range([0, dimensionZ]);
 		}
 	};
 
@@ -74,7 +61,7 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
-	 * @alias barChartMultiSeries
+	 * @alias crosshairPlot
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
@@ -86,7 +73,7 @@ export default function() {
 			x3d.attr("showLog", "true").attr("showStat", "true")
 		}
 
-		const scene = x3d.append("scene");
+		let scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
 		const layers = ["axis", "chart"];
@@ -110,12 +97,11 @@ export default function() {
 				.yScale(yScale)
 				.zScale(zScale);
 
-			// Construct Bars Component
-			const chart = component.barsMultiSeries()
+			// Construct Crosshair Component
+			const crosshair = component.crosshair()
 				.xScale(xScale)
 				.yScale(yScale)
-				.zScale(zScale)
-				.colors(colors);
+				.zScale(zScale);
 
 			scene.call(viewpoint);
 
@@ -123,14 +109,14 @@ export default function() {
 				.call(axis);
 
 			scene.select(".chart")
-				.datum((d) => d)
-				.call(chart);
-
-			scene.append("directionallight")
-				.attr("direction", "1 0 -1")
-				.attr("on", "true")
-				.attr("intensity", "0.4")
-				.attr("shadowintensity", "0");
+				.selectAll(".crosshair")
+				.data((d) => d.values)
+				.enter()
+				.append("group")
+				.classed("crosshair", true)
+				.each(function() {
+					d3.select(this).call(crosshair);
+				});
 		});
 	};
 
@@ -203,30 +189,6 @@ export default function() {
 	my.zScale = function(_v) {
 		if (!arguments.length) return zScale;
 		zScale = _v;
-		return my;
-	};
-
-	/**
-	 * Color Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 color scale.
-	 * @returns {*}
-	 */
-	my.colorScale = function(_v) {
-		if (!arguments.length) return colorScale;
-		colorScale = _v;
-		return my;
-	};
-
-	/**
-	 * Colors Getter / Setter
-	 *
-	 * @param {Array} _v - Array of colours used by color scale.
-	 * @returns {*}
-	 */
-	my.colors = function(_v) {
-		if (!arguments.length) return colors;
-		colors = _v;
 		return my;
 	};
 
