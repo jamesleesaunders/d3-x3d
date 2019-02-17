@@ -1622,12 +1622,12 @@ function componentCrosshair () {
 			var colorScale = d3.scaleOrdinal().domain(Object.keys(dimensions)).range(colors);
 
 			var transparency = 0;
-			var onmouseover = null;
-			var onmouseout = null;
+			var onMouseOver = null;
+			var onMouseOut = null;
 			if (hoverMode) {
 				transparency = 1;
-				onmouseover = "d3.select(this.parentNode).selectAll(\".line\").selectAll(\"material\").attr(\"transparency\", 0.5);";
-				onmouseout = "d3.select(this.parentNode).selectAll(\".line\").selectAll(\"material\").attr(\"transparency\", 1);";
+				onMouseOver = "d3.select(this.parentNode).selectAll(\".line\").selectAll(\"material\").attr(\"transparency\", 0.5);";
+				onMouseOut = "d3.select(this.parentNode).selectAll(\".line\").selectAll(\"material\").attr(\"transparency\", 1);";
 			}
 
 			// Origin Ball
@@ -1635,7 +1635,7 @@ function componentCrosshair () {
 
 			var ball = ballSelect.enter().append("transform").attr("translation", function (d) {
 				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-			}).classed("ball", true).attr("onmouseover", onmouseover).attr("onmouseout", onmouseout).append("shape");
+			}).classed("ball", true).attr("onmouseover", onMouseOver).attr("onmouseout", onMouseOut).append("shape");
 
 			ball.append("appearance").append("material").attr("diffusecolor", "blue").attr("transparency", transparency);
 
@@ -1668,8 +1668,6 @@ function componentCrosshair () {
 
 			lineSelect.transition().ease(d3.easeQuadOut).attr("translation", function (d) {
 				return getPositionVector(d);
-			}).attr("rotation", function (d) {
-				return getRotationVector(d);
 			});
 		});
 	};

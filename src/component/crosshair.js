@@ -63,12 +63,12 @@ export default function() {
 				.range(colors);
 
 			let transparency = 0;
-			let onmouseover = null;
-			let onmouseout = null;
+			let onMouseOver = `void(0);`;
+			let onMouseOut = `void(0);`;
 			if (hoverMode) {
 				transparency = 1;
-				onmouseover = `d3.select(this.parentNode).selectAll(".line").selectAll("material").attr("transparency", 0.5);`;
-				onmouseout = `d3.select(this.parentNode).selectAll(".line").selectAll("material").attr("transparency", 1);`;
+				onMouseOver = `d3.select(this.parentNode).selectAll(".line").selectAll("material").attr("transparency", 0.5);`;
+				onMouseOut = `d3.select(this.parentNode).selectAll(".line").selectAll("material").attr("transparency", 1);`;
 			}
 
 			// Origin Ball
@@ -79,8 +79,8 @@ export default function() {
 				.append("transform")
 				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
 				.classed("ball", true)
-				.attr("onmouseover", onmouseover)
-				.attr("onmouseout", onmouseout)
+				.attr("onmouseover", onMouseOver)
+				.attr("onmouseout", onMouseOut)
 				.append("shape");
 
 			ball.append("appearance")
@@ -121,8 +121,7 @@ export default function() {
 
 			lineSelect.transition()
 				.ease(d3.easeQuadOut)
-				.attr("translation", (d) => getPositionVector(d))
-				.attr("rotation", (d) => getRotationVector(d));
+				.attr("translation", (d) => getPositionVector(d));
 		});
 	};
 
