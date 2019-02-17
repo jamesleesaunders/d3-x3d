@@ -79,7 +79,7 @@ export default function() {
 		let scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
-		const layers = ["axis", "chart"];
+		const layers = ["axis", "bubbles", "crosshairs"];
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
@@ -101,21 +101,38 @@ export default function() {
 				.zScale(zScale);
 
 			// Construct Bubbles Component
-			const chart = component.bubbles()
+			const bubbles = component.bubbles()
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
 				.color(color)
 				.sizeDomain([0.5, 0.5]);
 
+			// Construct Crosshair Component
+			const crosshair = component.crosshair()
+				.xScale(xScale)
+				.yScale(yScale)
+				.zScale(zScale)
+				.hoverMode(true);
+
 			scene.call(viewpoint);
 
 			scene.select(".axis")
 				.call(axis);
 
-			scene.select(".chart")
+			scene.select(".bubbles")
 				.datum((d) => d)
-				.call(chart);
+				.call(bubbles);
+
+			scene.select(".crosshairs")
+				.selectAll(".crosshair")
+				.data((d) => d.values)
+				.enter()
+				.append("group")
+				.classed("crosshair", true)
+				.each(function() {
+					d3.select(this).call(crosshair);
+				});
 		});
 	};
 

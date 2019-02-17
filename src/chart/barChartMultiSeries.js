@@ -89,7 +89,7 @@ export default function() {
 		const scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
-		const layers = ["axis", "chart"];
+		const layers = ["axis", "bars"];
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
@@ -111,7 +111,7 @@ export default function() {
 				.zScale(zScale);
 
 			// Construct Bars Component
-			const chart = component.barsMultiSeries()
+			const bars = component.barsMultiSeries()
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
@@ -122,9 +122,9 @@ export default function() {
 			scene.select(".axis")
 				.call(axis);
 
-			scene.select(".chart")
+			scene.select(".bars")
 				.datum((d) => d)
-				.call(chart);
+				.call(bars);
 
 			scene.append("directionallight")
 				.attr("direction", "1 0 -1")

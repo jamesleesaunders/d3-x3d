@@ -133,7 +133,7 @@ export default function() {
 		let scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
-		const layers = ["axis", "chart"];
+		const layers = ["axis", "vectorFields"];
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
@@ -155,7 +155,7 @@ export default function() {
 				.zScale(zScale);
 
 			// Construct Vector Field Component
-			const chart = component.vectorFields()
+			const vectorFields = component.vectorFields()
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
@@ -169,9 +169,9 @@ export default function() {
 				.datum(origin)
 				.call(axis);
 
-			scene.select(".chart")
+			scene.select(".vectorFields")
 				.datum((d) => d)
-				.call(chart);
+				.call(vectorFields);
 		});
 	};
 

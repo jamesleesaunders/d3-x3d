@@ -73,7 +73,7 @@ export default function() {
 				selection
 					.append("appearance")
 					.append("material")
-					.attr("diffuseColor", color || "black");
+					.attr("diffusecolor", color || "black");
 				return selection;
 			};
 
@@ -83,18 +83,20 @@ export default function() {
 			const bubblesEnter = bubbles.enter()
 				.append("group")
 				.attr("class", "bubble")
-				.append("transform")
-				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
 				.attr("onmouseover", "d3.select(this).select('billboard').attr('render', true);")
 				.attr("onmouseout", "d3.select(this).select('billboard').attr('render', false);");
 
 			bubblesEnter
+				.append("transform")
+				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
 				.append("shape")
 				.call(makeSolid, color)
 				.append("sphere")
 				.attr("radius", (d) => sizeScale(d.value));
 
 			bubblesEnter
+				.append("transform")
+				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
 				.append("billboard")
 				.attr("render", false)
 				.attr("axisofrotation", "0 0 0")

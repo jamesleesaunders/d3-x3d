@@ -81,7 +81,7 @@ export default function() {
 		const scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
-		const layers = ["xAxis", "yAxis", "chart"];
+		const layers = ["xAxis", "yAxis", "bars"];
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
@@ -109,7 +109,7 @@ export default function() {
 				.tickSize(yScale.range()[1] - yScale.range()[0]);
 
 			// Construct Bars Component
-			const chart = component.bars()
+			const bars = component.bars()
 				.xScale(xScale)
 				.yScale(yScale)
 				.colors(colors);
@@ -122,9 +122,9 @@ export default function() {
 			scene.select(".yAxis")
 				.call(yAxis);
 
-			scene.select(".chart")
+			scene.select(".bars")
 				.datum((d) => d)
-				.call(chart);
+				.call(bars);
 		});
 	};
 

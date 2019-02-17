@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.1.0";
+var version = "1.1.1";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -1249,7 +1249,7 @@ function componentBubbles () {
 			init(data);
 
 			var makeSolid = function makeSolid(selection, color) {
-				selection.append("appearance").append("material").attr("diffuseColor", color || "black");
+				selection.append("appearance").append("material").attr("diffusecolor", color || "black");
 				return selection;
 			};
 
@@ -1257,15 +1257,17 @@ function componentBubbles () {
 				return d.values;
 			});
 
-			var bubblesEnter = bubbles.enter().append("group").attr("class", "bubble").append("transform").attr("translation", function (d) {
-				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-			}).attr("onmouseover", "d3.select(this).select('billboard').attr('render', true);").attr("onmouseout", "d3.select(this).select('billboard').attr('render', false);");
+			var bubblesEnter = bubbles.enter().append("group").attr("class", "bubble").attr("onmouseover", "d3.select(this).select('billboard').attr('render', true);").attr("onmouseout", "d3.select(this).select('billboard').attr('render', false);");
 
-			bubblesEnter.append("shape").call(makeSolid, color).append("sphere").attr("radius", function (d) {
+			bubblesEnter.append("transform").attr("translation", function (d) {
+				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
+			}).append("shape").call(makeSolid, color).append("sphere").attr("radius", function (d) {
 				return sizeScale(d.value);
 			});
 
-			bubblesEnter.append("billboard").attr("render", false).attr("axisofrotation", "0 0 0").append("transform").attr("translation", function (d) {
+			bubblesEnter.append("transform").attr("translation", function (d) {
+				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
+			}).append("billboard").attr("render", false).attr("axisofrotation", "0 0 0").append("transform").attr("translation", function (d) {
 				var r = sizeScale(d.value) / 2 + 0.6;
 				return r + " " + r + " " + r;
 			}).append("shape").call(makeSolid, "blue").append("text").attr("string", function (d) {
@@ -1571,6 +1573,7 @@ function componentCrosshair () {
 	var colors = ["blue", "red", "green"];
 	var classed = "x3dCrosshair";
 	var radius = 0.1;
+	var hoverMode = false;
 
 	/* Scales */
 	var xScale = void 0;
@@ -1618,6 +1621,33 @@ function componentCrosshair () {
 
 			var colorScale = d3.scaleOrdinal().domain(Object.keys(dimensions)).range(colors);
 
+			var transparency = 0;
+			var onmouseover = null;
+			var onmouseout = null;
+			if (hoverMode) {
+				transparency = 1;
+				onmouseover = "d3.select(this.parentNode).selectAll(\".line\").selectAll(\"material\").attr(\"transparency\", 0.5);";
+				onmouseout = "d3.select(this.parentNode).selectAll(\".line\").selectAll(\"material\").attr(\"transparency\", 1);";
+			}
+
+			// Origin Ball
+			var ballSelect = selection.selectAll(".ball").data([data]);
+
+			var ball = ballSelect.enter().append("transform").attr("translation", function (d) {
+				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
+			}).classed("ball", true).attr("onmouseover", onmouseover).attr("onmouseout", onmouseout).append("shape");
+
+			ball.append("appearance").append("material").attr("diffusecolor", "blue").attr("transparency", transparency);
+
+			ball.append("sphere").attr("radius", 0.5);
+
+			ball.merge(ballSelect);
+
+			ballSelect.transition().ease(d3.easeQuadOut).attr("translation", function (d) {
+				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
+			});
+
+			// Crosshair Lines
 			var lineSelect = selection.selectAll(".line").data(Object.keys(dimensions));
 
 			var line = lineSelect.enter().append("transform").classed("line", true).attr("translation", function (d) {
@@ -1632,7 +1662,9 @@ function componentCrosshair () {
 
 			line.append("appearance").append("material").attr("diffusecolor", function (d) {
 				return colorScale(d);
-			});
+			}).attr("transparency", transparency);
+
+			line.merge(lineSelect);
 
 			lineSelect.transition().ease(d3.easeQuadOut).attr("translation", function (d) {
 				return getPositionVector(d);
@@ -1699,6 +1731,18 @@ function componentCrosshair () {
 	my.colors = function (_v) {
 		if (!arguments.length) return colors;
 		colors = _v;
+		return my;
+	};
+
+	/**
+  * Set Hover Mode
+  *
+  * @param {Array} _v - Array of colours used by color scale.
+  * @returns {*}
+  */
+	my.hoverMode = function (_v) {
+		if (!arguments.length) return hoverMode;
+		hoverMode = _v;
 		return my;
 	};
 
@@ -2816,7 +2860,7 @@ function chartBarChartMultiSeries () {
 		var scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
-		var layers = ["axis", "chart"];
+		var layers = ["axis", "bars"];
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
@@ -2831,15 +2875,15 @@ function chartBarChartMultiSeries () {
 			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
 
 			// Construct Bars Component
-			var chart = component.barsMultiSeries().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
+			var bars = component.barsMultiSeries().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
 
 			scene.call(viewpoint);
 
 			scene.select(".axis").call(axis);
 
-			scene.select(".chart").datum(function (d) {
+			scene.select(".bars").datum(function (d) {
 				return d;
-			}).call(chart);
+			}).call(bars);
 
 			scene.append("directionallight").attr("direction", "1 0 -1").attr("on", "true").attr("intensity", "0.4").attr("shadowintensity", "0");
 		});
@@ -3031,7 +3075,7 @@ function chartBarChartVertical () {
 		var scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
-		var layers = ["xAxis", "yAxis", "chart"];
+		var layers = ["xAxis", "yAxis", "bars"];
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
@@ -3048,7 +3092,7 @@ function chartBarChartVertical () {
 			var yAxis = component.axis().scale(yScale).direction('y').tickDirection('x').tickSize(yScale.range()[1] - yScale.range()[0]);
 
 			// Construct Bars Component
-			var chart = component.bars().xScale(xScale).yScale(yScale).colors(colors);
+			var bars = component.bars().xScale(xScale).yScale(yScale).colors(colors);
 
 			scene.call(viewpoint);
 
@@ -3056,9 +3100,9 @@ function chartBarChartVertical () {
 
 			scene.select(".yAxis").call(yAxis);
 
-			scene.select(".chart").datum(function (d) {
+			scene.select(".bars").datum(function (d) {
 				return d;
-			}).call(chart);
+			}).call(bars);
 		});
 	};
 
@@ -3251,7 +3295,7 @@ function chartBubbleChart () {
 		var scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
-		var layers = ["axis", "chart"];
+		var layers = ["axis", "bubbles"];
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
@@ -3266,15 +3310,15 @@ function chartBubbleChart () {
 			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
 
 			// Construct Bubbles Component
-			var chart = component.bubblesMultiSeries().xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).colorScale(colorScale);
+			var bubbles = component.bubblesMultiSeries().xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).colorScale(colorScale);
 
 			scene.call(viewpoint);
 
 			scene.select(".axis").call(axis);
 
-			scene.select(".chart").datum(function (d) {
+			scene.select(".bubbles").datum(function (d) {
 				return d;
-			}).call(chart);
+			}).call(bubbles);
 
 			scene.append("directionallight").attr("direction", "1 0 -1").attr("on", "true").attr("intensity", "0.4").attr("shadowintensity", "0");
 		});
@@ -3416,7 +3460,7 @@ function chartBubbleChart () {
 }
 
 /**
- * Reusable 3D Crosshair Plot (Experimental) Chart 
+ * Reusable 3D Crosshair Plot (Experimental) Chart
  *
  * @module
  *
@@ -3489,7 +3533,7 @@ function chartCrosshairPlot () {
 		var scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
-		var layers = ["axis", "chart"];
+		var layers = ["axis", "crosshairs"];
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
@@ -3510,7 +3554,7 @@ function chartCrosshairPlot () {
 
 			scene.select(".axis").call(axis);
 
-			scene.select(".chart").selectAll(".crosshair").data(function (d) {
+			scene.select(".crosshairs").selectAll(".crosshair").data(function (d) {
 				return d.values;
 			}).enter().append("group").classed("crosshair", true).each(function () {
 				d3.select(this).call(crosshair);
@@ -3687,7 +3731,7 @@ function chartRibbonChartMultiSeries () {
 		var scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
-		var layers = ["axis", "chart"];
+		var layers = ["axis", "ribbons"];
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
@@ -3702,15 +3746,15 @@ function chartRibbonChartMultiSeries () {
 			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
 
 			// Construct Bars Component
-			var chart = component.ribbonMultiSeries().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
+			var ribbons = component.ribbonMultiSeries().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
 
 			scene.call(viewpoint);
 
 			scene.select(".axis").call(axis);
 
-			scene.select(".chart").datum(function (d) {
+			scene.select(".ribbons").datum(function (d) {
 				return d;
-			}).call(chart);
+			}).call(ribbons);
 
 			scene.append("directionallight").attr("direction", "1 0 -1").attr("on", "true").attr("intensity", "0.4").attr("shadowintensity", "0");
 		});
@@ -3904,7 +3948,7 @@ function chartScatterPlot () {
 		var scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
-		var layers = ["axis", "chart"];
+		var layers = ["axis", "bubbles", "crosshairs"];
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
@@ -3919,15 +3963,24 @@ function chartScatterPlot () {
 			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
 
 			// Construct Bubbles Component
-			var chart = component.bubbles().xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([0.5, 0.5]);
+			var bubbles = component.bubbles().xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([0.5, 0.5]);
+
+			// Construct Crosshair Component
+			var crosshair = component.crosshair().xScale(xScale).yScale(yScale).zScale(zScale).hoverMode(true);
 
 			scene.call(viewpoint);
 
 			scene.select(".axis").call(axis);
 
-			scene.select(".chart").datum(function (d) {
+			scene.select(".bubbles").datum(function (d) {
 				return d;
-			}).call(chart);
+			}).call(bubbles);
+
+			scene.select(".crosshairs").selectAll(".crosshair").data(function (d) {
+				return d.values;
+			}).enter().append("group").classed("crosshair", true).each(function () {
+				d3.select(this).call(crosshair);
+			});
 		});
 	};
 
@@ -4112,7 +4165,7 @@ function chartSurfacePlot () {
 		var scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
-		var layers = ["axis", "chart"];
+		var layers = ["axis", "surface"];
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
@@ -4127,15 +4180,15 @@ function chartSurfacePlot () {
 			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
 
 			// Construct Surface Component
-			var chart = component.surface().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
+			var surface = component.surface().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
 
 			scene.call(viewpoint);
 
 			scene.select(".axis").call(axis);
 
-			scene.select(".chart").datum(function (d) {
+			scene.select(".surface").datum(function (d) {
 				return d;
-			}).call(chart);
+			}).call(surface);
 		});
 	};
 
@@ -4387,7 +4440,7 @@ function chartVectorField () {
 		var scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
-		var layers = ["axis", "chart"];
+		var layers = ["axis", "vectorFields"];
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
@@ -4402,15 +4455,15 @@ function chartVectorField () {
 			var axis = component.crosshair().xScale(xScale).yScale(yScale).zScale(zScale);
 
 			// Construct Vector Field Component
-			var chart = component.vectorFields().xScale(xScale).yScale(yScale).zScale(zScale).colorScale(colorScale).sizeScale(sizeScale).vectorFunction(vectorFunction);
+			var vectorFields = component.vectorFields().xScale(xScale).yScale(yScale).zScale(zScale).colorScale(colorScale).sizeScale(sizeScale).vectorFunction(vectorFunction);
 
 			scene.call(viewpoint);
 
 			scene.select(".axis").datum(origin).call(axis);
 
-			scene.select(".chart").datum(function (d) {
+			scene.select(".vectorFields").datum(function (d) {
 				return d;
-			}).call(chart);
+			}).call(vectorFields);
 		});
 	};
 

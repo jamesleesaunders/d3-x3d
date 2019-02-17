@@ -76,7 +76,7 @@ export default function() {
 		let scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
-		const layers = ["axis", "chart"];
+		const layers = ["axis", "crosshairs"];
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
@@ -108,7 +108,7 @@ export default function() {
 			scene.select(".axis")
 				.call(axis);
 
-			scene.select(".chart")
+			scene.select(".crosshairs")
 				.selectAll(".crosshair")
 				.data((d) => d.values)
 				.enter()
