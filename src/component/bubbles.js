@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
+import component from "../component";
 
 /**
  * Reusable 3D Bubble Chart Component
@@ -77,24 +78,38 @@ export default function() {
 				return selection;
 			};
 
+			const crosshair = component.crosshair()
+				.xScale(xScale)
+				.yScale(yScale)
+				.zScale(zScale);
+
 			const bubbles = selection.selectAll(".bubble")
 				.data((d) => d.values);
 
 			const bubblesEnter = bubbles.enter()
 				.append("group")
 				.attr("class", "bubble")
-				.append("transform")
-				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
-				.attr("onmouseover", "d3.select(this).select('billboard').attr('render', true);")
-				.attr("onmouseout", "d3.select(this).select('billboard').attr('render', false);");
+				.attr("onmouseover", "d3.select(this).select('.crosshair').attr('render', true);")
+				.attr("onmouseout", "d3.select(this).select('.crosshair').attr('render', false);");
 
 			bubblesEnter
+				.append("transform")
+				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
 				.append("shape")
 				.call(makeSolid, color)
 				.append("sphere")
 				.attr("radius", (d) => sizeScale(d.value));
 
+			bubblesEnter.append("group")
+				.classed("crosshair", true)
+				.each(function() {
+					d3.select(this).call(crosshair);
+				})
+				.attr("render", false);
+
 			bubblesEnter
+				.append("transform")
+				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
 				.append("billboard")
 				.attr("render", false)
 				.attr("axisofrotation", "0 0 0")

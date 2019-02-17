@@ -1253,19 +1253,27 @@ function componentBubbles () {
 				return selection;
 			};
 
+			var crosshair = component.crosshair().xScale(xScale).yScale(yScale).zScale(zScale);
+
 			var bubbles = selection.selectAll(".bubble").data(function (d) {
 				return d.values;
 			});
 
-			var bubblesEnter = bubbles.enter().append("group").attr("class", "bubble").append("transform").attr("translation", function (d) {
-				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-			}).attr("onmouseover", "d3.select(this).select('billboard').attr('render', true);").attr("onmouseout", "d3.select(this).select('billboard').attr('render', false);");
+			var bubblesEnter = bubbles.enter().append("group").attr("class", "bubble").attr("onmouseover", "d3.select(this).select('.crosshair').attr('render', true);").attr("onmouseout", "d3.select(this).select('.crosshair').attr('render', false);");
 
-			bubblesEnter.append("shape").call(makeSolid, color).append("sphere").attr("radius", function (d) {
+			bubblesEnter.append("transform").attr("translation", function (d) {
+				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
+			}).append("shape").call(makeSolid, color).append("sphere").attr("radius", function (d) {
 				return sizeScale(d.value);
 			});
 
-			bubblesEnter.append("billboard").attr("render", false).attr("axisofrotation", "0 0 0").append("transform").attr("translation", function (d) {
+			bubblesEnter.append("group").classed("crosshair", true).each(function () {
+				d3.select(this).call(crosshair);
+			}).attr("render", false);
+
+			bubblesEnter.append("transform").attr("translation", function (d) {
+				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
+			}).append("billboard").attr("render", false).attr("axisofrotation", "0 0 0").append("transform").attr("translation", function (d) {
 				var r = sizeScale(d.value) / 2 + 0.6;
 				return r + " " + r + " " + r;
 			}).append("shape").call(makeSolid, "blue").append("text").attr("string", function (d) {
@@ -3416,7 +3424,7 @@ function chartBubbleChart () {
 }
 
 /**
- * Reusable 3D Crosshair Plot (Experimental) Chart 
+ * Reusable 3D Crosshair Plot (Experimental) Chart
  *
  * @module
  *
