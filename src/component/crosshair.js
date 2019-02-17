@@ -12,6 +12,7 @@ export default function() {
 	let colors = ["blue", "red", "green"];
 	let classed = "x3dCrosshair";
 	let radius = 0.1;
+	let hoverMode = false;
 
 	/* Scales */
 	let xScale;
@@ -61,6 +62,42 @@ export default function() {
 				.domain(Object.keys(dimensions))
 				.range(colors);
 
+			let transparency = 0;
+			let onmouseover = null;
+			let onmouseout = null;
+			if (hoverMode) {
+				transparency = 1;
+				onmouseover = `d3.select(this.parentNode).selectAll(".line").selectAll("material").attr("transparency", 0.5);`;
+				onmouseout = `d3.select(this.parentNode).selectAll(".line").selectAll("material").attr("transparency", 1);`;
+			}
+
+			// Origin Ball
+			const ballSelect = selection.selectAll(".ball")
+				.data([data]);
+
+			let ball = ballSelect.enter()
+				.append("transform")
+				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
+				.classed("ball", true)
+				.attr("onmouseover", onmouseover)
+				.attr("onmouseout", onmouseout)
+				.append("shape");
+
+			ball.append("appearance")
+				.append("material")
+				.attr("diffusecolor", "blue")
+				.attr("transparency", transparency);
+
+			ball.append("sphere")
+				.attr("radius", 0.5);
+
+			ball.merge(ballSelect);
+
+			ballSelect.transition()
+				.ease(d3.easeQuadOut)
+				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)));
+
+			// Crosshair Lines
 			const lineSelect = selection.selectAll(".line")
 				.data(Object.keys(dimensions));
 
@@ -77,7 +114,10 @@ export default function() {
 
 			line.append("appearance")
 				.append("material")
-				.attr("diffusecolor", (d) => colorScale(d));
+				.attr("diffusecolor", (d) => colorScale(d))
+				.attr("transparency", transparency);
+
+			line.merge(lineSelect);
 
 			lineSelect.transition()
 				.ease(d3.easeQuadOut)
@@ -143,6 +183,18 @@ export default function() {
 	my.colors = function(_v) {
 		if (!arguments.length) return colors;
 		colors = _v;
+		return my;
+	};
+
+	/**
+	 * Set Hover Mode
+	 *
+	 * @param {Array} _v - Array of colours used by color scale.
+	 * @returns {*}
+	 */
+	my.hoverMode = function(_v) {
+		if (!arguments.length) return hoverMode;
+		hoverMode = _v;
 		return my;
 	};
 

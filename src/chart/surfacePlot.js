@@ -87,7 +87,7 @@ export default function() {
 		const scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
-		const layers = ["axis", "chart"];
+		const layers = ["axis", "surface"];
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
@@ -109,7 +109,7 @@ export default function() {
 				.zScale(zScale);
 
 			// Construct Surface Component
-			const chart = component.surface()
+			const surface = component.surface()
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
@@ -120,9 +120,9 @@ export default function() {
 			scene.select(".axis")
 				.call(axis);
 
-			scene.select(".chart")
+			scene.select(".surface")
 				.datum((d) => d)
-				.call(chart);
+				.call(surface);
 		});
 	};
 
