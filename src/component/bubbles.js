@@ -84,9 +84,7 @@ export default function() {
 
 			const bubblesEnter = bubbles.enter()
 				.append("group")
-				.attr("class", "bubble")
-				.attr("onmouseover", "d3.select(this).select('billboard').attr('render', true);")
-				.attr("onmouseout", "d3.select(this).select('billboard').attr('render', false);");
+				.attr("class", "bubble");
 
 			bubblesEnter
 				.append("transform")
@@ -96,31 +94,11 @@ export default function() {
 				.on("click", function(e) { dispatch.call("customClick", this, e); })
 				.attr("onmouseover", "d3.x3dom.events.forwardMouseOver(event);")
 				.on("mouseover", function(e) { dispatch.call("customMouseOver", this, e); })
-
+				.attr("onmouseout", "d3.x3dom.events.forwardMouseOut(event);")
+				.on("mouseout", function(e) { dispatch.call("customMouseOut", this, e); })
 				.call(makeSolid, color)
 				.append("sphere")
 				.attr("radius", (d) => sizeScale(d.value));
-
-			bubblesEnter
-				.append("transform")
-				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
-				.append("billboard")
-				.attr("render", false)
-				.attr("axisofrotation", "0 0 0")
-				.append("transform")
-				.attr("translation", (d) => {
-					let r = (sizeScale(d.value) / 2) + 0.6;
-					return r + " " + r + " " + r;
-				})
-				.append("shape")
-				.call(makeSolid, "blue")
-				.append("text")
-				.attr("string", (d) => d.key)
-				.append("fontstyle")
-				.attr("size", 1)
-				.attr("family", "SANS")
-				.attr("style", "BOLD")
-				.attr("justify", "START");
 
 			bubblesEnter.merge(bubbles);
 

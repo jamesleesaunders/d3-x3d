@@ -15,12 +15,12 @@ import component from "../component";
  *
  * @see https://datavizproject.com/data-type/3d-scatterplot/
  */
-export default function() {
+export default function () {
 
 	/* Default Properties */
 	let width = 500;
 	let height = 500;
-	let dimensions = { x: 40, y: 40, z: 40 };
+	let dimensions = {x: 40, y: 40, z: 40};
 	let color = "orange";
 	let classed = "x3dScatterPlot";
 	let debug = false;
@@ -38,10 +38,10 @@ export default function() {
 	 * @private
 	 * @param {Array} data - Chart data.
 	 */
-	const init = function(data) {
-		const { coordinatesMax } = dataTransform(data).summary();
-		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
-		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
+	const init = function (data) {
+		const {coordinatesMax} = dataTransform(data).summary();
+		const {x: maxX, y: maxY, z: maxZ} = coordinatesMax;
+		const {x: dimensionX, y: dimensionY, z: dimensionZ} = dimensions;
 
 		if (typeof xScale === "undefined") {
 			xScale = d3.scaleLinear()
@@ -69,7 +69,7 @@ export default function() {
 	 * @alias scatterPlot
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
-	const my = function(selection) {
+	const my = function (selection) {
 		const x3d = selection.append("x3d")
 			.attr("width", width + "px")
 			.attr("height", height + "px");
@@ -81,7 +81,7 @@ export default function() {
 		let scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
-		const layers = ["axis", "bubbles", "crosshair"];
+		const layers = ["axis", "bubbles", "crosshair", "label"];
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
@@ -102,6 +102,18 @@ export default function() {
 				.yScale(yScale)
 				.zScale(zScale);
 
+			// Construct Crosshair Component
+			const crosshair = component.crosshair()
+				.xScale(xScale)
+				.yScale(yScale)
+				.zScale(zScale);
+
+			// Construct Label Component
+			const label = component.label()
+				.xScale(xScale)
+				.yScale(yScale)
+				.zScale(zScale);
+
 			// Construct Bubbles Component
 			const bubbles = component.bubbles()
 				.xScale(xScale)
@@ -110,23 +122,24 @@ export default function() {
 				.color(color)
 				.sizeDomain([0.5, 0.5])
 				.dispatch(dispatch)
-				.on("customClick", function(e) {
+				.on("customClick", function (e) {
 					scene.select(".crosshair")
 						.datum(d3.select(e.target).datum())
 						.classed("crosshair", true)
-						.each(function() {
+						.each(function () {
 							d3.select(this).call(crosshair);
 						});
 				})
-				.on("customMouseOver", function(e) {
-					console.log(d3.select(e.target).datum());
+				.on("customMouseOver", function (e) {
+					scene.select(".label")
+						.datum(d3.select(e.target).datum())
+						.each(function () {
+							d3.select(this).call(label);
+						});
+				})
+				.on("customMouseOut", function (e) {
+					scene.select(".label").selectAll("*").remove();
 				});
-
-			// Construct Crosshair Component
-			const crosshair = component.crosshair()
-				.xScale(xScale)
-				.yScale(yScale)
-				.zScale(zScale);
 
 			scene.call(viewpoint);
 
@@ -145,7 +158,7 @@ export default function() {
 	 * @param {number} _v - X3D canvas width in px.
 	 * @returns {*}
 	 */
-	my.width = function(_v) {
+	my.width = function (_v) {
 		if (!arguments.length) return width;
 		width = _v;
 		return this;
@@ -157,7 +170,7 @@ export default function() {
 	 * @param {number} _v - X3D canvas height in px.
 	 * @returns {*}
 	 */
-	my.height = function(_v) {
+	my.height = function (_v) {
 		if (!arguments.length) return height;
 		height = _v;
 		return this;
@@ -169,7 +182,7 @@ export default function() {
 	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
 	 * @returns {*}
 	 */
-	my.dimensions = function(_v) {
+	my.dimensions = function (_v) {
 		if (!arguments.length) return dimensions;
 		dimensions = _v;
 		return this;
@@ -181,7 +194,7 @@ export default function() {
 	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.xScale = function(_v) {
+	my.xScale = function (_v) {
 		if (!arguments.length) return xScale;
 		xScale = _v;
 		return my;
@@ -193,7 +206,7 @@ export default function() {
 	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.yScale = function(_v) {
+	my.yScale = function (_v) {
 		if (!arguments.length) return yScale;
 		yScale = _v;
 		return my;
@@ -205,7 +218,7 @@ export default function() {
 	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.zScale = function(_v) {
+	my.zScale = function (_v) {
 		if (!arguments.length) return zScale;
 		zScale = _v;
 		return my;
@@ -217,7 +230,7 @@ export default function() {
 	 * @param {string} _v - Color (e.g. 'red' or '#ff0000').
 	 * @returns {*}
 	 */
-	my.color = function(_v) {
+	my.color = function (_v) {
 		if (!arguments.length) return color;
 		color = _v;
 		return my;
@@ -229,7 +242,7 @@ export default function() {
 	 * @param {boolean} _v - Show debug log and stats. True/False.
 	 * @returns {*}
 	 */
-	my.debug = function(_v) {
+	my.debug = function (_v) {
 		if (!arguments.length) return debug;
 		debug = _v;
 		return my;
@@ -240,7 +253,7 @@ export default function() {
 	 *
 	 * @returns {*}
 	 */
-	my.on = function() {
+	my.on = function () {
 		let value = dispatch.on.apply(dispatch, arguments);
 		return value === dispatch ? my : value;
 	};

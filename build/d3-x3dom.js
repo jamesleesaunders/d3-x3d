@@ -1259,7 +1259,7 @@ function componentBubbles () {
 				return d.values;
 			});
 
-			var bubblesEnter = bubbles.enter().append("group").attr("class", "bubble").attr("onmouseover", "d3.select(this).select('billboard').attr('render', true);").attr("onmouseout", "d3.select(this).select('billboard').attr('render', false);");
+			var bubblesEnter = bubbles.enter().append("group").attr("class", "bubble");
 
 			bubblesEnter.append("transform").attr("translation", function (d) {
 				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
@@ -1267,18 +1267,11 @@ function componentBubbles () {
 				dispatch.call("customClick", this, e);
 			}).attr("onmouseover", "d3.x3dom.events.forwardMouseOver(event);").on("mouseover", function (e) {
 				dispatch.call("customMouseOver", this, e);
+			}).attr("onmouseout", "d3.x3dom.events.forwardMouseOut(event);").on("mouseout", function (e) {
+				dispatch.call("customMouseOut", this, e);
 			}).call(makeSolid, color).append("sphere").attr("radius", function (d) {
 				return sizeScale(d.value);
 			});
-
-			bubblesEnter.append("transform").attr("translation", function (d) {
-				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-			}).append("billboard").attr("render", false).attr("axisofrotation", "0 0 0").append("transform").attr("translation", function (d) {
-				var r = sizeScale(d.value) / 2 + 0.6;
-				return r + " " + r + " " + r;
-			}).append("shape").call(makeSolid, "blue").append("text").attr("string", function (d) {
-				return d.key;
-			}).append("fontstyle").attr("size", 1).attr("family", "SANS").attr("style", "BOLD").attr("justify", "START");
 
 			bubblesEnter.merge(bubbles);
 
@@ -1747,6 +1740,122 @@ function componentCrosshair () {
 	my.colors = function (_v) {
 		if (!arguments.length) return colors;
 		colors = _v;
+		return my;
+	};
+
+	return my;
+}
+
+/**
+ * Reusable 3D Label Component
+ *
+ * @module
+ */
+function componentLabel () {
+
+	/* Default Properties */
+	var dimensions = { x: 40, y: 40, z: 40 };
+	var color = "black";
+	var classed = "x3dLabel";
+	var offset = 0.6;
+
+	/* Scales */
+	var xScale = void 0;
+	var yScale = void 0;
+	var zScale = void 0;
+
+	/**
+  * Constructor
+  *
+  * @constructor
+  * @alias label
+  * @param {d3.selection} selection - The chart holder D3 selection.
+  */
+	var my = function my(selection) {
+		selection.classed(classed, true);
+
+		selection.each(function (data) {
+
+			var makeSolid = function makeSolid(selection, color) {
+				selection.append("appearance").append("material").attr("diffusecolor", color || "black");
+				return selection;
+			};
+
+			var labelSelect = selection.selectAll(".label").data([data]);
+
+			var label = labelSelect.enter().append("transform").attr("translation", function (d) {
+				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
+			}).classed("label", true).append("billboard").attr("axisofrotation", "0 0 0").append("transform").attr("translation", function (d) {
+				return offset + " " + offset + " " + offset;
+			}).append("shape").call(makeSolid, color).append("text").attr("string", function (d) {
+				return d.key;
+			}).append("fontstyle").attr("size", 1).attr("family", "SANS").attr("style", "BOLD").attr("justify", "START");
+
+			label.merge(labelSelect);
+
+			labelSelect.transition().ease(d3.easeQuadOut).attr("translation", function (d) {
+				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
+			});
+		});
+	};
+
+	/**
+  * Dimensions Getter / Setter
+  *
+  * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+  * @returns {*}
+  */
+	my.dimensions = function (_v) {
+		if (!arguments.length) return dimensions;
+		dimensions = _v;
+		return this;
+	};
+
+	/**
+  * X Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.xScale = function (_v) {
+		if (!arguments.length) return xScale;
+		xScale = _v;
+		return my;
+	};
+
+	/**
+  * Y Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.yScale = function (_v) {
+		if (!arguments.length) return yScale;
+		yScale = _v;
+		return my;
+	};
+
+	/**
+  * Z Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.zScale = function (_v) {
+		if (!arguments.length) return zScale;
+		zScale = _v;
+		return my;
+	};
+
+	/**
+  * Color Getter / Setter
+  *
+  * @param {string} _v - Color (e.g. 'red' or '#ff0000').
+  * @returns {*}
+  */
+	my.color = function (_v) {
+		if (!arguments.length) return color;
+		color = _v;
 		return my;
 	};
 
@@ -2775,6 +2884,7 @@ var component = {
 	bubbles: componentBubbles,
 	bubblesMultiSeries: componentBubblesMultiSeries,
 	crosshair: componentCrosshair,
+	label: componentLabel,
 	ribbon: componentRibbon,
 	ribbonMultiSeries: componentRibbonMultiSeries,
 	surface: componentSurface,
@@ -3954,7 +4064,7 @@ function chartScatterPlot () {
 		var scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
-		var layers = ["axis", "bubbles", "crosshair"];
+		var layers = ["axis", "bubbles", "crosshair", "label"];
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
@@ -3968,21 +4078,24 @@ function chartScatterPlot () {
 			// Construct Axis Component
 			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
 
+			// Construct Crosshair Component
+			var crosshair = component.crosshair().xScale(xScale).yScale(yScale).zScale(zScale);
+
+			// Construct Label Component
+			var label = component.label().xScale(xScale).yScale(yScale).zScale(zScale);
+
 			// Construct Bubbles Component
 			var bubbles = component.bubbles().xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([0.5, 0.5]).dispatch(dispatch).on("customClick", function (e) {
 				scene.select(".crosshair").datum(d3.select(e.target).datum()).classed("crosshair", true).each(function () {
 					d3.select(this).call(crosshair);
 				});
 			}).on("customMouseOver", function (e) {
-				console.log(d3.select(e.target).datum());
-
-				d3.select(e.target).append("billboard").attr("render", false).attr("axisofrotation", "0 0 0").append("transform").append("shape").append("text").attr("string", function (d) {
-					return d.key;
-				}).append("fontstyle").attr("size", 1).attr("family", "SANS").attr("style", "BOLD").attr("justify", "START");
+				scene.select(".label").datum(d3.select(e.target).datum()).each(function () {
+					d3.select(this).call(label);
+				});
+			}).on("customMouseOut", function (e) {
+				scene.select(".label").selectAll("*").remove();
 			});
-
-			// Construct Crosshair Component
-			var crosshair = component.crosshair().xScale(xScale).yScale(yScale).zScale(zScale);
 
 			scene.call(viewpoint);
 
