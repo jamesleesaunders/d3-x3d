@@ -20,6 +20,8 @@ export default function() {
 	let sizeScale;
 	let sizeDomain = [0.5, 4.0];
 
+	let dispatch = d3.dispatch("customMouseOver", "customMouseOut", "customClick");
+
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -90,6 +92,8 @@ export default function() {
 				.append("transform")
 				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
 				.append("shape")
+				.attr("onclick", "forwardClick(event);")
+				.on("click", function(e) { dispatch.call("customClick", this, e); })
 				.call(makeSolid, color)
 				.append("sphere")
 				.attr("radius", (d) => sizeScale(d.value));
@@ -207,6 +211,28 @@ export default function() {
 		if (!arguments.length) return color;
 		color = _v;
 		return my;
+	};
+
+	/**
+	 * Dispatch Getter / Setter
+	 *
+	 * @param {d3.dispatch} _v - Dispatch event handler.
+	 * @returns {*}
+	 */
+	my.dispatch = function(_v) {
+		if (!arguments.length) return dispatch();
+		dispatch = _v;
+		return this;
+	};
+
+	/**
+	 * Dispatch On Getter
+	 *
+	 * @returns {*}
+	 */
+	my.on = function() {
+		let value = dispatch.on.apply(dispatch, arguments);
+		return value === dispatch ? my : value;
 	};
 
 	return my;

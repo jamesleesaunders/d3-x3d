@@ -30,6 +30,8 @@ export default function() {
 	let yScale;
 	let zScale;
 
+	let dispatch = d3.dispatch("customMouseOver", "customMouseOut", "customClick");
+
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -79,7 +81,7 @@ export default function() {
 		let scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
-		const layers = ["axis", "bubbles", "crosshairs"];
+		const layers = ["axis", "bubbles", "crosshair"];
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
@@ -106,14 +108,22 @@ export default function() {
 				.yScale(yScale)
 				.zScale(zScale)
 				.color(color)
-				.sizeDomain([0.5, 0.5]);
+				.sizeDomain([0.5, 0.5])
+				.dispatch(dispatch)
+				.on("customClick", function(e) {
+					scene.select(".crosshair")
+						.datum(d3.select(e.target).datum())
+						.classed("crosshair", true)
+						.each(function() {
+							d3.select(this).call(crosshair);
+						});
+				});
 
 			// Construct Crosshair Component
 			const crosshair = component.crosshair()
 				.xScale(xScale)
 				.yScale(yScale)
-				.zScale(zScale)
-				.hoverMode(true);
+				.zScale(zScale);
 
 			scene.call(viewpoint);
 
@@ -123,16 +133,6 @@ export default function() {
 			scene.select(".bubbles")
 				.datum((d) => d)
 				.call(bubbles);
-
-			scene.select(".crosshairs")
-				.selectAll(".crosshair")
-				.data((d) => d.values)
-				.enter()
-				.append("group")
-				.classed("crosshair", true)
-				.each(function() {
-					d3.select(this).call(crosshair);
-				});
 		});
 	};
 
@@ -230,6 +230,16 @@ export default function() {
 		if (!arguments.length) return debug;
 		debug = _v;
 		return my;
+	};
+
+	/**
+	 * Dispatch On Getter
+	 *
+	 * @returns {*}
+	 */
+	my.on = function() {
+		let value = dispatch.on.apply(dispatch, arguments);
+		return value === dispatch ? my : value;
 	};
 
 	return my;

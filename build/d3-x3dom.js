@@ -1198,6 +1198,8 @@ function componentBubbles () {
 	var sizeScale = void 0;
 	var sizeDomain = [0.5, 4.0];
 
+	var dispatch = d3.dispatch("customMouseOver", "customMouseOut", "customClick");
+
 	/**
   * Initialise Data and Scales
   *
@@ -1261,7 +1263,9 @@ function componentBubbles () {
 
 			bubblesEnter.append("transform").attr("translation", function (d) {
 				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-			}).append("shape").call(makeSolid, color).append("sphere").attr("radius", function (d) {
+			}).append("shape").attr("onclick", "forwardClick(event);").on("click", function (e) {
+				dispatch.call("customClick", this, e);
+			}).call(makeSolid, color).append("sphere").attr("radius", function (d) {
 				return sizeScale(d.value);
 			});
 
@@ -1366,6 +1370,28 @@ function componentBubbles () {
 		if (!arguments.length) return color;
 		color = _v;
 		return my;
+	};
+
+	/**
+  * Dispatch Getter / Setter
+  *
+  * @param {d3.dispatch} _v - Dispatch event handler.
+  * @returns {*}
+  */
+	my.dispatch = function (_v) {
+		if (!arguments.length) return dispatch();
+		dispatch = _v;
+		return this;
+	};
+
+	/**
+  * Dispatch On Getter
+  *
+  * @returns {*}
+  */
+	my.on = function () {
+		var value = dispatch.on.apply(dispatch, arguments);
+		return value === dispatch ? my : value;
 	};
 
 	return my;
@@ -1573,7 +1599,6 @@ function componentCrosshair () {
 	var colors = ["blue", "red", "green"];
 	var classed = "x3dCrosshair";
 	var radius = 0.1;
-	var hoverMode = false;
 
 	/* Scales */
 	var xScale = void 0;
@@ -1621,23 +1646,14 @@ function componentCrosshair () {
 
 			var colorScale = d3.scaleOrdinal().domain(Object.keys(dimensions)).range(colors);
 
-			var transparency = 0;
-			var onMouseOver = null;
-			var onMouseOut = null;
-			if (hoverMode) {
-				transparency = 1;
-				onMouseOver = "d3.select(this.parentNode).selectAll(\".line\").selectAll(\"material\").attr(\"transparency\", 0.5);";
-				onMouseOut = "d3.select(this.parentNode).selectAll(\".line\").selectAll(\"material\").attr(\"transparency\", 1);";
-			}
-
 			// Origin Ball
 			var ballSelect = selection.selectAll(".ball").data([data]);
 
 			var ball = ballSelect.enter().append("transform").attr("translation", function (d) {
 				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-			}).classed("ball", true).attr("onmouseover", onMouseOver).attr("onmouseout", onMouseOut).append("shape");
+			}).classed("ball", true).append("shape");
 
-			ball.append("appearance").append("material").attr("diffusecolor", "blue").attr("transparency", transparency);
+			ball.append("appearance").append("material").attr("diffusecolor", "blue");
 
 			ball.append("sphere").attr("radius", 0.5);
 
@@ -1662,7 +1678,7 @@ function componentCrosshair () {
 
 			line.append("appearance").append("material").attr("diffusecolor", function (d) {
 				return colorScale(d);
-			}).attr("transparency", transparency);
+			});
 
 			line.merge(lineSelect);
 
@@ -1729,18 +1745,6 @@ function componentCrosshair () {
 	my.colors = function (_v) {
 		if (!arguments.length) return colors;
 		colors = _v;
-		return my;
-	};
-
-	/**
-  * Set Hover Mode
-  *
-  * @param {Array} _v - Array of colours used by color scale.
-  * @returns {*}
-  */
-	my.hoverMode = function (_v) {
-		if (!arguments.length) return hoverMode;
-		hoverMode = _v;
 		return my;
 	};
 
@@ -3897,6 +3901,8 @@ function chartScatterPlot () {
 	var yScale = void 0;
 	var zScale = void 0;
 
+	var dispatch = d3.dispatch("customMouseOver", "customMouseOut", "customClick");
+
 	/**
   * Initialise Data and Scales
   *
@@ -3946,7 +3952,7 @@ function chartScatterPlot () {
 		var scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
-		var layers = ["axis", "bubbles", "crosshairs"];
+		var layers = ["axis", "bubbles", "crosshair"];
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
@@ -3961,10 +3967,14 @@ function chartScatterPlot () {
 			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
 
 			// Construct Bubbles Component
-			var bubbles = component.bubbles().xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([0.5, 0.5]);
+			var bubbles = component.bubbles().xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([0.5, 0.5]).dispatch(dispatch).on("customClick", function (e) {
+				scene.select(".crosshair").datum(d3.select(e.target).datum()).classed("crosshair", true).each(function () {
+					d3.select(this).call(crosshair);
+				});
+			});
 
 			// Construct Crosshair Component
-			var crosshair = component.crosshair().xScale(xScale).yScale(yScale).zScale(zScale).hoverMode(true);
+			var crosshair = component.crosshair().xScale(xScale).yScale(yScale).zScale(zScale);
 
 			scene.call(viewpoint);
 
@@ -3973,12 +3983,6 @@ function chartScatterPlot () {
 			scene.select(".bubbles").datum(function (d) {
 				return d;
 			}).call(bubbles);
-
-			scene.select(".crosshairs").selectAll(".crosshair").data(function (d) {
-				return d.values;
-			}).enter().append("group").classed("crosshair", true).each(function () {
-				d3.select(this).call(crosshair);
-			});
 		});
 	};
 
@@ -4076,6 +4080,16 @@ function chartScatterPlot () {
 		if (!arguments.length) return debug;
 		debug = _v;
 		return my;
+	};
+
+	/**
+  * Dispatch On Getter
+  *
+  * @returns {*}
+  */
+	my.on = function () {
+		var value = dispatch.on.apply(dispatch, arguments);
+		return value === dispatch ? my : value;
 	};
 
 	return my;

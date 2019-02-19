@@ -12,7 +12,6 @@ export default function() {
 	let colors = ["blue", "red", "green"];
 	let classed = "x3dCrosshair";
 	let radius = 0.1;
-	let hoverMode = false;
 
 	/* Scales */
 	let xScale;
@@ -62,15 +61,6 @@ export default function() {
 				.domain(Object.keys(dimensions))
 				.range(colors);
 
-			let transparency = 0;
-			let onMouseOver = `void(0);`;
-			let onMouseOut = `void(0);`;
-			if (hoverMode) {
-				transparency = 1;
-				onMouseOver = `d3.select(this.parentNode).selectAll(".line").selectAll("material").attr("transparency", 0.5);`;
-				onMouseOut = `d3.select(this.parentNode).selectAll(".line").selectAll("material").attr("transparency", 1);`;
-			}
-
 			// Origin Ball
 			const ballSelect = selection.selectAll(".ball")
 				.data([data]);
@@ -79,14 +69,11 @@ export default function() {
 				.append("transform")
 				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
 				.classed("ball", true)
-				.attr("onmouseover", onMouseOver)
-				.attr("onmouseout", onMouseOut)
 				.append("shape");
 
 			ball.append("appearance")
 				.append("material")
-				.attr("diffusecolor", "blue")
-				.attr("transparency", transparency);
+				.attr("diffusecolor", "blue");
 
 			ball.append("sphere")
 				.attr("radius", 0.5);
@@ -114,8 +101,7 @@ export default function() {
 
 			line.append("appearance")
 				.append("material")
-				.attr("diffusecolor", (d) => colorScale(d))
-				.attr("transparency", transparency);
+				.attr("diffusecolor", (d) => colorScale(d));
 
 			line.merge(lineSelect);
 
@@ -182,18 +168,6 @@ export default function() {
 	my.colors = function(_v) {
 		if (!arguments.length) return colors;
 		colors = _v;
-		return my;
-	};
-
-	/**
-	 * Set Hover Mode
-	 *
-	 * @param {Array} _v - Array of colours used by color scale.
-	 * @returns {*}
-	 */
-	my.hoverMode = function(_v) {
-		if (!arguments.length) return hoverMode;
-		hoverMode = _v;
 		return my;
 	};
 
