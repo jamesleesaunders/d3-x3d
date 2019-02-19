@@ -1263,8 +1263,10 @@ function componentBubbles () {
 
 			bubblesEnter.append("transform").attr("translation", function (d) {
 				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-			}).append("shape").attr("onclick", "forwardClick(event);").on("click", function (e) {
+			}).append("shape").attr("onclick", "d3.x3dom.events.forwardMouseClick(event);").on("click", function (e) {
 				dispatch.call("customClick", this, e);
+			}).attr("onmouseover", "d3.x3dom.events.forwardMouseOver(event);").on("mouseover", function (e) {
+				dispatch.call("customMouseOver", this, e);
 			}).call(makeSolid, color).append("sphere").attr("radius", function (d) {
 				return sizeScale(d.value);
 			});
@@ -3971,6 +3973,12 @@ function chartScatterPlot () {
 				scene.select(".crosshair").datum(d3.select(e.target).datum()).classed("crosshair", true).each(function () {
 					d3.select(this).call(crosshair);
 				});
+			}).on("customMouseOver", function (e) {
+				console.log(d3.select(e.target).datum());
+
+				d3.select(e.target).append("billboard").attr("render", false).attr("axisofrotation", "0 0 0").append("transform").append("shape").append("text").attr("string", function (d) {
+					return d.key;
+				}).append("fontstyle").attr("size", 1).attr("family", "SANS").attr("style", "BOLD").attr("justify", "START");
 			});
 
 			// Construct Crosshair Component
@@ -4803,6 +4811,38 @@ var randomData = Object.freeze({
 	dataset5: dataset5
 });
 
+var dispatch = d3.dispatch("customMouseOver", "customMouseOut", "customClick");
+
+/**
+ * @see https://bl.ocks.org/hlvoorhees/5376764
+ *
+ * The x3dom canvas captures onclick events, so just defining a 3d event handler on an x3dom element does not work.
+ * Hence, clicking the red cube does nothing.
+ * A workaround is to define an onclick handler which calls the 3d 'click' event handler with the event, as
+ * demonstrated by clicking on the blue sphere. Note that x3dom event members differ from d3's, so d3.mouse()
+ * function does not work.
+ */
+function forwardMouseClick(event) {
+  var target = d3.select(event.target);
+  target.on('click')(event);
+}
+
+function forwardMouseOver(event) {
+  var target = d3.select(event.target);
+  target.on('mouseover')(event);
+}
+
+function forwardMouseOut(event) {
+  var target = d3.select(event.target);
+  target.on('mouseout')(event);
+}
+
+var events = Object.freeze({
+	forwardMouseClick: forwardMouseClick,
+	forwardMouseOver: forwardMouseOver,
+	forwardMouseOut: forwardMouseOut
+});
+
 /**
  * d3-x3dom
  *
@@ -4823,7 +4863,8 @@ var index = {
 	chart: chart,
 	component: component,
 	dataTransform: dataTransform,
-	randomData: randomData
+	randomData: randomData,
+	events: events
 };
 
 return index;

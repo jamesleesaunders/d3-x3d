@@ -1,3 +1,5 @@
+import * as d3 from "d3";
+
 /**
  * d3-x3dom
  *
@@ -15,6 +17,7 @@ import chart from "./src/chart";
 import component from "./src/component";
 import dataTransform from "./src/dataTransform";
 import * as randomData from "./src/randomData";
+import * as events from "./src/events";
 
 export default {
 	version: version,
@@ -24,5 +27,6 @@ export default {
 	chart: chart,
 	component: component,
 	dataTransform: dataTransform,
-	randomData: randomData
+	randomData: randomData,
+	events: events
 };

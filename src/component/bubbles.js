@@ -92,8 +92,11 @@ export default function() {
 				.append("transform")
 				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
 				.append("shape")
-				.attr("onclick", "forwardClick(event);")
+				.attr("onclick", "d3.x3dom.events.forwardMouseClick(event);")
 				.on("click", function(e) { dispatch.call("customClick", this, e); })
+				.attr("onmouseover", "d3.x3dom.events.forwardMouseOver(event);")
+				.on("mouseover", function(e) { dispatch.call("customMouseOver", this, e); })
+
 				.call(makeSolid, color)
 				.append("sphere")
 				.attr("radius", (d) => sizeScale(d.value));

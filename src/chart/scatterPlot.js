@@ -117,6 +117,9 @@ export default function() {
 						.each(function() {
 							d3.select(this).call(crosshair);
 						});
+				})
+				.on("customMouseOver", function(e) {
+					console.log(d3.select(e.target).datum());
 				});
 
 			// Construct Crosshair Component
