@@ -157,7 +157,7 @@ export default function dataTransform(data) {
 		d3.map(data).values().forEach((d) => {
 			d.values.forEach((d) => {
 				const columnName = d.key;
-				ret[columnName] = (typeof(ret[columnName]) === "undefined" ? 0 : ret[columnName]);
+				ret[columnName] = (typeof (ret[columnName]) === "undefined" ? 0 : ret[columnName]);
 				ret[columnName] += d.value;
 			});
 		});
@@ -189,7 +189,7 @@ export default function dataTransform(data) {
 		let ret;
 		d3.map(data).values().forEach((d) => {
 			d.values.forEach((d) => {
-				ret = (typeof(ret) === "undefined" ? d.value : d3.min([ret, +d.value]));
+				ret = (typeof (ret) === "undefined" ? d.value : d3.min([ret, +d.value]));
 			});
 		});
 

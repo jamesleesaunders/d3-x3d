@@ -76,7 +76,7 @@ export default function() {
 				.attr("diffusecolor", "blue");
 
 			ball.append("sphere")
-				.attr("radius", 0.5);
+				.attr("radius", 0.3);
 
 			ball.merge(ballSelect);
 

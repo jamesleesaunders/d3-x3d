@@ -19,6 +19,8 @@ export default function() {
 	let zScale;
 	let colorScale;
 
+	let dispatch = d3.dispatch("customClick", "customMouseOver", "customMouseOut");
+
 	/**
 	 * Array to String
 	 *
@@ -223,6 +225,28 @@ export default function() {
 		if (!arguments.length) return colors;
 		colors = _v;
 		return my;
+	};
+
+	/**
+	 * Dispatch Getter / Setter
+	 *
+	 * @param {d3.dispatch} _v - Dispatch event handler.
+	 * @returns {*}
+	 */
+	my.dispatch = function(_v) {
+		if (!arguments.length) return dispatch();
+		dispatch = _v;
+		return this;
+	};
+
+	/**
+	 * Dispatch On Getter
+	 *
+	 * @returns {*}
+	 */
+	my.on = function() {
+		let value = dispatch.on.apply(dispatch, arguments);
+		return value === dispatch ? my : value;
 	};
 
 	return my;
