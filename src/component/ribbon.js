@@ -11,7 +11,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 5 };
 	let color = "red";
-	let classed = "x3dRibbon";
+	let classed = "d3X3domRibbon";
 
 	/* Scales */
 	let xScale;

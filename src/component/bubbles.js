@@ -11,7 +11,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let color = "orange";
-	let classed = "x3dBubbles";
+	let classed = "d3X3domBubbles";
 
 	/* Scales */
 	let xScale;
@@ -20,7 +20,7 @@ export default function() {
 	let sizeScale;
 	let sizeDomain = [0.5, 4.0];
 
-	let dispatch = d3.dispatch("customClick", "customMouseOver", "customMouseOut");
+	let dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
 
 	/**
 	 * Initialise Data and Scales
@@ -91,11 +91,11 @@ export default function() {
 				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
 				.append("shape")
 				.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
-				.on("click", function(d) { dispatch.call("customClick", this, d); })
+				.on("click", function(d) { dispatch.call("d3X3domClick", this, d); })
 				.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
-				.on("mouseover", function(d) { dispatch.call("customMouseOver", this, d); })
+				.on("mouseover", function(d) { dispatch.call("d3X3domMouseOver", this, d); })
 				.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);")
-				.on("mouseout", function(d) { dispatch.call("customMouseOut", this, d); })
+				.on("mouseout", function(d) { dispatch.call("d3X3domMouseOut", this, d); })
 				.call(makeSolid, color)
 				.append("sphere")
 				.attr("radius", (d) => sizeScale(d.value));

@@ -11,7 +11,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 2 };
 	let colors = ["orange", "red", "yellow", "steelblue", "green"];
-	let classed = "x3dBars";
+	let classed = "d3X3domBars";
 
 	/* Scales */
 	let xScale;

@@ -10,7 +10,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["blue", "red", "green"];
-	let classed = "x3dCrosshair";
+	let classed = "d3X3domCrosshair";
 	let radius = 0.1;
 
 	/* Scales */

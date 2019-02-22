@@ -12,7 +12,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["green", "red", "yellow", "steelblue", "orange"];
-	let classed = "x3dBubblesMultiSeries";
+	let classed = "d3X3domBubblesMultiSeries";
 
 	/* Scales */
 	let xScale;
@@ -22,7 +22,7 @@ export default function() {
 	let sizeScale;
 	let sizeDomain = [0.5, 3.0];
 
-	let dispatch = d3.dispatch("customClick", "customMouseOver", "customMouseOut");
+	let dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
 
 	/**
 

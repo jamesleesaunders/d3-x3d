@@ -12,7 +12,7 @@ export default function() {
 	let viewPosition = [80.0, 15.0, 80.0];
 	let viewOrientation = [0.0, 1.0, 0.0, 0.8];
 	let fieldOfView = 0.8;
-	let classed = "x3dViewpoint";
+	let classed = "d3X3domViewpoint";
 
 	/**
 	 * Constructor

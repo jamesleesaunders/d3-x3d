@@ -19,7 +19,7 @@ export default function() {
 	let width = 500;
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let classed = "x3dCrosshairPlot";
+	let classed = "d3X3domCrosshairPlot";
 	let debug = false;
 
 	/* Scales */

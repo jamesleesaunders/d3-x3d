@@ -502,7 +502,7 @@ function componentAxis () {
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var color = "black";
-	var classed = "x3dAxis";
+	var classed = "d3X3domAxis";
 
 	/* Scale and Axis Options */
 	var scale = void 0;
@@ -749,7 +749,7 @@ function componentAxisThreePlane () {
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["blue", "red", "green"];
-	var classed = "x3dAxisThreePlane";
+	var classed = "d3X3domAxisThreePlane";
 
 	/* Scales */
 	var xScale = void 0;
@@ -861,7 +861,7 @@ function componentBars () {
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 2 };
 	var colors = ["orange", "red", "yellow", "steelblue", "green"];
-	var classed = "x3dBars";
+	var classed = "d3X3domBars";
 
 	/* Scales */
 	var xScale = void 0;
@@ -1024,7 +1024,7 @@ function componentBarsMultiSeries () {
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["orange", "red", "yellow", "steelblue", "green"];
-	var classed = "x3dBarsMultiSeries";
+	var classed = "d3X3domBarsMultiSeries";
 
 	/* Scales */
 	var xScale = void 0;
@@ -1189,7 +1189,7 @@ function componentBubbles () {
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var color = "orange";
-	var classed = "x3dBubbles";
+	var classed = "d3X3domBubbles";
 
 	/* Scales */
 	var xScale = void 0;
@@ -1198,7 +1198,7 @@ function componentBubbles () {
 	var sizeScale = void 0;
 	var sizeDomain = [0.5, 4.0];
 
-	var dispatch = d3.dispatch("customClick", "customMouseOver", "customMouseOut");
+	var dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
 
 	/**
   * Initialise Data and Scales
@@ -1264,11 +1264,11 @@ function componentBubbles () {
 			bubblesEnter.append("transform").attr("translation", function (d) {
 				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
 			}).append("shape").attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (d) {
-				dispatch.call("customClick", this, d);
+				dispatch.call("d3X3domClick", this, d);
 			}).attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").on("mouseover", function (d) {
-				dispatch.call("customMouseOver", this, d);
+				dispatch.call("d3X3domMouseOver", this, d);
 			}).attr("onmouseout", "d3.x3dom.events.forwardEvent(event);").on("mouseout", function (d) {
-				dispatch.call("customMouseOut", this, d);
+				dispatch.call("d3X3domMouseOut", this, d);
 			}).call(makeSolid, color).append("sphere").attr("radius", function (d) {
 				return sizeScale(d.value);
 			});
@@ -1402,7 +1402,7 @@ function componentBubblesMultiSeries () {
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["green", "red", "yellow", "steelblue", "orange"];
-	var classed = "x3dBubblesMultiSeries";
+	var classed = "d3X3domBubblesMultiSeries";
 
 	/* Scales */
 	var xScale = void 0;
@@ -1412,7 +1412,7 @@ function componentBubblesMultiSeries () {
 	var sizeScale = void 0;
 	var sizeDomain = [0.5, 3.0];
 
-	var dispatch = d3.dispatch("customClick", "customMouseOver", "customMouseOut");
+	var dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
 
 	/**
  	 /**
@@ -1617,7 +1617,7 @@ function componentCrosshair () {
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["blue", "red", "green"];
-	var classed = "x3dCrosshair";
+	var classed = "d3X3domCrosshair";
 	var radius = 0.1;
 
 	/* Scales */
@@ -1781,7 +1781,7 @@ function componentLabel () {
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var color = "black";
-	var classed = "x3dLabel";
+	var classed = "d3X3domLabel";
 	var offset = 0.6;
 
 	/* Scales */
@@ -1897,7 +1897,7 @@ function componentRibbon () {
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 5 };
 	var color = "red";
-	var classed = "x3dRibbon";
+	var classed = "d3X3domRibbon";
 
 	/* Scales */
 	var xScale = void 0;
@@ -2075,7 +2075,7 @@ function componentRibbonMultiSeries () {
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["orange", "red", "yellow", "steelblue", "green"];
-	var classed = "x3dRibbonMultiSeries";
+	var classed = "d3X3domRibbonMultiSeries";
 
 	/* Scales */
 	var xScale = void 0;
@@ -2242,7 +2242,7 @@ function componentSurface () {
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["blue", "red"];
-	var classed = "x3dSurface";
+	var classed = "d3X3domSurface";
 
 	/* Scales */
 	var xScale = void 0;
@@ -2250,7 +2250,7 @@ function componentSurface () {
 	var zScale = void 0;
 	var colorScale = void 0;
 
-	var dispatch = d3.dispatch("customClick", "customMouseOver", "customMouseOut");
+	var dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
 
 	/**
   * Array to String
@@ -2483,7 +2483,7 @@ function componentVectorFields () {
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = d3.interpolateRdYlGn;
-	var classed = "x3dVectorFields";
+	var classed = "d3X3domVectorFields";
 
 	/* Scales */
 	var xScale = void 0;
@@ -2822,7 +2822,7 @@ function componentViewpoint () {
 	var viewPosition = [80.0, 15.0, 80.0];
 	var viewOrientation = [0.0, 1.0, 0.0, 0.8];
 	var fieldOfView = 0.8;
-	var classed = "x3dViewpoint";
+	var classed = "d3X3domViewpoint";
 
 	/**
   * Constructor
@@ -2961,7 +2961,7 @@ function chartBarChartMultiSeries () {
 	var height = 500;
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["green", "red", "yellow", "steelblue", "orange"];
-	var classed = "x3dBarChartMultiSeries";
+	var classed = "d3X3domBarChartMultiSeries";
 	var debug = false;
 
 	/* Scales */
@@ -3183,7 +3183,7 @@ function chartBarChartVertical () {
 	var height = 500;
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["green", "red", "yellow", "steelblue", "orange"];
-	var classed = "x3dBarChartVertical";
+	var classed = "d3X3domBarChartVertical";
 	var debug = false;
 
 	/* Scales */
@@ -3388,7 +3388,7 @@ function chartBubbleChart () {
 	var height = 500;
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["green", "red", "yellow", "steelblue", "orange"];
-	var classed = "x3dBubbleChart";
+	var classed = "d3X3domBubbleChart";
 	var debug = false;
 
 	/* Scales */
@@ -3639,7 +3639,7 @@ function chartCrosshairPlot () {
 	var width = 500;
 	var height = 500;
 	var dimensions = { x: 40, y: 40, z: 40 };
-	var classed = "x3dCrosshairPlot";
+	var classed = "d3X3domCrosshairPlot";
 	var debug = false;
 
 	/* Scales */
@@ -3832,7 +3832,7 @@ function chartRibbonChartMultiSeries () {
 	var height = 500;
 	var dimensions = { x: 60, y: 40, z: 40 };
 	var colors = ["green", "red", "yellow", "steelblue", "orange"];
-	var classed = "x3dRibbonChartMultiSeries";
+	var classed = "d3X3domRibbonChartMultiSeries";
 	var debug = false;
 
 	/* Scales */
@@ -4054,7 +4054,7 @@ function chartScatterPlot () {
 	var height = 500;
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var color = "orange";
-	var classed = "x3dScatterPlot";
+	var classed = "d3X3domScatterPlot";
 	var debug = false;
 
 	/* Scales */
@@ -4062,7 +4062,7 @@ function chartScatterPlot () {
 	var yScale = void 0;
 	var zScale = void 0;
 
-	var dispatch = d3.dispatch("customClick", "customMouseOver", "customMouseOut");
+	var dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
 
 	/**
   * Initialise Data and Scales
@@ -4134,15 +4134,15 @@ function chartScatterPlot () {
 			var label = component.label().xScale(xScale).yScale(yScale).zScale(zScale);
 
 			// Construct Bubbles Component
-			var bubbles = component.bubbles().xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([0.5, 0.5]).dispatch(dispatch).on("customClick", function (d) {
+			var bubbles = component.bubbles().xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([0.5, 0.5]).dispatch(dispatch).on("d3X3domClick", function (d) {
 				scene.select(".crosshair").datum(d).classed("crosshair", true).each(function () {
 					d3.select(this).call(crosshair);
 				});
-			}).on("customMouseOver", function (d) {
+			}).on("d3X3domMouseOver", function (d) {
 				scene.select(".label").datum(d).each(function () {
 					d3.select(this).call(label);
 				});
-			}).on("customMouseOut", function (d) {
+			}).on("d3X3domMouseOut", function (d) {
 				scene.select(".label").selectAll("*").remove();
 			});
 
@@ -4285,7 +4285,7 @@ function chartSurfacePlot () {
 	var height = 500;
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["blue", "red"];
-	var classed = "x3dSurfacePlot";
+	var classed = "d3X3domSurfacePlot";
 	var debug = false;
 
 	/* Scales */
@@ -4506,7 +4506,7 @@ function chartVectorField () {
 	var height = 500;
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = d3.interpolateRdYlGn;
-	var classed = "x3dVectorFieldChart";
+	var classed = "d3X3domVectorFieldChart";
 	var debug = false;
 
 	/* Scales */
@@ -4973,13 +4973,15 @@ var randomData = Object.freeze({
 	dataset5: dataset5
 });
 
-var dispatch = d3.dispatch("customClick", "customMouseOver", "customMouseOut");
+var dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
 
 /**
- * In x3dom, it is the canvas which captures onclick events, therefore defining a D3 event handler on an single x3dom element does not work.
+ * Forward X3DOM Event to D3
  *
- * A workaround is to define an onclick handler which then forwards the call to the D3 'click' event handler with the event.
- * Note that x3dom event members differ from D3's, so d3.mouse() function does not work.
+ * In X3DOM, it is the canvas which captures onclick events, therefore defining a D3 event handler
+ * on an single X3DOM element does not work. A workaround is to define an onclick handler which then
+ * forwards the call to the D3 'click' event handler with the event.
+ * Note: X3DOM and D3 event members slightly differ, so d3.mouse() function does not work.
  *
  * @param event
  * @see https://bl.ocks.org/hlvoorhees/5376764
@@ -5008,11 +5010,13 @@ function showAlertWithEventCoordinate(event) {
  * @returns {{x: number, y: number}}
  */
 function invertMousePosition(event) {
-	var convertPoint = window.webkitConvertPointFromPageToNode;
 	var pageX = -1;
 	var pageY = -1;
+
+	var convertPoint = window.webkitConvertPointFromPageToNode;
+
 	if ("getBoundingClientRect" in document.documentElement) {
-		var elem = d3.select('#divX3d').node();
+		var elem = d3.select('#chartholder').node();
 		console.log('elem:', elem);
 		var box = elem.getBoundingClientRect();
 		var scrolleft = window.pageXOffset || document.body.scrollLeft;
@@ -5025,8 +5029,8 @@ function invertMousePosition(event) {
 		pageY = Math.round(event.layerY + (box.top + paddingTop + borderTopWidth + scrolltop));
 	} else if (convertPoint) {
 		var pagePoint = convertPoint(event.target, new WebKitPoint(0, 0));
-		var x = Math.round(point.x);
-		var y = Math.round(point.y);
+		pageX = Math.round(pagePoint.x);
+		pageY = Math.round(pagePoint.y);
 	} else {
 		x3dom.debug.logError('NO getBoundingClientRect, NO webkitConvertPointFromPageToNode');
 	}

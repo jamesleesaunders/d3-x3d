@@ -22,7 +22,7 @@ export default function() {
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["green", "red", "yellow", "steelblue", "orange"];
-	let classed = "x3dBarChartVertical";
+	let classed = "d3X3domBarChartVertical";
 	let debug = false;
 
 	/* Scales */

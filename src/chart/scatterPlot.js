@@ -22,7 +22,7 @@ export default function() {
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let color = "orange";
-	let classed = "x3dScatterPlot";
+	let classed = "d3X3domScatterPlot";
 	let debug = false;
 
 	/* Scales */
@@ -30,7 +30,7 @@ export default function() {
 	let yScale;
 	let zScale;
 
-	let dispatch = d3.dispatch("customClick", "customMouseOver", "customMouseOut");
+	let dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
 
 	/**
 	 * Initialise Data and Scales
@@ -122,7 +122,7 @@ export default function() {
 				.color(color)
 				.sizeDomain([0.5, 0.5])
 				.dispatch(dispatch)
-				.on("customClick", function(d) {
+				.on("d3X3domClick", function(d) {
 					scene.select(".crosshair")
 						.datum(d)
 						.classed("crosshair", true)
@@ -130,14 +130,14 @@ export default function() {
 							d3.select(this).call(crosshair);
 						});
 				})
-				.on("customMouseOver", function(d) {
+				.on("d3X3domMouseOver", function(d) {
 					scene.select(".label")
 						.datum(d)
 						.each(function() {
 							d3.select(this).call(label);
 						});
 				})
-				.on("customMouseOut", function(d) {
+				.on("d3X3domMouseOut", function(d) {
 					scene.select(".label").selectAll("*").remove();
 				});
 

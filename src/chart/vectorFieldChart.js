@@ -24,7 +24,7 @@ export default function() {
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = d3.interpolateRdYlGn;
-	let classed = "x3dVectorFieldChart";
+	let classed = "d3X3domVectorFieldChart";
 	let debug = false;
 
 	/* Scales */

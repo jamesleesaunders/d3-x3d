@@ -12,7 +12,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = d3.interpolateRdYlGn;
-	let classed = "x3dVectorFields";
+	let classed = "d3X3domVectorFields";
 
 	/* Scales */
 	let xScale;

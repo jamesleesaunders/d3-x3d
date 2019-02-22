@@ -22,7 +22,7 @@ export default function() {
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["blue", "red"];
-	let classed = "x3dSurfacePlot";
+	let classed = "d3X3domSurfacePlot";
 	let debug = false;
 
 	/* Scales */
