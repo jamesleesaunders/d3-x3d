@@ -120,7 +120,8 @@ export default function() {
 				.zScale(zScale)
 				.color(color)
 				.sizeDomain([0.5, 0.5])
-				.on("d3X3domClick", function(d) {
+				.on("d3X3domClick", function(e) {
+					const d = d3.select(e.target).datum();
 					scene.select(".crosshair")
 						.datum(d)
 						.classed("crosshair", true)
@@ -128,15 +129,18 @@ export default function() {
 							d3.select(this).call(crosshair);
 						});
 				})
-				.on("d3X3domMouseOver", function(d) {
+				.on("d3X3domMouseOver", function(e) {
+					const d = d3.select(e.target).datum();
 					scene.select(".label")
 						.datum(d)
 						.each(function() {
 							d3.select(this).call(label);
 						});
 				})
-				.on("d3X3domMouseOut", function(d) {
-					scene.select(".label").selectAll("*").remove();
+				.on("d3X3domMouseOut", function(e) {
+					scene.select(".label")
+						.selectAll("*")
+						.remove();
 				});
 
 			scene.call(viewpoint);

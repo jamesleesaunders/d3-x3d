@@ -15,60 +15,88 @@ export const dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3dom
  * forwards the call to the D3 'click' event handler with the event.
  * Note: X3DOM and D3 event members slightly differ, so d3.mouse() function does not work.
  *
- * @param event
+ * @param {event} event
  * @see https://bl.ocks.org/hlvoorhees/5376764
  */
 export function forwardEvent(event) {
 	let type = event.type;
 	let target = d3.select(event.target);
-	let data = target.datum();
-	target.on(type)(data);
+	target.on(type)(event);
 }
 
 /**
  * Show Alert With Event Coordinate
  *
- * @param event
+ * @param {event} event
+ * @returns {{canvas: {x: (*|number), y: (*|number)}, world: {x: *, y: *, z: *}, page: {x: number, y: number}}}
  */
-export function showAlertWithEventCoordinate(event) {
-	let pagePt = invertMousePosition(event);
+export function getEventCoordinates(event) {
+	let pagePoint = getEventPagePoint(event);
 
-	window.alert(d3.select(event.target).attr('id') + ' picked at:\n'
-		+ 'world coordinate (' + event.hitPnt + '),\n'
-		+ 'canvas coordinate (' + event.layerX + ', ' + event.layerY + '),\n'
-		+ 'page coordinate (' + pagePt.x + ', ' + pagePt.y + ')');
+	return {
+		world: { x: event.hitPnt[0], y: event.hitPnt[1], z: event.hitPnt[2] },
+		canvas: { x: event.layerX, y: event.layerY },
+		page: { x: pagePoint.x, y: pagePoint.y }
+	}
 }
 
 /**
  * Inverse of coordinate transform defined by function mousePosition(evt) in x3dom.js
  *
- * @param event
+ * @param {event} event
  * @returns {{x: number, y: number}}
  */
-export function invertMousePosition(event) {
+export function getEventPagePoint(event) {
 	let pageX = -1;
 	let pageY = -1;
 
 	let convertPoint = window.webkitConvertPointFromPageToNode;
 
 	if ("getBoundingClientRect" in document.documentElement) {
-		let elem = d3.select('#chartholder').node();
-		let box = elem.getBoundingClientRect();
-		let scrolleft = window.pageXOffset || document.body.scrollLeft;
-		let scrolltop = window.pageYOffset || document.body.scrollTop;
-		let paddingLeft = parseFloat(document.defaultView.getComputedStyle(elem, null).getPropertyValue('padding-left'));
-		let borderLeftWidth = parseFloat(document.defaultView.getComputedStyle(elem, null).getPropertyValue('border-left-width'));
-		let paddingTop = parseFloat(document.defaultView.getComputedStyle(elem, null).getPropertyValue('padding-top'));
-		let borderTopWidth = parseFloat(document.defaultView.getComputedStyle(elem, null).getPropertyValue('border-top-width'));
-		pageX = Math.round(event.layerX + (box.left + paddingLeft + borderLeftWidth + scrolleft));
-		pageY = Math.round(event.layerY + (box.top + paddingTop + borderTopWidth + scrolltop));
+		let holder = getX3domHolder(event);
+		let computedStyle = document.defaultView.getComputedStyle(holder, null);
+		let paddingLeft = parseFloat(computedStyle.getPropertyValue('padding-left'));
+		let borderLeftWidth = parseFloat(computedStyle.getPropertyValue('border-left-width'));
+		let paddingTop = parseFloat(computedStyle.getPropertyValue('padding-top'));
+		let borderTopWidth = parseFloat(computedStyle.getPropertyValue('border-top-width'));
+		let box = holder.getBoundingClientRect();
+		let scrolLeft = window.pageXOffset || document.body.scrollLeft;
+		let scrollTop = window.pageYOffset || document.body.scrollTop;
+		pageX = Math.round(event.layerX + (box.left + paddingLeft + borderLeftWidth + scrolLeft));
+		pageY = Math.round(event.layerY + (box.top + paddingTop + borderTopWidth + scrollTop));
 	} else if (convertPoint) {
 		let pagePoint = convertPoint(event.target, new WebKitPoint(0, 0));
 		pageX = Math.round(pagePoint.x);
 		pageY = Math.round(pagePoint.y);
 	} else {
-		x3dom.debug.logError('NO getBoundingClientRect, NO webkitConvertPointFromPageToNode');
+		x3dom.debug.logError('Unable to find getBoundingClientRect or webkitConvertPointFromPageToNode');
 	}
 
 	return { x: pageX, y: pageY };
+}
+
+/**
+ * Return the x3d Parent Holder
+ *
+ * Find clicked element, walk up DOM until we find the parent x3d.
+ * Then return the x3d's parent.
+ *
+ * @param event
+ * @returns {*}
+ */
+export function getX3domHolder(event) {
+	let target = d3.select(event.target);
+
+	let x3d = target.select(function() {
+		let el = this;
+		while (el.nodeName.toLowerCase() !== "x3d") {
+			el = el.parentElement;
+		}
+
+		return el;
+	});
+
+	return x3d.select(function() {
+		return this.parentNode;
+	}).node();
 }

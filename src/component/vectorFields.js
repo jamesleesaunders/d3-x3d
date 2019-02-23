@@ -160,9 +160,9 @@ export default function() {
 				.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);");
 
 			let arrowHead = arrowsEnter.append("shape")
-				.on("click", function(d) { dispatch.call("d3X3domClick", this, d); })
-				.on("mouseover", function(d) { dispatch.call("d3X3domMouseOver", this, d); })
-				.on("mouseout", function(d) { dispatch.call("d3X3domMouseOut", this, d); });
+				.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
+				.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
+				.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
 
 			arrowHead.append("appearance")
 				.append("material")
@@ -179,9 +179,9 @@ export default function() {
 					return "0 " + offset + " 0";
 				})
 				.append("shape")
-				.on("click", function(d) { dispatch.call("d3X3domClick", this, d); })
-				.on("mouseover", function(d) { dispatch.call("d3X3domMouseOver", this, d); })
-				.on("mouseout", function(d) { dispatch.call("d3X3domMouseOut", this, d); });
+				.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
+				.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
+				.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
 
 			arrowShaft.append("appearance")
 				.append("material")

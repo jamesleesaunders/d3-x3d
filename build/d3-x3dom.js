@@ -1194,66 +1194,98 @@ var dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut"
  * forwards the call to the D3 'click' event handler with the event.
  * Note: X3DOM and D3 event members slightly differ, so d3.mouse() function does not work.
  *
- * @param event
+ * @param {event} event
  * @see https://bl.ocks.org/hlvoorhees/5376764
  */
 function forwardEvent(event) {
 	var type = event.type;
 	var target = d3.select(event.target);
-	var data = target.datum();
-	target.on(type)(data);
+	target.on(type)(event);
 }
 
 /**
  * Show Alert With Event Coordinate
  *
- * @param event
+ * @param {event} event
+ * @returns {{canvas: {x: (*|number), y: (*|number)}, world: {x: *, y: *, z: *}, page: {x: number, y: number}}}
  */
-function showAlertWithEventCoordinate(event) {
-	var pagePt = invertMousePosition(event);
+function getEventCoordinates(event) {
+	var pagePoint = getEventPagePoint(event);
 
-	window.alert(d3.select(event.target).attr('id') + ' picked at:\n' + 'world coordinate (' + event.hitPnt + '),\n' + 'canvas coordinate (' + event.layerX + ', ' + event.layerY + '),\n' + 'page coordinate (' + pagePt.x + ', ' + pagePt.y + ')');
+	return {
+		world: { x: event.hitPnt[0], y: event.hitPnt[1], z: event.hitPnt[2] },
+		canvas: { x: event.layerX, y: event.layerY },
+		page: { x: pagePoint.x, y: pagePoint.y }
+	};
 }
 
 /**
  * Inverse of coordinate transform defined by function mousePosition(evt) in x3dom.js
  *
- * @param event
+ * @param {event} event
  * @returns {{x: number, y: number}}
  */
-function invertMousePosition(event) {
+function getEventPagePoint(event) {
 	var pageX = -1;
 	var pageY = -1;
 
 	var convertPoint = window.webkitConvertPointFromPageToNode;
 
 	if ("getBoundingClientRect" in document.documentElement) {
-		var elem = d3.select('#chartholder').node();
-		var box = elem.getBoundingClientRect();
-		var scrolleft = window.pageXOffset || document.body.scrollLeft;
-		var scrolltop = window.pageYOffset || document.body.scrollTop;
-		var paddingLeft = parseFloat(document.defaultView.getComputedStyle(elem, null).getPropertyValue('padding-left'));
-		var borderLeftWidth = parseFloat(document.defaultView.getComputedStyle(elem, null).getPropertyValue('border-left-width'));
-		var paddingTop = parseFloat(document.defaultView.getComputedStyle(elem, null).getPropertyValue('padding-top'));
-		var borderTopWidth = parseFloat(document.defaultView.getComputedStyle(elem, null).getPropertyValue('border-top-width'));
-		pageX = Math.round(event.layerX + (box.left + paddingLeft + borderLeftWidth + scrolleft));
-		pageY = Math.round(event.layerY + (box.top + paddingTop + borderTopWidth + scrolltop));
+		var holder = getX3domHolder(event);
+		var computedStyle = document.defaultView.getComputedStyle(holder, null);
+		var paddingLeft = parseFloat(computedStyle.getPropertyValue('padding-left'));
+		var borderLeftWidth = parseFloat(computedStyle.getPropertyValue('border-left-width'));
+		var paddingTop = parseFloat(computedStyle.getPropertyValue('padding-top'));
+		var borderTopWidth = parseFloat(computedStyle.getPropertyValue('border-top-width'));
+		var box = holder.getBoundingClientRect();
+		var scrolLeft = window.pageXOffset || document.body.scrollLeft;
+		var scrollTop = window.pageYOffset || document.body.scrollTop;
+		pageX = Math.round(event.layerX + (box.left + paddingLeft + borderLeftWidth + scrolLeft));
+		pageY = Math.round(event.layerY + (box.top + paddingTop + borderTopWidth + scrollTop));
 	} else if (convertPoint) {
 		var pagePoint = convertPoint(event.target, new WebKitPoint(0, 0));
 		pageX = Math.round(pagePoint.x);
 		pageY = Math.round(pagePoint.y);
 	} else {
-		x3dom.debug.logError('NO getBoundingClientRect, NO webkitConvertPointFromPageToNode');
+		x3dom.debug.logError('Unable to find getBoundingClientRect or webkitConvertPointFromPageToNode');
 	}
 
 	return { x: pageX, y: pageY };
 }
 
+/**
+ * Return the x3d Parent Holder
+ *
+ * Find clicked element, walk up DOM until we find the parent x3d.
+ * Then return the x3d's parent.
+ *
+ * @param event
+ * @returns {*}
+ */
+function getX3domHolder(event) {
+	var target = d3.select(event.target);
+
+	var x3d = target.select(function () {
+		var el = this;
+		while (el.nodeName.toLowerCase() !== "x3d") {
+			el = el.parentElement;
+		}
+
+		return el;
+	});
+
+	return x3d.select(function () {
+		return this.parentNode;
+	}).node();
+}
+
 var events = Object.freeze({
 	dispatch: dispatch,
 	forwardEvent: forwardEvent,
-	showAlertWithEventCoordinate: showAlertWithEventCoordinate,
-	invertMousePosition: invertMousePosition
+	getEventCoordinates: getEventCoordinates,
+	getEventPagePoint: getEventPagePoint,
+	getX3domHolder: getX3domHolder
 });
 
 /**
@@ -1338,12 +1370,12 @@ function componentBubbles () {
 
 			bubblesEnter.append("transform").attr("translation", function (d) {
 				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-			}).append("shape").attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (d) {
-				dispatch.call("d3X3domClick", this, d);
-			}).attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").on("mouseover", function (d) {
-				dispatch.call("d3X3domMouseOver", this, d);
-			}).attr("onmouseout", "d3.x3dom.events.forwardEvent(event);").on("mouseout", function (d) {
-				dispatch.call("d3X3domMouseOut", this, d);
+			}).append("shape").attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
+				dispatch.call("d3X3domClick", this, e);
+			}).attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").on("mouseover", function (e) {
+				dispatch.call("d3X3domMouseOver", this, e);
+			}).attr("onmouseout", "d3.x3dom.events.forwardEvent(event);").on("mouseout", function (e) {
+				dispatch.call("d3X3domMouseOut", this, e);
 			}).call(makeSolid, color).append("sphere").attr("radius", function (d) {
 				return sizeScale(d.value);
 			});
@@ -2674,12 +2706,12 @@ function componentVectorFields () {
 				return "0 " + offset + " 0";
 			}).append("group").attr("onclick", "d3.x3dom.events.forwardEvent(event);").attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").attr("onmouseout", "d3.x3dom.events.forwardEvent(event);");
 
-			var arrowHead = arrowsEnter.append("shape").on("click", function (d) {
-				dispatch.call("d3X3domClick", this, d);
-			}).on("mouseover", function (d) {
-				dispatch.call("d3X3domMouseOver", this, d);
-			}).on("mouseout", function (d) {
-				dispatch.call("d3X3domMouseOut", this, d);
+			var arrowHead = arrowsEnter.append("shape").on("click", function (e) {
+				dispatch.call("d3X3domClick", this, e);
+			}).on("mouseover", function (e) {
+				dispatch.call("d3X3domMouseOver", this, e);
+			}).on("mouseout", function (e) {
+				dispatch.call("d3X3domMouseOut", this, e);
 			});
 
 			arrowHead.append("appearance").append("material").attr("diffusecolor", function (d) {
@@ -2693,12 +2725,12 @@ function componentVectorFields () {
 			var arrowShaft = arrowsEnter.append("transform").attr("translation", function (d) {
 				var offset = sizeScale(d.value) / 2;
 				return "0 " + offset + " 0";
-			}).append("shape").on("click", function (d) {
-				dispatch.call("d3X3domClick", this, d);
-			}).on("mouseover", function (d) {
-				dispatch.call("d3X3domMouseOver", this, d);
-			}).on("mouseout", function (d) {
-				dispatch.call("d3X3domMouseOut", this, d);
+			}).append("shape").on("click", function (e) {
+				dispatch.call("d3X3domClick", this, e);
+			}).on("mouseover", function (e) {
+				dispatch.call("d3X3domMouseOver", this, e);
+			}).on("mouseout", function (e) {
+				dispatch.call("d3X3domMouseOut", this, e);
 			});
 
 			arrowShaft.append("appearance").append("material").attr("diffusecolor", function (d) {
@@ -4189,15 +4221,17 @@ function chartScatterPlot () {
 			var label = component.label().xScale(xScale).yScale(yScale).zScale(zScale);
 
 			// Construct Bubbles Component
-			var bubbles = component.bubbles().xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([0.5, 0.5]).on("d3X3domClick", function (d) {
+			var bubbles = component.bubbles().xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([0.5, 0.5]).on("d3X3domClick", function (e) {
+				var d = d3.select(e.target).datum();
 				scene.select(".crosshair").datum(d).classed("crosshair", true).each(function () {
 					d3.select(this).call(crosshair);
 				});
-			}).on("d3X3domMouseOver", function (d) {
+			}).on("d3X3domMouseOver", function (e) {
+				var d = d3.select(e.target).datum();
 				scene.select(".label").datum(d).each(function () {
 					d3.select(this).call(label);
 				});
-			}).on("d3X3domMouseOut", function (d) {
+			}).on("d3X3domMouseOut", function (e) {
 				scene.select(".label").selectAll("*").remove();
 			});
 
