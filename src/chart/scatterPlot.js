@@ -111,7 +111,8 @@ export default function() {
 			const label = component.label()
 				.xScale(xScale)
 				.yScale(yScale)
-				.zScale(zScale);
+				.zScale(zScale)
+				.offset(0.5);
 
 			// Construct Bubbles Component
 			const bubbles = component.bubbles()

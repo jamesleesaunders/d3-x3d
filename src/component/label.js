@@ -11,7 +11,7 @@ export default function() {
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let color = "black";
 	let classed = "d3X3domLabel";
-	let offset = 0.6;
+	let offset = 0;
 
 	/* Scales */
 	let xScale;
@@ -124,6 +124,18 @@ export default function() {
 	my.color = function(_v) {
 		if (!arguments.length) return color;
 		color = _v;
+		return my;
+	};
+
+	/**
+	 * Offset Getter / Setter
+	 *
+	 * @param {number} _v - Label offset number.
+	 * @returns {*}
+	 */
+	my.offset = function(_v) {
+		if (!arguments.length) return offset;
+		offset = _v;
 		return my;
 	};
 

@@ -1863,7 +1863,7 @@ function componentLabel () {
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var color = "black";
 	var classed = "d3X3domLabel";
-	var offset = 0.6;
+	var offset = 0;
 
 	/* Scales */
 	var xScale = void 0;
@@ -1962,6 +1962,18 @@ function componentLabel () {
 	my.color = function (_v) {
 		if (!arguments.length) return color;
 		color = _v;
+		return my;
+	};
+
+	/**
+  * Offset Getter / Setter
+  *
+  * @param {number} _v - Offset number.
+  * @returns {*}
+  */
+	my.offset = function (_v) {
+		if (!arguments.length) return offset;
+		offset = _v;
 		return my;
 	};
 
@@ -4218,7 +4230,7 @@ function chartScatterPlot () {
 			var crosshair = component.crosshair().xScale(xScale).yScale(yScale).zScale(zScale);
 
 			// Construct Label Component
-			var label = component.label().xScale(xScale).yScale(yScale).zScale(zScale);
+			var label = component.label().xScale(xScale).yScale(yScale).zScale(zScale).offset(0.5);
 
 			// Construct Bubbles Component
 			var bubbles = component.bubbles().xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([0.5, 0.5]).on("d3X3domClick", function (e) {
