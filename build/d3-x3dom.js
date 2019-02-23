@@ -1180,6 +1180,83 @@ function componentBarsMultiSeries () {
 }
 
 /**
+ * Custom Dispatch Events
+ *
+ * @type {d3.dispatch}
+ */
+var dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
+
+/**
+ * Forward X3DOM Event to D3
+ *
+ * In X3DOM, it is the canvas which captures onclick events, therefore defining a D3 event handler
+ * on an single X3DOM element does not work. A workaround is to define an onclick handler which then
+ * forwards the call to the D3 'click' event handler with the event.
+ * Note: X3DOM and D3 event members slightly differ, so d3.mouse() function does not work.
+ *
+ * @param event
+ * @see https://bl.ocks.org/hlvoorhees/5376764
+ */
+function forwardEvent(event) {
+	var type = event.type;
+	var target = d3.select(event.target);
+	var data = target.datum();
+	target.on(type)(data);
+}
+
+/**
+ * Show Alert With Event Coordinate
+ *
+ * @param event
+ */
+function showAlertWithEventCoordinate(event) {
+	var pagePt = invertMousePosition(event);
+
+	window.alert(d3.select(event.target).attr('id') + ' picked at:\n' + 'world coordinate (' + event.hitPnt + '),\n' + 'canvas coordinate (' + event.layerX + ', ' + event.layerY + '),\n' + 'page coordinate (' + pagePt.x + ', ' + pagePt.y + ')');
+}
+
+/**
+ * Inverse of coordinate transform defined by function mousePosition(evt) in x3dom.js
+ *
+ * @param event
+ * @returns {{x: number, y: number}}
+ */
+function invertMousePosition(event) {
+	var pageX = -1;
+	var pageY = -1;
+
+	var convertPoint = window.webkitConvertPointFromPageToNode;
+
+	if ("getBoundingClientRect" in document.documentElement) {
+		var elem = d3.select('#chartholder').node();
+		var box = elem.getBoundingClientRect();
+		var scrolleft = window.pageXOffset || document.body.scrollLeft;
+		var scrolltop = window.pageYOffset || document.body.scrollTop;
+		var paddingLeft = parseFloat(document.defaultView.getComputedStyle(elem, null).getPropertyValue('padding-left'));
+		var borderLeftWidth = parseFloat(document.defaultView.getComputedStyle(elem, null).getPropertyValue('border-left-width'));
+		var paddingTop = parseFloat(document.defaultView.getComputedStyle(elem, null).getPropertyValue('padding-top'));
+		var borderTopWidth = parseFloat(document.defaultView.getComputedStyle(elem, null).getPropertyValue('border-top-width'));
+		pageX = Math.round(event.layerX + (box.left + paddingLeft + borderLeftWidth + scrolleft));
+		pageY = Math.round(event.layerY + (box.top + paddingTop + borderTopWidth + scrolltop));
+	} else if (convertPoint) {
+		var pagePoint = convertPoint(event.target, new WebKitPoint(0, 0));
+		pageX = Math.round(pagePoint.x);
+		pageY = Math.round(pagePoint.y);
+	} else {
+		x3dom.debug.logError('NO getBoundingClientRect, NO webkitConvertPointFromPageToNode');
+	}
+
+	return { x: pageX, y: pageY };
+}
+
+var events = Object.freeze({
+	dispatch: dispatch,
+	forwardEvent: forwardEvent,
+	showAlertWithEventCoordinate: showAlertWithEventCoordinate,
+	invertMousePosition: invertMousePosition
+});
+
+/**
  * Reusable 3D Bubble Chart Component
  *
  * @module
@@ -1197,8 +1274,6 @@ function componentBubbles () {
 	var zScale = void 0;
 	var sizeScale = void 0;
 	var sizeDomain = [0.5, 4.0];
-
-	var dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
 
 	/**
   * Initialise Data and Scales
@@ -1368,18 +1443,6 @@ function componentBubbles () {
 	};
 
 	/**
-  * Dispatch Getter / Setter
-  *
-  * @param {d3.dispatch} _v - Dispatch event handler.
-  * @returns {*}
-  */
-	my.dispatch = function (_v) {
-		if (!arguments.length) return dispatch();
-		dispatch = _v;
-		return this;
-	};
-
-	/**
   * Dispatch On Getter
   *
   * @returns {*}
@@ -1411,8 +1474,6 @@ function componentBubblesMultiSeries () {
 	var colorScale = void 0;
 	var sizeScale = void 0;
 	var sizeDomain = [0.5, 3.0];
-
-	var dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
 
 	/**
  	 /**
@@ -1471,7 +1532,7 @@ function componentBubblesMultiSeries () {
 			init(data);
 
 			// Construct Bars Component
-			var bubbles = componentBubbles().xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).dispatch(dispatch);
+			var bubbles = componentBubbles().xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale);
 
 			// Create Bar Groups
 			var bubbleGroup = selection.selectAll(".bubbleGroup").data(data);
@@ -1580,18 +1641,6 @@ function componentBubblesMultiSeries () {
 		if (!arguments.length) return colors;
 		colors = _v;
 		return my;
-	};
-
-	/**
-  * Dispatch Getter / Setter
-  *
-  * @param {d3.dispatch} _v - Dispatch event handler.
-  * @returns {*}
-  */
-	my.dispatch = function (_v) {
-		if (!arguments.length) return dispatch();
-		dispatch = _v;
-		return this;
 	};
 
 	/**
@@ -2250,8 +2299,6 @@ function componentSurface () {
 	var zScale = void 0;
 	var colorScale = void 0;
 
-	var dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
-
 	/**
   * Array to String
   *
@@ -2449,18 +2496,6 @@ function componentSurface () {
 	};
 
 	/**
-  * Dispatch Getter / Setter
-  *
-  * @param {d3.dispatch} _v - Dispatch event handler.
-  * @returns {*}
-  */
-	my.dispatch = function (_v) {
-		if (!arguments.length) return dispatch();
-		dispatch = _v;
-		return this;
-	};
-
-	/**
   * Dispatch On Getter
   *
   * @returns {*}
@@ -2630,16 +2665,22 @@ function componentVectorFields () {
 
 			var arrows = selection.selectAll(".arrow").data(vectorData);
 
-			var arrowsEnter = arrows.enter().append("transform").attr("class", "arrow").attr("translation", function (d) {
+			var arrowsEnter = arrows.enter().append("transform").attr("translation", function (d) {
 				return d.translation;
 			}).attr("rotation", function (d) {
 				return d.rotation;
-			}).append("transform").attr("translation", function (d) {
+			}).attr("class", "arrow").append("transform").attr("translation", function (d) {
 				var offset = sizeScale(d.value) / 2;
 				return "0 " + offset + " 0";
-			});
+			}).append("group").attr("onclick", "d3.x3dom.events.forwardEvent(event);").attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").attr("onmouseout", "d3.x3dom.events.forwardEvent(event);");
 
-			var arrowHead = arrowsEnter.append("shape");
+			var arrowHead = arrowsEnter.append("shape").on("click", function (d) {
+				dispatch.call("d3X3domClick", this, d);
+			}).on("mouseover", function (d) {
+				dispatch.call("d3X3domMouseOver", this, d);
+			}).on("mouseout", function (d) {
+				dispatch.call("d3X3domMouseOut", this, d);
+			});
 
 			arrowHead.append("appearance").append("material").attr("diffusecolor", function (d) {
 				return rgb2Hex(colorScale(d.value));
@@ -2652,7 +2693,13 @@ function componentVectorFields () {
 			var arrowShaft = arrowsEnter.append("transform").attr("translation", function (d) {
 				var offset = sizeScale(d.value) / 2;
 				return "0 " + offset + " 0";
-			}).append("shape");
+			}).append("shape").on("click", function (d) {
+				dispatch.call("d3X3domClick", this, d);
+			}).on("mouseover", function (d) {
+				dispatch.call("d3X3domMouseOver", this, d);
+			}).on("mouseout", function (d) {
+				dispatch.call("d3X3domMouseOut", this, d);
+			});
 
 			arrowShaft.append("appearance").append("material").attr("diffusecolor", function (d) {
 				return rgb2Hex(colorScale(d.value));
@@ -2805,6 +2852,16 @@ function componentVectorFields () {
 		if (!arguments.length) return vectorFunction;
 		vectorFunction = _f;
 		return my;
+	};
+
+	/**
+  * Dispatch On Getter
+  *
+  * @returns {*}
+  */
+	my.on = function () {
+		var value = dispatch.on.apply(dispatch, arguments);
+		return value === dispatch ? my : value;
 	};
 
 	return my;
@@ -4062,8 +4119,6 @@ function chartScatterPlot () {
 	var yScale = void 0;
 	var zScale = void 0;
 
-	var dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
-
 	/**
   * Initialise Data and Scales
   *
@@ -4134,7 +4189,7 @@ function chartScatterPlot () {
 			var label = component.label().xScale(xScale).yScale(yScale).zScale(zScale);
 
 			// Construct Bubbles Component
-			var bubbles = component.bubbles().xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([0.5, 0.5]).dispatch(dispatch).on("d3X3domClick", function (d) {
+			var bubbles = component.bubbles().xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([0.5, 0.5]).on("d3X3domClick", function (d) {
 				scene.select(".crosshair").datum(d).classed("crosshair", true).each(function () {
 					d3.select(this).call(crosshair);
 				});
@@ -4971,77 +5026,6 @@ var randomData = Object.freeze({
 	dataset3: dataset3,
 	dataset4: dataset4,
 	dataset5: dataset5
-});
-
-var dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
-
-/**
- * Forward X3DOM Event to D3
- *
- * In X3DOM, it is the canvas which captures onclick events, therefore defining a D3 event handler
- * on an single X3DOM element does not work. A workaround is to define an onclick handler which then
- * forwards the call to the D3 'click' event handler with the event.
- * Note: X3DOM and D3 event members slightly differ, so d3.mouse() function does not work.
- *
- * @param event
- * @see https://bl.ocks.org/hlvoorhees/5376764
- */
-function forwardEvent(event) {
-	var type = event.type;
-	var target = d3.select(event.target);
-	var data = target.datum();
-	target.on(type)(data);
-}
-
-/**
- * Show Alert With Event Coordinate
- *
- * @param event
- */
-function showAlertWithEventCoordinate(event) {
-	var pagePt = invertMousePosition(event);
-	window.alert(d3.select(event.target).attr('id') + ' picked at:\n' + 'world coordinate (' + event.hitPnt + '),\n' + 'canvas coordinate (' + event.layerX + ', ' + event.layerY + '),\n' + 'page coordinate (' + pagePt.x + ', ' + pagePt.y + ')');
-}
-
-/**
- * Inverse of coordinate transform defined by function mousePosition(evt) in x3dom.js
- *
- * @param event
- * @returns {{x: number, y: number}}
- */
-function invertMousePosition(event) {
-	var pageX = -1;
-	var pageY = -1;
-
-	var convertPoint = window.webkitConvertPointFromPageToNode;
-
-	if ("getBoundingClientRect" in document.documentElement) {
-		var elem = d3.select('#chartholder').node();
-		console.log('elem:', elem);
-		var box = elem.getBoundingClientRect();
-		var scrolleft = window.pageXOffset || document.body.scrollLeft;
-		var scrolltop = window.pageYOffset || document.body.scrollTop;
-		var paddingLeft = parseFloat(document.defaultView.getComputedStyle(elem, null).getPropertyValue('padding-left'));
-		var borderLeftWidth = parseFloat(document.defaultView.getComputedStyle(elem, null).getPropertyValue('border-left-width'));
-		var paddingTop = parseFloat(document.defaultView.getComputedStyle(elem, null).getPropertyValue('padding-top'));
-		var borderTopWidth = parseFloat(document.defaultView.getComputedStyle(elem, null).getPropertyValue('border-top-width'));
-		pageX = Math.round(event.layerX + (box.left + paddingLeft + borderLeftWidth + scrolleft));
-		pageY = Math.round(event.layerY + (box.top + paddingTop + borderTopWidth + scrolltop));
-	} else if (convertPoint) {
-		var pagePoint = convertPoint(event.target, new WebKitPoint(0, 0));
-		pageX = Math.round(pagePoint.x);
-		pageY = Math.round(pagePoint.y);
-	} else {
-		x3dom.debug.logError('NO getBoundingClientRect, NO webkitConvertPointFromPageToNode');
-	}
-
-	return { x: pageX, y: pageY };
-}
-
-var events = Object.freeze({
-	forwardEvent: forwardEvent,
-	showAlertWithEventCoordinate: showAlertWithEventCoordinate,
-	invertMousePosition: invertMousePosition
 });
 
 /**

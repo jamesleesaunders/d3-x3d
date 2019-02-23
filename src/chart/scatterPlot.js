@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import component from "../component";
+import { dispatch } from "../events";
 
 /**
  * Reusable 3D Scatter Plot Chart
@@ -29,8 +30,6 @@ export default function() {
 	let xScale;
 	let yScale;
 	let zScale;
-
-	let dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
 
 	/**
 	 * Initialise Data and Scales
@@ -121,7 +120,6 @@ export default function() {
 				.zScale(zScale)
 				.color(color)
 				.sizeDomain([0.5, 0.5])
-				.dispatch(dispatch)
 				.on("d3X3domClick", function(d) {
 					scene.select(".crosshair")
 						.datum(d)

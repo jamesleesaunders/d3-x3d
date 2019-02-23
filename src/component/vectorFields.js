@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 // import * as x3dom from "x3dom";
 import dataTransform from "../dataTransform";
+import { dispatch } from "../events";
 
 /**
  * Reusable 3D Vector Fields Component
@@ -145,16 +146,23 @@ export default function() {
 
 			const arrowsEnter = arrows.enter()
 				.append("transform")
-				.attr("class", "arrow")
 				.attr("translation", (d) => d.translation)
 				.attr("rotation", (d) => d.rotation)
+				.attr("class", "arrow")
 				.append("transform")
 				.attr("translation", (d) => {
 					let offset = sizeScale(d.value) / 2;
 					return "0 " + offset + " 0";
-				});
+				})
+				.append("group")
+				.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
+				.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
+				.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);");
 
-			let arrowHead = arrowsEnter.append("shape");
+			let arrowHead = arrowsEnter.append("shape")
+				.on("click", function(d) { dispatch.call("d3X3domClick", this, d); })
+				.on("mouseover", function(d) { dispatch.call("d3X3domMouseOver", this, d); })
+				.on("mouseout", function(d) { dispatch.call("d3X3domMouseOut", this, d); });
 
 			arrowHead.append("appearance")
 				.append("material")
@@ -170,7 +178,10 @@ export default function() {
 					let offset = sizeScale(d.value) / 2;
 					return "0 " + offset + " 0";
 				})
-				.append("shape");
+				.append("shape")
+				.on("click", function(d) { dispatch.call("d3X3domClick", this, d); })
+				.on("mouseover", function(d) { dispatch.call("d3X3domMouseOver", this, d); })
+				.on("mouseout", function(d) { dispatch.call("d3X3domMouseOut", this, d); });
 
 			arrowShaft.append("appearance")
 				.append("material")
@@ -321,6 +332,16 @@ export default function() {
 		if (!arguments.length) return vectorFunction;
 		vectorFunction = _f;
 		return my;
+	};
+
+	/**
+	 * Dispatch On Getter
+	 *
+	 * @returns {*}
+	 */
+	my.on = function() {
+		let value = dispatch.on.apply(dispatch, arguments);
+		return value === dispatch ? my : value;
 	};
 
 	return my;

@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import componentBubbles from "./bubbles";
+import { dispatch } from "../events";
 
 /**
  * Reusable 3D Multi Series Bubble Chart Component
@@ -21,8 +22,6 @@ export default function() {
 	let colorScale;
 	let sizeScale;
 	let sizeDomain = [0.5, 3.0];
-
-	let dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
 
 	/**
 
@@ -86,8 +85,7 @@ export default function() {
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
-				.sizeScale(sizeScale)
-				.dispatch(dispatch);
+				.sizeScale(sizeScale);
 
 			// Create Bar Groups
 			const bubbleGroup = selection.selectAll(".bubbleGroup")
@@ -204,18 +202,6 @@ export default function() {
 		if (!arguments.length) return colors;
 		colors = _v;
 		return my;
-	};
-
-	/**
-	 * Dispatch Getter / Setter
-	 *
-	 * @param {d3.dispatch} _v - Dispatch event handler.
-	 * @returns {*}
-	 */
-	my.dispatch = function(_v) {
-		if (!arguments.length) return dispatch();
-		dispatch = _v;
-		return this;
 	};
 
 	/**

@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
+import { dispatch } from "../events";
 
 /**
  * Reusable 3D Surface Area Component
@@ -18,8 +19,6 @@ export default function() {
 	let yScale;
 	let zScale;
 	let colorScale;
-
-	let dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
 
 	/**
 	 * Array to String
@@ -225,18 +224,6 @@ export default function() {
 		if (!arguments.length) return colors;
 		colors = _v;
 		return my;
-	};
-
-	/**
-	 * Dispatch Getter / Setter
-	 *
-	 * @param {d3.dispatch} _v - Dispatch event handler.
-	 * @returns {*}
-	 */
-	my.dispatch = function(_v) {
-		if (!arguments.length) return dispatch();
-		dispatch = _v;
-		return this;
 	};
 
 	/**

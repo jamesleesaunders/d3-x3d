@@ -1,6 +1,11 @@
 import * as d3 from "d3";
 
-const dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
+/**
+ * Custom Dispatch Events
+ *
+ * @type {d3.dispatch}
+ */
+export const dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
 
 /**
  * Forward X3DOM Event to D3
@@ -27,6 +32,7 @@ export function forwardEvent(event) {
  */
 export function showAlertWithEventCoordinate(event) {
 	let pagePt = invertMousePosition(event);
+
 	window.alert(d3.select(event.target).attr('id') + ' picked at:\n'
 		+ 'world coordinate (' + event.hitPnt + '),\n'
 		+ 'canvas coordinate (' + event.layerX + ', ' + event.layerY + '),\n'
@@ -47,7 +53,6 @@ export function invertMousePosition(event) {
 
 	if ("getBoundingClientRect" in document.documentElement) {
 		let elem = d3.select('#chartholder').node();
-		console.log('elem:', elem);
 		let box = elem.getBoundingClientRect();
 		let scrolleft = window.pageXOffset || document.body.scrollLeft;
 		let scrolltop = window.pageYOffset || document.body.scrollTop;
