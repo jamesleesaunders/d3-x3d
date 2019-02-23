@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.1.1";
+var version = "1.1.2";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -1968,7 +1968,7 @@ function componentLabel () {
 	/**
   * Offset Getter / Setter
   *
-  * @param {number} _v - Offset number.
+  * @param {number} _v - Label offset number.
   * @returns {*}
   */
 	my.offset = function (_v) {
