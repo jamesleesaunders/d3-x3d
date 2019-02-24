@@ -18,6 +18,32 @@ export default function() {
 	let yScale;
 
 	/**
+	 * Array to String
+	 *
+	 * @private
+	 * @param {array} arr
+	 * @returns {string}
+	 */
+	const array2dToString = function(arr) {
+		return arr.reduce((a, b) => a.concat(b), [])
+			.reduce((a, b) => a.concat(b), [])
+			.join(" ");
+	};
+
+	/**
+	 * Array to Coordinate Index
+	 *
+	 * @private
+	 * @param {array} arr
+	 * @returns {string}
+	 */
+	const arrayToCoordIndex = function(arr) {
+		return arr.map((d, i) => i)
+			.join(" ")
+			.concat(" -1");
+	};
+
+	/**
 	 * Initialise Data and Scales
 	 *
 	 * @private
@@ -76,18 +102,6 @@ export default function() {
 						[x2, y2, z1],
 						[x1, y1, z1]
 					];
-
-					function array2dToString(arr) {
-						return arr.reduce((a, b) => a.concat(b), [])
-							.reduce((a, b) => a.concat(b), [])
-							.join(" ");
-					}
-
-					function arrayToCoordIndex(arr) {
-						return arr.map((d, i) => i)
-							.join(" ")
-							.concat(" -1");
-					}
 
 					return {
 						key: pointThis.key,

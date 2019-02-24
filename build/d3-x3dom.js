@@ -1997,6 +1997,34 @@ function componentRibbon () {
 	var yScale = void 0;
 
 	/**
+  * Array to String
+  *
+  * @private
+  * @param {array} arr
+  * @returns {string}
+  */
+	var array2dToString = function array2dToString(arr) {
+		return arr.reduce(function (a, b) {
+			return a.concat(b);
+		}, []).reduce(function (a, b) {
+			return a.concat(b);
+		}, []).join(" ");
+	};
+
+	/**
+  * Array to Coordinate Index
+  *
+  * @private
+  * @param {array} arr
+  * @returns {string}
+  */
+	var arrayToCoordIndex = function arrayToCoordIndex(arr) {
+		return arr.map(function (d, i) {
+			return i;
+		}).join(" ").concat(" -1");
+	};
+
+	/**
   * Initialise Data and Scales
   *
   * @private
@@ -2051,20 +2079,6 @@ function componentRibbon () {
 					var z2 = dimensions.z / 2;
 
 					var points = [[x1, y1, z1], [x1, y1, z2], [x2, y2, z2], [x2, y2, z1], [x1, y1, z1]];
-
-					function array2dToString(arr) {
-						return arr.reduce(function (a, b) {
-							return a.concat(b);
-						}, []).reduce(function (a, b) {
-							return a.concat(b);
-						}, []).join(" ");
-					}
-
-					function arrayToCoordIndex(arr) {
-						return arr.map(function (d, i) {
-							return i;
-						}).join(" ").concat(" -1");
-					}
 
 					return {
 						key: pointThis.key,
@@ -2347,8 +2361,8 @@ function componentSurface () {
   * Array to String
   *
   * @private
-  * @param arr
-  * @returns {*}
+  * @param {array} arr
+  * @returns {string}
   */
 	var array2dToString = function array2dToString(arr) {
 		return arr.reduce(function (a, b) {
@@ -2445,23 +2459,46 @@ function componentSurface () {
 
 			var coords = array2dToString(coordIndex.concat(coordIndexBack));
 
-			var surface = selection.selectAll(".surface").data(function (d) {
-				return [d];
-			});
+			var surfaceData = function surfaceData(d) {
+				var jim = d.map(function (j) {
+					return {
+						key: j.key,
+						values: j.values,
+						coordindex: array2dToString(coordIndex.concat(coordIndexBack)),
+						coordinatePoints: coordinatePoints(d),
+						colorFaceSet: colorFaceSet(d)
+					};
+				});
 
-			var surfaceSelect = surface.enter().append("shape").classed("surface", true).append("indexedfaceset").attr("coordindex", coords);
+				console.log(jim);
+				return jim;
+			};
+
+			var surface = selection.selectAll(".surface").data(surfaceData);
+
+			var surfaceSelect = surface.enter().append("shape").classed("surface", true).append("indexedfaceset").attr("coordindex", function (d) {
+				return d.coordindex;
+			});
 
 			surfaceSelect.append("coordinate").attr("point", coordinatePoints);
 
-			surfaceSelect.append("color").attr("color", colorFaceSet);
+			surfaceSelect.append("color").attr("color", function (d) {
+				return d.colorFaceSet;
+			});
 
 			surfaceSelect.merge(surface);
 
-			var surfaceTransition = surface.transition().select("indexedfaceset").attr("coordindex", coords);
+			var surfaceTransition = surface.transition().select("indexedfaceset").attr("coordindex", function (d) {
+				return d.coordindex;
+			});
 
-			surfaceTransition.select("coordinate").attr("point", coordinatePoints);
+			surfaceTransition.select("coordinate").attr("point", function (d) {
+				return d.coordinatePoints;
+			});
 
-			surfaceTransition.select("color").attr("color", colorFaceSet);
+			surfaceTransition.select("color").attr("color", function (d) {
+				return d.colorFaceSet;
+			});
 
 			surface.exit().remove();
 		});
