@@ -122,7 +122,7 @@ export default function() {
 			const coords = array2dToString(coordIndex.concat(coordIndexBack));
 
 			const surfaceData = function(d) {
-				let jim = d.map((j) => {
+				let data = d.map((j) => {
 					return {
 						key: j.key,
 						values: j.values,
@@ -132,8 +132,8 @@ export default function() {
 					}
 				});
 
-				console.log(jim);
-				return jim;
+				console.log(data);
+				return [data];
 			};
 
 			const surface = selection.selectAll(".surface")
@@ -144,25 +144,25 @@ export default function() {
 				.append("shape")
 				.classed("surface", true)
 				.append("indexedfaceset")
-				.attr("coordindex", (d) => d.coordindex);
+				.attr("coordindex", coords);
 
 			surfaceSelect.append("coordinate")
 				.attr("point", coordinatePoints);
 
 			surfaceSelect.append("color")
-				.attr("color", (d) => d.colorFaceSet);
+				.attr("color", colorFaceSet);
 
 			surfaceSelect.merge(surface);
 
 			const surfaceTransition = surface.transition()
 				.select("indexedfaceset")
-				.attr("coordindex", (d) => d.coordindex);
+				.attr("coordindex", coords);
 
 			surfaceTransition.select("coordinate")
-				.attr("point", (d) => d.coordinatePoints);
+				.attr("point", coordinatePoints);
 
 			surfaceTransition.select("color")
-				.attr("color", (d) => d.colorFaceSet);
+				.attr("color", colorFaceSet);
 
 			surface.exit()
 				.remove();

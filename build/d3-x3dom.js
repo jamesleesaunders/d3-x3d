@@ -2460,7 +2460,7 @@ function componentSurface () {
 			var coords = array2dToString(coordIndex.concat(coordIndexBack));
 
 			var surfaceData = function surfaceData(d) {
-				var jim = d.map(function (j) {
+				var data = d.map(function (j) {
 					return {
 						key: j.key,
 						values: j.values,
@@ -2470,35 +2470,25 @@ function componentSurface () {
 					};
 				});
 
-				console.log(jim);
-				return jim;
+				console.log(data);
+				return [data];
 			};
 
 			var surface = selection.selectAll(".surface").data(surfaceData);
 
-			var surfaceSelect = surface.enter().append("shape").classed("surface", true).append("indexedfaceset").attr("coordindex", function (d) {
-				return d.coordindex;
-			});
+			var surfaceSelect = surface.enter().append("shape").classed("surface", true).append("indexedfaceset").attr("coordindex", coords);
 
 			surfaceSelect.append("coordinate").attr("point", coordinatePoints);
 
-			surfaceSelect.append("color").attr("color", function (d) {
-				return d.colorFaceSet;
-			});
+			surfaceSelect.append("color").attr("color", colorFaceSet);
 
 			surfaceSelect.merge(surface);
 
-			var surfaceTransition = surface.transition().select("indexedfaceset").attr("coordindex", function (d) {
-				return d.coordindex;
-			});
+			var surfaceTransition = surface.transition().select("indexedfaceset").attr("coordindex", coords);
 
-			surfaceTransition.select("coordinate").attr("point", function (d) {
-				return d.coordinatePoints;
-			});
+			surfaceTransition.select("coordinate").attr("point", coordinatePoints);
 
-			surfaceTransition.select("color").attr("color", function (d) {
-				return d.colorFaceSet;
-			});
+			surfaceTransition.select("color").attr("color", colorFaceSet);
 
 			surface.exit().remove();
 		});
