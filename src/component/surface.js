@@ -83,55 +83,54 @@ export default function() {
 		selection.each((data) => {
 			init(data);
 
-			const ny = data.length;
-			const nx = data[0].values.length;
-
-			const coordinatePoints = function(data) {
-				const points = data.map(function(X) {
-					return X.values.map(function(d) {
-						return [xScale(X.key), yScale(d.value), zScale(d.key)];
-					})
-				});
-				return array2dToString(points);
-			};
-
-			const colorFaceSet = function(data) {
-				const colors = data.map(function(X) {
-					return X.values.map(function(d) {
-						const col = d3.color(colorScale(d.value));
-						return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
-					})
-				});
-				return array2dToString(colors);
-			};
-
-			const coordIndex = Array.apply(0, Array(ny - 1)).map(function(_, j) {
-				return Array.apply(0, Array(nx - 1)).map(function(_, i) {
-					const start = i + j * nx;
-					return [start, start + nx, start + nx + 1, start + 1, start, -1];
-				});
-			});
-
-			const coordIndexBack = Array.apply(0, Array(ny - 1)).map(function(_, j) {
-				return Array.apply(0, Array(nx - 1)).map(function(_, i) {
-					const start = i + j * nx;
-					return [start, start + 1, start + nx + 1, start + nx, start, -1];
-				});
-			});
-
-			const coords = array2dToString(coordIndex.concat(coordIndexBack));
-
 			const surfaceData = function(d) {
-				console.log(d);
+				const coordinatePoints = function(data) {
+					const points = data.map(function(X) {
+						return X.values.map(function(d) {
+							return [xScale(X.key), yScale(d.value), zScale(d.key)];
+						})
+					});
+					return array2dToString(points);
+				};
 
-				let data = {
-						coordindex: array2dToString(coordIndex.concat(coordIndexBack)),
-						coordinatePoints: coordinatePoints(d),
-						colorFaceSet: colorFaceSet(d)
-					};
+				const colorFaceSet = function(data) {
+					const colors = data.map(function(X) {
+						return X.values.map(function(d) {
+							const col = d3.color(colorScale(d.value));
+							return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
+						})
+					});
+					return array2dToString(colors);
+				};
 
-				console.log(data);
-				return [data];
+				const coordindex = function(data) {
+					const ny = data.length;
+					const nx = data[0].values.length;
+
+					const coordIndexFront = Array.apply(0, Array(ny - 1)).map(function(_, j) {
+						return Array.apply(0, Array(nx - 1)).map(function(_, i) {
+							const start = i + j * nx;
+							return [start, start + nx, start + nx + 1, start + 1, start, -1];
+						});
+					});
+
+					const coordIndexBack = Array.apply(0, Array(ny - 1)).map(function(_, j) {
+						return Array.apply(0, Array(nx - 1)).map(function(_, i) {
+							const start = i + j * nx;
+							return [start, start + 1, start + nx + 1, start + nx, start, -1];
+						});
+					});
+
+					const coordIndex = coordIndexFront.concat(coordIndexBack);
+
+					return array2dToString(coordIndex);
+				};
+
+				return [{
+					coordindex: coordindex(d),
+					coordinatePoints: coordinatePoints(d),
+					colorFaceSet: colorFaceSet(d)
+				}];
 			};
 
 			const surface = selection.selectAll(".surface")
