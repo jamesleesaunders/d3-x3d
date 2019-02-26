@@ -84,52 +84,49 @@ export default function() {
 			init(data);
 
 			const surfaceData = function(d) {
-				const coordinatePoints = function(data) {
-					const points = data.map(function(X) {
+
+				const coordPoints = function(data) {
+					return data.map(function(X) {
 						return X.values.map(function(d) {
 							return [xScale(X.key), yScale(d.value), zScale(d.key)];
 						})
 					});
-					return array2dToString(points);
 				};
 
-				const colorFaceSet = function(data) {
-					const colors = data.map(function(X) {
-						return X.values.map(function(d) {
-							const col = d3.color(colorScale(d.value));
-							return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
-						})
-					});
-					return array2dToString(colors);
-				};
+				const coordIndex = function(data) {
+					let ny = data.length;
+					let nx = data[0].values.length;
 
-				const coordindex = function(data) {
-					const ny = data.length;
-					const nx = data[0].values.length;
-
-					const coordIndexFront = Array.apply(0, Array(ny - 1)).map(function(_, j) {
+					let coordIndexFront = Array.apply(0, Array(ny - 1)).map(function(_, j) {
 						return Array.apply(0, Array(nx - 1)).map(function(_, i) {
 							const start = i + j * nx;
 							return [start, start + nx, start + nx + 1, start + 1, start, -1];
 						});
 					});
 
-					const coordIndexBack = Array.apply(0, Array(ny - 1)).map(function(_, j) {
+					let coordIndexBack = Array.apply(0, Array(ny - 1)).map(function(_, j) {
 						return Array.apply(0, Array(nx - 1)).map(function(_, i) {
 							const start = i + j * nx;
 							return [start, start + 1, start + nx + 1, start + nx, start, -1];
 						});
 					});
 
-					const coordIndex = coordIndexFront.concat(coordIndexBack);
+					return coordIndexFront.concat(coordIndexBack);
+				};
 
-					return array2dToString(coordIndex);
+				const colorFaceSet = function(data) {
+					return data.map(function(X) {
+						return X.values.map(function(d) {
+							const col = d3.color(colorScale(d.value));
+							return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
+						})
+					});
 				};
 
 				return [{
-					coordindex: coordindex(d),
-					coordinatePoints: coordinatePoints(d),
-					colorFaceSet: colorFaceSet(d)
+					coordindex: array2dToString(coordIndex(d)),
+					point: array2dToString(coordPoints(d)),
+					color: array2dToString(colorFaceSet(d))
 				}];
 			};
 
@@ -144,10 +141,10 @@ export default function() {
 				.attr("coordindex", (d) => d.coordindex);
 
 			surfaceSelect.append("coordinate")
-				.attr("point", (d) => d.coordinatePoints);
+				.attr("point", (d) => d.point);
 
 			surfaceSelect.append("color")
-				.attr("color", (d) => d.colorFaceSet);
+				.attr("color", (d) => d.color);
 
 			surfaceSelect.merge(surface);
 
@@ -156,10 +153,10 @@ export default function() {
 				.attr("coordindex", (d) => d.coordindex);
 
 			surfaceTransition.select("coordinate")
-				.attr("point", (d) => d.coordinatePoints);
+				.attr("point", (d) => d.point);
 
 			surfaceTransition.select("color")
-				.attr("color", (d) => d.colorFaceSet);
+				.attr("color", (d) => d.color);
 
 			surface.exit()
 				.remove();

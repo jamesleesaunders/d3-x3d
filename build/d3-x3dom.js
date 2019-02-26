@@ -2083,10 +2083,10 @@ function componentRibbon () {
 					return {
 						key: pointThis.key,
 						value: pointThis.value,
-						color: color,
-						transparency: 0.2,
 						coordindex: arrayToCoordIndex(points),
-						point: array2dToString(points)
+						point: array2dToString(points),
+						color: color,
+						transparency: 0.2
 					};
 				}).filter(function (d) {
 					return d !== null;
@@ -2422,26 +2422,16 @@ function componentSurface () {
 			init(data);
 
 			var surfaceData = function surfaceData(d) {
-				var coordinatePoints = function coordinatePoints(data) {
-					var points = data.map(function (X) {
+
+				var coordPoints = function coordPoints(data) {
+					return data.map(function (X) {
 						return X.values.map(function (d) {
 							return [xScale(X.key), yScale(d.value), zScale(d.key)];
 						});
 					});
-					return array2dToString(points);
 				};
 
-				var colorFaceSet = function colorFaceSet(data) {
-					var colors = data.map(function (X) {
-						return X.values.map(function (d) {
-							var col = d3.color(colorScale(d.value));
-							return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
-						});
-					});
-					return array2dToString(colors);
-				};
-
-				var coordindex = function coordindex(data) {
+				var coordIndex = function coordIndex(data) {
 					var ny = data.length;
 					var nx = data[0].values.length;
 
@@ -2459,15 +2449,22 @@ function componentSurface () {
 						});
 					});
 
-					var coordIndex = coordIndexFront.concat(coordIndexBack);
+					return coordIndexFront.concat(coordIndexBack);
+				};
 
-					return array2dToString(coordIndex);
+				var colorFaceSet = function colorFaceSet(data) {
+					return data.map(function (X) {
+						return X.values.map(function (d) {
+							var col = d3.color(colorScale(d.value));
+							return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
+						});
+					});
 				};
 
 				return [{
-					coordindex: coordindex(d),
-					coordinatePoints: coordinatePoints(d),
-					colorFaceSet: colorFaceSet(d)
+					coordindex: array2dToString(coordIndex(d)),
+					point: array2dToString(coordPoints(d)),
+					color: array2dToString(colorFaceSet(d))
 				}];
 			};
 
@@ -2478,11 +2475,11 @@ function componentSurface () {
 			});
 
 			surfaceSelect.append("coordinate").attr("point", function (d) {
-				return d.coordinatePoints;
+				return d.point;
 			});
 
 			surfaceSelect.append("color").attr("color", function (d) {
-				return d.colorFaceSet;
+				return d.color;
 			});
 
 			surfaceSelect.merge(surface);
@@ -2492,11 +2489,11 @@ function componentSurface () {
 			});
 
 			surfaceTransition.select("coordinate").attr("point", function (d) {
-				return d.coordinatePoints;
+				return d.point;
 			});
 
 			surfaceTransition.select("color").attr("color", function (d) {
-				return d.colorFaceSet;
+				return d.color;
 			});
 
 			surface.exit().remove();

@@ -106,10 +106,10 @@ export default function() {
 					return {
 						key: pointThis.key,
 						value: pointThis.value,
-						color: color,
-						transparency: 0.2,
 						coordindex: arrayToCoordIndex(points),
-						point: array2dToString(points)
+						point: array2dToString(points),
+						color: color,
+						transparency: 0.2
 					}
 				}).filter((d) => d !== null);
 			};
