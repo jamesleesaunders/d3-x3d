@@ -24,8 +24,8 @@ export default function() {
 	 * Array to String
 	 *
 	 * @private
-	 * @param arr
-	 * @returns {*}
+	 * @param {array} arr
+	 * @returns {string}
 	 */
 	const array2dToString = function(arr) {
 		return arr.reduce((a, b) => a.concat(b), [])
@@ -83,71 +83,80 @@ export default function() {
 		selection.each((data) => {
 			init(data);
 
-			const ny = data.length;
-			const nx = data[0].values.length;
+			const surfaceData = function(d) {
 
-			const coordinatePoints = function(data) {
-				const points = data.map(function(X) {
-					return X.values.map(function(d) {
-						return [xScale(X.key), yScale(d.value), zScale(d.key)];
-					})
-				});
-				return array2dToString(points);
+				const coordPoints = function(data) {
+					return data.map(function(X) {
+						return X.values.map(function(d) {
+							return [xScale(X.key), yScale(d.value), zScale(d.key)];
+						})
+					});
+				};
+
+				const coordIndex = function(data) {
+					let ny = data.length;
+					let nx = data[0].values.length;
+
+					let coordIndexFront = Array.apply(0, Array(ny - 1)).map(function(_, j) {
+						return Array.apply(0, Array(nx - 1)).map(function(_, i) {
+							const start = i + j * nx;
+							return [start, start + nx, start + nx + 1, start + 1, start, -1];
+						});
+					});
+
+					let coordIndexBack = Array.apply(0, Array(ny - 1)).map(function(_, j) {
+						return Array.apply(0, Array(nx - 1)).map(function(_, i) {
+							const start = i + j * nx;
+							return [start, start + 1, start + nx + 1, start + nx, start, -1];
+						});
+					});
+
+					return coordIndexFront.concat(coordIndexBack);
+				};
+
+				const colorFaceSet = function(data) {
+					return data.map(function(X) {
+						return X.values.map(function(d) {
+							const col = d3.color(colorScale(d.value));
+							return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
+						})
+					});
+				};
+
+				return [{
+					coordindex: array2dToString(coordIndex(d)),
+					point: array2dToString(coordPoints(d)),
+					color: array2dToString(colorFaceSet(d))
+				}];
 			};
-
-			const colorFaceSet = function(data) {
-				const colors = data.map(function(X) {
-					return X.values.map(function(d) {
-						const col = d3.color(colorScale(d.value));
-						return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
-					})
-				});
-				return array2dToString(colors);
-			};
-
-			const coordIndex = Array.apply(0, Array(ny - 1)).map(function(_, j) {
-				return Array.apply(0, Array(nx - 1)).map(function(_, i) {
-					const start = i + j * nx;
-					return [start, start + nx, start + nx + 1, start + 1, start, -1];
-				});
-			});
-
-			const coordIndexBack = Array.apply(0, Array(ny - 1)).map(function(_, j) {
-				return Array.apply(0, Array(nx - 1)).map(function(_, i) {
-					const start = i + j * nx;
-					return [start, start + 1, start + nx + 1, start + nx, start, -1];
-				});
-			});
-
-			const coords = array2dToString(coordIndex.concat(coordIndexBack));
 
 			const surface = selection.selectAll(".surface")
-				.data((d) => [d]);
+				.data(surfaceData);
 
 			const surfaceSelect = surface
 				.enter()
 				.append("shape")
 				.classed("surface", true)
 				.append("indexedfaceset")
-				.attr("coordindex", coords);
+				.attr("coordindex", (d) => d.coordindex);
 
 			surfaceSelect.append("coordinate")
-				.attr("point", coordinatePoints);
+				.attr("point", (d) => d.point);
 
 			surfaceSelect.append("color")
-				.attr("color", colorFaceSet);
+				.attr("color", (d) => d.color);
 
 			surfaceSelect.merge(surface);
 
 			const surfaceTransition = surface.transition()
 				.select("indexedfaceset")
-				.attr("coordindex", coords);
+				.attr("coordindex", (d) => d.coordindex);
 
 			surfaceTransition.select("coordinate")
-				.attr("point", coordinatePoints);
+				.attr("point", (d) => d.point);
 
 			surfaceTransition.select("color")
-				.attr("color", colorFaceSet);
+				.attr("color", (d) => d.color);
 
 			surface.exit()
 				.remove();

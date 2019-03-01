@@ -1997,6 +1997,34 @@ function componentRibbon () {
 	var yScale = void 0;
 
 	/**
+  * Array to String
+  *
+  * @private
+  * @param {array} arr
+  * @returns {string}
+  */
+	var array2dToString = function array2dToString(arr) {
+		return arr.reduce(function (a, b) {
+			return a.concat(b);
+		}, []).reduce(function (a, b) {
+			return a.concat(b);
+		}, []).join(" ");
+	};
+
+	/**
+  * Array to Coordinate Index
+  *
+  * @private
+  * @param {array} arr
+  * @returns {string}
+  */
+	var arrayToCoordIndex = function arrayToCoordIndex(arr) {
+		return arr.map(function (d, i) {
+			return i;
+		}).join(" ").concat(" -1");
+	};
+
+	/**
   * Initialise Data and Scales
   *
   * @private
@@ -2052,27 +2080,13 @@ function componentRibbon () {
 
 					var points = [[x1, y1, z1], [x1, y1, z2], [x2, y2, z2], [x2, y2, z1], [x1, y1, z1]];
 
-					function array2dToString(arr) {
-						return arr.reduce(function (a, b) {
-							return a.concat(b);
-						}, []).reduce(function (a, b) {
-							return a.concat(b);
-						}, []).join(" ");
-					}
-
-					function arrayToCoordIndex(arr) {
-						return arr.map(function (d, i) {
-							return i;
-						}).join(" ").concat(" -1");
-					}
-
 					return {
 						key: pointThis.key,
 						value: pointThis.value,
-						color: color,
-						transparency: 0.2,
 						coordindex: arrayToCoordIndex(points),
-						point: array2dToString(points)
+						point: array2dToString(points),
+						color: color,
+						transparency: 0.2
 					};
 				}).filter(function (d) {
 					return d !== null;
@@ -2347,8 +2361,8 @@ function componentSurface () {
   * Array to String
   *
   * @private
-  * @param arr
-  * @returns {*}
+  * @param {array} arr
+  * @returns {string}
   */
 	var array2dToString = function array2dToString(arr) {
 		return arr.reduce(function (a, b) {
@@ -2407,61 +2421,80 @@ function componentSurface () {
 		selection.each(function (data) {
 			init(data);
 
-			var ny = data.length;
-			var nx = data[0].values.length;
+			var surfaceData = function surfaceData(d) {
 
-			var coordinatePoints = function coordinatePoints(data) {
-				var points = data.map(function (X) {
-					return X.values.map(function (d) {
-						return [xScale(X.key), yScale(d.value), zScale(d.key)];
+				var coordPoints = function coordPoints(data) {
+					return data.map(function (X) {
+						return X.values.map(function (d) {
+							return [xScale(X.key), yScale(d.value), zScale(d.key)];
+						});
 					});
-				});
-				return array2dToString(points);
+				};
+
+				var coordIndex = function coordIndex(data) {
+					var ny = data.length;
+					var nx = data[0].values.length;
+
+					var coordIndexFront = Array.apply(0, Array(ny - 1)).map(function (_, j) {
+						return Array.apply(0, Array(nx - 1)).map(function (_, i) {
+							var start = i + j * nx;
+							return [start, start + nx, start + nx + 1, start + 1, start, -1];
+						});
+					});
+
+					var coordIndexBack = Array.apply(0, Array(ny - 1)).map(function (_, j) {
+						return Array.apply(0, Array(nx - 1)).map(function (_, i) {
+							var start = i + j * nx;
+							return [start, start + 1, start + nx + 1, start + nx, start, -1];
+						});
+					});
+
+					return coordIndexFront.concat(coordIndexBack);
+				};
+
+				var colorFaceSet = function colorFaceSet(data) {
+					return data.map(function (X) {
+						return X.values.map(function (d) {
+							var col = d3.color(colorScale(d.value));
+							return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
+						});
+					});
+				};
+
+				return [{
+					coordindex: array2dToString(coordIndex(d)),
+					point: array2dToString(coordPoints(d)),
+					color: array2dToString(colorFaceSet(d))
+				}];
 			};
 
-			var colorFaceSet = function colorFaceSet(data) {
-				var colors = data.map(function (X) {
-					return X.values.map(function (d) {
-						var col = d3.color(colorScale(d.value));
-						return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
-					});
-				});
-				return array2dToString(colors);
-			};
+			var surface = selection.selectAll(".surface").data(surfaceData);
 
-			var coordIndex = Array.apply(0, Array(ny - 1)).map(function (_, j) {
-				return Array.apply(0, Array(nx - 1)).map(function (_, i) {
-					var start = i + j * nx;
-					return [start, start + nx, start + nx + 1, start + 1, start, -1];
-				});
+			var surfaceSelect = surface.enter().append("shape").classed("surface", true).append("indexedfaceset").attr("coordindex", function (d) {
+				return d.coordindex;
 			});
 
-			var coordIndexBack = Array.apply(0, Array(ny - 1)).map(function (_, j) {
-				return Array.apply(0, Array(nx - 1)).map(function (_, i) {
-					var start = i + j * nx;
-					return [start, start + 1, start + nx + 1, start + nx, start, -1];
-				});
+			surfaceSelect.append("coordinate").attr("point", function (d) {
+				return d.point;
 			});
 
-			var coords = array2dToString(coordIndex.concat(coordIndexBack));
-
-			var surface = selection.selectAll(".surface").data(function (d) {
-				return [d];
+			surfaceSelect.append("color").attr("color", function (d) {
+				return d.color;
 			});
-
-			var surfaceSelect = surface.enter().append("shape").classed("surface", true).append("indexedfaceset").attr("coordindex", coords);
-
-			surfaceSelect.append("coordinate").attr("point", coordinatePoints);
-
-			surfaceSelect.append("color").attr("color", colorFaceSet);
 
 			surfaceSelect.merge(surface);
 
-			var surfaceTransition = surface.transition().select("indexedfaceset").attr("coordindex", coords);
+			var surfaceTransition = surface.transition().select("indexedfaceset").attr("coordindex", function (d) {
+				return d.coordindex;
+			});
 
-			surfaceTransition.select("coordinate").attr("point", coordinatePoints);
+			surfaceTransition.select("coordinate").attr("point", function (d) {
+				return d.point;
+			});
 
-			surfaceTransition.select("color").attr("color", colorFaceSet);
+			surfaceTransition.select("color").attr("color", function (d) {
+				return d.color;
+			});
 
 			surface.exit().remove();
 		});
