@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3dom : 3D Volume Render Example</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
+</head>
+
+<body>
+
+  <div>
+    <x3d showStat='true' showLog='false' width='500px' height='500px'>
+      <Scene>
+        <Background skyColor='0.0 0.0 0.0'></Background>
+        <Viewpoint description='Default' zNear='0.0001' zFar='100'></Viewpoint>
+        <Transform>
+          <VolumeData id='volume' dimensions='4.0 4.0 4.0'>
+            <ImageTextureAtlas containerField='voxels' url='scan1.png' numberOfSlices='96' slicesOverX='10' slicesOverY='10'></ImageTextureAtlas>
+            <OpacityMapVolumeStyle lightFactor='1.2' opacityFactor='6.0'>
+              <ImageTexture containerField='transferFunction' url='transfer.png'></ImageTexture>
+            </OpacityMapVolumeStyle>
+          </VolumeData>
+        </Transform>
+      </Scene>
+    </x3d>
+  </div>
+
+</body>
+
+</html>

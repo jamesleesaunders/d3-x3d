@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>d3-x3dom : 3D Volume Render Example</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
+	<link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
+</head>
+
+<body>
+
+	<div>
+		<x3d showStat='true' showLog='true' width='500px' height='500px'>
+			<Scene>
+				<Background skyColor='0.0 0.0 0.0'></Background>
+				<Viewpoint description='Default' zNear='0.0001' zFar='100' position="0.85713 1.49578 9.85028" orientation="-0.85521 0.50269 0.12614 0.17466"></Viewpoint>
+				<Transform>
+					<VolumeData id='volume' dimensions='4.0 4.0 4.0'>
+						<ImageTextureAtlas containerField='voxels' url='scan1.png' numberOfSlices='96' slicesOverX='10' slicesOverY='10'></ImageTextureAtlas>
+						<MPRVolumeStyle id='position' positionLine='0.5'></MPRVolumeStyle>
+					</VolumeData>
+				</Transform>
+			</Scene>
+		</x3d>
+	</div>
+
+	<input type="range" min="0" max="100" value="50" class="slider" id="slider">
+
+	<script>
+		var threshold = 0.5;
+
+		$(document).on('input change', '#slider', function() {
+			$('#slider_value').html( $(this).val() );
+			threshold = $(this).val() / 100;
+			document.getElementById("position").setAttribute('positionLine', threshold);
+		});
+
+	</script>
+
+</body>
+
+</html>

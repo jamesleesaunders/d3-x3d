@@ -3059,6 +3059,104 @@ function componentViewpoint () {
 	return my;
 }
 
+/**
+ * Reusable 3D Volume Slice Component
+ *
+ * @module
+ */
+function componentVolumeSlice () {
+
+	/* Default Properties */
+	var dimensions = { x: 40, y: 40, z: 40 };
+	var classed = "d3X3domVolume";
+
+	var imageUrl = "assets/scan1.png";
+	var numberOfSlices = 96;
+	var slicesOverX = 10;
+	var slicesOverY = 10;
+
+	/**
+  * Constructor
+  *
+  * @constructor
+  * @alias bars
+  * @param {d3.selection} selection - The chart holder D3 selection.
+  */
+	var my = function my(selection) {
+		selection.classed(classed, true);
+		var _dimensions = dimensions,
+		    dimensionX = _dimensions.x,
+		    dimensionY = _dimensions.y,
+		    dimensionZ = _dimensions.z;
+
+		var html = "\n\t\t\t\t<transform>\n\t\t\t\t<volumedata id='volume' dimensions='" + dimensionX + " " + dimensionY + " " + dimensionZ + "'>\n\t\t\t\t<imagetextureatlas crossOrigin='anonymous' containerField='voxels' url='" + imageUrl + "' numberOfSlices='" + numberOfSlices + "' slicesOverX='" + slicesOverX + "' slicesOverY='" + slicesOverY + "'></imagetextureatlas>\n\t\t\t\t<opacitymapvolumestyle lightFactor='1.2' opacityFactor='6.0'>\n\t\t\t\t\t<imagetexture crossOrigin='anonymous' containerField='transferFunction' url='assets/transfer.png'></imagetexture>\n\t\t\t\t</opacitymapvolumestyle>\n\t\t\t\t</volumedata>\n\t\t\t\t</transform>\n\t\t\t";
+
+		selection.append("group").html(html);
+	};
+
+	/**
+  * Dimensions Getter / Setter
+  *
+  * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+  * @returns {*}
+  */
+	my.dimensions = function (_v) {
+		if (!arguments.length) return dimensions;
+		dimensions = _v;
+		return this;
+	};
+
+	/**
+  * Image URL Getter / Setter
+  *
+  * @param {string} _v - Image URL path.
+  * @returns {*}
+  */
+	my.imageUrl = function (_v) {
+		if (!arguments.length) return imageUrl;
+		imageUrl = _v;
+		return this;
+	};
+
+	/**
+  * Number of Slices Getter / Setter
+  *
+  * @param {number} _v - Total number of slices.
+  * @returns {*}
+  */
+	my.numberOfSlices = function (_v) {
+		if (!arguments.length) return numberOfSlices;
+		numberOfSlices = _v;
+		return this;
+	};
+
+	/**
+  * X Slices Getter / Setter
+  *
+  * @param {number} _v - Number of slices over X axis.
+  * @returns {*}
+  */
+	my.slicesOverX = function (_v) {
+		if (!arguments.length) return slicesOverX;
+		slicesOverX = _v;
+		return this;
+	};
+
+	/**
+  * Y Slices Getter / Setter
+  *
+  * @param {number} _v - Number of slices over Y axis.
+  * @returns {*}
+  */
+	my.slicesOverY = function (_v) {
+		if (!arguments.length) return slicesOverY;
+		slicesOverY = _v;
+		return this;
+	};
+
+	return my;
+}
+
 var component = {
 	axis: componentAxis,
 	axisThreePlane: componentAxisThreePlane,
@@ -3072,7 +3170,8 @@ var component = {
 	ribbonMultiSeries: componentRibbonMultiSeries,
 	surface: componentSurface,
 	vectorFields: componentVectorFields,
-	viewpoint: componentViewpoint
+	viewpoint: componentViewpoint,
+	volumeSlice: componentVolumeSlice
 };
 
 /**
