@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3dom : 3D Volume Render Example</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
+  <script src="../build/d3-x3dom.js"></script>
+</head>
+
+<body>
+  <div id="chartholder"></div>
+
+  <script>
+    // Chart dimensions
+    var width = 500;
+    var height = 500;
+
+    var viewpointComponent = d3.x3dom.component.viewpoint();
+    var volumeComponent = d3.x3dom.component.volumeSlice()
+      .imageUrl("assets/scan2.png")
+      .numberOfSlices(35)
+      .slicesOverX(7)
+      .slicesOverY(5)
+      .dimensions({ x: 40, y: 40, z: 30 });
+
+    // Create scene
+    var chartHolder = d3.select("#chartholder")
+      .append("x3d")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("scene");
+
+    // Add to page
+    chartHolder.call(viewpointComponent);
+    chartHolder.call(volumeComponent);
+
+  </script>
+
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.
+  </div>
+</body>
+
+</html>

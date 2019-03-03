@@ -11,6 +11,7 @@ import componentRibbonMultiSeries from "./component/ribbonMultiSeries";
 import componentSurface from "./component/surface";
 import componentVectorFields from "./component/vectorFields";
 import componentViewpoint from "./component/viewpoint";
+import componentVolumeSlice from "./component/volumeSlice";
 
 export default {
 	axis: componentAxis,
@@ -25,5 +26,6 @@ export default {
 	ribbonMultiSeries: componentRibbonMultiSeries,
 	surface: componentSurface,
 	vectorFields: componentVectorFields,
-	viewpoint: componentViewpoint
+	viewpoint: componentViewpoint,
+	volumeSlice: componentVolumeSlice
 };
