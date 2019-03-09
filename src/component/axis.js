@@ -64,10 +64,12 @@ export default function() {
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
+		const axis = selection._groups[0][0]["classList"][0];
+		console.log(axis);
 		selection.each(function() {
 
-			const element = d3.select(this)
-				.classed(classed, true);
+      const element = d3.select(this)
+        .classed(classed, true);
 
 			const makeSolid = (shape, color) => {
 				shape.append("appearance")
@@ -85,6 +87,9 @@ export default function() {
 			const axisRotationVector = getAxisRotationVector(direction);
 			const tickRotationVector = getAxisRotationVector(tickDirection);
 
+			//console.log(axisDirectionVector);
+			console.log(tickDirectionVector);
+
 			let path = element.selectAll("transform")
 				.data([null]);
 
@@ -97,7 +102,15 @@ export default function() {
 			const tickExit = tick.exit();
 			const tickEnter = tick.enter()
 				.append("transform")
-				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
+				.attr("translation", (t) => (axisDirectionVector.map((a, i) => {
+					if (axis === "xzAxis" && i===0) {
+						return (scale(t) * a + 4);
+					} else if (axis === "zxAxis" && i===2) {
+						return (scale(t) * a + 6);
+					} else {
+						return (scale(t) * a);
+					}
+				})).join(" "))
 				.attr("class", "tick");
 
 			let line = tick.select(".tickLine");
@@ -114,40 +127,44 @@ export default function() {
 			const tickFormatDefault = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : (d) => d;
 			tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
 
-			if (tickFormat !== "") {
-				let text = tick.select("billboard");
-				let newText = tickEnter.append("transform");
-				newText
-					.attr("translation", tickDirectionVector.map((d) => (-d * tickPadding)))
-					.append("billboard")
-					.attr("axisofrotation", "0 0 0")
-					.append("shape")
-					.call(makeSolid, "black")
-					.append("text")
-					.attr("string", tickFormat)
-					.append("fontstyle")
-					.attr("size", 1.3)
-					.attr("family", "SANS")
-					.attr("style", "BOLD")
-					.attr("justify", "MIDDLE");
-				text = text.merge(newText);
-			}
+      if (tickFormat !== "") {
+        let text = tick.select("billboard");
+        let newText = tickEnter.append("transform");
+        newText
+					.attr("translation", tickDirectionVector.map((d,i,arr) => {
+						let r = (-d * tickPadding * -42.5);
+						console.log(`arr: ${arr}, i: ${i}, d: ${d}, p: ${tickPadding}, r: ${r}`);
+						return r;
+					}))
+          .append("billboard")
+          .attr("axisofrotation", "0 0 0")
+          .append("shape")
+          .call(makeSolid, "black")
+          .append("text")
+          .attr("string", tickFormat)
+          .append("fontstyle")
+          .attr("size", 1.3)
+          .attr("family", "SANS")
+          .attr("style", "BOLD")
+          .attr("justify", "MIDDLE");
+        text = text.merge(newText);
+      }
 
-			tickExit.remove();
-			path
-				.append("cylinder")
-				.attr("radius", 0.1)
-				.attr("height", range1 - range0);
+      tickExit.remove();
+      path
+        .append("cylinder")
+        .attr("radius", 0.1)
+        .attr("height", range1 - range0);
 
-			line
-				.attr("translation", tickDirectionVector.map((d) => (d * tickSize / 2)).join(" "))
-				.attr("rotation", tickRotationVector.join(" "))
-				.attr("class", "tickLine")
-				.append("shape")
-				.call(makeSolid, "#d3d3d3")
-				.append("cylinder")
-				.attr("radius", 0.05)
-				.attr("height", tickSize);
+      line
+        .attr("translation", tickDirectionVector.map((d) => (d * tickSize / 2)).join(" "))
+        .attr("rotation", tickRotationVector.join(" "))
+        .attr("class", "tickLine")
+        .append("shape")
+        .call(makeSolid, "#d3d3d3")
+        .append("cylinder")
+        .attr("radius", 0.05)
+        .attr("height", tickSize);
 		});
 	};
 
