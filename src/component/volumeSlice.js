@@ -26,19 +26,36 @@ export default function() {
 	 */
 	const my = function(selection) {
 		selection.classed(classed, true);
-		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
-		let html = `
-				<transform>
-				<volumedata id='volume' dimensions='${dimensionX} ${dimensionY} ${dimensionZ}'>
-				<imagetextureatlas crossOrigin='anonymous' containerField='voxels' url='${imageUrl}' numberOfSlices='${numberOfSlices}' slicesOverX='${slicesOverX}' slicesOverY='${slicesOverY}'></imagetextureatlas>
-				<opacitymapvolumestyle lightFactor='1.2' opacityFactor='6.0'>
-					<imagetexture crossOrigin='anonymous' containerField='transferFunction' url='assets/transfer.png'></imagetexture>
-				</opacitymapvolumestyle>
-				</volumedata>
-				</transform>
-			`;
 
-		selection.append("group").html(html);
+		let mode = true;
+
+		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
+
+		const volumeEnter = selection.append("transform")
+			.classed("volume", true)
+			.append("volumedata")
+			.attr("dimensions", `${dimensionX} ${dimensionY} ${dimensionZ}`);
+
+		volumeEnter.append("imagetextureatlas")
+			.attr("crossorigin", "anonymous")
+			.attr("containerfield", "voxels")
+			.attr("url", imageUrl)
+			.attr("numberofslices", numberOfSlices)
+			.attr("slicesoverx", slicesOverX)
+			.attr("slicesovery", slicesOverY);
+
+		if (mode) {
+			volumeEnter.append("opacitymapvolumestyle")
+				.attr("lightfactor", 1.2)
+				.attr("opacityfactor", 6.0)
+				.append("imagetexture")
+				.attr("crossorigin", 'anonymous')
+				.attr("containerfield", 'transferFunction')
+				.attr("url", 'assets/transfer.png');
+		} else {
+			volumeEnter.append("mprvolumestyle")
+				.attr("positionLine", 0.5);
+		}
 	};
 
 	/**

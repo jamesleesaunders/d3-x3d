@@ -3084,14 +3084,24 @@ function componentVolumeSlice () {
   */
 	var my = function my(selection) {
 		selection.classed(classed, true);
+
+		var mode = true;
+
 		var _dimensions = dimensions,
 		    dimensionX = _dimensions.x,
 		    dimensionY = _dimensions.y,
 		    dimensionZ = _dimensions.z;
 
-		var html = "\n\t\t\t\t<transform>\n\t\t\t\t<volumedata id='volume' dimensions='" + dimensionX + " " + dimensionY + " " + dimensionZ + "'>\n\t\t\t\t<imagetextureatlas crossOrigin='anonymous' containerField='voxels' url='" + imageUrl + "' numberOfSlices='" + numberOfSlices + "' slicesOverX='" + slicesOverX + "' slicesOverY='" + slicesOverY + "'></imagetextureatlas>\n\t\t\t\t<opacitymapvolumestyle lightFactor='1.2' opacityFactor='6.0'>\n\t\t\t\t\t<imagetexture crossOrigin='anonymous' containerField='transferFunction' url='assets/transfer.png'></imagetexture>\n\t\t\t\t</opacitymapvolumestyle>\n\t\t\t\t</volumedata>\n\t\t\t\t</transform>\n\t\t\t";
 
-		selection.append("group").html(html);
+		var volumeEnter = selection.append("transform").classed("volume", true).append("volumedata").attr("dimensions", dimensionX + " " + dimensionY + " " + dimensionZ);
+
+		volumeEnter.append("imagetextureatlas").attr("crossorigin", "anonymous").attr("containerfield", "voxels").attr("url", imageUrl).attr("numberofslices", numberOfSlices).attr("slicesoverx", slicesOverX).attr("slicesovery", slicesOverY);
+
+		if (mode) {
+			volumeEnter.append("opacitymapvolumestyle").attr("lightfactor", 1.2).attr("opacityfactor", 6.0).append("imagetexture").attr("crossorigin", 'anonymous').attr("containerfield", 'transferFunction').attr("url", 'assets/transfer.png');
+		} else {
+			volumeEnter.append("mprvolumestyle").attr("positionLine", 0.5);
+		}
 	};
 
 	/**
