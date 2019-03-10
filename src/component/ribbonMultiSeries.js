@@ -65,10 +65,11 @@ export default function() {
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
-		selection.classed(classed, true);
-
-		selection.each((data) => {
+		selection.each(function(data) {
 			init(data);
+
+			const element = d3.select(this)
+				.classed(classed, true);
 
 			// Construct Ribbon Component
 			const ribbon = componentRibbon()
@@ -81,7 +82,7 @@ export default function() {
 				});
 
 			// Create Bar Groups
-			const ribbonGroup = selection.selectAll(".ribbonGroup")
+			const ribbonGroup = element.selectAll(".ribbonGroup")
 				.data(data);
 
 			ribbonGroup.enter()

@@ -26,9 +26,10 @@ export default function() {
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
-		selection.classed(classed, true);
+		selection.each(function(data) {
 
-		selection.each((data) => {
+			const element = d3.select(this)
+				.classed(classed, true);
 
 			const makeSolid = (selection, color) => {
 				selection
@@ -38,7 +39,7 @@ export default function() {
 				return selection;
 			};
 
-			const labelSelect = selection.selectAll(".label")
+			const labelSelect = element.selectAll(".label")
 				.data([data]);
 
 			let label = labelSelect.enter()

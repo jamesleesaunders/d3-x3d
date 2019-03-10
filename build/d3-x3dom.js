@@ -556,64 +556,66 @@ function componentAxis () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
-		selection.classed(classed, true);
+		selection.each(function () {
 
-		var makeSolid = function makeSolid(selection, color) {
-			selection.append("appearance").append("material").attr("diffuseColor", color || "black");
+			var element = d3.select(this).classed(classed, true);
 
-			return selection;
-		};
+			var makeSolid = function makeSolid(shape, color) {
+				shape.append("appearance").append("material").attr("diffuseColor", color || "black");
+				return shape;
+			};
 
-		var range = scale.range();
-		var range0 = range[0];
-		var range1 = range[range.length - 1];
+			var range = scale.range();
+			var range0 = range[0];
+			var range1 = range[range.length - 1];
 
-		var axisDirectionVector = getAxisDirectionVector(direction);
-		var tickDirectionVector = getAxisDirectionVector(tickDirection);
-		var axisRotationVector = getAxisRotationVector(direction);
-		var tickRotationVector = getAxisRotationVector(tickDirection);
+			var axisDirectionVector = getAxisDirectionVector(direction);
+			var tickDirectionVector = getAxisDirectionVector(tickDirection);
+			var axisRotationVector = getAxisRotationVector(direction);
+			var tickRotationVector = getAxisRotationVector(tickDirection);
 
-		var path = selection.selectAll("transform").data([null]);
+			var path = element.selectAll("transform").data([null]);
 
-		var tickValuesDefault = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
-		tickValues = tickValues === null ? tickValuesDefault : tickValues;
+			var tickValuesDefault = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
+			tickValues = tickValues === null ? tickValuesDefault : tickValues;
 
-		var tick = selection.selectAll(".tick").data(tickValues, scale).order();
+			var tick = selection.selectAll(".tick").data(tickValues, scale).order();
 
-		var tickExit = tick.exit();
-		var tickEnter = tick.enter().append("transform").attr("translation", function (t) {
-			return axisDirectionVector.map(function (a) {
-				return scale(t) * a;
-			}).join(" ");
-		}).attr("class", "tick");
+			var tickExit = tick.exit();
+			var tickEnter = tick.enter().append("transform").attr("translation", function (t) {
+				return axisDirectionVector.map(function (a) {
+					return scale(t) * a;
+				}).join(" ");
+			}).attr("class", "tick");
 
-		var line = tick.select(".tickLine");
-		path = path.merge(path.enter().append("transform").attr("rotation", axisRotationVector.join(" ")).attr("translation", axisDirectionVector.map(function (d) {
-			return d * (range0 + range1) / 2;
-		}).join(" ")).append("shape").call(makeSolid, color).attr("class", "domain"));
-		tick = tick.merge(tickEnter);
-		line = line.merge(tickEnter.append("transform"));
+			var line = tick.select(".tickLine");
+			path = path.merge(path.enter().append("transform").attr("rotation", axisRotationVector.join(" ")).attr("translation", axisDirectionVector.map(function (d) {
+				return d * (range0 + range1) / 2;
+			}).join(" ")).append("shape").call(makeSolid, color).attr("class", "domain"));
+			tick = tick.merge(tickEnter);
+			line = line.merge(tickEnter.append("transform"));
 
-		var tickFormatDefault = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : function (d) {
-			return d;
-		};
-		tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
+			var tickFormatDefault = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : function (d) {
+				return d;
+			};
+			tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
 
-		if (tickFormat !== "") {
-			var text = tick.select("billboard");
-			var newText = tickEnter.append("transform");
-			newText.attr("translation", tickDirectionVector.map(function (d) {
-				return -d * tickPadding;
-			})).append("billboard").attr("axisofrotation", "0 0 0").append("shape").call(makeSolid, "black").append("text").attr("string", tickFormat).append("fontstyle").attr("size", 1.3).attr("family", "SANS").attr("style", "BOLD").attr("justify", "MIDDLE");
-			text = text.merge(newText);
-		}
+			if (tickFormat !== "") {
+				var text = tick.select("billboard");
+				var newText = tickEnter.append("transform");
+				newText.attr("translation", tickDirectionVector.map(function (d) {
+					return -d * tickPadding;
+				})).append("billboard").attr("axisofrotation", "0 0 0").append("shape").call(makeSolid, "black").append("text").attr("string", tickFormat).append("fontstyle").attr("size", 1.3).attr("family", "SANS").attr("style", "BOLD").attr("justify", "MIDDLE");
+				text = text.merge(newText);
+			}
 
-		tickExit.remove();
-		path.append("cylinder").attr("radius", 0.1).attr("height", range1 - range0);
+			tickExit.remove();
+			path.append("cylinder").attr("radius", 0.1).attr("height", range1 - range0);
 
-		line.attr("translation", tickDirectionVector.map(function (d) {
-			return d * tickSize / 2;
-		}).join(" ")).attr("rotation", tickRotationVector.join(" ")).attr("class", "tickLine").append("shape").call(makeSolid, "#d3d3d3").append("cylinder").attr("radius", 0.05).attr("height", tickSize);
+			line.attr("translation", tickDirectionVector.map(function (d) {
+				return d * tickSize / 2;
+			}).join(" ")).attr("rotation", tickRotationVector.join(" ")).attr("class", "tickLine").append("shape").call(makeSolid, "#d3d3d3").append("cylinder").attr("radius", 0.05).attr("height", tickSize);
+		});
 	};
 
 	/**
@@ -756,6 +758,8 @@ function componentAxisThreePlane () {
 	var yScale = void 0;
 	var zScale = void 0;
 
+	var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
+
 	/**
   * Constructor
   *
@@ -764,28 +768,31 @@ function componentAxisThreePlane () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
-		var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
+		selection.each(function () {
 
-		selection.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
-			return d;
+			var element = d3.select(this).classed(classed, true);
+
+			element.selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+				return d;
+			});
+
+			// Construct Axis Components
+			var xzAxis = componentAxis().scale(xScale).direction("x").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
+
+			var yzAxis = componentAxis().scale(yScale).direction("y").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("red");
+
+			var yxAxis = componentAxis().scale(yScale).direction("y").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).tickFormat("").color("red");
+
+			var zxAxis = componentAxis().scale(zScale).direction("z").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color("black");
+
+			element.select(".xzAxis").call(xzAxis);
+
+			element.select(".yzAxis").call(yzAxis);
+
+			element.select(".yxAxis").call(yxAxis);
+
+			element.select(".zxAxis").call(zxAxis);
 		});
-
-		// Construct Axis Components
-		var xzAxis = componentAxis().scale(xScale).direction("x").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
-
-		var yzAxis = componentAxis().scale(yScale).direction("y").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("red");
-
-		var yxAxis = componentAxis().scale(yScale).direction("y").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).tickFormat("").color("red");
-
-		var zxAxis = componentAxis().scale(zScale).direction("z").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color("black");
-
-		selection.select(".xzAxis").call(xzAxis);
-
-		selection.select(".yzAxis").call(yzAxis);
-
-		selection.select(".yxAxis").call(yxAxis);
-
-		selection.select(".zxAxis").call(zxAxis);
 	};
 
 	/**
@@ -906,12 +913,12 @@ function componentBars () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
-		selection.classed(classed, true);
-
 		selection.each(function (data) {
 			init(data);
 
-			var bars = selection.selectAll(".bar").data(function (d) {
+			var element = d3.select(this).classed(classed, true);
+
+			var bars = element.selectAll(".bar").data(function (d) {
 				return d.values;
 			});
 
@@ -1076,10 +1083,10 @@ function componentBarsMultiSeries () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
-		selection.classed(classed, true);
-
 		selection.each(function (data) {
 			init(data);
+
+			var element = d3.select(this).classed(classed, true);
 
 			// Construct Bars Component
 			var bars = componentBars().xScale(xScale).yScale(yScale).dimensions({
@@ -1089,7 +1096,7 @@ function componentBarsMultiSeries () {
 			}).colors(colors);
 
 			// Create Bar Groups
-			var barGroup = selection.selectAll(".barGroup").data(data);
+			var barGroup = element.selectAll(".barGroup").data(data);
 
 			barGroup.enter().append("transform").classed("barGroup", true).attr("translation", function (d) {
 				var x = 0;
@@ -1352,17 +1359,17 @@ function componentBubbles () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
-		selection.classed(classed, true);
-
 		selection.each(function (data) {
 			init(data);
 
-			var makeSolid = function makeSolid(selection, color) {
-				selection.append("appearance").append("material").attr("diffusecolor", color || "black");
-				return selection;
+			var element = d3.select(this).classed(classed, true);
+
+			var makeSolid = function makeSolid(shape, color) {
+				shape.append("appearance").append("material").attr("diffusecolor", color || "black");
+				return shape;
 			};
 
-			var bubbles = selection.selectAll(".bubble").data(function (d) {
+			var bubbles = element.selectAll(".bubble").data(function (d) {
 				return d.values;
 			});
 
@@ -1558,16 +1565,16 @@ function componentBubblesMultiSeries () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
-		selection.classed(classed, true);
-
 		selection.each(function (data) {
 			init(data);
+
+			var element = d3.select(this).classed(classed, true);
 
 			// Construct Bars Component
 			var bubbles = componentBubbles().xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale);
 
 			// Create Bar Groups
-			var bubbleGroup = selection.selectAll(".bubbleGroup").data(data);
+			var bubbleGroup = element.selectAll(".bubbleGroup").data(data);
 
 			bubbleGroup.enter().append("group").classed("bubbleGroup", true).merge(bubbleGroup).transition().each(function (d) {
 				var color = colorScale(d.key);
@@ -1714,9 +1721,8 @@ function componentCrosshair () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
-		selection.classed(classed, true);
-
 		selection.each(function (data) {
+			var element = d3.select(this).classed(classed, true);
 
 			var xOff = dimensions["x"] / 2;
 			var yOff = dimensions["y"] / 2;
@@ -1748,7 +1754,7 @@ function componentCrosshair () {
 			var colorScale = d3.scaleOrdinal().domain(Object.keys(dimensions)).range(colors);
 
 			// Origin Ball
-			var ballSelect = selection.selectAll(".ball").data([data]);
+			var ballSelect = element.selectAll(".ball").data([data]);
 
 			var ball = ballSelect.enter().append("transform").attr("translation", function (d) {
 				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
@@ -1765,7 +1771,7 @@ function componentCrosshair () {
 			});
 
 			// Crosshair Lines
-			var lineSelect = selection.selectAll(".line").data(Object.keys(dimensions));
+			var lineSelect = element.selectAll(".line").data(Object.keys(dimensions));
 
 			var line = lineSelect.enter().append("transform").classed("line", true).attr("translation", function (d) {
 				return getPositionVector(d);
@@ -1878,16 +1884,16 @@ function componentLabel () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
-		selection.classed(classed, true);
-
 		selection.each(function (data) {
+
+			var element = d3.select(this).classed(classed, true);
 
 			var makeSolid = function makeSolid(selection, color) {
 				selection.append("appearance").append("material").attr("diffusecolor", color || "black");
 				return selection;
 			};
 
-			var labelSelect = selection.selectAll(".label").data([data]);
+			var labelSelect = element.selectAll(".label").data([data]);
 
 			var label = labelSelect.enter().append("transform").attr("translation", function (d) {
 				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
@@ -2058,10 +2064,10 @@ function componentRibbon () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
-		selection.classed(classed, true);
-
 		selection.each(function (data) {
 			init(data);
+
+			var element = d3.select(this).classed(classed, true);
 
 			var ribbonData = function ribbonData(d) {
 				return d.values.map(function (pointThis, indexThis, array) {
@@ -2093,7 +2099,7 @@ function componentRibbon () {
 				});
 			};
 
-			var ribbon = selection.selectAll(".ribbon").data(ribbonData);
+			var ribbon = element.selectAll(".ribbon").data(ribbonData);
 
 			var ribbonEnter = ribbon.enter().append("shape").classed("ribbon", true);
 
@@ -2234,10 +2240,10 @@ function componentRibbonMultiSeries () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
-		selection.classed(classed, true);
-
 		selection.each(function (data) {
 			init(data);
+
+			var element = d3.select(this).classed(classed, true);
 
 			// Construct Ribbon Component
 			var ribbon = componentRibbon().xScale(xScale).yScale(yScale).dimensions({
@@ -2247,7 +2253,7 @@ function componentRibbonMultiSeries () {
 			});
 
 			// Create Bar Groups
-			var ribbonGroup = selection.selectAll(".ribbonGroup").data(data);
+			var ribbonGroup = element.selectAll(".ribbonGroup").data(data);
 
 			ribbonGroup.enter().append("transform").classed("ribbonGroup", true).attr("translation", function (d) {
 				var x = 0;
@@ -2416,10 +2422,10 @@ function componentSurface () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
-		selection.classed(classed, true);
-
 		selection.each(function (data) {
 			init(data);
+
+			var element = d3.select(this).classed(classed, true);
 
 			var surfaceData = function surfaceData(d) {
 
@@ -2468,7 +2474,7 @@ function componentSurface () {
 				}];
 			};
 
-			var surface = selection.selectAll(".surface").data(surfaceData);
+			var surface = element.selectAll(".surface").data(surfaceData);
 
 			var surfaceSelect = surface.enter().append("shape").classed("surface", true).append("indexedfaceset").attr("coordindex", function (d) {
 				return d.coordindex;
@@ -2692,10 +2698,10 @@ function componentVectorFields () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
-		selection.classed(classed, true);
-
 		selection.each(function (data) {
 			init(data);
+
+			var element = d3.select(this).classed(classed, true);
 
 			var vectorData = function vectorData(d) {
 				return d.values.map(function (f) {
@@ -2740,7 +2746,7 @@ function componentVectorFields () {
 				});
 			};
 
-			var arrows = selection.selectAll(".arrow").data(vectorData);
+			var arrows = element.selectAll(".arrow").data(vectorData);
 
 			var arrowsEnter = arrows.enter().append("transform").attr("translation", function (d) {
 				return d.translation;
@@ -3083,25 +3089,27 @@ function componentVolumeSlice () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
-		selection.classed(classed, true);
+		selection.each(function (data) {
+			var element = d3.select(this).classed(classed, true);
 
-		var mode = true;
+			var mode = true;
 
-		var _dimensions = dimensions,
-		    dimensionX = _dimensions.x,
-		    dimensionY = _dimensions.y,
-		    dimensionZ = _dimensions.z;
+			var _dimensions = dimensions,
+			    dimensionX = _dimensions.x,
+			    dimensionY = _dimensions.y,
+			    dimensionZ = _dimensions.z;
 
 
-		var volumeEnter = selection.append("transform").classed("volume", true).append("volumedata").attr("dimensions", dimensionX + " " + dimensionY + " " + dimensionZ);
+			var volumeEnter = element.append("transform").classed("volume", true).append("volumedata").attr("dimensions", dimensionX + " " + dimensionY + " " + dimensionZ);
 
-		volumeEnter.append("imagetextureatlas").attr("crossorigin", "anonymous").attr("containerfield", "voxels").attr("url", imageUrl).attr("numberofslices", numberOfSlices).attr("slicesoverx", slicesOverX).attr("slicesovery", slicesOverY);
+			volumeEnter.append("imagetextureatlas").attr("crossorigin", "anonymous").attr("containerfield", "voxels").attr("url", imageUrl).attr("numberofslices", numberOfSlices).attr("slicesoverx", slicesOverX).attr("slicesovery", slicesOverY);
 
-		if (mode) {
-			volumeEnter.append("opacitymapvolumestyle").attr("lightfactor", 1.2).attr("opacityfactor", 6.0).append("imagetexture").attr("crossorigin", 'anonymous').attr("containerfield", 'transferFunction').attr("url", 'assets/transfer.png');
-		} else {
-			volumeEnter.append("mprvolumestyle").attr("positionLine", 0.5);
-		}
+			if (mode) {
+				volumeEnter.append("opacitymapvolumestyle").attr("lightfactor", 1.2).attr("opacityfactor", 6.0).append("imagetexture").attr("crossorigin", 'anonymous').attr("containerfield", 'transferFunction').attr("url", 'assets/transfer.png');
+			} else {
+				volumeEnter.append("mprvolumestyle").attr("positionLine", 0.5);
+			}
+		});
 	};
 
 	/**

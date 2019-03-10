@@ -26,9 +26,9 @@ export default function() {
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
-		selection.classed(classed, true);
-
-		selection.each((data) => {
+		selection.each(function(data) {
+			const element = d3.select(this)
+				.classed(classed, true);
 
 			const xOff = dimensions["x"] / 2;
 			const yOff = dimensions["y"] / 2;
@@ -62,7 +62,7 @@ export default function() {
 				.range(colors);
 
 			// Origin Ball
-			const ballSelect = selection.selectAll(".ball")
+			const ballSelect = element.selectAll(".ball")
 				.data([data]);
 
 			let ball = ballSelect.enter()
@@ -85,7 +85,7 @@ export default function() {
 				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)));
 
 			// Crosshair Lines
-			const lineSelect = selection.selectAll(".line")
+			const lineSelect = element.selectAll(".line")
 				.data(Object.keys(dimensions));
 
 			const line = lineSelect.enter()

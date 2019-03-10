@@ -78,10 +78,11 @@ export default function() {
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
-		selection.classed(classed, true);
-
-		selection.each((data) => {
+		selection.each(function(data) {
 			init(data);
+
+			const element = d3.select(this)
+				.classed(classed, true);
 
 			const surfaceData = function(d) {
 
@@ -130,7 +131,7 @@ export default function() {
 				}];
 			};
 
-			const surface = selection.selectAll(".surface")
+			const surface = element.selectAll(".surface")
 				.data(surfaceData);
 
 			const surfaceSelect = surface

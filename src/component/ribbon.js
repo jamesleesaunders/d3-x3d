@@ -75,10 +75,11 @@ export default function() {
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
-		selection.classed(classed, true);
-
-		selection.each((data) => {
+		selection.each(function(data) {
 			init(data);
+
+			const element = d3.select(this)
+				.classed(classed, true);
 
 			const ribbonData = function(d) {
 				return d.values.map((pointThis, indexThis, array) => {
@@ -114,7 +115,7 @@ export default function() {
 				}).filter((d) => d !== null);
 			};
 
-			const ribbon = selection.selectAll(".ribbon")
+			const ribbon = element.selectAll(".ribbon")
 				.data(ribbonData);
 
 			const ribbonEnter = ribbon.enter()
