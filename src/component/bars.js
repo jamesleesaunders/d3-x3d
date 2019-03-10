@@ -57,12 +57,13 @@ export default function() {
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
-		selection.classed(classed, true);
-
-		selection.each((data) => {
+		selection.each(function(data) {
 			init(data);
 
-			const bars = selection.selectAll(".bar")
+			const element = d3.select(this)
+				.classed(classed, true);
+
+			const bars = element.selectAll(".bar")
 				.data((d) => d.values);
 
 			const barsEnter = bars.enter()

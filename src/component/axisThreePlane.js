@@ -18,6 +18,8 @@ export default function() {
 	let yScale;
 	let zScale;
 
+	const layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
+
 	/**
 	 * Constructor
 	 *
@@ -26,58 +28,60 @@ export default function() {
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
-		const layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
+		selection.each(function() {
 
-		selection.classed(classed, true)
-			.selectAll("group")
-			.data(layers)
-			.enter()
-			.append("group")
-			.attr("class", (d) => d);
+			const element = d3.select(this)
+				.classed(classed, true);
 
-		// Construct Axis Components
-		const xzAxis = componentAxis()
-			.scale(xScale)
-			.direction("x")
-			.tickDirection("z")
-			.tickSize(zScale.range()[1] - zScale.range()[0])
-			.tickPadding(xScale.range()[0])
-			.color("blue");
+			element.selectAll("group")
+				.data(layers)
+				.enter()
+				.append("group")
+				.attr("class", (d) => d);
 
-		const yzAxis = componentAxis()
-			.scale(yScale)
-			.direction("y")
-			.tickDirection("z")
-			.tickSize(zScale.range()[1] - zScale.range()[0])
-			.color("red");
+			// Construct Axis Components
+			const xzAxis = componentAxis()
+				.scale(xScale)
+				.direction("x")
+				.tickDirection("z")
+				.tickSize(zScale.range()[1] - zScale.range()[0])
+				.tickPadding(xScale.range()[0])
+				.color("blue");
 
-		const yxAxis = componentAxis()
-			.scale(yScale)
-			.direction("y")
-			.tickDirection("x")
-			.tickSize(xScale.range()[1] - xScale.range()[0])
-			.tickFormat("")
-			.color("red");
+			const yzAxis = componentAxis()
+				.scale(yScale)
+				.direction("y")
+				.tickDirection("z")
+				.tickSize(zScale.range()[1] - zScale.range()[0])
+				.color("red");
 
-		const zxAxis = componentAxis()
-			.scale(zScale)
-			.direction("z")
-			.tickDirection("x")
-			.tickSize(xScale.range()[1] - xScale.range()[0])
-			.color("black");
+			const yxAxis = componentAxis()
+				.scale(yScale)
+				.direction("y")
+				.tickDirection("x")
+				.tickSize(xScale.range()[1] - xScale.range()[0])
+				.tickFormat("")
+				.color("red");
 
-		selection.select(".xzAxis")
-			.call(xzAxis);
+			const zxAxis = componentAxis()
+				.scale(zScale)
+				.direction("z")
+				.tickDirection("x")
+				.tickSize(xScale.range()[1] - xScale.range()[0])
+				.color("black");
 
-		selection.select(".yzAxis")
-			.call(yzAxis);
+			element.select(".xzAxis")
+				.call(xzAxis);
 
-		selection.select(".yxAxis")
-			.call(yxAxis);
+			element.select(".yzAxis")
+				.call(yzAxis);
 
-		selection.select(".zxAxis")
-			.call(zxAxis);
+			element.select(".yxAxis")
+				.call(yxAxis);
 
+			element.select(".zxAxis")
+				.call(zxAxis);
+		});
 	};
 
 	/**

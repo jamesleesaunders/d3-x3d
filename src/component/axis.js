@@ -64,88 +64,91 @@ export default function() {
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
-		selection.classed(classed, true);
+		selection.each(function() {
 
-		const makeSolid = (selection, color) => {
-			selection.append("appearance")
-				.append("material")
-				.attr("diffuseColor", color || "black");
+			const element = d3.select(this)
+				.classed(classed, true);
 
-			return selection;
-		};
+			const makeSolid = (shape, color) => {
+				shape.append("appearance")
+					.append("material")
+					.attr("diffuseColor", color || "black");
+				return shape;
+			};
 
-		const range = scale.range();
-		const range0 = range[0];
-		const range1 = range[range.length - 1];
+			const range = scale.range();
+			const range0 = range[0];
+			const range1 = range[range.length - 1];
 
-		const axisDirectionVector = getAxisDirectionVector(direction);
-		const tickDirectionVector = getAxisDirectionVector(tickDirection);
-		const axisRotationVector = getAxisRotationVector(direction);
-		const tickRotationVector = getAxisRotationVector(tickDirection);
+			const axisDirectionVector = getAxisDirectionVector(direction);
+			const tickDirectionVector = getAxisDirectionVector(tickDirection);
+			const axisRotationVector = getAxisRotationVector(direction);
+			const tickRotationVector = getAxisRotationVector(tickDirection);
 
-		let path = selection.selectAll("transform")
-			.data([null]);
+			let path = element.selectAll("transform")
+				.data([null]);
 
-		const tickValuesDefault = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
-		tickValues = tickValues === null ? tickValuesDefault : tickValues;
+			const tickValuesDefault = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
+			tickValues = tickValues === null ? tickValuesDefault : tickValues;
 
-		let tick = selection.selectAll(".tick")
-			.data(tickValues, scale).order();
+			let tick = selection.selectAll(".tick")
+				.data(tickValues, scale).order();
 
-		const tickExit = tick.exit();
-		const tickEnter = tick.enter()
-			.append("transform")
-			.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
-			.attr("class", "tick");
+			const tickExit = tick.exit();
+			const tickEnter = tick.enter()
+				.append("transform")
+				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
+				.attr("class", "tick");
 
-		let line = tick.select(".tickLine");
-		path = path.merge(path.enter()
-			.append("transform")
-			.attr("rotation", axisRotationVector.join(" "))
-			.attr("translation", axisDirectionVector.map((d) => (d * (range0 + range1) / 2)).join(" "))
-			.append("shape")
-			.call(makeSolid, color)
-			.attr("class", "domain"));
-		tick = tick.merge(tickEnter);
-		line = line.merge(tickEnter.append("transform"));
-
-		const tickFormatDefault = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : (d) => d;
-		tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
-
-		if (tickFormat !== "") {
-			let text = tick.select("billboard");
-			let newText = tickEnter.append("transform");
-			newText
-				.attr("translation", tickDirectionVector.map((d) => (-d * tickPadding)))
-				.append("billboard")
-				.attr("axisofrotation", "0 0 0")
+			let line = tick.select(".tickLine");
+			path = path.merge(path.enter()
+				.append("transform")
+				.attr("rotation", axisRotationVector.join(" "))
+				.attr("translation", axisDirectionVector.map((d) => (d * (range0 + range1) / 2)).join(" "))
 				.append("shape")
-				.call(makeSolid, "black")
-				.append("text")
-				.attr("string", tickFormat)
-				.append("fontstyle")
-				.attr("size", 1.3)
-				.attr("family", "SANS")
-				.attr("style", "BOLD")
-				.attr("justify", "MIDDLE");
-			text = text.merge(newText);
-		}
+				.call(makeSolid, color)
+				.attr("class", "domain"));
+			tick = tick.merge(tickEnter);
+			line = line.merge(tickEnter.append("transform"));
 
-		tickExit.remove();
-		path
-			.append("cylinder")
-			.attr("radius", 0.1)
-			.attr("height", range1 - range0);
+			const tickFormatDefault = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : (d) => d;
+			tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
 
-		line
-			.attr("translation", tickDirectionVector.map((d) => (d * tickSize / 2)).join(" "))
-			.attr("rotation", tickRotationVector.join(" "))
-			.attr("class", "tickLine")
-			.append("shape")
-			.call(makeSolid, "#d3d3d3")
-			.append("cylinder")
-			.attr("radius", 0.05)
-			.attr("height", tickSize);
+			if (tickFormat !== "") {
+				let text = tick.select("billboard");
+				let newText = tickEnter.append("transform");
+				newText
+					.attr("translation", tickDirectionVector.map((d) => (-d * tickPadding)))
+					.append("billboard")
+					.attr("axisofrotation", "0 0 0")
+					.append("shape")
+					.call(makeSolid, "black")
+					.append("text")
+					.attr("string", tickFormat)
+					.append("fontstyle")
+					.attr("size", 1.3)
+					.attr("family", "SANS")
+					.attr("style", "BOLD")
+					.attr("justify", "MIDDLE");
+				text = text.merge(newText);
+			}
+
+			tickExit.remove();
+			path
+				.append("cylinder")
+				.attr("radius", 0.1)
+				.attr("height", range1 - range0);
+
+			line
+				.attr("translation", tickDirectionVector.map((d) => (d * tickSize / 2)).join(" "))
+				.attr("rotation", tickRotationVector.join(" "))
+				.attr("class", "tickLine")
+				.append("shape")
+				.call(makeSolid, "#d3d3d3")
+				.append("cylinder")
+				.attr("radius", 0.05)
+				.attr("height", tickSize);
+		});
 	};
 
 	/**

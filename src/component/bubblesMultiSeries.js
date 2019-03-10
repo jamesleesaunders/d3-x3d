@@ -75,10 +75,11 @@ export default function() {
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
-		selection.classed(classed, true);
-
-		selection.each((data) => {
+		selection.each(function(data) {
 			init(data);
+
+			const element = d3.select(this)
+				.classed(classed, true);
 
 			// Construct Bars Component
 			const bubbles = componentBubbles()
@@ -88,7 +89,7 @@ export default function() {
 				.sizeScale(sizeScale);
 
 			// Create Bar Groups
-			const bubbleGroup = selection.selectAll(".bubbleGroup")
+			const bubbleGroup = element.selectAll(".bubbleGroup")
 				.data(data);
 
 			bubbleGroup.enter()

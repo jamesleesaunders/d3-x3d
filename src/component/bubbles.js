@@ -65,20 +65,21 @@ export default function() {
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
-		selection.classed(classed, true);
-
-		selection.each((data) => {
+		selection.each(function(data) {
 			init(data);
 
-			const makeSolid = (selection, color) => {
-				selection
+			const element = d3.select(this)
+				.classed(classed, true);
+
+			const makeSolid = (shape, color) => {
+				shape
 					.append("appearance")
 					.append("material")
 					.attr("diffusecolor", color || "black");
-				return selection;
+				return shape;
 			};
 
-			const bubbles = selection.selectAll(".bubble")
+			const bubbles = element.selectAll(".bubble")
 				.data((d) => d.values);
 
 			const bubblesEnter = bubbles.enter()
