@@ -32,9 +32,23 @@
       .attr("height", height + "px")
       .append("scene");
 
+    var data = {
+        key: "VolumeSlices",
+        values: [
+          { key: "Slice1", value: 0.5, x: 1, y: 0, z: 0 },
+          { key: "Slice2", value: 0.2, x: 0, y: 1, z: 0 },
+          { key: "Slice3", value: 0.3, x: 1, y: 0, z: 0 },
+          { key: "Slice4", value: 0.1, x: 0, y: 0, z: 1 }
+        ]
+      };
+
     // Add to page
     chartHolder.call(viewpointComponent);
-    chartHolder.call(volumeComponent);
+
+    chartHolder
+      .append("group")
+      .datum(data)
+      .call(volumeComponent);
 
   </script>
 

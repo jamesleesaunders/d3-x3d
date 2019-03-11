@@ -3092,7 +3092,7 @@ function componentVolumeSlice () {
 		selection.each(function (data) {
 			var element = d3.select(this).classed(classed, true);
 
-			var mode = true;
+			var sliceMode = true;
 
 			var _dimensions = dimensions,
 			    dimensionX = _dimensions.x,
@@ -3104,10 +3104,18 @@ function componentVolumeSlice () {
 
 			volumeEnter.append("imagetextureatlas").attr("crossorigin", "anonymous").attr("containerfield", "voxels").attr("url", imageUrl).attr("numberofslices", numberOfSlices).attr("slicesoverx", slicesOverX).attr("slicesovery", slicesOverY);
 
-			if (mode) {
+			if (!sliceMode) {
 				volumeEnter.append("opacitymapvolumestyle").attr("lightfactor", 1.2).attr("opacityfactor", 6.0).append("imagetexture").attr("crossorigin", 'anonymous').attr("containerfield", 'transferFunction').attr("url", 'assets/transfer.png');
 			} else {
-				volumeEnter.append("mprvolumestyle").attr("positionLine", 0.5);
+				var positionLine = data.values[0].value;
+				var _data$values$ = data.values[0],
+				    x = _data$values$.x,
+				    y = _data$values$.y,
+				    z = _data$values$.z;
+
+				var finalLine = x + " " + y + " " + z;
+
+				volumeEnter.append("mprvolumestyle").attr("finalLine", finalLine).attr("positionLine", positionLine);
 			}
 		});
 	};
