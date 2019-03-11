@@ -29,7 +29,7 @@ export default function() {
 			const element = d3.select(this)
 				.classed(classed, true);
 
-			let mode = true;
+			let sliceMode = true;
 
 			const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
@@ -46,7 +46,7 @@ export default function() {
 				.attr("slicesoverx", slicesOverX)
 				.attr("slicesovery", slicesOverY);
 
-			if (mode) {
+			if (!sliceMode) {
 				volumeEnter.append("opacitymapvolumestyle")
 					.attr("lightfactor", 1.2)
 					.attr("opacityfactor", 6.0)
@@ -55,8 +55,13 @@ export default function() {
 					.attr("containerfield", 'transferFunction')
 					.attr("url", 'assets/transfer.png');
 			} else {
+				let positionLine = data.values[0].value;
+				let { x, y, z } = data.values[0];
+				let finalLine = x + " " + y + " " + z;
+
 				volumeEnter.append("mprvolumestyle")
-					.attr("positionLine", 0.5);
+					.attr("finalLine", finalLine)
+					.attr("positionLine", positionLine);
 			}
 		});
 	};
