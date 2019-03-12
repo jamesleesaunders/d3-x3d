@@ -17,6 +17,8 @@ export default function() {
 	let slicesOverX = 10;
 	let slicesOverY = 10;
 
+	let volumeStyle = "opacitymap";
+
 	/**
 	 * Constructor
 	 *
@@ -29,11 +31,13 @@ export default function() {
 			const element = d3.select(this)
 				.classed(classed, true);
 
-			let sliceMode = true;
-
 			const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
-			const volumeEnter = element.append("transform")
+			const volume = element.selectAll(".volume")
+				.data((d) => d.values);
+
+			const volumeEnter = volume.enter()
+				.append("transform")
 				.classed("volume", true)
 				.append("volumedata")
 				.attr("dimensions", `${dimensionX} ${dimensionY} ${dimensionZ}`);
@@ -46,22 +50,23 @@ export default function() {
 				.attr("slicesoverx", slicesOverX)
 				.attr("slicesovery", slicesOverY);
 
-			if (!sliceMode) {
-				volumeEnter.append("opacitymapvolumestyle")
-					.attr("lightfactor", 1.2)
-					.attr("opacityfactor", 6.0)
-					.append("imagetexture")
-					.attr("crossorigin", 'anonymous')
-					.attr("containerfield", 'transferFunction')
-					.attr("url", 'assets/transfer.png');
-			} else {
-				let positionLine = data.values[0].value;
-				let { x, y, z } = data.values[0];
-				let finalLine = x + " " + y + " " + z;
+			switch (volumeStyle) {
+				case "mprvolume":
+					volumeEnter.append("mprvolumestyle")
+						.attr("finalline", (d) => d.x + " " + d.y + " " + d.z)
+						.attr("positionline", (d) => d.value);
+					break;
 
-				volumeEnter.append("mprvolumestyle")
-					.attr("finalLine", finalLine)
-					.attr("positionLine", positionLine);
+				case "opacitymap":
+				default:
+					volumeEnter.append("opacitymapvolumestyle")
+						.attr("lightfactor", 1.2)
+						.attr("opacityfactor", 6.0)
+						.append("imagetexture")
+						.attr("containerfield", 'transferFunction')
+						.attr("url", 'assets/transfer.png')
+						.attr("crossorigin", 'anonymous');
+					break;
 			}
 		});
 	};
@@ -123,6 +128,18 @@ export default function() {
 	my.slicesOverY = function(_v) {
 		if (!arguments.length) return slicesOverY;
 		slicesOverY = _v;
+		return this;
+	};
+
+	/**
+	 * Volume Style Getter / Setter
+	 *
+	 * @param {string} _v - Volume render style (either 'mprvolume' or 'opacitymap')
+	 * @returns {*}
+	 */
+	my.volumeStyle = function(_v) {
+		if (!arguments.length) return volumeStyle;
+		volumeStyle = _v;
 		return this;
 	};
 
