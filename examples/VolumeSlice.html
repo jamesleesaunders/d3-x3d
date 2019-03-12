@@ -19,11 +19,12 @@
 
     var viewpointComponent = d3.x3dom.component.viewpoint();
     var volumeComponent = d3.x3dom.component.volumeSlice()
+      .dimensions({ x: 40, y: 40, z: 30 })
       .imageUrl("assets/scan2.png")
       .numberOfSlices(35)
       .slicesOverX(7)
       .slicesOverY(5)
-      .dimensions({ x: 40, y: 40, z: 30 });
+      .volumeStyle("mprvolume");
 
     // Create scene
     var chartHolder = d3.select("#chartholder")
@@ -36,9 +37,8 @@
         key: "VolumeSlices",
         values: [
           { key: "Slice1", value: 0.5, x: 1, y: 0, z: 0 },
-          { key: "Slice2", value: 0.2, x: 0, y: 1, z: 0 },
-          { key: "Slice3", value: 0.3, x: 1, y: 0, z: 0 },
-          { key: "Slice4", value: 0.1, x: 0, y: 0, z: 1 }
+          { key: "Slice2", value: 0.5, x: 0, y: 1, z: 0 },
+          { key: "Slice3", value: 0.5, x: 0, y: 0, z: 1 },
         ]
       };
 
