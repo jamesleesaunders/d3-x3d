@@ -26,7 +26,7 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Surface Plot](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/SurfacePlot.html)
 * [Ribbon Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/RibbonChart.html)
 * [Vector Field Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/VectorFieldChart.html)
-* [Volume Slice](https://raw.githack.com/jamesleesaunders/d3-x3dom/Volume/examples/VolumeSlice.html)
+* [Volume Slice](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/VolumeSlice.html)
 * [Crosshair Component](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Crosshair.html)
 * [Components Showcase](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
 * [Observable Examples](https://beta.observablehq.com/collection/@jamesleesaunders/d3-x3dom)
@@ -140,7 +140,7 @@ Component modules do not generate a `x3d` tag, these should be attached to an ex
 | component.surface()            | Surface Area                        | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)  | [View](https://jamesleesaunders.github.io/d3-x3dom/surface.html)            |
 | component.vectorFields()       | Vector Field Chart                  | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)  | [View](https://jamesleesaunders.github.io/d3-x3dom/vectorFields.html)       |
 | component.viewpoint()          | Camera position                     | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)  | [View](https://jamesleesaunders.github.io/d3-x3dom/viewpoint.html)          |
-| component.volumeSlice()        | Volume Slice (MRI Scan)             | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/Volume/examples/VolumeSlice.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/volumeSlice.html)        |
+| component.volumeSlice()        | Volume Slice (MRI Scan)             | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/VolumeSlice.html) | [View](https://jamesleesaunders.github.io/d3-x3dom/volumeSlice.html)        |
 
 #### Charts
 
