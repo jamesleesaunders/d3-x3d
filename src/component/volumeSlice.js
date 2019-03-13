@@ -23,7 +23,7 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
-	 * @alias bars
+	 * @alias volumeSlice
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
