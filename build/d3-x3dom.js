@@ -3076,11 +3076,11 @@ function componentVolumeSlice () {
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var classed = "d3X3domVolume";
 
+	/* Other Volume Properties */
 	var imageUrl = "assets/scan1.png";
 	var numberOfSlices = 96;
 	var slicesOverX = 10;
 	var slicesOverY = 10;
-
 	var volumeStyle = "opacitymap";
 
 	/**
@@ -3092,6 +3092,7 @@ function componentVolumeSlice () {
   */
 	var my = function my(selection) {
 		selection.each(function (data) {
+
 			var element = d3.select(this).classed(classed, true);
 
 			var _dimensions = dimensions,
@@ -3100,17 +3101,20 @@ function componentVolumeSlice () {
 			    dimensionZ = _dimensions.z;
 
 
-			var volume = element.selectAll(".volume").data(function (d) {
+			var volumedata = element.append("transform").append("volumedata").attr("dimensions", dimensionX + " " + dimensionY + " " + dimensionZ);
+
+			volumedata.append("imagetextureatlas").attr("crossorigin", "anonymous").attr("containerfield", "voxels").attr("url", imageUrl).attr("numberofslices", numberOfSlices).attr("slicesoverx", slicesOverX).attr("slicesovery", slicesOverY);
+
+			var plane = volumedata.selectAll(".plane").data(function (d) {
 				return d.values;
 			});
 
-			var volumeEnter = volume.enter().append("transform").classed("volume", true).append("volumedata").attr("dimensions", dimensionX + " " + dimensionY + " " + dimensionZ);
-
-			volumeEnter.append("imagetextureatlas").attr("crossorigin", "anonymous").attr("containerfield", "voxels").attr("url", imageUrl).attr("numberofslices", numberOfSlices).attr("slicesoverx", slicesOverX).attr("slicesovery", slicesOverY);
-
 			switch (volumeStyle) {
 				case "mprvolume":
-					volumeEnter.append("mprvolumestyle").attr("finalline", function (d) {
+					// X3DOM does not currently support multiple planes inside a single VolumeData node.
+					// There are plans to add this functionality see:
+					//   https://github.com/x3dom/x3dom/issues/944
+					plane.enter().append("mprvolumestyle").classed("plane", true).attr("finalline", function (d) {
 						return d.x + " " + d.y + " " + d.z;
 					}).attr("positionline", function (d) {
 						return d.value;
@@ -3119,7 +3123,7 @@ function componentVolumeSlice () {
 
 				case "opacitymap":
 				default:
-					volumeEnter.append("opacitymapvolumestyle").attr("lightfactor", 1.2).attr("opacityfactor", 6.0).append("imagetexture").attr("containerfield", 'transferFunction').attr("url", 'assets/transfer.png').attr("crossorigin", 'anonymous');
+					volumedata.append("opacitymapvolumestyle").attr("lightfactor", 1.2).attr("opacityfactor", 6.0).append("imagetexture").attr("containerfield", "transferFunction").attr("url", "assets/transfer.png").attr("crossorigin", "anonymous");
 					break;
 			}
 		});

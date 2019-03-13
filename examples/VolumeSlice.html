@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>d3-x3dom : 3D Volume Render Example</title>
+  <title>d3-x3dom : 3D Volume Slice Example</title>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
   <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
@@ -23,8 +23,7 @@
       .imageUrl("assets/scan2.png")
       .numberOfSlices(35)
       .slicesOverX(7)
-      .slicesOverY(5)
-      .volumeStyle("mprvolume");
+      .slicesOverY(5);
 
     // Create scene
     var chartHolder = d3.select("#chartholder")
@@ -38,7 +37,7 @@
         values: [
           { key: "Slice1", value: 0.5, x: 1, y: 0, z: 0 },
           { key: "Slice2", value: 0.5, x: 0, y: 1, z: 0 },
-          { key: "Slice3", value: 0.5, x: 0, y: 0, z: 1 },
+          { key: "Slice3", value: 0.5, x: 0, y: 1, z: 1 },
         ]
       };
 

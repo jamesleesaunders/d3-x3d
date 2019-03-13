@@ -12,11 +12,11 @@ export default function() {
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let classed = "d3X3domVolume";
 
+	/* Other Volume Properties */
 	let imageUrl = "assets/scan1.png";
 	let numberOfSlices = 96;
 	let slicesOverX = 10;
 	let slicesOverY = 10;
-
 	let volumeStyle = "opacitymap";
 
 	/**
@@ -28,21 +28,17 @@ export default function() {
 	 */
 	const my = function(selection) {
 		selection.each(function(data) {
+
 			const element = d3.select(this)
 				.classed(classed, true);
 
 			const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
-			const volume = element.selectAll(".volume")
-				.data((d) => d.values);
-
-			const volumeEnter = volume.enter()
-				.append("transform")
-				.classed("volume", true)
+			const volumedata = element.append("transform")
 				.append("volumedata")
 				.attr("dimensions", `${dimensionX} ${dimensionY} ${dimensionZ}`);
 
-			volumeEnter.append("imagetextureatlas")
+			volumedata.append("imagetextureatlas")
 				.attr("crossorigin", "anonymous")
 				.attr("containerfield", "voxels")
 				.attr("url", imageUrl)
@@ -50,22 +46,30 @@ export default function() {
 				.attr("slicesoverx", slicesOverX)
 				.attr("slicesovery", slicesOverY);
 
+			const plane = volumedata.selectAll(".plane")
+				.data((d) => d.values);
+
 			switch (volumeStyle) {
 				case "mprvolume":
-					volumeEnter.append("mprvolumestyle")
-						.attr("finalline", (d) => d.x + " " + d.y + " " + d.z)
+					// X3DOM does not currently support multiple planes inside a single VolumeData node.
+					// There are plans to add this functionality see:
+					//   https://github.com/x3dom/x3dom/issues/944
+					plane.enter()
+						.append("mprvolumestyle")
+						.classed("plane", true)
+						.attr("finalline", (d) => `${d.x} ${d.y} ${d.z}`)
 						.attr("positionline", (d) => d.value);
 					break;
 
 				case "opacitymap":
 				default:
-					volumeEnter.append("opacitymapvolumestyle")
+					volumedata.append("opacitymapvolumestyle")
 						.attr("lightfactor", 1.2)
 						.attr("opacityfactor", 6.0)
 						.append("imagetexture")
-						.attr("containerfield", 'transferFunction')
-						.attr("url", 'assets/transfer.png')
-						.attr("crossorigin", 'anonymous');
+						.attr("containerfield", "transferFunction")
+						.attr("url", "assets/transfer.png")
+						.attr("crossorigin", "anonymous");
 					break;
 			}
 		});
