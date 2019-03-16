@@ -157,6 +157,7 @@ Chart modules also generate the `x3d` tag, these should be attached to a `div` t
 | chart.scatterPlot()            | Scatter Plot & Axis           | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/ScatterPlot.html)         | [View](https://jamesleesaunders.github.io/d3-x3dom/scatterPlot.html)            |
 | chart.surfacePlot()            | Surface Plot & Axis           | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/SurfacePlot.html)         | [View](https://jamesleesaunders.github.io/d3-x3dom/surfacePlot.html)            |
 | chart.vectorFieldChart()       | Vector Field Chart            | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/VectorFieldChart.html)    | [View](https://jamesleesaunders.github.io/d3-x3dom/vectorFieldChart.html)       |
+| chart.volumeSliceChart()       | Volume Slice Chart            | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/VolumeSlice.html)         | [View](https://jamesleesaunders.github.io/d3-x3dom/volumeSliceChart.html)       |
 
 ### Data Structures
 
