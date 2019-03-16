@@ -75,6 +75,7 @@ export default function() {
 
 			// Construct Axis Component
 			const axis = component.crosshair()
+				.dimensions(dimensions)
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale);

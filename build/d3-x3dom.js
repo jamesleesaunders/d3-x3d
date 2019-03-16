@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.2.0";
+var version = "1.2.1";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -5179,7 +5179,7 @@ function chartVolumeSlice () {
 			var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
 			// Construct Axis Component
-			var axis = component.crosshair().xScale(xScale).yScale(yScale).zScale(zScale);
+			var axis = component.crosshair().dimensions(dimensions).xScale(xScale).yScale(yScale).zScale(zScale);
 
 			// Construct Volume Slice Component
 			var volumeSlice = component.volumeSlice().dimensions(dimensions).imageUrl(imageUrl).numberOfSlices(numberOfSlices).slicesOverX(slicesOverX).slicesOverY(slicesOverY);
