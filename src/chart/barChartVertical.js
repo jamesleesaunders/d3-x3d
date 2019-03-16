@@ -9,8 +9,11 @@ import component from "../component";
  *
  * @example
  * let chartHolder = d3.select("#chartholder");
+ *
  * let myData = [...];
+ *
  * let myChart = d3.x3dom.chart.barChartVertical();
+ *
  * chartHolder.datum(myData).call(myChart);
  *
  * @see https://datavizproject.com/data-type/3d-bar-chart/

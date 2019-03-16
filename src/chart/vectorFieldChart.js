@@ -10,7 +10,9 @@ import component from "../component";
  *
  * @example
  * let chartHolder = d3.select("#chartholder");
+ *
  * let myData = [...];
+ *
  * let vectorFunction = (x, y, z, value) => {
  *    return {
  *       vx: Math.pow(x, 2) + y * Math.pow(x, 2),
@@ -18,8 +20,10 @@ import component from "../component";
  *       vz: Math.pow(z, 2)
  *    };
  * };
- * let myChart = d3.x3dom.chart.vectorFieldChart();
- * myChart.vectorFunction(vectorFunction);
+ *
+ * let myChart = d3.x3dom.chart.vectorFieldChart()
+ *    .vectorFunction(vectorFunction);
+ *
  * chartHolder.datum(myData).call(myChart);
  *
  * @see https://mathinsight.org/vector_field_overview

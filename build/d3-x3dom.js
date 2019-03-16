@@ -3076,13 +3076,13 @@ function componentVolumeSlice () {
 
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
-	var classed = "d3X3domVolume";
+	var classed = "d3X3domVolumeSlice";
 
 	/* Other Volume Properties */
-	var imageUrl = "assets/scan1.png";
-	var numberOfSlices = 96;
-	var slicesOverX = 10;
-	var slicesOverY = 10;
+	var imageUrl = void 0;
+	var numberOfSlices = void 0;
+	var slicesOverX = void 0;
+	var slicesOverY = void 0;
 	var volumeStyle = "opacitymap";
 
 	/**
@@ -3125,7 +3125,7 @@ function componentVolumeSlice () {
 
 				case "opacitymap":
 				default:
-					volumedata.append("opacitymapvolumestyle").attr("lightfactor", 1.2).attr("opacityfactor", 6.0).append("imagetexture").attr("containerfield", "transferFunction").attr("url", "assets/transfer.png").attr("crossorigin", "anonymous");
+					volumedata.append("opacitymapvolumestyle").attr("lightfactor", 1.2).attr("opacityfactor", 6.0);
 					break;
 			}
 		});
@@ -3230,8 +3230,11 @@ var component = {
  *
  * @example
  * let chartHolder = d3.select("#chartholder");
+ *
  * let myData = [...];
+ *
  * let myChart = d3.x3dom.chart.barChartMultiSeries();
+ *
  * chartHolder.datum(myData).call(myChart);
  *
  * @see https://datavizproject.com/data-type/3d-bar-chart/
@@ -3452,8 +3455,11 @@ function chartBarChartMultiSeries () {
  *
  * @example
  * let chartHolder = d3.select("#chartholder");
+ *
  * let myData = [...];
+ *
  * let myChart = d3.x3dom.chart.barChartVertical();
+ *
  * chartHolder.datum(myData).call(myChart);
  *
  * @see https://datavizproject.com/data-type/3d-bar-chart/
@@ -3657,8 +3663,11 @@ function chartBarChartVertical () {
  *
  * @example
  * let chartHolder = d3.select("#chartholder");
+ *
  * let myData = [...];
+ *
  * let myChart = d3.x3dom.chart.bubbleChart();
+ *
  * chartHolder.datum(myData).call(myChart);
  *
  * @see https://datavizproject.com/data-type/bubble-chart/
@@ -3911,8 +3920,11 @@ function chartBubbleChart () {
  *
  * @example
  * let chartHolder = d3.select("#chartholder");
+ *
  * let myData = [...];
+ *
  * let myChart = d3.x3dom.chart.crosshairPlot();
+ *
  * chartHolder.datum(myData).call(myChart);
  */
 function chartCrosshairPlot () {
@@ -4101,8 +4113,11 @@ function chartCrosshairPlot () {
  *
  * @example
  * let chartHolder = d3.select("#chartholder");
+ *
  * let myData = [...];
+ *
  * let myChart = d3.x3dom.chart.ribbonChartMultiSeries();
+ *
  * chartHolder.datum(myData).call(myChart);
  *
  * @see https://datavizproject.com/data-type/waterfall-plot/
@@ -4323,8 +4338,11 @@ function chartRibbonChartMultiSeries () {
  *
  * @example
  * let chartHolder = d3.select("#chartholder");
+ *
  * let myData = [...];
+ *
  * let myChart = d3.x3dom.chart.scatterPlot();
+ *
  * chartHolder.datum(myData).call(myChart);
  *
  * @see https://datavizproject.com/data-type/3d-scatterplot/
@@ -4554,8 +4572,11 @@ function chartScatterPlot () {
  *
  * @example
  * let chartHolder = d3.select("#chartholder");
+ *
  * let myData = [...];
+ *
  * let myChart = d3.x3dom.chart.surfacePlot();
+ *
  * chartHolder.datum(myData).call(myChart);
  *
  * @see https://datavizproject.com/data-type/three-dimensional-stream-graph/
@@ -4774,7 +4795,9 @@ function chartSurfacePlot () {
  *
  * @example
  * let chartHolder = d3.select("#chartholder");
+ *
  * let myData = [...];
+ *
  * let vectorFunction = (x, y, z, value) => {
  *    return {
  *       vx: Math.pow(x, 2) + y * Math.pow(x, 2),
@@ -4782,8 +4805,10 @@ function chartSurfacePlot () {
  *       vz: Math.pow(z, 2)
  *    };
  * };
- * let myChart = d3.x3dom.chart.vectorFieldChart();
- * myChart.vectorFunction(vectorFunction);
+ *
+ * let myChart = d3.x3dom.chart.vectorFieldChart()
+ *    .vectorFunction(vectorFunction);
+ *
  * chartHolder.datum(myData).call(myChart);
  *
  * @see https://mathinsight.org/vector_field_overview
@@ -5087,6 +5112,240 @@ function chartVectorField () {
 	return my;
 }
 
+/**
+ * Reusable 3D Vertical Volume Slice Chart
+ *
+ * @module
+ *
+ * @example
+ * let chartHolder = d3.select("#chartholder");
+ *
+ * let myChart = d3.x3dom.chart.volumeSliceChart();
+ *    .dimensions({ x: 40, y: 40, z: 30 })
+ *    .imageUrl("assets/scan2.png")
+ *    .numberOfSlices(35)
+ *    .slicesOverX(7)
+ *    .slicesOverY(5);
+ *
+ * chartHolder.call(myChart);
+ */
+function chartVolumeSlice () {
+
+	/* Default Properties */
+	var width = 500;
+	var height = 500;
+	var dimensions = { x: 40, y: 40, z: 40 };
+	var classed = "d3X3domVolumeSliceChart";
+	var debug = false;
+
+	/* Scales */
+	var xScale = void 0;
+	var yScale = void 0;
+	var zScale = void 0;
+	var origin = { x: 0, y: 0, z: 0 };
+
+	/* Other Volume Properties */
+	var imageUrl = void 0;
+	var numberOfSlices = void 0;
+	var slicesOverX = void 0;
+	var slicesOverY = void 0;
+	var volumeStyle = "opacitymap";
+
+	/**
+  * Constructor
+  *
+  * @constructor
+  * @alias volumeSliceChartVertical
+  * @param {d3.selection} selection - The chart holder D3 selection.
+  */
+	var my = function my(selection) {
+		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
+
+		if (debug) {
+			x3d.attr("showLog", "true").attr("showStat", "true");
+		}
+
+		var scene = x3d.append("scene");
+
+		// Update the chart dimensions and add layer groups
+		var layers = ["axis", "volumeSlice"];
+		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+			return d;
+		});
+
+		scene.each(function (data) {
+
+			// Construct Viewpoint Component
+			var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
+
+			// Construct Axis Component
+			var axis = component.crosshair().xScale(xScale).yScale(yScale).zScale(zScale);
+
+			// Construct Volume Slice Component
+			var volumeSlice = component.volumeSlice().dimensions(dimensions).imageUrl(imageUrl).numberOfSlices(numberOfSlices).slicesOverX(slicesOverX).slicesOverY(slicesOverY);
+
+			scene.call(viewpoint);
+
+			scene.select(".axis").datum(origin).call(axis);
+
+			scene.select(".volumeSlice").append("transform").attr("translation", function (d) {
+				var x = dimensions.x / 2;
+				var y = dimensions.y / 2;
+				var z = dimensions.z / 2;
+				return x + " " + y + " " + z;
+			}).datum(function (d) {
+				return d;
+			}).call(volumeSlice);
+		});
+	};
+
+	/**
+  * Width Getter / Setter
+  *
+  * @param {number} _v - X3D canvas width in px.
+  * @returns {*}
+  */
+	my.width = function (_v) {
+		if (!arguments.length) return width;
+		width = _v;
+		return this;
+	};
+
+	/**
+  * Height Getter / Setter
+  *
+  * @param {number} _v - X3D canvas height in px.
+  * @returns {*}
+  */
+	my.height = function (_v) {
+		if (!arguments.length) return height;
+		height = _v;
+		return this;
+	};
+
+	/**
+  * X Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.xScale = function (_v) {
+		if (!arguments.length) return xScale;
+		xScale = _v;
+		return my;
+	};
+
+	/**
+  * Y Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.yScale = function (_v) {
+		if (!arguments.length) return yScale;
+		yScale = _v;
+		return my;
+	};
+
+	/**
+  * Z Scale Getter / Setter
+  *
+  * @param {d3.scale} _v - D3 scale.
+  * @returns {*}
+  */
+	my.zScale = function (_v) {
+		if (!arguments.length) return zScale;
+		zScale = _v;
+		return my;
+	};
+
+	/**
+  * Dimensions Getter / Setter
+  *
+  * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+  * @returns {*}
+  */
+	my.dimensions = function (_v) {
+		if (!arguments.length) return dimensions;
+		dimensions = _v;
+		return this;
+	};
+
+	/**
+  * Image URL Getter / Setter
+  *
+  * @param {string} _v - Image URL path.
+  * @returns {*}
+  */
+	my.imageUrl = function (_v) {
+		if (!arguments.length) return imageUrl;
+		imageUrl = _v;
+		return this;
+	};
+
+	/**
+  * Number of Slices Getter / Setter
+  *
+  * @param {number} _v - Total number of slices.
+  * @returns {*}
+  */
+	my.numberOfSlices = function (_v) {
+		if (!arguments.length) return numberOfSlices;
+		numberOfSlices = _v;
+		return this;
+	};
+
+	/**
+  * X Slices Getter / Setter
+  *
+  * @param {number} _v - Number of slices over X axis.
+  * @returns {*}
+  */
+	my.slicesOverX = function (_v) {
+		if (!arguments.length) return slicesOverX;
+		slicesOverX = _v;
+		return this;
+	};
+
+	/**
+  * Y Slices Getter / Setter
+  *
+  * @param {number} _v - Number of slices over Y axis.
+  * @returns {*}
+  */
+	my.slicesOverY = function (_v) {
+		if (!arguments.length) return slicesOverY;
+		slicesOverY = _v;
+		return this;
+	};
+
+	/**
+  * Volume Style Getter / Setter
+  *
+  * @param {string} _v - Volume render style (either 'mprvolume' or 'opacitymap')
+  * @returns {*}
+  */
+	my.volumeStyle = function (_v) {
+		if (!arguments.length) return volumeStyle;
+		volumeStyle = _v;
+		return this;
+	};
+
+	/**
+  * Debug Getter / Setter
+  *
+  * @param {boolean} _v - Show debug log and stats. True/False.
+  * @returns {*}
+  */
+	my.debug = function (_v) {
+		if (!arguments.length) return debug;
+		debug = _v;
+		return my;
+	};
+
+	return my;
+}
+
 var chart = {
 	barChartMultiSeries: chartBarChartMultiSeries,
 	barChartVertical: chartBarChartVertical,
@@ -5095,7 +5354,8 @@ var chart = {
 	ribbonChartMultiSeries: chartRibbonChartMultiSeries,
 	scatterPlot: chartScatterPlot,
 	surfacePlot: chartSurfacePlot,
-	vectorFieldChart: chartVectorField
+	vectorFieldChart: chartVectorField,
+	volumeSliceChart: chartVolumeSlice
 };
 
 /**
