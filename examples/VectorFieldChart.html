@@ -26,8 +26,8 @@
       yRange.forEach(function(y) {
         zRange.forEach(function(z) {
           values.push({
-            key: null,
-            value: null,
+            key: 'Field',
+            value: Math.floor(Math.random() * 10) + 1,
             x: x,
             y: y,
             z: z
@@ -41,11 +41,11 @@
       values: values
     };
 
-    var vectorFunction = function(x, y, z) {
+    var vectorFunction = function(x, y, z, value) {
       return {
-        x: -y / (Math.pow(x, 2) + Math.pow(y, 2)),
-        y: x / (Math.pow(x, 2) + Math.pow(y, 2)),
-        z: 0
+        vx: -y / (Math.pow(x, 2) + Math.pow(y, 2)),
+        vy: x / (Math.pow(x, 2) + Math.pow(y, 2)),
+        vz: 0
       };
     };
 

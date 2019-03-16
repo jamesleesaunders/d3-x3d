@@ -2614,16 +2614,18 @@ function componentVectorFields () {
 	/**
   * Vector Field Function
   *
-  * @param x
-  * @param y
-  * @param z
-  * @returns {{x: number, y: number, z: number}}
+  * @param {number} x
+  * @param {number} y
+  * @param {number} z
+  * @param {number} value
+  * @returns {{vx: number, vy: number, vz: number}}
   */
 	var vectorFunction = function vectorFunction(x, y, z) {
+
 		return {
-			x: x,
-			y: y,
-			z: z
+			vx: x,
+			vy: y,
+			vz: z
 		};
 	};
 
@@ -2659,11 +2661,11 @@ function componentVectorFields () {
 				vy = f.vy;
 				vz = f.vz;
 			} else {
-				var _vectorFunction = vectorFunction(f.x, f.y, f.z);
+				var _vectorFunction = vectorFunction(f.x, f.y, f.z, f.value);
 
-				vx = _vectorFunction.x;
-				vy = _vectorFunction.y;
-				vz = _vectorFunction.z;
+				vx = _vectorFunction.vx;
+				vy = _vectorFunction.vy;
+				vz = _vectorFunction.vz;
 			}
 
 			return new x3dom.fields.SFVec3f(vx, vy, vz).length();
@@ -2714,11 +2716,11 @@ function componentVectorFields () {
 						vy = f.vy;
 						vz = f.vz;
 					} else {
-						var _vectorFunction2 = vectorFunction(f.x, f.y, f.z);
+						var _vectorFunction2 = vectorFunction(f.x, f.y, f.z, f.value);
 
-						vx = _vectorFunction2.x;
-						vy = _vectorFunction2.y;
-						vz = _vectorFunction2.z;
+						vx = _vectorFunction2.vx;
+						vy = _vectorFunction2.vy;
+						vz = _vectorFunction2.vz;
 					}
 
 					var fromVector = new x3dom.fields.SFVec3f(0, 1, 0);
@@ -3087,7 +3089,7 @@ function componentVolumeSlice () {
   * Constructor
   *
   * @constructor
-  * @alias bars
+  * @alias volumeSlice
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
@@ -4773,8 +4775,15 @@ function chartSurfacePlot () {
  * @example
  * let chartHolder = d3.select("#chartholder");
  * let myData = [...];
+ * let vectorFunction = (x, y, z, value) => {
+ *    return {
+ *       vx: Math.pow(x, 2) + y * Math.pow(x, 2),
+ *       vy: Math.pow(y, 2) - x * Math.pow(z, 2),
+ *       vz: Math.pow(z, 2)
+ *    };
+ * };
  * let myChart = d3.x3dom.chart.vectorFieldChart();
- * myChart.vectorFunction((x, y, z) => ({ x: -x, y: -y, z: -z }));
+ * myChart.vectorFunction(vectorFunction);
  * chartHolder.datum(myData).call(myChart);
  *
  * @see https://mathinsight.org/vector_field_overview
@@ -4801,16 +4810,18 @@ function chartVectorField () {
 	/**
   * Vector Field Function
   *
-  * @param x
-  * @param y
-  * @param z
-  * @returns {{x: number, y: number, z: number}}
+  * @param {number} x
+  * @param {number} y
+  * @param {number} z
+  * @param {number} value
+  * @returns {{vx: number, vy: number, vz: number}}
   */
 	var vectorFunction = function vectorFunction(x, y, z) {
+
 		return {
-			x: x,
-			y: y,
-			z: z
+			vx: x,
+			vy: y,
+			vz: z
 		};
 	};
 
@@ -4846,11 +4857,11 @@ function chartVectorField () {
 				vy = f.vy;
 				vz = f.vz;
 			} else {
-				var _vectorFunction = vectorFunction(f.x, f.y, f.z);
+				var _vectorFunction = vectorFunction(f.x, f.y, f.z, f.value);
 
-				vx = _vectorFunction.x;
-				vy = _vectorFunction.y;
-				vz = _vectorFunction.z;
+				vx = _vectorFunction.vx;
+				vy = _vectorFunction.vy;
+				vz = _vectorFunction.vz;
 			}
 
 			return new x3dom.fields.SFVec3f(vx, vy, vz).length();

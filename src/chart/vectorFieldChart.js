@@ -11,8 +11,15 @@ import component from "../component";
  * @example
  * let chartHolder = d3.select("#chartholder");
  * let myData = [...];
+ * let vectorFunction = (x, y, z, value) => {
+ *    return {
+ *       vx: Math.pow(x, 2) + y * Math.pow(x, 2),
+ *       vy: Math.pow(y, 2) - x * Math.pow(z, 2),
+ *       vz: Math.pow(z, 2)
+ *    };
+ * };
  * let myChart = d3.x3dom.chart.vectorFieldChart();
- * myChart.vectorFunction((x, y, z) => ({ x: -x, y: -y, z: -z }));
+ * myChart.vectorFunction(vectorFunction);
  * chartHolder.datum(myData).call(myChart);
  *
  * @see https://mathinsight.org/vector_field_overview
@@ -39,16 +46,17 @@ export default function() {
 	/**
 	 * Vector Field Function
 	 *
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @returns {{x: number, y: number, z: number}}
+	 * @param {number} x
+	 * @param {number} y
+	 * @param {number} z
+	 * @param {number} value
+	 * @returns {{vx: number, vy: number, vz: number}}
 	 */
-	let vectorFunction = function(x, y, z) {
+	let vectorFunction = function(x, y, z, value = null) {
 		return {
-			x: x,
-			y: y,
-			z: z
+			vx: x,
+			vy: y,
+			vz: z
 		};
 	};
 
@@ -69,7 +77,7 @@ export default function() {
 			if ('vx' in f) {
 				({ vx, vy, vz } = f);
 			} else {
-				({ x: vx, y: vy, z: vz } = vectorFunction(f.x, f.y, f.z));
+				({ vx, vy, vz } = vectorFunction(f.x, f.y, f.z, f.value));
 			}
 
 			return new x3dom.fields.SFVec3f(vx, vy, vz).length();
