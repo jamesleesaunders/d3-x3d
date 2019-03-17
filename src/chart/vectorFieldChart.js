@@ -164,7 +164,8 @@ export default function() {
 			const axis = component.crosshair()
 				.xScale(xScale)
 				.yScale(yScale)
-				.zScale(zScale);
+				.zScale(zScale)
+				.dimensions(dimensions);
 
 			// Construct Vector Field Component
 			const vectorFields = component.vectorFields()

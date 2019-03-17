@@ -4002,7 +4002,7 @@ function chartCrosshairPlot () {
 			var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
 			// Construct Axis Component
-			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
+			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale).dimensions(dimensions);
 
 			// Construct Crosshair Component
 			var crosshair = component.crosshair().xScale(xScale).yScale(yScale).zScale(zScale);
@@ -4950,7 +4950,7 @@ function chartVectorField () {
 			var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
 			// Construct Axis Component
-			var axis = component.crosshair().xScale(xScale).yScale(yScale).zScale(zScale);
+			var axis = component.crosshair().xScale(xScale).yScale(yScale).zScale(zScale).dimensions(dimensions);
 
 			// Construct Vector Field Component
 			var vectorFields = component.vectorFields().xScale(xScale).yScale(yScale).zScale(zScale).colorScale(colorScale).sizeScale(sizeScale).vectorFunction(vectorFunction);

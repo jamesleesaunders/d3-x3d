@@ -98,7 +98,8 @@ export default function() {
 			const axis = component.axisThreePlane()
 				.xScale(xScale)
 				.yScale(yScale)
-				.zScale(zScale);
+				.zScale(zScale)
+				.dimensions(dimensions);
 
 			// Construct Crosshair Component
 			const crosshair = component.crosshair()
