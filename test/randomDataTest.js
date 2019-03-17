@@ -1,24 +1,40 @@
-let test = require("tape");
+let chai = require('chai');
+let expect = chai.expect;
 let window = require('browser-env')();
 let d3 = require('d3');
-let d3X3dom = require("../");
+let d3X3dom = require('../');
 
-test("Test Random Data Generation", function(t) {
-	let randomData = d3X3dom.randomData;
+describe('Test Random Data Generation', () => {
+  let randomData = d3X3dom.randomData;
+  let countries = ['UK', 'France', 'Spain', 'Germany', 'Italy', 'Portugal'];
+  let fruit = ['Apples', 'Oranges', 'Pears', 'Bananas'];
+  let data = randomData.dataset1();
+  let keys = Object.keys(data);
+  let key = Object.keys(data.key);
+  let values = Object.keys(data.values);
 
-	let countries = ["UK", "France", "Spain", "Germany", "Italy", "Portugal"];
-	t.deepEqual(randomData.countries, countries, "Test Stores");
+  it('shoud return stores', (done) => {
+    expect(randomData.countries).to.be.deep.equal(countries);
+    done();
+  });
 
-	let fruit = ["Apples", "Oranges", "Pears", "Bananas"];
-	t.deepEqual(randomData.fruit, fruit, "Test Fruit");
+  it('shoud return fruits', (done) => {
+    expect(randomData.fruit).to.be.deep.equal(fruit);
+    done();
+  });
 
-	let data = randomData.dataset1();
-	let keys = Object.keys(data);
-	t.deepEqual(keys, ["key", "values"], "Test Random Dataset 1 Keys");
-	let key = Object.keys(data.key);
-	t.deepEqual(key, ["0", "1", "2", "3", "4"], "Test Random Dataset 1 Key");
-	let values = Object.keys(data.values);
-	t.deepEqual(values, ["0", "1", "2", "3"], "Test Random Dataset 1 Values");
+  it('shoud return random Dataset 1 Keys', (done) => {
+    expect(keys).to.be.deep.equal(['key', 'values']);
+    done();
+  });
 
-	t.end();
+  it('shoud return random Dataset 1 Keys', (done) => {
+    expect(key).to.be.deep.equal(['0', '1', '2', '3', '4']);
+    done();
+  });
+
+  it('should return random Dataset 1 values', (done) => {
+    expect(values).to.be.deep.equal(['0', '1', '2', '3']);
+    done();
+  });
 });
