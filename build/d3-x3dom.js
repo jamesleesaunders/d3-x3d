@@ -3244,6 +3244,8 @@ function chartBarChartMultiSeries () {
 	/* Default Properties */
 	var width = 500;
 	var height = 500;
+	// var width = window.innerWidth;
+	// var height = window.innerHeight;
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["green", "red", "yellow", "steelblue", "orange"];
 	var classed = "d3X3domBarChartMultiSeries";
@@ -3300,12 +3302,16 @@ function chartBarChartMultiSeries () {
   */
 	var my = function my(selection) {
 		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
+		// var x3d = selection.append("x3d");
 
 		if (debug) {
 			x3d.attr("showLog", "true").attr("showStat", "true");
 		}
 
 		var scene = x3d.append("scene");
+		
+		//THIS PART IS MY CODE, not Saunders'
+		scene.attr("id", "scene");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "bars"];
