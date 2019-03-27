@@ -21,14 +21,29 @@
   </form>
 
   <script>
-    // Select chartholder
-    var chartHolder = d3.select("#chartholder");
+    // Chart dimensions
+    var width = 500;
+    var height = 500;
 
     // Generate some data
     var data = d3.x3dom.randomData.dataset2();
 
     // Declare the bar chart component
-    var myChart = d3.x3dom.chart.ribbonChartMultiSeries();
+    var viewpoint = d3.x3dom.component.viewpoint();
+    var component = d3.x3dom.component.bubblesMultiSeries();
+
+    // Create scene
+    var scene = d3.select("#chartholder")
+      .append("x3d")
+      .attr("id", "bubbles")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("scene");
+
+    scene.call(viewpoint);
+
+    var chart = scene.append("group")
+      .attr("class", "chart");
 
     var refreshChart = function() {
       var checks = document.querySelectorAll('input[type=checkbox]');
@@ -44,7 +59,7 @@
 
       console.log(filteredData);
 
-      chartHolder.datum(filteredData).call(myChart);
+      chart.datum(filteredData).call(component);
     };
 
     var bindCheckboxOnClick = function(func) {
@@ -61,8 +76,7 @@
 
   </script>
 
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.
-  </div>
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.</div>
 </body>
 
 </html>

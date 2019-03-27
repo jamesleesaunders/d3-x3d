@@ -2,31 +2,31 @@
 <html>
 
 <head>
-  <title>d3-x3dom : 3D Crosshair Example</title>
+  <title>d3-x3dom : Test</title>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
   <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
-  <script src="../build/d3-x3dom.js"></script>
+  <script src="../../build/d3-x3dom.js"></script>
 </head>
 
 <body>
   <div id="chartholder"></div>
 
-
   <form>
-
     <select name="graphType" id="graphType">
       <option value='1'>One</option>
       <option value='2'>Two</option>
       <option value='3'>Three</option>
     </select>
-
   </form>
 
   <script>
     // Chart dimensions
     var width = 500;
     var height = 500;
+
+    // Generate some data
+    var data = d3.x3dom.randomData.dataset1();
 
     // Create scene
     var chartHolder = d3.select("#chartholder")
@@ -38,18 +38,17 @@
     var viewpointComponent = d3.x3dom.component.viewpoint();
     chartHolder.call(viewpointComponent);
 
-    function update(chartHolder, chartComponent) {
-      var data = d3.x3dom.randomData.dataset1();
+    function refreshChart(chartHolder, chartComponent) {
       chartHolder.datum(data)
         .call(chartComponent);
     }
 
     var chartComponent = d3.x3dom.component.bars();
-    update(chartHolder, chartComponent);
+    refreshChart(chartHolder, chartComponent);
 
     document.querySelector('#graphType').addEventListener('change', function() {
       chartComponent = d3.x3dom.component.ribbon();
-      update(chartHolder, chartComponent);
+      refreshChart(chartHolder, chartComponent);
     });
 
   </script>

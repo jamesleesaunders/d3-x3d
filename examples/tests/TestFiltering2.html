@@ -10,22 +10,25 @@
 </head>
 
 <body>
-  <label for="uk">UK</label><input type="checkbox" name="country" id="uk" checked value="UK" />
-  <label for="france">France</label><input type="checkbox" name="country" id="france" checked value="France" />
-  <label for="spain">Spain</label><input type="checkbox" name="country" id="spain" value="Spain" />
-  <label for="germany">Germany</label><input type="checkbox" name="country" id="germany" checked value="Germany" />
-  <label for="italy">Italy</label><input type="checkbox" name="country" id="italy" value="Italy" />
-
   <div id="chartholder"></div>
+
+  <form>
+    <label for="uk">UK</label><input type="checkbox" name="country" id="uk" checked value="UK" />
+    <label for="france">France</label><input type="checkbox" name="country" id="france" checked value="France" />
+    <label for="spain">Spain</label><input type="checkbox" name="country" id="spain" value="Spain" />
+    <label for="germany">Germany</label><input type="checkbox" name="country" id="germany" checked value="Germany" />
+    <label for="italy">Italy</label><input type="checkbox" name="country" id="italy" value="Italy" />
+  </form>
 
   <script>
     // Select chartholder
     var chartHolder = d3.select("#chartholder");
 
+    // Generate some data
+    var data = d3.x3dom.randomData.dataset2();
+
     // Declare the bar chart component
     var myChart = d3.x3dom.chart.barChartMultiSeries();
-
-    var data = d3.x3dom.randomData.dataset2();
 
     var refreshChart = function() {
       var checks = document.querySelectorAll('input[type=checkbox]');

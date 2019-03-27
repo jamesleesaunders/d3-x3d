@@ -21,6 +21,7 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Test 1](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/TestFiltering1.html)
 * [Test 2](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/TestFiltering2.html)
 * [Test 3](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/TestFiltering3.html)
+* [Test 4](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/TestFiltering4.html)
 
 ### Examples
 * [Multi Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartMultiSeries.html)
