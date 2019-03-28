@@ -21,30 +21,6 @@
   </form>
 
   <script>
-    // Chart dimensions
-    var width = 500;
-    var height = 500;
-
-    // Generate some data
-    var data = d3.x3dom.randomData.dataset2();
-
-    // Declare the bar chart component
-    var viewpoint = d3.x3dom.component.viewpoint();
-    var component = d3.x3dom.component.bubblesMultiSeries();
-
-    // Create scene
-    var scene = d3.select("#chartholder")
-      .append("x3d")
-      .attr("id", "bubbles")
-      .attr("width", width + "px")
-      .attr("height", height + "px")
-      .append("scene");
-
-    scene.call(viewpoint);
-
-    var chart = scene.append("group")
-      .attr("class", "chart");
-
     var refreshChart = function() {
       var checks = document.querySelectorAll('input[type=checkbox]');
 
@@ -69,6 +45,32 @@
         checks[i].onchange = func;
       }
     };
+
+
+
+    // Chart dimensions
+    var width = 500;
+    var height = 500;
+
+    // Generate some data
+    var data = d3.x3dom.randomData.dataset2();
+
+    // Declare the bar chart component
+    var viewpoint = d3.x3dom.component.viewpoint();
+    var component = d3.x3dom.component.bubblesMultiSeries();
+
+    // Create scene
+    var scene = d3.select("#chartholder")
+      .append("x3d")
+      .attr("id", "d3X3dom")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("scene");
+
+    scene.call(viewpoint);
+
+    var chart = scene.append("group")
+      .attr("class", "chart");
 
     bindCheckboxOnClick(refreshChart);
 

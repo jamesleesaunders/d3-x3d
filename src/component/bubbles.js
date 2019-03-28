@@ -21,6 +21,8 @@ export default function() {
 	let sizeScale;
 	let sizeDomain = [0.5, 4.0];
 
+	let transition = { ease: d3.easeBounce, duration: 500 };
+
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -75,7 +77,8 @@ export default function() {
 				shape
 					.append("appearance")
 					.append("material")
-					.attr("diffusecolor", color || "black");
+					.attr("diffusecolor", color || "black")
+					.attr("ambientintensity", 0.1);
 				return shape;
 			};
 
@@ -83,27 +86,33 @@ export default function() {
 				.data((d) => d.values);
 
 			const bubblesEnter = bubbles.enter()
-				.append("group")
-				.attr("class", "bubble");
-
-			bubblesEnter
 				.append("transform")
-				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
-				.append("shape")
+				.attr("class", "bubble")
+				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)));
+
+			const shape = bubblesEnter.append("shape")
 				.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
 				.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
 				.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
 				.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
 				.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);")
-				.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); })
-				.call(makeSolid, color)
-				.append("sphere")
+				.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
+
+			shape.append("sphere")
 				.attr("radius", (d) => sizeScale(d.value));
+
+			shape.append("appearance")
+				.append("material")
+				.attr("diffusecolor", color)
+				.attr("ambientintensity", 0.1);
 
 			bubblesEnter.merge(bubbles);
 
 			bubbles.transition()
-				.attr("translation", (d) => (xScale(d.x) + ' ' + yScale(d.y) + ' ' + zScale(d.z)));
+				.attr("translation", (d) => (xScale(d.x) + ' ' + yScale(d.y) + ' ' + zScale(d.z)))
+				.select("shape")
+				.select("sphere")
+				.attr("radius", (d) => sizeScale(d.value));
 
 			bubbles.exit()
 				.remove();

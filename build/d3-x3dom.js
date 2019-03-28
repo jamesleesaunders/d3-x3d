@@ -1068,21 +1068,13 @@ function componentBarsMultiSeries () {
 		    dimensionZ = _dimensions.z;
 
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
-		}
+		xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-		}
+		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.7);
-		}
+		zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.7);
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
-		}
+		colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
 	};
 
 	/**
@@ -1115,9 +1107,7 @@ function componentBarsMultiSeries () {
 				var y = 0;
 				var z = zScale(d.key);
 				return x + " " + y + " " + z;
-			});
-
-			d3.selectAll(".barGroup").each(function (d) {
+			}).transition().each(function (d) {
 				d3.select(this).call(bars);
 			});
 
@@ -1378,33 +1368,34 @@ function componentBubbles () {
 
 			var element = d3.select(this).classed(classed, true);
 
-			var makeSolid = function makeSolid(shape, color) {
-				shape.append("appearance").append("material").attr("diffusecolor", color || "black");
-				return shape;
-			};
-
 			var bubbles = element.selectAll(".bubble").data(function (d) {
 				return d.values;
 			});
 
-			var bubblesEnter = bubbles.enter().append("group").attr("class", "bubble");
-
-			bubblesEnter.append("transform").attr("translation", function (d) {
+			var bubblesEnter = bubbles.enter().append("transform").attr("class", "bubble").attr("translation", function (d) {
 				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-			}).append("shape").attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
+			});
+
+			var shape = bubblesEnter.append("shape").attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
 				dispatch.call("d3X3domClick", this, e);
 			}).attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").on("mouseover", function (e) {
 				dispatch.call("d3X3domMouseOver", this, e);
 			}).attr("onmouseout", "d3.x3dom.events.forwardEvent(event);").on("mouseout", function (e) {
 				dispatch.call("d3X3domMouseOut", this, e);
-			}).call(makeSolid, color).append("sphere").attr("radius", function (d) {
+			});
+
+			shape.append("sphere").attr("radius", function (d) {
 				return sizeScale(d.value);
 			});
+
+			shape.append("appearance").append("material").attr("diffusecolor", color).attr("ambientintensity", 0.1);
 
 			bubblesEnter.merge(bubbles);
 
 			bubbles.transition().attr("translation", function (d) {
 				return xScale(d.x) + ' ' + yScale(d.y) + ' ' + zScale(d.z);
+			}).select("shape").select("sphere").attr("radius", function (d) {
+				return sizeScale(d.value);
 			});
 
 			bubbles.exit().remove();
@@ -1550,25 +1541,15 @@ function componentBubblesMultiSeries () {
 		    dimensionZ = _dimensions.z;
 
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
-		}
+		xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
-		}
+		yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
-		}
+		zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
-		}
+		colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
 
-		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeDomain);
-		}
+		sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeDomain);
 	};
 
 	/**
@@ -2239,21 +2220,13 @@ function componentRibbonMultiSeries () {
 		    dimensionZ = _dimensions.z;
 
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
-		}
+		xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
-		}
+		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
-		}
+		zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
-		}
+		colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
 	};
 
 	/**
@@ -2286,7 +2259,7 @@ function componentRibbonMultiSeries () {
 				var y = 0;
 				var z = zScale(d.key);
 				return x + " " + y + " " + z;
-			}).each(function (d) {
+			}).transition().each(function (d) {
 				var color = colorScale(d.key);
 				ribbon.color(color);
 				d3.select(this).call(ribbon);

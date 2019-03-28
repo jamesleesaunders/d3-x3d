@@ -21,15 +21,6 @@
   </form>
 
   <script>
-    // Select chartholder
-    var chartHolder = d3.select("#chartholder");
-
-    // Generate some data
-    var data = d3.x3dom.randomData.dataset2();
-
-    // Declare the bar chart component
-    var myChart = d3.x3dom.chart.ribbonChartMultiSeries();
-
     var refreshChart = function() {
       var checks = document.querySelectorAll('input[type=checkbox]');
 
@@ -54,6 +45,17 @@
         checks[i].onchange = func;
       }
     };
+
+
+
+    // Select chartholder
+    var chartHolder = d3.select("#chartholder");
+
+    // Generate some data
+    var data = d3.x3dom.randomData.dataset2();
+
+    // Declare the bar chart component
+    var myChart = d3.x3dom.chart.ribbonChartMultiSeries();
 
     bindCheckboxOnClick(refreshChart);
 
