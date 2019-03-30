@@ -71,31 +71,34 @@ export default function() {
 			const element = d3.select(this)
 				.classed(classed, true);
 
-			// Construct Bars Component
-			const bubbles = componentBubbles()
-				.xScale(xScale)
-				.yScale(yScale)
-				.zScale(zScale)
-				.sizeScale(sizeScale);
+			const addBubbles = function(d) {
+				const color = colorScale(d.key);
+
+				// Construct Bars Component
+				const bubbles = componentBubbles()
+					.xScale(xScale)
+					.yScale(yScale)
+					.zScale(zScale)
+					.sizeScale(sizeScale)
+					.color(color);
+
+				d3.select(this).datum(d).call(bubbles);
+			};
 
 			// Create Bubble Groups
 			const bubbleGroup = element.selectAll(".bubbleGroup")
-				.data((d) => d);
+				.data((d) => d, (d) => d.key);
 
 			bubbleGroup.enter()
 				.append("group")
 				.classed("bubbleGroup", true)
+				.attr("id", (d) => d.key)
 				.merge(bubbleGroup)
 				.transition()
-				.each(function(d) {
-					const color = colorScale(d.key);
-					bubbles.color(color);
-					d3.select(this).call(bubbles);
-				});
+				.each(addBubbles);
 
 			bubbleGroup.exit()
 				.remove();
-
 		});
 	};
 

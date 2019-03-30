@@ -126,11 +126,13 @@ export default function() {
 				.datum(data)
 				.call(bars);
 
+			/*
 			scene.append("directionallight")
 				.attr("direction", "1 0 -1")
 				.attr("on", "true")
 				.attr("intensity", "0.4")
 				.attr("shadowintensity", "0");
+			*/
 		});
 	};
 

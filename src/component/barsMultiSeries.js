@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import componentBars from "./bars";
+import componentBubbles from "./bubbles";
 
 /**
  * Reusable 3D Multi Series Bar Chart Component
@@ -65,39 +66,41 @@ export default function() {
 			const element = d3.select(this)
 				.classed(classed, true);
 
-			// Construct Bars Component
-			const bars = componentBars()
-				.xScale(xScale)
-				.yScale(yScale)
-				.dimensions({
-					x: dimensions.x,
-					y: dimensions.y,
-					z: zScale.bandwidth()
-				})
-				.colors(colors);
+			const addBars = function(d) {
+				// Construct Bars Component
+				const bars = componentBars()
+					.xScale(xScale)
+					.yScale(yScale)
+					.dimensions({
+						x: dimensions.x,
+						y: dimensions.y,
+						z: zScale.bandwidth()
+					})
+					.colors(colors);
+
+				d3.select(this).call(bars);
+			};
 
 			// Create Bar Groups
 			const barGroup = element.selectAll(".barGroup")
-				.data((d) => d);
+				.data((d) => d, (d) => d.key);
 
 			barGroup.enter()
 				.append("transform")
 				.classed("barGroup", true)
+				.attr("id", (d) => d.key)
 				.merge(barGroup)
+				.transition()
 				.attr("translation", (d) => {
 					const x = 0;
 					const y = 0;
 					const z = zScale(d.key);
 					return x + " " + y + " " + z;
 				})
-				.transition()
-				.each(function(d) {
-					d3.select(this).call(bars);
-				});
+				.each(addBars);
 
 			barGroup.exit()
 				.remove();
-
 		});
 	};
 

@@ -116,7 +116,8 @@ export default function() {
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
-				.colors(colors);
+				.colors(colors)
+				.dimensions(dimensions);
 
 			scene.call(viewpoint);
 
@@ -127,11 +128,13 @@ export default function() {
 				.datum(data)
 				.call(ribbons);
 
+			/*
 			scene.append("directionallight")
 				.attr("direction", "1 0 -1")
 				.attr("on", "true")
 				.attr("intensity", "0.4")
 				.attr("shadowintensity", "0");
+			*/
 		});
 	};
 

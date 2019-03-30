@@ -21,8 +21,6 @@ export default function() {
 	let sizeScale;
 	let sizeDomain = [0.5, 4.0];
 
-	let transition = { ease: d3.easeBounce, duration: 500 };
-
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -73,46 +71,36 @@ export default function() {
 			const element = d3.select(this)
 				.classed(classed, true);
 
-			const makeSolid = (shape, color) => {
-				shape
-					.append("appearance")
+			const shape = (el) => {
+				const shape = el.append("shape")
+					.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
+					.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
+					.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
+					.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
+					.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);")
+					.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
+
+				shape.append("sphere")
+					.attr("radius", (d) => sizeScale(d.value));
+
+				shape.append("appearance")
 					.append("material")
-					.attr("diffusecolor", color || "black")
+					.attr("diffusecolor", color)
 					.attr("ambientintensity", 0.1);
+
 				return shape;
 			};
 
 			const bubbles = element.selectAll(".bubble")
-				.data((d) => d.values);
+				.data((d) => d.values, (d) => d.key);
 
-			const bubblesEnter = bubbles.enter()
+			bubbles.enter()
 				.append("transform")
 				.attr("class", "bubble")
+				.call(shape)
+				.merge(bubbles)
+				.transition()
 				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)));
-
-			const shape = bubblesEnter.append("shape")
-				.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
-				.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
-				.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
-				.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
-				.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);")
-				.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
-
-			shape.append("sphere")
-				.attr("radius", (d) => sizeScale(d.value));
-
-			shape.append("appearance")
-				.append("material")
-				.attr("diffusecolor", color)
-				.attr("ambientintensity", 0.1);
-
-			bubblesEnter.merge(bubbles);
-
-			bubbles.transition()
-				.attr("translation", (d) => (xScale(d.x) + ' ' + yScale(d.y) + ' ' + zScale(d.z)))
-				.select("shape")
-				.select("sphere")
-				.attr("radius", (d) => sizeScale(d.value));
 
 			bubbles.exit()
 				.remove();

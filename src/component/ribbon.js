@@ -82,7 +82,7 @@ export default function() {
 				.classed(classed, true);
 
 			const ribbonData = function(d) {
-				return d.values.map((pointThis, indexThis, array) => {
+				return d.map((pointThis, indexThis, array) => {
 					let indexNext = indexThis + 1;
 					if (indexNext >= array.length) {
 						return null;
@@ -115,25 +115,32 @@ export default function() {
 				}).filter((d) => d !== null);
 			};
 
+			const shape = (el) => {
+				const shape = el.append("shape");
+
+				shape.append("indexedfaceset")
+					.attr("solid", "true")
+					.attr("coordindex", (d) => d.coordindex)
+					.append("coordinate")
+					.attr("point", (d) => d.point);
+
+				shape.append("appearance")
+					.append("twosidedmaterial")
+					.attr("diffusecolor", (d) => d.color)
+					.attr("transparency", (d) => d.transparency);
+
+				return shape;
+			};
+
 			const ribbon = element.selectAll(".ribbon")
-				.data(ribbonData);
+				.data((d) => ribbonData(d.values), (d) => d.key);
 
-			const ribbonEnter = ribbon.enter()
-				.append("shape")
-				.classed("ribbon", true);
-
-			ribbonEnter.append("indexedfaceset")
-				.attr("solid", "true")
-				.attr("coordindex", (d) => d.coordindex)
-				.append("coordinate")
-				.attr("point", (d) => d.point);
-
-			ribbonEnter.append("appearance")
-				.append("twosidedmaterial")
-				.attr("diffusecolor", (d) => d.color)
-				.attr("transparency", (d) => d.transparency);
-
-			ribbonEnter.merge(ribbon);
+			ribbon.enter()
+				.append("group")
+				.classed("ribbon", true)
+				.call(shape)
+				.merge(ribbon)
+				.transition();
 
 			const ribbonTrans = ribbon.transition();
 

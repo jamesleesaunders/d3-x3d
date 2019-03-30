@@ -109,7 +109,8 @@ export default function() {
 			const tick = element.selectAll(".tick")
 				.data(tickValues, scale).order();
 
-			const tickEnter = tick.enter().append("transform")
+			const tickEnter = tick.enter()
+				.append("transform")
 				.attr("class", "tick")
 				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")));
 

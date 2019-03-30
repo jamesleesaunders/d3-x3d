@@ -63,40 +63,43 @@ export default function() {
 			const element = d3.select(this)
 				.classed(classed, true);
 
-			// Construct Ribbon Component
-			const ribbon = componentRibbon()
-				.xScale(xScale)
-				.yScale(yScale)
-				.dimensions({
-					x: dimensions.x,
-					y: dimensions.y,
-					z: zScale.bandwidth()
-				});
+			const addRibbon = function(d) {
+				const color = colorScale(d.key);
+
+				// Construct Ribbon Component
+				const ribbon = componentRibbon()
+					.xScale(xScale)
+					.yScale(yScale)
+					.dimensions({
+						x: dimensions.x,
+						y: dimensions.y,
+						z: zScale.bandwidth()
+					})
+					.color(color);
+
+				d3.select(this).call(ribbon);
+			};
 
 			// Create Ribbon Groups
 			const ribbonGroup = element.selectAll(".ribbonGroup")
-				.data((d) => d);
+				.data((d) => d, (d) => d.key);
 
 			ribbonGroup.enter()
 				.append("transform")
 				.classed("ribbonGroup", true)
+				.attr("id", (d) => d.key)
 				.merge(ribbonGroup)
+				.transition()
 				.attr("translation", (d) => {
 					const x = 0;
 					const y = 0;
 					const z = zScale(d.key);
 					return x + " " + y + " " + z;
 				})
-				.transition()
-				.each(function(d) {
-					const color = colorScale(d.key);
-					ribbon.color(color);
-					d3.select(this).call(ribbon);
-				});
+				.each(addRibbon);
 
 			ribbonGroup.exit()
 				.remove();
-
 		});
 	};
 
