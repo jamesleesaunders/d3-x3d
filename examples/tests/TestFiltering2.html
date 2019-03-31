@@ -12,13 +12,13 @@
 <body>
   <div id="chartholder"></div>
 
-  <form>
-    <label for="uk">UK</label><input type="checkbox" name="country" id="uk" checked value="UK" />
-    <label for="france">France</label><input type="checkbox" name="country" id="france" checked value="France" />
-    <label for="spain">Spain</label><input type="checkbox" name="country" id="spain" value="Spain" />
-    <label for="germany">Germany</label><input type="checkbox" name="country" id="germany" checked value="Germany" />
-    <label for="italy">Italy</label><input type="checkbox" name="country" id="italy" value="Italy" />
-  </form>
+  <table>
+    <tr><td>UK</td><td><input type="checkbox" name="country" id="uk" checked value="UK" /></td></tr>
+    <tr><td>France</td><td><input type="checkbox" name="country" id="france" checked value="France" /></td></tr>
+    <tr><td>Spain</td><td><input type="checkbox" name="country" id="spain" value="Spain" /></td></tr>
+    <tr><td>Germany</td><td><input type="checkbox" name="country" id="germany" checked value="Germany" /></td></tr>
+    <tr><td>Italy</td><td><input type="checkbox" name="country" id="italy" value="Italy" /></td></tr>
+  </table>
 
   <script>
     var refreshChart = function() {
