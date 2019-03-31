@@ -48,6 +48,7 @@
     var checks = document.querySelectorAll('input[type=checkbox]');
 
     var refreshChart = function() {
+      var data = d3.x3dom.randomData.dataset2();
       var filterArray = [];
       for (var i = 0; i < checks.length; i++) {
         if (checks[i].checked) {

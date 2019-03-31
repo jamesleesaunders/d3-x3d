@@ -119,7 +119,6 @@ export default function() {
 				const shape = el.append("shape");
 
 				shape.append("indexedfaceset")
-					.attr("solid", "true")
 					.attr("coordindex", (d) => d.coordindex)
 					.append("coordinate")
 					.attr("point", (d) => d.point);
@@ -140,19 +139,11 @@ export default function() {
 				.classed("ribbon", true)
 				.call(shape)
 				.merge(ribbon)
-				.transition();
-
-			const ribbonTrans = ribbon.transition();
-
-			ribbonTrans.select("indexedfaceset")
+				.transition()
+				.select("indexedfaceset")
 				.attr("coordindex", (d) => d.coordindex)
 				.select("coordinate")
 				.attr("point", (d) => d.point);
-
-			ribbonTrans.select("appearance")
-				.select("twosidedmaterial")
-				.attr("diffusecolor", (d) => d.color)
-				.attr("transparency", (d) => d.transparency);
 
 			ribbon.exit()
 				.remove();

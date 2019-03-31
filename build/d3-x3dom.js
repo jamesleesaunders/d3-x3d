@@ -2099,7 +2099,7 @@ function componentRibbon () {
 			var shape = function shape(el) {
 				var shape = el.append("shape");
 
-				shape.append("indexedfaceset").attr("solid", "true").attr("coordindex", function (d) {
+				shape.append("indexedfaceset").attr("coordindex", function (d) {
 					return d.coordindex;
 				}).append("coordinate").attr("point", function (d) {
 					return d.point;
@@ -2120,20 +2120,10 @@ function componentRibbon () {
 				return d.key;
 			});
 
-			ribbon.enter().append("group").classed("ribbon", true).call(shape).merge(ribbon).transition();
-
-			var ribbonTrans = ribbon.transition();
-
-			ribbonTrans.select("indexedfaceset").attr("coordindex", function (d) {
+			ribbon.enter().append("group").classed("ribbon", true).call(shape).merge(ribbon).transition().select("indexedfaceset").attr("coordindex", function (d) {
 				return d.coordindex;
 			}).select("coordinate").attr("point", function (d) {
 				return d.point;
-			});
-
-			ribbonTrans.select("appearance").select("twosidedmaterial").attr("diffusecolor", function (d) {
-				return d.color;
-			}).attr("transparency", function (d) {
-				return d.transparency;
 			});
 
 			ribbon.exit().remove();
