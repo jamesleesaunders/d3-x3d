@@ -17,13 +17,15 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Download from GitHub](https://github.com/jamesleesaunders/d3-x3dom)
 * [Download from NPM](https://www.npmjs.com/package/d3-x3dom)
 
-### Tests
-* [Test 1](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/TestFiltering1.html)
-* [Test 2](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/TestFiltering2.html)
-* [Test 3](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/TestFiltering3.html)
-* [Test 4](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/TestFiltering4.html)
-* [Test 5](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/TestFiltering5.html)
-* [Test 6](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/TestFiltering6.html)
+### WIP Chart Filter Tests
+* [Multi Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/FilterChartMultiSeriesBar.html)
+* [Single Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/FilterChartSingleSeriesBar.html)
+* [Ribbon Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/FilterChartRibbon.html)
+
+### WIP Component Filter Tests
+* [Bubbles](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/FilterComponentBubbles.html)
+* [Bars](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/FilterComponentMultiSeriesBar.html)
+* [Ribbon](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/FilterComponentRibbon.html)
 
 ### Examples
 * [Multi Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartMultiSeries.html)

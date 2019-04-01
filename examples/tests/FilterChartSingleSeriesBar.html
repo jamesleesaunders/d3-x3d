@@ -27,15 +27,28 @@
   </table>
 
   <script>
-    var refreshChart = function() {
-      var checks = document.querySelectorAll('input[type=checkbox]');
+    // Select chartholder
+    var chartHolder = d3.select("#chartholder");
 
+    // Generate some data
+    var data = d3.x3dom.randomData.dataset1();
+
+    // Declare the bar chart component
+    var myChart = d3.x3dom.chart.barChartVertical();
+
+    var checks = d3.selectAll('input[type=checkbox]');
+
+    var refreshChart = function() {
+      var data = d3.x3dom.randomData.dataset1();
       var filterArray = [];
-      for (var i = 0; i < checks.length; i++) {
-        if (checks[i].checked) {
-          filterArray.push(checks[i].value)
+
+      checks.each(function() {
+        var check = d3.select(this);
+        var checked = check.property("checked");
+        if (checked) {
+          filterArray.push(check.attr("value"));
         }
-      }
+      });
 
       var filteredData = {
         key: data.key,
@@ -47,26 +60,14 @@
       chartHolder.datum(filteredData).call(myChart);
     };
 
-    var bindCheckboxOnClick = function(func) {
-      var checks = document.querySelectorAll('input[type=checkbox]');
+    for (var i = 0; i < checks.length; i++) {
+      checks[i].onchange = refreshChart;
+    }
 
-      for (var i = 0; i < checks.length; i++) {
-        checks[i].onchange = func;
-      }
-    };
-
-
-
-    // Select chartholder
-    var chartHolder = d3.select("#chartholder");
-
-    // Generate some data
-    var data = d3.x3dom.randomData.dataset1();
-
-    // Declare the bar chart component
-    var myChart = d3.x3dom.chart.barChartVertical();
-
-    bindCheckboxOnClick(refreshChart);
+    checks.each(function() {
+      var check = d3.select(this);
+      check.attr("onchange", "refreshChart()");
+    });
 
     refreshChart();
 

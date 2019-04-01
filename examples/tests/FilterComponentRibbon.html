@@ -30,7 +30,7 @@
 
     // Declare the bar chart component
     var viewpoint = d3.x3dom.component.viewpoint();
-    var component = d3.x3dom.component.bubblesMultiSeries();
+    var component = d3.x3dom.component.ribbonMultiSeries();
 
     // Create scene
     var scene = d3.select("#chartholder")
@@ -45,17 +45,23 @@
     var chart = scene.append("group")
       .attr("class", "chart");
 
-    var checks = document.querySelectorAll('input[type=checkbox]');
+    var checks = d3.selectAll('input[type=checkbox]');
 
     var refreshChart = function() {
       var data = d3.x3dom.randomData.dataset2();
       var filterArray = [];
-      for (var i = 0; i < checks.length; i++) {
-        if (checks[i].checked) {
-          filterArray.push(checks[i].value)
+
+      checks.each(function() {
+        var check = d3.select(this);
+        var checked = check.property("checked");
+        if (checked) {
+          filterArray.push(check.attr("value"));
         }
-      }
+      });
+
       var filteredData = data.filter(series => filterArray.includes(series.key));
+
+      console.log(filteredData);
 
       chart.datum(filteredData).call(component);
     };
@@ -63,6 +69,11 @@
     for (var i = 0; i < checks.length; i++) {
       checks[i].onchange = refreshChart;
     }
+
+    checks.each(function() {
+      var check = d3.select(this);
+      check.attr("onchange", "refreshChart()");
+    });
 
     refreshChart();
 

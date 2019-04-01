@@ -21,54 +21,51 @@
   </table>
 
   <script>
-    // Chart dimensions
-    var width = 500;
-    var height = 500;
+    // Select chartholder
+    var chartHolder = d3.select("#chartholder");
 
     // Generate some data
     var data = d3.x3dom.randomData.dataset2();
 
     // Declare the bar chart component
-    var viewpoint = d3.x3dom.component.viewpoint();
-    var component = d3.x3dom.component.ribbonMultiSeries();
+    var myChart = d3.x3dom.chart.barChartMultiSeries();
 
-    // Create scene
-    var scene = d3.select("#chartholder")
-      .append("x3d")
-      .attr("id", "d3X3dom")
-      .attr("width", width + "px")
-      .attr("height", height + "px")
-      .append("scene");
-
-    scene.call(viewpoint);
-
-    var chart = scene.append("group")
-      .attr("class", "chart");
-
-    var checks = document.querySelectorAll('input[type=checkbox]');
+    var checks = d3.selectAll('input[type=checkbox]');
 
     var refreshChart = function() {
       var data = d3.x3dom.randomData.dataset2();
       var filterArray = [];
-      for (var i = 0; i < checks.length; i++) {
-        if (checks[i].checked) {
-          filterArray.push(checks[i].value)
+
+      checks.each(function() {
+        var check = d3.select(this);
+        var checked = check.property("checked");
+        if (checked) {
+          filterArray.push(check.attr("value"));
         }
-      }
+      });
+
       var filteredData = data.filter(series => filterArray.includes(series.key));
 
-      chart.datum(filteredData).call(component);
+      console.log(filteredData);
+
+      chartHolder.datum(filteredData).call(myChart);
     };
 
     for (var i = 0; i < checks.length; i++) {
       checks[i].onchange = refreshChart;
     }
 
+    checks.each(function() {
+      var check = d3.select(this);
+      check.attr("onchange", "refreshChart()");
+    });
+
     refreshChart();
 
   </script>
 
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.</div>
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.
+  </div>
 </body>
 
 </html>
