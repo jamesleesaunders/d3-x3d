@@ -101,6 +101,7 @@ export default function() {
 				.call(shape)
 				.merge(bubbles)
 				.transition()
+				.duration(0)
 				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)));
 
 			bubbles.exit()
