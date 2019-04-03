@@ -17,16 +17,6 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Download from GitHub](https://github.com/jamesleesaunders/d3-x3dom)
 * [Download from NPM](https://www.npmjs.com/package/d3-x3dom)
 
-### WIP Chart Filter Tests
-* [Multi Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/FilterChartMultiSeriesBar.html)
-* [Single Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/FilterChartSingleSeriesBar.html)
-* [Ribbon Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/FilterChartRibbon.html)
-
-### WIP Component Filter Tests
-* [Bubbles](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/FilterComponentBubbles.html)
-* [Bars](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/FilterComponentMultiSeriesBar.html)
-* [Ribbon](https://raw.githack.com/jamesleesaunders/d3-x3dom/Transitions/examples/tests/FilterComponentRibbon.html)
-
 ### Examples
 * [Multi Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartMultiSeries.html)
 * [Vertical Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartVertical.html)
@@ -228,3 +218,13 @@ var myData = [
 * David Sankel - For the original [Bar Chart](http://bl.ocks.org/camio/5087116).
 * Victor Glindås - Various contributions to JSDoc and ES6 standardisation.
 * You may also be interested in the sister project [d3-ez](https://github.com/jamesleesaunders/d3-ez) Reusable 2D Charts Library.
+
+### WIP Chart Filter Tests
+* [Multi Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterChartMultiSeriesBar.html)
+* [Single Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterChartSingleSeriesBar.html)
+* [Ribbon Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterChartRibbon.html)
+
+### WIP Component Filter Tests
+* [Bubbles](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterComponentBubbles.html)
+* [Bars](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterComponentMultiSeriesBar.html)
+* [Ribbon](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterComponentRibbon.html)
