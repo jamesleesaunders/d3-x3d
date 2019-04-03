@@ -87,7 +87,6 @@ export default function() {
 			ribbonGroup.enter()
 				.append("transform")
 				.classed("ribbonGroup", true)
-				.attr("id", (d) => d.key)
 				.merge(ribbonGroup)
 				.transition()
 				.attr("translation", (d) => {

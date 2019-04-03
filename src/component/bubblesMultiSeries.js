@@ -92,7 +92,6 @@ export default function() {
 			bubbleGroup.enter()
 				.append("group")
 				.classed("bubbleGroup", true)
-				.attr("id", (d) => d.key)
 				.merge(bubbleGroup)
 				.transition()
 				.each(addBubbles);

@@ -88,7 +88,6 @@ export default function() {
 			barGroup.enter()
 				.append("transform")
 				.classed("barGroup", true)
-				.attr("id", (d) => d.key)
 				.merge(barGroup)
 				.transition()
 				.attr("translation", (d) => {

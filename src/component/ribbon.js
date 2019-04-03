@@ -79,7 +79,8 @@ export default function() {
 			init(data);
 
 			const element = d3.select(this)
-				.classed(classed, true);
+				.classed(classed, true)
+				.attr("id", (d) => d.key);
 
 			const ribbonData = function(d) {
 				return d.map((pointThis, indexThis, array) => {

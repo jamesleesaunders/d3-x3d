@@ -27,8 +27,10 @@ export default function() {
 	 */
 	const my = function(selection) {
 		selection.each(function(data) {
+
 			const element = d3.select(this)
-				.classed(classed, true);
+				.classed(classed, true)
+				.attr("id", (d) => d.key);
 
 			const xOff = dimensions["x"] / 2;
 			const yOff = dimensions["y"] / 2;

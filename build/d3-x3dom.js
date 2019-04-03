@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.2.1";
+var version = "1.2.2";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -1031,7 +1031,9 @@ function componentBars () {
 		selection.each(function (data) {
 			init(data);
 
-			var element = d3.select(this).classed(classed, true);
+			var element = d3.select(this).classed(classed, true).attr("id", function (d) {
+				return d.key;
+			});
 
 			var shape = function shape(el) {
 				var shape = el.append("shape");
@@ -1197,7 +1199,9 @@ function componentBubbles () {
 		selection.each(function (data) {
 			init(data);
 
-			var element = d3.select(this).classed(classed, true);
+			var element = d3.select(this).classed(classed, true).attr("id", function (d) {
+				return d.key;
+			});
 
 			var shape = function shape(el) {
 				var shape = el.append("shape").attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
@@ -1405,9 +1409,7 @@ function componentBarsMultiSeries () {
 				return d.key;
 			});
 
-			barGroup.enter().append("transform").classed("barGroup", true).attr("id", function (d) {
-				return d.key;
-			}).merge(barGroup).transition().attr("translation", function (d) {
+			barGroup.enter().append("transform").classed("barGroup", true).merge(barGroup).transition().attr("translation", function (d) {
 				var x = 0;
 				var y = 0;
 				var z = zScale(d.key);
@@ -1575,9 +1577,7 @@ function componentBubblesMultiSeries () {
 				return d.key;
 			});
 
-			bubbleGroup.enter().append("group").classed("bubbleGroup", true).attr("id", function (d) {
-				return d.key;
-			}).merge(bubbleGroup).transition().each(addBubbles);
+			bubbleGroup.enter().append("group").classed("bubbleGroup", true).merge(bubbleGroup).transition().each(addBubbles);
 
 			bubbleGroup.exit().remove();
 		});
@@ -1719,7 +1719,10 @@ function componentCrosshair () {
   */
 	var my = function my(selection) {
 		selection.each(function (data) {
-			var element = d3.select(this).classed(classed, true);
+
+			var element = d3.select(this).classed(classed, true).attr("id", function (d) {
+				return d.key;
+			});
 
 			var xOff = dimensions["x"] / 2;
 			var yOff = dimensions["y"] / 2;
@@ -1883,7 +1886,9 @@ function componentLabel () {
 	var my = function my(selection) {
 		selection.each(function (data) {
 
-			var element = d3.select(this).classed(classed, true);
+			var element = d3.select(this).classed(classed, true).attr("id", function (d) {
+				return d.key;
+			});
 
 			var makeSolid = function makeSolid(selection, color) {
 				selection.append("appearance").append("material").attr("diffusecolor", color || "black");
@@ -2064,7 +2069,9 @@ function componentRibbon () {
 		selection.each(function (data) {
 			init(data);
 
-			var element = d3.select(this).classed(classed, true);
+			var element = d3.select(this).classed(classed, true).attr("id", function (d) {
+				return d.key;
+			});
 
 			var ribbonData = function ribbonData(d) {
 				return d.map(function (pointThis, indexThis, array) {
@@ -2260,9 +2267,7 @@ function componentRibbonMultiSeries () {
 				return d.key;
 			});
 
-			ribbonGroup.enter().append("transform").classed("ribbonGroup", true).attr("id", function (d) {
-				return d.key;
-			}).merge(ribbonGroup).transition().attr("translation", function (d) {
+			ribbonGroup.enter().append("transform").classed("ribbonGroup", true).merge(ribbonGroup).transition().attr("translation", function (d) {
 				var x = 0;
 				var y = 0;
 				var z = zScale(d.key);
@@ -2706,7 +2711,9 @@ function componentVectorFields () {
 		selection.each(function (data) {
 			init(data);
 
-			var element = d3.select(this).classed(classed, true);
+			var element = d3.select(this).classed(classed, true).attr("id", function (d) {
+				return d.key;
+			});
 
 			var vectorData = function vectorData(d) {
 				return d.values.map(function (f) {
@@ -3106,7 +3113,9 @@ function componentVolumeSlice () {
 	var my = function my(selection) {
 		selection.each(function (data) {
 
-			var element = d3.select(this).classed(classed, true);
+			var element = d3.select(this).classed(classed, true).attr("id", function (d) {
+				return d.key;
+			});
 
 			var _dimensions = dimensions,
 			    dimensionX = _dimensions.x,
