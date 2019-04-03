@@ -31,30 +31,22 @@ export default function() {
 		const valueExtent = [0, valueMax];
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scalePoint()
-				.domain(columnKeys)
-				.range([0, dimensionX]);
-		}
+		xScale = d3.scalePoint()
+			.domain(columnKeys)
+			.range([0, dimensionX]);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
-				.domain(valueExtent)
-				.range([0, dimensionY]);
-		}
+		yScale = d3.scaleLinear()
+			.domain(valueExtent)
+			.range([0, dimensionY]);
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleBand()
-				.domain(rowKeys)
-				.range([0, dimensionZ])
-				.padding(0.4);
-		}
+		zScale = d3.scaleBand()
+			.domain(rowKeys)
+			.range([0, dimensionZ])
+			.padding(0.4);
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal()
-				.domain(rowKeys)
-				.range(colors);
-		}
+		colorScale = d3.scaleOrdinal()
+			.domain(rowKeys)
+			.range(colors);
 	};
 
 	/**
@@ -71,41 +63,42 @@ export default function() {
 			const element = d3.select(this)
 				.classed(classed, true);
 
-			// Construct Ribbon Component
-			const ribbon = componentRibbon()
-				.xScale(xScale)
-				.yScale(yScale)
-				.dimensions({
-					x: dimensions.x,
-					y: dimensions.y,
-					z: zScale.bandwidth()
-				});
+			const addRibbon = function(d) {
+				const color = colorScale(d.key);
 
-			// Create Bar Groups
+				// Construct Ribbon Component
+				const ribbon = componentRibbon()
+					.xScale(xScale)
+					.yScale(yScale)
+					.dimensions({
+						x: dimensions.x,
+						y: dimensions.y,
+						z: zScale.bandwidth()
+					})
+					.color(color);
+
+				d3.select(this).call(ribbon);
+			};
+
+			// Create Ribbon Groups
 			const ribbonGroup = element.selectAll(".ribbonGroup")
-				.data(data);
+				.data((d) => d, (d) => d.key);
 
 			ribbonGroup.enter()
 				.append("transform")
 				.classed("ribbonGroup", true)
+				.merge(ribbonGroup)
+				.transition()
 				.attr("translation", (d) => {
 					const x = 0;
 					const y = 0;
 					const z = zScale(d.key);
 					return x + " " + y + " " + z;
 				})
-				.append("group")
-				.merge(ribbonGroup)
-				.transition()
-				.each(function(d) {
-					const color = colorScale(d.key);
-					ribbon.color(color);
-					d3.select(this).call(ribbon);
-				});
+				.each(addRibbon);
 
 			ribbonGroup.exit()
 				.remove();
-
 		});
 	};
 

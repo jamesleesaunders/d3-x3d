@@ -22,13 +22,26 @@ export default function() {
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
-		selection.append("viewpoint")
-			.classed(classed, true)
-			.attr("centerofrotation", centerOfRotation.join(" "))
-			.attr("position", viewPosition.join(" "))
-			.attr("orientation", viewOrientation.join(" "))
-			.attr("fieldofview", fieldOfView)
-			.attr("set_bind", "true");
+		selection.each(function() {
+
+			const element = d3.select(this)
+				.classed(classed, true);
+
+			// Main Lines
+			const viewpoint = element.selectAll("viewpoint")
+				.data([null]);
+
+			viewpoint.enter()
+				.append("viewpoint")
+				.classed(classed, true)
+				.attr("centerofrotation", centerOfRotation.join(" "))
+				.attr("position", viewPosition.join(" "))
+				.attr("orientation", viewOrientation.join(" "))
+				.attr("fieldofview", fieldOfView)
+				.attr("set_bind", "true")
+				.merge(viewpoint);
+
+		});
 	};
 
 	/**
