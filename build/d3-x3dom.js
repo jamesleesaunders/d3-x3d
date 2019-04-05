@@ -2111,11 +2111,19 @@ function componentRibbon () {
 			var shape = function shape(el) {
 				var shape = el.append("shape");
 
-				shape.append("indexedfaceset").attr("coordindex", function (d) {
-					return d.coordindex;
-				}).append("coordinate").attr("point", function (d) {
-					return d.point;
-				});
+// 				shape.append("indexedfaceset").attr("coordindex", function (d) {
+// 					return d.coordindex;
+// 				}).append("coordinate").attr("point", function (d) {
+// 					return d.point;
+// 				});
+				
+				shape.html(function (d) {
+					var innerHTML = '<IndexedFaceSet ';
+					innerHTML += 'coordIndex="' + d.coordindex + '"> ';
+					innerHTML += '<Coordinate point="' + d.point + '">';
+					innerHTML += '</Coordinate> </IndexedFaceSet>';
+					return innerHTML;
+				})
 
 				shape.append("appearance").append("twosidedmaterial").attr("diffusecolor", function (d) {
 					return d.color;
