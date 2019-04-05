@@ -2110,16 +2110,22 @@ function componentRibbon () {
 			var shape = function shape(el) {
 				var shape = el.append("shape");
 
-				shape.append("indexedfaceset").attr("coordindex", function (d) {
-					return d.coordindex;
-				}).append("coordinate").attr("point", function (d) {
-					return d.point;
-				});
+				// FIXME: Due to a x3dom bug we need to use .html() rather than .attr().
+				//shape.append("indexedfaceset")
+				//	.attr("coordindex", (d) => d.coordindex)
+				//	.append("coordinate")
+				//	.attr("point", (d) => d.point);
 
-				shape.append("appearance").append("twosidedmaterial").attr("diffusecolor", function (d) {
-					return d.color;
-				}).attr("transparency", function (d) {
-					return d.transparency;
+				// shape.append("appearance")
+				// 	.append("twosidedmaterial")
+				// 	.attr("diffusecolor", (d) => d.color)
+				// 	.attr("transparency", (d) => d.transparency);
+
+				shape.html(function (d) {
+					var indexedfaceset = "<indexedfaceset coordindex=\"" + d.coordindex + "\"><coordinate point=\"" + d.point + "\"></coordinate></indexedfaceset>";
+					var appearance = "<appearance><twosidedmaterial diffusecolor=\"" + d.color + "\" transparency=\"" + d.transparency + "\"></twosidedmaterial></appearance>";
+
+					return indexedfaceset + appearance;
 				});
 
 				return shape;
