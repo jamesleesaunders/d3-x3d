@@ -1212,13 +1212,12 @@ function componentBubbles () {
 					dispatch.call("d3X3domMouseOut", this, e);
 				});
 
-// 				shape.append("sphere").attr("radius", function (d) {
-// 					return sizeScale(d.value);
-// 				});
-				
-				//AP make sure there is no need to call fieldChanged, also faster
+				// FIXME: Due to a x3dom `._quality`, `fieldChanged()` bug we need to use .html() rather than .attr().
+				// shape.append("sphere")
+				//	.attr("radius", (d) => sizeScale(d.value));
+
 				shape.html(function (d) {
-					return "<sphere radius='" + sizeScale(d.value) + "'></sphere>"
+					return "<sphere radius='" + sizeScale(d.value) + "'></sphere>";
 				});
 
 				shape.append("appearance").append("material").attr("diffusecolor", color).attr("ambientintensity", 0.1);
