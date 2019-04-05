@@ -104,7 +104,11 @@ export default function() {
 				.call(shape)
 				.merge(bubbles)
 				.transition()
-				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)));
+				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
+				.select("shape")
+				.select("appearance")
+				.select("material")
+				.attr("diffusecolor", color);
 
 			bubbles.exit()
 				.remove();

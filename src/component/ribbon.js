@@ -147,12 +147,18 @@ export default function() {
 				.append("group")
 				.classed("ribbon", true)
 				.call(shape)
-				.merge(ribbon)
-				.transition()
-				.select("indexedfaceset")
+				.merge(ribbon);
+
+			const ribbonTransition = ribbon.transition().select("shape");
+
+			ribbonTransition.select("indexedfaceset")
 				.attr("coordindex", (d) => d.coordindex)
 				.select("coordinate")
 				.attr("point", (d) => d.point);
+
+			ribbonTransition.select("appearance")
+				.select("twosidedmaterial")
+				.attr("diffusecolor", (d) => d.color);
 
 			ribbon.exit()
 				.remove();

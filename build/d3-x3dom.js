@@ -1233,7 +1233,7 @@ function componentBubbles () {
 
 			bubbles.enter().append("transform").attr("class", "bubble").call(shape).merge(bubbles).transition().attr("translation", function (d) {
 				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-			});
+			}).select("shape").select("appearance").select("material").attr("diffusecolor", color);
 
 			bubbles.exit().remove();
 		});
@@ -2110,7 +2110,7 @@ function componentRibbon () {
 			var shape = function shape(el) {
 				var shape = el.append("shape");
 
-				// FIXME: Due to a x3dom bug we need to use .html() rather than .attr().
+				// FIXME: Due to a x3dom bug we need to use .html() rather than .append() & .attr().
 				//shape.append("indexedfaceset")
 				//	.attr("coordindex", (d) => d.coordindex)
 				//	.append("coordinate")
@@ -2137,10 +2137,18 @@ function componentRibbon () {
 				return d.key;
 			});
 
-			ribbon.enter().append("group").classed("ribbon", true).call(shape).merge(ribbon).transition().select("indexedfaceset").attr("coordindex", function (d) {
+			ribbon.enter().append("group").classed("ribbon", true).call(shape).merge(ribbon);
+
+			var ribbonTransition = ribbon.transition().select("shape");
+
+			ribbonTransition.select("indexedfaceset").attr("coordindex", function (d) {
 				return d.coordindex;
 			}).select("coordinate").attr("point", function (d) {
 				return d.point;
+			});
+
+			ribbonTransition.select("appearance").select("twosidedmaterial").attr("diffusecolor", function (d) {
+				return d.color;
 			});
 
 			ribbon.exit().remove();
