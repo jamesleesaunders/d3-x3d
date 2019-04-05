@@ -1212,8 +1212,13 @@ function componentBubbles () {
 					dispatch.call("d3X3domMouseOut", this, e);
 				});
 
-				shape.append("sphere").attr("radius", function (d) {
-					return sizeScale(d.value);
+// 				shape.append("sphere").attr("radius", function (d) {
+// 					return sizeScale(d.value);
+// 				});
+				
+				//AP make sure there is no need to call fieldChanged, also faster
+				shape.html(function (d) {
+					return "<sphere radius='" + sizeScale(d.value) + "'></sphere>"
 				});
 
 				shape.append("appearance").append("material").attr("diffusecolor", color).attr("ambientintensity", 0.1);
