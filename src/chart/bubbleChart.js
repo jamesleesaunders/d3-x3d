@@ -69,7 +69,6 @@ export default function() {
 		sizeScale = d3.scaleLinear()
 			.domain(valueExtent)
 			.range(sizeDomain);
-
 	};
 
 	/**
@@ -99,7 +98,8 @@ export default function() {
 			.data(layers)
 			.enter()
 			.append("group")
-			.attr("class", (d) => d);
+			.attr("class", (d) => d)
+			.merge(scene);
 
 		selection.each((data) => {
 			init(data);
@@ -131,11 +131,13 @@ export default function() {
 				.datum(data)
 				.call(bubbles);
 
+			/*
 			scene.append("directionallight")
 				.attr("direction", "1 0 -1")
 				.attr("on", "true")
 				.attr("intensity", "0.4")
 				.attr("shadowintensity", "0");
+			*/
 		});
 	};
 

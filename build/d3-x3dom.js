@@ -1518,6 +1518,29 @@ function componentBubblesMultiSeries () {
 	var colorScale = void 0;
 	var sizeScale = void 0;
 	var sizeDomain = [0.5, 3.0];
+	var colorDomain = [];
+
+	/**
+  * Unique Array
+  *
+  * @param {array} array1
+  * @param {array} array2
+  * @returns {array}
+  */
+	var arrayUnique = function arrayUnique(array1, array2) {
+		var array = array1.concat(array2);
+
+		var a = array.concat();
+		for (var i = 0; i < a.length; ++i) {
+			for (var j = i + 1; j < a.length; ++j) {
+				if (a[i] === a[j]) {
+					a.splice(j--, 1);
+				}
+			}
+		}
+
+		return a;
+	};
 
 	/**
  	 /**
@@ -1547,7 +1570,8 @@ function componentBubblesMultiSeries () {
 
 		zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
 
-		colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
+		colorDomain = arrayUnique(colorDomain, rowKeys);
+		colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
 
 		sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeDomain);
 	};
@@ -2223,6 +2247,29 @@ function componentRibbonMultiSeries () {
 	var yScale = void 0;
 	var zScale = void 0;
 	var colorScale = void 0;
+	var colorDomain = [];
+
+	/**
+  * Unique Array
+  *
+  * @param {array} array1
+  * @param {array} array2
+  * @returns {array}
+  */
+	var arrayUnique = function arrayUnique(array1, array2) {
+		var array = array1.concat(array2);
+
+		var a = array.concat();
+		for (var i = 0; i < a.length; ++i) {
+			for (var j = i + 1; j < a.length; ++j) {
+				if (a[i] === a[j]) {
+					a.splice(j--, 1);
+				}
+			}
+		}
+
+		return a;
+	};
 
 	/**
   * Initialise Data and Scales
@@ -2249,7 +2296,8 @@ function componentRibbonMultiSeries () {
 
 		zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
 
-		colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
+		colorDomain = arrayUnique(colorDomain, rowKeys);
+		colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
 	};
 
 	/**
@@ -3345,7 +3393,7 @@ function chartBarChartMultiSeries () {
 
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
-		});
+		}).merge(scene);
 
 		selection.each(function (data) {
 			init(data);
@@ -3565,7 +3613,7 @@ function chartBarChartVertical () {
 
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
-		});
+		}).merge(scene);
 
 		selection.each(function (data) {
 			init(data);
@@ -3780,7 +3828,7 @@ function chartBubbleChart () {
 
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
-		});
+		}).merge(scene);
 
 		selection.each(function (data) {
 			init(data);
@@ -3800,7 +3848,13 @@ function chartBubbleChart () {
 
 			scene.select(".bubbles").datum(data).call(bubbles);
 
-			scene.append("directionallight").attr("direction", "1 0 -1").attr("on", "true").attr("intensity", "0.4").attr("shadowintensity", "0");
+			/*
+   scene.append("directionallight")
+   	.attr("direction", "1 0 -1")
+   	.attr("on", "true")
+   	.attr("intensity", "0.4")
+   	.attr("shadowintensity", "0");
+   */
 		});
 	};
 
@@ -4019,7 +4073,7 @@ function chartCrosshairPlot () {
 		var layers = ["axis", "crosshairs"];
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
-		});
+		}).merge(scene);
 
 		selection.each(function (data) {
 			init(data);
@@ -4216,7 +4270,7 @@ function chartRibbonChartMultiSeries () {
 
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
-		});
+		}).merge(scene);
 
 		selection.each(function (data) {
 			init(data);
@@ -4440,7 +4494,7 @@ function chartScatterPlot () {
 		var layers = ["axis", "bubbles", "crosshair", "label"];
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
-		});
+		}).merge(scene);
 
 		selection.each(function (data) {
 			init(data);
@@ -4679,7 +4733,7 @@ function chartSurfacePlot () {
 		var layers = ["axis", "surface"];
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
-		});
+		}).merge(scene);
 
 		selection.each(function (data) {
 			init(data);
@@ -4967,7 +5021,7 @@ function chartVectorField () {
 		var layers = ["axis", "vectorFields"];
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
-		});
+		}).merge(scene);
 
 		selection.each(function (data) {
 			init(data);
@@ -5197,7 +5251,7 @@ function chartVolumeSlice () {
 		var layers = ["axis", "volumeSlice"];
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
-		});
+		}).merge(scene);
 
 		selection.each(function (data) {
 

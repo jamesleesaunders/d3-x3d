@@ -151,7 +151,8 @@ export default function() {
 			.data(layers)
 			.enter()
 			.append("group")
-			.attr("class", (d) => d);
+			.attr("class", (d) => d)
+			.merge(scene);
 
 		selection.each((data) => {
 			init(data);

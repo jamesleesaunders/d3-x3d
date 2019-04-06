@@ -22,6 +22,29 @@ export default function() {
 	let colorScale;
 	let sizeScale;
 	let sizeDomain = [0.5, 3.0];
+	let colorDomain = [];
+
+	/**
+	 * Unique Array
+	 *
+	 * @param {array} array1
+	 * @param {array} array2
+	 * @returns {array}
+	 */
+	const arrayUnique = function(array1, array2) {
+		let array = array1.concat(array2);
+
+		let a = array.concat();
+		for (let i = 0; i < a.length; ++i) {
+			for (let j = i + 1; j < a.length; ++j) {
+				if (a[i] === a[j]) {
+					a.splice(j--, 1);
+				}
+			}
+		}
+
+		return a;
+	};
 
 	/**
 
@@ -48,8 +71,9 @@ export default function() {
 			.domain([0, maxZ])
 			.range([0, dimensionZ]);
 
+		colorDomain = arrayUnique(colorDomain, rowKeys);
 		colorScale = d3.scaleOrdinal()
-			.domain(rowKeys)
+			.domain(colorDomain)
 			.range(colors);
 
 		sizeScale = d3.scaleLinear()
