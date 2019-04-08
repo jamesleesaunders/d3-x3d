@@ -120,7 +120,7 @@ export default function() {
 				const shape = el.append("shape");
 
 				/*
-				FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
+				// FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
 				shape.append("indexedfaceset")
 					.attr("coordindex", (d) => d.coordindex)
 					.append("coordinate")

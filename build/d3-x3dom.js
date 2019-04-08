@@ -1222,7 +1222,7 @@ function componentBubbles () {
 				});
 
 				/*
-    FIXME: Due to a bug with x3dom `._quality`, `fieldChanged()`, we must to use .html() rather than .attr().
+    // FIXME: Due to a bug with x3dom `._quality`, `fieldChanged()`, we must to use .html() rather than .attr().
     shape.append("sphere")
     	.attr("radius", (d) => sizeScale(d.value));
     */
@@ -2150,7 +2150,7 @@ function componentRibbon () {
 				var shape = el.append("shape");
 
 				/*
-    FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
+    // FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
     shape.append("indexedfaceset")
     	.attr("coordindex", (d) => d.coordindex)
     	.append("coordinate")
