@@ -34,6 +34,10 @@ export default function() {
 	let zScale;
 	let colorScale;
 
+	const viewpoint = component.viewpoint();
+	const axis = component.axisThreePlane();
+	const surface = component.surface();
+
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -96,25 +100,21 @@ export default function() {
 			.data(layers)
 			.enter()
 			.append("group")
-			.attr("class", (d) => d)
-			.merge(scene);
+			.attr("class", (d) => d);
 
 		selection.each((data) => {
 			init(data);
 
 			// Construct Viewpoint Component
-			const viewpoint = component.viewpoint()
-				.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
+			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
 			// Construct Axis Component
-			const axis = component.axisThreePlane()
-				.xScale(xScale)
+			axis.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale);
 
 			// Construct Surface Component
-			const surface = component.surface()
-				.xScale(xScale)
+			surface.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
 				.colors(colors);

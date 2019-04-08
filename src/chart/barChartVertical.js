@@ -36,6 +36,11 @@ export default function() {
 	let yScale;
 	let colorScale;
 
+	const viewpoint = component.viewpoint();
+	const xAxis = component.axis();
+	const yAxis = component.axis();
+	const bars = component.bars();
+
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -89,31 +94,26 @@ export default function() {
 			.data(layers)
 			.enter()
 			.append("group")
-			.attr("class", (d) => d)
-			.merge(scene);
+			.attr("class", (d) => d);
 
 		selection.each((data) => {
 			init(data);
 
 			// Construct Viewpoint Component
-			const viewpoint = component.viewpoint()
-				.quickView("left");
+			viewpoint.quickView("left");
 
 			// Construct Axis Components
-			const xAxis = component.axis()
-				.scale(xScale)
+			xAxis.scale(xScale)
 				.direction('x')
 				.tickDirection('y');
 
-			const yAxis = component.axis()
-				.scale(yScale)
+			yAxis.scale(yScale)
 				.direction('y')
 				.tickDirection('x')
 				.tickSize(yScale.range()[1] - yScale.range()[0]);
 
 			// Construct Bars Component
-			const bars = component.bars()
-				.xScale(xScale)
+			bars.xScale(xScale)
 				.yScale(yScale)
 				.colors(colors);
 
