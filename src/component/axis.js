@@ -85,8 +85,11 @@ export default function() {
 			const axisRotationVector = getAxisRotationVector(direction);
 			const tickRotationVector = getAxisRotationVector(tickDirection);
 
+			/*
 			const tickValuesDefault = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
 			tickValues = tickValues === null ? tickValuesDefault : tickValues;
+			*/
+			tickValues = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
 
 			const tickFormatDefault = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : (d) => d;
 			tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
@@ -95,7 +98,8 @@ export default function() {
 			const domain = element.selectAll(".domain")
 				.data([null]);
 
-			const domainEnter = domain.enter().append("transform")
+			const domainEnter = domain.enter()
+				.append("transform")
 				.attr("class", "domain")
 				.attr("rotation", axisRotationVector.join(" "))
 				.attr("translation", axisDirectionVector.map((d) => (d * (range0 + range1) / 2)).join(" "))
@@ -105,9 +109,13 @@ export default function() {
 				.attr("radius", 0.1)
 				.attr("height", range1 - range0);
 
+			domainEnter.merge(domain);
+
+			domain.exit().remove();
+
 			// Tick Lines
 			const tick = element.selectAll(".tick")
-				.data(tickValues, scale).order();
+				.data(tickValues);
 
 			const tickEnter = tick.enter()
 				.append("transform")
@@ -141,15 +149,18 @@ export default function() {
 			}
 
 			tick.transition()
-				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")));
-
-			domainEnter.merge(domain);
+				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
+				.on("start", function() {
+					d3.select(this)
+						.select("billboard")
+						.select("shape")
+						.select("text")
+						.attr("string", tickFormat);
+				});
 
 			tickEnter.merge(tick);
 
 			tick.exit().remove();
-
-			domain.exit().remove();
 
 		});
 	};

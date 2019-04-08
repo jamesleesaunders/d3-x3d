@@ -21,6 +21,8 @@ export default function() {
 	let zScale;
 	let colorScale;
 
+	const bars = componentBars();
+
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -66,10 +68,9 @@ export default function() {
 			const element = d3.select(this)
 				.classed(classed, true);
 
-			const addBars = function(d) {
+			const addBars = function() {
 				// Construct Bars Component
-				const bars = componentBars()
-					.xScale(xScale)
+				bars.xScale(xScale)
 					.yScale(yScale)
 					.dimensions({
 						x: dimensions.x,

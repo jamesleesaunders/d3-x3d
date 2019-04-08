@@ -24,6 +24,8 @@ export default function() {
 	let sizeDomain = [0.5, 3.0];
 	let colorDomain = [];
 
+	const bubbles = componentBubbles();
+
 	/**
 	 * Unique Array
 	 *
@@ -99,8 +101,7 @@ export default function() {
 				const color = colorScale(d.key);
 
 				// Construct Bars Component
-				const bubbles = componentBubbles()
-					.xScale(xScale)
+				bubbles.xScale(xScale)
 					.yScale(yScale)
 					.zScale(zScale)
 					.sizeScale(sizeScale)

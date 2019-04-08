@@ -574,8 +574,11 @@ function componentAxis () {
 			var axisRotationVector = getAxisRotationVector(direction);
 			var tickRotationVector = getAxisRotationVector(tickDirection);
 
-			var tickValuesDefault = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
-			tickValues = tickValues === null ? tickValuesDefault : tickValues;
+			/*
+   const tickValuesDefault = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
+   tickValues = tickValues === null ? tickValuesDefault : tickValues;
+   */
+			tickValues = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
 
 			var tickFormatDefault = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : function (d) {
 				return d;
@@ -589,8 +592,12 @@ function componentAxis () {
 				return d * (range0 + range1) / 2;
 			}).join(" ")).append("shape").call(makeSolid, color).append("cylinder").attr("radius", 0.1).attr("height", range1 - range0);
 
+			domainEnter.merge(domain);
+
+			domain.exit().remove();
+
 			// Tick Lines
-			var tick = element.selectAll(".tick").data(tickValues, scale).order();
+			var tick = element.selectAll(".tick").data(tickValues);
 
 			var tickEnter = tick.enter().append("transform").attr("class", "tick").attr("translation", function (t) {
 				return axisDirectionVector.map(function (a) {
@@ -612,15 +619,13 @@ function componentAxis () {
 				return axisDirectionVector.map(function (a) {
 					return scale(t) * a;
 				}).join(" ");
+			}).on("start", function () {
+				d3.select(this).select("billboard").select("shape").select("text").attr("string", tickFormat);
 			});
-
-			domainEnter.merge(domain);
 
 			tickEnter.merge(tick);
 
 			tick.exit().remove();
-
-			domain.exit().remove();
 		});
 	};
 
@@ -765,6 +770,10 @@ function componentAxisThreePlane () {
 	var zScale = void 0;
 
 	var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
+	var xzAxis = componentAxis();
+	var yzAxis = componentAxis();
+	var yxAxis = componentAxis();
+	var zxAxis = componentAxis();
 
 	/**
   * Constructor
@@ -783,13 +792,13 @@ function componentAxisThreePlane () {
 			});
 
 			// Construct Axis Components
-			var xzAxis = componentAxis().scale(xScale).direction("x").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
+			xzAxis.scale(xScale).direction("x").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
 
-			var yzAxis = componentAxis().scale(yScale).direction("y").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("red");
+			yzAxis.scale(yScale).direction("y").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("red");
 
-			var yxAxis = componentAxis().scale(yScale).direction("y").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).tickFormat("").color("red");
+			yxAxis.scale(yScale).direction("y").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).tickFormat("").color("red");
 
-			var zxAxis = componentAxis().scale(zScale).direction("z").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color("black");
+			zxAxis.scale(zScale).direction("z").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color("black");
 
 			element.select(".xzAxis").call(xzAxis);
 
@@ -1212,9 +1221,11 @@ function componentBubbles () {
 					dispatch.call("d3X3domMouseOut", this, e);
 				});
 
-				// FIXME: Due to a x3dom `._quality`, `fieldChanged()` bug we need to use .html() rather than .attr().
-				// shape.append("sphere")
-				//	.attr("radius", (d) => sizeScale(d.value));
+				/*
+    FIXME: Due to a bug with x3dom `._quality`, `fieldChanged()`, we must to use .html() rather than .attr().
+    shape.append("sphere")
+    	.attr("radius", (d) => sizeScale(d.value));
+    */
 
 				shape.html(function (d) {
 					return "<sphere radius='" + sizeScale(d.value) + "'></sphere>";
@@ -1354,6 +1365,8 @@ function componentBarsMultiSeries () {
 	var zScale = void 0;
 	var colorScale = void 0;
 
+	var bars = componentBars();
+
 	/**
   * Initialise Data and Scales
   *
@@ -1395,9 +1408,9 @@ function componentBarsMultiSeries () {
 
 			var element = d3.select(this).classed(classed, true);
 
-			var addBars = function addBars(d) {
+			var addBars = function addBars() {
 				// Construct Bars Component
-				var bars = componentBars().xScale(xScale).yScale(yScale).dimensions({
+				bars.xScale(xScale).yScale(yScale).dimensions({
 					x: dimensions.x,
 					y: dimensions.y,
 					z: zScale.bandwidth()
@@ -1520,6 +1533,8 @@ function componentBubblesMultiSeries () {
 	var sizeDomain = [0.5, 3.0];
 	var colorDomain = [];
 
+	var bubbles = componentBubbles();
+
 	/**
   * Unique Array
   *
@@ -1593,7 +1608,7 @@ function componentBubblesMultiSeries () {
 				var color = colorScale(d.key);
 
 				// Construct Bars Component
-				var bubbles = componentBubbles().xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).color(color);
+				bubbles.xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).color(color);
 
 				d3.select(this).datum(d).call(bubbles);
 			};
@@ -2134,16 +2149,17 @@ function componentRibbon () {
 			var shape = function shape(el) {
 				var shape = el.append("shape");
 
-				// FIXME: Due to a x3dom bug we need to use .html() rather than .append() & .attr().
-				//shape.append("indexedfaceset")
-				//	.attr("coordindex", (d) => d.coordindex)
-				//	.append("coordinate")
-				//	.attr("point", (d) => d.point);
-
-				// shape.append("appearance")
-				// 	.append("twosidedmaterial")
-				// 	.attr("diffusecolor", (d) => d.color)
-				// 	.attr("transparency", (d) => d.transparency);
+				/*
+    FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
+    shape.append("indexedfaceset")
+    	.attr("coordindex", (d) => d.coordindex)
+    	.append("coordinate")
+    	.attr("point", (d) => d.point);
+    	shape.append("appearance")
+    	.append("twosidedmaterial")
+    	.attr("diffusecolor", (d) => d.color)
+    	.attr("transparency", (d) => d.transparency);
+    */
 
 				shape.html(function (d) {
 					var indexedfaceset = "<indexedfaceset coordindex=\"" + d.coordindex + "\"><coordinate point=\"" + d.point + "\"></coordinate></indexedfaceset>";
@@ -2249,6 +2265,8 @@ function componentRibbonMultiSeries () {
 	var colorScale = void 0;
 	var colorDomain = [];
 
+	var ribbon = componentRibbon();
+
 	/**
   * Unique Array
   *
@@ -2317,7 +2335,7 @@ function componentRibbonMultiSeries () {
 				var color = colorScale(d.key);
 
 				// Construct Ribbon Component
-				var ribbon = componentRibbon().xScale(xScale).yScale(yScale).dimensions({
+				ribbon.xScale(xScale).yScale(yScale).dimensions({
 					x: dimensions.x,
 					y: dimensions.y,
 					z: zScale.bandwidth()

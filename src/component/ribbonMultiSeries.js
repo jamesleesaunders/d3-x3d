@@ -21,6 +21,8 @@ export default function() {
 	let colorScale;
 	let colorDomain = [];
 
+	const ribbon = componentRibbon();
+
 	/**
 	 * Unique Array
 	 *
@@ -91,8 +93,7 @@ export default function() {
 				const color = colorScale(d.key);
 
 				// Construct Ribbon Component
-				const ribbon = componentRibbon()
-					.xScale(xScale)
+				ribbon.xScale(xScale)
 					.yScale(yScale)
 					.dimensions({
 						x: dimensions.x,

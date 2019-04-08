@@ -19,6 +19,10 @@ export default function() {
 	let zScale;
 
 	const layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
+	const xzAxis = componentAxis();
+	const yzAxis = componentAxis();
+	const yxAxis = componentAxis();
+	const zxAxis = componentAxis();
 
 	/**
 	 * Constructor
@@ -40,31 +44,27 @@ export default function() {
 				.attr("class", (d) => d);
 
 			// Construct Axis Components
-			const xzAxis = componentAxis()
-				.scale(xScale)
+			xzAxis.scale(xScale)
 				.direction("x")
 				.tickDirection("z")
 				.tickSize(zScale.range()[1] - zScale.range()[0])
 				.tickPadding(xScale.range()[0])
 				.color("blue");
 
-			const yzAxis = componentAxis()
-				.scale(yScale)
+			yzAxis.scale(yScale)
 				.direction("y")
 				.tickDirection("z")
 				.tickSize(zScale.range()[1] - zScale.range()[0])
 				.color("red");
 
-			const yxAxis = componentAxis()
-				.scale(yScale)
+			yxAxis.scale(yScale)
 				.direction("y")
 				.tickDirection("x")
 				.tickSize(xScale.range()[1] - xScale.range()[0])
 				.tickFormat("")
 				.color("red");
 
-			const zxAxis = componentAxis()
-				.scale(zScale)
+			zxAxis.scale(zScale)
 				.direction("z")
 				.tickDirection("x")
 				.tickSize(xScale.range()[1] - xScale.range()[0])
