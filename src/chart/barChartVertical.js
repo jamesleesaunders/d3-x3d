@@ -9,13 +9,19 @@ import component from "../component";
  *
  * @example
  * let chartHolder = d3.select("#chartholder");
+ *
  * let myData = [...];
+ *
  * let myChart = d3.x3dom.chart.barChartVertical();
+ *
  * chartHolder.datum(myData).call(myChart);
  *
  * @see https://datavizproject.com/data-type/3d-bar-chart/
  */
 export default function() {
+
+	let x3d;
+	let scene;
 
 	/* Default Properties */
 	let width = 500;
@@ -41,25 +47,19 @@ export default function() {
 		const valueExtent = [0, valueMax];
 		const { x: dimensionX, y: dimensionY } = dimensions;
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleBand()
-				.domain(columnKeys)
-				.rangeRound([0, dimensionX])
-				.padding(0.5);
-		}
+		xScale = d3.scaleBand()
+			.domain(columnKeys)
+			.rangeRound([0, dimensionX])
+			.padding(0.5);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
-				.domain(valueExtent)
-				.range([0, dimensionY])
-				.nice();
-		}
+		yScale = d3.scaleLinear()
+			.domain(valueExtent)
+			.range([0, dimensionY])
+			.nice();
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal()
-				.domain(columnKeys)
-				.range(colors);
-		}
+		colorScale = d3.scaleOrdinal()
+			.domain(columnKeys)
+			.range(colors);
 	};
 
 	/**
@@ -70,18 +70,20 @@ export default function() {
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
-		const x3d = selection.append("x3d")
-			.attr("width", width + "px")
-			.attr("height", height + "px");
-
-		if (debug) {
-			x3d.attr("showLog", "true").attr("showStat", "true")
+		// Create x3d element (if it does not exist already)
+		if (!x3d) {
+			x3d = selection.append("x3d");
+			scene = x3d.append("scene");
 		}
 
-		const scene = x3d.append("scene");
+		x3d.attr("width", width + "px")
+			.attr("height", height + "px")
+			.attr("showLog", debug ? "true" : "false")
+			.attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		const layers = ["xAxis", "yAxis", "bars"];
+
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
@@ -89,7 +91,7 @@ export default function() {
 			.append("group")
 			.attr("class", (d) => d);
 
-		scene.each((data) => {
+		selection.each((data) => {
 			init(data);
 
 			// Construct Viewpoint Component
@@ -123,7 +125,7 @@ export default function() {
 				.call(yAxis);
 
 			scene.select(".bars")
-				.datum((d) => d)
+				.datum(data)
 				.call(bars);
 		});
 	};

@@ -1,6 +1,6 @@
 {
 	"name": "d3-x3dom",
-	"version": "1.2.0",
+	"version": "1.2.2",
 	"description": "D3 X3DOM Data Visualisation Library",
 	"license": "GPL-2.0",
 	"keywords": [
@@ -28,7 +28,7 @@
 	"module": "index.js",
 	"scripts": {
 		"pretest": "make",
-		"test": "tape 'test/**/*Test.js' | tap-spec",
+		"test": "mocha test/indexTest.js && mocha test/randomDataTest.js && tape 'test/dataTransformTest.js' | tap-spec && tape 'test/c*/*Test.js' | tap-spec",
 		"build:docs": "jsdoc -c config/jsdoc.conf.json",
 		"deploy:docs": "npm run build:docs && gh-pages -d docs"
 	},
@@ -49,8 +49,10 @@
 		"rollup": "^0.56.2",
 		"rollup-plugin-babel": "^3.0.7",
 		"rollup-plugin-json": "^2.3.1",
-		"tap-spec": "^5.0.0",
 		"tape": "^4.9.1",
+		"tap-spec": "^5.0.0",
+		"chai": "^4.2.0",
+		"mocha": "^6.0.2",
 		"toast-jsdoc": "^1.0.2",
 		"uglify-es": "^3.3.9",
 		"vows": "^0.8.2"

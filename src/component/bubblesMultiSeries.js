@@ -36,35 +36,25 @@ export default function() {
 		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear()
-				.domain([0, maxX])
-				.range([0, dimensionX]);
-		}
+		xScale = d3.scaleLinear()
+			.domain([0, maxX])
+			.range([0, dimensionX]);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
-				.domain([0, maxY])
-				.range([0, dimensionY]);
-		}
+		yScale = d3.scaleLinear()
+			.domain([0, maxY])
+			.range([0, dimensionY]);
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear()
-				.domain([0, maxZ])
-				.range([0, dimensionZ]);
-		}
+		zScale = d3.scaleLinear()
+			.domain([0, maxZ])
+			.range([0, dimensionZ]);
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal()
-				.domain(rowKeys)
-				.range(colors);
-		}
+		colorScale = d3.scaleOrdinal()
+			.domain(rowKeys)
+			.range(colors);
 
-		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear()
-				.domain(valueExtent)
-				.range(sizeDomain);
-		}
+		sizeScale = d3.scaleLinear()
+			.domain(valueExtent)
+			.range(sizeDomain);
 	};
 
 	/**
@@ -81,31 +71,33 @@ export default function() {
 			const element = d3.select(this)
 				.classed(classed, true);
 
-			// Construct Bars Component
-			const bubbles = componentBubbles()
-				.xScale(xScale)
-				.yScale(yScale)
-				.zScale(zScale)
-				.sizeScale(sizeScale);
+			const addBubbles = function(d) {
+				const color = colorScale(d.key);
 
-			// Create Bar Groups
+				// Construct Bars Component
+				const bubbles = componentBubbles()
+					.xScale(xScale)
+					.yScale(yScale)
+					.zScale(zScale)
+					.sizeScale(sizeScale)
+					.color(color);
+
+				d3.select(this).datum(d).call(bubbles);
+			};
+
+			// Create Bubble Groups
 			const bubbleGroup = element.selectAll(".bubbleGroup")
-				.data(data);
+				.data((d) => d, (d) => d.key);
 
 			bubbleGroup.enter()
 				.append("group")
 				.classed("bubbleGroup", true)
 				.merge(bubbleGroup)
 				.transition()
-				.each(function(d) {
-					const color = colorScale(d.key);
-					bubbles.color(color);
-					d3.select(this).call(bubbles);
-				});
+				.each(addBubbles);
 
 			bubbleGroup.exit()
 				.remove();
-
 		});
 	};
 

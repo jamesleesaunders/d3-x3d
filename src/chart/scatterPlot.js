@@ -10,8 +10,11 @@ import { dispatch } from "../events";
  *
  * @example
  * let chartHolder = d3.select("#chartholder");
+ *
  * let myData = [...];
+ *
  * let myChart = d3.x3dom.chart.scatterPlot();
+ *
  * chartHolder.datum(myData).call(myChart);
  *
  * @see https://datavizproject.com/data-type/3d-scatterplot/
@@ -88,7 +91,7 @@ export default function() {
 			.append("group")
 			.attr("class", (d) => d);
 
-		scene.each((data) => {
+		selection.each((data) => {
 			init(data);
 
 			// Construct Viewpoint Component

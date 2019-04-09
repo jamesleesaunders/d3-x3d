@@ -69,41 +69,46 @@ export default function() {
 			init(data);
 
 			const element = d3.select(this)
-				.classed(classed, true);
+				.classed(classed, true)
+				.attr("id", (d) => d.key);
 
-			const makeSolid = (shape, color) => {
-				shape
-					.append("appearance")
+			const shape = (el) => {
+				const shape = el.append("shape")
+					.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
+					.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
+					.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
+					.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
+					.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);")
+					.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
+
+				// FIXME: Due to a x3dom `._quality`, `fieldChanged()` bug we need to use .html() rather than .attr().
+				// shape.append("sphere")
+				//	.attr("radius", (d) => sizeScale(d.value));
+
+				shape.html((d) => "<sphere radius='" + sizeScale(d.value) + "'></sphere>");
+
+				shape.append("appearance")
 					.append("material")
-					.attr("diffusecolor", color || "black");
+					.attr("diffusecolor", color)
+					.attr("ambientintensity", 0.1);
+
 				return shape;
 			};
 
 			const bubbles = element.selectAll(".bubble")
-				.data((d) => d.values);
+				.data((d) => d.values, (d) => d.key);
 
-			const bubblesEnter = bubbles.enter()
-				.append("group")
-				.attr("class", "bubble");
-
-			bubblesEnter
+			bubbles.enter()
 				.append("transform")
+				.attr("class", "bubble")
+				.call(shape)
+				.merge(bubbles)
+				.transition()
 				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
-				.append("shape")
-				.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
-				.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
-				.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
-				.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
-				.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);")
-				.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); })
-				.call(makeSolid, color)
-				.append("sphere")
-				.attr("radius", (d) => sizeScale(d.value));
-
-			bubblesEnter.merge(bubbles);
-
-			bubbles.transition()
-				.attr("translation", (d) => (xScale(d.x) + ' ' + yScale(d.y) + ' ' + zScale(d.z)));
+				.select("shape")
+				.select("appearance")
+				.select("material")
+				.attr("diffusecolor", color);
 
 			bubbles.exit()
 				.remove();

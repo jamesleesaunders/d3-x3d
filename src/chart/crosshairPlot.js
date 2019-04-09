@@ -9,8 +9,11 @@ import component from "../component";
  *
  * @example
  * let chartHolder = d3.select("#chartholder");
+ *
  * let myData = [...];
+ *
  * let myChart = d3.x3dom.chart.crosshairPlot();
+ *
  * chartHolder.datum(myData).call(myChart);
  */
 export default function() {
@@ -84,7 +87,7 @@ export default function() {
 			.append("group")
 			.attr("class", (d) => d);
 
-		scene.each((data) => {
+		selection.each((data) => {
 			init(data);
 
 			// Construct Viewpoint Component
@@ -95,7 +98,8 @@ export default function() {
 			const axis = component.axisThreePlane()
 				.xScale(xScale)
 				.yScale(yScale)
-				.zScale(zScale);
+				.zScale(zScale)
+				.dimensions(dimensions);
 
 			// Construct Crosshair Component
 			const crosshair = component.crosshair()

@@ -18,7 +18,6 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Download from NPM](https://www.npmjs.com/package/d3-x3dom)
 
 ### Examples
-
 * [Multi Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartMultiSeries.html)
 * [Vertical Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartVertical.html)
 * [Bubble Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BubbleChart.html)
@@ -157,6 +156,7 @@ Chart modules also generate the `x3d` tag, these should be attached to a `div` t
 | chart.scatterPlot()            | Scatter Plot & Axis           | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/ScatterPlot.html)         | [View](https://jamesleesaunders.github.io/d3-x3dom/scatterPlot.html)            |
 | chart.surfacePlot()            | Surface Plot & Axis           | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/SurfacePlot.html)         | [View](https://jamesleesaunders.github.io/d3-x3dom/surfacePlot.html)            |
 | chart.vectorFieldChart()       | Vector Field Chart            | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/VectorFieldChart.html)    | [View](https://jamesleesaunders.github.io/d3-x3dom/vectorFieldChart.html)       |
+| chart.volumeSliceChart()       | Volume Slice Chart            | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/VolumeSlice.html)         | [View](https://jamesleesaunders.github.io/d3-x3dom/volumeSliceChart.html)       |
 
 ### Data Structures
 
@@ -218,3 +218,13 @@ var myData = [
 * David Sankel - For the original [Bar Chart](http://bl.ocks.org/camio/5087116).
 * Victor Glindås - Various contributions to JSDoc and ES6 standardisation.
 * You may also be interested in the sister project [d3-ez](https://github.com/jamesleesaunders/d3-ez) Reusable 2D Charts Library.
+
+### WIP Chart Filter Tests
+* [Multi Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterChartMultiSeriesBar.html)
+* [Single Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterChartSingleSeriesBar.html)
+* [Ribbon Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterChartRibbon.html)
+
+### WIP Component Filter Tests
+* [Bubbles](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterComponentBubbles.html)
+* [Bars](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterComponentMultiSeriesBar.html)
+* [Ribbon](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterComponentRibbon.html)

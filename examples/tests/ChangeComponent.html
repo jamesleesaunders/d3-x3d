@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3dom : Test</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
+  <script src="../../build/d3-x3dom.js"></script>
+</head>
+
+<body>
+  <div id="chartholder"></div>
+
+  <form>
+    <select name="graphType" id="graphType">
+      <option value='bars'>Bar Chart</option>
+      <option value='ribbon'>Ribbon Chart</option>
+      <option value='bubbles'>Bubble Chart</option>
+    </select>
+  </form>
+
+  <script>
+    function refreshChart(chartHolder, chartComponent) {
+      chartHolder
+        .datum(data)
+        .call(chartComponent);
+    }
+
+    // Chart dimensions
+    var width = 500;
+    var height = 500;
+
+    // Generate some data
+    var data = d3.x3dom.randomData.dataset1();
+
+    // Create scene
+    var chartHolder = d3.select("#chartholder")
+      .append("x3d")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("scene");
+
+    var viewpointComponent = d3.x3dom.component.viewpoint();
+    chartHolder.call(viewpointComponent);
+
+    var chartComponent = d3.x3dom.component.bars();
+    refreshChart(chartHolder, chartComponent);
+
+    document.querySelector('#graphType').addEventListener('change', function() {
+      var graphType = $(this).find('option:selected').val();
+
+      switch(graphType) {
+        case 'bars':
+          chartComponent = d3.x3dom.component.bars();
+          break;
+        case 'ribbon':
+          chartComponent = d3.x3dom.component.ribbon();
+          break;
+        case 'bubbles':
+          chartComponent = d3.x3dom.component.bubbles();
+          break;
+      }
+
+      refreshChart(chartHolder, chartComponent);
+    });
+
+  </script>
+
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.
+  </div>
+</body>

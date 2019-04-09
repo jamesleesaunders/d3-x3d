@@ -6,6 +6,7 @@ import chartRibbonChartMultiSeries from "./chart/ribbonChartMultiSeries";
 import chartScatterPlot from "./chart/scatterPlot";
 import chartSurfacePlot from "./chart/surfacePlot";
 import chartVectorField from "./chart/vectorFieldChart";
+import chartVolumeSlice from "./chart/volumeSliceChart";
 
 export default {
 	barChartMultiSeries: chartBarChartMultiSeries,
@@ -15,5 +16,6 @@ export default {
 	ribbonChartMultiSeries: chartRibbonChartMultiSeries,
 	scatterPlot: chartScatterPlot,
 	surfacePlot: chartSurfacePlot,
-	vectorFieldChart: chartVectorField
+	vectorFieldChart: chartVectorField,
+	volumeSliceChart: chartVolumeSlice
 };

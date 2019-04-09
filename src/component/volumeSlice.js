@@ -10,13 +10,13 @@ export default function() {
 
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let classed = "d3X3domVolume";
+	let classed = "d3X3domVolumeSlice";
 
 	/* Other Volume Properties */
-	let imageUrl = "assets/scan1.png";
-	let numberOfSlices = 96;
-	let slicesOverX = 10;
-	let slicesOverY = 10;
+	let imageUrl;
+	let numberOfSlices;
+	let slicesOverX;
+	let slicesOverY;
 	let volumeStyle = "opacitymap";
 
 	/**
@@ -30,7 +30,8 @@ export default function() {
 		selection.each(function(data) {
 
 			const element = d3.select(this)
-				.classed(classed, true);
+				.classed(classed, true)
+				.attr("id", (d) => d.key);
 
 			const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
@@ -63,13 +64,10 @@ export default function() {
 
 				case "opacitymap":
 				default:
-					volumedata.append("opacitymapvolumestyle")
+					volumedata
+						.append("opacitymapvolumestyle")
 						.attr("lightfactor", 1.2)
-						.attr("opacityfactor", 6.0)
-						.append("imagetexture")
-						.attr("containerfield", "transferFunction")
-						.attr("url", "assets/transfer.png")
-						.attr("crossorigin", "anonymous");
+						.attr("opacityfactor", 6.0);
 					break;
 			}
 		});

@@ -79,10 +79,11 @@ export default function() {
 			init(data);
 
 			const element = d3.select(this)
-				.classed(classed, true);
+				.classed(classed, true)
+				.attr("id", (d) => d.key);
 
 			const ribbonData = function(d) {
-				return d.values.map((pointThis, indexThis, array) => {
+				return d.map((pointThis, indexThis, array) => {
 					let indexNext = indexThis + 1;
 					if (indexNext >= array.length) {
 						return null;
@@ -111,35 +112,53 @@ export default function() {
 						point: array2dToString(points),
 						color: color,
 						transparency: 0.2
-					}
+					};
 				}).filter((d) => d !== null);
 			};
 
+			const shape = (el) => {
+				const shape = el.append("shape");
+
+				// FIXME: Due to a x3dom bug we need to use .html() rather than .append() & .attr().
+				//shape.append("indexedfaceset")
+				//	.attr("coordindex", (d) => d.coordindex)
+				//	.append("coordinate")
+				//	.attr("point", (d) => d.point);
+
+				// shape.append("appearance")
+				// 	.append("twosidedmaterial")
+				// 	.attr("diffusecolor", (d) => d.color)
+				// 	.attr("transparency", (d) => d.transparency);
+
+				shape.html((d) => {
+					var indexedfaceset = `<indexedfaceset coordindex="${d.coordindex}"><coordinate point="${d.point}"></coordinate></indexedfaceset>`;
+					var appearance = `<appearance><twosidedmaterial diffusecolor="${d.color}" transparency="${d.transparency}"></twosidedmaterial></appearance>`;
+
+					return indexedfaceset + appearance;
+				});
+
+				return shape;
+			};
+
 			const ribbon = element.selectAll(".ribbon")
-				.data(ribbonData);
+				.data((d) => ribbonData(d.values), (d) => d.key);
 
-			const ribbonEnter = ribbon.enter()
-				.append("shape")
-				.classed("ribbon", true);
+			ribbon.enter()
+				.append("group")
+				.classed("ribbon", true)
+				.call(shape)
+				.merge(ribbon);
 
-			ribbonEnter.append("indexedfaceset")
-				.attr("coordindex", (d) => d.coordindex)
-				.attr("solid", true)
-				.append("coordinate")
-				.attr("point", (d) => d.point);
+			const ribbonTransition = ribbon.transition().select("shape");
 
-			ribbonEnter.append("appearance")
-				.append("twosidedmaterial")
-				.attr("diffusecolor", (d) => d.color)
-				.attr("transparency", (d) => d.transparency);
-
-			ribbonEnter.merge(ribbon);
-
-			ribbon.transition()
-				.select("indexedfaceset")
+			ribbonTransition.select("indexedfaceset")
 				.attr("coordindex", (d) => d.coordindex)
 				.select("coordinate")
 				.attr("point", (d) => d.point);
+
+			ribbonTransition.select("appearance")
+				.select("twosidedmaterial")
+				.attr("diffusecolor", (d) => d.color);
 
 			ribbon.exit()
 				.remove();

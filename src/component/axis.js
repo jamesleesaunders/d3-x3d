@@ -87,84 +87,72 @@ export default function() {
 			const axisRotationVector = getAxisRotationVector(direction);
 			const tickRotationVector = getAxisRotationVector(tickDirection);
 
-			//console.log(axisDirectionVector);
-			console.log(tickDirectionVector);
-
-			let path = element.selectAll("transform")
-				.data([null]);
-
 			const tickValuesDefault = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
 			tickValues = tickValues === null ? tickValuesDefault : tickValues;
-
-			let tick = selection.selectAll(".tick")
-				.data(tickValues, scale).order();
-
-			const tickExit = tick.exit();
-			const tickEnter = tick.enter()
-				.append("transform")
-				.attr("translation", (t) => (axisDirectionVector.map((a, i) => {
-					if (axis === "xzAxis" && i===0) {
-						return (scale(t) * a + 4);
-					} else if (axis === "zxAxis" && i===2) {
-						return (scale(t) * a + 6);
-					} else {
-						return (scale(t) * a);
-					}
-				})).join(" "))
-				.attr("class", "tick");
-
-			let line = tick.select(".tickLine");
-			path = path.merge(path.enter()
-				.append("transform")
-				.attr("rotation", axisRotationVector.join(" "))
-				.attr("translation", axisDirectionVector.map((d) => (d * (range0 + range1) / 2)).join(" "))
-				.append("shape")
-				.call(makeSolid, color)
-				.attr("class", "domain"));
-			tick = tick.merge(tickEnter);
-			line = line.merge(tickEnter.append("transform"));
 
 			const tickFormatDefault = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : (d) => d;
 			tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
 
-      if (tickFormat !== "") {
-        let text = tick.select("billboard");
-        let newText = tickEnter.append("transform");
-        newText
-					.attr("translation", tickDirectionVector.map((d,i,arr) => {
-						let r = (-d * tickPadding * -42.5);
-						console.log(`arr: ${arr}, i: ${i}, d: ${d}, p: ${tickPadding}, r: ${r}`);
-						return r;
-					}))
-          .append("billboard")
-          .attr("axisofrotation", "0 0 0")
-          .append("shape")
-          .call(makeSolid, "black")
-          .append("text")
-          .attr("string", tickFormat)
-          .append("fontstyle")
-          .attr("size", 1.3)
-          .attr("family", "SANS")
-          .attr("style", "BOLD")
-          .attr("justify", "MIDDLE");
-        text = text.merge(newText);
-      }
+			// Main Lines
+			const domain = element.selectAll(".domain")
+				.data([null]);
 
-      tickExit.remove();
-      path
-        .append("cylinder")
-        .attr("radius", 0.1)
-        .attr("height", range1 - range0);
+			const domainEnter = domain.enter().append("transform")
+				.attr("class", "domain")
+				.attr("rotation", axisRotationVector.join(" "))
+				.attr("translation", axisDirectionVector.map((d) => (d * (range0 + range1) / 2)).join(" "))
+				.append("shape")
+				.call(makeSolid, color)
+				.append("cylinder")
+				.attr("radius", 0.1)
+				.attr("height", range1 - range0);
 
-      line
-        .attr("translation", tickDirectionVector.map((d) => (d * tickSize / 2)).join(" "))
-        .attr("rotation", tickRotationVector.join(" "))
-        .attr("class", "tickLine")
-        .append("shape")
-        .call(makeSolid, "#d3d3d3")
-        .append("cylinder")
-        .attr("radius", 0.05)
-        .attr("height", tickSize);
+			// Tick Lines
+			const tick = element.selectAll(".tick")
+				.data(tickValues, scale).order();
+
+			const tickEnter = tick.enter()
+				.append("transform")
+				.attr("class", "tick")
+				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")));
+
+			tickEnter.append("transform")
+				.attr("translation", tickDirectionVector.map((d) => (d * tickSize / 2)).join(" "))
+				.attr("rotation", tickRotationVector.join(" "))
+				.attr("class", "tickLine")
+				.append("shape")
+				.call(makeSolid, "#d3d3d3")
+				.append("cylinder")
+				.attr("radius", 0.05)
+				.attr("height", tickSize);
+
+			if (tickFormat !== "") {
+				tickEnter.append("transform")
+					.attr("translation", tickDirectionVector.map((d) => (-d * tickPadding)))
+					.append("billboard")
+					.attr("axisofrotation", "0 0 0")
+					.append("shape")
+					.call(makeSolid, "black")
+					.append("text")
+					.attr("string", tickFormat)
+					.append("fontstyle")
+					.attr("size", 1.3)
+					.attr("family", "SANS")
+					.attr("style", "BOLD")
+					.attr("justify", "MIDDLE");
+			}
+
+			tick.transition()
+				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")));
+
+			domainEnter.merge(domain);
+
+			tickEnter.merge(tick);
+
+			tick.exit().remove();
+
+			domain.exit().remove();
+
 		});
 	};
 

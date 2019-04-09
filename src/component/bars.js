@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
+import { dispatch } from "../events";
 
 /**
  * Reusable 3D Bar Chart Component
@@ -61,39 +62,32 @@ export default function() {
 			init(data);
 
 			const element = d3.select(this)
-				.classed(classed, true);
+				.classed(classed, true)
+				.attr("id", (d) => d.key);
+
+			const shape = (el) => {
+				const shape = el.append("shape");
+
+				shape.append("box")
+					.attr("size", "1.0 1.0 1.0");
+
+				shape.append("appearance")
+					.append("material")
+					.attr("diffusecolor", (d) => colorScale(d.key))
+					.attr("ambientintensity", 0.1);
+
+				return shape;
+			};
 
 			const bars = element.selectAll(".bar")
-				.data((d) => d.values);
+				.data((d) => d.values, (d) => d.key);
 
-			const barsEnter = bars.enter()
+			bars.enter()
 				.append("transform")
 				.classed("bar", true)
-				.attr("scale", (d) => {
-					let x = xScale.bandwidth();
-					let y = yScale(d.value);
-					let z = dimensions.z;
-					return x + " " + y + " " + z;
-				})
-				.attr("translation", (d) => {
-					let x = xScale(d.key);
-					let y = yScale(d.value) / 2;
-					let z = 0.0;
-					return x + " " + y + " " + z;
-				})
-				.append("shape");
-
-			barsEnter.append("box")
-				.attr("size", "1.0 1.0 1.0");
-
-			barsEnter.append("appearance")
-				.append("material")
-				.attr("diffusecolor", (d) => colorScale(d.key))
-				.attr("ambientintensity", "0.1");
-
-			barsEnter.merge(bars);
-
-			bars.transition()
+				.call(shape)
+				.merge(bars)
+				.transition()
 				.attr("scale", (d) => {
 					let x = xScale.bandwidth();
 					let y = yScale(d.value);

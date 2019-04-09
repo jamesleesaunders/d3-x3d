@@ -1,22 +1,22 @@
 import * as d3 from "d3";
-import dataTransform from "../dataTransform";
 import component from "../component";
 
 /**
- * Reusable 3D Surface Plot Chart
+ * Reusable 3D Vertical Volume Slice Chart
  *
  * @module
  *
  * @example
  * let chartHolder = d3.select("#chartholder");
  *
- * let myData = [...];
+ * let myChart = d3.x3dom.chart.volumeSliceChart();
+ *    .dimensions({ x: 40, y: 40, z: 30 })
+ *    .imageUrl("assets/scan2.png")
+ *    .numberOfSlices(35)
+ *    .slicesOverX(7)
+ *    .slicesOverY(5);
  *
- * let myChart = d3.x3dom.chart.surfacePlot();
- *
- * chartHolder.datum(myData).call(myChart);
- *
- * @see https://datavizproject.com/data-type/three-dimensional-stream-graph/
+ * chartHolder.call(myChart);
  */
 export default function() {
 
@@ -24,58 +24,27 @@ export default function() {
 	let width = 500;
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = ["blue", "red"];
-	let classed = "d3X3domSurfacePlot";
+	let classed = "d3X3domVolumeSliceChart";
 	let debug = false;
 
 	/* Scales */
 	let xScale;
 	let yScale;
 	let zScale;
-	let colorScale;
+	let origin = { x: 0, y: 0, z: 0 };
 
-	/**
-	 * Initialise Data and Scales
-	 *
-	 * @private
-	 * @param {Array} data - Chart data.
-	 */
-	const init = function(data) {
-		const { rowKeys, columnKeys, valueMax } = dataTransform(data).summary();
-		const valueExtent = [0, valueMax];
-		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
-
-		if (typeof xScale === "undefined") {
-			xScale = d3.scalePoint()
-				.domain(rowKeys)
-				.range([0, dimensionX]);
-		}
-
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
-				.domain(valueExtent)
-				.range([0, dimensionY]).nice();
-		}
-
-		if (typeof zScale === "undefined") {
-			zScale = d3.scalePoint()
-				.domain(columnKeys)
-				.range([0, dimensionZ]);
-		}
-
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleLinear()
-				.domain(valueExtent)
-				.range(colors)
-				.interpolate(d3.interpolateLab);
-		}
-	};
+	/* Other Volume Properties */
+	let imageUrl;
+	let numberOfSlices;
+	let slicesOverX;
+	let slicesOverY;
+	let volumeStyle = "opacitymap";
 
 	/**
 	 * Constructor
 	 *
 	 * @constructor
-	 * @alias surfacePlot
+	 * @alias volumeSliceChartVertical
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
@@ -90,7 +59,7 @@ export default function() {
 		const scene = x3d.append("scene");
 
 		// Update the chart dimensions and add layer groups
-		const layers = ["axis", "surface"];
+		const layers = ["axis", "volumeSlice"];
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
@@ -99,33 +68,42 @@ export default function() {
 			.attr("class", (d) => d);
 
 		selection.each((data) => {
-			init(data);
 
 			// Construct Viewpoint Component
 			const viewpoint = component.viewpoint()
 				.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
 			// Construct Axis Component
-			const axis = component.axisThreePlane()
+			const axis = component.crosshair()
+				.dimensions(dimensions)
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale);
 
-			// Construct Surface Component
-			const surface = component.surface()
-				.xScale(xScale)
-				.yScale(yScale)
-				.zScale(zScale)
-				.colors(colors);
+			// Construct Volume Slice Component
+			const volumeSlice = component.volumeSlice()
+				.dimensions(dimensions)
+				.imageUrl(imageUrl)
+				.numberOfSlices(numberOfSlices)
+				.slicesOverX(slicesOverX)
+				.slicesOverY(slicesOverY);
 
 			scene.call(viewpoint);
 
 			scene.select(".axis")
+				.datum(origin)
 				.call(axis);
 
-			scene.select(".surface")
+			scene.select(".volumeSlice")
+				.append("transform")
+				.attr("translation", (d) => {
+					const x = dimensions.x / 2;
+					const y = dimensions.y / 2;
+					const z = dimensions.z / 2;
+					return x + " " + y + " " + z;
+				})
 				.datum((d) => d)
-				.call(surface);
+				.call(volumeSlice);
 		});
 	};
 
@@ -150,18 +128,6 @@ export default function() {
 	my.height = function(_v) {
 		if (!arguments.length) return height;
 		height = _v;
-		return this;
-	};
-
-	/**
-	 * Dimensions Getter / Setter
-	 *
-	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-	 * @returns {*}
-	 */
-	my.dimensions = function(_v) {
-		if (!arguments.length) return dimensions;
-		dimensions = _v;
 		return this;
 	};
 
@@ -202,27 +168,75 @@ export default function() {
 	};
 
 	/**
-	 * Color Scale Getter / Setter
+	 * Dimensions Getter / Setter
 	 *
-	 * @param {d3.scale} _v - D3 color scale.
+	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
 	 * @returns {*}
 	 */
-	my.colorScale = function(_v) {
-		if (!arguments.length) return colorScale;
-		colorScale = _v;
-		return my;
+	my.dimensions = function(_v) {
+		if (!arguments.length) return dimensions;
+		dimensions = _v;
+		return this;
 	};
 
 	/**
-	 * Colors Getter / Setter
+	 * Image URL Getter / Setter
 	 *
-	 * @param {Array} _v - Array of colours used by color scale.
+	 * @param {string} _v - Image URL path.
 	 * @returns {*}
 	 */
-	my.colors = function(_v) {
-		if (!arguments.length) return colors;
-		colors = _v;
-		return my;
+	my.imageUrl = function(_v) {
+		if (!arguments.length) return imageUrl;
+		imageUrl = _v;
+		return this;
+	};
+
+	/**
+	 * Number of Slices Getter / Setter
+	 *
+	 * @param {number} _v - Total number of slices.
+	 * @returns {*}
+	 */
+	my.numberOfSlices = function(_v) {
+		if (!arguments.length) return numberOfSlices;
+		numberOfSlices = _v;
+		return this;
+	};
+
+	/**
+	 * X Slices Getter / Setter
+	 *
+	 * @param {number} _v - Number of slices over X axis.
+	 * @returns {*}
+	 */
+	my.slicesOverX = function(_v) {
+		if (!arguments.length) return slicesOverX;
+		slicesOverX = _v;
+		return this;
+	};
+
+	/**
+	 * Y Slices Getter / Setter
+	 *
+	 * @param {number} _v - Number of slices over Y axis.
+	 * @returns {*}
+	 */
+	my.slicesOverY = function(_v) {
+		if (!arguments.length) return slicesOverY;
+		slicesOverY = _v;
+		return this;
+	};
+
+	/**
+	 * Volume Style Getter / Setter
+	 *
+	 * @param {string} _v - Volume render style (either 'mprvolume' or 'opacitymap')
+	 * @returns {*}
+	 */
+	my.volumeStyle = function(_v) {
+		if (!arguments.length) return volumeStyle;
+		volumeStyle = _v;
+		return this;
 	};
 
 	/**
