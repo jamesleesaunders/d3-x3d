@@ -21,6 +21,7 @@ export default function() {
 	let colorScale;
 	let colorDomain = [];
 
+	/* Components */
 	const ribbon = componentRibbon();
 
 	/**
@@ -89,23 +90,20 @@ export default function() {
 			const element = d3.select(this)
 				.classed(classed, true);
 
+			ribbon.xScale(xScale)
+				.yScale(yScale)
+				.dimensions({
+					x: dimensions.x,
+					y: dimensions.y,
+					z: zScale.bandwidth()
+				});
+
 			const addRibbon = function(d) {
 				const color = colorScale(d.key);
-
-				// Construct Ribbon Component
-				ribbon.xScale(xScale)
-					.yScale(yScale)
-					.dimensions({
-						x: dimensions.x,
-						y: dimensions.y,
-						z: zScale.bandwidth()
-					})
-					.color(color);
-
+				ribbon.color(color);
 				d3.select(this).call(ribbon);
 			};
 
-			// Create Ribbon Groups
 			const ribbonGroup = element.selectAll(".ribbonGroup")
 				.data((d) => d, (d) => d.key);
 

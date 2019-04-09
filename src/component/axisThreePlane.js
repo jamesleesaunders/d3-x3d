@@ -18,7 +18,7 @@ export default function() {
 	let yScale;
 	let zScale;
 
-	const layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
+	/* Components */
 	const xzAxis = componentAxis();
 	const yzAxis = componentAxis();
 	const yxAxis = componentAxis();
@@ -37,13 +37,14 @@ export default function() {
 			const element = d3.select(this)
 				.classed(classed, true);
 
+			const layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
+
 			element.selectAll("group")
 				.data(layers)
 				.enter()
 				.append("group")
 				.attr("class", (d) => d);
 
-			// Construct Axis Components
 			xzAxis.scale(xScale)
 				.direction("x")
 				.tickDirection("z")

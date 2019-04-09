@@ -24,6 +24,7 @@ export default function() {
 	let sizeDomain = [0.5, 3.0];
 	let colorDomain = [];
 
+	/* Components */
 	const bubbles = componentBubbles();
 
 	/**
@@ -97,20 +98,17 @@ export default function() {
 			const element = d3.select(this)
 				.classed(classed, true);
 
+			bubbles.xScale(xScale)
+				.yScale(yScale)
+				.zScale(zScale)
+				.sizeScale(sizeScale);
+
 			const addBubbles = function(d) {
 				const color = colorScale(d.key);
-
-				// Construct Bars Component
-				bubbles.xScale(xScale)
-					.yScale(yScale)
-					.zScale(zScale)
-					.sizeScale(sizeScale)
-					.color(color);
-
+				bubbles.color(color);
 				d3.select(this).datum(d).call(bubbles);
 			};
 
-			// Create Bubble Groups
 			const bubbleGroup = element.selectAll(".bubbleGroup")
 				.data((d) => d, (d) => d.key);
 
