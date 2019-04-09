@@ -769,7 +769,7 @@ function componentAxisThreePlane () {
 	var yScale = void 0;
 	var zScale = void 0;
 
-	var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
+	/* Components */
 	var xzAxis = componentAxis();
 	var yzAxis = componentAxis();
 	var yxAxis = componentAxis();
@@ -787,11 +787,12 @@ function componentAxisThreePlane () {
 
 			var element = d3.select(this).classed(classed, true);
 
+			var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
+
 			element.selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 				return d;
 			});
 
-			// Construct Axis Components
 			xzAxis.scale(xScale).direction("x").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
 
 			yzAxis.scale(yScale).direction("y").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("red");
@@ -1365,6 +1366,7 @@ function componentBarsMultiSeries () {
 	var zScale = void 0;
 	var colorScale = void 0;
 
+	/* Components */
 	var bars = componentBars();
 
 	/**
@@ -1408,18 +1410,16 @@ function componentBarsMultiSeries () {
 
 			var element = d3.select(this).classed(classed, true);
 
-			var addBars = function addBars() {
-				// Construct Bars Component
-				bars.xScale(xScale).yScale(yScale).dimensions({
-					x: dimensions.x,
-					y: dimensions.y,
-					z: zScale.bandwidth()
-				}).colors(colors);
+			bars.xScale(xScale).yScale(yScale).dimensions({
+				x: dimensions.x,
+				y: dimensions.y,
+				z: zScale.bandwidth()
+			}).colors(colors);
 
+			var addBars = function addBars() {
 				d3.select(this).call(bars);
 			};
 
-			// Create Bar Groups
 			var barGroup = element.selectAll(".barGroup").data(function (d) {
 				return d;
 			}, function (d) {
@@ -1533,6 +1533,7 @@ function componentBubblesMultiSeries () {
 	var sizeDomain = [0.5, 3.0];
 	var colorDomain = [];
 
+	/* Components */
 	var bubbles = componentBubbles();
 
 	/**
@@ -1604,16 +1605,14 @@ function componentBubblesMultiSeries () {
 
 			var element = d3.select(this).classed(classed, true);
 
+			bubbles.xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale);
+
 			var addBubbles = function addBubbles(d) {
 				var color = colorScale(d.key);
-
-				// Construct Bars Component
-				bubbles.xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).color(color);
-
+				bubbles.color(color);
 				d3.select(this).datum(d).call(bubbles);
 			};
 
-			// Create Bubble Groups
 			var bubbleGroup = element.selectAll(".bubbleGroup").data(function (d) {
 				return d;
 			}, function (d) {
@@ -2265,6 +2264,7 @@ function componentRibbonMultiSeries () {
 	var colorScale = void 0;
 	var colorDomain = [];
 
+	/* Components */
 	var ribbon = componentRibbon();
 
 	/**
@@ -2331,20 +2331,18 @@ function componentRibbonMultiSeries () {
 
 			var element = d3.select(this).classed(classed, true);
 
+			ribbon.xScale(xScale).yScale(yScale).dimensions({
+				x: dimensions.x,
+				y: dimensions.y,
+				z: zScale.bandwidth()
+			});
+
 			var addRibbon = function addRibbon(d) {
 				var color = colorScale(d.key);
-
-				// Construct Ribbon Component
-				ribbon.xScale(xScale).yScale(yScale).dimensions({
-					x: dimensions.x,
-					y: dimensions.y,
-					z: zScale.bandwidth()
-				}).color(color);
-
+				ribbon.color(color);
 				d3.select(this).call(ribbon);
 			};
 
-			// Create Ribbon Groups
 			var ribbonGroup = element.selectAll(".ribbonGroup").data(function (d) {
 				return d;
 			}, function (d) {
