@@ -3362,6 +3362,7 @@ function chartBarChartMultiSeries () {
 	var zScale = void 0;
 	var colorScale = void 0;
 
+	/* Components */
 	var viewpoint = component.viewpoint();
 	var axis = component.axisThreePlane();
 	var bars = component.barsMultiSeries();
@@ -3420,22 +3421,23 @@ function chartBarChartMultiSeries () {
 		selection.each(function (data) {
 			init(data);
 
-			// Construct Viewpoint Component
+			// Add Viewpoint
 			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-
-			// Construct Axis Component
-			axis.xScale(xScale).yScale(yScale).zScale(zScale);
-
-			// Construct Bars Component
-			bars.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
 
 			scene.call(viewpoint);
 
+			// Add Axis
+			axis.xScale(xScale).yScale(yScale).zScale(zScale);
+
 			scene.select(".axis").call(axis);
+
+			// Add Bars
+			bars.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
 
 			scene.select(".bars").datum(data).call(bars);
 
 			/*
+   // Add Light
    scene.append("directionallight")
    	.attr("direction", "1 0 -1")
    	.attr("on", "true")
@@ -3590,6 +3592,7 @@ function chartBarChartVertical () {
 	var yScale = void 0;
 	var colorScale = void 0;
 
+	/* Components */
 	var viewpoint = component.viewpoint();
 	var xAxis = component.axis();
 	var yAxis = component.axis();
@@ -3645,22 +3648,22 @@ function chartBarChartVertical () {
 		selection.each(function (data) {
 			init(data);
 
-			// Construct Viewpoint Component
+			// Add Viewpoint
 			viewpoint.quickView("left");
 
-			// Construct Axis Components
-			xAxis.scale(xScale).direction('x').tickDirection('y');
+			scene.call(viewpoint);
+
+			// Add Axis
+			xAxis.scale(xScale).direction('x').tickDirection('y').tickSize(0);
 
 			yAxis.scale(yScale).direction('y').tickDirection('x').tickSize(yScale.range()[1] - yScale.range()[0]);
-
-			// Construct Bars Component
-			bars.xScale(xScale).yScale(yScale).colors(colors);
-
-			scene.call(viewpoint);
 
 			scene.select(".xAxis").call(xAxis);
 
 			scene.select(".yAxis").call(yAxis);
+
+			// Add Bars
+			bars.xScale(xScale).yScale(yScale).colors(colors);
 
 			scene.select(".bars").datum(data).call(bars);
 		});
@@ -3802,6 +3805,7 @@ function chartBubbleChart () {
 	var sizeScale = void 0;
 	var sizeDomain = [0.5, 3.5];
 
+	/* Components */
 	var viewpoint = component.viewpoint();
 	var axis = component.axisThreePlane();
 	var bubbles = component.bubblesMultiSeries();
@@ -3864,22 +3868,23 @@ function chartBubbleChart () {
 		selection.each(function (data) {
 			init(data);
 
-			// Construct Viewpoint Component
+			// Add Viewpoint
 			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-
-			// Construct Axis Component
-			axis.xScale(xScale).yScale(yScale).zScale(zScale);
-
-			// Construct Bubbles Component
-			bubbles.xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).colorScale(colorScale);
 
 			scene.call(viewpoint);
 
+			// Add Axis
+			axis.xScale(xScale).yScale(yScale).zScale(zScale);
+
 			scene.select(".axis").call(axis);
+
+			// Add Bubbles
+			bubbles.xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).colorScale(colorScale);
 
 			scene.select(".bubbles").datum(data).call(bubbles);
 
 			/*
+   // Add Light
    scene.append("directionallight")
    	.attr("direction", "1 0 -1")
    	.attr("on", "true")
@@ -4052,6 +4057,7 @@ function chartCrosshairPlot () {
 	var yScale = void 0;
 	var zScale = void 0;
 
+	/* Components */
 	var viewpoint = component.viewpoint();
 	var axis = component.axisThreePlane();
 	var crosshair = component.crosshair();
@@ -4113,18 +4119,18 @@ function chartCrosshairPlot () {
 		selection.each(function (data) {
 			init(data);
 
-			// Construct Viewpoint Component
+			// Add Viewpoint
 			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-
-			// Construct Axis Component
-			axis.xScale(xScale).yScale(yScale).zScale(zScale).dimensions(dimensions);
-
-			// Construct Crosshair Component
-			crosshair.xScale(xScale).yScale(yScale).zScale(zScale);
 
 			scene.call(viewpoint);
 
+			// Add Axis
+			axis.xScale(xScale).yScale(yScale).zScale(zScale).dimensions(dimensions);
+
 			scene.select(".axis").call(axis);
+
+			// Add Crosshair
+			crosshair.xScale(xScale).yScale(yScale).zScale(zScale);
 
 			scene.select(".crosshairs").selectAll(".crosshair").data(function (d) {
 				return d.values;
@@ -4256,6 +4262,7 @@ function chartRibbonChartMultiSeries () {
 	var zScale = void 0;
 	var colorScale = void 0;
 
+	/* Components */
 	var viewpoint = component.viewpoint();
 	var axis = component.axisThreePlane();
 	var ribbons = component.ribbonMultiSeries();
@@ -4314,22 +4321,23 @@ function chartRibbonChartMultiSeries () {
 		selection.each(function (data) {
 			init(data);
 
-			// Construct Viewpoint Component
+			// Add Viewpoint
 			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]).viewOrientation([-0.61021, 0.77568, 0.16115, 0.65629]).viewPosition([77.63865, 54.69470, 104.38314]);
-
-			// Construct Axis Component
-			axis.xScale(xScale).yScale(yScale).zScale(zScale);
-
-			// Construct Bars Component
-			ribbons.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors).dimensions(dimensions);
 
 			scene.call(viewpoint);
 
+			// Add Axis
+			axis.xScale(xScale).yScale(yScale).zScale(zScale);
+
 			scene.select(".axis").call(axis);
+
+			// Add Ribbons
+			ribbons.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors).dimensions(dimensions);
 
 			scene.select(".ribbons").datum(data).call(ribbons);
 
 			/*
+   // Add Light
    scene.append("directionallight")
    	.attr("direction", "1 0 -1")
    	.attr("on", "true")
@@ -4481,6 +4489,7 @@ function chartScatterPlot () {
 	var yScale = void 0;
 	var zScale = void 0;
 
+	/* Components */
 	var viewpoint = component.viewpoint();
 	var axis = component.axisThreePlane();
 	var crosshair = component.crosshair();
@@ -4544,19 +4553,23 @@ function chartScatterPlot () {
 		selection.each(function (data) {
 			init(data);
 
-			// Construct Viewpoint Component
+			// Add Viewpoint
 			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
-			// Construct Axis Component
+			scene.call(viewpoint);
+
+			// Add Axis
 			axis.xScale(xScale).yScale(yScale).zScale(zScale);
 
-			// Construct Crosshair Component
+			scene.select(".axis").call(axis);
+
+			// Add Crosshair
 			crosshair.xScale(xScale).yScale(yScale).zScale(zScale);
 
-			// Construct Label Component
+			// Add Labels
 			label.xScale(xScale).yScale(yScale).zScale(zScale).offset(0.5);
 
-			// Construct Bubbles Component
+			// Add Bubbles
 			bubbles.xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([0.5, 0.5]).on("d3X3domClick", function (e) {
 				var d = d3.select(e.target).datum();
 				scene.select(".crosshair").datum(d).classed("crosshair", true).each(function () {
@@ -4570,10 +4583,6 @@ function chartScatterPlot () {
 			}).on("d3X3domMouseOut", function (e) {
 				scene.select(".label").selectAll("*").remove();
 			});
-
-			scene.call(viewpoint);
-
-			scene.select(".axis").call(axis);
 
 			scene.select(".bubbles").datum(function (d) {
 				return d;
@@ -4722,6 +4731,7 @@ function chartSurfacePlot () {
 	var zScale = void 0;
 	var colorScale = void 0;
 
+	/* Components */
 	var viewpoint = component.viewpoint();
 	var axis = component.axisThreePlane();
 	var surface = component.surface();
@@ -4787,18 +4797,18 @@ function chartSurfacePlot () {
 		selection.each(function (data) {
 			init(data);
 
-			// Construct Viewpoint Component
+			// Add Viewpoint
 			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-
-			// Construct Axis Component
-			axis.xScale(xScale).yScale(yScale).zScale(zScale);
-
-			// Construct Surface Component
-			surface.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
 
 			scene.call(viewpoint);
 
+			// Add Axis
+			axis.xScale(xScale).yScale(yScale).zScale(zScale);
+
 			scene.select(".axis").call(axis);
+
+			// Add Surface Area
+			surface.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
 
 			scene.select(".surface").datum(function (d) {
 				return d;
@@ -4961,6 +4971,7 @@ function chartVectorField () {
 	var sizeDomain = [2.0, 5.0];
 	var origin = { x: 0, y: 0, z: 0 };
 
+	/* Components */
 	var viewpoint = component.viewpoint();
 	var axis = component.crosshair();
 	var vectorFields = component.vectorFields();
@@ -5079,18 +5090,18 @@ function chartVectorField () {
 		selection.each(function (data) {
 			init(data);
 
-			// Construct Viewpoint Component
+			// Add Viewpoint
 			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-
-			// Construct Axis Component
-			axis.xScale(xScale).yScale(yScale).zScale(zScale).dimensions(dimensions);
-
-			// Construct Vector Field Component
-			vectorFields.xScale(xScale).yScale(yScale).zScale(zScale).colorScale(colorScale).sizeScale(sizeScale).vectorFunction(vectorFunction);
 
 			scene.call(viewpoint);
 
+			// Add Axis
+			axis.xScale(xScale).yScale(yScale).zScale(zScale).dimensions(dimensions);
+
 			scene.select(".axis").datum(origin).call(axis);
+
+			// Add Vector Fields
+			vectorFields.xScale(xScale).yScale(yScale).zScale(zScale).colorScale(colorScale).sizeScale(sizeScale).vectorFunction(vectorFunction);
 
 			scene.select(".vectorFields").datum(function (d) {
 				return d;
@@ -5284,6 +5295,7 @@ function chartVolumeSlice () {
 	var slicesOverY = void 0;
 	var volumeStyle = "opacitymap";
 
+	/* Components */
 	var viewpoint = component.viewpoint();
 	var axis = component.crosshair();
 	var volumeSlice = component.volumeSlice();
@@ -5312,18 +5324,18 @@ function chartVolumeSlice () {
 
 		selection.each(function (data) {
 
-			// Construct Viewpoint Component
+			// Add Viewpoint
 			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-
-			// Construct Axis Component
-			axis.dimensions(dimensions).xScale(xScale).yScale(yScale).zScale(zScale);
-
-			// Construct Volume Slice Component
-			volumeSlice.dimensions(dimensions).imageUrl(imageUrl).numberOfSlices(numberOfSlices).slicesOverX(slicesOverX).slicesOverY(slicesOverY);
 
 			scene.call(viewpoint);
 
+			// Add Axis
+			axis.dimensions(dimensions).xScale(xScale).yScale(yScale).zScale(zScale);
+
 			scene.select(".axis").datum(origin).call(axis);
+
+			// Add Volume Slice
+			volumeSlice.dimensions(dimensions).imageUrl(imageUrl).numberOfSlices(numberOfSlices).slicesOverX(slicesOverX).slicesOverY(slicesOverY);
 
 			scene.select(".volumeSlice").append("transform").attr("translation", function (d) {
 				var x = dimensions.x / 2;

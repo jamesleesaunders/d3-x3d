@@ -47,6 +47,7 @@ export default function() {
 	let sizeDomain = [2.0, 5.0];
 	let origin = { x: 0, y: 0, z: 0 };
 
+	/* Components */
 	const viewpoint = component.viewpoint();
 	const axis = component.crosshair();
 	const vectorFields = component.vectorFields();
@@ -160,28 +161,28 @@ export default function() {
 		selection.each((data) => {
 			init(data);
 
-			// Construct Viewpoint Component
+			// Add Viewpoint
 			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
-			// Construct Axis Component
+			scene.call(viewpoint);
+
+			// Add Axis
 			axis.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
 				.dimensions(dimensions);
 
-			// Construct Vector Field Component
+			scene.select(".axis")
+				.datum(origin)
+				.call(axis);
+
+			// Add Vector Fields
 			vectorFields.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
 				.colorScale(colorScale)
 				.sizeScale(sizeScale)
 				.vectorFunction(vectorFunction);
-
-			scene.call(viewpoint);
-
-			scene.select(".axis")
-				.datum(origin)
-				.call(axis);
 
 			scene.select(".vectorFields")
 				.datum((d) => d)

@@ -37,6 +37,7 @@ export default function() {
 	let zScale;
 	let colorScale;
 
+	/* Components */
 	const viewpoint = component.viewpoint();
 	const axis = component.axisThreePlane();
 	const bars = component.barsMultiSeries();
@@ -104,30 +105,31 @@ export default function() {
 		selection.each((data) => {
 			init(data);
 
-			// Construct Viewpoint Component
+			// Add Viewpoint
 			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
-			// Construct Axis Component
+			scene.call(viewpoint);
+
+			// Add Axis
 			axis.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale);
 
-			// Construct Bars Component
+			scene.select(".axis")
+				.call(axis);
+
+			// Add Bars
 			bars.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
 				.colors(colors);
-
-			scene.call(viewpoint);
-
-			scene.select(".axis")
-				.call(axis);
 
 			scene.select(".bars")
 				.datum(data)
 				.call(bars);
 
 			/*
+			// Add Light
 			scene.append("directionallight")
 				.attr("direction", "1 0 -1")
 				.attr("on", "true")

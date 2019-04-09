@@ -36,6 +36,7 @@ export default function() {
 	let yScale;
 	let colorScale;
 
+	/* Components */
 	const viewpoint = component.viewpoint();
 	const xAxis = component.axis();
 	const yAxis = component.axis();
@@ -99,31 +100,32 @@ export default function() {
 		selection.each((data) => {
 			init(data);
 
-			// Construct Viewpoint Component
+			// Add Viewpoint
 			viewpoint.quickView("left");
 
-			// Construct Axis Components
+			scene.call(viewpoint);
+
+			// Add Axis
 			xAxis.scale(xScale)
 				.direction('x')
-				.tickDirection('y');
+				.tickDirection('y')
+				.tickSize(0);
 
 			yAxis.scale(yScale)
 				.direction('y')
 				.tickDirection('x')
 				.tickSize(yScale.range()[1] - yScale.range()[0]);
 
-			// Construct Bars Component
-			bars.xScale(xScale)
-				.yScale(yScale)
-				.colors(colors);
-
-			scene.call(viewpoint);
-
 			scene.select(".xAxis")
 				.call(xAxis);
 
 			scene.select(".yAxis")
 				.call(yAxis);
+
+			// Add Bars
+			bars.xScale(xScale)
+				.yScale(yScale)
+				.colors(colors);
 
 			scene.select(".bars")
 				.datum(data)

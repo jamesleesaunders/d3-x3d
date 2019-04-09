@@ -37,6 +37,7 @@ export default function() {
 	let zScale;
 	let colorScale;
 
+	/* Components */
 	const viewpoint = component.viewpoint();
 	const axis = component.axisThreePlane();
 	const ribbons = component.ribbonMultiSeries();
@@ -103,33 +104,34 @@ export default function() {
 		selection.each((data) => {
 			init(data);
 
-			// Construct Viewpoint Component
+			// Add Viewpoint
 			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2])
 				.viewOrientation([-0.61021, 0.77568, 0.16115, 0.65629])
 				.viewPosition([77.63865, 54.69470, 104.38314]);
 
-			// Construct Axis Component
+			scene.call(viewpoint);
+
+			// Add Axis
 			axis.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale);
 
-			// Construct Bars Component
+			scene.select(".axis")
+				.call(axis);
+
+			// Add Ribbons
 			ribbons.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
 				.colors(colors)
 				.dimensions(dimensions);
 
-			scene.call(viewpoint);
-
-			scene.select(".axis")
-				.call(axis);
-
 			scene.select(".ribbons")
 				.datum(data)
 				.call(ribbons);
 
 			/*
+			// Add Light
 			scene.append("directionallight")
 				.attr("direction", "1 0 -1")
 				.attr("on", "true")
