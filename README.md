@@ -220,11 +220,12 @@ var myData = [
 * You may also be interested in the sister project [d3-ez](https://github.com/jamesleesaunders/d3-ez) Reusable 2D Charts Library.
 
 ### WIP Chart Filter Tests
+* [Ribbon Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterChartRibbon.html)
+* [Bubble Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterChartBubble.html)
 * [Multi Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterChartMultiSeriesBar.html)
 * [Single Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterChartSingleSeriesBar.html)
-* [Ribbon Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterChartRibbon.html)
 
 ### WIP Component Filter Tests
+* [Ribbon](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterComponentRibbon.html)
 * [Bubbles](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterComponentBubbles.html)
 * [Bars](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterComponentMultiSeriesBar.html)
-* [Ribbon](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterComponentRibbon.html)

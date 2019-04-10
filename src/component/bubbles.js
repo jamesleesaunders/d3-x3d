@@ -81,9 +81,11 @@ export default function() {
 					.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);")
 					.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
 
-				// FIXME: Due to a x3dom `._quality`, `fieldChanged()` bug we need to use .html() rather than .attr().
-				// shape.append("sphere")
-				//	.attr("radius", (d) => sizeScale(d.value));
+				/*
+				// FIXME: Due to a bug with x3dom `._quality`, `fieldChanged()`, we must to use .html() rather than .attr().
+				shape.append("sphere")
+					.attr("radius", (d) => sizeScale(d.value));
+				*/
 
 				shape.html((d) => "<sphere radius='" + sizeScale(d.value) + "'></sphere>");
 

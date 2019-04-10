@@ -12,14 +12,18 @@ export default function() {
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["blue", "red", "green"];
 	let classed = "d3X3domAxisThreePlane";
-  let labelPosition = "proximal";
+	let labelPosition = "proximal";
 
 	/* Scales */
 	let xScale;
 	let yScale;
 	let zScale;
 
-	const layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
+	/* Components */
+	const xzAxis = componentAxis();
+	const yzAxis = componentAxis();
+	const yxAxis = componentAxis();
+	const zxAxis = componentAxis();
 
 	/**
 	 * Constructor
@@ -34,46 +38,43 @@ export default function() {
 			const element = d3.select(this)
 				.classed(classed, true);
 
+			const layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
+
 			element.selectAll("group")
 				.data(layers)
 				.enter()
 				.append("group")
 				.attr("class", (d) => d);
 
-			// Construct Axis Components
-			const xzAxis = componentAxis()
-				.scale(xScale)
+			xzAxis.scale(xScale)
 				.direction("x")
 				.tickDirection("z")
 				.tickSize(zScale.range()[1] - zScale.range()[0])
 				.tickPadding(xScale.range()[0])
 				.color("blue")
-        .labelPosition(labelPosition);
+				.labelPosition(labelPosition);
 
-			const yzAxis = componentAxis()
-				.scale(yScale)
+			yzAxis.scale(yScale)
 				.direction("y")
 				.tickDirection("z")
 				.tickSize(zScale.range()[1] - zScale.range()[0])
 				.color("red")
-        .labelPosition(labelPosition);
+				.labelPosition(labelPosition);
 
-			const yxAxis = componentAxis()
-				.scale(yScale)
+			yxAxis.scale(yScale)
 				.direction("y")
 				.tickDirection("x")
 				.tickSize(xScale.range()[1] - xScale.range()[0])
 				.tickFormat("")
 				.color("red")
-        .labelPosition(labelPosition);
+				.labelPosition(labelPosition);
 
-			const zxAxis = componentAxis()
-				.scale(zScale)
+			zxAxis.scale(zScale)
 				.direction("z")
 				.tickDirection("x")
 				.tickSize(xScale.range()[1] - xScale.range()[0])
 				.color("black")
-        .labelPosition(labelPosition);
+				.labelPosition(labelPosition);
 
 			element.select(".xzAxis")
 				.call(xzAxis);
@@ -149,19 +150,17 @@ export default function() {
 		return my;
 	};
 
-  /**
-   * Label Position Getter / Setter
-   *
-   * @param {string} _v - Position ('proximal' or 'distal')
-   * @returns {*}
-   *
-   */
-  my.labelPosition = function(_v) {
-    if (!arguments.length) return labelPosition;
-    labelPosition = _v;
-    return my;
-  }
-
+	/**
+	 * Label Position Getter / Setter
+	 *
+	 * @param {string} _v - Position ('proximal' or 'distal')
+	 * @returns {*}
+	 */
+	my.labelPosition = function(_v) {
+		if (!arguments.length) return labelPosition;
+		labelPosition = _v;
+		return my;
+	};
 
 	return my;
 }

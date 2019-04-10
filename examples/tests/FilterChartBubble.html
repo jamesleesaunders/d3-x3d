@@ -13,10 +13,11 @@
   <div id="chartholder"></div>
 
   <table>
-    <tr><td>Apples</td><td><input type="checkbox" name="fruit" id="apples" checked value="Apples" /></td></tr>
-    <tr><td>Oranges</td><td><input type="checkbox" name="fruit" id="oranges" checked value="Oranges" /></td></tr>
-    <tr><td>Pears</td><td><input type="checkbox" name="fruit" id="pears" value="Pears" /></td></tr>
-    <tr><td>Bananas</td><td><input type="checkbox" name="fruit" id="bananas" checked value="Bananas" /></td></tr>
+    <tr><td>UK</td><td><input type="checkbox" name="country" id="uk" checked value="UK" /></td></tr>
+    <tr><td>France</td><td><input type="checkbox" name="country" id="france" checked value="France" /></td></tr>
+    <tr><td>Spain</td><td><input type="checkbox" name="country" id="spain" value="Spain" /></td></tr>
+    <tr><td>Germany</td><td><input type="checkbox" name="country" id="germany" checked value="Germany" /></td></tr>
+    <tr><td>Italy</td><td><input type="checkbox" name="country" id="italy" value="Italy" /></td></tr>
   </table>
 
   <script>
@@ -24,10 +25,10 @@
     var chartHolder = d3.select("#chartholder");
 
     // Generate some data
-    var data = d3.x3dom.randomData.dataset1();
+    var data = d3.x3dom.randomData.dataset2();
 
     // Declare the bar chart component
-    var myChart = d3.x3dom.chart.barChartVertical();
+    var myChart = d3.x3dom.chart.bubbleChart();
 
     var checks = d3.selectAll('input[type=checkbox]');
 
@@ -42,10 +43,7 @@
         }
       });
 
-      var filteredData = {
-        key: data.key,
-        values: data.values.filter(series => filterArray.includes(series.key))
-      };
+      var filteredData = data.filter(series => filterArray.includes(series.key));
 
       console.log(filteredData);
 

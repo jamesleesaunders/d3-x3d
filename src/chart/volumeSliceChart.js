@@ -40,6 +40,11 @@ export default function() {
 	let slicesOverY;
 	let volumeStyle = "opacitymap";
 
+	/* Components */
+	const viewpoint = component.viewpoint();
+	const axis = component.crosshair();
+	const volumeSlice = component.volumeSlice();
+
 	/**
 	 * Constructor
 	 *
@@ -69,30 +74,27 @@ export default function() {
 
 		selection.each((data) => {
 
-			// Construct Viewpoint Component
-			const viewpoint = component.viewpoint()
-				.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
+			// Add Viewpoint
+			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
-			// Construct Axis Component
-			const axis = component.crosshair()
-				.dimensions(dimensions)
+			scene.call(viewpoint);
+
+			// Add Axis
+			axis.dimensions(dimensions)
 				.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale);
 
-			// Construct Volume Slice Component
-			const volumeSlice = component.volumeSlice()
-				.dimensions(dimensions)
+			scene.select(".axis")
+				.datum(origin)
+				.call(axis);
+
+			// Add Volume Slice
+			volumeSlice.dimensions(dimensions)
 				.imageUrl(imageUrl)
 				.numberOfSlices(numberOfSlices)
 				.slicesOverX(slicesOverX)
 				.slicesOverY(slicesOverY);
-
-			scene.call(viewpoint);
-
-			scene.select(".axis")
-				.datum(origin)
-				.call(axis);
 
 			scene.select(".volumeSlice")
 				.append("transform")

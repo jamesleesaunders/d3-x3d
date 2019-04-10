@@ -38,6 +38,11 @@ export default function() {
 	let zScale;
 	let colorScale;
 
+	/* Components */
+	const viewpoint = component.viewpoint();
+	const axis = component.axisThreePlane();
+	const bars = component.barsMultiSeries();
+
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -101,34 +106,32 @@ export default function() {
 		selection.each((data) => {
 			init(data);
 
-			// Construct Viewpoint Component
-			const viewpoint = component.viewpoint()
-				.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
+			// Add Viewpoint
+			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
-			// Construct Axis Component
-			const axis = component.axisThreePlane()
-				.xScale(xScale)
+			scene.call(viewpoint);
+
+			// Add Axis
+			axis.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
         .labelPosition(labelPosition);
 
-			// Construct Bars Component
-			const bars = component.barsMultiSeries()
-				.xScale(xScale)
+			scene.select(".axis")
+				.call(axis);
+
+			// Add Bars
+			bars.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
 				.colors(colors);
-
-			scene.call(viewpoint);
-
-			scene.select(".axis")
-				.call(axis);
 
 			scene.select(".bars")
 				.datum(data)
 				.call(bars);
 
 			/*
+			// Add Light
 			scene.append("directionallight")
 				.attr("direction", "1 0 -1")
 				.attr("on", "true")
@@ -251,13 +254,12 @@ export default function() {
    *
    * @param {string} _v - Position ('proximal' or 'distal')
    * @returns {*}
-   *
    */
   my.labelPosition = function(_v) {
     if (!arguments.length) return labelPosition;
     labelPosition = _v;
     return my;
-  }
+  };
 
 	return my;
 }

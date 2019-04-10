@@ -119,16 +119,18 @@ export default function() {
 			const shape = (el) => {
 				const shape = el.append("shape");
 
-				// FIXME: Due to a x3dom bug we need to use .html() rather than .append() & .attr().
-				//shape.append("indexedfaceset")
-				//	.attr("coordindex", (d) => d.coordindex)
-				//	.append("coordinate")
-				//	.attr("point", (d) => d.point);
+				/*
+				// FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
+				shape.append("indexedfaceset")
+					.attr("coordindex", (d) => d.coordindex)
+					.append("coordinate")
+					.attr("point", (d) => d.point);
 
-				// shape.append("appearance")
-				// 	.append("twosidedmaterial")
-				// 	.attr("diffusecolor", (d) => d.color)
-				// 	.attr("transparency", (d) => d.transparency);
+				shape.append("appearance")
+					.append("twosidedmaterial")
+					.attr("diffusecolor", (d) => d.color)
+					.attr("transparency", (d) => d.transparency);
+				*/
 
 				shape.html((d) => {
 					var indexedfaceset = `<indexedfaceset coordindex="${d.coordindex}"><coordinate point="${d.point}"></coordinate></indexedfaceset>`;

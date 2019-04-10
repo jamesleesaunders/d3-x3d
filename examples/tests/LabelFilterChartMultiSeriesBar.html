@@ -39,6 +39,8 @@
     var refreshChart = function() {
       var labelPosition = d3.select('#labelPosition').property('checked') ? 'distal' : 'proximal';
 
+      myChart.labelPosition(labelPosition);
+
       var filterArray = [];
 
       checks.each(function() {
@@ -50,7 +52,7 @@
       });
 
       var filteredData = data.filter(series => filterArray.includes(series.key));
-      chartHolder.datum(filteredData).call(myChart.labelPosition(labelPosition));
+      chartHolder.datum(filteredData).call(myChart);
     };
 
     for (var i = 0; i < checks.length; i++) {

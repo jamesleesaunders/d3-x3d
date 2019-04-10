@@ -30,6 +30,11 @@ export default function() {
 	let yScale;
 	let zScale;
 
+	/* Components */
+	const viewpoint = component.viewpoint();
+	const axis = component.axisThreePlane();
+	const crosshair = component.crosshair();
+
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -90,27 +95,24 @@ export default function() {
 		selection.each((data) => {
 			init(data);
 
-			// Construct Viewpoint Component
-			const viewpoint = component.viewpoint()
-				.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
+			// Add Viewpoint
+			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
-			// Construct Axis Component
-			const axis = component.axisThreePlane()
-				.xScale(xScale)
+			scene.call(viewpoint);
+
+			// Add Axis
+			axis.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
 				.dimensions(dimensions);
 
-			// Construct Crosshair Component
-			const crosshair = component.crosshair()
-				.xScale(xScale)
-				.yScale(yScale)
-				.zScale(zScale);
-
-			scene.call(viewpoint);
-
 			scene.select(".axis")
 				.call(axis);
+
+			// Add Crosshair
+			crosshair.xScale(xScale)
+				.yScale(yScale)
+				.zScale(zScale);
 
 			scene.select(".crosshairs")
 				.selectAll(".crosshair")
