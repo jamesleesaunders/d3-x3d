@@ -5,12 +5,14 @@ import * as d3 from "d3";
  *
  * @module
  */
-export default function() {
+export default function(opts) {
 
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let color = "black";
 	let classed = "d3X3domAxis";
+  let labelPosition = "proximal";
+  let labelInset = labelPosition === "distal" ? 1 : -1;
 
 	/* Scale and Axis Options */
 	let scale;
@@ -66,8 +68,8 @@ export default function() {
 	const my = function(selection) {
 		selection.each(function() {
 
-			const element = d3.select(this)
-				.classed(classed, true);
+      const element = d3.select(this)
+        .classed(classed, true);
 
 			const makeSolid = (shape, color) => {
 				shape.append("appearance")
@@ -126,7 +128,7 @@ export default function() {
 
 			if (tickFormat !== "") {
 				tickEnter.append("transform")
-					.attr("translation", tickDirectionVector.map((d) => (-d * tickPadding)))
+					.attr("translation", tickDirectionVector.map((d,i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * (range1 - range0) * tickDirectionVector[i])))
 					.append("billboard")
 					.attr("axisofrotation", "0 0 0")
 					.append("shape")
@@ -273,6 +275,20 @@ export default function() {
 		color = _v;
 		return my;
 	};
+
+  /**
+   * Label Position Getter / Setter
+   *
+   * @param {string} _v - Position ('proximal' or 'distal')
+   * @returns {*}
+   *
+   */
+  my.labelPosition = function(_v) {
+    if (!arguments.length) return labelPosition;
+    labelPosition = _v;
+    labelInset = labelPosition === "distal" ? 1 : -1;
+    return my;
+  }
 
 	return my;
 }

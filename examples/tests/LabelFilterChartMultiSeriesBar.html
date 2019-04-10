@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3dom : Test</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
+  <script src="../../build/d3-x3dom.js"></script>
+</head>
+
+<body>
+  <div id="chartholder"></div>
+
+  <table>
+    <tr><td>Distal Labels?</td><td><input checked type="checkbox" name="labelPosition" id="labelPosition" value="labelPosition" /></td></tr>
+  </table>
+  <br>
+  <table>
+    <tr><td>UK</td><td><input type="checkbox" name="country" id="uk" checked value="UK" /></td></tr>
+    <tr><td>France</td><td><input type="checkbox" name="country" id="france" checked value="France" /></td></tr>
+    <tr><td>Spain</td><td><input type="checkbox" name="country" id="spain" value="Spain" /></td></tr>
+    <tr><td>Germany</td><td><input type="checkbox" name="country" id="germany" checked value="Germany" /></td></tr>
+    <tr><td>Italy</td><td><input type="checkbox" name="country" id="italy" value="Italy" /></td></tr>
+  </table>
+
+  <script>
+    // Select chartholder
+    var chartHolder = d3.select("#chartholder");
+
+    // Generate some data
+    var data = d3.x3dom.randomData.dataset2();
+
+    // Declare the bar chart component
+    var myChart = d3.x3dom.chart.barChartMultiSeries();
+
+    var checks = d3.selectAll('input[type=checkbox]');
+
+    var refreshChart = function() {
+      var labelPosition = d3.select('#labelPosition').property('checked') ? 'distal' : 'proximal';
+
+      var filterArray = [];
+
+      checks.each(function() {
+        var check = d3.select(this);
+        var checked = check.property("checked");
+        if (checked) {
+          filterArray.push(check.attr("value"));
+        }
+      });
+
+      var filteredData = data.filter(series => filterArray.includes(series.key));
+      chartHolder.datum(filteredData).call(myChart.labelPosition(labelPosition));
+    };
+
+    for (var i = 0; i < checks.length; i++) {
+      checks[i].onchange = refreshChart;
+    }
+
+    checks.each(function() {
+      var check = d3.select(this);
+      check.attr("onchange", "refreshChart()");
+    });
+
+    refreshChart();
+
+  </script>
+
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.
+  </div>
+</body>
+
+</html>
