@@ -29,6 +29,7 @@ export default function() {
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["green", "red", "yellow", "steelblue", "orange"];
 	let classed = "d3X3domBarChartMultiSeries";
+  let labelPosition = "proximal";
 	let debug = false;
 
 	/* Scales */
@@ -108,7 +109,8 @@ export default function() {
 			const axis = component.axisThreePlane()
 				.xScale(xScale)
 				.yScale(yScale)
-				.zScale(zScale);
+				.zScale(zScale)
+        .labelPosition(labelPosition);
 
 			// Construct Bars Component
 			const bars = component.barsMultiSeries()
@@ -243,6 +245,19 @@ export default function() {
 		debug = _v;
 		return my;
 	};
+
+  /**
+   * Label Position Getter / Setter
+   *
+   * @param {string} _v - Position ('proximal' or 'distal')
+   * @returns {*}
+   *
+   */
+  my.labelPosition = function(_v) {
+    if (!arguments.length) return labelPosition;
+    labelPosition = _v;
+    return my;
+  }
 
 	return my;
 }

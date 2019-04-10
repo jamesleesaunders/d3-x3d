@@ -11,6 +11,8 @@ export default function(opts) {
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let color = "black";
 	let classed = "d3X3domAxis";
+  let labelPosition = "proximal";
+  let labelInset = labelPosition === "distal" ? 1 : -1;
 
 	/* Scale and Axis Options */
 	let scale;
@@ -273,6 +275,20 @@ export default function(opts) {
 		color = _v;
 		return my;
 	};
+
+  /**
+   * Label Position Getter / Setter
+   *
+   * @param {string} _v - Position ('proximal' or 'distal')
+   * @returns {*}
+   *
+   */
+  my.labelPosition = function(_v) {
+    if (!arguments.length) return labelPosition;
+    labelPosition = _v;
+    labelInset = labelPosition === "distal" ? 1 : -1;
+    return my;
+  }
 
 	return my;
 }

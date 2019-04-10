@@ -12,6 +12,7 @@ export default function() {
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["blue", "red", "green"];
 	let classed = "d3X3domAxisThreePlane";
+  let labelPosition = "proximal";
 
 	/* Scales */
 	let xScale;
@@ -46,14 +47,16 @@ export default function() {
 				.tickDirection("z")
 				.tickSize(zScale.range()[1] - zScale.range()[0])
 				.tickPadding(xScale.range()[0])
-				.color("blue");
+				.color("blue")
+        .labelPosition(labelPosition);
 
 			const yzAxis = componentAxis()
 				.scale(yScale)
 				.direction("y")
 				.tickDirection("z")
 				.tickSize(zScale.range()[1] - zScale.range()[0])
-				.color("red");
+				.color("red")
+        .labelPosition(labelPosition);
 
 			const yxAxis = componentAxis()
 				.scale(yScale)
@@ -61,14 +64,16 @@ export default function() {
 				.tickDirection("x")
 				.tickSize(xScale.range()[1] - xScale.range()[0])
 				.tickFormat("")
-				.color("red");
+				.color("red")
+        .labelPosition(labelPosition);
 
 			const zxAxis = componentAxis()
 				.scale(zScale)
 				.direction("z")
 				.tickDirection("x")
 				.tickSize(xScale.range()[1] - xScale.range()[0])
-				.color("black");
+				.color("black")
+        .labelPosition(labelPosition);
 
 			element.select(".xzAxis")
 				.call(xzAxis);
@@ -143,6 +148,20 @@ export default function() {
 		colors = _v;
 		return my;
 	};
+
+  /**
+   * Label Position Getter / Setter
+   *
+   * @param {string} _v - Position ('proximal' or 'distal')
+   * @returns {*}
+   *
+   */
+  my.labelPosition = function(_v) {
+    if (!arguments.length) return labelPosition;
+    labelPosition = _v;
+    return my;
+  }
+
 
 	return my;
 }
