@@ -5,7 +5,7 @@ import * as d3 from "d3";
  *
  * @module
  */
-export default function() {
+export default function(opts) {
 
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
@@ -64,8 +64,6 @@ export default function() {
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
-		const axis = selection._groups[0][0]["classList"][0];
-		console.log(axis);
 		selection.each(function() {
 
       const element = d3.select(this)
