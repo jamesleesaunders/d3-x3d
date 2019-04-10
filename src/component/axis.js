@@ -128,7 +128,7 @@ export default function(opts) {
 
 			if (tickFormat !== "") {
 				tickEnter.append("transform")
-					.attr("translation", tickDirectionVector.map((d) => (-d * tickPadding)))
+					.attr("translation", tickDirectionVector.map((d,i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * (range1 - range0) * tickDirectionVector[i])))
 					.append("billboard")
 					.attr("axisofrotation", "0 0 0")
 					.append("shape")
