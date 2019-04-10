@@ -11,8 +11,8 @@ export default function() {
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let color = "black";
 	let classed = "d3X3domAxis";
-  let labelPosition = "proximal";
-  let labelInset = labelPosition === "distal" ? 1 : -1;
+	let labelPosition = "proximal";
+	let labelInset = labelPosition === "distal" ? 1 : -1;
 
 	/* Scale and Axis Options */
 	let scale;
@@ -68,8 +68,8 @@ export default function() {
 	const my = function(selection) {
 		selection.each(function() {
 
-      const element = d3.select(this)
-        .classed(classed, true);
+			const element = d3.select(this)
+				.classed(classed, true);
 
 			const makeSolid = (shape, color) => {
 				shape.append("appearance")
@@ -88,6 +88,7 @@ export default function() {
 			const tickRotationVector = getAxisRotationVector(tickDirection);
 
 			/*
+			// FIXME: Currently the tickArguments option does not work.
 			const tickValuesDefault = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
 			tickValues = tickValues === null ? tickValuesDefault : tickValues;
 			*/
@@ -150,6 +151,8 @@ export default function() {
 					.attr("justify", "MIDDLE");
 			}
 
+			tickEnter.merge(tick);
+
 			tick.transition()
 				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
 				.on("start", function() {
@@ -160,9 +163,8 @@ export default function() {
 						.attr("string", tickFormat);
 				});
 
-			tickEnter.merge(tick);
-
-			tick.exit().remove();
+			tick.exit()
+				.remove();
 
 		});
 	};
@@ -287,18 +289,18 @@ export default function() {
 		return my;
 	};
 
-  /**
-   * Label Position Getter / Setter
-   *
-   * @param {string} _v - Position ('proximal' or 'distal')
-   * @returns {*}
-   */
-  my.labelPosition = function(_v) {
-    if (!arguments.length) return labelPosition;
-    labelPosition = _v;
-    labelInset = labelPosition === "distal" ? 1 : -1;
-    return my;
-  };
+	/**
+	 * Label Position Getter / Setter
+	 *
+	 * @param {string} _v - Position ('proximal' or 'distal')
+	 * @returns {*}
+	 */
+	my.labelPosition = function(_v) {
+		if (!arguments.length) return labelPosition;
+		labelPosition = _v;
+		labelInset = labelPosition === "distal" ? 1 : -1;
+		return my;
+	};
 
 	return my;
 }

@@ -577,6 +577,7 @@ function componentAxis () {
 			var tickRotationVector = getAxisRotationVector(tickDirection);
 
 			/*
+   // FIXME: Currently the tickArguments option does not work.
    const tickValuesDefault = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
    tickValues = tickValues === null ? tickValuesDefault : tickValues;
    */
@@ -617,6 +618,8 @@ function componentAxis () {
 				})).append("billboard").attr("axisofrotation", "0 0 0").append("shape").call(makeSolid, "black").append("text").attr("string", tickFormat).append("fontstyle").attr("size", 1.3).attr("family", "SANS").attr("style", "BOLD").attr("justify", "MIDDLE");
 			}
 
+			tickEnter.merge(tick);
+
 			tick.transition().attr("translation", function (t) {
 				return axisDirectionVector.map(function (a) {
 					return scale(t) * a;
@@ -624,8 +627,6 @@ function componentAxis () {
 			}).on("start", function () {
 				d3.select(this).select("billboard").select("shape").select("text").attr("string", tickFormat);
 			});
-
-			tickEnter.merge(tick);
 
 			tick.exit().remove();
 		});

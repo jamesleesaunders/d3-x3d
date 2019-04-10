@@ -217,15 +217,5 @@ var myData = [
 * Fabian Dubois - For the original [3D Axis](http://bl.ocks.org/fabid/61cbfe14de686cc25c47/), [Surface Area](https://github.com/fabid/d3-x3dom-shape) and [Scatter Plot](http://bl.ocks.org/fabid/acb5dc4961ffa741b52b).
 * David Sankel - For the original [Bar Chart](http://bl.ocks.org/camio/5087116).
 * Victor Glindås - Various contributions to JSDoc and ES6 standardisation.
+* Jefferson Hudson - For contributions to axis labels and transitions.
 * You may also be interested in the sister project [d3-ez](https://github.com/jamesleesaunders/d3-ez) Reusable 2D Charts Library.
-
-### WIP Chart Filter Tests
-* [Ribbon Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterChartRibbon.html)
-* [Bubble Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterChartBubble.html)
-* [Multi Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterChartMultiSeriesBar.html)
-* [Single Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterChartSingleSeriesBar.html)
-
-### WIP Component Filter Tests
-* [Ribbon](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterComponentRibbon.html)
-* [Bubbles](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterComponentBubbles.html)
-* [Bars](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/tests/FilterComponentMultiSeriesBar.html)
