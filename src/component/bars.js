@@ -66,7 +66,13 @@ export default function() {
 				.attr("id", (d) => d.key);
 
 			const shape = (el) => {
-				const shape = el.append("shape");
+				const shape = el.append("shape")
+					.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
+					.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
+					.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
+					.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
+					.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);")
+					.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
 
 				shape.append("box")
 					.attr("size", "1.0 1.0 1.0");
@@ -164,6 +170,16 @@ export default function() {
 		if (!arguments.length) return colors;
 		colors = _v;
 		return my;
+	};
+
+	/**
+	 * Dispatch On Getter
+	 *
+	 * @returns {*}
+	 */
+	my.on = function() {
+		let value = dispatch.on.apply(dispatch, arguments);
+		return value === dispatch ? my : value;
 	};
 
 	return my;

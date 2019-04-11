@@ -162,7 +162,7 @@ export default function() {
 				.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
 				.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);");
 
-			let arrowHead = arrowsEnter.append("shape")
+			const arrowHead = arrowsEnter.append("shape")
 				.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
 				.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
 				.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
@@ -175,7 +175,7 @@ export default function() {
 				.attr("height", (d) => sizeScale(d.value))
 				.attr("radius", 0.1);
 
-			let arrowShaft = arrowsEnter
+			const arrowShaft = arrowsEnter
 				.append("transform")
 				.attr("translation", (d) => {
 					let offset = sizeScale(d.value) / 2;

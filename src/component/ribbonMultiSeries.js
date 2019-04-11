@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import componentRibbon from "./ribbon";
+import { dispatch } from "../events";
 
 /**
  * Reusable 3D Multi Series Ribbon Chart Component
@@ -195,6 +196,16 @@ export default function() {
 		if (!arguments.length) return colors;
 		colors = _v;
 		return my;
+	};
+
+	/**
+	 * Dispatch On Getter
+	 *
+	 * @returns {*}
+	 */
+	my.on = function() {
+		let value = dispatch.on.apply(dispatch, arguments);
+		return value === dispatch ? my : value;
 	};
 
 	return my;

@@ -117,26 +117,40 @@ export default function() {
 			domain.exit().remove();
 
 			// Tick Lines
-			const tick = element.selectAll(".tick")
+			const ticks = element.selectAll(".tick")
 				.data(tickValues);
 
-			const tickEnter = tick.enter()
+			const ticksEnter = ticks.enter()
 				.append("transform")
 				.attr("class", "tick")
-				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")));
-
-			tickEnter.append("transform")
+				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
+				.append("transform")
 				.attr("translation", tickDirectionVector.map((d) => (d * tickSize / 2)).join(" "))
 				.attr("rotation", tickRotationVector.join(" "))
-				.attr("class", "tickLine")
 				.append("shape")
 				.call(makeSolid, "#d3d3d3")
 				.append("cylinder")
 				.attr("radius", 0.05)
 				.attr("height", tickSize);
 
+			ticksEnter.merge(ticks);
+
+			ticks.transition()
+				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")));
+
+			ticks.exit()
+				.remove();
+
+			// Labels
 			if (tickFormat !== "") {
-				tickEnter.append("transform")
+				const labels = element.selectAll(".label")
+					.data(tickValues);
+
+				const labelsEnter = ticks.enter()
+					.append("transform")
+					.attr("class", "label")
+					.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
+					.append("transform")
 					.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * (range1 - range0) * tickDirectionVector[i])))
 					.append("billboard")
 					.attr("axisofrotation", "0 0 0")
@@ -149,22 +163,25 @@ export default function() {
 					.attr("family", "SANS")
 					.attr("style", "BOLD")
 					.attr("justify", "MIDDLE");
+
+				labelsEnter.merge(labels);
+
+				labels.transition()
+					.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
+					.select("transform")
+					.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * (range1 - range0) * tickDirectionVector[i])))
+					.on("start", function() {
+						d3.select(this)
+							.select("billboard")
+							.select("shape")
+							.select("text")
+							.attr("string", tickFormat);
+					});
+
+				labels.exit()
+					.remove();
 			}
 
-			tickEnter.merge(tick);
-
-			tick.transition()
-				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
-				.on("start", function() {
-					d3.select(this)
-						.select("billboard")
-						.select("shape")
-						.select("text")
-						.attr("string", tickFormat);
-				});
-
-			tick.exit()
-				.remove();
 
 		});
 	};

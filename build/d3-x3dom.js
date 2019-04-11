@@ -600,35 +600,52 @@ function componentAxis () {
 			domain.exit().remove();
 
 			// Tick Lines
-			var tick = element.selectAll(".tick").data(tickValues);
+			var ticks = element.selectAll(".tick").data(tickValues);
 
-			var tickEnter = tick.enter().append("transform").attr("class", "tick").attr("translation", function (t) {
+			var ticksEnter = ticks.enter().append("transform").attr("class", "tick").attr("translation", function (t) {
+				return axisDirectionVector.map(function (a) {
+					return scale(t) * a;
+				}).join(" ");
+			}).append("transform").attr("translation", tickDirectionVector.map(function (d) {
+				return d * tickSize / 2;
+			}).join(" ")).attr("rotation", tickRotationVector.join(" ")).append("shape").call(makeSolid, "#d3d3d3").append("cylinder").attr("radius", 0.05).attr("height", tickSize);
+
+			ticksEnter.merge(ticks);
+
+			ticks.transition().attr("translation", function (t) {
 				return axisDirectionVector.map(function (a) {
 					return scale(t) * a;
 				}).join(" ");
 			});
 
-			tickEnter.append("transform").attr("translation", tickDirectionVector.map(function (d) {
-				return d * tickSize / 2;
-			}).join(" ")).attr("rotation", tickRotationVector.join(" ")).attr("class", "tickLine").append("shape").call(makeSolid, "#d3d3d3").append("cylinder").attr("radius", 0.05).attr("height", tickSize);
+			ticks.exit().remove();
 
+			// Labels
 			if (tickFormat !== "") {
-				tickEnter.append("transform").attr("translation", tickDirectionVector.map(function (d, i) {
+				var labels = element.selectAll(".label").data(tickValues);
+
+				var labelsEnter = ticks.enter().append("transform").attr("class", "label").attr("translation", function (t) {
+					return axisDirectionVector.map(function (a) {
+						return scale(t) * a;
+					}).join(" ");
+				}).append("transform").attr("translation", tickDirectionVector.map(function (d, i) {
 					return labelInset * d * tickPadding + (labelInset + 1) / 2 * (range1 - range0) * tickDirectionVector[i];
 				})).append("billboard").attr("axisofrotation", "0 0 0").append("shape").call(makeSolid, "black").append("text").attr("string", tickFormat).append("fontstyle").attr("size", 1.3).attr("family", "SANS").attr("style", "BOLD").attr("justify", "MIDDLE");
+
+				labelsEnter.merge(labels);
+
+				labels.transition().attr("translation", function (t) {
+					return axisDirectionVector.map(function (a) {
+						return scale(t) * a;
+					}).join(" ");
+				}).select("transform").attr("translation", tickDirectionVector.map(function (d, i) {
+					return labelInset * d * tickPadding + (labelInset + 1) / 2 * (range1 - range0) * tickDirectionVector[i];
+				})).on("start", function () {
+					d3.select(this).select("billboard").select("shape").select("text").attr("string", tickFormat);
+				});
+
+				labels.exit().remove();
 			}
-
-			tickEnter.merge(tick);
-
-			tick.transition().attr("translation", function (t) {
-				return axisDirectionVector.map(function (a) {
-					return scale(t) * a;
-				}).join(" ");
-			}).on("start", function () {
-				d3.select(this).select("billboard").select("shape").select("text").attr("string", tickFormat);
-			});
-
-			tick.exit().remove();
 		});
 	};
 
@@ -1075,7 +1092,13 @@ function componentBars () {
 			});
 
 			var shape = function shape(el) {
-				var shape = el.append("shape");
+				var shape = el.append("shape").attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
+					dispatch.call("d3X3domClick", this, e);
+				}).attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").on("mouseover", function (e) {
+					dispatch.call("d3X3domMouseOver", this, e);
+				}).attr("onmouseout", "d3.x3dom.events.forwardEvent(event);").on("mouseout", function (e) {
+					dispatch.call("d3X3domMouseOut", this, e);
+				});
 
 				shape.append("box").attr("size", "1.0 1.0 1.0");
 
@@ -1166,6 +1189,16 @@ function componentBars () {
 		if (!arguments.length) return colors;
 		colors = _v;
 		return my;
+	};
+
+	/**
+  * Dispatch On Getter
+  *
+  * @returns {*}
+  */
+	my.on = function () {
+		var value = dispatch.on.apply(dispatch, arguments);
+		return value === dispatch ? my : value;
 	};
 
 	return my;
@@ -2175,7 +2208,13 @@ function componentRibbon () {
 			};
 
 			var shape = function shape(el) {
-				var shape = el.append("shape");
+				var shape = el.append("shape").attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
+					dispatch.call("d3X3domClick", this, e);
+				}).attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").on("mouseover", function (e) {
+					dispatch.call("d3X3domMouseOver", this, e);
+				}).attr("onmouseout", "d3.x3dom.events.forwardEvent(event);").on("mouseout", function (e) {
+					dispatch.call("d3X3domMouseOut", this, e);
+				});
 
 				/*
     // FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
@@ -2269,6 +2308,16 @@ function componentRibbon () {
 		if (!arguments.length) return color;
 		color = _v;
 		return my;
+	};
+
+	/**
+  * Dispatch On Getter
+  *
+  * @returns {*}
+  */
+	my.on = function () {
+		var value = dispatch.on.apply(dispatch, arguments);
+		return value === dispatch ? my : value;
 	};
 
 	return my;
@@ -2461,6 +2510,16 @@ function componentRibbonMultiSeries () {
 		return my;
 	};
 
+	/**
+  * Dispatch On Getter
+  *
+  * @returns {*}
+  */
+	my.on = function () {
+		var value = dispatch.on.apply(dispatch, arguments);
+		return value === dispatch ? my : value;
+	};
+
 	return my;
 }
 
@@ -2473,7 +2532,7 @@ function componentSurface () {
 
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
-	var colors = ["blue", "red"];
+	var colors = ["orange", "maroon"];
 	var classed = "d3X3domSurface";
 
 	/* Scales */
