@@ -18,16 +18,16 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Download from NPM](https://www.npmjs.com/package/d3-x3dom)
 
 ### Examples
-* [Multi Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartMultiSeries.html)
-* [Vertical Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BarChartVertical.html)
-* [Bubble Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/BubbleChart.html)
-* [Scatter Plot](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/ScatterPlot.html)
-* [Surface Plot](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/SurfacePlot.html)
-* [Ribbon Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/RibbonChart.html)
-* [Vector Field Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/VectorFieldChart.html)
-* [Volume Slice](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/VolumeSlice.html)
-* [Crosshair Component](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Crosshair.html)
-* [Components Showcase](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/Components.html)
+* [Multi Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/BarChartMultiSeries.html)
+* [Vertical Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/BarChartVertical.html)
+* [Bubble Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/BubbleChart.html)
+* [Scatter Plot](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/ScatterPlot.html)
+* [Surface Plot](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/SurfacePlot.html)
+* [Ribbon Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/RibbonChart.html)
+* [Vector Field Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/VectorFieldChart.html)
+* [Volume Slice](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/VolumeSlice.html)
+* [Crosshair Component](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/component/Crosshair.html)
+* [Components Showcase](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/component/Components.html)
 * [Observable Examples](https://beta.observablehq.com/collection/@jamesleesaunders/d3-x3dom)
 
 ### Getting Started

@@ -2,11 +2,11 @@
 <html>
 
 <head>
-  <title>d3-x3dom : 3D Ribbon Chart Example</title>
+  <title>d3-x3dom : 3D Scatter Plot Example</title>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
   <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
-  <script src="../build/d3-x3dom.js"></script>
+  <script src="../../build/d3-x3dom.js"></script>
 </head>
 
 <body>
@@ -17,10 +17,10 @@
     var chartHolder = d3.select("#chartholder");
 
     // Generate some data
-    var myData = d3.x3dom.randomData.dataset2();
+    var myData = d3.x3dom.randomData.dataset3(200);
 
     // Declare the chart component
-    var myChart = d3.x3dom.chart.ribbonChartMultiSeries();
+    var myChart = d3.x3dom.chart.scatterPlot();
 
     // Attach chart and data to the chartholder
     chartHolder.datum(myData).call(myChart);
