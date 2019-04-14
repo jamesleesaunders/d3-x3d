@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>d3-x3dom : Test</title>
+  <title>d3-x3dom : 3D Multi Series Ribbon Chart Example</title>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
   <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
@@ -13,10 +13,11 @@
   <div id="chartholder"></div>
 
   <table>
-    <tr><td>Apples</td><td><input type="checkbox" name="fruit" id="apples" checked value="Apples" /></td></tr>
-    <tr><td>Oranges</td><td><input type="checkbox" name="fruit" id="oranges" checked value="Oranges" /></td></tr>
-    <tr><td>Pears</td><td><input type="checkbox" name="fruit" id="pears" value="Pears" /></td></tr>
-    <tr><td>Bananas</td><td><input type="checkbox" name="fruit" id="bananas" checked value="Bananas" /></td></tr>
+    <tr><td><input type="checkbox" name="country" id="uk" checked value="UK" /></td><td>UK</td></tr>
+    <tr><td><input type="checkbox" name="country" id="france" checked value="France" /></td><td>France</td></tr>
+    <tr><td><input type="checkbox" name="country" id="spain" value="Spain" /></td><td>Spain</td></tr>
+    <tr><td><input type="checkbox" name="country" id="germany" checked value="Germany" /></td><td>Germany</td></tr>
+    <tr><td><input type="checkbox" name="country" id="italy" value="Italy" /></td><td>Italy</td></tr>
   </table>
 
   <script>
@@ -24,10 +25,10 @@
     var chartHolder = d3.select("#chartholder");
 
     // Generate some data
-    var data = d3.x3dom.randomData.dataset1();
+    var data = d3.x3dom.randomData.dataset2();
 
     // Declare the bar chart component
-    var myChart = d3.x3dom.chart.barChartVertical();
+    var myChart = d3.x3dom.chart.ribbonChartMultiSeries();
 
     var checks = d3.selectAll('input[type=checkbox]');
 
@@ -42,10 +43,7 @@
         }
       });
 
-      var filteredData = {
-        key: data.key,
-        values: data.values.filter(series => filterArray.includes(series.key))
-      };
+      var filteredData = data.filter(series => filterArray.includes(series.key));
 
       console.log(filteredData);
 
@@ -65,8 +63,7 @@
 
   </script>
 
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.
-  </div>
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.</div>
 </body>
 
 </html>

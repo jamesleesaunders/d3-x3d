@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>d3-x3dom : 3D Bar Chart Example</title>
+  <title>d3-x3dom : 3D Vertical Bar Chart Example</title>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
   <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
@@ -12,18 +12,56 @@
 <body>
   <div id="chartholder"></div>
 
+  <table>
+    <tr><td><input type="checkbox" name="fruit" id="apples" checked value="Apples" /></td><td>Apples</td></tr>
+    <tr><td><input type="checkbox" name="fruit" id="oranges" checked value="Oranges" /></td><td>Oranges</td></tr>
+    <tr><td><input type="checkbox" name="fruit" id="pears" value="Pears" /></td><td>Pears</td></tr>
+    <tr><td><input type="checkbox" name="fruit" id="bananas" checked value="Bananas" /></td><td>Bananas</td></tr>
+  </table>
+
   <script>
     // Select chartholder
     var chartHolder = d3.select("#chartholder");
 
     // Generate some data
-    var myData = d3.x3dom.randomData.dataset1();
+    var data = d3.x3dom.randomData.dataset1();
 
-    // Declare the chart component
+    // Declare the bar chart component
     var myChart = d3.x3dom.chart.barChartVertical();
 
-    // Attach chart and data to the chartholder
-    chartHolder.datum(myData).call(myChart);
+    var checks = d3.selectAll('input[type=checkbox]');
+
+    var refreshChart = function() {
+      var filterArray = [];
+
+      checks.each(function() {
+        var check = d3.select(this);
+        var checked = check.property("checked");
+        if (checked) {
+          filterArray.push(check.attr("value"));
+        }
+      });
+
+      var filteredData = {
+        key: data.key,
+        values: data.values.filter(series => filterArray.includes(series.key))
+      };
+
+      console.log(filteredData);
+
+      chartHolder.datum(filteredData).call(myChart);
+    };
+
+    for (var i = 0; i < checks.length; i++) {
+      checks[i].onchange = refreshChart;
+    }
+
+    checks.each(function() {
+      var check = d3.select(this);
+      check.attr("onchange", "refreshChart()");
+    });
+
+    refreshChart();
 
   </script>
 
