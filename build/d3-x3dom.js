@@ -3451,7 +3451,7 @@ function chartBarChartMultiSeries () {
 
 	/* Components */
 	var viewpoint = component.viewpoint();
-	var axis = component.axisThreePlane();
+	var axis = component.axisThreePlane().labelPosition("distal");
 	var bars = component.barsMultiSeries();
 
 	/**
