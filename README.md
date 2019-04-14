@@ -23,11 +23,11 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Bubble Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/BubbleChart.html)
 * [Scatter Plot](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/ScatterPlot.html)
 * [Surface Plot](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/SurfacePlot.html)
-* [Ribbon Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/RibbonChart.html)
+* [Ribbon Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/RibbonChartMultiSeries.html)
 * [Vector Field Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/VectorFieldChart.html)
 * [Volume Slice](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/VolumeSliceChart.html)
 * [Crosshair Component](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/component/Crosshair.html)
-* [Components Showcase](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/component/ComponentShowcase.html)
+* [Components Showcase](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/component/Showcase.html)
 * [Observable Examples](https://beta.observablehq.com/collection/@jamesleesaunders/d3-x3dom)
 
 ### Getting Started
@@ -136,7 +136,7 @@ Component modules do not generate a `x3d` tag, these should be attached to an ex
 | component.crosshair()          | Crosshair                           | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/component/Crosshair.html)          | [View](https://jamesleesaunders.github.io/d3-x3dom/crosshair.html)          |
 | component.ribbon()             | Ribbon Chart / Line Chart           | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/component/Showcase.html)           | [View](https://jamesleesaunders.github.io/d3-x3dom/ribbon.html)             |
 | component.ribbonMultiSeries()  | Multi series Ribbon Chart           | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/component/RibbonMultiSeries.html)  | [View](https://jamesleesaunders.github.io/d3-x3dom/ribbonMultiSeries.html)  |
-| component.surface()            | Surface Area                        | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/component/Showcase.html)           | [View](https://jamesleesaunders.github.io/d3-x3dom/surface.html)            |
+| component.surface()            | Surface Area                        | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/component/Surface.html)            | [View](https://jamesleesaunders.github.io/d3-x3dom/surface.html)            |
 | component.vectorFields()       | Vector Field Chart                  | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/component/Showcase.html)           | [View](https://jamesleesaunders.github.io/d3-x3dom/vectorFields.html)       |
 | component.viewpoint()          | Camera position                     | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/component/Showcase.html)           | [View](https://jamesleesaunders.github.io/d3-x3dom/viewpoint.html)          |
 | component.volumeSlice()        | Volume Slice (MRI Scan)             | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/component/Showcase.html)           | [View](https://jamesleesaunders.github.io/d3-x3dom/volumeSlice.html)        |
