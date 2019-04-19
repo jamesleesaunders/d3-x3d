@@ -98,7 +98,6 @@ export default function() {
 
 		// Update the chart dimensions and add layer groups
 		const layers = ["axis", "bubbles"];
-
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)

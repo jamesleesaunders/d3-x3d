@@ -94,7 +94,6 @@ export default function() {
 
 		// Update the chart dimensions and add layer groups
 		const layers = ["axis", "ribbons"];
-
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)

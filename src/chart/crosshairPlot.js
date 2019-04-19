@@ -18,6 +18,9 @@ import component from "../component";
  */
 export default function() {
 
+	let x3d;
+	let scene;
+
 	/* Default Properties */
 	let width = 500;
 	let height = 500;
@@ -46,23 +49,17 @@ export default function() {
 		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear()
-				.domain([0, maxX])
-				.range([0, dimensionX]);
-		}
+		xScale = d3.scaleLinear()
+			.domain([0, maxX])
+			.range([0, dimensionX]);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
-				.domain([0, maxY])
-				.range([0, dimensionY]);
-		}
+		yScale = d3.scaleLinear()
+			.domain([0, maxY])
+			.range([0, dimensionY]);
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear()
-				.domain([0, maxZ])
-				.range([0, dimensionZ]);
-		}
+		zScale = d3.scaleLinear()
+			.domain([0, maxZ])
+			.range([0, dimensionZ]);
 	};
 
 	/**
@@ -73,15 +70,16 @@ export default function() {
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
-		const x3d = selection.append("x3d")
-			.attr("width", width + "px")
-			.attr("height", height + "px");
-
-		if (debug) {
-			x3d.attr("showLog", "true").attr("showStat", "true")
+		// Create x3d element (if it does not exist already)
+		if (!x3d) {
+			x3d = selection.append("x3d");
+			scene = x3d.append("scene");
 		}
 
-		let scene = x3d.append("scene");
+		x3d.attr("width", width + "px")
+			.attr("height", height + "px")
+			.attr("showLog", debug ? "true" : "false")
+			.attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		const layers = ["axis", "crosshairs"];
@@ -114,12 +112,16 @@ export default function() {
 				.yScale(yScale)
 				.zScale(zScale);
 
-			scene.select(".crosshairs")
+			let crosshairs = scene.select(".crosshairs")
+				.datum(data)
 				.selectAll(".crosshair")
-				.data((d) => d.values)
-				.enter()
+				.data((d) => d.values);
+
+			crosshairs.enter()
 				.append("group")
 				.classed("crosshair", true)
+				.merge(crosshairs)
+				.transition()
 				.each(function() {
 					d3.select(this).call(crosshair);
 				});

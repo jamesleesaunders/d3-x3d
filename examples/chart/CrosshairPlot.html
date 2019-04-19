@@ -12,18 +12,25 @@
 <body>
   <div id="chartholder"></div>
 
+  <input type="button" id="refresh" value="Refresh" />
+
   <script>
     // Select chartholder
     var chartHolder = d3.select("#chartholder");
 
-    // Generate some data
-    var myData = d3.x3dom.randomData.dataset3(10);
-
     // Declare the chart component
     var myChart = d3.x3dom.chart.crosshairPlot();
 
-    // Attach chart and data to the chartholder
-    chartHolder.datum(myData).call(myChart);
+    var refreshChart = function() {
+      // Generate some data
+      var myData = d3.x3dom.randomData.dataset3(10);
+
+      chartHolder.datum(myData).call(myChart);
+    };
+
+    d3.select("#refresh").attr("onclick", "refreshChart()");
+
+    refreshChart();
 
   </script>
 

@@ -90,7 +90,6 @@ export default function() {
 
 		// Update the chart dimensions and add layer groups
 		const layers = ["xAxis", "yAxis", "bars"];
-
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
