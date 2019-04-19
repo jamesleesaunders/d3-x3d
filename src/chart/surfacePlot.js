@@ -114,7 +114,8 @@ export default function() {
 			// Add Axis
 			axis.xScale(xScale)
 				.yScale(yScale)
-				.zScale(zScale);
+				.zScale(zScale)
+				.labelPosition("distal");
 
 			scene.select(".axis")
 				.call(axis);

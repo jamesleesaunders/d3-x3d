@@ -43,6 +43,7 @@ export default function() {
 	const viewpoint = component.viewpoint();
 	const axis = component.axisThreePlane();
 	const bubbles = component.bubblesMultiSeries();
+	const light = component.light();
 
 	/**
 	 * Initialise Data and Scales
@@ -132,14 +133,8 @@ export default function() {
 				.datum(data)
 				.call(bubbles);
 
-			/*
 			// Add Light
-			scene.append("directionallight")
-				.attr("direction", "1 0 -1")
-				.attr("on", "true")
-				.attr("intensity", "0.4")
-				.attr("shadowintensity", "0");
-			*/
+			scene.call(light);
 		});
 	};
 

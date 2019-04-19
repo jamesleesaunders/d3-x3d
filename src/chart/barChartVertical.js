@@ -41,6 +41,7 @@ export default function() {
 	const xAxis = component.axis();
 	const yAxis = component.axis();
 	const bars = component.bars();
+	const light = component.light();
 
 	/**
 	 * Initialise Data and Scales
@@ -130,6 +131,9 @@ export default function() {
 			scene.select(".bars")
 				.datum(data)
 				.call(bars);
+
+			// Add Light
+			scene.call(light);
 		});
 	};
 

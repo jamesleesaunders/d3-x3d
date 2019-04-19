@@ -50,7 +50,6 @@ export default function() {
 				.direction("x")
 				.tickDirection("z")
 				.tickSize(zScale.range()[1] - zScale.range()[0])
-				.tickPadding(xScale.range()[0])
 				.color("blue")
 				.labelPosition(labelPosition);
 

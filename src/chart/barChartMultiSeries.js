@@ -29,7 +29,7 @@ export default function() {
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["green", "red", "yellow", "steelblue", "orange"];
 	let classed = "d3X3domBarChartMultiSeries";
-  let labelPosition = "proximal";
+  let labelPosition = "distal";
 	let debug = false;
 
 	/* Scales */
@@ -40,8 +40,9 @@ export default function() {
 
 	/* Components */
 	const viewpoint = component.viewpoint();
-	const axis = component.axisThreePlane().labelPosition("distal");
+	const axis = component.axisThreePlane();
 	const bars = component.barsMultiSeries();
+	const light = component.light();
 
 	/**
 	 * Initialise Data and Scales
@@ -130,14 +131,8 @@ export default function() {
 				.datum(data)
 				.call(bars);
 
-			/*
 			// Add Light
-			scene.append("directionallight")
-				.attr("direction", "1 0 -1")
-				.attr("on", "true")
-				.attr("intensity", "0.4")
-				.attr("shadowintensity", "0");
-			*/
+			scene.call(light);
 		});
 	};
 

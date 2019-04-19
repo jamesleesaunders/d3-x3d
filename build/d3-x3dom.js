@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.2.3";
+var version = "1.2.4";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -514,7 +514,7 @@ function componentAxis () {
 	var tickValues = null;
 	var tickFormat = null;
 	var tickSize = 1;
-	var tickPadding = 1;
+	var tickPadding = 1.5;
 
 	var axisDirectionVectors = {
 		x: [1, 0, 0],
@@ -827,7 +827,7 @@ function componentAxisThreePlane () {
 				return d;
 			});
 
-			xzAxis.scale(xScale).direction("x").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).tickPadding(xScale.range()[0]).color("blue").labelPosition(labelPosition);
+			xzAxis.scale(xScale).direction("x").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("blue").labelPosition(labelPosition);
 
 			yzAxis.scale(yScale).direction("y").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("red").labelPosition(labelPosition);
 
@@ -2093,6 +2093,77 @@ function componentLabel () {
 }
 
 /**
+ * Reusable X3DOM Light Component
+ *
+ * @module
+ */
+function componentLight () {
+
+	/* Default Properties */
+	var classed = "d3X3domLight";
+	var direction = "1 0 -1";
+	var intensity = 0.5;
+	var shadowIntensity = 0;
+
+	/**
+  * Constructor
+  *
+  * @constructor
+  * @alias light
+  * @param {d3.selection} selection - The chart holder D3 selection.
+  */
+	var my = function my(selection) {
+		selection.each(function () {
+
+			var element = d3.select(this).classed(classed, true);
+
+			// Main Lines
+			var light = element.selectAll("directionallight").data([null]);
+
+			light.enter().append("directionallight").attr("on", true).attr("direction", direction).attr("intensity", intensity).attr("shadowintensity", shadowIntensity).merge(light);
+		});
+	};
+
+	/**
+  * Light Direction Getter / Setter
+  *
+  * @param {number[]} _v - View orientation.
+  * @returns {*}
+  */
+	my.direction = function (_v) {
+		if (!arguments.length) return direction;
+		direction = _v;
+		return my;
+	};
+
+	/**
+  * Light Intensity Getter / Setter
+  *
+  * @param {number[]} _v - View orientation.
+  * @returns {*}
+  */
+	my.intensity = function (_v) {
+		if (!arguments.length) return intensity;
+		intensity = _v;
+		return my;
+	};
+
+	/**
+  * Shadow Intensity Getter / Setter
+  *
+  * @param {number[]} _v - View orientation.
+  * @returns {*}
+  */
+	my.shadowIntensity = function (_v) {
+		if (!arguments.length) return shadowIntensity;
+		shadowIntensity = _v;
+		return my;
+	};
+
+	return my;
+}
+
+/**
  * Reusable 3D Ribbon Chart Component
  *
  * @module
@@ -3161,7 +3232,7 @@ function componentViewpoint () {
 			// Main Lines
 			var viewpoint = element.selectAll("viewpoint").data([null]);
 
-			viewpoint.enter().append("viewpoint").classed(classed, true).attr("centerofrotation", centerOfRotation.join(" ")).attr("position", viewPosition.join(" ")).attr("orientation", viewOrientation.join(" ")).attr("fieldofview", fieldOfView).attr("set_bind", "true").merge(viewpoint);
+			viewpoint.enter().append("viewpoint").attr("centerofrotation", centerOfRotation.join(" ")).attr("position", viewPosition.join(" ")).attr("orientation", viewOrientation.join(" ")).attr("fieldofview", fieldOfView).attr("set_bind", "true").merge(viewpoint);
 		});
 	};
 
@@ -3405,6 +3476,7 @@ var component = {
 	bubblesMultiSeries: componentBubblesMultiSeries,
 	crosshair: componentCrosshair,
 	label: componentLabel,
+	light: componentLight,
 	ribbon: componentRibbon,
 	ribbonMultiSeries: componentRibbonMultiSeries,
 	surface: componentSurface,
@@ -3440,7 +3512,7 @@ function chartBarChartMultiSeries () {
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["green", "red", "yellow", "steelblue", "orange"];
 	var classed = "d3X3domBarChartMultiSeries";
-	var labelPosition = "proximal";
+	var labelPosition = "distal";
 	var debug = false;
 
 	/* Scales */
@@ -3451,8 +3523,9 @@ function chartBarChartMultiSeries () {
 
 	/* Components */
 	var viewpoint = component.viewpoint();
-	var axis = component.axisThreePlane().labelPosition("distal");
+	var axis = component.axisThreePlane();
 	var bars = component.barsMultiSeries();
+	var light = component.light();
 
 	/**
   * Initialise Data and Scales
@@ -3523,14 +3596,8 @@ function chartBarChartMultiSeries () {
 
 			scene.select(".bars").datum(data).call(bars);
 
-			/*
-   // Add Light
-   scene.append("directionallight")
-   	.attr("direction", "1 0 -1")
-   	.attr("on", "true")
-   	.attr("intensity", "0.4")
-   	.attr("shadowintensity", "0");
-   */
+			// Add Light
+			scene.call(light);
 		});
 	};
 
@@ -3696,6 +3763,7 @@ function chartBarChartVertical () {
 	var xAxis = component.axis();
 	var yAxis = component.axis();
 	var bars = component.bars();
+	var light = component.light();
 
 	/**
   * Initialise Data and Scales
@@ -3765,6 +3833,9 @@ function chartBarChartVertical () {
 			bars.xScale(xScale).yScale(yScale).colors(colors);
 
 			scene.select(".bars").datum(data).call(bars);
+
+			// Add Light
+			scene.call(light);
 		});
 	};
 
@@ -3908,6 +3979,7 @@ function chartBubbleChart () {
 	var viewpoint = component.viewpoint();
 	var axis = component.axisThreePlane();
 	var bubbles = component.bubblesMultiSeries();
+	var light = component.light();
 
 	/**
   * Initialise Data and Scales
@@ -3982,14 +4054,8 @@ function chartBubbleChart () {
 
 			scene.select(".bubbles").datum(data).call(bubbles);
 
-			/*
-   // Add Light
-   scene.append("directionallight")
-   	.attr("direction", "1 0 -1")
-   	.attr("on", "true")
-   	.attr("intensity", "0.4")
-   	.attr("shadowintensity", "0");
-   */
+			// Add Light
+			scene.call(light);
 		});
 	};
 
@@ -4365,6 +4431,7 @@ function chartRibbonChartMultiSeries () {
 	var viewpoint = component.viewpoint();
 	var axis = component.axisThreePlane();
 	var ribbons = component.ribbonMultiSeries();
+	var light = component.light();
 
 	/**
   * Initialise Data and Scales
@@ -4435,14 +4502,8 @@ function chartRibbonChartMultiSeries () {
 
 			scene.select(".ribbons").datum(data).call(ribbons);
 
-			/*
-   // Add Light
-   scene.append("directionallight")
-   	.attr("direction", "1 0 -1")
-   	.attr("on", "true")
-   	.attr("intensity", "0.4")
-   	.attr("shadowintensity", "0");
-   */
+			// Add Light
+			scene.call(light);
 		});
 	};
 
@@ -4902,7 +4963,7 @@ function chartSurfacePlot () {
 			scene.call(viewpoint);
 
 			// Add Axis
-			axis.xScale(xScale).yScale(yScale).zScale(zScale);
+			axis.xScale(xScale).yScale(yScale).zScale(zScale).labelPosition("distal");
 
 			scene.select(".axis").call(axis);
 

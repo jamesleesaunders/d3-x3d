@@ -33,7 +33,6 @@ export default function() {
 
 			viewpoint.enter()
 				.append("viewpoint")
-				.classed(classed, true)
 				.attr("centerofrotation", centerOfRotation.join(" "))
 				.attr("position", viewPosition.join(" "))
 				.attr("orientation", viewOrientation.join(" "))

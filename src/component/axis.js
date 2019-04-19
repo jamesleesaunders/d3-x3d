@@ -22,7 +22,7 @@ export default function() {
 	let tickValues = null;
 	let tickFormat = null;
 	let tickSize = 1;
-	let tickPadding = 1;
+	let tickPadding = 1.5;
 
 	const axisDirectionVectors = {
 		x: [1, 0, 0],
