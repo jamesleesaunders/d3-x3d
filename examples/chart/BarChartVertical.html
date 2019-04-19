@@ -47,8 +47,6 @@
         values: data.values.filter(series => filterArray.includes(series.key))
       };
 
-      console.log(filteredData);
-
       chartHolder.datum(filteredData).call(myChart);
     };
 
