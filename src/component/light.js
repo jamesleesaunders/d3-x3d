@@ -43,7 +43,7 @@ export default function() {
 	/**
 	 * Light Direction Getter / Setter
 	 *
-	 * @param {number[]} _v - View orientation.
+	 * @param {string} _v - Direction vector (e.g. "1 0 -1").
 	 * @returns {*}
 	 */
 	my.direction = function(_v) {
@@ -55,7 +55,7 @@ export default function() {
 	/**
 	 * Light Intensity Getter / Setter
 	 *
-	 * @param {number[]} _v - View orientation.
+	 * @param {number} _v - Intensity value.
 	 * @returns {*}
 	 */
 	my.intensity = function(_v) {
@@ -67,7 +67,7 @@ export default function() {
 	/**
 	 * Shadow Intensity Getter / Setter
 	 *
-	 * @param {number[]} _v - View orientation.
+	 * @param {number} _v - Intensity value.
 	 * @returns {*}
 	 */
 	my.shadowIntensity = function(_v) {
