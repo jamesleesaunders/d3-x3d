@@ -83,6 +83,7 @@ export default function() {
 
 				/*
 				// FIXME: Due to a bug with x3dom `._quality`, `fieldChanged()`, we must to use .html() rather than .attr().
+				// SEE: https://github.com/x3dom/x3dom/pull/949
 				shape.append("sphere")
 					.attr("radius", (d) => sizeScale(d.value));
 				*/
