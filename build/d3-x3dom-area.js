@@ -2003,6 +2003,7 @@ function componentArea () {
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 5 };
 	var color = "red";
+	var transparency = 0.2;
 	var classed = "d3X3domArea";
 
 	/* Scales */
@@ -2031,9 +2032,9 @@ function componentArea () {
   * @param {array} arr
   * @returns {string}
   */
-	var arrayToCoordIndex = function arrayToCoordIndex(arr) {
+	var arrayToCoordIndex = function arrayToCoordIndex(arr, offset) {
 		return arr.map(function (d, i) {
-			return i;
+			return i + offset;
 		}).join(" ").concat(" -1");
 	};
 
@@ -2075,8 +2076,10 @@ function componentArea () {
 			init(data);
 
 			var element = d3.select(this).classed(classed, true).attr("id", function (d) {
-				return d.key;
-			});
+					return d.key;
+				})
+				.append("group").classed("area", true)
+				.append("shape");
 
 			var areaData = function areaData(d) {
 				return d.map(function (pointThis, indexThis, array) {
@@ -2098,8 +2101,7 @@ function componentArea () {
 					return {
 						key: pointThis.key,
 						value: pointThis.value,
-						coordindex: arrayToCoordIndex(points),
-						point: array2dToString(points),
+						points: points,
 						color: color,
 						transparency: 0.2
 					};
@@ -2108,42 +2110,25 @@ function componentArea () {
 				});
 			};
 
-			var shape = function shape(el) {
-				var shape = el.append("shape");
+			element.append("appearance").append("material")
+				.attr("diffusecolor", color)
+				.attr("transparency", transparency);
 
-// 				shape.append("indexedfaceset").attr("coordindex", function (d) {
-// 					return d.coordindex;
-// 				}).append("coordinate").attr("point", function (d) {
-// 					return d.point;
-// 				});
-				
-				shape.html(function (d) {
-					var innerHTML = '<IndexedFaceSet ';
-					innerHTML += 'coordIndex="' + d.coordindex + '"> ';
-					innerHTML += '<Coordinate point="' + d.point + '">';
-					innerHTML += '</Coordinate> </IndexedFaceSet>';
-					return innerHTML;
-				})
+			var ifs = element.append("indexedfaceset").attr("coordIndex", "").attr("solid", "false");
+			var coord = ifs.append("coordinate").attr("point", "");
 
-				shape.append("appearance").append("twosidedmaterial").attr("diffusecolor", function (d) {
-					return d.color;
-				}).attr("transparency", function (d) {
-					return d.transparency;
-				});
-
-				return shape;
-			};
-
-			var area = element.append("group").classed("area", true).selectAll('.area')
+			var area = ifs.selectAll('.area')
 				.data(d => areaData(d.values), d => d.key);
 
-// 			area.enter().call(shape);
-
-			area.enter().call(shape).merge(area).transition().select("indexedfaceset").attr("coordindex", function (d) {
-				return d.coordindex;
-			}).select("coordinate").attr("point", function (d) {
-				return d.point;
-			});
+			function addIndices (d) {
+				var point = coord.attr("point");
+				var lastIndex3 = point.split(" ").length - 1;
+				var coordIndex = ifs.attr("coordIndex") + " ";
+				ifs.attr("coordIndex", coordIndex + arrayToCoordIndex(d.points, lastIndex3/3));
+				coord.attr("point", point + " " + array2dToString(d.points));
+			}
+		
+			area.enter().each(addIndices);
 
 			area.exit().remove();
 		});
