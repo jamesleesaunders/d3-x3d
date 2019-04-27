@@ -2003,7 +2003,7 @@ function componentArea () {
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 5 };
 	var color = "red";
-	var transparency = 0.2;
+	var transparency = 0.0;
 	var classed = "d3X3domArea";
 
 	/* Scales */
@@ -2071,6 +2071,7 @@ function componentArea () {
   * @alias area
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
+  
 	var my = function my(selection) {
 		selection.each(function (data) {
 			init(data);
@@ -2096,7 +2097,7 @@ function componentArea () {
 					var z1 = 1 - dimensions.z / 2;
 					var z2 = dimensions.z / 2;
 
-					var points = [[x1, y1, z1], [x1, y1, z2], [x2, y2, z2], [x2, y2, z1], [x1, y1, z1]];
+					var points = [[x1, 0, z1], [x1, y1, z1], [x2, y2, z1], [x2, 0, z1]];
 
 					return {
 						key: pointThis.key,
