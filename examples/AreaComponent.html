@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>d3-x3dom : 3D Components Example</title>
+  <title>d3-x3dom : Area Components Example</title>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
   <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
@@ -22,8 +22,8 @@
     /**
      * Ribbon Component
      */
-    var ribbonData = d3.x3dom.randomData.dataset3(20);
-    var ribbonComponent = d3.x3dom.component.ribbon();
+    var areaData = d3.x3dom.randomData.dataset3(20);
+    var areaComponent = d3.x3dom.component.area();
 
     // Create scene
     var scene6 = d3.select("#chartholder6")
@@ -37,7 +37,7 @@
       .append("group")
       .attr("class", "chart")
       .datum(ribbonData)
-      .call(ribbonComponent);
+      .call(areaComponent);
 
     /**
      * Sync Viewpoints
