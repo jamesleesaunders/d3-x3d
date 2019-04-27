@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3dom : 3D Components Example</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
+  <script src="../build/d3-x3dom.js"></script>
+</head>
+
+<body>
+  <div id="chartholder6"></div>
+  
+  <script>
+    // Chart dimensions
+    var width = 300;
+    var height = 300;
+
+    var viewpoint = d3.x3dom.component.viewpoint();
+
+    /**
+     * Ribbon Component
+     */
+    var ribbonData = d3.x3dom.randomData.dataset3(20);
+    var ribbonComponent = d3.x3dom.component.ribbon();
+
+    // Create scene
+    var scene6 = d3.select("#chartholder6")
+      .append("x3d")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("scene");
+
+    // Add chart component
+    scene6.call(viewpoint)
+      .append("group")
+      .attr("class", "chart")
+      .datum(ribbonData)
+      .call(ribbonComponent);
+
+    /**
+     * Sync Viewpoints
+     */
+    function syncViewpoints(e) {
+      viewpoints.forEach(function(viewpoint) {
+        viewpoint.setFieldValue("orientation", x3dom.fields.Quaternion.axisAngle(e.orientation[0], e.orientation[1]));
+        viewpoint.setFieldValue("position", e.position);
+      });
+    }
+
+    var viewpoints = document.querySelectorAll("viewpoint");
+    document.onload = function() {
+      viewpoints.forEach(function(viewpoint) {
+        viewpoint.addEventListener("viewpointChanged", syncViewpoints, false);
+      });
+    };
+
+  </script>
+
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.</div>
+</body>
+
+</html>
