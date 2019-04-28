@@ -20,9 +20,18 @@
     var viewpoint = d3.x3dom.component.viewpoint();
 
     /**
-     * Ribbon Component
+     * Area Component
      */
     var areaData = d3.x3dom.randomData.dataset3(20);
+    // smooth
+    var values = areaData.values;
+    var keys = values.map(v => v.key);
+    var splinePolator = d3.interpolateBasis(values.map(v => v.value));
+    var keyPicker = d3.interpolateDiscrete(keys);
+    var keyPolator = function (t) { return d3.interpolate(keyPicker(t), keyPicker(t + 1/keys.length))(t) };
+    var sampler = d3.range(0, 1, 0.01); // 100 samples
+    areaData.values = sampler.map(t => { return {key: keyPolator(t), value: splinePolator(t)};});
+    
     var areaComponent = d3.x3dom.component.area();
 
     // Create scene
