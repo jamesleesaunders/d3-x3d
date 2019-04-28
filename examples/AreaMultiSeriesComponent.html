@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3dom : 3D Components Example</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
+  <script src="../build/d3-x3dom.js"></script>
+</head>
+
+<body>
+  <div id="chartholder1"></div>
+  <div id="chartholder2"></div>
+  <div id="chartholder3"></div>
+  <div id="chartholder4"></div>
+  <div id="chartholder5"></div>
+  <div id="chartholder6"></div>
+  <div id="chartholder7"></div>
+  <div id="chartholder8"></div>
+  <div id="chartholder9"></div>
+
+  <script>
+    // Chart dimensions
+    var width = 300;
+    var height = 300;
+
+    var viewpoint = d3.x3dom.component.viewpoint();
+
+    /**
+     * Ribbon Multi Component
+     */
+    var ribbonMultiSeriesData = d3.x3dom.randomData.dataset5();
+    var ribbonMultiSeriesComponent = d3.x3dom.component.ribbonMultiSeries();
+
+    // Create scene
+    var scene7 = d3.select("#chartholder7")
+      .append("x3d")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("scene");
+
+    // Add chart component
+    scene7.call(viewpoint)
+      .append("group")
+      .attr("class", "chart")
+      .datum(ribbonMultiSeriesData)
+      .call(ribbonMultiSeriesComponent);
+
+    /**
+     * Sync Viewpoints
+     */
+    function syncViewpoints(e) {
+      viewpoints.forEach(function(viewpoint) {
+        viewpoint.setFieldValue("orientation", x3dom.fields.Quaternion.axisAngle(e.orientation[0], e.orientation[1]));
+        viewpoint.setFieldValue("position", e.position);
+      });
+    }
+
+    var viewpoints = document.querySelectorAll("viewpoint");
+    document.onload = function() {
+      viewpoints.forEach(function(viewpoint) {
+        viewpoint.addEventListener("viewpointChanged", syncViewpoints, false);
+      });
+    };
+
+  </script>
+
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.</div>
+</body>
+
+</html>
