@@ -29,6 +29,7 @@ export default function() {
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["green", "red", "yellow", "steelblue", "orange"];
 	let classed = "d3X3domBarChartMultiSeries";
+  let labelPosition = "distal";
 	let debug = false;
 
 	/* Scales */
@@ -36,6 +37,12 @@ export default function() {
 	let yScale;
 	let zScale;
 	let colorScale;
+
+	/* Components */
+	const viewpoint = component.viewpoint();
+	const axis = component.axisThreePlane();
+	const bars = component.barsMultiSeries();
+	const light = component.light();
 
 	/**
 	 * Initialise Data and Scales
@@ -89,7 +96,6 @@ export default function() {
 
 		// Update the chart dimensions and add layer groups
 		const layers = ["axis", "bars"];
-
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
@@ -100,39 +106,32 @@ export default function() {
 		selection.each((data) => {
 			init(data);
 
-			// Construct Viewpoint Component
-			const viewpoint = component.viewpoint()
-				.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-
-			// Construct Axis Component
-			const axis = component.axisThreePlane()
-				.xScale(xScale)
-				.yScale(yScale)
-				.zScale(zScale);
-
-			// Construct Bars Component
-			const bars = component.barsMultiSeries()
-				.xScale(xScale)
-				.yScale(yScale)
-				.zScale(zScale)
-				.colors(colors);
+			// Add Viewpoint
+			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
 			scene.call(viewpoint);
 
+			// Add Axis
+			axis.xScale(xScale)
+				.yScale(yScale)
+				.zScale(zScale)
+        .labelPosition(labelPosition);
+
 			scene.select(".axis")
 				.call(axis);
+
+			// Add Bars
+			bars.xScale(xScale)
+				.yScale(yScale)
+				.zScale(zScale)
+				.colors(colors);
 
 			scene.select(".bars")
 				.datum(data)
 				.call(bars);
 
-			/*
-			scene.append("directionallight")
-				.attr("direction", "1 0 -1")
-				.attr("on", "true")
-				.attr("intensity", "0.4")
-				.attr("shadowintensity", "0");
-			*/
+			// Add Light
+			scene.call(light);
 		});
 	};
 
@@ -243,6 +242,18 @@ export default function() {
 		debug = _v;
 		return my;
 	};
+
+  /**
+   * Label Position Getter / Setter
+   *
+   * @param {string} _v - Position ('proximal' or 'distal')
+   * @returns {*}
+   */
+  my.labelPosition = function(_v) {
+    if (!arguments.length) return labelPosition;
+    labelPosition = _v;
+    return my;
+  };
 
 	return my;
 }

@@ -36,6 +36,13 @@ export default function() {
 	let yScale;
 	let colorScale;
 
+	/* Components */
+	const viewpoint = component.viewpoint();
+	const xAxis = component.axis();
+	const yAxis = component.axis();
+	const bars = component.bars();
+	const light = component.light();
+
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -83,7 +90,6 @@ export default function() {
 
 		// Update the chart dimensions and add layer groups
 		const layers = ["xAxis", "yAxis", "bars"];
-
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
@@ -94,29 +100,21 @@ export default function() {
 		selection.each((data) => {
 			init(data);
 
-			// Construct Viewpoint Component
-			const viewpoint = component.viewpoint()
-				.quickView("left");
+			// Add Viewpoint
+			viewpoint.quickView("left");
 
-			// Construct Axis Components
-			const xAxis = component.axis()
-				.scale(xScale)
+			scene.call(viewpoint);
+
+			// Add Axis
+			xAxis.scale(xScale)
 				.direction('x')
-				.tickDirection('y');
+				.tickDirection('y')
+				.tickSize(0);
 
-			const yAxis = component.axis()
-				.scale(yScale)
+			yAxis.scale(yScale)
 				.direction('y')
 				.tickDirection('x')
 				.tickSize(yScale.range()[1] - yScale.range()[0]);
-
-			// Construct Bars Component
-			const bars = component.bars()
-				.xScale(xScale)
-				.yScale(yScale)
-				.colors(colors);
-
-			scene.call(viewpoint);
 
 			scene.select(".xAxis")
 				.call(xAxis);
@@ -124,9 +122,17 @@ export default function() {
 			scene.select(".yAxis")
 				.call(yAxis);
 
+			// Add Bars
+			bars.xScale(xScale)
+				.yScale(yScale)
+				.colors(colors);
+
 			scene.select(".bars")
 				.datum(data)
 				.call(bars);
+
+			// Add Light
+			scene.call(light);
 		});
 	};
 

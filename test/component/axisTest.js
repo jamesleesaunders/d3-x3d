@@ -52,7 +52,7 @@ test("Test Axis Component, component.axis()", function(t) {
 	t.deepEqual(axis.tickSize(), 5, "Changed tickSize is set");
 
 	// Test tickPadding getter / setter function
-	t.deepEqual(axis.tickPadding(), 1, "Default tickPadding");
+	t.deepEqual(axis.tickPadding(), 1.5, "Default tickPadding");
 	axis.tickPadding(5);
 	t.deepEqual(axis.tickPadding(), 5, "Changed tickPadding is set");
 

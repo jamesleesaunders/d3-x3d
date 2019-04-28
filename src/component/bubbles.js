@@ -81,8 +81,14 @@ export default function() {
 					.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);")
 					.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
 
+				/*
+				// FIXME: Due to a bug with x3dom `._quality`, `fieldChanged()`, we must to use .html() rather than .attr().
+				// SEE: https://github.com/x3dom/x3dom/pull/949
 				shape.append("sphere")
 					.attr("radius", (d) => sizeScale(d.value));
+				*/
+
+				shape.html((d) => "<sphere radius='" + sizeScale(d.value) + "'></sphere>");
 
 				shape.append("appearance")
 					.append("material")
@@ -101,8 +107,11 @@ export default function() {
 				.call(shape)
 				.merge(bubbles)
 				.transition()
-				.duration(0)
-				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)));
+				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
+				.select("shape")
+				.select("appearance")
+				.select("material")
+				.attr("diffusecolor", color);
 
 			bubbles.exit()
 				.remove();

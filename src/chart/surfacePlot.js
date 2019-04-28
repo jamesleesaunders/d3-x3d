@@ -20,6 +20,9 @@ import component from "../component";
  */
 export default function() {
 
+	let x3d;
+	let scene;
+
 	/* Default Properties */
 	let width = 500;
 	let height = 500;
@@ -34,6 +37,11 @@ export default function() {
 	let zScale;
 	let colorScale;
 
+	/* Components */
+	const viewpoint = component.viewpoint();
+	const axis = component.axisThreePlane();
+	const surface = component.surface();
+
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -45,30 +53,22 @@ export default function() {
 		const valueExtent = [0, valueMax];
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scalePoint()
-				.domain(rowKeys)
-				.range([0, dimensionX]);
-		}
+		xScale = d3.scalePoint()
+			.domain(rowKeys)
+			.range([0, dimensionX]);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
-				.domain(valueExtent)
-				.range([0, dimensionY]).nice();
-		}
+		yScale = d3.scaleLinear()
+			.domain(valueExtent)
+			.range([0, dimensionY]).nice();
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scalePoint()
-				.domain(columnKeys)
-				.range([0, dimensionZ]);
-		}
+		zScale = d3.scalePoint()
+			.domain(columnKeys)
+			.range([0, dimensionZ]);
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleLinear()
-				.domain(valueExtent)
-				.range(colors)
-				.interpolate(d3.interpolateLab);
-		}
+		colorScale = d3.scaleLinear()
+			.domain(valueExtent)
+			.range(colors)
+			.interpolate(d3.interpolateLab);
 	};
 
 	/**
@@ -79,15 +79,16 @@ export default function() {
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
-		const x3d = selection.append("x3d")
-			.attr("width", width + "px")
-			.attr("height", height + "px");
-
-		if (debug) {
-			x3d.attr("showLog", "true").attr("showStat", "true")
+		// Create x3d element (if it does not exist already)
+		if (!x3d) {
+			x3d = selection.append("x3d");
+			scene = x3d.append("scene");
 		}
 
-		const scene = x3d.append("scene");
+		x3d.attr("width", width + "px")
+			.attr("height", height + "px")
+			.attr("showLog", debug ? "true" : "false")
+			.attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		const layers = ["axis", "surface"];
@@ -101,30 +102,28 @@ export default function() {
 		selection.each((data) => {
 			init(data);
 
-			// Construct Viewpoint Component
-			const viewpoint = component.viewpoint()
-				.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-
-			// Construct Axis Component
-			const axis = component.axisThreePlane()
-				.xScale(xScale)
-				.yScale(yScale)
-				.zScale(zScale);
-
-			// Construct Surface Component
-			const surface = component.surface()
-				.xScale(xScale)
-				.yScale(yScale)
-				.zScale(zScale)
-				.colors(colors);
+			// Add Viewpoint
+			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
 			scene.call(viewpoint);
+
+			// Add Axis
+			axis.xScale(xScale)
+				.yScale(yScale)
+				.zScale(zScale)
+				.labelPosition("distal");
 
 			scene.select(".axis")
 				.call(axis);
 
+			// Add Surface Area
+			surface.xScale(xScale)
+				.yScale(yScale)
+				.zScale(zScale)
+				.colors(colors);
+
 			scene.select(".surface")
-				.datum((d) => d)
+				.datum(data)
 				.call(surface);
 		});
 	};
