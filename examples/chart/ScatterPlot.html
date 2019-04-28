@@ -2,28 +2,35 @@
 <html>
 
 <head>
-  <title>d3-x3dom : 3D Bar Chart Example</title>
+  <title>d3-x3dom : 3D Scatter Plot Chart Example</title>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
   <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
-  <script src="../build/d3-x3dom.js"></script>
+  <script src="../../build/d3-x3dom.js"></script>
 </head>
 
 <body>
   <div id="chartholder"></div>
 
+  <input type="button" id="refresh" value="Refresh" />
+
   <script>
     // Select chartholder
     var chartHolder = d3.select("#chartholder");
 
-    // Generate some data
-    var myData = d3.x3dom.randomData.dataset2();
-
     // Declare the chart component
-    var myChart = d3.x3dom.chart.barChartMultiSeries();
+    var myChart = d3.x3dom.chart.scatterPlot();
 
-    // Attach chart and data to the chartholder
-    chartHolder.datum(myData).call(myChart);
+    var refreshChart = function() {
+      // Generate some data
+      var myData = d3.x3dom.randomData.dataset3(200);
+
+      chartHolder.datum(myData).call(myChart);
+    };
+
+    d3.select("#refresh").attr("onclick", "refreshChart()");
+
+    refreshChart();
 
   </script>
 

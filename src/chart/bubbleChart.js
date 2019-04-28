@@ -39,6 +39,12 @@ export default function() {
 	let sizeScale;
 	let sizeDomain = [0.5, 3.5];
 
+	/* Components */
+	const viewpoint = component.viewpoint();
+	const axis = component.axisThreePlane();
+	const bubbles = component.bubblesMultiSeries();
+	const light = component.light();
+
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -69,7 +75,6 @@ export default function() {
 		sizeScale = d3.scaleLinear()
 			.domain(valueExtent)
 			.range(sizeDomain);
-
 	};
 
 	/**
@@ -93,7 +98,6 @@ export default function() {
 
 		// Update the chart dimensions and add layer groups
 		const layers = ["axis", "bubbles"];
-
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
@@ -104,38 +108,32 @@ export default function() {
 		selection.each((data) => {
 			init(data);
 
-			// Construct Viewpoint Component
-			const viewpoint = component.viewpoint()
-				.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
+			// Add Viewpoint
+			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
-			// Construct Axis Component
-			const axis = component.axisThreePlane()
-				.xScale(xScale)
+			scene.call(viewpoint);
+
+			// Add Axis
+			axis.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale);
 
-			// Construct Bubbles Component
-			const bubbles = component.bubblesMultiSeries()
-				.xScale(xScale)
+			scene.select(".axis")
+				.call(axis);
+
+			// Add Bubbles
+			bubbles.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
 				.sizeScale(sizeScale)
 				.colorScale(colorScale);
 
-			scene.call(viewpoint);
-
-			scene.select(".axis")
-				.call(axis);
-
 			scene.select(".bubbles")
 				.datum(data)
 				.call(bubbles);
 
-			scene.append("directionallight")
-				.attr("direction", "1 0 -1")
-				.attr("on", "true")
-				.attr("intensity", "0.4")
-				.attr("shadowintensity", "0");
+			// Add Light
+			scene.call(light);
 		});
 	};
 

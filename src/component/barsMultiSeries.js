@@ -21,6 +21,9 @@ export default function() {
 	let zScale;
 	let colorScale;
 
+	/* Components */
+	const bars = componentBars();
+
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -66,22 +69,19 @@ export default function() {
 			const element = d3.select(this)
 				.classed(classed, true);
 
-			const addBars = function(d) {
-				// Construct Bars Component
-				const bars = componentBars()
-					.xScale(xScale)
-					.yScale(yScale)
-					.dimensions({
-						x: dimensions.x,
-						y: dimensions.y,
-						z: zScale.bandwidth()
-					})
-					.colors(colors);
+			bars.xScale(xScale)
+				.yScale(yScale)
+				.dimensions({
+					x: dimensions.x,
+					y: dimensions.y,
+					z: zScale.bandwidth()
+				})
+				.colors(colors);
 
+			const addBars = function() {
 				d3.select(this).call(bars);
 			};
 
-			// Create Bar Groups
 			const barGroup = element.selectAll(".barGroup")
 				.data((d) => d, (d) => d.key);
 

@@ -11,6 +11,8 @@ export default function() {
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let color = "black";
 	let classed = "d3X3domAxis";
+	let labelPosition = "proximal";
+	let labelInset = labelPosition === "distal" ? 1 : -1;
 
 	/* Scale and Axis Options */
 	let scale;
@@ -20,7 +22,7 @@ export default function() {
 	let tickValues = null;
 	let tickFormat = null;
 	let tickSize = 1;
-	let tickPadding = 1;
+	let tickPadding = 1.5;
 
 	const axisDirectionVectors = {
 		x: [1, 0, 0],
@@ -85,8 +87,12 @@ export default function() {
 			const axisRotationVector = getAxisRotationVector(direction);
 			const tickRotationVector = getAxisRotationVector(tickDirection);
 
+			/*
+			// FIXME: Currently the tickArguments option does not work.
 			const tickValuesDefault = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
 			tickValues = tickValues === null ? tickValuesDefault : tickValues;
+			*/
+			tickValues = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
 
 			const tickFormatDefault = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : (d) => d;
 			tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
@@ -95,7 +101,8 @@ export default function() {
 			const domain = element.selectAll(".domain")
 				.data([null]);
 
-			const domainEnter = domain.enter().append("transform")
+			const domainEnter = domain.enter()
+				.append("transform")
 				.attr("class", "domain")
 				.attr("rotation", axisRotationVector.join(" "))
 				.attr("translation", axisDirectionVector.map((d) => (d * (range0 + range1) / 2)).join(" "))
@@ -105,28 +112,46 @@ export default function() {
 				.attr("radius", 0.1)
 				.attr("height", range1 - range0);
 
-			// Tick Lines
-			const tick = element.selectAll(".tick")
-				.data(tickValues, scale).order();
+			domainEnter.merge(domain);
 
-			const tickEnter = tick.enter()
+			domain.exit().remove();
+
+			// Tick Lines
+			const ticks = element.selectAll(".tick")
+				.data(tickValues);
+
+			const ticksEnter = ticks.enter()
 				.append("transform")
 				.attr("class", "tick")
-				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")));
-
-			tickEnter.append("transform")
+				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
+				.append("transform")
 				.attr("translation", tickDirectionVector.map((d) => (d * tickSize / 2)).join(" "))
 				.attr("rotation", tickRotationVector.join(" "))
-				.attr("class", "tickLine")
 				.append("shape")
 				.call(makeSolid, "#d3d3d3")
 				.append("cylinder")
 				.attr("radius", 0.05)
 				.attr("height", tickSize);
 
+			ticksEnter.merge(ticks);
+
+			ticks.transition()
+				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")));
+
+			ticks.exit()
+				.remove();
+
+			// Labels
 			if (tickFormat !== "") {
-				tickEnter.append("transform")
-					.attr("translation", tickDirectionVector.map((d) => (-d * tickPadding)))
+				const labels = element.selectAll(".label")
+					.data(tickValues);
+
+				const labelsEnter = ticks.enter()
+					.append("transform")
+					.attr("class", "label")
+					.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
+					.append("transform")
+					.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * (range1 - range0) * tickDirectionVector[i])))
 					.append("billboard")
 					.attr("axisofrotation", "0 0 0")
 					.append("shape")
@@ -138,18 +163,25 @@ export default function() {
 					.attr("family", "SANS")
 					.attr("style", "BOLD")
 					.attr("justify", "MIDDLE");
+
+				labelsEnter.merge(labels);
+
+				labels.transition()
+					.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
+					.select("transform")
+					.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * (range1 - range0) * tickDirectionVector[i])))
+					.on("start", function() {
+						d3.select(this)
+							.select("billboard")
+							.select("shape")
+							.select("text")
+							.attr("string", tickFormat);
+					});
+
+				labels.exit()
+					.remove();
 			}
 
-			tick.transition()
-				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")));
-
-			domainEnter.merge(domain);
-
-			tickEnter.merge(tick);
-
-			tick.exit().remove();
-
-			domain.exit().remove();
 
 		});
 	};
@@ -271,6 +303,19 @@ export default function() {
 	my.color = function(_v) {
 		if (!arguments.length) return color;
 		color = _v;
+		return my;
+	};
+
+	/**
+	 * Label Position Getter / Setter
+	 *
+	 * @param {string} _v - Position ('proximal' or 'distal')
+	 * @returns {*}
+	 */
+	my.labelPosition = function(_v) {
+		if (!arguments.length) return labelPosition;
+		labelPosition = _v;
+		labelInset = labelPosition === "distal" ? 1 : -1;
 		return my;
 	};
 

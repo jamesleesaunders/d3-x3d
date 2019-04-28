@@ -21,6 +21,9 @@ import { dispatch } from "../events";
  */
 export default function() {
 
+	let x3d;
+	let scene;
+
 	/* Default Properties */
 	let width = 500;
 	let height = 500;
@@ -34,6 +37,13 @@ export default function() {
 	let yScale;
 	let zScale;
 
+	/* Components */
+	const viewpoint = component.viewpoint();
+	const axis = component.axisThreePlane();
+	const crosshair = component.crosshair();
+	const label = component.label();
+	const bubbles = component.bubbles();
+
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -45,23 +55,17 @@ export default function() {
 		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear()
-				.domain([0, maxX])
-				.range([0, dimensionX]);
-		}
+		xScale = d3.scaleLinear()
+			.domain([0, maxX])
+			.range([0, dimensionX]);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
-				.domain([0, maxY])
-				.range([0, dimensionY]);
-		}
+		yScale = d3.scaleLinear()
+			.domain([0, maxY])
+			.range([0, dimensionY]);
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear()
-				.domain([0, maxZ])
-				.range([0, dimensionZ]);
-		}
+		zScale = d3.scaleLinear()
+			.domain([0, maxZ])
+			.range([0, dimensionZ]);
 	};
 
 	/**
@@ -72,15 +76,16 @@ export default function() {
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
-		const x3d = selection.append("x3d")
-			.attr("width", width + "px")
-			.attr("height", height + "px");
-
-		if (debug) {
-			x3d.attr("showLog", "true").attr("showStat", "true")
+		// Create x3d element (if it does not exist already)
+		if (!x3d) {
+			x3d = selection.append("x3d");
+			scene = x3d.append("scene");
 		}
 
-		let scene = x3d.append("scene");
+		x3d.attr("width", width + "px")
+			.attr("height", height + "px")
+			.attr("showLog", debug ? "true" : "false")
+			.attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		const layers = ["axis", "bubbles", "crosshair", "label"];
@@ -94,32 +99,32 @@ export default function() {
 		selection.each((data) => {
 			init(data);
 
-			// Construct Viewpoint Component
-			const viewpoint = component.viewpoint()
-				.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
+			// Add Viewpoint
+			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
-			// Construct Axis Component
-			const axis = component.axisThreePlane()
-				.xScale(xScale)
+			scene.call(viewpoint);
+
+			// Add Axis
+			axis.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale);
 
-			// Construct Crosshair Component
-			const crosshair = component.crosshair()
-				.xScale(xScale)
+			scene.select(".axis")
+				.call(axis);
+
+			// Add Crosshair
+			crosshair.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale);
 
-			// Construct Label Component
-			const label = component.label()
-				.xScale(xScale)
+			// Add Labels
+			label.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
 				.offset(0.5);
 
-			// Construct Bubbles Component
-			const bubbles = component.bubbles()
-				.xScale(xScale)
+			// Add Bubbles
+			bubbles.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
 				.color(color)
@@ -147,13 +152,8 @@ export default function() {
 						.remove();
 				});
 
-			scene.call(viewpoint);
-
-			scene.select(".axis")
-				.call(axis);
-
 			scene.select(".bubbles")
-				.datum((d) => d)
+				.datum(data)
 				.call(bubbles);
 		});
 	};

@@ -37,6 +37,12 @@ export default function() {
 	let zScale;
 	let colorScale;
 
+	/* Components */
+	const viewpoint = component.viewpoint();
+	const axis = component.axisThreePlane();
+	const ribbons = component.ribbonMultiSeries();
+	const light = component.light();
+
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -88,7 +94,6 @@ export default function() {
 
 		// Update the chart dimensions and add layer groups
 		const layers = ["axis", "ribbons"];
-
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
@@ -99,42 +104,34 @@ export default function() {
 		selection.each((data) => {
 			init(data);
 
-			// Construct Viewpoint Component
-			const viewpoint = component.viewpoint()
-				.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2])
+			// Add Viewpoint
+			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2])
 				.viewOrientation([-0.61021, 0.77568, 0.16115, 0.65629])
 				.viewPosition([77.63865, 54.69470, 104.38314]);
 
-			// Construct Axis Component
-			const axis = component.axisThreePlane()
-				.xScale(xScale)
+			scene.call(viewpoint);
+
+			// Add Axis
+			axis.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale);
 
-			// Construct Bars Component
-			const ribbons = component.ribbonMultiSeries()
-				.xScale(xScale)
+			scene.select(".axis")
+				.call(axis);
+
+			// Add Ribbons
+			ribbons.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
 				.colors(colors)
 				.dimensions(dimensions);
 
-			scene.call(viewpoint);
-
-			scene.select(".axis")
-				.call(axis);
-
 			scene.select(".ribbons")
 				.datum(data)
 				.call(ribbons);
 
-			/*
-			scene.append("directionallight")
-				.attr("direction", "1 0 -1")
-				.attr("on", "true")
-				.attr("intensity", "0.4")
-				.attr("shadowintensity", "0");
-			*/
+			// Add Light
+			scene.call(light);
 		});
 	};
 

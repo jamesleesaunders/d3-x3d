@@ -30,6 +30,9 @@ import component from "../component";
  */
 export default function() {
 
+	let x3d;
+	let scene;
+
 	/* Default Properties */
 	let width = 500;
 	let height = 500;
@@ -46,6 +49,11 @@ export default function() {
 	let sizeScale;
 	let sizeDomain = [2.0, 5.0];
 	let origin = { x: 0, y: 0, z: 0 };
+
+	/* Components */
+	const viewpoint = component.viewpoint();
+	const axis = component.crosshair();
+	const vectorFields = component.vectorFields();
 
 	/**
 	 * Vector Field Function
@@ -87,35 +95,25 @@ export default function() {
 			return new x3dom.fields.SFVec3f(vx, vy, vz).length();
 		}));
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear()
-				.domain([minX, maxX])
-				.range([0, dimensionX]);
-		}
+		xScale = d3.scaleLinear()
+			.domain([minX, maxX])
+			.range([0, dimensionX]);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
-				.domain([minY, maxY])
-				.range([0, dimensionY]);
-		}
+		yScale = d3.scaleLinear()
+			.domain([minY, maxY])
+			.range([0, dimensionY]);
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear()
-				.domain([minZ, maxZ])
-				.range([0, dimensionZ]);
-		}
+		zScale = d3.scaleLinear()
+			.domain([minZ, maxZ])
+			.range([0, dimensionZ]);
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleSequential()
-				.domain(extent.slice().reverse())
-				.interpolator(colors);
-		}
+		colorScale = d3.scaleSequential()
+			.domain(extent.slice().reverse())
+			.interpolator(colors);
 
-		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear()
-				.domain(extent)
-				.range(sizeDomain);
-		}
+		sizeScale = d3.scaleLinear()
+			.domain(extent)
+			.range(sizeDomain);
 
 		// TODO: Have a think about whether this is appropriate?
 		// Or, do we always want the origin to be 0,0,0 ?
@@ -134,15 +132,16 @@ export default function() {
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
-		const x3d = selection.append("x3d")
-			.attr("width", width + "px")
-			.attr("height", height + "px");
-
-		if (debug) {
-			x3d.attr("showLog", "true").attr("showStat", "true")
+		// Create x3d element (if it does not exist already)
+		if (!x3d) {
+			x3d = selection.append("x3d");
+			scene = x3d.append("scene");
 		}
 
-		let scene = x3d.append("scene");
+		x3d.attr("width", width + "px")
+			.attr("height", height + "px")
+			.attr("showLog", debug ? "true" : "false")
+			.attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		const layers = ["axis", "vectorFields"];
@@ -156,34 +155,31 @@ export default function() {
 		selection.each((data) => {
 			init(data);
 
-			// Construct Viewpoint Component
-			const viewpoint = component.viewpoint()
-				.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
+			// Add Viewpoint
+			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
-			// Construct Axis Component
-			const axis = component.crosshair()
-				.xScale(xScale)
+			scene.call(viewpoint);
+
+			// Add Axis
+			axis.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
 				.dimensions(dimensions);
 
-			// Construct Vector Field Component
-			const vectorFields = component.vectorFields()
-				.xScale(xScale)
+			scene.select(".axis")
+				.datum(origin)
+				.call(axis);
+
+			// Add Vector Fields
+			vectorFields.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
 				.colorScale(colorScale)
 				.sizeScale(sizeScale)
 				.vectorFunction(vectorFunction);
 
-			scene.call(viewpoint);
-
-			scene.select(".axis")
-				.datum(origin)
-				.call(axis);
-
 			scene.select(".vectorFields")
-				.datum((d) => d)
+				.datum(data)
 				.call(vectorFields);
 		});
 	};

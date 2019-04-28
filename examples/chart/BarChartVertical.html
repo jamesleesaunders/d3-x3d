@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>d3-x3dom : Test</title>
+  <title>d3-x3dom : 3D Vertical Bar Chart Example</title>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
   <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
@@ -13,11 +13,10 @@
   <div id="chartholder"></div>
 
   <table>
-    <tr><td>UK</td><td><input type="checkbox" name="country" id="uk" checked value="UK" /></td></tr>
-    <tr><td>France</td><td><input type="checkbox" name="country" id="france" checked value="France" /></td></tr>
-    <tr><td>Spain</td><td><input type="checkbox" name="country" id="spain" value="Spain" /></td></tr>
-    <tr><td>Germany</td><td><input type="checkbox" name="country" id="germany" checked value="Germany" /></td></tr>
-    <tr><td>Italy</td><td><input type="checkbox" name="country" id="italy" value="Italy" /></td></tr>
+    <tr><td><input type="checkbox" name="fruit" id="apples" checked value="Apples" /></td><td>Apples</td></tr>
+    <tr><td><input type="checkbox" name="fruit" id="oranges" checked value="Oranges" /></td><td>Oranges</td></tr>
+    <tr><td><input type="checkbox" name="fruit" id="pears" value="Pears" /></td><td>Pears</td></tr>
+    <tr><td><input type="checkbox" name="fruit" id="bananas" checked value="Bananas" /></td><td>Bananas</td></tr>
   </table>
 
   <script>
@@ -25,10 +24,10 @@
     var chartHolder = d3.select("#chartholder");
 
     // Generate some data
-    var data = d3.x3dom.randomData.dataset2();
+    var data = d3.x3dom.randomData.dataset1();
 
     // Declare the bar chart component
-    var myChart = d3.x3dom.chart.barChartMultiSeries();
+    var myChart = d3.x3dom.chart.barChartVertical();
 
     var checks = d3.selectAll('input[type=checkbox]');
 
@@ -43,9 +42,10 @@
         }
       });
 
-      var filteredData = data.filter(series => filterArray.includes(series.key));
-
-      console.log(filteredData);
+      var filteredData = {
+        key: data.key,
+        values: data.values.filter(series => filterArray.includes(series.key))
+      };
 
       chartHolder.datum(filteredData).call(myChart);
     };
@@ -63,8 +63,7 @@
 
   </script>
 
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.
-  </div>
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.</div>
 </body>
 
 </html>

@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
+import { dispatch } from "../events";
 
 /**
  * Reusable 3D Ribbon Chart Component
@@ -117,8 +118,16 @@ export default function() {
 			};
 
 			const shape = (el) => {
-				const shape = el.append("shape");
+				const shape = el.append("shape")
+					.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
+					.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
+					.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
+					.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
+					.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);")
+					.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
 
+				/*
+				// FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
 				shape.append("indexedfaceset")
 					.attr("coordindex", (d) => d.coordindex)
 					.append("coordinate")
@@ -128,6 +137,14 @@ export default function() {
 					.append("twosidedmaterial")
 					.attr("diffusecolor", (d) => d.color)
 					.attr("transparency", (d) => d.transparency);
+				*/
+
+				shape.html((d) => {
+					var indexedfaceset = `<indexedfaceset coordindex="${d.coordindex}"><coordinate point="${d.point}"></coordinate></indexedfaceset>`;
+					var appearance = `<appearance><twosidedmaterial diffusecolor="${d.color}" transparency="${d.transparency}"></twosidedmaterial></appearance>`;
+
+					return indexedfaceset + appearance;
+				});
 
 				return shape;
 			};
@@ -139,12 +156,18 @@ export default function() {
 				.append("group")
 				.classed("ribbon", true)
 				.call(shape)
-				.merge(ribbon)
-				.transition()
-				.select("indexedfaceset")
+				.merge(ribbon);
+
+			const ribbonTransition = ribbon.transition().select("shape");
+
+			ribbonTransition.select("indexedfaceset")
 				.attr("coordindex", (d) => d.coordindex)
 				.select("coordinate")
 				.attr("point", (d) => d.point);
+
+			ribbonTransition.select("appearance")
+				.select("twosidedmaterial")
+				.attr("diffusecolor", (d) => d.color);
 
 			ribbon.exit()
 				.remove();
@@ -198,6 +221,16 @@ export default function() {
 		if (!arguments.length) return color;
 		color = _v;
 		return my;
+	};
+
+	/**
+	 * Dispatch On Getter
+	 *
+	 * @returns {*}
+	 */
+	my.on = function() {
+		let value = dispatch.on.apply(dispatch, arguments);
+		return value === dispatch ? my : value;
 	};
 
 	return my;

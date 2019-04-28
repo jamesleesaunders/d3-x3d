@@ -22,6 +22,32 @@ export default function() {
 	let colorScale;
 	let sizeScale;
 	let sizeDomain = [0.5, 3.0];
+	let colorDomain = [];
+
+	/* Components */
+	const bubbles = componentBubbles();
+
+	/**
+	 * Unique Array
+	 *
+	 * @param {array} array1
+	 * @param {array} array2
+	 * @returns {array}
+	 */
+	const arrayUnique = function(array1, array2) {
+		let array = array1.concat(array2);
+
+		let a = array.concat();
+		for (let i = 0; i < a.length; ++i) {
+			for (let j = i + 1; j < a.length; ++j) {
+				if (a[i] === a[j]) {
+					a.splice(j--, 1);
+				}
+			}
+		}
+
+		return a;
+	};
 
 	/**
 
@@ -48,8 +74,9 @@ export default function() {
 			.domain([0, maxZ])
 			.range([0, dimensionZ]);
 
+		colorDomain = arrayUnique(colorDomain, rowKeys);
 		colorScale = d3.scaleOrdinal()
-			.domain(rowKeys)
+			.domain(colorDomain)
 			.range(colors);
 
 		sizeScale = d3.scaleLinear()
@@ -71,21 +98,17 @@ export default function() {
 			const element = d3.select(this)
 				.classed(classed, true);
 
+			bubbles.xScale(xScale)
+				.yScale(yScale)
+				.zScale(zScale)
+				.sizeScale(sizeScale);
+
 			const addBubbles = function(d) {
 				const color = colorScale(d.key);
-
-				// Construct Bars Component
-				const bubbles = componentBubbles()
-					.xScale(xScale)
-					.yScale(yScale)
-					.zScale(zScale)
-					.sizeScale(sizeScale)
-					.color(color);
-
+				bubbles.color(color);
 				d3.select(this).datum(d).call(bubbles);
 			};
 
-			// Create Bubble Groups
 			const bubbleGroup = element.selectAll(".bubbleGroup")
 				.data((d) => d, (d) => d.key);
 
