@@ -2082,6 +2082,17 @@ function componentArea () {
 				.append("group").classed("area", true)
 				.append("shape");
 
+			//x3dom cannot have empty IFS node
+			element.html(`
+				<IndexedFaceSet coordIndex='' solid='false'>
+					<Coordinate point=''></Coordinate>
+				</IndexedFaceSet>
+				<Appearance>
+					<Material diffuseColor='${color}' transparency='${transparency}'></Material>
+				</Appearance>
+			`);
+			
+
 			var areaData = function areaData(d) {
 				return d.map(function (pointThis, indexThis, array) {
 					var indexNext = indexThis + 1;
@@ -2111,22 +2122,20 @@ function componentArea () {
 				});
 			};
 
-			element.append("appearance").append("material")
-				.attr("diffusecolor", color)
-				.attr("transparency", transparency);
-
-			var ifs = element.append("indexedfaceset").attr("coordIndex", "").attr("solid", "false");
-			var coord = ifs.append("coordinate").attr("point", "");
+			var ifs = element.select("IndexedFaceSet");
+			var coord = ifs.select("Coordinate");
 
 			var area = ifs.selectAll('.area')
 				.data(d => areaData(d.values), d => d.key);
 
 			function addIndices (d) {
 				var point = coord.attr("point");
+				if (typeof point !== 'string') { point = ''}; //getAttribute is redefined by x3dom and does not work for ''
+				coord.attr("point", point + " " + array2dToString(d.points));
 				var lastIndex3 = point.split(" ").length - 1;
 				var coordIndex = ifs.attr("coordIndex") + " ";
 				ifs.attr("coordIndex", coordIndex + arrayToCoordIndex(d.points, lastIndex3/3));
-				coord.attr("point", point + " " + array2dToString(d.points));
+				
 			}
 		
 			area.enter().each(addIndices);
