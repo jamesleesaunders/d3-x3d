@@ -10,16 +10,8 @@
 </head>
 
 <body>
-  <div id="chartholder1"></div>
-  <div id="chartholder2"></div>
-  <div id="chartholder3"></div>
-  <div id="chartholder4"></div>
-  <div id="chartholder5"></div>
-  <div id="chartholder6"></div>
   <div id="chartholder7"></div>
-  <div id="chartholder8"></div>
-  <div id="chartholder9"></div>
-
+ 
   <script>
     // Chart dimensions
     var width = 300;
@@ -28,10 +20,10 @@
     var viewpoint = d3.x3dom.component.viewpoint();
 
     /**
-     * Ribbon Multi Component
+     * Area Multi Component
      */
-    var ribbonMultiSeriesData = d3.x3dom.randomData.dataset5();
-    var ribbonMultiSeriesComponent = d3.x3dom.component.ribbonMultiSeries();
+    var areaMultiSeriesData = d3.x3dom.randomData.dataset5();
+    var areaMultiSeriesComponent = d3.x3dom.component.areaMultiSeries();
 
     // Create scene
     var scene7 = d3.select("#chartholder7")
@@ -44,8 +36,8 @@
     scene7.call(viewpoint)
       .append("group")
       .attr("class", "chart")
-      .datum(ribbonMultiSeriesData)
-      .call(ribbonMultiSeriesComponent);
+      .datum(areaMultiSeriesData)
+      .call(areaMultiSeriesComponent);
 
     /**
      * Sync Viewpoints
