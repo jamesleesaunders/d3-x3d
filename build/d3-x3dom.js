@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.2.2";
+var version = "1.2.4";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -503,6 +503,8 @@ function componentAxis () {
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var color = "black";
 	var classed = "d3X3domAxis";
+	var labelPosition = "proximal";
+	var labelInset = labelPosition === "distal" ? 1 : -1;
 
 	/* Scale and Axis Options */
 	var scale = void 0;
@@ -512,7 +514,7 @@ function componentAxis () {
 	var tickValues = null;
 	var tickFormat = null;
 	var tickSize = 1;
-	var tickPadding = 1;
+	var tickPadding = 1.5;
 
 	var axisDirectionVectors = {
 		x: [1, 0, 0],
@@ -574,8 +576,12 @@ function componentAxis () {
 			var axisRotationVector = getAxisRotationVector(direction);
 			var tickRotationVector = getAxisRotationVector(tickDirection);
 
-			var tickValuesDefault = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
-			tickValues = tickValues === null ? tickValuesDefault : tickValues;
+			/*
+   // FIXME: Currently the tickArguments option does not work.
+   const tickValuesDefault = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
+   tickValues = tickValues === null ? tickValuesDefault : tickValues;
+   */
+			tickValues = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
 
 			var tickFormatDefault = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : function (d) {
 				return d;
@@ -589,38 +595,57 @@ function componentAxis () {
 				return d * (range0 + range1) / 2;
 			}).join(" ")).append("shape").call(makeSolid, color).append("cylinder").attr("radius", 0.1).attr("height", range1 - range0);
 
-			// Tick Lines
-			var tick = element.selectAll(".tick").data(tickValues, scale).order();
-
-			var tickEnter = tick.enter().append("transform").attr("class", "tick").attr("translation", function (t) {
-				return axisDirectionVector.map(function (a) {
-					return scale(t) * a;
-				}).join(" ");
-			});
-
-			tickEnter.append("transform").attr("translation", tickDirectionVector.map(function (d) {
-				return d * tickSize / 2;
-			}).join(" ")).attr("rotation", tickRotationVector.join(" ")).attr("class", "tickLine").append("shape").call(makeSolid, "#d3d3d3").append("cylinder").attr("radius", 0.05).attr("height", tickSize);
-
-			if (tickFormat !== "") {
-				tickEnter.append("transform").attr("translation", tickDirectionVector.map(function (d) {
-					return -d * tickPadding;
-				})).append("billboard").attr("axisofrotation", "0 0 0").append("shape").call(makeSolid, "black").append("text").attr("string", tickFormat).append("fontstyle").attr("size", 1.3).attr("family", "SANS").attr("style", "BOLD").attr("justify", "MIDDLE");
-			}
-
-			tick.transition().attr("translation", function (t) {
-				return axisDirectionVector.map(function (a) {
-					return scale(t) * a;
-				}).join(" ");
-			});
-
 			domainEnter.merge(domain);
 
-			tickEnter.merge(tick);
-
-			tick.exit().remove();
-
 			domain.exit().remove();
+
+			// Tick Lines
+			var ticks = element.selectAll(".tick").data(tickValues);
+
+			var ticksEnter = ticks.enter().append("transform").attr("class", "tick").attr("translation", function (t) {
+				return axisDirectionVector.map(function (a) {
+					return scale(t) * a;
+				}).join(" ");
+			}).append("transform").attr("translation", tickDirectionVector.map(function (d) {
+				return d * tickSize / 2;
+			}).join(" ")).attr("rotation", tickRotationVector.join(" ")).append("shape").call(makeSolid, "#d3d3d3").append("cylinder").attr("radius", 0.05).attr("height", tickSize);
+
+			ticksEnter.merge(ticks);
+
+			ticks.transition().attr("translation", function (t) {
+				return axisDirectionVector.map(function (a) {
+					return scale(t) * a;
+				}).join(" ");
+			});
+
+			ticks.exit().remove();
+
+			// Labels
+			if (tickFormat !== "") {
+				var labels = element.selectAll(".label").data(tickValues);
+
+				var labelsEnter = ticks.enter().append("transform").attr("class", "label").attr("translation", function (t) {
+					return axisDirectionVector.map(function (a) {
+						return scale(t) * a;
+					}).join(" ");
+				}).append("transform").attr("translation", tickDirectionVector.map(function (d, i) {
+					return labelInset * d * tickPadding + (labelInset + 1) / 2 * (range1 - range0) * tickDirectionVector[i];
+				})).append("billboard").attr("axisofrotation", "0 0 0").append("shape").call(makeSolid, "black").append("text").attr("string", tickFormat).append("fontstyle").attr("size", 1.3).attr("family", "SANS").attr("style", "BOLD").attr("justify", "MIDDLE");
+
+				labelsEnter.merge(labels);
+
+				labels.transition().attr("translation", function (t) {
+					return axisDirectionVector.map(function (a) {
+						return scale(t) * a;
+					}).join(" ");
+				}).select("transform").attr("translation", tickDirectionVector.map(function (d, i) {
+					return labelInset * d * tickPadding + (labelInset + 1) / 2 * (range1 - range0) * tickDirectionVector[i];
+				})).on("start", function () {
+					d3.select(this).select("billboard").select("shape").select("text").attr("string", tickFormat);
+				});
+
+				labels.exit().remove();
+			}
 		});
 	};
 
@@ -744,6 +769,19 @@ function componentAxis () {
 		return my;
 	};
 
+	/**
+  * Label Position Getter / Setter
+  *
+  * @param {string} _v - Position ('proximal' or 'distal')
+  * @returns {*}
+  */
+	my.labelPosition = function (_v) {
+		if (!arguments.length) return labelPosition;
+		labelPosition = _v;
+		labelInset = labelPosition === "distal" ? 1 : -1;
+		return my;
+	};
+
 	return my;
 }
 
@@ -758,13 +796,18 @@ function componentAxisThreePlane () {
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["blue", "red", "green"];
 	var classed = "d3X3domAxisThreePlane";
+	var labelPosition = "proximal";
 
 	/* Scales */
 	var xScale = void 0;
 	var yScale = void 0;
 	var zScale = void 0;
 
-	var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
+	/* Components */
+	var xzAxis = componentAxis();
+	var yzAxis = componentAxis();
+	var yxAxis = componentAxis();
+	var zxAxis = componentAxis();
 
 	/**
   * Constructor
@@ -778,18 +821,19 @@ function componentAxisThreePlane () {
 
 			var element = d3.select(this).classed(classed, true);
 
+			var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
+
 			element.selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 				return d;
 			});
 
-			// Construct Axis Components
-			var xzAxis = componentAxis().scale(xScale).direction("x").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).tickPadding(xScale.range()[0]).color("blue");
+			xzAxis.scale(xScale).direction("x").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("blue").labelPosition(labelPosition);
 
-			var yzAxis = componentAxis().scale(yScale).direction("y").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("red");
+			yzAxis.scale(yScale).direction("y").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("red").labelPosition(labelPosition);
 
-			var yxAxis = componentAxis().scale(yScale).direction("y").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).tickFormat("").color("red");
+			yxAxis.scale(yScale).direction("y").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).tickFormat("").color("red").labelPosition(labelPosition);
 
-			var zxAxis = componentAxis().scale(zScale).direction("z").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color("black");
+			zxAxis.scale(zScale).direction("z").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color("black").labelPosition(labelPosition);
 
 			element.select(".xzAxis").call(xzAxis);
 
@@ -858,6 +902,18 @@ function componentAxisThreePlane () {
 	my.colors = function (_v) {
 		if (!arguments.length) return colors;
 		colors = _v;
+		return my;
+	};
+
+	/**
+  * Label Position Getter / Setter
+  *
+  * @param {string} _v - Position ('proximal' or 'distal')
+  * @returns {*}
+  */
+	my.labelPosition = function (_v) {
+		if (!arguments.length) return labelPosition;
+		labelPosition = _v;
 		return my;
 	};
 
@@ -1036,7 +1092,13 @@ function componentBars () {
 			});
 
 			var shape = function shape(el) {
-				var shape = el.append("shape");
+				var shape = el.append("shape").attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
+					dispatch.call("d3X3domClick", this, e);
+				}).attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").on("mouseover", function (e) {
+					dispatch.call("d3X3domMouseOver", this, e);
+				}).attr("onmouseout", "d3.x3dom.events.forwardEvent(event);").on("mouseout", function (e) {
+					dispatch.call("d3X3domMouseOut", this, e);
+				});
 
 				shape.append("box").attr("size", "1.0 1.0 1.0");
 
@@ -1129,6 +1191,16 @@ function componentBars () {
 		return my;
 	};
 
+	/**
+  * Dispatch On Getter
+  *
+  * @returns {*}
+  */
+	my.on = function () {
+		var value = dispatch.on.apply(dispatch, arguments);
+		return value === dispatch ? my : value;
+	};
+
 	return my;
 }
 
@@ -1212,13 +1284,14 @@ function componentBubbles () {
 					dispatch.call("d3X3domMouseOut", this, e);
 				});
 
-// 				shape.append("sphere").attr("radius", function (d) {
-// 					return sizeScale(d.value);
-// 				});
-				
-				//AP make sure there is no need to call fieldChanged, also faster
+				/*
+    // FIXME: Due to a bug with x3dom `._quality`, `fieldChanged()`, we must to use .html() rather than .attr().
+    shape.append("sphere")
+    	.attr("radius", (d) => sizeScale(d.value));
+    */
+
 				shape.html(function (d) {
-					return "<sphere radius='" + sizeScale(d.value) + "'></sphere>"
+					return "<sphere radius='" + sizeScale(d.value) + "'></sphere>";
 				});
 
 				shape.append("appearance").append("material").attr("diffusecolor", color).attr("ambientintensity", 0.1);
@@ -1234,7 +1307,7 @@ function componentBubbles () {
 
 			bubbles.enter().append("transform").attr("class", "bubble").call(shape).merge(bubbles).transition().attr("translation", function (d) {
 				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-			});
+			}).select("shape").select("appearance").select("material").attr("diffusecolor", color);
 
 			bubbles.exit().remove();
 		});
@@ -1355,6 +1428,9 @@ function componentBarsMultiSeries () {
 	var zScale = void 0;
 	var colorScale = void 0;
 
+	/* Components */
+	var bars = componentBars();
+
 	/**
   * Initialise Data and Scales
   *
@@ -1396,18 +1472,16 @@ function componentBarsMultiSeries () {
 
 			var element = d3.select(this).classed(classed, true);
 
-			var addBars = function addBars(d) {
-				// Construct Bars Component
-				var bars = componentBars().xScale(xScale).yScale(yScale).dimensions({
-					x: dimensions.x,
-					y: dimensions.y,
-					z: zScale.bandwidth()
-				}).colors(colors);
+			bars.xScale(xScale).yScale(yScale).dimensions({
+				x: dimensions.x,
+				y: dimensions.y,
+				z: zScale.bandwidth()
+			}).colors(colors);
 
+			var addBars = function addBars() {
 				d3.select(this).call(bars);
 			};
 
-			// Create Bar Groups
 			var barGroup = element.selectAll(".barGroup").data(function (d) {
 				return d;
 			}, function (d) {
@@ -1519,6 +1593,32 @@ function componentBubblesMultiSeries () {
 	var colorScale = void 0;
 	var sizeScale = void 0;
 	var sizeDomain = [0.5, 3.0];
+	var colorDomain = [];
+
+	/* Components */
+	var bubbles = componentBubbles();
+
+	/**
+  * Unique Array
+  *
+  * @param {array} array1
+  * @param {array} array2
+  * @returns {array}
+  */
+	var arrayUnique = function arrayUnique(array1, array2) {
+		var array = array1.concat(array2);
+
+		var a = array.concat();
+		for (var i = 0; i < a.length; ++i) {
+			for (var j = i + 1; j < a.length; ++j) {
+				if (a[i] === a[j]) {
+					a.splice(j--, 1);
+				}
+			}
+		}
+
+		return a;
+	};
 
 	/**
  	 /**
@@ -1548,7 +1648,8 @@ function componentBubblesMultiSeries () {
 
 		zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
 
-		colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
+		colorDomain = arrayUnique(colorDomain, rowKeys);
+		colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
 
 		sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeDomain);
 	};
@@ -1566,16 +1667,14 @@ function componentBubblesMultiSeries () {
 
 			var element = d3.select(this).classed(classed, true);
 
+			bubbles.xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale);
+
 			var addBubbles = function addBubbles(d) {
 				var color = colorScale(d.key);
-
-				// Construct Bars Component
-				var bubbles = componentBubbles().xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).color(color);
-
+				bubbles.color(color);
 				d3.select(this).datum(d).call(bubbles);
 			};
 
-			// Create Bubble Groups
 			var bubbleGroup = element.selectAll(".bubbleGroup").data(function (d) {
 				return d;
 			}, function (d) {
@@ -1994,6 +2093,77 @@ function componentLabel () {
 }
 
 /**
+ * Reusable X3DOM Light Component
+ *
+ * @module
+ */
+function componentLight () {
+
+	/* Default Properties */
+	var classed = "d3X3domLight";
+	var direction = "1 0 -1";
+	var intensity = 0.5;
+	var shadowIntensity = 0;
+
+	/**
+  * Constructor
+  *
+  * @constructor
+  * @alias light
+  * @param {d3.selection} selection - The chart holder D3 selection.
+  */
+	var my = function my(selection) {
+		selection.each(function () {
+
+			var element = d3.select(this).classed(classed, true);
+
+			// Main Lines
+			var light = element.selectAll("directionallight").data([null]);
+
+			light.enter().append("directionallight").attr("on", true).attr("direction", direction).attr("intensity", intensity).attr("shadowintensity", shadowIntensity).merge(light);
+		});
+	};
+
+	/**
+  * Light Direction Getter / Setter
+  *
+  * @param {number[]} _v - View orientation.
+  * @returns {*}
+  */
+	my.direction = function (_v) {
+		if (!arguments.length) return direction;
+		direction = _v;
+		return my;
+	};
+
+	/**
+  * Light Intensity Getter / Setter
+  *
+  * @param {number[]} _v - View orientation.
+  * @returns {*}
+  */
+	my.intensity = function (_v) {
+		if (!arguments.length) return intensity;
+		intensity = _v;
+		return my;
+	};
+
+	/**
+  * Shadow Intensity Getter / Setter
+  *
+  * @param {number[]} _v - View orientation.
+  * @returns {*}
+  */
+	my.shadowIntensity = function (_v) {
+		if (!arguments.length) return shadowIntensity;
+		shadowIntensity = _v;
+		return my;
+	};
+
+	return my;
+}
+
+/**
  * Reusable 3D Ribbon Chart Component
  *
  * @module
@@ -2109,26 +2279,31 @@ function componentRibbon () {
 			};
 
 			var shape = function shape(el) {
-				var shape = el.append("shape");
+				var shape = el.append("shape").attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
+					dispatch.call("d3X3domClick", this, e);
+				}).attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").on("mouseover", function (e) {
+					dispatch.call("d3X3domMouseOver", this, e);
+				}).attr("onmouseout", "d3.x3dom.events.forwardEvent(event);").on("mouseout", function (e) {
+					dispatch.call("d3X3domMouseOut", this, e);
+				});
 
-// 				shape.append("indexedfaceset").attr("coordindex", function (d) {
-// 					return d.coordindex;
-// 				}).append("coordinate").attr("point", function (d) {
-// 					return d.point;
-// 				});
-				
+				/*
+    // FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
+    shape.append("indexedfaceset")
+    	.attr("coordindex", (d) => d.coordindex)
+    	.append("coordinate")
+    	.attr("point", (d) => d.point);
+    	shape.append("appearance")
+    	.append("twosidedmaterial")
+    	.attr("diffusecolor", (d) => d.color)
+    	.attr("transparency", (d) => d.transparency);
+    */
+
 				shape.html(function (d) {
-					var innerHTML = '<IndexedFaceSet ';
-					innerHTML += 'coordIndex="' + d.coordindex + '"> ';
-					innerHTML += '<Coordinate point="' + d.point + '">';
-					innerHTML += '</Coordinate> </IndexedFaceSet>';
-					return innerHTML;
-				})
+					var indexedfaceset = "<indexedfaceset coordindex=\"" + d.coordindex + "\"><coordinate point=\"" + d.point + "\"></coordinate></indexedfaceset>";
+					var appearance = "<appearance><twosidedmaterial diffusecolor=\"" + d.color + "\" transparency=\"" + d.transparency + "\"></twosidedmaterial></appearance>";
 
-				shape.append("appearance").append("twosidedmaterial").attr("diffusecolor", function (d) {
-					return d.color;
-				}).attr("transparency", function (d) {
-					return d.transparency;
+					return indexedfaceset + appearance;
 				});
 
 				return shape;
@@ -2140,10 +2315,18 @@ function componentRibbon () {
 				return d.key;
 			});
 
-			ribbon.enter().append("group").classed("ribbon", true).call(shape).merge(ribbon).transition().select("indexedfaceset").attr("coordindex", function (d) {
+			ribbon.enter().append("group").classed("ribbon", true).call(shape).merge(ribbon);
+
+			var ribbonTransition = ribbon.transition().select("shape");
+
+			ribbonTransition.select("indexedfaceset").attr("coordindex", function (d) {
 				return d.coordindex;
 			}).select("coordinate").attr("point", function (d) {
 				return d.point;
+			});
+
+			ribbonTransition.select("appearance").select("twosidedmaterial").attr("diffusecolor", function (d) {
+				return d.color;
 			});
 
 			ribbon.exit().remove();
@@ -2198,6 +2381,16 @@ function componentRibbon () {
 		return my;
 	};
 
+	/**
+  * Dispatch On Getter
+  *
+  * @returns {*}
+  */
+	my.on = function () {
+		var value = dispatch.on.apply(dispatch, arguments);
+		return value === dispatch ? my : value;
+	};
+
 	return my;
 }
 
@@ -2218,6 +2411,32 @@ function componentRibbonMultiSeries () {
 	var yScale = void 0;
 	var zScale = void 0;
 	var colorScale = void 0;
+	var colorDomain = [];
+
+	/* Components */
+	var ribbon = componentRibbon();
+
+	/**
+  * Unique Array
+  *
+  * @param {array} array1
+  * @param {array} array2
+  * @returns {array}
+  */
+	var arrayUnique = function arrayUnique(array1, array2) {
+		var array = array1.concat(array2);
+
+		var a = array.concat();
+		for (var i = 0; i < a.length; ++i) {
+			for (var j = i + 1; j < a.length; ++j) {
+				if (a[i] === a[j]) {
+					a.splice(j--, 1);
+				}
+			}
+		}
+
+		return a;
+	};
 
 	/**
   * Initialise Data and Scales
@@ -2244,7 +2463,8 @@ function componentRibbonMultiSeries () {
 
 		zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
 
-		colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
+		colorDomain = arrayUnique(colorDomain, rowKeys);
+		colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
 	};
 
 	/**
@@ -2260,20 +2480,18 @@ function componentRibbonMultiSeries () {
 
 			var element = d3.select(this).classed(classed, true);
 
+			ribbon.xScale(xScale).yScale(yScale).dimensions({
+				x: dimensions.x,
+				y: dimensions.y,
+				z: zScale.bandwidth()
+			});
+
 			var addRibbon = function addRibbon(d) {
 				var color = colorScale(d.key);
-
-				// Construct Ribbon Component
-				var ribbon = componentRibbon().xScale(xScale).yScale(yScale).dimensions({
-					x: dimensions.x,
-					y: dimensions.y,
-					z: zScale.bandwidth()
-				}).color(color);
-
+				ribbon.color(color);
 				d3.select(this).call(ribbon);
 			};
 
-			// Create Ribbon Groups
 			var ribbonGroup = element.selectAll(".ribbonGroup").data(function (d) {
 				return d;
 			}, function (d) {
@@ -2363,6 +2581,16 @@ function componentRibbonMultiSeries () {
 		return my;
 	};
 
+	/**
+  * Dispatch On Getter
+  *
+  * @returns {*}
+  */
+	my.on = function () {
+		var value = dispatch.on.apply(dispatch, arguments);
+		return value === dispatch ? my : value;
+	};
+
 	return my;
 }
 
@@ -2375,7 +2603,7 @@ function componentSurface () {
 
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };
-	var colors = ["blue", "red"];
+	var colors = ["orange", "maroon"];
 	var classed = "d3X3domSurface";
 
 	/* Scales */
@@ -3004,7 +3232,7 @@ function componentViewpoint () {
 			// Main Lines
 			var viewpoint = element.selectAll("viewpoint").data([null]);
 
-			viewpoint.enter().append("viewpoint").classed(classed, true).attr("centerofrotation", centerOfRotation.join(" ")).attr("position", viewPosition.join(" ")).attr("orientation", viewOrientation.join(" ")).attr("fieldofview", fieldOfView).attr("set_bind", "true").merge(viewpoint);
+			viewpoint.enter().append("viewpoint").attr("centerofrotation", centerOfRotation.join(" ")).attr("position", viewPosition.join(" ")).attr("orientation", viewOrientation.join(" ")).attr("fieldofview", fieldOfView).attr("set_bind", "true").merge(viewpoint);
 		});
 	};
 
@@ -3248,6 +3476,7 @@ var component = {
 	bubblesMultiSeries: componentBubblesMultiSeries,
 	crosshair: componentCrosshair,
 	label: componentLabel,
+	light: componentLight,
 	ribbon: componentRibbon,
 	ribbonMultiSeries: componentRibbonMultiSeries,
 	surface: componentSurface,
@@ -3283,6 +3512,7 @@ function chartBarChartMultiSeries () {
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["green", "red", "yellow", "steelblue", "orange"];
 	var classed = "d3X3domBarChartMultiSeries";
+	var labelPosition = "distal";
 	var debug = false;
 
 	/* Scales */
@@ -3290,6 +3520,12 @@ function chartBarChartMultiSeries () {
 	var yScale = void 0;
 	var zScale = void 0;
 	var colorScale = void 0;
+
+	/* Components */
+	var viewpoint = component.viewpoint();
+	var axis = component.axisThreePlane();
+	var bars = component.barsMultiSeries();
+	var light = component.light();
 
 	/**
   * Initialise Data and Scales
@@ -3337,7 +3573,6 @@ function chartBarChartMultiSeries () {
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "bars"];
-
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
@@ -3345,28 +3580,23 @@ function chartBarChartMultiSeries () {
 		selection.each(function (data) {
 			init(data);
 
-			// Construct Viewpoint Component
-			var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-
-			// Construct Axis Component
-			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
-
-			// Construct Bars Component
-			var bars = component.barsMultiSeries().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
+			// Add Viewpoint
+			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
 			scene.call(viewpoint);
 
+			// Add Axis
+			axis.xScale(xScale).yScale(yScale).zScale(zScale).labelPosition(labelPosition);
+
 			scene.select(".axis").call(axis);
+
+			// Add Bars
+			bars.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
 
 			scene.select(".bars").datum(data).call(bars);
 
-			/*
-   scene.append("directionallight")
-   	.attr("direction", "1 0 -1")
-   	.attr("on", "true")
-   	.attr("intensity", "0.4")
-   	.attr("shadowintensity", "0");
-   */
+			// Add Light
+			scene.call(light);
 		});
 	};
 
@@ -3478,6 +3708,18 @@ function chartBarChartMultiSeries () {
 		return my;
 	};
 
+	/**
+  * Label Position Getter / Setter
+  *
+  * @param {string} _v - Position ('proximal' or 'distal')
+  * @returns {*}
+  */
+	my.labelPosition = function (_v) {
+		if (!arguments.length) return labelPosition;
+		labelPosition = _v;
+		return my;
+	};
+
 	return my;
 }
 
@@ -3514,6 +3756,13 @@ function chartBarChartVertical () {
 	var xScale = void 0;
 	var yScale = void 0;
 	var colorScale = void 0;
+
+	/* Components */
+	var viewpoint = component.viewpoint();
+	var xAxis = component.axis();
+	var yAxis = component.axis();
+	var bars = component.bars();
+	var light = component.light();
 
 	/**
   * Initialise Data and Scales
@@ -3557,7 +3806,6 @@ function chartBarChartVertical () {
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["xAxis", "yAxis", "bars"];
-
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
@@ -3565,24 +3813,27 @@ function chartBarChartVertical () {
 		selection.each(function (data) {
 			init(data);
 
-			// Construct Viewpoint Component
-			var viewpoint = component.viewpoint().quickView("left");
-
-			// Construct Axis Components
-			var xAxis = component.axis().scale(xScale).direction('x').tickDirection('y');
-
-			var yAxis = component.axis().scale(yScale).direction('y').tickDirection('x').tickSize(yScale.range()[1] - yScale.range()[0]);
-
-			// Construct Bars Component
-			var bars = component.bars().xScale(xScale).yScale(yScale).colors(colors);
+			// Add Viewpoint
+			viewpoint.quickView("left");
 
 			scene.call(viewpoint);
+
+			// Add Axis
+			xAxis.scale(xScale).direction('x').tickDirection('y').tickSize(0);
+
+			yAxis.scale(yScale).direction('y').tickDirection('x').tickSize(yScale.range()[1] - yScale.range()[0]);
 
 			scene.select(".xAxis").call(xAxis);
 
 			scene.select(".yAxis").call(yAxis);
 
+			// Add Bars
+			bars.xScale(xScale).yScale(yScale).colors(colors);
+
 			scene.select(".bars").datum(data).call(bars);
+
+			// Add Light
+			scene.call(light);
 		});
 	};
 
@@ -3722,6 +3973,12 @@ function chartBubbleChart () {
 	var sizeScale = void 0;
 	var sizeDomain = [0.5, 3.5];
 
+	/* Components */
+	var viewpoint = component.viewpoint();
+	var axis = component.axisThreePlane();
+	var bubbles = component.bubblesMultiSeries();
+	var light = component.light();
+
 	/**
   * Initialise Data and Scales
   *
@@ -3772,7 +4029,6 @@ function chartBubbleChart () {
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "bubbles"];
-
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
@@ -3780,22 +4036,23 @@ function chartBubbleChart () {
 		selection.each(function (data) {
 			init(data);
 
-			// Construct Viewpoint Component
-			var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-
-			// Construct Axis Component
-			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
-
-			// Construct Bubbles Component
-			var bubbles = component.bubblesMultiSeries().xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).colorScale(colorScale);
+			// Add Viewpoint
+			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
 			scene.call(viewpoint);
 
+			// Add Axis
+			axis.xScale(xScale).yScale(yScale).zScale(zScale);
+
 			scene.select(".axis").call(axis);
+
+			// Add Bubbles
+			bubbles.xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).colorScale(colorScale);
 
 			scene.select(".bubbles").datum(data).call(bubbles);
 
-			scene.append("directionallight").attr("direction", "1 0 -1").attr("on", "true").attr("intensity", "0.4").attr("shadowintensity", "0");
+			// Add Light
+			scene.call(light);
 		});
 	};
 
@@ -3950,6 +4207,9 @@ function chartBubbleChart () {
  */
 function chartCrosshairPlot () {
 
+	var x3d = void 0;
+	var scene = void 0;
+
 	/* Default Properties */
 	var width = 500;
 	var height = 500;
@@ -3961,6 +4221,11 @@ function chartCrosshairPlot () {
 	var xScale = void 0;
 	var yScale = void 0;
 	var zScale = void 0;
+
+	/* Components */
+	var viewpoint = component.viewpoint();
+	var axis = component.axisThreePlane();
+	var crosshair = component.crosshair();
 
 	/**
   * Initialise Data and Scales
@@ -3981,17 +4246,11 @@ function chartCrosshairPlot () {
 		    dimensionZ = _dimensions.z;
 
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
-		}
+		xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
-		}
+		yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
-		}
+		zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
 	};
 
 	/**
@@ -4002,13 +4261,13 @@ function chartCrosshairPlot () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
-		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
-
-		if (debug) {
-			x3d.attr("showLog", "true").attr("showStat", "true");
+		// Create x3d element (if it does not exist already)
+		if (!x3d) {
+			x3d = selection.append("x3d");
+			scene = x3d.append("scene");
 		}
 
-		var scene = x3d.append("scene");
+		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "crosshairs"];
@@ -4019,22 +4278,24 @@ function chartCrosshairPlot () {
 		selection.each(function (data) {
 			init(data);
 
-			// Construct Viewpoint Component
-			var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-
-			// Construct Axis Component
-			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale).dimensions(dimensions);
-
-			// Construct Crosshair Component
-			var crosshair = component.crosshair().xScale(xScale).yScale(yScale).zScale(zScale);
+			// Add Viewpoint
+			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
 			scene.call(viewpoint);
 
+			// Add Axis
+			axis.xScale(xScale).yScale(yScale).zScale(zScale).dimensions(dimensions);
+
 			scene.select(".axis").call(axis);
 
-			scene.select(".crosshairs").selectAll(".crosshair").data(function (d) {
+			// Add Crosshair
+			crosshair.xScale(xScale).yScale(yScale).zScale(zScale);
+
+			var crosshairs = scene.select(".crosshairs").datum(data).selectAll(".crosshair").data(function (d) {
 				return d.values;
-			}).enter().append("group").classed("crosshair", true).each(function () {
+			});
+
+			crosshairs.enter().append("group").classed("crosshair", true).merge(crosshairs).transition().each(function () {
 				d3.select(this).call(crosshair);
 			});
 		});
@@ -4162,6 +4423,12 @@ function chartRibbonChartMultiSeries () {
 	var zScale = void 0;
 	var colorScale = void 0;
 
+	/* Components */
+	var viewpoint = component.viewpoint();
+	var axis = component.axisThreePlane();
+	var ribbons = component.ribbonMultiSeries();
+	var light = component.light();
+
 	/**
   * Initialise Data and Scales
   *
@@ -4208,7 +4475,6 @@ function chartRibbonChartMultiSeries () {
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "ribbons"];
-
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
@@ -4216,28 +4482,23 @@ function chartRibbonChartMultiSeries () {
 		selection.each(function (data) {
 			init(data);
 
-			// Construct Viewpoint Component
-			var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]).viewOrientation([-0.61021, 0.77568, 0.16115, 0.65629]).viewPosition([77.63865, 54.69470, 104.38314]);
-
-			// Construct Axis Component
-			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
-
-			// Construct Bars Component
-			var ribbons = component.ribbonMultiSeries().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors).dimensions(dimensions);
+			// Add Viewpoint
+			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]).viewOrientation([-0.61021, 0.77568, 0.16115, 0.65629]).viewPosition([77.63865, 54.69470, 104.38314]);
 
 			scene.call(viewpoint);
 
+			// Add Axis
+			axis.xScale(xScale).yScale(yScale).zScale(zScale);
+
 			scene.select(".axis").call(axis);
+
+			// Add Ribbons
+			ribbons.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors).dimensions(dimensions);
 
 			scene.select(".ribbons").datum(data).call(ribbons);
 
-			/*
-   scene.append("directionallight")
-   	.attr("direction", "1 0 -1")
-   	.attr("on", "true")
-   	.attr("intensity", "0.4")
-   	.attr("shadowintensity", "0");
-   */
+			// Add Light
+			scene.call(light);
 		});
 	};
 
@@ -4370,6 +4631,9 @@ function chartRibbonChartMultiSeries () {
  */
 function chartScatterPlot () {
 
+	var x3d = void 0;
+	var scene = void 0;
+
 	/* Default Properties */
 	var width = 500;
 	var height = 500;
@@ -4382,6 +4646,13 @@ function chartScatterPlot () {
 	var xScale = void 0;
 	var yScale = void 0;
 	var zScale = void 0;
+
+	/* Components */
+	var viewpoint = component.viewpoint();
+	var axis = component.axisThreePlane();
+	var crosshair = component.crosshair();
+	var label = component.label();
+	var bubbles = component.bubbles();
 
 	/**
   * Initialise Data and Scales
@@ -4402,17 +4673,11 @@ function chartScatterPlot () {
 		    dimensionZ = _dimensions.z;
 
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
-		}
+		xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
-		}
+		yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
-		}
+		zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
 	};
 
 	/**
@@ -4423,13 +4688,13 @@ function chartScatterPlot () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
-		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
-
-		if (debug) {
-			x3d.attr("showLog", "true").attr("showStat", "true");
+		// Create x3d element (if it does not exist already)
+		if (!x3d) {
+			x3d = selection.append("x3d");
+			scene = x3d.append("scene");
 		}
 
-		var scene = x3d.append("scene");
+		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "bubbles", "crosshair", "label"];
@@ -4440,20 +4705,24 @@ function chartScatterPlot () {
 		selection.each(function (data) {
 			init(data);
 
-			// Construct Viewpoint Component
-			var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
+			// Add Viewpoint
+			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
-			// Construct Axis Component
-			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
+			scene.call(viewpoint);
 
-			// Construct Crosshair Component
-			var crosshair = component.crosshair().xScale(xScale).yScale(yScale).zScale(zScale);
+			// Add Axis
+			axis.xScale(xScale).yScale(yScale).zScale(zScale);
 
-			// Construct Label Component
-			var label = component.label().xScale(xScale).yScale(yScale).zScale(zScale).offset(0.5);
+			scene.select(".axis").call(axis);
 
-			// Construct Bubbles Component
-			var bubbles = component.bubbles().xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([0.5, 0.5]).on("d3X3domClick", function (e) {
+			// Add Crosshair
+			crosshair.xScale(xScale).yScale(yScale).zScale(zScale);
+
+			// Add Labels
+			label.xScale(xScale).yScale(yScale).zScale(zScale).offset(0.5);
+
+			// Add Bubbles
+			bubbles.xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([0.5, 0.5]).on("d3X3domClick", function (e) {
 				var d = d3.select(e.target).datum();
 				scene.select(".crosshair").datum(d).classed("crosshair", true).each(function () {
 					d3.select(this).call(crosshair);
@@ -4467,13 +4736,7 @@ function chartScatterPlot () {
 				scene.select(".label").selectAll("*").remove();
 			});
 
-			scene.call(viewpoint);
-
-			scene.select(".axis").call(axis);
-
-			scene.select(".bubbles").datum(function (d) {
-				return d;
-			}).call(bubbles);
+			scene.select(".bubbles").datum(data).call(bubbles);
 		});
 	};
 
@@ -4604,6 +4867,9 @@ function chartScatterPlot () {
  */
 function chartSurfacePlot () {
 
+	var x3d = void 0;
+	var scene = void 0;
+
 	/* Default Properties */
 	var width = 500;
 	var height = 500;
@@ -4617,6 +4883,11 @@ function chartSurfacePlot () {
 	var yScale = void 0;
 	var zScale = void 0;
 	var colorScale = void 0;
+
+	/* Components */
+	var viewpoint = component.viewpoint();
+	var axis = component.axisThreePlane();
+	var surface = component.surface();
 
 	/**
   * Initialise Data and Scales
@@ -4637,21 +4908,13 @@ function chartSurfacePlot () {
 		    dimensionZ = _dimensions.z;
 
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scalePoint().domain(rowKeys).range([0, dimensionX]);
-		}
+		xScale = d3.scalePoint().domain(rowKeys).range([0, dimensionX]);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-		}
+		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scalePoint().domain(columnKeys).range([0, dimensionZ]);
-		}
+		zScale = d3.scalePoint().domain(columnKeys).range([0, dimensionZ]);
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleLinear().domain(valueExtent).range(colors).interpolate(d3.interpolateLab);
-		}
+		colorScale = d3.scaleLinear().domain(valueExtent).range(colors).interpolate(d3.interpolateLab);
 	};
 
 	/**
@@ -4662,13 +4925,13 @@ function chartSurfacePlot () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
-		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
-
-		if (debug) {
-			x3d.attr("showLog", "true").attr("showStat", "true");
+		// Create x3d element (if it does not exist already)
+		if (!x3d) {
+			x3d = selection.append("x3d");
+			scene = x3d.append("scene");
 		}
 
-		var scene = x3d.append("scene");
+		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "surface"];
@@ -4679,22 +4942,20 @@ function chartSurfacePlot () {
 		selection.each(function (data) {
 			init(data);
 
-			// Construct Viewpoint Component
-			var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-
-			// Construct Axis Component
-			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
-
-			// Construct Surface Component
-			var surface = component.surface().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
+			// Add Viewpoint
+			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
 			scene.call(viewpoint);
 
+			// Add Axis
+			axis.xScale(xScale).yScale(yScale).zScale(zScale).labelPosition("distal");
+
 			scene.select(".axis").call(axis);
 
-			scene.select(".surface").datum(function (d) {
-				return d;
-			}).call(surface);
+			// Add Surface Area
+			surface.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
+
+			scene.select(".surface").datum(data).call(surface);
 		});
 	};
 
@@ -4836,6 +5097,9 @@ function chartSurfacePlot () {
  */
 function chartVectorField () {
 
+	var x3d = void 0;
+	var scene = void 0;
+
 	/* Default Properties */
 	var width = 500;
 	var height = 500;
@@ -4852,6 +5116,11 @@ function chartVectorField () {
 	var sizeScale = void 0;
 	var sizeDomain = [2.0, 5.0];
 	var origin = { x: 0, y: 0, z: 0 };
+
+	/* Components */
+	var viewpoint = component.viewpoint();
+	var axis = component.crosshair();
+	var vectorFields = component.vectorFields();
 
 	/**
   * Vector Field Function
@@ -4913,25 +5182,15 @@ function chartVectorField () {
 			return new x3dom.fields.SFVec3f(vx, vy, vz).length();
 		}));
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear().domain([minX, maxX]).range([0, dimensionX]);
-		}
+		xScale = d3.scaleLinear().domain([minX, maxX]).range([0, dimensionX]);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain([minY, maxY]).range([0, dimensionY]);
-		}
+		yScale = d3.scaleLinear().domain([minY, maxY]).range([0, dimensionY]);
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear().domain([minZ, maxZ]).range([0, dimensionZ]);
-		}
+		zScale = d3.scaleLinear().domain([minZ, maxZ]).range([0, dimensionZ]);
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleSequential().domain(extent.slice().reverse()).interpolator(colors);
-		}
+		colorScale = d3.scaleSequential().domain(extent.slice().reverse()).interpolator(colors);
 
-		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
-		}
+		sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
 
 		// TODO: Have a think about whether this is appropriate?
 		// Or, do we always want the origin to be 0,0,0 ?
@@ -4950,13 +5209,13 @@ function chartVectorField () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
-		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
-
-		if (debug) {
-			x3d.attr("showLog", "true").attr("showStat", "true");
+		// Create x3d element (if it does not exist already)
+		if (!x3d) {
+			x3d = selection.append("x3d");
+			scene = x3d.append("scene");
 		}
 
-		var scene = x3d.append("scene");
+		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "vectorFields"];
@@ -4967,22 +5226,20 @@ function chartVectorField () {
 		selection.each(function (data) {
 			init(data);
 
-			// Construct Viewpoint Component
-			var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-
-			// Construct Axis Component
-			var axis = component.crosshair().xScale(xScale).yScale(yScale).zScale(zScale).dimensions(dimensions);
-
-			// Construct Vector Field Component
-			var vectorFields = component.vectorFields().xScale(xScale).yScale(yScale).zScale(zScale).colorScale(colorScale).sizeScale(sizeScale).vectorFunction(vectorFunction);
+			// Add Viewpoint
+			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
 			scene.call(viewpoint);
 
+			// Add Axis
+			axis.xScale(xScale).yScale(yScale).zScale(zScale).dimensions(dimensions);
+
 			scene.select(".axis").datum(origin).call(axis);
 
-			scene.select(".vectorFields").datum(function (d) {
-				return d;
-			}).call(vectorFields);
+			// Add Vector Fields
+			vectorFields.xScale(xScale).yScale(yScale).zScale(zScale).colorScale(colorScale).sizeScale(sizeScale).vectorFunction(vectorFunction);
+
+			scene.select(".vectorFields").datum(data).call(vectorFields);
 		});
 	};
 
@@ -5152,6 +5409,9 @@ function chartVectorField () {
  */
 function chartVolumeSlice () {
 
+	var x3d = void 0;
+	var scene = void 0;
+
 	/* Default Properties */
 	var width = 500;
 	var height = 500;
@@ -5172,6 +5432,11 @@ function chartVolumeSlice () {
 	var slicesOverY = void 0;
 	var volumeStyle = "opacitymap";
 
+	/* Components */
+	var viewpoint = component.viewpoint();
+	var axis = component.crosshair();
+	var volumeSlice = component.volumeSlice();
+
 	/**
   * Constructor
   *
@@ -5180,13 +5445,13 @@ function chartVolumeSlice () {
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
-		var x3d = selection.append("x3d").attr("width", width + "px").attr("height", height + "px");
-
-		if (debug) {
-			x3d.attr("showLog", "true").attr("showStat", "true");
+		// Create x3d element (if it does not exist already)
+		if (!x3d) {
+			x3d = selection.append("x3d");
+			scene = x3d.append("scene");
 		}
 
-		var scene = x3d.append("scene");
+		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "volumeSlice"];
@@ -5196,18 +5461,18 @@ function chartVolumeSlice () {
 
 		selection.each(function (data) {
 
-			// Construct Viewpoint Component
-			var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-
-			// Construct Axis Component
-			var axis = component.crosshair().dimensions(dimensions).xScale(xScale).yScale(yScale).zScale(zScale);
-
-			// Construct Volume Slice Component
-			var volumeSlice = component.volumeSlice().dimensions(dimensions).imageUrl(imageUrl).numberOfSlices(numberOfSlices).slicesOverX(slicesOverX).slicesOverY(slicesOverY);
+			// Add Viewpoint
+			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
 			scene.call(viewpoint);
 
+			// Add Axis
+			axis.dimensions(dimensions).xScale(xScale).yScale(yScale).zScale(zScale);
+
 			scene.select(".axis").datum(origin).call(axis);
+
+			// Add Volume Slice
+			volumeSlice.dimensions(dimensions).imageUrl(imageUrl).numberOfSlices(numberOfSlices).slicesOverX(slicesOverX).slicesOverY(slicesOverY);
 
 			scene.select(".volumeSlice").append("transform").attr("translation", function (d) {
 				var x = dimensions.x / 2;
