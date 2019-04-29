@@ -20,6 +20,9 @@ export default function() {
 	var zScale = void 0;
 	var colorScale = void 0;
 
+	/* Components */
+	var area = componentArea();
+
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -59,36 +62,44 @@ export default function() {
 		selection.each(function(data) {
 			init(data);
 
-			var element = d3.select(this).classed(classed, true);
+			var element = d3.select(this)
+				.classed(classed, true);
 
 			var addArea = function addArea(d) {
 				var color = colorScale(d.key);
 
 				// Construct Area Component
-				var area = componentArea().xScale(xScale).yScale(yScale).dimensions({
-					x: dimensions.x,
-					y: dimensions.y,
-					z: zScale.bandwidth()
-				}).color(color);
+				area.xScale(xScale)
+					.yScale(yScale)
+					.dimensions({
+						x: dimensions.x,
+						y: dimensions.y,
+						z: zScale.bandwidth()
+					})
+					.color(color);
 
 				d3.select(this).call(area);
 			};
 
 			// Create Area Groups
-			var areaGroup = element.selectAll(".areaGroup").data(function(d) {
-				return d;
-			}, function(d) {
-				return d.key;
-			});
+			var areaGroup = element.selectAll(".areaGroup")
+				.data(function(d) { return d; }, function(d) { return d.key; });
 
-			areaGroup.enter().append("transform").classed("areaGroup", true).merge(areaGroup).transition().attr("translation", function(d) {
-				var x = 0;
-				var y = 0;
-				var z = zScale(d.key);
-				return x + " " + y + " " + z;
-			}).each(addArea);
+			areaGroup.enter()
+				.append("transform")
+				.classed("areaGroup", true)
+				.merge(areaGroup)
+				.transition()
+				.attr("translation", function(d) {
+					var x = 0;
+					var y = 0;
+					var z = zScale(d.key);
+					return x + " " + y + " " + z;
+				})
+				.each(addArea);
 
-			areaGroup.exit().remove();
+			areaGroup.exit()
+				.remove();
 		});
 	};
 

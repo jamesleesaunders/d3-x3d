@@ -30,6 +30,11 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Components Showcase](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/component/Showcase.html)
 * [Observable Examples](https://beta.observablehq.com/collection/@jamesleesaunders/d3-x3dom)
 
+### Beta Area
+* [Area Component](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples//component/AreaComponent.html)
+* [Multi Series Area Component](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/component/AreaMultiSeries.html)
+* [Area Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/AreaChartMultiSeries.html)
+
 ### Getting Started
 
 Include D3.js, X3DOM and d3-x3dom js and css files in the `<head>` section of your page:

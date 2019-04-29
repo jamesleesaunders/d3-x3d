@@ -1,6 +1,5 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
-import { dispatch } from "../events";
 
 /**
  * Reusable 3D Area Chart Component
@@ -85,18 +84,14 @@ export default function() {
 		selection.each(function(data) {
 			init(data);
 
-			var element = d3.select(this).classed(classed, true).attr("id", function(d) {
-				return d.key;
-			})
-				.append("group").classed("area", true)
-				.append("shape")
-				.attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function(e) {
-					dispatch.call("d3X3domClick", this, e);
-				}).attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").on("mouseover", function(e) {
-					dispatch.call("d3X3domMouseOver", this, e);
-				}).attr("onmouseout", "d3.x3dom.events.forwardEvent(event);").on("mouseout", function(e) {
-					dispatch.call("d3X3domMouseOut", this, e);
-				});
+			var element = d3.select(this)
+				.classed(classed, true)
+				.attr("id", function(d) {
+					return d.key;
+				})
+				.append("group")
+				.classed("area", true)
+				.append("shape");
 
 			//x3dom cannot have empty IFS nodes
 			element.html(`
@@ -121,7 +116,6 @@ export default function() {
 					var y1 = yScale(pointThis.value);
 					var y2 = yScale(pointNext.value);
 					var z1 = 1 - dimensions.z / 2;
-					var z2 = dimensions.z / 2;
 
 					var points = [[x1, 0, z1], [x1, y1, z1], [x2, y2, z1], [x2, 0, z1]];
 
@@ -145,10 +139,11 @@ export default function() {
 
 			function addIndices(d) {
 				var point = coord.attr("point");
+
 				if (typeof point !== 'string') {
 					point = ''
 				}
-				; //getAttribute is redefined by x3dom and does not work for ''
+				// getAttribute is redefined by x3dom and does not work for ''
 				coord.attr("point", point + " " + array2dToString(d.points));
 				var lastIndex3 = point.split(" ").length - 1;
 				var coordIndex = ifs.attr("coordIndex") + " ";

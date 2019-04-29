@@ -37,6 +37,12 @@ export default function() {
 	var zScale = void 0;
 	var colorScale = void 0;
 
+	/* Components */
+	var viewpoint = component.viewpoint();
+	var axis = component.axisThreePlane();
+	var areas = component.areaMultiSeries();
+	var light = component.light();
+
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -91,28 +97,36 @@ export default function() {
 		selection.each(function(data) {
 			init(data);
 
-			// Construct Viewpoint Component
-			var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]).viewOrientation([-0.61021, 0.77568, 0.16115, 0.65629]).viewPosition([77.63865, 54.69470, 104.38314]);
-
-			// Construct Axis Component
-			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
-
-			// Construct Areas Component
-			var areas = component.areaMultiSeries().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors).dimensions(dimensions);
+			// Add Viewpoint
+			viewpoint
+				.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2])
+				.viewOrientation([-0.61021, 0.77568, 0.16115, 0.65629])
+				.viewPosition([77.63865, 54.69470, 104.38314]);
 
 			scene.call(viewpoint);
 
-			scene.select(".axis").call(axis);
+			// Add Axis
+			axis.xScale(xScale)
+				.yScale(yScale)
+				.zScale(zScale);
 
-			scene.select(".areas").datum(data).call(areas);
+			// Add Axis
+			scene.select(".axis")
+				.call(axis);
 
-			/*
-			scene.append("directionallight")
-				.attr("direction", "1 0 -1")
-				.attr("on", "true")
-				.attr("intensity", "0.4")
-				.attr("shadowintensity", "0");
-		 	*/
+			// Add Series
+			areas.xScale(xScale)
+				.yScale(yScale)
+				.zScale(zScale)
+				.colors(colors)
+				.dimensions(dimensions);
+
+			scene.select(".areas")
+				.datum(data)
+				.call(areas);
+
+			// Add Light
+			scene.call(light);
 		});
 	};
 

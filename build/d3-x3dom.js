@@ -493,115 +493,6 @@ function dataTransform(data) {
 }
 
 /**
- * Custom Dispatch Events
- *
- * @type {d3.dispatch}
- */
-var dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
-
-/**
- * Forward X3DOM Event to D3
- *
- * In X3DOM, it is the canvas which captures onclick events, therefore defining a D3 event handler
- * on an single X3DOM element does not work. A workaround is to define an onclick handler which then
- * forwards the call to the D3 'click' event handler with the event.
- * Note: X3DOM and D3 event members slightly differ, so d3.mouse() function does not work.
- *
- * @param {event} event
- * @see https://bl.ocks.org/hlvoorhees/5376764
- */
-function forwardEvent(event) {
-	var type = event.type;
-	var target = d3.select(event.target);
-	target.on(type)(event);
-}
-
-/**
- * Show Alert With Event Coordinate
- *
- * @param {event} event
- * @returns {{canvas: {x: (*|number), y: (*|number)}, world: {x: *, y: *, z: *}, page: {x: number, y: number}}}
- */
-function getEventCoordinates(event) {
-	var pagePoint = getEventPagePoint(event);
-
-	return {
-		world: { x: event.hitPnt[0], y: event.hitPnt[1], z: event.hitPnt[2] },
-		canvas: { x: event.layerX, y: event.layerY },
-		page: { x: pagePoint.x, y: pagePoint.y }
-	};
-}
-
-/**
- * Inverse of coordinate transform defined by function mousePosition(evt) in x3dom.js
- *
- * @param {event} event
- * @returns {{x: number, y: number}}
- */
-function getEventPagePoint(event) {
-	var pageX = -1;
-	var pageY = -1;
-
-	var convertPoint = window.webkitConvertPointFromPageToNode;
-
-	if ("getBoundingClientRect" in document.documentElement) {
-		var holder = getX3domHolder(event);
-		var computedStyle = document.defaultView.getComputedStyle(holder, null);
-		var paddingLeft = parseFloat(computedStyle.getPropertyValue('padding-left'));
-		var borderLeftWidth = parseFloat(computedStyle.getPropertyValue('border-left-width'));
-		var paddingTop = parseFloat(computedStyle.getPropertyValue('padding-top'));
-		var borderTopWidth = parseFloat(computedStyle.getPropertyValue('border-top-width'));
-		var box = holder.getBoundingClientRect();
-		var scrolLeft = window.pageXOffset || document.body.scrollLeft;
-		var scrollTop = window.pageYOffset || document.body.scrollTop;
-		pageX = Math.round(event.layerX + (box.left + paddingLeft + borderLeftWidth + scrolLeft));
-		pageY = Math.round(event.layerY + (box.top + paddingTop + borderTopWidth + scrollTop));
-	} else if (convertPoint) {
-		var pagePoint = convertPoint(event.target, new WebKitPoint(0, 0));
-		pageX = Math.round(pagePoint.x);
-		pageY = Math.round(pagePoint.y);
-	} else {
-		x3dom.debug.logError('Unable to find getBoundingClientRect or webkitConvertPointFromPageToNode');
-	}
-
-	return { x: pageX, y: pageY };
-}
-
-/**
- * Return the x3d Parent Holder
- *
- * Find clicked element, walk up DOM until we find the parent x3d.
- * Then return the x3d's parent.
- *
- * @param event
- * @returns {*}
- */
-function getX3domHolder(event) {
-	var target = d3.select(event.target);
-
-	var x3d = target.select(function () {
-		var el = this;
-		while (el.nodeName.toLowerCase() !== "x3d") {
-			el = el.parentElement;
-		}
-
-		return el;
-	});
-
-	return x3d.select(function () {
-		return this.parentNode;
-	}).node();
-}
-
-var events = Object.freeze({
-	dispatch: dispatch,
-	forwardEvent: forwardEvent,
-	getEventCoordinates: getEventCoordinates,
-	getEventPagePoint: getEventPagePoint,
-	getX3domHolder: getX3domHolder
-});
-
-/**
  * Reusable 3D Area Chart Component
  *
  * @module
@@ -685,13 +576,7 @@ function componentArea () {
 
 			var element = d3.select(this).classed(classed, true).attr("id", function (d) {
 				return d.key;
-			}).append("group").classed("area", true).append("shape").attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
-				dispatch.call("d3X3domClick", this, e);
-			}).attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").on("mouseover", function (e) {
-				dispatch.call("d3X3domMouseOver", this, e);
-			}).attr("onmouseout", "d3.x3dom.events.forwardEvent(event);").on("mouseout", function (e) {
-				dispatch.call("d3X3domMouseOut", this, e);
-			});
+			}).append("group").classed("area", true).append("shape");
 
 			//x3dom cannot have empty IFS nodes
 			element.html("\n\t\t\t\t<IndexedFaceSet coordIndex='' solid='false'>\n\t\t\t\t\t<Coordinate point=''></Coordinate>\n\t\t\t\t</IndexedFaceSet>\n\t\t\t\t<Appearance>\n\t\t\t\t\t<Material diffuseColor='" + color + "' transparency='" + transparency + "'></Material>\n\t\t\t\t</Appearance>\n\t\t\t");
@@ -709,7 +594,6 @@ function componentArea () {
 					var y1 = yScale(pointThis.value);
 					var y2 = yScale(pointNext.value);
 					var z1 = 1 - dimensions.z / 2;
-					var z2 = dimensions.z / 2;
 
 					var points = [[x1, 0, z1], [x1, y1, z1], [x2, y2, z1], [x2, 0, z1]];
 
@@ -736,9 +620,11 @@ function componentArea () {
 
 			function addIndices(d) {
 				var point = coord.attr("point");
+
 				if (typeof point !== 'string') {
 					point = '';
 				}
+				// getAttribute is redefined by x3dom and does not work for ''
 				coord.attr("point", point + " " + array2dToString(d.points));
 				var lastIndex3 = point.split(" ").length - 1;
 				var coordIndex = ifs.attr("coordIndex") + " ";
@@ -820,6 +706,9 @@ function componentAreaMultiSeries () {
 	var zScale = void 0;
 	var colorScale = void 0;
 
+	/* Components */
+	var area = componentArea();
+
 	/**
   * Initialise Data and Scales
   *
@@ -864,7 +753,7 @@ function componentAreaMultiSeries () {
 				var color = colorScale(d.key);
 
 				// Construct Area Component
-				var area = componentArea().xScale(xScale).yScale(yScale).dimensions({
+				area.xScale(xScale).yScale(yScale).dimensions({
 					x: dimensions.x,
 					y: dimensions.y,
 					z: zScale.bandwidth()
@@ -1393,6 +1282,115 @@ function componentAxisThreePlane () {
 
 	return my;
 }
+
+/**
+ * Custom Dispatch Events
+ *
+ * @type {d3.dispatch}
+ */
+var dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
+
+/**
+ * Forward X3DOM Event to D3
+ *
+ * In X3DOM, it is the canvas which captures onclick events, therefore defining a D3 event handler
+ * on an single X3DOM element does not work. A workaround is to define an onclick handler which then
+ * forwards the call to the D3 'click' event handler with the event.
+ * Note: X3DOM and D3 event members slightly differ, so d3.mouse() function does not work.
+ *
+ * @param {event} event
+ * @see https://bl.ocks.org/hlvoorhees/5376764
+ */
+function forwardEvent(event) {
+	var type = event.type;
+	var target = d3.select(event.target);
+	target.on(type)(event);
+}
+
+/**
+ * Show Alert With Event Coordinate
+ *
+ * @param {event} event
+ * @returns {{canvas: {x: (*|number), y: (*|number)}, world: {x: *, y: *, z: *}, page: {x: number, y: number}}}
+ */
+function getEventCoordinates(event) {
+	var pagePoint = getEventPagePoint(event);
+
+	return {
+		world: { x: event.hitPnt[0], y: event.hitPnt[1], z: event.hitPnt[2] },
+		canvas: { x: event.layerX, y: event.layerY },
+		page: { x: pagePoint.x, y: pagePoint.y }
+	};
+}
+
+/**
+ * Inverse of coordinate transform defined by function mousePosition(evt) in x3dom.js
+ *
+ * @param {event} event
+ * @returns {{x: number, y: number}}
+ */
+function getEventPagePoint(event) {
+	var pageX = -1;
+	var pageY = -1;
+
+	var convertPoint = window.webkitConvertPointFromPageToNode;
+
+	if ("getBoundingClientRect" in document.documentElement) {
+		var holder = getX3domHolder(event);
+		var computedStyle = document.defaultView.getComputedStyle(holder, null);
+		var paddingLeft = parseFloat(computedStyle.getPropertyValue('padding-left'));
+		var borderLeftWidth = parseFloat(computedStyle.getPropertyValue('border-left-width'));
+		var paddingTop = parseFloat(computedStyle.getPropertyValue('padding-top'));
+		var borderTopWidth = parseFloat(computedStyle.getPropertyValue('border-top-width'));
+		var box = holder.getBoundingClientRect();
+		var scrolLeft = window.pageXOffset || document.body.scrollLeft;
+		var scrollTop = window.pageYOffset || document.body.scrollTop;
+		pageX = Math.round(event.layerX + (box.left + paddingLeft + borderLeftWidth + scrolLeft));
+		pageY = Math.round(event.layerY + (box.top + paddingTop + borderTopWidth + scrollTop));
+	} else if (convertPoint) {
+		var pagePoint = convertPoint(event.target, new WebKitPoint(0, 0));
+		pageX = Math.round(pagePoint.x);
+		pageY = Math.round(pagePoint.y);
+	} else {
+		x3dom.debug.logError('Unable to find getBoundingClientRect or webkitConvertPointFromPageToNode');
+	}
+
+	return { x: pageX, y: pageY };
+}
+
+/**
+ * Return the x3d Parent Holder
+ *
+ * Find clicked element, walk up DOM until we find the parent x3d.
+ * Then return the x3d's parent.
+ *
+ * @param event
+ * @returns {*}
+ */
+function getX3domHolder(event) {
+	var target = d3.select(event.target);
+
+	var x3d = target.select(function () {
+		var el = this;
+		while (el.nodeName.toLowerCase() !== "x3d") {
+			el = el.parentElement;
+		}
+
+		return el;
+	});
+
+	return x3d.select(function () {
+		return this.parentNode;
+	}).node();
+}
+
+var events = Object.freeze({
+	dispatch: dispatch,
+	forwardEvent: forwardEvent,
+	getEventCoordinates: getEventCoordinates,
+	getEventPagePoint: getEventPagePoint,
+	getX3domHolder: getX3domHolder
+});
 
 /**
  * Reusable 3D Bar Chart Component
@@ -3888,6 +3886,12 @@ function chartAreaChartMultiSeries () {
 	var zScale = void 0;
 	var colorScale = void 0;
 
+	/* Components */
+	var viewpoint = component.viewpoint();
+	var axis = component.axisThreePlane();
+	var areas = component.areaMultiSeries();
+	var light = component.light();
+
 	/**
   * Initialise Data and Scales
   *
@@ -3941,28 +3945,24 @@ function chartAreaChartMultiSeries () {
 		selection.each(function (data) {
 			init(data);
 
-			// Construct Viewpoint Component
-			var viewpoint = component.viewpoint().centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]).viewOrientation([-0.61021, 0.77568, 0.16115, 0.65629]).viewPosition([77.63865, 54.69470, 104.38314]);
-
-			// Construct Axis Component
-			var axis = component.axisThreePlane().xScale(xScale).yScale(yScale).zScale(zScale);
-
-			// Construct Areas Component
-			var areas = component.areaMultiSeries().xScale(xScale).yScale(yScale).zScale(zScale).colors(colors).dimensions(dimensions);
+			// Add Viewpoint
+			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]).viewOrientation([-0.61021, 0.77568, 0.16115, 0.65629]).viewPosition([77.63865, 54.69470, 104.38314]);
 
 			scene.call(viewpoint);
 
+			// Add Axis
+			axis.xScale(xScale).yScale(yScale).zScale(zScale);
+
+			// Add Axis
 			scene.select(".axis").call(axis);
+
+			// Add Series
+			areas.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors).dimensions(dimensions);
 
 			scene.select(".areas").datum(data).call(areas);
 
-			/*
-   scene.append("directionallight")
-   	.attr("direction", "1 0 -1")
-   	.attr("on", "true")
-   	.attr("intensity", "0.4")
-   	.attr("shadowintensity", "0");
-   */
+			// Add Light
+			scene.call(light);
 		});
 	};
 
