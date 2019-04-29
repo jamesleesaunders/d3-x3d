@@ -1,3 +1,5 @@
+import componentArea from "./component/area";
+import componentAreaMultiSeries from "./component/areaMultiSeries";
 import componentAxis from "./component/axis";
 import componentAxisThreePlane from "./component/axisThreePlane";
 import componentBars from "./component/bars";
@@ -15,6 +17,8 @@ import componentViewpoint from "./component/viewpoint";
 import componentVolumeSlice from "./component/volumeSlice";
 
 export default {
+	area: componentArea,
+	areaMultiSeries: componentAreaMultiSeries,
 	axis: componentAxis,
 	axisThreePlane: componentAxisThreePlane,
 	bars: componentBars,
