@@ -56,7 +56,7 @@ export default function() {
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	var my = function my(selection) {
-		selection.each(function (data) {
+		selection.each(function(data) {
 			init(data);
 
 			var element = d3.select(this).classed(classed, true);
@@ -75,13 +75,13 @@ export default function() {
 			};
 
 			// Create Area Groups
-			var areaGroup = element.selectAll(".areaGroup").data(function (d) {
+			var areaGroup = element.selectAll(".areaGroup").data(function(d) {
 				return d;
-			}, function (d) {
+			}, function(d) {
 				return d.key;
 			});
 
-			areaGroup.enter().append("transform").classed("areaGroup", true).merge(areaGroup).transition().attr("translation", function (d) {
+			areaGroup.enter().append("transform").classed("areaGroup", true).merge(areaGroup).transition().attr("translation", function(d) {
 				var x = 0;
 				var y = 0;
 				var z = zScale(d.key);
@@ -98,7 +98,7 @@ export default function() {
 	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
 	 * @returns {*}
 	 */
-	my.dimensions = function (_v) {
+	my.dimensions = function(_v) {
 		if (!arguments.length) return dimensions;
 		dimensions = _v;
 		return this;
@@ -110,7 +110,7 @@ export default function() {
 	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.xScale = function (_v) {
+	my.xScale = function(_v) {
 		if (!arguments.length) return xScale;
 		xScale = _v;
 		return my;
@@ -122,7 +122,7 @@ export default function() {
 	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.yScale = function (_v) {
+	my.yScale = function(_v) {
 		if (!arguments.length) return yScale;
 		yScale = _v;
 		return my;
@@ -134,7 +134,7 @@ export default function() {
 	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.zScale = function (_v) {
+	my.zScale = function(_v) {
 		if (!arguments.length) return zScale;
 		zScale = _v;
 		return my;
@@ -146,7 +146,7 @@ export default function() {
 	 * @param {d3.scale} _v - D3 color scale.
 	 * @returns {*}
 	 */
-	my.colorScale = function (_v) {
+	my.colorScale = function(_v) {
 		if (!arguments.length) return colorScale;
 		colorScale = _v;
 		return my;
@@ -158,7 +158,7 @@ export default function() {
 	 * @param {Array} _v - Array of colours used by color scale.
 	 * @returns {*}
 	 */
-	my.colors = function (_v) {
+	my.colors = function(_v) {
 		if (!arguments.length) return colors;
 		colors = _v;
 		return my;

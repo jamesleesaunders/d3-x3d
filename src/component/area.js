@@ -27,9 +27,9 @@ export default function() {
 	 * @returns {string}
 	 */
 	var array2dToString = function array2dToString(arr) {
-		return arr.reduce(function (a, b) {
+		return arr.reduce(function(a, b) {
 			return a.concat(b);
-		}, []).reduce(function (a, b) {
+		}, []).reduce(function(a, b) {
 			return a.concat(b);
 		}, []).join(" ");
 	};
@@ -42,7 +42,7 @@ export default function() {
 	 * @returns {string}
 	 */
 	var arrayToCoordIndex = function arrayToCoordIndex(arr, offset) {
-		return arr.map(function (d, i) {
+		return arr.map(function(d, i) {
 			return i + offset;
 		}).join(" ").concat(" -1");
 	};
@@ -82,19 +82,19 @@ export default function() {
 	 */
 
 	var my = function my(selection) {
-		selection.each(function (data) {
+		selection.each(function(data) {
 			init(data);
 
-			var element = d3.select(this).classed(classed, true).attr("id", function (d) {
+			var element = d3.select(this).classed(classed, true).attr("id", function(d) {
 				return d.key;
 			})
 				.append("group").classed("area", true)
 				.append("shape")
-				.attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
+				.attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function(e) {
 					dispatch.call("d3X3domClick", this, e);
-				}).attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").on("mouseover", function (e) {
+				}).attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").on("mouseover", function(e) {
 					dispatch.call("d3X3domMouseOver", this, e);
-				}).attr("onmouseout", "d3.x3dom.events.forwardEvent(event);").on("mouseout", function (e) {
+				}).attr("onmouseout", "d3.x3dom.events.forwardEvent(event);").on("mouseout", function(e) {
 					dispatch.call("d3X3domMouseOut", this, e);
 				});
 
@@ -109,7 +109,7 @@ export default function() {
 			`);
 
 			var areaData = function areaData(d) {
-				return d.map(function (pointThis, indexThis, array) {
+				return d.map(function(pointThis, indexThis, array) {
 					var indexNext = indexThis + 1;
 					if (indexNext >= array.length) {
 						return null;
@@ -132,7 +132,7 @@ export default function() {
 						color: color,
 						transparency: 0.2
 					};
-				}).filter(function (d) {
+				}).filter(function(d) {
 					return d !== null;
 				});
 			};
@@ -143,13 +143,16 @@ export default function() {
 			var area = ifs.selectAll('.area')
 				.data(d => areaData(d.values), d => d.key);
 
-			function addIndices (d) {
+			function addIndices(d) {
 				var point = coord.attr("point");
-				if (typeof point !== 'string') { point = ''}; //getAttribute is redefined by x3dom and does not work for ''
+				if (typeof point !== 'string') {
+					point = ''
+				}
+				; //getAttribute is redefined by x3dom and does not work for ''
 				coord.attr("point", point + " " + array2dToString(d.points));
 				var lastIndex3 = point.split(" ").length - 1;
 				var coordIndex = ifs.attr("coordIndex") + " ";
-				ifs.attr("coordIndex", coordIndex + arrayToCoordIndex(d.points, lastIndex3/3));
+				ifs.attr("coordIndex", coordIndex + arrayToCoordIndex(d.points, lastIndex3 / 3));
 
 			}
 
@@ -165,7 +168,7 @@ export default function() {
 	 * @param {{x: {number}, y: {number}, z: {number}}} _v - 3D Object dimensions.
 	 * @returns {*}
 	 */
-	my.dimensions = function (_v) {
+	my.dimensions = function(_v) {
 		if (!arguments.length) return dimensions;
 		dimensions = _v;
 		return this;
@@ -177,7 +180,7 @@ export default function() {
 	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.xScale = function (_v) {
+	my.xScale = function(_v) {
 		if (!arguments.length) return xScale;
 		xScale = _v;
 		return my;
@@ -189,7 +192,7 @@ export default function() {
 	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.yScale = function (_v) {
+	my.yScale = function(_v) {
 		if (!arguments.length) return yScale;
 		yScale = _v;
 		return my;
@@ -201,7 +204,7 @@ export default function() {
 	 * @param {string} _v - Color (e.g. 'red' or '#ff0000').
 	 * @returns {*}
 	 */
-	my.color = function (_v) {
+	my.color = function(_v) {
 		if (!arguments.length) return color;
 		color = _v;
 		return my;

@@ -84,11 +84,11 @@ export default function() {
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "areas"];
 
-		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function(d) {
 			return d;
 		});
 
-		selection.each(function (data) {
+		selection.each(function(data) {
 			init(data);
 
 			// Construct Viewpoint Component
@@ -107,12 +107,12 @@ export default function() {
 			scene.select(".areas").datum(data).call(areas);
 
 			/*
-   scene.append("directionallight")
-   	.attr("direction", "1 0 -1")
-   	.attr("on", "true")
-   	.attr("intensity", "0.4")
-   	.attr("shadowintensity", "0");
-   */
+			scene.append("directionallight")
+				.attr("direction", "1 0 -1")
+				.attr("on", "true")
+				.attr("intensity", "0.4")
+				.attr("shadowintensity", "0");
+		 	*/
 		});
 	};
 
@@ -122,7 +122,7 @@ export default function() {
 	 * @param {number} _v - X3D canvas width in px.
 	 * @returns {*}
 	 */
-	my.width = function (_v) {
+	my.width = function(_v) {
 		if (!arguments.length) return width;
 		width = _v;
 		return this;
@@ -134,7 +134,7 @@ export default function() {
 	 * @param {number} _v - X3D canvas height in px.
 	 * @returns {*}
 	 */
-	my.height = function (_v) {
+	my.height = function(_v) {
 		if (!arguments.length) return height;
 		height = _v;
 		return this;
@@ -146,7 +146,7 @@ export default function() {
 	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
 	 * @returns {*}
 	 */
-	my.dimensions = function (_v) {
+	my.dimensions = function(_v) {
 		if (!arguments.length) return dimensions;
 		dimensions = _v;
 		return this;
@@ -158,7 +158,7 @@ export default function() {
 	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.xScale = function (_v) {
+	my.xScale = function(_v) {
 		if (!arguments.length) return xScale;
 		xScale = _v;
 		return my;
@@ -170,7 +170,7 @@ export default function() {
 	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.yScale = function (_v) {
+	my.yScale = function(_v) {
 		if (!arguments.length) return yScale;
 		yScale = _v;
 		return my;
@@ -182,7 +182,7 @@ export default function() {
 	 * @param {d3.scale} _v - D3 scale.
 	 * @returns {*}
 	 */
-	my.zScale = function (_v) {
+	my.zScale = function(_v) {
 		if (!arguments.length) return zScale;
 		zScale = _v;
 		return my;
@@ -194,7 +194,7 @@ export default function() {
 	 * @param {d3.scale} _v - D3 color scale.
 	 * @returns {*}
 	 */
-	my.colorScale = function (_v) {
+	my.colorScale = function(_v) {
 		if (!arguments.length) return colorScale;
 		colorScale = _v;
 		return my;
@@ -206,7 +206,7 @@ export default function() {
 	 * @param {Array} _v - Array of colours used by color scale.
 	 * @returns {*}
 	 */
-	my.colors = function (_v) {
+	my.colors = function(_v) {
 		if (!arguments.length) return colors;
 		colors = _v;
 		return my;
@@ -218,7 +218,7 @@ export default function() {
 	 * @param {boolean} _v - Show debug log and stats. True/False.
 	 * @returns {*}
 	 */
-	my.debug = function (_v) {
+	my.debug = function(_v) {
 		if (!arguments.length) return debug;
 		debug = _v;
 		return my;
