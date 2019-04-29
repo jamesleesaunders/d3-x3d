@@ -2,16 +2,16 @@
 <html>
 
 <head>
-  <title>d3-x3dom : Area Components Example</title>
+  <title>d3-x3dom : 3D Components Example</title>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
   <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
-  <script src="../build/d3-x3dom-area.js"></script>
+  <script src="../../build/d3-x3dom.js"></script>
 </head>
 
 <body>
-  <div id="chartholder6"></div>
-  
+  <div id="chartholder7"></div>
+ 
   <script>
     // Chart dimensions
     var width = 300;
@@ -20,33 +20,38 @@
     var viewpoint = d3.x3dom.component.viewpoint();
 
     /**
-     * Area Component
+     * Area Multi Component
      */
-    var areaData = d3.x3dom.randomData.dataset3(20);
-    // smooth
-    var values = areaData.values;
-    var keys = values.map(v => v.key);
-    var splinePolator = d3.interpolateBasis(values.map(v => v.value));
-    var keyPicker = d3.interpolateDiscrete(keys);
-    var keyPolator = function (t) { return d3.interpolate(keyPicker(t), keyPicker(t + 1/keys.length))(t) };
-    var sampler = d3.range(0, 1, 0.01); // 100 samples
-    areaData.values = sampler.map(t => { return {key: keyPolator(t), value: splinePolator(t)};});
-    
-    var areaComponent = d3.x3dom.component.area();
+    var areaMultiSeriesData = d3.x3dom.randomData.dataset5();
+
+    areaMultiSeriesData.forEach( smoothData );
+
+    function smoothData ( areaData ) {
+      // smooth
+      var values = areaData.values;
+      var keys = values.map(v => v.key);
+      var splinePolator = d3.interpolateBasis(values.map(v => v.value));
+      var keyPicker = d3.interpolateDiscrete(keys);
+      var keyPolator = function (t) { return d3.interpolate(keyPicker(t), keyPicker(t + 1/keys.length))(t) };
+      var sampler = d3.range(0, 1, 0.01); // 100 samples
+      areaData.values = sampler.map(t => { return {key: keyPolator(t), value: splinePolator(t)};});
+    }
+
+    var areaMultiSeriesComponent = d3.x3dom.component.areaMultiSeries();
 
     // Create scene
-    var scene6 = d3.select("#chartholder6")
+    var scene7 = d3.select("#chartholder7")
       .append("x3d")
       .attr("width", width + "px")
       .attr("height", height + "px")
       .append("scene");
 
     // Add chart component
-    scene6.call(viewpoint)
+    scene7.call(viewpoint)
       .append("group")
       .attr("class", "chart")
-      .datum(areaData)
-      .call(areaComponent);
+      .datum(areaMultiSeriesData)
+      .call(areaMultiSeriesComponent);
 
     /**
      * Sync Viewpoints

@@ -1,9 +1,13 @@
+import * as d3 from "d3";
+import dataTransform from "../dataTransform";
+import { dispatch } from "../events";
+
 /**
  * Reusable 3D Area Chart Component
  *
  * @module
  */
-function componentArea () {
+export default function() {
 
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 5 };

@@ -1,9 +1,13 @@
+import * as d3 from "d3";
+import dataTransform from "../dataTransform";
+import componentArea from "./area";
+
 /**
  * Reusable 3D Multi Series Area Chart Component
  *
  * @module
  */
-function componentAreaMultiSeries () {
+export default function() {
 
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 40 };

@@ -1,3 +1,7 @@
+import * as d3 from "d3";
+import dataTransform from "../dataTransform";
+import component from "../component";
+
 /**
  * Reusable 3D Multi Series Area Chart
  *
@@ -14,7 +18,7 @@
  *
  * @see https://datavizproject.com/data-type/waterfall-plot/
  */
-function chartAreaChartMultiSeries () {
+export default function() {
 
 	var x3d = void 0;
 	var scene = void 0;
@@ -65,7 +69,7 @@ function chartAreaChartMultiSeries () {
 	 * Constructor
 	 *
 	 * @constructor
-	 * @alias ribbonChartMultiSeries
+	 * @alias areaChartMultiSeries
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	var my = function my(selection) {
