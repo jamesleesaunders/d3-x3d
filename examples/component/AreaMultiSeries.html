@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3dom : 3D Components Example</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
+  <script src="../../build/d3-x3dom.js"></script>
+</head>
+
+<body>
+  <div id="chartholder"></div>
+ 
+  <script>
+    // Chart dimensions
+    var width = 500;
+    var height = 500;
+
+    var viewpoint = d3.x3dom.component.viewpoint();
+
+    /**
+     * Area Multi Component
+     */
+    var areaMultiSeriesData = d3.x3dom.randomData.dataset5();
+
+    areaMultiSeriesData.forEach( smoothData );
+
+    function smoothData ( areaData ) {
+      // smooth
+      var values = areaData.values;
+      var keys = values.map(v => v.key);
+      var splinePolator = d3.interpolateBasis(values.map(v => v.value));
+      var keyPicker = d3.interpolateDiscrete(keys);
+      var keyPolator = function (t) { return d3.interpolate(keyPicker(t), keyPicker(t + 1/keys.length))(t) };
+      var sampler = d3.range(0, 1, 0.01); // 100 samples
+      areaData.values = sampler.map(t => { return {key: keyPolator(t), value: splinePolator(t)};});
+    }
+
+    var areaMultiSeriesComponent = d3.x3dom.component.areaMultiSeries();
+
+    // Create scene
+    var scene = d3.select("#chartholder")
+      .append("x3d")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("scene");
+
+    // Add chart component
+    scene.call(viewpoint)
+      .append("group")
+      .attr("class", "chart")
+      .datum(areaMultiSeriesData)
+      .call(areaMultiSeriesComponent);
+
+  </script>
+
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.</div>
+</body>
+
+</html>

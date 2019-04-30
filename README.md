@@ -18,6 +18,7 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Download from NPM](https://www.npmjs.com/package/d3-x3dom)
 
 ### Examples
+* [Area Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/AreaChartMultiSeries.html)
 * [Multi Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/BarChartMultiSeries.html)
 * [Vertical Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/BarChartVertical.html)
 * [Bubble Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/BubbleChart.html)
@@ -127,6 +128,8 @@ Component modules do not generate a `x3d` tag, these should be attached to an ex
 
 | Function                       | Description                         | Example                                                                                                     | Documentation                                                               |
 |--------------------------------| ------------------------------------|-------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
+| component.area()               | Single series Area Chart            | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/component/Area.html)               | [View](https://jamesleesaunders.github.io/d3-x3dom/area.html)               |
+| component.areaMultiSeries()    | Multi series Area Chart             | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/component/AreaMultiSeries.html)    | [View](https://jamesleesaunders.github.io/d3-x3dom/areaMultiSeries.html)    |
 | component.axis()               | Single plane x/y Axis               | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/component/Showcase.html)           | [View](https://jamesleesaunders.github.io/d3-x3dom/axis.html)               |
 | component.axisThreePlane()     | Three plane x/y/z Axis              | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/component/Showcase.html)           | [View](https://jamesleesaunders.github.io/d3-x3dom/axisThreePlane.html)     |
 | component.bars()               | Single series Bar Chart             | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/component/Showcase.html)           | [View](https://jamesleesaunders.github.io/d3-x3dom/bars.html)               |
