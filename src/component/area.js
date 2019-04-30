@@ -79,7 +79,6 @@ export default function() {
 	 * @alias area
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
-
 	var my = function my(selection) {
 		selection.each(function(data) {
 			init(data);
@@ -88,20 +87,7 @@ export default function() {
 				.classed(classed, true)
 				.attr("id", function(d) {
 					return d.key;
-				})
-				.append("group")
-				.classed("area", true)
-				.append("shape");
-
-			//x3dom cannot have empty IFS nodes
-			element.html(`
-				<IndexedFaceSet coordIndex='' solid='false'>
-					<Coordinate point=''></Coordinate>
-				</IndexedFaceSet>
-				<Appearance>
-					<Material diffuseColor='${color}' transparency='${transparency}'></Material>
-				</Appearance>
-			`);
+				});
 
 			var areaData = function areaData(d) {
 				return d.map(function(pointThis, indexThis, array) {
@@ -131,11 +117,33 @@ export default function() {
 				});
 			};
 
+			var shape = (el) => {
+				const shape = el.append("shape");
+
+				//x3dom cannot have empty IFS nodes
+				shape.html(`
+				<IndexedFaceSet coordIndex='' solid='false'>
+					<Coordinate point=''></Coordinate>
+				</IndexedFaceSet>
+				<Appearance>
+					<Material diffuseColor='${color}' transparency='${transparency}'></Material>
+				</Appearance>
+			`);
+
+				return shape;
+			};
+
+			var area = element.selectAll(".area")
+				.data(function(d) { return areaData(d.values) }, function(d) { return d.key });
+
+			area.enter()
+				.append("group")
+				.classed("area", true)
+				.call(shape)
+				.merge(area);
+
 			var ifs = element.select("IndexedFaceSet");
 			var coord = ifs.select("Coordinate");
-
-			var area = ifs.selectAll('.area')
-				.data(d => areaData(d.values), d => d.key);
 
 			function addIndices(d) {
 				var point = coord.attr("point");

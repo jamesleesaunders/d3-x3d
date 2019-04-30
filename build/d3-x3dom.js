@@ -569,17 +569,13 @@ function componentArea () {
   * @alias area
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
-
 	var my = function my(selection) {
 		selection.each(function (data) {
 			init(data);
 
 			var element = d3.select(this).classed(classed, true).attr("id", function (d) {
 				return d.key;
-			}).append("group").classed("area", true).append("shape");
-
-			//x3dom cannot have empty IFS nodes
-			element.html("\n\t\t\t\t<IndexedFaceSet coordIndex='' solid='false'>\n\t\t\t\t\t<Coordinate point=''></Coordinate>\n\t\t\t\t</IndexedFaceSet>\n\t\t\t\t<Appearance>\n\t\t\t\t\t<Material diffuseColor='" + color + "' transparency='" + transparency + "'></Material>\n\t\t\t\t</Appearance>\n\t\t\t");
+			});
 
 			var areaData = function areaData(d) {
 				return d.map(function (pointThis, indexThis, array) {
@@ -609,14 +605,25 @@ function componentArea () {
 				});
 			};
 
-			var ifs = element.select("IndexedFaceSet");
-			var coord = ifs.select("Coordinate");
+			var shape = function shape(el) {
+				var shape = el.append("shape");
 
-			var area = ifs.selectAll('.area').data(function (d) {
+				//x3dom cannot have empty IFS nodes
+				shape.html("\n\t\t\t\t<IndexedFaceSet coordIndex='' solid='false'>\n\t\t\t\t\t<Coordinate point=''></Coordinate>\n\t\t\t\t</IndexedFaceSet>\n\t\t\t\t<Appearance>\n\t\t\t\t\t<Material diffuseColor='" + color + "' transparency='" + transparency + "'></Material>\n\t\t\t\t</Appearance>\n\t\t\t");
+
+				return shape;
+			};
+
+			var area = element.selectAll(".area").data(function (d) {
 				return areaData(d.values);
 			}, function (d) {
 				return d.key;
 			});
+
+			area.enter().append("group").classed("area", true).call(shape).merge(area);
+
+			var ifs = element.select("IndexedFaceSet");
+			var coord = ifs.select("Coordinate");
 
 			function addIndices(d) {
 				var point = coord.attr("point");
