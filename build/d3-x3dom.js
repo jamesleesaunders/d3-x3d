@@ -589,9 +589,8 @@ function componentArea () {
 					var x2 = xScale(pointNext.key);
 					var y1 = yScale(pointThis.value);
 					var y2 = yScale(pointNext.value);
-					var z1 = 1 - dimensions.z / 2;
 
-					var points = [[x1, 0, z1], [x1, y1, z1], [x2, y2, z1], [x2, 0, z1]];
+					var points = [[x1, 0, 0], [x1, y1, 0], [x2, y2, 0], [x2, 0, 0]];
 
 					return {
 						key: pointThis.key,
