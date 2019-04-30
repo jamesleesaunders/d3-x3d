@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>ribbon - Documentation</title>
+    <title>areaMultiSeries - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">ribbon</h1>
+    <h1 class="page-title">areaMultiSeries</h1>
     
 
     
@@ -42,7 +42,7 @@
 <header>
     
         <h2>
-        ribbon
+        areaMultiSeries
         </h2>
         
     
@@ -56,7 +56,7 @@
 
     
 
-    <h4 class="name" id="ribbon"><span class="type-signature"></span>new ribbon<span class="signature">(selection)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="areaMultiSeries"><span class="type-signature"></span>new areaMultiSeries<span class="signature">(selection)</span><span class="type-signature"></span></h4>
 
     
 
@@ -99,7 +99,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_ribbon.js.html">component/ribbon.js</a>, <a href="component_ribbon.js.html#line78">line 78</a>
+        <a href="component_areaMultiSeries.js.html">component/areaMultiSeries.js</a>, <a href="component_areaMultiSeries.js.html#line85">line 85</a>
     </li></ul></dd>
     
 
@@ -209,14 +209,14 @@
 
     
 
-    <h4 class="name" id=".color"><span class="type-signature">(static) </span>color<span class="signature">(_v)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    <h4 class="name" id=".colors"><span class="type-signature">(static) </span>colors<span class="signature">(_v)</span><span class="type-signature"> &rarr; {*}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Color Getter / Setter</p>
+    <p>Colors Getter / Setter</p>
 </div>
 
 
@@ -252,7 +252,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_ribbon.js.html">component/ribbon.js</a>, <a href="component_ribbon.js.html#line220">line 220</a>
+        <a href="component_areaMultiSeries.js.html">component/areaMultiSeries.js</a>, <a href="component_areaMultiSeries.js.html#line193">line 193</a>
     </li></ul></dd>
     
 
@@ -302,7 +302,7 @@
             <td class="type">
             
                 
-<span class="param-type"><code>string</code></span>
+<span class="param-type"><code>Array</code></span>
 
 
             
@@ -313,7 +313,163 @@
             
 
             <td class="description last">
-                <p>Color (e.g. 'red' or '#ff0000').</p>
+                <p>Array of colours used by color scale.</p>
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>*</code></span>
+
+
+    </dd>
+</dl>
+
+
+    
+</div>
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id=".colorScale"><span class="type-signature">(static) </span>colorScale<span class="signature">(_v)</span><span class="type-signature"> &rarr; {*}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Color Scale Getter / Setter</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="component_areaMultiSeries.js.html">component/areaMultiSeries.js</a>, <a href="component_areaMultiSeries.js.html#line181">line 181</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>_v</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>d3.scale</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>D3 color scale.</p>
                 
             </td>
         </tr>
@@ -408,7 +564,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_ribbon.js.html">component/ribbon.js</a>, <a href="component_ribbon.js.html#line184">line 184</a>
+        <a href="component_areaMultiSeries.js.html">component/areaMultiSeries.js</a>, <a href="component_areaMultiSeries.js.html#line133">line 133</a>
     </li></ul></dd>
     
 
@@ -469,7 +625,7 @@
             
 
             <td class="description last">
-                <p>3D Object dimensions.</p>
+                <p>3D object dimensions.</p>
                 
             </td>
         </tr>
@@ -477,110 +633,6 @@
     
     </tbody>
 </table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-<dl class="param-type">
-    <dt>
-        Type:
-    </dt>
-    <dd>
-        
-<span class="param-type"><code>*</code></span>
-
-
-    </dd>
-</dl>
-
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id=".on"><span class="type-signature">(static) </span>on<span class="signature">()</span><span class="type-signature"> &rarr; {*}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Dispatch On Getter</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_ribbon.js.html">component/ribbon.js</a>, <a href="component_ribbon.js.html#line231">line 231</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
 
 
 
@@ -668,7 +720,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_ribbon.js.html">component/ribbon.js</a>, <a href="component_ribbon.js.html#line196">line 196</a>
+        <a href="component_areaMultiSeries.js.html">component/areaMultiSeries.js</a>, <a href="component_areaMultiSeries.js.html#line145">line 145</a>
     </li></ul></dd>
     
 
@@ -824,7 +876,163 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_ribbon.js.html">component/ribbon.js</a>, <a href="component_ribbon.js.html#line208">line 208</a>
+        <a href="component_areaMultiSeries.js.html">component/areaMultiSeries.js</a>, <a href="component_areaMultiSeries.js.html#line157">line 157</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>_v</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>d3.scale</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>D3 scale.</p>
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>*</code></span>
+
+
+    </dd>
+</dl>
+
+
+    
+</div>
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id=".zScale"><span class="type-signature">(static) </span>zScale<span class="signature">(_v)</span><span class="type-signature"> &rarr; {*}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Z Scale Getter / Setter</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="component_areaMultiSeries.js.html">component/areaMultiSeries.js</a>, <a href="component_areaMultiSeries.js.html#line169">line 169</a>
     </li></ul></dd>
     
 
@@ -949,7 +1157,7 @@
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Apr 30 2019 23:31:52 GMT+0100 (BST) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Apr 30 2019 23:31:51 GMT+0100 (BST) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>

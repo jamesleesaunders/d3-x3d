@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>ribbon - Documentation</title>
+    <title>chart/areaChartMultiSeries - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">ribbon</h1>
+    <h1 class="page-title">chart/areaChartMultiSeries</h1>
     
 
     
@@ -41,9 +41,8 @@
 
 <header>
     
-        <h2>
-        ribbon
-        </h2>
+        
+            
         
     
 </header>
@@ -52,19 +51,14 @@
     <div class="container-overview">
     
         
+            <div class="description"><p>Reusable 3D Multi Series Area Chart</p></div>
+        
+
+        
+            
 <div class="section-method">
 
-    
 
-    <h4 class="name" id="ribbon"><span class="type-signature"></span>new ribbon<span class="signature">(selection)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Constructor</p>
-</div>
 
 
 
@@ -99,12 +93,19 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_ribbon.js.html">component/ribbon.js</a>, <a href="component_ribbon.js.html#line78">line 78</a>
+        <a href="chart_areaChartMultiSeries.js.html">chart/areaChartMultiSeries.js</a>, <a href="chart_areaChartMultiSeries.js.html#line5">line 5</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://datavizproject.com/data-type/waterfall-plot/">https://datavizproject.com/data-type/waterfall-plot/</a></li>
+        </ul>
+    </dd>
     
 
     
@@ -118,56 +119,6 @@
 
 
 
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>selection</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>d3.selection</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>The chart holder D3 selection.</p>
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -182,9 +133,21 @@
 
 
 
+<div class="section-examples">
+<h5>Example</h5>
 
+    <pre class="prettyprint"><code>let chartHolder = d3.select("#chartholder");
+
+let myData = [...];
+
+let myChart = d3.x3dom.chart.areaChartMultiSeries();
+
+chartHolder.datum(myData).call(myChart);</code></pre>
 
 </div>
+
+</div>
+        
     
     </div>
 
@@ -200,738 +163,6 @@
 
     
 
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id=".color"><span class="type-signature">(static) </span>color<span class="signature">(_v)</span><span class="type-signature"> &rarr; {*}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Color Getter / Setter</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_ribbon.js.html">component/ribbon.js</a>, <a href="component_ribbon.js.html#line220">line 220</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>_v</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>string</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>Color (e.g. 'red' or '#ff0000').</p>
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-<dl class="param-type">
-    <dt>
-        Type:
-    </dt>
-    <dd>
-        
-<span class="param-type"><code>*</code></span>
-
-
-    </dd>
-</dl>
-
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id=".dimensions"><span class="type-signature">(static) </span>dimensions<span class="signature">(_v)</span><span class="type-signature"> &rarr; {*}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Dimensions Getter / Setter</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_ribbon.js.html">component/ribbon.js</a>, <a href="component_ribbon.js.html#line184">line 184</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>_v</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>3D Object dimensions.</p>
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-<dl class="param-type">
-    <dt>
-        Type:
-    </dt>
-    <dd>
-        
-<span class="param-type"><code>*</code></span>
-
-
-    </dd>
-</dl>
-
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id=".on"><span class="type-signature">(static) </span>on<span class="signature">()</span><span class="type-signature"> &rarr; {*}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Dispatch On Getter</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_ribbon.js.html">component/ribbon.js</a>, <a href="component_ribbon.js.html#line231">line 231</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-<dl class="param-type">
-    <dt>
-        Type:
-    </dt>
-    <dd>
-        
-<span class="param-type"><code>*</code></span>
-
-
-    </dd>
-</dl>
-
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id=".xScale"><span class="type-signature">(static) </span>xScale<span class="signature">(_v)</span><span class="type-signature"> &rarr; {*}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>X Scale Getter / Setter</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_ribbon.js.html">component/ribbon.js</a>, <a href="component_ribbon.js.html#line196">line 196</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>_v</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>d3.scale</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>D3 scale.</p>
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-<dl class="param-type">
-    <dt>
-        Type:
-    </dt>
-    <dd>
-        
-<span class="param-type"><code>*</code></span>
-
-
-    </dd>
-</dl>
-
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id=".yScale"><span class="type-signature">(static) </span>yScale<span class="signature">(_v)</span><span class="type-signature"> &rarr; {*}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Y Scale Getter / Setter</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_ribbon.js.html">component/ribbon.js</a>, <a href="component_ribbon.js.html#line208">line 208</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>_v</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>d3.scale</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>D3 scale.</p>
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-<dl class="param-type">
-    <dt>
-        Type:
-    </dt>
-    <dd>
-        
-<span class="param-type"><code>*</code></span>
-
-
-    </dd>
-</dl>
-
-
-    
-</div>
-
-
-
-</div>
-        
     
 
     
