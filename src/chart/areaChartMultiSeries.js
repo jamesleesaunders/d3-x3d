@@ -61,7 +61,6 @@ export default function() {
 			dimensionY = _dimensions.y,
 			dimensionZ = _dimensions.z;
 
-
 		xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
 
 		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();

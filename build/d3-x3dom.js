@@ -596,9 +596,7 @@ function componentArea () {
 					return {
 						key: pointThis.key,
 						value: pointThis.value,
-						points: points,
-						color: color,
-						transparency: 0.2
+						points: points
 					};
 				}).filter(function (d) {
 					return d !== null;
@@ -608,24 +606,17 @@ function componentArea () {
 			var shape = function shape(el) {
 				var shape = el.append("shape");
 
-				//x3dom cannot have empty IFS nodes
-				shape.html("\n\t\t\t\t<IndexedFaceSet coordIndex='' solid='false'>\n\t\t\t\t\t<Coordinate point=''></Coordinate>\n\t\t\t\t</IndexedFaceSet>\n\t\t\t\t<Appearance>\n\t\t\t\t\t<Material diffuseColor='" + color + "' transparency='" + transparency + "'></Material>\n\t\t\t\t</Appearance>\n\t\t\t");
+				// FIXME: x3dom cannot have empty IFS nodes
+				shape.html("\n\t\t\t\t<indexedfaceset coordIndex='' solid='false'>\n\t\t\t\t\t<coordinate point=''></coordinate>\n\t\t\t\t</indexedfaceset>\n\t\t\t\t<appearance>\n\t\t\t\t\t<material diffuseColor='" + color + "' transparency='" + transparency + "'></material>\n\t\t\t\t</appearance>\n\t\t\t");
 
 				return shape;
 			};
 
-			var area = element.selectAll(".area").data(function (d) {
-				return areaData(d.values);
-			}, function (d) {
-				return d.key;
-			});
-
-			area.enter().append("group").classed("area", true).call(shape).merge(area);
-
-			var ifs = element.select("IndexedFaceSet");
-			var coord = ifs.select("Coordinate");
-
 			function addIndices(d) {
+				var shape = d3.select(this).select("shape");
+				var ifs = shape.select("indexedfaceset");
+				var coord = ifs.select("coordinate");
+
 				var point = coord.attr("point");
 
 				if (typeof point !== 'string') {
@@ -633,12 +624,22 @@ function componentArea () {
 				}
 				// getAttribute is redefined by x3dom and does not work for ''
 				coord.attr("point", point + " " + array2dToString(d.points));
-				var lastIndex3 = point.split(" ").length - 1;
-				var coordIndex = ifs.attr("coordIndex") + " ";
-				ifs.attr("coordIndex", coordIndex + arrayToCoordIndex(d.points, lastIndex3 / 3));
+				var lastIndex = point.split(" ").length - 1;
+				var coordIndex = ifs.attr("coordindex") + " ";
+				ifs.attr("coordindex", coordIndex + arrayToCoordIndex(d.points, lastIndex / 3));
 			}
 
-			area.enter().each(addIndices);
+			var area = element.selectAll(".area").data(function (d) {
+				return areaData(d.values);
+			}, function (d) {
+				return d.key;
+			});
+
+			area.enter().append("group").classed("area", true).call(shape).each(addIndices).merge(area);
+
+			area.transition().select("shape").select("appearance").select("material").attr("diffusecolor", function (d) {
+				return d.color;
+			});
 
 			area.exit().remove();
 		});
@@ -712,9 +713,32 @@ function componentAreaMultiSeries () {
 	var yScale = void 0;
 	var zScale = void 0;
 	var colorScale = void 0;
+	var colorDomain = [];
 
 	/* Components */
 	var area = componentArea();
+
+	/**
+  * Unique Array
+  *
+  * @param {array} array1
+  * @param {array} array2
+  * @returns {array}
+  */
+	var arrayUnique = function arrayUnique(array1, array2) {
+		var array = array1.concat(array2);
+
+		var a = array.concat();
+		for (var i = 0; i < a.length; ++i) {
+			for (var j = i + 1; j < a.length; ++j) {
+				if (a[i] === a[j]) {
+					a.splice(j--, 1);
+				}
+			}
+		}
+
+		return a;
+	};
 
 	/**
   * Initialise Data and Scales
@@ -740,7 +764,8 @@ function componentAreaMultiSeries () {
 
 		zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
 
-		colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
+		colorDomain = arrayUnique(colorDomain, rowKeys);
+		colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
 	};
 
 	/**
@@ -756,20 +781,18 @@ function componentAreaMultiSeries () {
 
 			var element = d3.select(this).classed(classed, true);
 
+			area.xScale(xScale).yScale(yScale).dimensions({
+				x: dimensions.x,
+				y: dimensions.y,
+				z: zScale.bandwidth()
+			});
+
 			var addArea = function addArea(d) {
 				var color = colorScale(d.key);
-
-				// Construct Area Component
-				area.xScale(xScale).yScale(yScale).dimensions({
-					x: dimensions.x,
-					y: dimensions.y,
-					z: zScale.bandwidth()
-				}).color(color);
-
+				area.color(color);
 				d3.select(this).call(area);
 			};
 
-			// Create Area Groups
 			var areaGroup = element.selectAll(".areaGroup").data(function (d) {
 				return d;
 			}, function (d) {

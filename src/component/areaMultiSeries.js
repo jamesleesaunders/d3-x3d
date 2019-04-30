@@ -19,9 +19,32 @@ export default function() {
 	var yScale = void 0;
 	var zScale = void 0;
 	var colorScale = void 0;
+	let colorDomain = [];
 
 	/* Components */
 	var area = componentArea();
+
+	/**
+	 * Unique Array
+	 *
+	 * @param {array} array1
+	 * @param {array} array2
+	 * @returns {array}
+	 */
+	const arrayUnique = function(array1, array2) {
+		let array = array1.concat(array2);
+
+		let a = array.concat();
+		for (let i = 0; i < a.length; ++i) {
+			for (let j = i + 1; j < a.length; ++j) {
+				if (a[i] === a[j]) {
+					a.splice(j--, 1);
+				}
+			}
+		}
+
+		return a;
+	};
 
 	/**
 	 * Initialise Data and Scales
@@ -48,7 +71,8 @@ export default function() {
 
 		zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
 
-		colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
+		colorDomain = arrayUnique(colorDomain, rowKeys);
+		colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
 	};
 
 	/**
@@ -65,23 +89,20 @@ export default function() {
 			var element = d3.select(this)
 				.classed(classed, true);
 
+			area.xScale(xScale)
+				.yScale(yScale)
+				.dimensions({
+					x: dimensions.x,
+					y: dimensions.y,
+					z: zScale.bandwidth()
+				});
+
 			var addArea = function addArea(d) {
 				var color = colorScale(d.key);
-
-				// Construct Area Component
-				area.xScale(xScale)
-					.yScale(yScale)
-					.dimensions({
-						x: dimensions.x,
-						y: dimensions.y,
-						z: zScale.bandwidth()
-					})
-					.color(color);
-
+				area.color(color);
 				d3.select(this).call(area);
 			};
 
-			// Create Area Groups
 			var areaGroup = element.selectAll(".areaGroup")
 				.data(function(d) { return d; }, function(d) { return d.key; });
 

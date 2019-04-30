@@ -85,9 +85,7 @@ export default function() {
 
 			var element = d3.select(this)
 				.classed(classed, true)
-				.attr("id", function(d) {
-					return d.key;
-				});
+				.attr("id", function(d) { return d.key; });
 
 			var areaData = function areaData(d) {
 				return d.map(function(pointThis, indexThis, array) {
@@ -108,30 +106,45 @@ export default function() {
 					return {
 						key: pointThis.key,
 						value: pointThis.value,
-						points: points,
-						color: color,
-						transparency: 0.2
+						points: points
 					};
 				}).filter(function(d) {
 					return d !== null;
 				});
 			};
 
-			var shape = (el) => {
+			var shape = function(el) {
 				const shape = el.append("shape");
 
-				//x3dom cannot have empty IFS nodes
+				// FIXME: x3dom cannot have empty IFS nodes
 				shape.html(`
-				<IndexedFaceSet coordIndex='' solid='false'>
-					<Coordinate point=''></Coordinate>
-				</IndexedFaceSet>
-				<Appearance>
-					<Material diffuseColor='${color}' transparency='${transparency}'></Material>
-				</Appearance>
+				<indexedfaceset coordIndex='' solid='false'>
+					<coordinate point=''></coordinate>
+				</indexedfaceset>
+				<appearance>
+					<material diffuseColor='${color}' transparency='${transparency}'></material>
+				</appearance>
 			`);
 
 				return shape;
 			};
+
+			function addIndices(d) {
+				var shape = d3.select(this).select("shape");
+				var ifs = shape.select("indexedfaceset");
+				var coord = ifs.select("coordinate");
+
+				var point = coord.attr("point");
+
+				if (typeof point !== 'string') {
+					point = ''
+				}
+				// getAttribute is redefined by x3dom and does not work for ''
+				coord.attr("point", point + " " + array2dToString(d.points));
+				var lastIndex = point.split(" ").length - 1;
+				var coordIndex = ifs.attr("coordindex") + " ";
+				ifs.attr("coordindex", coordIndex + arrayToCoordIndex(d.points, lastIndex / 3));
+			}
 
 			var area = element.selectAll(".area")
 				.data(function(d) { return areaData(d.values) }, function(d) { return d.key });
@@ -140,26 +153,14 @@ export default function() {
 				.append("group")
 				.classed("area", true)
 				.call(shape)
+				.each(addIndices)
 				.merge(area);
 
-			var ifs = element.select("IndexedFaceSet");
-			var coord = ifs.select("Coordinate");
-
-			function addIndices(d) {
-				var point = coord.attr("point");
-
-				if (typeof point !== 'string') {
-					point = ''
-				}
-				// getAttribute is redefined by x3dom and does not work for ''
-				coord.attr("point", point + " " + array2dToString(d.points));
-				var lastIndex3 = point.split(" ").length - 1;
-				var coordIndex = ifs.attr("coordIndex") + " ";
-				ifs.attr("coordIndex", coordIndex + arrayToCoordIndex(d.points, lastIndex3 / 3));
-
-			}
-
-			area.enter().each(addIndices);
+			area.transition()
+				.select("shape")
+				.select("appearance")
+				.select("material")
+				.attr("diffusecolor", function(d) { return d.color; });
 
 			area.exit().remove();
 		});
