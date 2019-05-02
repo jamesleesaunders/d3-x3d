@@ -221,4 +221,5 @@ var myData = [
 * David Sankel - For the original [Bar Chart](http://bl.ocks.org/camio/5087116).
 * Victor Glindås - Various contributions to JSDoc and ES6 standardisation.
 * Jefferson Hudson - For contributions to axis labels and transitions.
+* Andreas Plesch - For contributing the Area Chart and Components.
 * You may also be interested in the sister project [d3-ez](https://github.com/jamesleesaunders/d3-ez) Reusable 2D Charts Library.
