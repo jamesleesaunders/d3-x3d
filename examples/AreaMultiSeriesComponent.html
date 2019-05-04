@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3dom : 3D Components Example</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
+  <script src="../build/d3-x3dom-area.js"></script>
+</head>
+
+<body>
+  <div id="chartholder7"></div>
+
+  <script>
+    // Chart dimensions
+    var width = 300;
+    var height = 300;
+
+    var viewpoint = d3.x3dom.component.viewpoint();
+
+    /**
+     * Area Multi Component
+     */
+    var areaMultiSeriesData = d3.x3dom.randomData.dataset5();
+    areaMultiSeriesData.splice(-1,1);
+
+    var smoothedSeries1 = areaMultiSeriesData.map( smoothData, {curve: d3.curveLinear, suffix: "_linear" });
+    var smoothedSeries2 = areaMultiSeriesData.map( smoothData, {curve: d3.curveBasis, suffix: "_basisSpline" } );
+    var smoothedSeries3 = areaMultiSeriesData.map( smoothData, {curve: d3.curveMonotoneX, suffix: "_mono" } );
+    /*
+        smoothData(data) returns a copy of the input data series which is subsampled into a 100 samples, and has the smoothed values based on a provided d3.curve
+    */
+    function smoothData ( areaData ) {
+      // smooth
+      var curve = this.curve;
+      var values = areaData.values;
+      var keys = values.map(v => v.key);
+      var valuePolator = interpolateCurve(values.map(v => v.value), curve);
+      var keyPicker = d3.interpolateDiscrete(keys);
+      var keyPolator = function (t) { return d3.interpolate(keyPicker(t), keyPicker(t + 1/keys.length))(t) };
+      var sampler = d3.range(0, 1, 0.01); // 100 samples
+      return {
+        "key": areaData.key + this.suffix,
+        values: sampler.map(t => { return {key: keyPolator(t), value: valuePolator(t).y};})
+      };
+    }
+
+    var areaMultiSeriesComponent = d3.x3dom.component.areaMultiSeries();
+
+    // Create scene
+    var scene7 = d3.select("#chartholder7")
+      .append("x3d")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("scene");
+
+    scene7
+      .append("orthoviewpoint")
+      .attr("position", "98.01942 45.21401 209.85072")
+      .attr("orientation", "-0.34193 0.93960 -0.01525 0.42513")
+      .attr("fieldOfView", "-5, -5, 55, 55");
+
+    // Add chart component
+    scene7 //.call(viewpoint)
+      .append("group")
+      .attr("class", "chart")
+      .datum(smoothedSeries3.concat(smoothedSeries2).concat(smoothedSeries1))
+      .call(areaMultiSeriesComponent);
+
+    /**
+     * Sync Viewpoints
+     */
+    function syncViewpoints(e) {
+      viewpoints.forEach(function(viewpoint) {
+        viewpoint.setFieldValue("orientation", x3dom.fields.Quaternion.axisAngle(e.orientation[0], e.orientation[1]));
+        viewpoint.setFieldValue("position", e.position);
+      });
+    }
+
+    var viewpoints = document.querySelectorAll("viewpoint");
+    document.onload = function() {
+      viewpoints.forEach(function(viewpoint) {
+        viewpoint.addEventListener("viewpointChanged", syncViewpoints, false);
+      });
+    };
+
+    /*
+
+smoothData uses interpolateCurve(values) which returns an interpolator function similar to d3.interpoleBasis(values). The returned function expects input in the range [0,1] and returns a smoothed value. For example, interpolateCurve(values)(0) returns the the first value.
+
+interpolateCurve uses curvePolator(points) which returns a similar interpolator function. However, the returned function works in the arbitrary domain defined by the provided points and expects an input x in this domain.
+
+curvePolator uses SVGPathInterpolator(svgpath) which returns a similar interpolator function. However, the returned function is constructed based on an svgpath string. d3.line(points) outputs such svgpath strings.
+    */
+
+    function interpolateCurve (values, curve, eps, maxIter) {
+      const xrange = d3.range(0, 1, 1/values.length);
+      const points = values.map( (v, i) => [xrange[i], v] );
+      return curvePolator (points, curve, eps, maxIter);
+    }
+
+    function curvePolator (points, curve, eps, maxIter) {
+      curve = curve || d3.curveBasis;
+      const path = d3.line().curve(curve)(points);
+      return SVGPathInterpolator (path, eps, maxIter);
+    }
+
+    function SVGPathInterpolator (path, eps, maxIter) {
+      const safeIter = maxIter || 100;
+      const epsilon = eps || 0.00001;
+      const pathString = path || "M0,0L1,1";
+      const area = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      area.innerHTML = `
+            <path d='${pathString}'></path>
+        `;
+      const svgpath = area.querySelector('path');
+      svgpath.setAttribute('d', pathString);
+      const totalLength = svgpath.getTotalLength();
+      const minPoint = svgpath.getPointAtLength(0);
+      const maxPoint = svgpath.getPointAtLength(totalLength);
+      let reverse = maxPoint.x < minPoint.x;
+      const range = reverse ? [maxPoint, minPoint] : [minPoint, maxPoint];
+      reverse = reverse ? -1 : 1;
+      return function interpolator (x) {
+        const targetX = x === 0 ? 0 : x || minPoint.x; // check for 0 and null/undefined
+        if ( targetX < range[0].x ) return range[0]; // clamp
+        if ( targetX > range[1].x ) return range[1];
+        const estimatedLength = estimateLength(totalLength / 2, 0, totalLength);
+        return svgpath.getPointAtLength(estimatedLength);
+        function estimateLength (l, mn, mx) {
+          let delta = svgpath.getPointAtLength(l).x - targetX;
+          let next_delta = 0;
+          let iter = 0;
+          //console.log(delta, targetX, epsilon);
+          while (Math.abs(delta) > epsilon && iter < safeIter) {
+            iter++;
+            //console.log(iter, Math.abs(delta) > epsilon);
+            if (reverse * delta < 0) { mn = l; l = (l + mx) / 2; }
+            else { mx = l; l = (mn + l) / 2; }
+            next_delta = svgpath.getPointAtLength(l).x - targetX;
+            if (Math.abs(Math.abs(delta) - Math.abs(next_delta)) < epsilon) break; // not improving, targetX may be in a gap;
+            delta = next_delta;
+          }
+          return l;
+          // if (Math.abs(delta) < epsilon) return resultLength
+          // if (reverse * delta < 0) return estimateLength((totalLength + max)/2, resultLength, max)
+          // return estimateLength((min + resultLength)/2, min, resultLength)
+        }
+      }
+    }
+
+  </script>
+
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.</div>
+</body>
+
+</html>
