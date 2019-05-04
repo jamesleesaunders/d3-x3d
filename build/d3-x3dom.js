@@ -628,13 +628,17 @@ function componentArea () {
 				ifs.attr("coordindex", coordIndex + arrayToCoordIndex(d.points, lastIndex / 3));
 			}
 
-			var area = element.selectAll(".area").data(function (d) {
+			var group = element.selectAll("group").data(function (d) {
+				return [d];
+			}).enter().append("group").classed("area", true).call(shape);
+
+			var area = group.selectAll(".area").data(function (d) {
 				return areaData(d.values);
 			}, function (d) {
 				return d.key;
 			});
 
-			area.enter().append("group").classed("area", true).call(shape).each(addIndices).merge(area);
+			area.enter().each(addIndices).merge(area);
 
 			area.transition().select("shape").select("appearance").select("material").attr("diffusecolor", function (d) {
 				return d.color;

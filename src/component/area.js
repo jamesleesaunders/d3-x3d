@@ -145,13 +145,17 @@ export default function() {
 				ifs.attr("coordindex", coordIndex + arrayToCoordIndex(d.points, lastIndex / 3));
 			}
 
-			var area = element.selectAll(".area")
+			var group = element.selectAll("group")
+				.data((d) => [d])
+				.enter()
+				.append("group")
+				.classed("area", true)
+				.call(shape);
+
+			var area = group.selectAll(".area")
 				.data(function(d) { return areaData(d.values) }, function(d) { return d.key });
 
 			area.enter()
-				.append("group")
-				.classed("area", true)
-				.call(shape)
 				.each(addIndices)
 				.merge(area);
 
