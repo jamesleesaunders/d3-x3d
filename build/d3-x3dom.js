@@ -510,34 +510,6 @@ function componentArea () {
 	var yScale = void 0;
 
 	/**
-  * Array to String
-  *
-  * @private
-  * @param {array} arr
-  * @returns {string}
-  */
-	var array2dToString = function array2dToString(arr) {
-		return arr.reduce(function (a, b) {
-			return a.concat(b);
-		}, []).reduce(function (a, b) {
-			return a.concat(b);
-		}, []).join(" ");
-	};
-
-	/**
-  * Array to Coordinate Index
-  *
-  * @private
-  * @param {array} arr
-  * @returns {string}
-  */
-	var arrayToCoordIndex = function arrayToCoordIndex(arr, offset) {
-		return arr.map(function (d, i) {
-			return i + offset;
-		}).join(" ").concat(" -1");
-	};
-
-	/**
   * Initialise Data and Scales
   *
   * @private
@@ -573,78 +545,58 @@ function componentArea () {
 		selection.each(function (data) {
 			init(data);
 
-			var element = d3.select(this).classed(classed, true).attr("id", function (d) {
-				return d.key;
-			});
-
 			var areaData = function areaData(d) {
-				return d.map(function (pointThis, indexThis, array) {
-					var indexNext = indexThis + 1;
-					if (indexNext >= array.length) {
-						return null;
-					}
-					var pointNext = array[indexNext];
+				var points = d.map(function (point) {
+					var x = xScale(point.key);
+					var y = yScale(point.value);
 
-					var x1 = xScale(pointThis.key);
-					var x2 = xScale(pointNext.key);
-					var y1 = yScale(pointThis.value);
-					var y2 = yScale(pointNext.value);
-
-					var points = [[x1, 0, 0], [x1, y1, 0], [x2, y2, 0], [x2, 0, 0]];
-
-					return {
-						key: pointThis.key,
-						value: pointThis.value,
-						points: points
-					};
-				}).filter(function (d) {
-					return d !== null;
+					return [x, y, 0];
 				});
+
+				points.unshift([0, 0, 0]);
+				points.push([dimensions.x, 0, 0]);
+
+				return {
+					point: points.map(function (d) {
+						return d.join(" ");
+					}).join(" "),
+					coordindex: points.map(function (d, i) {
+						return i;
+					}).join(" ") + " -1"
+				};
 			};
 
 			var shape = function shape(el) {
 				var shape = el.append("shape");
 
 				// FIXME: x3dom cannot have empty IFS nodes
-				shape.html("\n\t\t\t\t<indexedfaceset coordIndex='' solid='false'>\n\t\t\t\t\t<coordinate point=''></coordinate>\n\t\t\t\t</indexedfaceset>\n\t\t\t\t<appearance>\n\t\t\t\t\t<material diffuseColor='" + color + "' transparency='" + transparency + "'></material>\n\t\t\t\t</appearance>\n\t\t\t");
+				shape.html(function (d) {
+					return "\n\t\t\t\t\t<indexedfaceset coordindex='" + d.coordindex + "' solid='false'>\n\t\t\t\t\t\t<coordinate point='" + d.point + "' ></coordinate>\n\t\t\t\t\t</indexedfaceset>\n\t\t\t\t\t<appearance>\n\t\t\t\t\t\t<material diffuseColor='" + color + "' transparency='" + transparency + "'></material>\n\t\t\t\t\t</appearance>\n\t\t\t\t";
+				});
 
 				return shape;
 			};
 
-			function addIndices(d) {
-				var shape = d3.select(this).select("shape");
-				var ifs = shape.select("indexedfaceset");
-				var coord = ifs.select("coordinate");
+			var element = d3.select(this).classed(classed, true).attr("id", function (d) {
+				return d.key;
+			});
 
-				var point = coord.attr("point");
-
-				if (typeof point !== 'string') {
-					point = '';
-				}
-				// getAttribute is redefined by x3dom and does not work for ''
-				coord.attr("point", point + " " + array2dToString(d.points));
-				var lastIndex = point.split(" ").length - 1;
-				var coordIndex = ifs.attr("coordindex") + " ";
-				ifs.attr("coordindex", coordIndex + arrayToCoordIndex(d.points, lastIndex / 3));
-			}
-
-			var group = element.selectAll("group").data(function (d) {
-				return [d];
-			}).enter().append("group").classed("area", true).call(shape);
-
-			var area = group.selectAll(".area").data(function (d) {
-				return areaData(d.values);
+			var area = element.selectAll("group").data(function (d) {
+				return [areaData(d.values)];
 			}, function (d) {
 				return d.key;
 			});
 
-			area.enter().each(addIndices).merge(area);
+			area.enter().append("group").classed("area", true).call(shape).merge(area);
 
-			area.transition().select("shape").select("appearance").select("material").attr("diffusecolor", function (d) {
-				return d.color;
-			});
-
-			area.exit().remove();
+			/*
+   area.transition()
+   	.select("shape")
+   	.select("appearance")
+   	.select("material")
+   	.attr("diffusecolor", function(d) { return d.color; });
+   	area.exit().remove();
+   */
 		});
 	};
 
