@@ -506,8 +506,8 @@ function componentArea () {
 	var classed = "d3X3domArea";
 
 	/* Scales */
-	var xScale = void 0;
-	var yScale = void 0;
+	var xScale;
+	var yScale;
 
 	/**
   * Initialise Data and Scales
@@ -525,13 +525,13 @@ function componentArea () {
 		    dimensionX = _dimensions.x,
 		    dimensionY = _dimensions.y;
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
-		}
+		//if (typeof xScale === "undefined") {
+		xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
+		//}
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
-		}
+		//if (typeof yScale === "undefined") {
+		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+		//}
 	};
 
 	/**
@@ -543,7 +543,41 @@ function componentArea () {
   */
 	var my = function my(selection) {
 		selection.each(function (data) {
-			init(data);
+
+			var values = data.values;
+			var keys = values.map(function (d, i) {
+				return i;
+			});
+			var vals = values.map(function (d) {
+				return d.value;
+			});
+			var splinePolator = d3.interpolateBasis(vals);
+			var keyPicker = d3.interpolateDiscrete(keys);
+
+			var keyPolator = function keyPolator(t) {
+				var one = keyPicker(t);
+				var two = keyPicker(t) + 1 / keys.length;
+
+				var jim = d3.interpolate(one, two)(t);
+
+				return jim.toFixed(4);
+			};
+			var sampler = d3.range(0, 1, 0.01); // 100 samples
+
+			var areaData1 = {
+				key: data.key,
+				values: sampler.map(function (t) {
+					return {
+						key: keyPolator(t),
+						value: splinePolator(t)
+					};
+				})
+			};
+
+			console.log(data);
+			console.log(areaData1);
+
+			init(areaData1);
 
 			var areaData = function areaData(d) {
 				var points = d.map(function (point) {
@@ -557,6 +591,7 @@ function componentArea () {
 				points.push([dimensions.x, 0, 0]);
 
 				return {
+					key: d.key,
 					point: points.map(function (d) {
 						return d.join(" ");
 					}).join(" "),
@@ -581,9 +616,7 @@ function componentArea () {
 				return d.key;
 			});
 
-			var area = element.selectAll("group").data(function (d) {
-				return [areaData(d.values)];
-			}, function (d) {
+			var area = element.selectAll("group").data([areaData(areaData1.values)], function (d) {
 				return d.key;
 			});
 

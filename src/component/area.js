@@ -15,8 +15,8 @@ export default function() {
 	var classed = "d3X3domArea";
 
 	/* Scales */
-	var xScale = void 0;
-	var yScale = void 0;
+	var xScale;
+	var yScale;
 
 	/**
 	 * Initialise Data and Scales
@@ -34,14 +34,13 @@ export default function() {
 			dimensionX = _dimensions.x,
 			dimensionY = _dimensions.y;
 
-
-		if (typeof xScale === "undefined") {
+		//if (typeof xScale === "undefined") {
 			xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
-		}
+		//}
 
-		if (typeof yScale === "undefined") {
+		//if (typeof yScale === "undefined") {
 			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
-		}
+		//}
 	};
 
 	/**
@@ -53,7 +52,35 @@ export default function() {
 	 */
 	var my = function my(selection) {
 		selection.each(function(data) {
-			init(data);
+
+			var values = data.values;
+			var keys = values.map((d, i) => i);
+			var vals = values.map((d) => d.value);
+			var splinePolator = d3.interpolateBasis(vals);
+			var keyPicker = d3.interpolateDiscrete(keys);
+
+			var keyPolator = function(t) {
+				var one = keyPicker(t);
+				var two = keyPicker(t) + (1 / keys.length);
+
+				var jim = d3.interpolate(one, two)(t);
+
+				return jim.toFixed(4);
+			};
+			var sampler = d3.range(0, 1, 0.01); // 100 samples
+
+			var areaData1 = {
+				key: data.key,
+				values: sampler.map((t) => ({
+					key: keyPolator(t),
+					value: splinePolator(t)
+				}))
+			};
+
+			console.log(data);
+			console.log(areaData1);
+
+			init(areaData1);
 
 			var areaData = function(d) {
 				var points = d.map(function(point) {
@@ -67,7 +94,8 @@ export default function() {
 				points.push([dimensions.x, 0, 0]);
 
 				return {
-					point: points.map((d) => d.join((" "))).join(" "),
+					key: d.key,
+					point: points.map((d) => d.join(" ")).join(" "),
 					coordindex: points.map((d, i) => i).join(" ") + " -1"
 				};
 			};
@@ -93,7 +121,7 @@ export default function() {
 				.attr("id", function(d) { return d.key; });
 
 			var area = element.selectAll("group")
-				.data(function(d) { return [areaData(d.values)] }, function(d) { return d.key });
+				.data([areaData(areaData1.values)], function(d) { return d.key });
 
 			area.enter()
 				.append("group")
