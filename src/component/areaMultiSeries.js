@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import componentArea from "./area";
 
+
 /**
  * Reusable 3D Multi Series Area Chart Component
  *
@@ -10,19 +11,19 @@ import componentArea from "./area";
 export default function() {
 
 	/* Default Properties */
-	var dimensions = { x: 40, y: 40, z: 40 };
-	var colors = ["orange", "red", "yellow", "steelblue", "green"];
-	var classed = "d3X3domAreaMultiSeries";
+	let dimensions = { x: 40, y: 40, z: 40 };
+	let colors = ["orange", "red", "yellow", "steelblue", "green"];
+	let classed = "d3X3domAreaMultiSeries";
 
 	/* Scales */
-	var xScale = void 0;
-	var yScale = void 0;
-	var zScale = void 0;
-	var colorScale = void 0;
+	let xScale;
+	let yScale;
+	let zScale;
+	let colorScale;
 	let colorDomain = [];
 
 	/* Components */
-	var area = componentArea();
+	const area = componentArea();
 
 	/**
 	 * Unique Array
@@ -52,27 +53,28 @@ export default function() {
 	 * @private
 	 * @param {Array} data - Chart data.
 	 */
-	var init = function init(data) {
-		var _dataTransform$summar = dataTransform(data).summary(),
-			rowKeys = _dataTransform$summar.rowKeys,
-			columnKeys = _dataTransform$summar.columnKeys,
-			valueMax = _dataTransform$summar.valueMax;
+	const init = function(data) {
+		const { rowKeys, columnKeys, valueMax } = dataTransform(data).summary();
+		const valueExtent = [0, valueMax];
+		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
-		var valueExtent = [0, valueMax];
-		var _dimensions = dimensions,
-			dimensionX = _dimensions.x,
-			dimensionY = _dimensions.y,
-			dimensionZ = _dimensions.z;
+		xScale = d3.scalePoint()
+			.domain(columnKeys)
+			.range([0, dimensionX]);
 
+		yScale = d3.scaleLinear()
+			.domain(valueExtent)
+			.range([0, dimensionY]);
 
-		xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
-
-		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
-
-		zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
+		zScale = d3.scaleBand()
+			.domain(rowKeys)
+			.range([0, dimensionZ])
+			.padding(0.4);
 
 		colorDomain = arrayUnique(colorDomain, rowKeys);
-		colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
+		colorScale = d3.scaleOrdinal()
+			.domain(colorDomain)
+			.range(colors);
 	};
 
 	/**
@@ -82,11 +84,11 @@ export default function() {
 	 * @alias areaMultiSeries
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
-	var my = function my(selection) {
+	const my = function(selection) {
 		selection.each(function(data) {
 			init(data);
 
-			var element = d3.select(this)
+			const element = d3.select(this)
 				.classed(classed, true);
 
 			area.xScale(xScale)
@@ -97,24 +99,24 @@ export default function() {
 					z: zScale.bandwidth()
 				});
 
-			var addArea = function addArea(d) {
-				var color = colorScale(d.key);
+			const addArea = function(d) {
+				const color = colorScale(d.key);
 				area.color(color);
 				d3.select(this).call(area);
 			};
 
-			var areaGroup = element.selectAll(".areaGroup")
-				.data(function(d) { return d; }, function(d) { return d.key; });
+			const areaGroup = element.selectAll(".areaGroup")
+				.data((d) => d, (d) => d.key);
 
 			areaGroup.enter()
 				.append("transform")
 				.classed("areaGroup", true)
 				.merge(areaGroup)
 				.transition()
-				.attr("translation", function(d) {
-					var x = 0;
-					var y = 0;
-					var z = zScale(d.key);
+				.attr("translation", (d) => {
+					const x = 0;
+					const y = 0;
+					const z = zScale(d.key);
 					return x + " " + y + " " + z;
 				})
 				.each(addArea);
