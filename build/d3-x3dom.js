@@ -501,13 +501,13 @@ function componentArea () {
 
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 5 };
-	var color = "red";
+	var color = "blue";
 	var transparency = 0.0;
 	var classed = "d3X3domArea";
 
 	/* Scales */
-	var xScale;
-	var yScale;
+	var xScale = void 0;
+	var yScale = void 0;
 
 	/**
   * Initialise Data and Scales
@@ -526,6 +526,7 @@ function componentArea () {
 		    dimensionY = _dimensions.y;
 
 		//if (typeof xScale === "undefined") {
+
 		xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
 		//}
 
@@ -745,6 +746,7 @@ function componentAreaMultiSeries () {
 		    dimensionX = _dimensions.x,
 		    dimensionY = _dimensions.y,
 		    dimensionZ = _dimensions.z;
+
 
 		xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
 
@@ -2555,6 +2557,7 @@ function componentRibbon () {
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 5 };
 	var color = "red";
+	var transparency = 0.2;
 	var classed = "d3X3domRibbon";
 
 	/* Scales */
@@ -2651,9 +2654,7 @@ function componentRibbon () {
 						key: pointThis.key,
 						value: pointThis.value,
 						coordindex: arrayToCoordIndex(points),
-						point: array2dToString(points),
-						color: color,
-						transparency: 0.2
+						point: array2dToString(points)
 					};
 				}).filter(function (d) {
 					return d !== null;
@@ -2683,7 +2684,7 @@ function componentRibbon () {
 
 				shape.html(function (d) {
 					var indexedfaceset = "<indexedfaceset coordindex=\"" + d.coordindex + "\"><coordinate point=\"" + d.point + "\"></coordinate></indexedfaceset>";
-					var appearance = "<appearance><twosidedmaterial diffusecolor=\"" + d.color + "\" transparency=\"" + d.transparency + "\"></twosidedmaterial></appearance>";
+					var appearance = "<appearance><twosidedmaterial diffusecolor=\"" + color + "\" transparency=\"" + transparency + "\"></twosidedmaterial></appearance>";
 
 					return indexedfaceset + appearance;
 				});

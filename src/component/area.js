@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 
+
 /**
  * Reusable 3D Area Chart Component
  *
@@ -9,14 +10,14 @@ import dataTransform from "../dataTransform";
 export default function() {
 
 	/* Default Properties */
-	var dimensions = { x: 40, y: 40, z: 5 };
-	var color = "red";
-	var transparency = 0.0;
-	var classed = "d3X3domArea";
+	let dimensions = { x: 40, y: 40, z: 5 };
+	let color = "blue";
+	let transparency = 0.0;
+	let classed = "d3X3domArea";
 
 	/* Scales */
-	var xScale;
-	var yScale;
+	let xScale;
+	let yScale;
 
 	/**
 	 * Initialise Data and Scales
@@ -24,22 +25,21 @@ export default function() {
 	 * @private
 	 * @param {Array} data - Chart data.
 	 */
-	var init = function init(data) {
-		var _dataTransform$summar = dataTransform(data).summary(),
-			columnKeys = _dataTransform$summar.columnKeys,
-			valueMax = _dataTransform$summar.valueMax;
-
-		var valueExtent = [0, valueMax];
-		var _dimensions = dimensions,
-			dimensionX = _dimensions.x,
-			dimensionY = _dimensions.y;
+	const init = function(data) {
+		const { columnKeys, valueMax } = dataTransform(data).summary();
+		const valueExtent = [0, valueMax];
+		const { x: dimensionX, y: dimensionY } = dimensions;
 
 		//if (typeof xScale === "undefined") {
-			xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
+			xScale = d3.scalePoint()
+				.domain(columnKeys)
+				.range([0, dimensionX]);
 		//}
 
 		//if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+			yScale = d3.scaleLinear()
+				.domain(valueExtent)
+				.range([0, dimensionY]);
 		//}
 	};
 
@@ -50,26 +50,26 @@ export default function() {
 	 * @alias area
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
-	var my = function my(selection) {
+	const my = function(selection) {
 		selection.each(function(data) {
 
-			var values = data.values;
-			var keys = values.map((d, i) => i);
-			var vals = values.map((d) => d.value);
-			var splinePolator = d3.interpolateBasis(vals);
-			var keyPicker = d3.interpolateDiscrete(keys);
+			let values = data.values;
+			let keys = values.map((d, i) => i);
+			let vals = values.map((d) => d.value);
+			let splinePolator = d3.interpolateBasis(vals);
+			let keyPicker = d3.interpolateDiscrete(keys);
 
-			var keyPolator = function(t) {
-				var one = keyPicker(t);
-				var two = keyPicker(t) + (1 / keys.length);
+			let keyPolator = function(t) {
+				let one = keyPicker(t);
+				let two = keyPicker(t) + (1 / keys.length);
 
-				var jim = d3.interpolate(one, two)(t);
+				let jim = d3.interpolate(one, two)(t);
 
 				return jim.toFixed(4);
 			};
-			var sampler = d3.range(0, 1, 0.01); // 100 samples
+			let sampler = d3.range(0, 1, 0.01); // 100 samples
 
-			var areaData1 = {
+			let areaData1 = {
 				key: data.key,
 				values: sampler.map((t) => ({
 					key: keyPolator(t),
@@ -82,10 +82,10 @@ export default function() {
 
 			init(areaData1);
 
-			var areaData = function(d) {
-				var points = d.map(function(point) {
-					var x = xScale(point.key);
-					var y = yScale(point.value);
+			let areaData = function(d) {
+				let points = d.map(function(point) {
+					let x = xScale(point.key);
+					let y = yScale(point.value);
 
 					return [x, y, 0];
 				});
@@ -100,7 +100,7 @@ export default function() {
 				};
 			};
 
-			var shape = function(el) {
+			let shape = function(el) {
 				const shape = el.append("shape");
 
 				// FIXME: x3dom cannot have empty IFS nodes
@@ -116,11 +116,11 @@ export default function() {
 				return shape;
 			};
 
-			var element = d3.select(this)
+			let element = d3.select(this)
 				.classed(classed, true)
 				.attr("id", function(d) { return d.key; });
 
-			var area = element.selectAll("group")
+			let area = element.selectAll("group")
 				.data([areaData(areaData1.values)], function(d) { return d.key });
 
 			area.enter()
