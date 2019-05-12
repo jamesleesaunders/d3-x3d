@@ -32,7 +32,8 @@ export default function() {
 	let debug = false;
 
 	/* Scales */
-	let xScale;
+	let xScaleArea;
+	let xScaleAxis;
 	let yScale;
 	let zScale;
 	let colorScale;
@@ -44,6 +45,43 @@ export default function() {
 	const light = component.light();
 
 	/**
+	 * Smooth Data
+	 *
+	 * @private
+	 * @param {Array} data - Chart data.
+	 * @return {Array} Smoothed Chart data.
+	 */
+	const smoothData = function(data) {
+		function smooth(values) {
+			let keys = values.map((d, i) => i);
+			let vals = values.map((d) => d.value);
+			let splinePolator = d3.interpolateBasis(vals);
+			let keyPicker = d3.interpolateDiscrete(keys);
+
+			let keyPolator = function(t) {
+				let one = keyPicker(t);
+				let two = keyPicker(t) + (1 / keys.length);
+
+				return d3.interpolate(one, two)(t).toFixed(4);
+			};
+
+			// 100 Samples
+			let sampler = d3.range(0, 1, 0.01);
+
+			return sampler.map((t) => ({
+				key: keyPolator(t),
+				value: splinePolator(t)
+			}));
+		}
+
+		return data.map((d) => ({
+			key: d.key,
+			values: smooth(d.values),
+			original: d.values
+		}));
+	};
+
+	/**
 	 * Initialise Data and Scales
 	 *
 	 * @private
@@ -53,9 +91,14 @@ export default function() {
 		const { rowKeys, columnKeys, valueMax } = dataTransform(data).summary();
 		const valueExtent = [0, valueMax];
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
+		const originalKeys = d3.values(data[0].original).map((d) => d.key);
 
-		xScale = d3.scalePoint()
+		xScaleArea = d3.scalePoint()
 			.domain(columnKeys)
+			.range([0, dimensionX]);
+
+		xScaleAxis = d3.scalePoint()
+			.domain(originalKeys)
 			.range([0, dimensionX]);
 
 		yScale = d3.scaleLinear()
@@ -93,7 +136,7 @@ export default function() {
 			.attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
-		var layers = ["axis", "areas"];
+		const layers = ["axis", "areas"];
 		scene.classed(classed, true)
 			.selectAll("group")
 			.data(layers)
@@ -102,7 +145,8 @@ export default function() {
 			.attr("class", (d) => d);
 
 		selection.each((data) => {
-			init(data);
+			let smoothedData = smoothData(data);
+			init(smoothedData);
 
 			// Add Viewpoint
 			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2])
@@ -112,7 +156,7 @@ export default function() {
 			scene.call(viewpoint);
 
 			// Add Axis
-			axis.xScale(xScale)
+			axis.xScale(xScaleAxis)
 				.yScale(yScale)
 				.zScale(zScale);
 
@@ -120,14 +164,14 @@ export default function() {
 				.call(axis);
 
 			// Add Areas
-			areas.xScale(xScale)
+			areas.xScale(xScaleArea)
 				.yScale(yScale)
 				.zScale(zScale)
 				.colors(colors)
 				.dimensions(dimensions);
 
 			scene.select(".areas")
-				.datum(data)
+				.datum(smoothedData)
 				.call(areas);
 
 			// Add Light
@@ -178,8 +222,8 @@ export default function() {
 	 * @returns {*}
 	 */
 	my.xScale = function(_v) {
-		if (!arguments.length) return xScale;
-		xScale = _v;
+		if (!arguments.length) return xScaleArea;
+		xScaleArea = _v;
 		return my;
 	};
 

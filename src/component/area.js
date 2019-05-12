@@ -30,17 +30,17 @@ export default function() {
 		const valueExtent = [0, valueMax];
 		const { x: dimensionX, y: dimensionY } = dimensions;
 
-		//if (typeof xScale === "undefined") {
+		if (typeof xScale === "undefined") {
 			xScale = d3.scalePoint()
 				.domain(columnKeys)
 				.range([0, dimensionX]);
-		//}
+		}
 
-		//if (typeof yScale === "undefined") {
+		if (typeof yScale === "undefined") {
 			yScale = d3.scaleLinear()
 				.domain(valueExtent)
 				.range([0, dimensionY]);
-		//}
+		}
 	};
 
 	/**
@@ -52,35 +52,7 @@ export default function() {
 	 */
 	const my = function(selection) {
 		selection.each(function(data) {
-
-			let values = data.values;
-			let keys = values.map((d, i) => i);
-			let vals = values.map((d) => d.value);
-			let splinePolator = d3.interpolateBasis(vals);
-			let keyPicker = d3.interpolateDiscrete(keys);
-
-			let keyPolator = function(t) {
-				let one = keyPicker(t);
-				let two = keyPicker(t) + (1 / keys.length);
-
-				let jim = d3.interpolate(one, two)(t);
-
-				return jim.toFixed(4);
-			};
-			let sampler = d3.range(0, 1, 0.01); // 100 samples
-
-			let areaData1 = {
-				key: data.key,
-				values: sampler.map((t) => ({
-					key: keyPolator(t),
-					value: splinePolator(t)
-				}))
-			};
-
-			console.log(data);
-			console.log(areaData1);
-
-			init(areaData1);
+			init(data);
 
 			let areaData = function(d) {
 				let points = d.map(function(point) {
@@ -121,7 +93,7 @@ export default function() {
 				.attr("id", function(d) { return d.key; });
 
 			let area = element.selectAll("group")
-				.data([areaData(areaData1.values)], function(d) { return d.key });
+				.data([areaData(data.values)], function(d) { return d.key });
 
 			area.enter()
 				.append("group")

@@ -525,14 +525,14 @@ function componentArea () {
 		    dimensionX = _dimensions.x,
 		    dimensionY = _dimensions.y;
 
-		//if (typeof xScale === "undefined") {
 
-		xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
-		//}
+		if (typeof xScale === "undefined") {
+			xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
+		}
 
-		//if (typeof yScale === "undefined") {
-		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
-		//}
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+		}
 	};
 
 	/**
@@ -544,41 +544,7 @@ function componentArea () {
   */
 	var my = function my(selection) {
 		selection.each(function (data) {
-
-			var values = data.values;
-			var keys = values.map(function (d, i) {
-				return i;
-			});
-			var vals = values.map(function (d) {
-				return d.value;
-			});
-			var splinePolator = d3.interpolateBasis(vals);
-			var keyPicker = d3.interpolateDiscrete(keys);
-
-			var keyPolator = function keyPolator(t) {
-				var one = keyPicker(t);
-				var two = keyPicker(t) + 1 / keys.length;
-
-				var jim = d3.interpolate(one, two)(t);
-
-				return jim.toFixed(4);
-			};
-			var sampler = d3.range(0, 1, 0.01); // 100 samples
-
-			var areaData1 = {
-				key: data.key,
-				values: sampler.map(function (t) {
-					return {
-						key: keyPolator(t),
-						value: splinePolator(t)
-					};
-				})
-			};
-
-			console.log(data);
-			console.log(areaData1);
-
-			init(areaData1);
+			init(data);
 
 			var areaData = function areaData(d) {
 				var points = d.map(function (point) {
@@ -617,7 +583,7 @@ function componentArea () {
 				return d.key;
 			});
 
-			var area = element.selectAll("group").data([areaData(areaData1.values)], function (d) {
+			var area = element.selectAll("group").data([areaData(data.values)], function (d) {
 				return d.key;
 			});
 
@@ -3884,7 +3850,7 @@ var component = {
  *
  * chartHolder.datum(myData).call(myChart);
  *
- * @see https://datavizproject.com/data-type/waterfall-plot/
+ * @see https://datavizproject.com/data-type/nested-area-chart/
  */
 function chartAreaChartMultiSeries () {
 
@@ -3900,7 +3866,8 @@ function chartAreaChartMultiSeries () {
 	var debug = false;
 
 	/* Scales */
-	var xScale = void 0;
+	var xScaleArea = void 0;
+	var xScaleAxis = void 0;
 	var yScale = void 0;
 	var zScale = void 0;
 	var colorScale = void 0;
@@ -3910,6 +3877,51 @@ function chartAreaChartMultiSeries () {
 	var axis = component.axisThreePlane();
 	var areas = component.areaMultiSeries();
 	var light = component.light();
+
+	/**
+  * Smooth Data
+  *
+  * @private
+  * @param {Array} data - Chart data.
+  * @return {Array} Smoothed Chart data.
+  */
+	var smoothData = function smoothData(data) {
+		function smooth(values) {
+			var keys = values.map(function (d, i) {
+				return i;
+			});
+			var vals = values.map(function (d) {
+				return d.value;
+			});
+			var splinePolator = d3.interpolateBasis(vals);
+			var keyPicker = d3.interpolateDiscrete(keys);
+
+			var keyPolator = function keyPolator(t) {
+				var one = keyPicker(t);
+				var two = keyPicker(t) + 1 / keys.length;
+
+				return d3.interpolate(one, two)(t).toFixed(4);
+			};
+
+			// 100 Samples
+			var sampler = d3.range(0, 1, 0.01);
+
+			return sampler.map(function (t) {
+				return {
+					key: keyPolator(t),
+					value: splinePolator(t)
+				};
+			});
+		}
+
+		return data.map(function (d) {
+			return {
+				key: d.key,
+				values: smooth(d.values),
+				original: d.values
+			};
+		});
+	};
 
 	/**
   * Initialise Data and Scales
@@ -3929,7 +3941,13 @@ function chartAreaChartMultiSeries () {
 		    dimensionY = _dimensions.y,
 		    dimensionZ = _dimensions.z;
 
-		xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
+		var originalKeys = d3.values(data[0].original).map(function (d) {
+			return d.key;
+		});
+
+		xScaleArea = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
+
+		xScaleAxis = d3.scalePoint().domain(originalKeys).range([0, dimensionX]);
 
 		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
 
@@ -3956,13 +3974,13 @@ function chartAreaChartMultiSeries () {
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "areas"];
-
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
 
 		selection.each(function (data) {
-			init(data);
+			var smoothedData = smoothData(data);
+			init(smoothedData);
 
 			// Add Viewpoint
 			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]).viewOrientation([-0.61021, 0.77568, 0.16115, 0.65629]).viewPosition([77.63865, 54.69470, 104.38314]);
@@ -3970,15 +3988,14 @@ function chartAreaChartMultiSeries () {
 			scene.call(viewpoint);
 
 			// Add Axis
-			axis.xScale(xScale).yScale(yScale).zScale(zScale);
+			axis.xScale(xScaleAxis).yScale(yScale).zScale(zScale);
 
-			// Add Axis
 			scene.select(".axis").call(axis);
 
-			// Add Series
-			areas.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors).dimensions(dimensions);
+			// Add Areas
+			areas.xScale(xScaleArea).yScale(yScale).zScale(zScale).colors(colors).dimensions(dimensions);
 
-			scene.select(".areas").datum(data).call(areas);
+			scene.select(".areas").datum(smoothedData).call(areas);
 
 			// Add Light
 			scene.call(light);
@@ -4028,8 +4045,8 @@ function chartAreaChartMultiSeries () {
   * @returns {*}
   */
 	my.xScale = function (_v) {
-		if (!arguments.length) return xScale;
-		xScale = _v;
+		if (!arguments.length) return xScaleArea;
+		xScaleArea = _v;
 		return my;
 	};
 
