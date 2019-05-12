@@ -16,32 +16,32 @@ import component from "../component";
  *
  * chartHolder.datum(myData).call(myChart);
  *
- * @see https://datavizproject.com/data-type/waterfall-plot/
+ * @see https://datavizproject.com/data-type/nested-area-chart/
  */
 export default function() {
 
-	var x3d = void 0;
-	var scene = void 0;
+	let x3d;
+	let scene;
 
 	/* Default Properties */
-	var width = 500;
-	var height = 500;
-	var dimensions = { x: 60, y: 40, z: 40 };
-	var colors = ["green", "red", "yellow", "steelblue", "orange"];
-	var classed = "d3X3domAreaChartMultiSeries";
-	var debug = false;
+	let width = 500;
+	let height = 500;
+	let dimensions = { x: 60, y: 40, z: 40 };
+	let colors = ["green", "red", "yellow", "steelblue", "orange"];
+	let classed = "d3X3domAreaChartMultiSeries";
+	let debug = false;
 
 	/* Scales */
-	var xScale = void 0;
-	var yScale = void 0;
-	var zScale = void 0;
-	var colorScale = void 0;
+	let xScale;
+	let yScale;
+	let zScale;
+	let colorScale;
 
 	/* Components */
-	var viewpoint = component.viewpoint();
-	var axis = component.axisThreePlane();
-	var areas = component.areaMultiSeries();
-	var light = component.light();
+	const viewpoint = component.viewpoint();
+	const axis = component.axisThreePlane();
+	const areas = component.areaMultiSeries();
+	const light = component.light();
 
 	/**
 	 * Initialise Data and Scales
@@ -49,25 +49,28 @@ export default function() {
 	 * @private
 	 * @param {Array} data - Chart data.
 	 */
-	var init = function init(data) {
-		var _dataTransform$summar = dataTransform(data).summary(),
-			rowKeys = _dataTransform$summar.rowKeys,
-			columnKeys = _dataTransform$summar.columnKeys,
-			valueMax = _dataTransform$summar.valueMax;
+	const init = function(data) {
+		const { rowKeys, columnKeys, valueMax } = dataTransform(data).summary();
+		const valueExtent = [0, valueMax];
+		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
-		var valueExtent = [0, valueMax];
-		var _dimensions = dimensions,
-			dimensionX = _dimensions.x,
-			dimensionY = _dimensions.y,
-			dimensionZ = _dimensions.z;
+		xScale = d3.scalePoint()
+			.domain(columnKeys)
+			.range([0, dimensionX]);
 
-		xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
+		yScale = d3.scaleLinear()
+			.domain(valueExtent)
+			.range([0, dimensionY])
+			.nice();
 
-		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+		zScale = d3.scaleBand()
+			.domain(rowKeys)
+			.range([0, dimensionZ])
+			.padding(0.4);
 
-		zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
-
-		colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+		colorScale = d3.scaleOrdinal()
+			.domain(columnKeys)
+			.range(colors);
 	};
 
 	/**
@@ -77,28 +80,32 @@ export default function() {
 	 * @alias areaChartMultiSeries
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
-	var my = function my(selection) {
+	const my = function(selection) {
 		// Create x3d element (if it does not exist already)
 		if (!x3d) {
 			x3d = selection.append("x3d");
 			scene = x3d.append("scene");
 		}
 
-		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
+		x3d.attr("width", width + "px")
+			.attr("height", height + "px")
+			.attr("showLog", debug ? "true" : "false")
+			.attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "areas"];
+		scene.classed(classed, true)
+			.selectAll("group")
+			.data(layers)
+			.enter()
+			.append("group")
+			.attr("class", (d) => d);
 
-		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function(d) {
-			return d;
-		});
-
-		selection.each(function(data) {
+		selection.each((data) => {
 			init(data);
 
 			// Add Viewpoint
-			viewpoint
-				.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2])
+			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2])
 				.viewOrientation([-0.61021, 0.77568, 0.16115, 0.65629])
 				.viewPosition([77.63865, 54.69470, 104.38314]);
 
@@ -109,11 +116,10 @@ export default function() {
 				.yScale(yScale)
 				.zScale(zScale);
 
-			// Add Axis
 			scene.select(".axis")
 				.call(axis);
 
-			// Add Series
+			// Add Areas
 			areas.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
