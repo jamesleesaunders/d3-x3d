@@ -62,7 +62,11 @@ export default function() {
 				let one = keyPicker(t);
 				let two = keyPicker(t) + (1 / keys.length);
 
-				return d3.interpolate(one, two)(t).toFixed(4);
+				//return d3.interpolate(one, two)(t).toFixed(4);
+
+				let jim = Number((t * 100).toFixed(0)) + 1;
+				console.log(jim);
+				return jim;
 			};
 
 			// 100 Samples
