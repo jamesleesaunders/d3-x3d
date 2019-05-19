@@ -84,8 +84,10 @@ export default function() {
 				.classed(classed, true)
 				.attr("id", (d) => d.key);
 
-			const ribbonData = function(d) {
-				return d.map((pointThis, indexThis, array) => {
+			const ribbonData = function(data) {
+				let values = data.values;
+
+				return values.map((pointThis, indexThis, array) => {
 					let indexNext = indexThis + 1;
 					if (indexNext >= array.length) {
 						return null;
@@ -149,7 +151,7 @@ export default function() {
 			};
 
 			const ribbon = element.selectAll(".ribbon")
-				.data((d) => ribbonData(d.values), (d) => d.key);
+				.data((d) => ribbonData(d), (d) => d.key);
 
 			ribbon.enter()
 				.append("group")

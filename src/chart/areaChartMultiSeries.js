@@ -32,58 +32,18 @@ export default function() {
 	let debug = false;
 
 	/* Scales */
-	let xScaleArea;
-	let xScaleAxis;
+	let xScale;
 	let yScale;
 	let zScale;
 	let colorScale;
+
+	let smoothed = true;
 
 	/* Components */
 	const viewpoint = component.viewpoint();
 	const axis = component.axisThreePlane();
 	const areas = component.areaMultiSeries();
 	const light = component.light();
-
-	/**
-	 * Smooth Data
-	 *
-	 * @private
-	 * @param {Array} data - Chart data.
-	 * @return {Array} Smoothed Chart data.
-	 */
-	const smoothData = function(data) {
-		function smooth(values) {
-			let keys = values.map((d, i) => i);
-			let vals = values.map((d) => d.value);
-			let splinePolator = d3.interpolateBasis(vals);
-			let keyPicker = d3.interpolateDiscrete(keys);
-
-			let keyPolator = function(t) {
-				let one = keyPicker(t);
-				let two = keyPicker(t) + (1 / keys.length);
-
-				//return d3.interpolate(one, two)(t).toFixed(4);
-
-				let jim = Number((t * 100).toFixed(0)) + 1;
-				console.log(jim);
-				return jim;
-			};
-
-			// 100 Samples
-			let sampler = d3.range(0, 1, 0.01);
-
-			return sampler.map((t) => ({
-				key: keyPolator(t),
-				value: splinePolator(t)
-			}));
-		}
-
-		return data.map((d) => ({
-			key: d.key,
-			values: smooth(d.values),
-			original: d.values
-		}));
-	};
 
 	/**
 	 * Initialise Data and Scales
@@ -95,14 +55,9 @@ export default function() {
 		const { rowKeys, columnKeys, valueMax } = dataTransform(data).summary();
 		const valueExtent = [0, valueMax];
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
-		const originalKeys = d3.values(data[0].original).map((d) => d.key);
 
-		xScaleArea = d3.scalePoint()
+		xScale = d3.scalePoint()
 			.domain(columnKeys)
-			.range([0, dimensionX]);
-
-		xScaleAxis = d3.scalePoint()
-			.domain(originalKeys)
 			.range([0, dimensionX]);
 
 		yScale = d3.scaleLinear()
@@ -149,8 +104,7 @@ export default function() {
 			.attr("class", (d) => d);
 
 		selection.each((data) => {
-			let smoothedData = smoothData(data);
-			init(smoothedData);
+			init(data);
 
 			// Add Viewpoint
 			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2])
@@ -160,7 +114,7 @@ export default function() {
 			scene.call(viewpoint);
 
 			// Add Axis
-			axis.xScale(xScaleAxis)
+			axis.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale);
 
@@ -168,14 +122,15 @@ export default function() {
 				.call(axis);
 
 			// Add Areas
-			areas.xScale(xScaleArea)
+			areas.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
 				.colors(colors)
+				.smoothed(smoothed)
 				.dimensions(dimensions);
 
 			scene.select(".areas")
-				.datum(smoothedData)
+				.datum(data)
 				.call(areas);
 
 			// Add Light
@@ -226,8 +181,8 @@ export default function() {
 	 * @returns {*}
 	 */
 	my.xScale = function(_v) {
-		if (!arguments.length) return xScaleArea;
-		xScaleArea = _v;
+		if (!arguments.length) return xScale;
+		xScale = _v;
 		return my;
 	};
 
@@ -288,6 +243,18 @@ export default function() {
 	my.debug = function(_v) {
 		if (!arguments.length) return debug;
 		debug = _v;
+		return my;
+	};
+
+	/**
+	 * Color Getter / Setter
+	 *
+	 * @param {string} _v - Color (e.g. 'red' or '#ff0000').
+	 * @returns {*}
+	 */
+	my.smoothed = function(_v) {
+		if (!arguments.length) return smoothed;
+		smoothed = _v;
 		return my;
 	};
 

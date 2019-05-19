@@ -19,6 +19,8 @@ export default function() {
 	let xScale;
 	let yScale;
 
+	let smoothed = true;
+
 	/**
 	 * Initialise Data and Scales
 	 *
@@ -54,22 +56,36 @@ export default function() {
 		selection.each(function(data) {
 			init(data);
 
-			let areaData = function(d) {
-				let points = d.map(function(point) {
+			let areaData = function(data) {
+				const dimensionX = dimensions.x;
+
+				let values = data.values;
+
+				if (smoothed) {
+					values = dataTransform(data).interpolate();
+					let keys = d3.extent(values.map((d) => d.key));
+					xScale = d3.scaleLinear()
+						.domain(keys)
+						.range([0, dimensionX]);
+				}
+
+				// Convert values into IFS coordinates
+				let coords = values.map(function(point) {
 					let x = xScale(point.key);
 					let y = yScale(point.value);
 
 					return [x, y, 0];
 				});
 
-				points.unshift([0, 0, 0]);
-				points.push([dimensions.x, 0, 0]);
+				// Prepend start position, end and back to start coordinates.
+				coords.unshift([0, 0, 0]);
+				coords.push([dimensionX, 0, 0]);
+				coords.unshift([0, 0, 0]);
 
-				return {
-					key: d.key,
-					point: points.map((d) => d.join(" ")).join(" "),
-					coordindex: points.map((d, i) => i).join(" ") + " -1"
-				};
+				data.point = coords.map((d) => d.join(" ")).join(" ");
+				data.coordindex = coords.map((d, i) => i).join(" ") + " -1";
+
+				return [data];
 			};
 
 			let shape = function(el) {
@@ -90,10 +106,10 @@ export default function() {
 
 			let element = d3.select(this)
 				.classed(classed, true)
-				.attr("id", function(d) { return d.key; });
+				.attr("id", (d) => d.key);
 
 			let area = element.selectAll("group")
-				.data([areaData(data.values)], function(d) { return d.key });
+				.data((d) => areaData(d), (d) => d.key);
 
 			area.enter()
 				.append("group")
@@ -101,15 +117,13 @@ export default function() {
 				.call(shape)
 				.merge(area);
 
-			/*
 			area.transition()
 				.select("shape")
 				.select("appearance")
 				.select("material")
-				.attr("diffusecolor", function(d) { return d.color; });
+				.attr("diffusecolor", (d) => d.color);
 
 			area.exit().remove();
-			*/
 		});
 	};
 
@@ -158,6 +172,18 @@ export default function() {
 	my.color = function(_v) {
 		if (!arguments.length) return color;
 		color = _v;
+		return my;
+	};
+
+	/**
+	 * Smooth Interpolation Getter / Setter
+	 *
+	 * @param {boolean} _v.
+	 * @returns {*}
+	 */
+	my.smoothed = function(_v) {
+		if (!arguments.length) return smoothed;
+		smoothed = _v;
 		return my;
 	};
 

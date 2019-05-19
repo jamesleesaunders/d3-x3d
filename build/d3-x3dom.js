@@ -486,9 +486,52 @@ function dataTransform(data) {
 		return rotated;
 	};
 
+	/**
+  * Basis Interpolate Values
+  *
+  * @private
+  * @param {Array} values
+  */
+	var interpolateBasis = function interpolateBasis(values) {
+		var vals = values.map(function (d) {
+			return d.value;
+		});
+
+		var splinePolator = d3.interpolateBasis(vals);
+
+		var keyPolator = function keyPolator(t) {
+			return Number((t * 100).toFixed(0)) + 1;
+		};
+
+		var sampler = d3.range(0, 1, 0.01);
+
+		return sampler.map(function (t) {
+			return {
+				key: keyPolator(t),
+				value: splinePolator(t)
+			};
+		});
+	};
+
+	/**
+  * Max Decimal Place
+  *
+  * @returns {number}
+  */
+	var interpolate = function interpolate() {
+		if (dataType === MULTI_SERIES) {
+			return data.map(function (d) {
+				return { key: d.key, values: interpolateBasis(d.values) };
+			});
+		} else {
+			return interpolateBasis(data.values);
+		}
+	};
+
 	return {
 		summary: summary,
-		rotate: rotate
+		rotate: rotate,
+		interpolate: interpolate
 	};
 }
 
@@ -508,6 +551,8 @@ function componentArea () {
 	/* Scales */
 	var xScale = void 0;
 	var yScale = void 0;
+
+	var smoothed = true;
 
 	/**
   * Initialise Data and Scales
@@ -546,26 +591,40 @@ function componentArea () {
 		selection.each(function (data) {
 			init(data);
 
-			var areaData = function areaData(d) {
-				var points = d.map(function (point) {
+			var areaData = function areaData(data) {
+				var dimensionX = dimensions.x;
+
+				var values = data.values;
+
+				if (smoothed) {
+					values = dataTransform(data).interpolate();
+					var keys = d3.extent(values.map(function (d) {
+						return d.key;
+					}));
+					xScale = d3.scaleLinear().domain(keys).range([0, dimensionX]);
+				}
+
+				// Convert values into IFS coordinates
+				var coords = values.map(function (point) {
 					var x = xScale(point.key);
 					var y = yScale(point.value);
 
 					return [x, y, 0];
 				});
 
-				points.unshift([0, 0, 0]);
-				points.push([dimensions.x, 0, 0]);
+				// Prepend start position, end and back to start coordinates.
+				coords.unshift([0, 0, 0]);
+				coords.push([dimensionX, 0, 0]);
+				coords.unshift([0, 0, 0]);
 
-				return {
-					key: d.key,
-					point: points.map(function (d) {
-						return d.join(" ");
-					}).join(" "),
-					coordindex: points.map(function (d, i) {
-						return i;
-					}).join(" ") + " -1"
-				};
+				data.point = coords.map(function (d) {
+					return d.join(" ");
+				}).join(" ");
+				data.coordindex = coords.map(function (d, i) {
+					return i;
+				}).join(" ") + " -1";
+
+				return [data];
 			};
 
 			var shape = function shape(el) {
@@ -583,20 +642,19 @@ function componentArea () {
 				return d.key;
 			});
 
-			var area = element.selectAll("group").data([areaData(data.values)], function (d) {
+			var area = element.selectAll("group").data(function (d) {
+				return areaData(d);
+			}, function (d) {
 				return d.key;
 			});
 
 			area.enter().append("group").classed("area", true).call(shape).merge(area);
 
-			/*
-   area.transition()
-   	.select("shape")
-   	.select("appearance")
-   	.select("material")
-   	.attr("diffusecolor", function(d) { return d.color; });
-   	area.exit().remove();
-   */
+			area.transition().select("shape").select("appearance").select("material").attr("diffusecolor", function (d) {
+				return d.color;
+			});
+
+			area.exit().remove();
 		});
 	};
 
@@ -648,6 +706,18 @@ function componentArea () {
 		return my;
 	};
 
+	/**
+  * Smooth Interpolation Getter / Setter
+  *
+  * @param {boolean} _v.
+  * @returns {*}
+  */
+	my.smoothed = function (_v) {
+		if (!arguments.length) return smoothed;
+		smoothed = _v;
+		return my;
+	};
+
 	return my;
 }
 
@@ -662,6 +732,7 @@ function componentAreaMultiSeries () {
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["orange", "red", "yellow", "steelblue", "green"];
 	var classed = "d3X3domAreaMultiSeries";
+	var smoothed = true;
 
 	/* Scales */
 	var xScale = void 0;
@@ -741,7 +812,7 @@ function componentAreaMultiSeries () {
 				x: dimensions.x,
 				y: dimensions.y,
 				z: zScale.bandwidth()
-			});
+			}).smoothed(smoothed);
 
 			var addArea = function addArea(d) {
 				var color = colorScale(d.key);
@@ -835,6 +906,18 @@ function componentAreaMultiSeries () {
 	my.colors = function (_v) {
 		if (!arguments.length) return colors;
 		colors = _v;
+		return my;
+	};
+
+	/**
+  * Smooth Interpolation Getter / Setter
+  *
+  * @param {boolean} _v.
+  * @returns {*}
+  */
+	my.smoothed = function (_v) {
+		if (!arguments.length) return smoothed;
+		smoothed = _v;
 		return my;
 	};
 
@@ -2599,8 +2682,10 @@ function componentRibbon () {
 				return d.key;
 			});
 
-			var ribbonData = function ribbonData(d) {
-				return d.map(function (pointThis, indexThis, array) {
+			var ribbonData = function ribbonData(data) {
+				var values = data.values;
+
+				return values.map(function (pointThis, indexThis, array) {
 					var indexNext = indexThis + 1;
 					if (indexNext >= array.length) {
 						return null;
@@ -2659,7 +2744,7 @@ function componentRibbon () {
 			};
 
 			var ribbon = element.selectAll(".ribbon").data(function (d) {
-				return ribbonData(d.values);
+				return ribbonData(d);
 			}, function (d) {
 				return d.key;
 			});
@@ -3866,62 +3951,18 @@ function chartAreaChartMultiSeries () {
 	var debug = false;
 
 	/* Scales */
-	var xScaleArea = void 0;
-	var xScaleAxis = void 0;
+	var xScale = void 0;
 	var yScale = void 0;
 	var zScale = void 0;
 	var colorScale = void 0;
+
+	var smoothed = true;
 
 	/* Components */
 	var viewpoint = component.viewpoint();
 	var axis = component.axisThreePlane();
 	var areas = component.areaMultiSeries();
 	var light = component.light();
-
-	/**
-  * Smooth Data
-  *
-  * @private
-  * @param {Array} data - Chart data.
-  * @return {Array} Smoothed Chart data.
-  */
-	var smoothData = function smoothData(data) {
-		function smooth(values) {
-			var keys = values.map(function (d, i) {
-				return i;
-			});
-			var vals = values.map(function (d) {
-				return d.value;
-			});
-			var splinePolator = d3.interpolateBasis(vals);
-			var keyPicker = d3.interpolateDiscrete(keys);
-
-			var keyPolator = function keyPolator(t) {
-				var one = keyPicker(t);
-				var two = keyPicker(t) + 1 / keys.length;
-
-				return d3.interpolate(one, two)(t).toFixed(4);
-			};
-
-			// 100 Samples
-			var sampler = d3.range(0, 1, 0.01);
-
-			return sampler.map(function (t) {
-				return {
-					key: keyPolator(t),
-					value: splinePolator(t)
-				};
-			});
-		}
-
-		return data.map(function (d) {
-			return {
-				key: d.key,
-				values: smooth(d.values),
-				original: d.values
-			};
-		});
-	};
 
 	/**
   * Initialise Data and Scales
@@ -3941,13 +3982,8 @@ function chartAreaChartMultiSeries () {
 		    dimensionY = _dimensions.y,
 		    dimensionZ = _dimensions.z;
 
-		var originalKeys = d3.values(data[0].original).map(function (d) {
-			return d.key;
-		});
 
-		xScaleArea = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
-
-		xScaleAxis = d3.scalePoint().domain(originalKeys).range([0, dimensionX]);
+		xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
 
 		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
 
@@ -3979,8 +4015,7 @@ function chartAreaChartMultiSeries () {
 		});
 
 		selection.each(function (data) {
-			var smoothedData = smoothData(data);
-			init(smoothedData);
+			init(data);
 
 			// Add Viewpoint
 			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]).viewOrientation([-0.61021, 0.77568, 0.16115, 0.65629]).viewPosition([77.63865, 54.69470, 104.38314]);
@@ -3988,14 +4023,14 @@ function chartAreaChartMultiSeries () {
 			scene.call(viewpoint);
 
 			// Add Axis
-			axis.xScale(xScaleAxis).yScale(yScale).zScale(zScale);
+			axis.xScale(xScale).yScale(yScale).zScale(zScale);
 
 			scene.select(".axis").call(axis);
 
 			// Add Areas
-			areas.xScale(xScaleArea).yScale(yScale).zScale(zScale).colors(colors).dimensions(dimensions);
+			areas.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors).smoothed(smoothed).dimensions(dimensions);
 
-			scene.select(".areas").datum(smoothedData).call(areas);
+			scene.select(".areas").datum(data).call(areas);
 
 			// Add Light
 			scene.call(light);
@@ -4045,8 +4080,8 @@ function chartAreaChartMultiSeries () {
   * @returns {*}
   */
 	my.xScale = function (_v) {
-		if (!arguments.length) return xScaleArea;
-		xScaleArea = _v;
+		if (!arguments.length) return xScale;
+		xScale = _v;
 		return my;
 	};
 
@@ -4107,6 +4142,18 @@ function chartAreaChartMultiSeries () {
 	my.debug = function (_v) {
 		if (!arguments.length) return debug;
 		debug = _v;
+		return my;
+	};
+
+	/**
+  * Color Getter / Setter
+  *
+  * @param {string} _v - Color (e.g. 'red' or '#ff0000').
+  * @returns {*}
+  */
+	my.smoothed = function (_v) {
+		if (!arguments.length) return smoothed;
+		smoothed = _v;
 		return my;
 	};
 

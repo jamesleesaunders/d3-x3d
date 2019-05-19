@@ -406,9 +406,46 @@ export default function dataTransform(data) {
 		return rotated;
 	};
 
+	/**
+	 * Basis Interpolate Values
+	 *
+	 * @private
+	 * @param {Array} values
+	 */
+	const interpolateBasis = function(values) {
+		let vals = values.map((d) => d.value);
+
+		let splinePolator = d3.interpolateBasis(vals);
+
+		let keyPolator = function(t) {
+			return Number((t * 100).toFixed(0)) + 1;
+		};
+
+		let sampler = d3.range(0, 1, 0.01);
+
+		return sampler.map((t) => ({
+			key: keyPolator(t),
+			value: splinePolator(t)
+		}));
+	};
+
+	/**
+	 * Max Decimal Place
+	 *
+	 * @returns {number}
+	 */
+	const interpolate = function() {
+		if (dataType === MULTI_SERIES) {
+			return data.map((d) => ({ key: d.key, values: interpolateBasis(d.values) }));
+		} else {
+			return interpolateBasis(data.values);
+		}
+	};
+
 	return {
 		summary: summary,
-		rotate: rotate
+		rotate: rotate,
+		interpolate: interpolate
 	};
 
 }

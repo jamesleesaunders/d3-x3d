@@ -14,6 +14,7 @@ export default function() {
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["orange", "red", "yellow", "steelblue", "green"];
 	let classed = "d3X3domAreaMultiSeries";
+	let smoothed = true;
 
 	/* Scales */
 	let xScale;
@@ -97,7 +98,8 @@ export default function() {
 					x: dimensions.x,
 					y: dimensions.y,
 					z: zScale.bandwidth()
-				});
+				})
+				.smoothed(smoothed);
 
 			const addArea = function(d) {
 				const color = colorScale(d.key);
@@ -195,6 +197,18 @@ export default function() {
 	my.colors = function(_v) {
 		if (!arguments.length) return colors;
 		colors = _v;
+		return my;
+	};
+
+	/**
+	 * Smooth Interpolation Getter / Setter
+	 *
+	 * @param {boolean} _v.
+	 * @returns {*}
+	 */
+	my.smoothed = function(_v) {
+		if (!arguments.length) return smoothed;
+		smoothed = _v;
 		return my;
 	};
 
