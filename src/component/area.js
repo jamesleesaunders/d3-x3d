@@ -14,12 +14,11 @@ export default function() {
 	let color = "blue";
 	let transparency = 0.0;
 	let classed = "d3X3domArea";
+	let smoothing = d3.curveMonotoneX;
 
 	/* Scales */
 	let xScale;
 	let yScale;
-
-	let smoothed = true;
 
 	/**
 	 * Initialise Data and Scales
@@ -59,15 +58,16 @@ export default function() {
 			let areaData = function(data) {
 				const dimensionX = dimensions.x;
 
-				let values = data.values;
+				if (smoothing) {
+					data = dataTransform(data).smooth(smoothing);
 
-				if (smoothed) {
-					values = dataTransform(data).interpolate();
-					let keys = d3.extent(values.map((d) => d.key));
+					const keys = d3.extent(data.values.map((d) => d.key));
 					xScale = d3.scaleLinear()
 						.domain(keys)
 						.range([0, dimensionX]);
 				}
+
+				let values = data.values;
 
 				// Convert values into IFS coordinates
 				let coords = values.map(function(point) {
@@ -178,12 +178,17 @@ export default function() {
 	/**
 	 * Smooth Interpolation Getter / Setter
 	 *
-	 * @param {boolean} _v.
+	 * Options:
+	 *   d3.curveLinear
+	 *   d3.curveBasis
+	 *   d3.curveMonotoneX
+	 *
+	 * @param {d3.curve} _v.
 	 * @returns {*}
 	 */
 	my.smoothed = function(_v) {
-		if (!arguments.length) return smoothed;
-		smoothed = _v;
+		if (!arguments.length) return smoothing;
+		smoothing = _v;
 		return my;
 	};
 
