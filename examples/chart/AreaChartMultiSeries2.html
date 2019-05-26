@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3dom : Test</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
+  <script src="../../build/d3-x3dom.js"></script>
+</head>
+
+<body>
+  <div id="chartholder"></div>
+
+  <script>
+    // Select chartholder
+    var chartHolder = d3.select("#chartholder");
+
+    // Generate some data
+    var data = d3.x3dom.randomData.dataset2();
+    var data = [
+      {
+        key: "A",
+        values: [
+          { key: 'One', value: 1 },
+          { key: 'Two', value: 2 },
+          { key: 'Three', value: 3 },
+          { key: 'Four', value: 4 },
+          { key: 'Five', value: 3 },
+          { key: 'Six', value: 2 },
+          { key: 'One', value: 1 },
+          { key: 'Two', value: 2 },
+          { key: 'Three', value: 3 },
+          { key: 'Four', value: 4 },
+          { key: 'Five', value: 3 },
+          { key: 'Six', value: 2 },
+          { key: 'Six', value: 1 }
+        ]
+      },
+      {
+        key: "B",
+        values: [
+          { key: 'One', value: 1 },
+          { key: 'Two', value: 2 },
+          { key: 'Three', value: 1 },
+          { key: 'Four', value: 0 },
+          { key: 'Five', value: -1 },
+          { key: 'Six', value: -2 },
+          { key: 'One', value: -1 },
+          { key: 'Two', value: 0 },
+          { key: 'Three', value: -1 },
+          { key: 'Four', value: -2 },
+          { key: 'Five', value: -1 },
+          { key: 'Six', value: 0 },
+          { key: 'Six', value: 1 }
+        ]
+      }
+    ];
+
+    // Declare the bar chart component
+    var myChart = d3.x3dom.chart.areaChartMultiSeries();
+
+    var checks = d3.selectAll('input[type=checkbox]');
+
+
+    chartHolder.datum(data).call(myChart);
+  </script>
+
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM
+    Data Visualization Library.
+  </div>
+</body>
+
+</html>

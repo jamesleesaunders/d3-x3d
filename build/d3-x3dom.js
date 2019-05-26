@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.3.0";
+var version = "1.3.1";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -486,9 +486,161 @@ function dataTransform(data) {
 		return rotated;
 	};
 
+	/**
+  * Smooth Data
+  *
+  * Returns a copy of the input data series which is subsampled into a 100 samples,
+  * and has the smoothed values based on a provided d3.curve function.
+  *
+  * @param curve
+  * @returns {{values: *, key: *}}
+  */
+	var smoothV2 = function smoothV2(curve) {
+		var epsilon = 0.00001;
+		var samples = 100;
+
+		var values = data.values.map(function (d) {
+			return d.value;
+		});
+		var valuePolator = interpolateCurve(values, curve, epsilon, samples);
+
+		var keyPolator = function keyPolator(t) {
+			return Number((t * samples).toFixed(0)) + 1;
+		};
+
+		var sampler = d3.range(0, 1, 1 / samples);
+
+		return {
+			key: data.key,
+			values: sampler.map(function (t) {
+				return {
+					key: keyPolator(t),
+					value: valuePolator(t).y
+				};
+			})
+		};
+	};
+
+	/**
+  * Interpolate Curve
+  *
+  * Returns an interpolator function similar to d3.interpoleBasis(values).
+  * The returned function expects input in the range [0, 1] and returns a smoothed value. For example:
+  *
+  * - interpolateCurve(values)(0) returns the the first value.
+  *
+  * - interpolateCurve uses curvePolator(points) which returns a similar interpolator function.
+  *   However, the returned function works in the arbitrary domain defined by the provided points
+  *   and expects an input x in this domain.
+  *
+  * - curvePolator uses svgPathInterpolator(svgpath) which returns a similar interpolator function.
+  *   However, the returned function is constructed based on an SVG path string.
+  *   d3.line(points) outputs such SVG path strings.
+  *
+  * @private
+  *
+  * @param values
+  * @param curve
+  * @param epsilon
+  * @param samples
+  *
+  * @returns {*}
+  */
+	var interpolateCurve = function interpolateCurve(values, curve, epsilon, samples) {
+		var length = values.length;
+		var xrange = d3.range(length).map(function (d, i) {
+			return i * (1 / (length - 1));
+		});
+		var points = values.map(function (v, i) {
+			return [xrange[i], v];
+		});
+
+		return curvePolator(points, curve, epsilon, samples);
+	};
+
+	/**
+  * Curve Polator
+  *
+  * @private
+  *
+  * @param points
+  * @param curve
+  * @param epsilon
+  * @param samples
+  *
+  * @returns {*}
+  */
+	var curvePolator = function curvePolator(points, curve, epsilon, samples) {
+		var path = d3.line().curve(curve)(points);
+
+		return svgPathInterpolator(path, epsilon, samples);
+	};
+
+	/**
+  * SVG Path Interpolator
+  *
+  * @private
+  *
+  * @param path
+  * @param epsilon
+  * @param samples
+  *
+  * @returns {interpolator}
+  */
+	var svgPathInterpolator = function svgPathInterpolator(path, epsilon, samples) {
+		// Create SVG Path
+		path = path || "M0,0L1,1";
+		var area = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+		area.innerHTML = '<path d=\'' + path + '\'></path>';
+		var svgpath = area.querySelector('path');
+		svgpath.setAttribute('d', path);
+
+		// Calculate lengths and max points
+		var totalLength = svgpath.getTotalLength();
+		var minPoint = svgpath.getPointAtLength(0);
+		var maxPoint = svgpath.getPointAtLength(totalLength);
+		var reverse = maxPoint.x < minPoint.x;
+		var range = reverse ? [maxPoint, minPoint] : [minPoint, maxPoint];
+		reverse = reverse ? -1 : 1;
+
+		// Return function
+		return function (x) {
+			var targetX = x === 0 ? 0 : x || minPoint.x; // Check for 0 and null/undefined
+			if (targetX < range[0].x) return range[0]; // Clamp
+			if (targetX > range[1].x) return range[1];
+
+			function estimateLength(l, mn, mx) {
+				var delta = svgpath.getPointAtLength(l).x - targetX;
+				var nextDelta = 0;
+				var iter = 0;
+				// console.log(delta, targetX, epsilon);
+				while (Math.abs(delta) > epsilon && iter < samples) {
+					iter++;
+					// console.log(iter, Math.abs(delta) > epsilon);
+					if (reverse * delta < 0) {
+						mn = l;
+						l = (l + mx) / 2;
+					} else {
+						mx = l;
+						l = (mn + l) / 2;
+					}
+					nextDelta = svgpath.getPointAtLength(l).x - targetX;
+					if (Math.abs(Math.abs(delta) - Math.abs(nextDelta)) < epsilon) break; // Not improving, targetX may be in a gap
+					delta = nextDelta;
+				}
+
+				return l;
+			}
+
+			var estimatedLength = estimateLength(totalLength / 2, 0, totalLength);
+			return svgpath.getPointAtLength(estimatedLength);
+		};
+	};
+
 	return {
 		summary: summary,
-		rotate: rotate
+		rotate: rotate,
+		smooth: smoothV2
 	};
 }
 
@@ -501,41 +653,14 @@ function componentArea () {
 
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 5 };
-	var color = "red";
+	var color = "blue";
 	var transparency = 0.0;
 	var classed = "d3X3domArea";
+	var smoothing = d3.curveMonotoneX;
 
 	/* Scales */
 	var xScale = void 0;
 	var yScale = void 0;
-
-	/**
-  * Array to String
-  *
-  * @private
-  * @param {array} arr
-  * @returns {string}
-  */
-	var array2dToString = function array2dToString(arr) {
-		return arr.reduce(function (a, b) {
-			return a.concat(b);
-		}, []).reduce(function (a, b) {
-			return a.concat(b);
-		}, []).join(" ");
-	};
-
-	/**
-  * Array to Coordinate Index
-  *
-  * @private
-  * @param {array} arr
-  * @returns {string}
-  */
-	var arrayToCoordIndex = function arrayToCoordIndex(arr, offset) {
-		return arr.map(function (d, i) {
-			return i + offset;
-		}).join(" ").concat(" -1");
-	};
 
 	/**
   * Initialise Data and Scales
@@ -552,6 +677,7 @@ function componentArea () {
 		var _dimensions = dimensions,
 		    dimensionX = _dimensions.x,
 		    dimensionY = _dimensions.y;
+
 
 		if (typeof xScale === "undefined") {
 			xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
@@ -573,12 +699,22 @@ function componentArea () {
 		selection.each(function (data) {
 			init(data);
 
-			var element = d3.select(this).classed(classed, true).attr("id", function (d) {
-				return d.key;
-			});
+			var areaData = function areaData(data) {
+				var dimensionX = dimensions.x;
 
-			var areaData = function areaData(d) {
-				return d.map(function (pointThis, indexThis, array) {
+				if (smoothing) {
+					data = dataTransform(data).smooth(smoothing);
+
+					var keys = d3.extent(data.values.map(function (d) {
+						return d.key;
+					}));
+					xScale = d3.scaleLinear().domain(keys).range([0, dimensionX]);
+				}
+
+				var values = data.values;
+
+				// Convert values into IFS coordinates
+				var coords = values.map(function (pointThis, indexThis, array) {
 					var indexNext = indexThis + 1;
 					if (indexNext >= array.length) {
 						return null;
@@ -590,51 +726,44 @@ function componentArea () {
 					var y1 = yScale(pointThis.value);
 					var y2 = yScale(pointNext.value);
 
-					var points = [[x1, 0, 0], [x1, y1, 0], [x2, y2, 0], [x2, 0, 0]];
-
-					return {
-						key: pointThis.key,
-						value: pointThis.value,
-						points: points
-					};
+					return [x1, 0, 0, x1, y1, 0, x2, y2, 0, x2, 0, 0];
 				}).filter(function (d) {
 					return d !== null;
 				});
+
+				data.point = coords.map(function (d) {
+					return d.join(" ");
+				}).join(" ");
+				data.coordindex = coords.map(function (d, i) {
+					var offset = i * 4;
+					return [offset, offset + 1, offset + 2, offset + 3, -1].join(" ");
+				}).join(" ");
+
+				return [data];
 			};
 
 			var shape = function shape(el) {
 				var shape = el.append("shape");
 
 				// FIXME: x3dom cannot have empty IFS nodes
-				shape.html("\n\t\t\t\t<indexedfaceset coordIndex='' solid='false'>\n\t\t\t\t\t<coordinate point=''></coordinate>\n\t\t\t\t</indexedfaceset>\n\t\t\t\t<appearance>\n\t\t\t\t\t<material diffuseColor='" + color + "' transparency='" + transparency + "'></material>\n\t\t\t\t</appearance>\n\t\t\t");
+				shape.html(function (d) {
+					return "\n\t\t\t\t\t<indexedfaceset coordindex='" + d.coordindex + "' solid='false'>\n\t\t\t\t\t\t<coordinate point='" + d.point + "' ></coordinate>\n\t\t\t\t\t</indexedfaceset>\n\t\t\t\t\t<appearance>\n\t\t\t\t\t\t<material diffuseColor='" + color + "' transparency='" + transparency + "'></material>\n\t\t\t\t\t</appearance>\n\t\t\t\t";
+				});
 
 				return shape;
 			};
 
-			function addIndices(d) {
-				var shape = d3.select(this).select("shape");
-				var ifs = shape.select("indexedfaceset");
-				var coord = ifs.select("coordinate");
+			var element = d3.select(this).classed(classed, true).attr("id", function (d) {
+				return d.key;
+			});
 
-				var point = coord.attr("point");
-
-				if (typeof point !== 'string') {
-					point = '';
-				}
-				// getAttribute is redefined by x3dom and does not work for ''
-				coord.attr("point", point + " " + array2dToString(d.points));
-				var lastIndex = point.split(" ").length - 1;
-				var coordIndex = ifs.attr("coordindex") + " ";
-				ifs.attr("coordindex", coordIndex + arrayToCoordIndex(d.points, lastIndex / 3));
-			}
-
-			var area = element.selectAll(".area").data(function (d) {
-				return areaData(d.values);
+			var area = element.selectAll("group").data(function (d) {
+				return areaData(d);
 			}, function (d) {
 				return d.key;
 			});
 
-			area.enter().append("group").classed("area", true).call(shape).each(addIndices).merge(area);
+			area.enter().append("group").classed("area", true).call(shape).merge(area);
 
 			area.transition().select("shape").select("appearance").select("material").attr("diffusecolor", function (d) {
 				return d.color;
@@ -692,6 +821,23 @@ function componentArea () {
 		return my;
 	};
 
+	/**
+  * Smooth Interpolation Getter / Setter
+  *
+  * Options:
+  *   d3.curveBasis
+  *   d3.curveLinear
+  *   d3.curveMonotoneX
+  *
+  * @param {d3.curve} _v.
+  * @returns {*}
+  */
+	my.smoothed = function (_v) {
+		if (!arguments.length) return smoothing;
+		smoothing = _v;
+		return my;
+	};
+
 	return my;
 }
 
@@ -706,6 +852,7 @@ function componentAreaMultiSeries () {
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["orange", "red", "yellow", "steelblue", "green"];
 	var classed = "d3X3domAreaMultiSeries";
+	var smoothing = d3.curveMonotoneX;
 
 	/* Scales */
 	var xScale = void 0;
@@ -757,6 +904,7 @@ function componentAreaMultiSeries () {
 		    dimensionY = _dimensions.y,
 		    dimensionZ = _dimensions.z;
 
+
 		xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
 
 		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
@@ -784,7 +932,7 @@ function componentAreaMultiSeries () {
 				x: dimensions.x,
 				y: dimensions.y,
 				z: zScale.bandwidth()
-			});
+			}).smoothed(smoothing);
 
 			var addArea = function addArea(d) {
 				var color = colorScale(d.key);
@@ -878,6 +1026,23 @@ function componentAreaMultiSeries () {
 	my.colors = function (_v) {
 		if (!arguments.length) return colors;
 		colors = _v;
+		return my;
+	};
+
+	/**
+  * Smooth Interpolation Getter / Setter
+  *
+  * Options:
+  *   d3.curveBasis
+  *   d3.curveLinear
+  *   d3.curveMonotoneX
+  *
+  * @param {d3.curve} _v.
+  * @returns {*}
+  */
+	my.smoothed = function (_v) {
+		if (!arguments.length) return smoothing;
+		smoothing = _v;
 		return my;
 	};
 
@@ -2566,6 +2731,7 @@ function componentRibbon () {
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 5 };
 	var color = "red";
+	var transparency = 0.2;
 	var classed = "d3X3domRibbon";
 
 	/* Scales */
@@ -2641,8 +2807,10 @@ function componentRibbon () {
 				return d.key;
 			});
 
-			var ribbonData = function ribbonData(d) {
-				return d.map(function (pointThis, indexThis, array) {
+			var ribbonData = function ribbonData(data) {
+				var values = data.values;
+
+				return values.map(function (pointThis, indexThis, array) {
 					var indexNext = indexThis + 1;
 					if (indexNext >= array.length) {
 						return null;
@@ -2662,9 +2830,7 @@ function componentRibbon () {
 						key: pointThis.key,
 						value: pointThis.value,
 						coordindex: arrayToCoordIndex(points),
-						point: array2dToString(points),
-						color: color,
-						transparency: 0.2
+						point: array2dToString(points)
 					};
 				}).filter(function (d) {
 					return d !== null;
@@ -2694,7 +2860,7 @@ function componentRibbon () {
 
 				shape.html(function (d) {
 					var indexedfaceset = "<indexedfaceset coordindex=\"" + d.coordindex + "\"><coordinate point=\"" + d.point + "\"></coordinate></indexedfaceset>";
-					var appearance = "<appearance><twosidedmaterial diffusecolor=\"" + d.color + "\" transparency=\"" + d.transparency + "\"></twosidedmaterial></appearance>";
+					var appearance = "<appearance><twosidedmaterial diffusecolor=\"" + color + "\" transparency=\"" + transparency + "\"></twosidedmaterial></appearance>";
 
 					return indexedfaceset + appearance;
 				});
@@ -2703,7 +2869,7 @@ function componentRibbon () {
 			};
 
 			var ribbon = element.selectAll(".ribbon").data(function (d) {
-				return ribbonData(d.values);
+				return ribbonData(d);
 			}, function (d) {
 				return d.key;
 			});
@@ -3894,7 +4060,7 @@ var component = {
  *
  * chartHolder.datum(myData).call(myChart);
  *
- * @see https://datavizproject.com/data-type/waterfall-plot/
+ * @see https://datavizproject.com/data-type/nested-area-chart/
  */
 function chartAreaChartMultiSeries () {
 
@@ -3908,6 +4074,7 @@ function chartAreaChartMultiSeries () {
 	var colors = ["green", "red", "yellow", "steelblue", "orange"];
 	var classed = "d3X3domAreaChartMultiSeries";
 	var debug = false;
+	var smoothing = d3.curveMonotoneX;
 
 	/* Scales */
 	var xScale = void 0;
@@ -3939,6 +4106,7 @@ function chartAreaChartMultiSeries () {
 		    dimensionY = _dimensions.y,
 		    dimensionZ = _dimensions.z;
 
+
 		xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
 
 		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
@@ -3966,7 +4134,6 @@ function chartAreaChartMultiSeries () {
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "areas"];
-
 		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
 			return d;
 		});
@@ -3982,11 +4149,10 @@ function chartAreaChartMultiSeries () {
 			// Add Axis
 			axis.xScale(xScale).yScale(yScale).zScale(zScale);
 
-			// Add Axis
 			scene.select(".axis").call(axis);
 
-			// Add Series
-			areas.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors).dimensions(dimensions);
+			// Add Areas
+			areas.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors).smoothed(smoothing).dimensions(dimensions);
 
 			scene.select(".areas").datum(data).call(areas);
 
@@ -4100,6 +4266,23 @@ function chartAreaChartMultiSeries () {
 	my.debug = function (_v) {
 		if (!arguments.length) return debug;
 		debug = _v;
+		return my;
+	};
+
+	/**
+  * Smooth Interpolation Getter / Setter
+  *
+  * Options:
+  *   d3.curveBasis
+  *   d3.curveLinear
+  *   d3.curveMonotoneX
+  *
+  * @param {d3.curve} _v.
+  * @returns {*}
+  */
+	my.smoothed = function (_v) {
+		if (!arguments.length) return smoothing;
+		smoothing = _v;
 		return my;
 	};
 

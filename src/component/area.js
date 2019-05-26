@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 
+
 /**
  * Reusable 3D Area Chart Component
  *
@@ -9,42 +10,15 @@ import dataTransform from "../dataTransform";
 export default function() {
 
 	/* Default Properties */
-	var dimensions = { x: 40, y: 40, z: 5 };
-	var color = "red";
-	var transparency = 0.0;
-	var classed = "d3X3domArea";
+	let dimensions = { x: 40, y: 40, z: 5 };
+	let color = "blue";
+	let transparency = 0.0;
+	let classed = "d3X3domArea";
+	let smoothing = d3.curveMonotoneX;
 
 	/* Scales */
-	var xScale = void 0;
-	var yScale = void 0;
-
-	/**
-	 * Array to String
-	 *
-	 * @private
-	 * @param {array} arr
-	 * @returns {string}
-	 */
-	var array2dToString = function array2dToString(arr) {
-		return arr.reduce(function(a, b) {
-			return a.concat(b);
-		}, []).reduce(function(a, b) {
-			return a.concat(b);
-		}, []).join(" ");
-	};
-
-	/**
-	 * Array to Coordinate Index
-	 *
-	 * @private
-	 * @param {array} arr
-	 * @returns {string}
-	 */
-	var arrayToCoordIndex = function arrayToCoordIndex(arr, offset) {
-		return arr.map(function(d, i) {
-			return i + offset;
-		}).join(" ").concat(" -1");
-	};
+	let xScale;
+	let yScale;
 
 	/**
 	 * Initialise Data and Scales
@@ -52,23 +26,21 @@ export default function() {
 	 * @private
 	 * @param {Array} data - Chart data.
 	 */
-	var init = function init(data) {
-		var _dataTransform$summar = dataTransform(data).summary(),
-			columnKeys = _dataTransform$summar.columnKeys,
-			valueMax = _dataTransform$summar.valueMax;
-
-		var valueExtent = [0, valueMax];
-		var _dimensions = dimensions,
-			dimensionX = _dimensions.x,
-			dimensionY = _dimensions.y;
-
+	const init = function(data) {
+		const { columnKeys, valueMax } = dataTransform(data).summary();
+		const valueExtent = [0, valueMax];
+		const { x: dimensionX, y: dimensionY } = dimensions;
 
 		if (typeof xScale === "undefined") {
-			xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
+			xScale = d3.scalePoint()
+				.domain(columnKeys)
+				.range([0, dimensionX]);
 		}
 
 		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+			yScale = d3.scaleLinear()
+				.domain(valueExtent)
+				.range([0, dimensionY]);
 		}
 	};
 
@@ -79,87 +51,85 @@ export default function() {
 	 * @alias area
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
-	var my = function my(selection) {
+	const my = function(selection) {
 		selection.each(function(data) {
 			init(data);
 
-			var element = d3.select(this)
-				.classed(classed, true)
-				.attr("id", function(d) { return d.key; });
+			let areaData = function(data) {
+				const dimensionX = dimensions.x;
 
-			var areaData = function areaData(d) {
-				return d.map(function(pointThis, indexThis, array) {
-					var indexNext = indexThis + 1;
+				if (smoothing) {
+					data = dataTransform(data).smooth(smoothing);
+
+					const keys = d3.extent(data.values.map((d) => d.key));
+					xScale = d3.scaleLinear()
+						.domain(keys)
+						.range([0, dimensionX]);
+				}
+
+				let values = data.values;
+
+				// Convert values into IFS coordinates
+				let coords = values.map(function(pointThis, indexThis, array) {
+					let indexNext = indexThis + 1;
 					if (indexNext >= array.length) {
 						return null;
 					}
-					var pointNext = array[indexNext];
+					let pointNext = array[indexNext];
 
-					var x1 = xScale(pointThis.key);
-					var x2 = xScale(pointNext.key);
-					var y1 = yScale(pointThis.value);
-					var y2 = yScale(pointNext.value);
+					let x1 = xScale(pointThis.key);
+					let x2 = xScale(pointNext.key);
+					let y1 = yScale(pointThis.value);
+					let y2 = yScale(pointNext.value);
 
-					var points = [[x1, 0, 0], [x1, y1, 0], [x2, y2, 0], [x2, 0, 0]];
-
-					return {
-						key: pointThis.key,
-						value: pointThis.value,
-						points: points
-					};
+					return [x1, 0, 0, x1, y1, 0, x2, y2, 0, x2, 0, 0];
 				}).filter(function(d) {
 					return d !== null;
 				});
+
+				data.point = coords.map((d) => d.join(" ")).join(" ");
+				data.coordindex = coords.map((d, i) => {
+					let offset = i * 4;
+					return [offset, offset + 1, offset + 2, offset + 3, -1].join(" ");
+				}).join(" ");
+
+				return [data];
 			};
 
-			var shape = function(el) {
+			let shape = function(el) {
 				const shape = el.append("shape");
 
 				// FIXME: x3dom cannot have empty IFS nodes
-				shape.html(`
-				<indexedfaceset coordIndex='' solid='false'>
-					<coordinate point=''></coordinate>
-				</indexedfaceset>
-				<appearance>
-					<material diffuseColor='${color}' transparency='${transparency}'></material>
-				</appearance>
-			`);
+				shape.html((d) => `
+					<indexedfaceset coordindex='${d.coordindex}' solid='false'>
+						<coordinate point='${d.point}' ></coordinate>
+					</indexedfaceset>
+					<appearance>
+						<material diffuseColor='${color}' transparency='${transparency}'></material>
+					</appearance>
+				`);
 
 				return shape;
 			};
 
-			function addIndices(d) {
-				var shape = d3.select(this).select("shape");
-				var ifs = shape.select("indexedfaceset");
-				var coord = ifs.select("coordinate");
+			let element = d3.select(this)
+				.classed(classed, true)
+				.attr("id", (d) => d.key);
 
-				var point = coord.attr("point");
-
-				if (typeof point !== 'string') {
-					point = ''
-				}
-				// getAttribute is redefined by x3dom and does not work for ''
-				coord.attr("point", point + " " + array2dToString(d.points));
-				var lastIndex = point.split(" ").length - 1;
-				var coordIndex = ifs.attr("coordindex") + " ";
-				ifs.attr("coordindex", coordIndex + arrayToCoordIndex(d.points, lastIndex / 3));
-			}
-
-			var area = element.selectAll(".area")
-				.data(function(d) { return areaData(d.values) }, function(d) { return d.key });
+			let area = element.selectAll("group")
+				.data((d) => areaData(d), (d) => d.key);
 
 			area.enter()
 				.append("group")
 				.classed("area", true)
 				.call(shape)
-				.each(addIndices)
 				.merge(area);
 
 			area.transition()
 				.select("shape")
 				.select("appearance")
 				.select("material")
-				.attr("diffusecolor", function(d) { return d.color; });
+				.attr("diffusecolor", (d) => d.color);
 
 			area.exit().remove();
 		});
@@ -210,6 +180,23 @@ export default function() {
 	my.color = function(_v) {
 		if (!arguments.length) return color;
 		color = _v;
+		return my;
+	};
+
+	/**
+	 * Smooth Interpolation Getter / Setter
+	 *
+	 * Options:
+	 *   d3.curveBasis
+	 *   d3.curveLinear
+	 *   d3.curveMonotoneX
+	 *
+	 * @param {d3.curve} _v.
+	 * @returns {*}
+	 */
+	my.smoothed = function(_v) {
+		if (!arguments.length) return smoothing;
+		smoothing = _v;
 		return my;
 	};
 
