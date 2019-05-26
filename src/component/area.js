@@ -70,20 +70,28 @@ export default function() {
 				let values = data.values;
 
 				// Convert values into IFS coordinates
-				let coords = values.map(function(point) {
-					let x = xScale(point.key);
-					let y = yScale(point.value);
+				let coords = values.map(function(pointThis, indexThis, array) {
+					let indexNext = indexThis + 1;
+					if (indexNext >= array.length) {
+						return null;
+					}
+					let pointNext = array[indexNext];
 
-					return [x, y, 0];
+					let x1 = xScale(pointThis.key);
+					let x2 = xScale(pointNext.key);
+					let y1 = yScale(pointThis.value);
+					let y2 = yScale(pointNext.value);
+
+					return [x1, 0, 0, x1, y1, 0, x2, y2, 0, x2, 0, 0];
+				}).filter(function(d) {
+					return d !== null;
 				});
 
-				// Prepend start position, end and back to start coordinates.
-				coords.unshift([0, 0, 0]);
-				coords.push([dimensionX, 0, 0]);
-				coords.unshift([0, 0, 0]);
-
 				data.point = coords.map((d) => d.join(" ")).join(" ");
-				data.coordindex = coords.map((d, i) => i).join(" ") + " -1";
+				data.coordindex = coords.map((d, i) => {
+					let offset = i * 4;
+					return [offset, offset + 1, offset + 2, offset + 3, -1].join(" ");
+				}).join(" ");
 
 				return [data];
 			};
@@ -179,8 +187,8 @@ export default function() {
 	 * Smooth Interpolation Getter / Setter
 	 *
 	 * Options:
-	 *   d3.curveLinear
 	 *   d3.curveBasis
+	 *   d3.curveLinear
 	 *   d3.curveMonotoneX
 	 *
 	 * @param {d3.curve} _v.

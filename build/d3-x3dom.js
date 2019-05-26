@@ -714,24 +714,30 @@ function componentArea () {
 				var values = data.values;
 
 				// Convert values into IFS coordinates
-				var coords = values.map(function (point) {
-					var x = xScale(point.key);
-					var y = yScale(point.value);
+				var coords = values.map(function (pointThis, indexThis, array) {
+					var indexNext = indexThis + 1;
+					if (indexNext >= array.length) {
+						return null;
+					}
+					var pointNext = array[indexNext];
 
-					return [x, y, 0];
+					var x1 = xScale(pointThis.key);
+					var x2 = xScale(pointNext.key);
+					var y1 = yScale(pointThis.value);
+					var y2 = yScale(pointNext.value);
+
+					return [x1, 0, 0, x1, y1, 0, x2, y2, 0, x2, 0, 0];
+				}).filter(function (d) {
+					return d !== null;
 				});
-
-				// Prepend start position, end and back to start coordinates.
-				coords.unshift([0, 0, 0]);
-				coords.push([dimensionX, 0, 0]);
-				coords.unshift([0, 0, 0]);
 
 				data.point = coords.map(function (d) {
 					return d.join(" ");
 				}).join(" ");
 				data.coordindex = coords.map(function (d, i) {
-					return i;
-				}).join(" ") + " -1";
+					var offset = i * 4;
+					return [offset, offset + 1, offset + 2, offset + 3, -1].join(" ");
+				}).join(" ");
 
 				return [data];
 			};
@@ -819,8 +825,8 @@ function componentArea () {
   * Smooth Interpolation Getter / Setter
   *
   * Options:
-  *   d3.curveLinear
   *   d3.curveBasis
+  *   d3.curveLinear
   *   d3.curveMonotoneX
   *
   * @param {d3.curve} _v.
@@ -1027,8 +1033,8 @@ function componentAreaMultiSeries () {
   * Smooth Interpolation Getter / Setter
   *
   * Options:
-  *   d3.curveLinear
   *   d3.curveBasis
+  *   d3.curveLinear
   *   d3.curveMonotoneX
   *
   * @param {d3.curve} _v.
@@ -4267,8 +4273,8 @@ function chartAreaChartMultiSeries () {
   * Smooth Interpolation Getter / Setter
   *
   * Options:
-  *   d3.curveLinear
   *   d3.curveBasis
+  *   d3.curveLinear
   *   d3.curveMonotoneX
   *
   * @param {d3.curve} _v.

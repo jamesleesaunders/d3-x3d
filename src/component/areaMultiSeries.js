@@ -204,8 +204,8 @@ export default function() {
 	 * Smooth Interpolation Getter / Setter
 	 *
 	 * Options:
-	 *   d3.curveLinear
 	 *   d3.curveBasis
+	 *   d3.curveLinear
 	 *   d3.curveMonotoneX
 	 *
 	 * @param {d3.curve} _v.
