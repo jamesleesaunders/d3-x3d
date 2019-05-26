@@ -13,15 +13,35 @@
   <div id="chartholder"></div>
 
   <table>
-    <tr><td><input type="checkbox" name="country" id="uk" checked value="UK" /></td><td>UK</td></tr>
-    <tr><td><input type="checkbox" name="country" id="france" checked value="France" /></td><td>France</td></tr>
-    <tr><td><input type="checkbox" name="country" id="spain" value="Spain" /></td><td>Spain</td></tr>
-    <tr><td><input type="checkbox" name="country" id="germany" checked value="Germany" /></td><td>Germany</td></tr>
-    <tr><td><input type="checkbox" name="country" id="italy" value="Italy" /></td><td>Italy</td></tr>
+    <tr>
+      <td><input type="checkbox" name="country" id="uk" checked value="UK" /></td>
+      <td>UK</td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" name="country" id="france" checked value="France" /></td>
+      <td>France</td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" name="country" id="spain" value="Spain" /></td>
+      <td>Spain</td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" name="country" id="germany" checked value="Germany" /></td>
+      <td>Germany</td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" name="country" id="italy" value="Italy" /></td>
+      <td>Italy</td>
+    </tr>
   </table>
+
   <br />
+
   <table>
-    <tr><td><input checked type="checkbox" name="labelPosition" id="labelPosition" value="labelPosition" /></td><td>Distal Labels</td></tr>
+    <tr>
+      <td><input checked type="checkbox" name="labelPosition" id="labelPosition" value="labelPosition" /></td>
+      <td>Distal Labels</td>
+    </tr>
   </table>
 
   <script>
@@ -51,7 +71,7 @@
         }
       });
 
-      var filteredData = data.filter(series => filterArray.includes(series.key));
+      var filteredData = data.filter(function(series) { return filterArray.includes(series.key); });
       chartHolder.datum(filteredData).call(myChart);
     };
 

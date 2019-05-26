@@ -40,7 +40,7 @@
       .attr("height", height + "px")
       .append("scene");
 
-    var ranNum = () => d3.x3dom.randomData.randomNum();
+    var ranNum = function() { return d3.x3dom.randomData.randomNum(); };
 
     // Add to page
     chartHolder.call(viewpointComponent);

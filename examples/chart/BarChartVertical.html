@@ -13,10 +13,22 @@
   <div id="chartholder"></div>
 
   <table>
-    <tr><td><input type="checkbox" name="fruit" id="apples" checked value="Apples" /></td><td>Apples</td></tr>
-    <tr><td><input type="checkbox" name="fruit" id="oranges" checked value="Oranges" /></td><td>Oranges</td></tr>
-    <tr><td><input type="checkbox" name="fruit" id="pears" value="Pears" /></td><td>Pears</td></tr>
-    <tr><td><input type="checkbox" name="fruit" id="bananas" checked value="Bananas" /></td><td>Bananas</td></tr>
+    <tr>
+      <td><input type="checkbox" name="fruit" id="apples" checked value="Apples" /></td>
+      <td>Apples</td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" name="fruit" id="oranges" checked value="Oranges" /></td>
+      <td>Oranges</td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" name="fruit" id="pears" value="Pears" /></td>
+      <td>Pears</td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" name="fruit" id="bananas" checked value="Bananas" /></td>
+      <td>Bananas</td>
+    </tr>
   </table>
 
   <script>
@@ -44,7 +56,7 @@
 
       var filteredData = {
         key: data.key,
-        values: data.values.filter(series => filterArray.includes(series.key))
+        values: data.values.filter(function(series) { return filterArray.includes(series.key); })
       };
 
       chartHolder.datum(filteredData).call(myChart);

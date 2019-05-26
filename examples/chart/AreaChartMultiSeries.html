@@ -13,11 +13,26 @@
   <div id="chartholder"></div>
 
   <table>
-    <tr><td><input type="checkbox" name="country" id="uk" checked value="UK" /></td><td>UK</td></tr>
-    <tr><td><input type="checkbox" name="country" id="france" checked value="France" /></td><td>France</td></tr>
-    <tr><td><input type="checkbox" name="country" id="spain" value="Spain" /></td><td>Spain</td></tr>
-    <tr><td><input type="checkbox" name="country" id="germany" checked value="Germany" /></td><td>Germany</td></tr>
-    <tr><td><input type="checkbox" name="country" id="italy" value="Italy" /></td><td>Italy</td></tr>
+    <tr>
+      <td><input type="checkbox" name="country" id="uk" checked value="UK" /></td>
+      <td>UK</td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" name="country" id="france" checked value="France" /></td>
+      <td>France</td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" name="country" id="spain" value="Spain" /></td>
+      <td>Spain</td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" name="country" id="germany" checked value="Germany" /></td>
+      <td>Germany</td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" name="country" id="italy" value="Italy" /></td>
+      <td>Italy</td>
+    </tr>
   </table>
 
   <script>
@@ -43,7 +58,7 @@
         }
       });
 
-      var filteredData = data.filter(series => filterArray.includes(series.key));
+      var filteredData = data.filter(function(series) { return filterArray.includes(series.key) });
 
       chartHolder.datum(filteredData).call(myChart);
     };
@@ -58,10 +73,10 @@
     });
 
     refreshChart();
+
   </script>
 
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.
-  </div>
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.</div>
 </body>
 
 </html>
