@@ -12,7 +12,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 5 };
 	let color = "blue";
-	let transparency = 0.0;
+	let transparency = 0.1;
 	let classed = "d3X3domArea";
 	let smoothing = d3.curveMonotoneX;
 
@@ -88,7 +88,7 @@ export default function() {
 				});
 
 				data.point = coords.map((d) => d.join(" ")).join(" ");
-				data.coordindex = coords.map((d, i) => {
+				data.coordIndex = coords.map((d, i) => {
 					let offset = i * 4;
 					return [offset, offset + 1, offset + 2, offset + 3, -1].join(" ");
 				}).join(" ");
@@ -101,7 +101,7 @@ export default function() {
 
 				// FIXME: x3dom cannot have empty IFS nodes
 				shape.html((d) => `
-					<IndexedFaceset coordindex='${d.coordindex}' solid='false'>
+					<IndexedFaceset coordIndex='${d.coordIndex}' solid='false'>
 						<Coordinate point='${d.point}' ></Coordinate>
 					</IndexedFaceset>
 					<Appearance>

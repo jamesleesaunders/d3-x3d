@@ -654,7 +654,7 @@ function componentArea () {
 	/* Default Properties */
 	var dimensions = { x: 40, y: 40, z: 5 };
 	var color = "blue";
-	var transparency = 0.0;
+	var transparency = 0.1;
 	var classed = "d3X3domArea";
 	var smoothing = d3.curveMonotoneX;
 
@@ -734,7 +734,7 @@ function componentArea () {
 				data.point = coords.map(function (d) {
 					return d.join(" ");
 				}).join(" ");
-				data.coordindex = coords.map(function (d, i) {
+				data.coordIndex = coords.map(function (d, i) {
 					var offset = i * 4;
 					return [offset, offset + 1, offset + 2, offset + 3, -1].join(" ");
 				}).join(" ");
@@ -747,7 +747,7 @@ function componentArea () {
 
 				// FIXME: x3dom cannot have empty IFS nodes
 				shape.html(function (d) {
-					return "\n\t\t\t\t\t<IndexedFaceset coordindex='" + d.coordindex + "' solid='false'>\n\t\t\t\t\t\t<Coordinate point='" + d.point + "' ></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<Material diffuseColor='" + color + "' transparency='" + transparency + "'></Material>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
+					return "\n\t\t\t\t\t<IndexedFaceset coordIndex='" + d.coordIndex + "' solid='false'>\n\t\t\t\t\t\t<Coordinate point='" + d.point + "' ></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<Material diffuseColor='" + color + "' transparency='" + transparency + "'></Material>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
 				});
 
 				return shape;
@@ -2005,13 +2005,9 @@ function componentBubbles () {
 					dispatch.call("d3X3domMouseOut", this, e);
 				});
 
-				// FIXME: Due to a bug with x3dom `._quality`, `fieldChanged()`, we must to use .html() rather than .attr().
-				// SEE: https://github.com/x3dom/x3dom/pull/949
 				shape.append("Sphere").attr("radius", function (d) {
 					return sizeScale(d.value);
 				});
-
-				// shape.html((d) => "<Sphere radius='" + sizeScale(d.value) + "'></Sphere>");
 
 				shape.append("Appearance").append("Material").attr("diffuseColor", color).attr("ambientIntensity", 0.1);
 
@@ -2826,7 +2822,7 @@ function componentRibbon () {
 					return {
 						key: pointThis.key,
 						value: pointThis.value,
-						coordindex: arrayToCoordIndex(points),
+						coordIndex: arrayToCoordIndex(points),
 						point: array2dToString(points)
 					};
 				}).filter(function (d) {
@@ -2835,7 +2831,7 @@ function componentRibbon () {
 			};
 
 			var shape = function shape(el) {
-				var shape = el.append("shape").attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
+				var shape = el.append("Shape").attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
 					dispatch.call("d3X3domClick", this, e);
 				}).attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").on("mouseover", function (e) {
 					dispatch.call("d3X3domMouseOver", this, e);
@@ -2845,18 +2841,18 @@ function componentRibbon () {
 
 				/*
     // FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
-    shape.append("indexedfaceset")
-    	.attr("coordindex", (d) => d.coordindex)
-    	.append("coordinate")
+    shape.append("IndexedFaceset")
+    	.attr("coordIndex", (d) => d.coordIndex)
+    	.append("Coordinate")
     	.attr("point", (d) => d.point);
-    	shape.append("appearance")
-    	.append("twosidedmaterial")
-    	.attr("diffusecolor", (d) => d.color)
+    	shape.append("Appearance")
+    	.append("TwoSidedMaterial")
+    	.attr("diffuseColor", (d) => d.color)
     	.attr("transparency", (d) => d.transparency);
     */
 
 				shape.html(function (d) {
-					var indexedfaceset = "<IndexedFaceset coordIndex=\"" + d.coordindex + "\"><coordinate point=\"" + d.point + "\"></coordinate></IndexedFaceset>";
+					var indexedfaceset = "<IndexedFaceset coordIndex=\"" + d.coordIndex + "\"><coordinate point=\"" + d.point + "\"></coordinate></IndexedFaceset>";
 					var appearance = "<Appearance><TwoSidedMaterial diffuseColor=\"" + color + "\" transparency=\"" + transparency + "\"></TwoSidedMaterial></Appearance>";
 
 					return indexedfaceset + appearance;
@@ -2873,15 +2869,15 @@ function componentRibbon () {
 
 			ribbon.enter().append("group").classed("ribbon", true).call(shape).merge(ribbon);
 
-			var ribbonTransition = ribbon.transition().select("shape");
+			var ribbonTransition = ribbon.transition().select("Shape");
 
-			ribbonTransition.select("indexedfaceset").attr("coordindex", function (d) {
-				return d.coordindex;
-			}).select("coordinate").attr("point", function (d) {
+			ribbonTransition.select("IndexedFaceset").attr("coordIndex", function (d) {
+				return d.coordIndex;
+			}).select("Coordinate").attr("point", function (d) {
 				return d.point;
 			});
 
-			ribbonTransition.select("appearance").select("twosidedmaterial").attr("diffusecolor", function (d) {
+			ribbonTransition.select("Appearance").select("TwoSidedMaterial").attr("diffuseColor", function (d) {
 				return d.color;
 			});
 
@@ -3273,7 +3269,7 @@ function componentSurface () {
 				};
 
 				return [{
-					coordindex: array2dToString(coordIndex(d)),
+					coordIndex: array2dToString(coordIndex(d)),
 					point: array2dToString(coordPoints(d)),
 					color: array2dToString(colorFaceSet(d))
 				}];
@@ -3282,7 +3278,7 @@ function componentSurface () {
 			var surface = element.selectAll(".surface").data(surfaceData);
 
 			var surfaceSelect = surface.enter().append("Shape").classed("surface", true).append("IndexedFaceset").attr("coordIndex", function (d) {
-				return d.coordindex;
+				return d.coordIndex;
 			});
 
 			surfaceSelect.append("Coordinate").attr("point", function (d) {
@@ -3296,7 +3292,7 @@ function componentSurface () {
 			surfaceSelect.merge(surface);
 
 			var surfaceTransition = surface.transition().select("IndexedFaceset").attr("coordIndex", function (d) {
-				return d.coordindex;
+				return d.coordIndex;
 			});
 
 			surfaceTransition.select("coordinate").attr("point", function (d) {

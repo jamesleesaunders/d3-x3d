@@ -125,7 +125,7 @@ export default function() {
 				};
 
 				return [{
-					coordindex: array2dToString(coordIndex(d)),
+					coordIndex: array2dToString(coordIndex(d)),
 					point: array2dToString(coordPoints(d)),
 					color: array2dToString(colorFaceSet(d))
 				}];
@@ -139,7 +139,7 @@ export default function() {
 				.append("Shape")
 				.classed("surface", true)
 				.append("IndexedFaceset")
-				.attr("coordIndex", (d) => d.coordindex);
+				.attr("coordIndex", (d) => d.coordIndex);
 
 			surfaceSelect.append("Coordinate")
 				.attr("point", (d) => d.point);
@@ -151,7 +151,7 @@ export default function() {
 
 			const surfaceTransition = surface.transition()
 				.select("IndexedFaceset")
-				.attr("coordIndex", (d) => d.coordindex);
+				.attr("coordIndex", (d) => d.coordIndex);
 
 			surfaceTransition.select("coordinate")
 				.attr("point", (d) => d.point);

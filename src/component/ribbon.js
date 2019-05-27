@@ -112,14 +112,14 @@ export default function() {
 					return {
 						key: pointThis.key,
 						value: pointThis.value,
-						coordindex: arrayToCoordIndex(points),
+						coordIndex: arrayToCoordIndex(points),
 						point: array2dToString(points)
 					};
 				}).filter((d) => d !== null);
 			};
 
 			const shape = (el) => {
-				const shape = el.append("shape")
+				const shape = el.append("Shape")
 					.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
 					.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
 					.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
@@ -129,19 +129,19 @@ export default function() {
 
 				/*
 				// FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
-				shape.append("indexedfaceset")
-					.attr("coordindex", (d) => d.coordindex)
-					.append("coordinate")
+				shape.append("IndexedFaceset")
+					.attr("coordIndex", (d) => d.coordIndex)
+					.append("Coordinate")
 					.attr("point", (d) => d.point);
 
-				shape.append("appearance")
-					.append("twosidedmaterial")
-					.attr("diffusecolor", (d) => d.color)
+				shape.append("Appearance")
+					.append("TwoSidedMaterial")
+					.attr("diffuseColor", (d) => d.color)
 					.attr("transparency", (d) => d.transparency);
 				*/
 
 				shape.html((d) => {
-					let indexedfaceset = `<IndexedFaceset coordIndex="${d.coordindex}"><coordinate point="${d.point}"></coordinate></IndexedFaceset>`;
+					let indexedfaceset = `<IndexedFaceset coordIndex="${d.coordIndex}"><coordinate point="${d.point}"></coordinate></IndexedFaceset>`;
 					let appearance = `<Appearance><TwoSidedMaterial diffuseColor="${color}" transparency="${transparency}"></TwoSidedMaterial></Appearance>`;
 
 					return indexedfaceset + appearance;
@@ -159,16 +159,16 @@ export default function() {
 				.call(shape)
 				.merge(ribbon);
 
-			const ribbonTransition = ribbon.transition().select("shape");
+			const ribbonTransition = ribbon.transition().select("Shape");
 
-			ribbonTransition.select("indexedfaceset")
-				.attr("coordindex", (d) => d.coordindex)
-				.select("coordinate")
+			ribbonTransition.select("IndexedFaceset")
+				.attr("coordIndex", (d) => d.coordIndex)
+				.select("Coordinate")
 				.attr("point", (d) => d.point);
 
-			ribbonTransition.select("appearance")
-				.select("twosidedmaterial")
-				.attr("diffusecolor", (d) => d.color);
+			ribbonTransition.select("Appearance")
+				.select("TwoSidedMaterial")
+				.attr("diffuseColor", (d) => d.color);
 
 			ribbon.exit()
 				.remove();
