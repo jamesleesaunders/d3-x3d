@@ -34,9 +34,9 @@ export default function() {
 
 			const makeSolid = (selection, color) => {
 				selection
-					.append("appearance")
-					.append("material")
-					.attr("diffusecolor", color || "black");
+					.append("Appearance")
+					.append("Material")
+					.attr("diffuseColor", color || "black");
 				return selection;
 			};
 
@@ -44,18 +44,18 @@ export default function() {
 				.data([data]);
 
 			let label = labelSelect.enter()
-				.append("transform")
+				.append("Transform")
 				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
 				.classed("label", true)
-				.append("billboard")
-				.attr("axisofrotation", "0 0 0")
-				.append("transform")
+				.append("Billboard")
+				.attr("axisOfRotation", "0 0 0")
+				.append("Transform")
 				.attr("translation", (d) => (offset + " " + offset + " " + offset))
-				.append("shape")
+				.append("Shape")
 				.call(makeSolid, color)
-				.append("text")
+				.append("Text")
 				.attr("string", (d) => d.key)
-				.append("fontstyle")
+				.append("FontStyle")
 				.attr("size", 1)
 				.attr("family", "SANS")
 				.attr("style", "BOLD")

@@ -148,52 +148,52 @@ export default function() {
 				.data(vectorData);
 
 			const arrowsEnter = arrows.enter()
-				.append("transform")
+				.append("Transform")
 				.attr("translation", (d) => d.translation)
 				.attr("rotation", (d) => d.rotation)
 				.attr("class", "arrow")
-				.append("transform")
+				.append("Transform")
 				.attr("translation", (d) => {
 					let offset = sizeScale(d.value) / 2;
 					return "0 " + offset + " 0";
 				})
-				.append("group")
+				.append("Group")
 				.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
 				.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
 				.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);");
 
-			const arrowHead = arrowsEnter.append("shape")
+			const arrowHead = arrowsEnter.append("Shape")
 				.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
 				.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
 				.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
 
-			arrowHead.append("appearance")
-				.append("material")
-				.attr("diffusecolor", (d) => rgb2Hex(colorScale(d.value)));
+			arrowHead.append("Appearance")
+				.append("Material")
+				.attr("diffuseColor", (d) => rgb2Hex(colorScale(d.value)));
 
-			arrowHead.append("cylinder")
+			arrowHead.append("Cylinder")
 				.attr("height", (d) => sizeScale(d.value))
 				.attr("radius", 0.1);
 
 			const arrowShaft = arrowsEnter
-				.append("transform")
+				.append("Transform")
 				.attr("translation", (d) => {
 					let offset = sizeScale(d.value) / 2;
 					return "0 " + offset + " 0";
 				})
-				.append("shape")
+				.append("Shape")
 				.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
 				.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
 				.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
 
-			arrowShaft.append("appearance")
-				.append("material")
-				.attr("diffusecolor", (d) => rgb2Hex(colorScale(d.value)));
+			arrowShaft.append("Appearance")
+				.append("Material")
+				.attr("diffuseColor", (d) => rgb2Hex(colorScale(d.value)));
 
 			arrowShaft
 				.append("cone")
 				.attr("height", 1)
-				.attr("bottomradius", 0.4);
+				.attr("bottomRadius", 0.4);
 
 			arrowsEnter.merge(arrows);
 

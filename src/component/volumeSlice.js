@@ -35,17 +35,17 @@ export default function() {
 
 			const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
-			const volumedata = element.append("transform")
-				.append("volumedata")
+			const volumedata = element.append("Transform")
+				.append("VolumeData")
 				.attr("dimensions", `${dimensionX} ${dimensionY} ${dimensionZ}`);
 
-			volumedata.append("imagetextureatlas")
-				.attr("crossorigin", "anonymous")
-				.attr("containerfield", "voxels")
+			volumedata.append("ImageTextureAtlas")
+				.attr("crossOrigin", "anonymous")
+				.attr("containerField", "voxels")
 				.attr("url", imageUrl)
-				.attr("numberofslices", numberOfSlices)
-				.attr("slicesoverx", slicesOverX)
-				.attr("slicesovery", slicesOverY);
+				.attr("numberOfSlices", numberOfSlices)
+				.attr("slicesOverX", slicesOverX)
+				.attr("slicesOverY", slicesOverY);
 
 			const plane = volumedata.selectAll(".plane")
 				.data((d) => d.values);
@@ -56,18 +56,18 @@ export default function() {
 					// There are plans to add this functionality see:
 					//   https://github.com/x3dom/x3dom/issues/944
 					plane.enter()
-						.append("mprvolumestyle")
+						.append("MPRVolumeStyle")
 						.classed("plane", true)
-						.attr("finalline", (d) => `${d.x} ${d.y} ${d.z}`)
-						.attr("positionline", (d) => d.value);
+						.attr("finalLine", (d) => `${d.x} ${d.y} ${d.z}`)
+						.attr("positionLine", (d) => d.value);
 					break;
 
 				case "opacitymap":
 				default:
 					volumedata
-						.append("opacitymapvolumestyle")
-						.attr("lightfactor", 1.2)
-						.attr("opacityfactor", 6.0);
+						.append("OpacityMapVolumeStyle")
+						.attr("lightFactor", 1.2)
+						.attr("opacityFactor", 6.0);
 					break;
 			}
 		});

@@ -73,7 +73,7 @@ export default function() {
 				.attr("id", (d) => d.key);
 
 			const shape = (el) => {
-				const shape = el.append("shape")
+				const shape = el.append("Shape")
 					.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
 					.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
 					.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
@@ -84,16 +84,16 @@ export default function() {
 				/*
 				// FIXME: Due to a bug with x3dom `._quality`, `fieldChanged()`, we must to use .html() rather than .attr().
 				// SEE: https://github.com/x3dom/x3dom/pull/949
-				shape.append("sphere")
+				shape.append("Sphere")
 					.attr("radius", (d) => sizeScale(d.value));
 				*/
 
-				shape.html((d) => "<sphere radius='" + sizeScale(d.value) + "'></sphere>");
+				shape.html((d) => "<Sphere radius='" + sizeScale(d.value) + "'></Sphere>");
 
-				shape.append("appearance")
-					.append("material")
-					.attr("diffusecolor", color)
-					.attr("ambientintensity", 0.1);
+				shape.append("Appearance")
+					.append("Material")
+					.attr("diffuseColor", color)
+					.attr("ambientIntensity", 0.1);
 
 				return shape;
 			};
@@ -102,16 +102,16 @@ export default function() {
 				.data((d) => d.values, (d) => d.key);
 
 			bubbles.enter()
-				.append("transform")
+				.append("Transform")
 				.attr("class", "bubble")
 				.call(shape)
 				.merge(bubbles)
 				.transition()
 				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
-				.select("shape")
-				.select("appearance")
-				.select("material")
-				.attr("diffusecolor", color);
+				.select("Shape")
+				.select("Appearance")
+				.select("Material")
+				.attr("diffuseColor", color);
 
 			bubbles.exit()
 				.remove();

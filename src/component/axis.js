@@ -72,8 +72,8 @@ export default function() {
 				.classed(classed, true);
 
 			const makeSolid = (shape, color) => {
-				shape.append("appearance")
-					.append("material")
+				shape.append("Appearance")
+					.append("Material")
 					.attr("diffuseColor", color || "black");
 				return shape;
 			};
@@ -102,13 +102,13 @@ export default function() {
 				.data([null]);
 
 			const domainEnter = domain.enter()
-				.append("transform")
+				.append("Transform")
 				.attr("class", "domain")
 				.attr("rotation", axisRotationVector.join(" "))
 				.attr("translation", axisDirectionVector.map((d) => (d * (range0 + range1) / 2)).join(" "))
-				.append("shape")
+				.append("Shape")
 				.call(makeSolid, color)
-				.append("cylinder")
+				.append("Cylinder")
 				.attr("radius", 0.1)
 				.attr("height", range1 - range0);
 
@@ -121,15 +121,15 @@ export default function() {
 				.data(tickValues);
 
 			const ticksEnter = ticks.enter()
-				.append("transform")
+				.append("Transform")
 				.attr("class", "tick")
 				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
-				.append("transform")
+				.append("Transform")
 				.attr("translation", tickDirectionVector.map((d) => (d * tickSize / 2)).join(" "))
 				.attr("rotation", tickRotationVector.join(" "))
-				.append("shape")
+				.append("Shape")
 				.call(makeSolid, "#d3d3d3")
-				.append("cylinder")
+				.append("Cylinder")
 				.attr("radius", 0.05)
 				.attr("height", tickSize);
 
@@ -147,18 +147,18 @@ export default function() {
 					.data(tickValues);
 
 				const labelsEnter = ticks.enter()
-					.append("transform")
+					.append("Transform")
 					.attr("class", "label")
 					.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
-					.append("transform")
+					.append("Transform")
 					.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * (range1 - range0) * tickDirectionVector[i])))
-					.append("billboard")
-					.attr("axisofrotation", "0 0 0")
-					.append("shape")
+					.append("Billboard")
+					.attr("axisOfRotation", "0 0 0")
+					.append("Shape")
 					.call(makeSolid, "black")
-					.append("text")
+					.append("Text")
 					.attr("string", tickFormat)
-					.append("fontstyle")
+					.append("FontStyle")
 					.attr("size", 1.3)
 					.attr("family", "SANS")
 					.attr("style", "BOLD")

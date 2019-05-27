@@ -113,7 +113,7 @@ export default function() {
 				.data((d) => d, (d) => d.key);
 
 			bubbleGroup.enter()
-				.append("group")
+				.append("Group")
 				.classed("bubbleGroup", true)
 				.merge(bubbleGroup)
 				.transition()

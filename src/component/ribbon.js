@@ -141,8 +141,8 @@ export default function() {
 				*/
 
 				shape.html((d) => {
-					let indexedfaceset = `<indexedfaceset coordindex="${d.coordindex}"><coordinate point="${d.point}"></coordinate></indexedfaceset>`;
-					let appearance = `<appearance><twosidedmaterial diffusecolor="${color}" transparency="${transparency}"></twosidedmaterial></appearance>`;
+					let indexedfaceset = `<IndexedFaceset coordIndex="${d.coordindex}"><coordinate point="${d.point}"></coordinate></IndexedFaceset>`;
+					let appearance = `<Appearance><TwoSidedMaterial diffuseColor="${color}" transparency="${transparency}"></TwoSidedMaterial></Appearance>`;
 
 					return indexedfaceset + appearance;
 				});

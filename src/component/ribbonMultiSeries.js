@@ -109,7 +109,7 @@ export default function() {
 				.data((d) => d, (d) => d.key);
 
 			ribbonGroup.enter()
-				.append("transform")
+				.append("Transform")
 				.classed("ribbonGroup", true)
 				.merge(ribbonGroup)
 				.transition()

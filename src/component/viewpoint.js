@@ -32,11 +32,11 @@ export default function() {
 				.data([null]);
 
 			viewpoint.enter()
-				.append("viewpoint")
-				.attr("centerofrotation", centerOfRotation.join(" "))
+				.append("Viewpoint")
+				.attr("centerOfRotation", centerOfRotation.join(" "))
 				.attr("position", viewPosition.join(" "))
 				.attr("orientation", viewOrientation.join(" "))
-				.attr("fieldofview", fieldOfView)
+				.attr("fieldOfView", fieldOfView)
 				.attr("set_bind", "true")
 				.merge(viewpoint);
 

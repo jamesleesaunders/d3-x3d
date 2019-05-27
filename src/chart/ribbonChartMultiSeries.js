@@ -83,8 +83,8 @@ export default function() {
 	const my = function(selection) {
 		// Create x3d element (if it does not exist already)
 		if (!x3d) {
-			x3d = selection.append("x3d");
-			scene = x3d.append("scene");
+			x3d = selection.append("X3D");
+			scene = x3d.append("Scene");
 		}
 
 		x3d.attr("width", width + "px")
@@ -95,10 +95,10 @@ export default function() {
 		// Update the chart dimensions and add layer groups
 		const layers = ["axis", "ribbons"];
 		scene.classed(classed, true)
-			.selectAll("group")
+			.selectAll("Group")
 			.data(layers)
 			.enter()
-			.append("group")
+			.append("Group")
 			.attr("class", (d) => d);
 
 		selection.each((data) => {

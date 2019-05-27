@@ -136,22 +136,22 @@ export default function() {
 
 			const surfaceSelect = surface
 				.enter()
-				.append("shape")
+				.append("Shape")
 				.classed("surface", true)
-				.append("indexedfaceset")
-				.attr("coordindex", (d) => d.coordindex);
+				.append("IndexedFaceset")
+				.attr("coordIndex", (d) => d.coordindex);
 
-			surfaceSelect.append("coordinate")
+			surfaceSelect.append("Coordinate")
 				.attr("point", (d) => d.point);
 
-			surfaceSelect.append("color")
+			surfaceSelect.append("Color")
 				.attr("color", (d) => d.color);
 
 			surfaceSelect.merge(surface);
 
 			const surfaceTransition = surface.transition()
-				.select("indexedfaceset")
-				.attr("coordindex", (d) => d.coordindex);
+				.select("IndexedFaceset")
+				.attr("coordIndex", (d) => d.coordindex);
 
 			surfaceTransition.select("coordinate")
 				.attr("point", (d) => d.point);

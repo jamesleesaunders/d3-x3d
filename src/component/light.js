@@ -27,15 +27,15 @@ export default function() {
 				.classed(classed, true);
 
 			// Main Lines
-			const light = element.selectAll("directionallight")
+			const light = element.selectAll("DirectionalLight")
 				.data([null]);
 
 			light.enter()
-				.append("directionallight")
+				.append("DirectionalLight")
 				.attr("on", true)
 				.attr("direction", direction)
 				.attr("intensity", intensity)
-				.attr("shadowintensity", shadowIntensity)
+				.attr("shadowIntensity", shadowIntensity)
 				.merge(light);
 		});
 	};

@@ -43,7 +43,7 @@ export default function() {
 			element.selectAll("group")
 				.data(layers)
 				.enter()
-				.append("group")
+				.append("Group")
 				.attr("class", (d) => d);
 
 			xzAxis.scale(xScale)

@@ -97,16 +97,16 @@ export default function() {
 			};
 
 			let shape = function(el) {
-				const shape = el.append("shape");
+				const shape = el.append("Shape");
 
 				// FIXME: x3dom cannot have empty IFS nodes
 				shape.html((d) => `
-					<indexedfaceset coordindex='${d.coordindex}' solid='false'>
-						<coordinate point='${d.point}' ></coordinate>
-					</indexedfaceset>
-					<appearance>
-						<material diffuseColor='${color}' transparency='${transparency}'></material>
-					</appearance>
+					<IndexedFaceset coordindex='${d.coordindex}' solid='false'>
+						<Coordinate point='${d.point}' ></Coordinate>
+					</IndexedFaceset>
+					<Appearance>
+						<Material diffuseColor='${color}' transparency='${transparency}'></Material>
+					</Appearance>
 				`);
 
 				return shape;
@@ -116,20 +116,20 @@ export default function() {
 				.classed(classed, true)
 				.attr("id", (d) => d.key);
 
-			let area = element.selectAll("group")
+			let area = element.selectAll(".area")
 				.data((d) => areaData(d), (d) => d.key);
 
 			area.enter()
-				.append("group")
+				.append("Group")
 				.classed("area", true)
 				.call(shape)
 				.merge(area);
 
 			area.transition()
-				.select("shape")
-				.select("appearance")
-				.select("material")
-				.attr("diffusecolor", (d) => d.color);
+				.select("Shape")
+				.select("Appearance")
+				.select("Material")
+				.attr("diffuseColor", (d) => d.color);
 
 			area.exit().remove();
 		});

@@ -66,7 +66,7 @@ export default function() {
 				.attr("id", (d) => d.key);
 
 			const shape = (el) => {
-				const shape = el.append("shape")
+				const shape = el.append("Shape")
 					.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
 					.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
 					.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
@@ -74,13 +74,13 @@ export default function() {
 					.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);")
 					.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
 
-				shape.append("box")
+				shape.append("Box")
 					.attr("size", "1.0 1.0 1.0");
 
-				shape.append("appearance")
-					.append("material")
-					.attr("diffusecolor", (d) => colorScale(d.key))
-					.attr("ambientintensity", 0.1);
+				shape.append("Appearance")
+					.append("Material")
+					.attr("diffuseColor", (d) => colorScale(d.key))
+					.attr("ambientIntensity", 0.1);
 
 				return shape;
 			};
@@ -89,7 +89,7 @@ export default function() {
 				.data((d) => d.values, (d) => d.key);
 
 			bars.enter()
-				.append("transform")
+				.append("Transform")
 				.classed("bar", true)
 				.call(shape)
 				.merge(bars)

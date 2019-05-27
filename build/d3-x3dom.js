@@ -743,11 +743,11 @@ function componentArea () {
 			};
 
 			var shape = function shape(el) {
-				var shape = el.append("shape");
+				var shape = el.append("Shape");
 
 				// FIXME: x3dom cannot have empty IFS nodes
 				shape.html(function (d) {
-					return "\n\t\t\t\t\t<indexedfaceset coordindex='" + d.coordindex + "' solid='false'>\n\t\t\t\t\t\t<coordinate point='" + d.point + "' ></coordinate>\n\t\t\t\t\t</indexedfaceset>\n\t\t\t\t\t<appearance>\n\t\t\t\t\t\t<material diffuseColor='" + color + "' transparency='" + transparency + "'></material>\n\t\t\t\t\t</appearance>\n\t\t\t\t";
+					return "\n\t\t\t\t\t<IndexedFaceset coordindex='" + d.coordindex + "' solid='false'>\n\t\t\t\t\t\t<Coordinate point='" + d.point + "' ></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<Material diffuseColor='" + color + "' transparency='" + transparency + "'></Material>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
 				});
 
 				return shape;
@@ -757,15 +757,15 @@ function componentArea () {
 				return d.key;
 			});
 
-			var area = element.selectAll("group").data(function (d) {
+			var area = element.selectAll(".area").data(function (d) {
 				return areaData(d);
 			}, function (d) {
 				return d.key;
 			});
 
-			area.enter().append("group").classed("area", true).call(shape).merge(area);
+			area.enter().append("Group").classed("area", true).call(shape).merge(area);
 
-			area.transition().select("shape").select("appearance").select("material").attr("diffusecolor", function (d) {
+			area.transition().select("Shape").select("Appearance").select("Material").attr("diffuseColor", function (d) {
 				return d.color;
 			});
 
@@ -946,7 +946,7 @@ function componentAreaMultiSeries () {
 				return d.key;
 			});
 
-			areaGroup.enter().append("transform").classed("areaGroup", true).merge(areaGroup).transition().attr("translation", function (d) {
+			areaGroup.enter().append("Transform").classed("areaGroup", true).merge(areaGroup).transition().attr("translation", function (d) {
 				var x = 0;
 				var y = 0;
 				var z = zScale(d.key);
@@ -1120,7 +1120,7 @@ function componentAxis () {
 			var element = d3.select(this).classed(classed, true);
 
 			var makeSolid = function makeSolid(shape, color) {
-				shape.append("appearance").append("material").attr("diffuseColor", color || "black");
+				shape.append("Appearance").append("Material").attr("diffuseColor", color || "black");
 				return shape;
 			};
 
@@ -1148,9 +1148,9 @@ function componentAxis () {
 			// Main Lines
 			var domain = element.selectAll(".domain").data([null]);
 
-			var domainEnter = domain.enter().append("transform").attr("class", "domain").attr("rotation", axisRotationVector.join(" ")).attr("translation", axisDirectionVector.map(function (d) {
+			var domainEnter = domain.enter().append("Transform").attr("class", "domain").attr("rotation", axisRotationVector.join(" ")).attr("translation", axisDirectionVector.map(function (d) {
 				return d * (range0 + range1) / 2;
-			}).join(" ")).append("shape").call(makeSolid, color).append("cylinder").attr("radius", 0.1).attr("height", range1 - range0);
+			}).join(" ")).append("Shape").call(makeSolid, color).append("Cylinder").attr("radius", 0.1).attr("height", range1 - range0);
 
 			domainEnter.merge(domain);
 
@@ -1159,13 +1159,13 @@ function componentAxis () {
 			// Tick Lines
 			var ticks = element.selectAll(".tick").data(tickValues);
 
-			var ticksEnter = ticks.enter().append("transform").attr("class", "tick").attr("translation", function (t) {
+			var ticksEnter = ticks.enter().append("Transform").attr("class", "tick").attr("translation", function (t) {
 				return axisDirectionVector.map(function (a) {
 					return scale(t) * a;
 				}).join(" ");
-			}).append("transform").attr("translation", tickDirectionVector.map(function (d) {
+			}).append("Transform").attr("translation", tickDirectionVector.map(function (d) {
 				return d * tickSize / 2;
-			}).join(" ")).attr("rotation", tickRotationVector.join(" ")).append("shape").call(makeSolid, "#d3d3d3").append("cylinder").attr("radius", 0.05).attr("height", tickSize);
+			}).join(" ")).attr("rotation", tickRotationVector.join(" ")).append("Shape").call(makeSolid, "#d3d3d3").append("Cylinder").attr("radius", 0.05).attr("height", tickSize);
 
 			ticksEnter.merge(ticks);
 
@@ -1181,13 +1181,13 @@ function componentAxis () {
 			if (tickFormat !== "") {
 				var labels = element.selectAll(".label").data(tickValues);
 
-				var labelsEnter = ticks.enter().append("transform").attr("class", "label").attr("translation", function (t) {
+				var labelsEnter = ticks.enter().append("Transform").attr("class", "label").attr("translation", function (t) {
 					return axisDirectionVector.map(function (a) {
 						return scale(t) * a;
 					}).join(" ");
-				}).append("transform").attr("translation", tickDirectionVector.map(function (d, i) {
+				}).append("Transform").attr("translation", tickDirectionVector.map(function (d, i) {
 					return labelInset * d * tickPadding + (labelInset + 1) / 2 * (range1 - range0) * tickDirectionVector[i];
-				})).append("billboard").attr("axisofrotation", "0 0 0").append("shape").call(makeSolid, "black").append("text").attr("string", tickFormat).append("fontstyle").attr("size", 1.3).attr("family", "SANS").attr("style", "BOLD").attr("justify", "MIDDLE");
+				})).append("Billboard").attr("axisOfRotation", "0 0 0").append("Shape").call(makeSolid, "black").append("Text").attr("string", tickFormat).append("FontStyle").attr("size", 1.3).attr("family", "SANS").attr("style", "BOLD").attr("justify", "MIDDLE");
 
 				labelsEnter.merge(labels);
 
@@ -1380,7 +1380,7 @@ function componentAxisThreePlane () {
 
 			var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
 
-			element.selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+			element.selectAll("group").data(layers).enter().append("Group").attr("class", function (d) {
 				return d;
 			});
 
@@ -1649,7 +1649,7 @@ function componentBars () {
 			});
 
 			var shape = function shape(el) {
-				var shape = el.append("shape").attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
+				var shape = el.append("Shape").attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
 					dispatch.call("d3X3domClick", this, e);
 				}).attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").on("mouseover", function (e) {
 					dispatch.call("d3X3domMouseOver", this, e);
@@ -1657,11 +1657,11 @@ function componentBars () {
 					dispatch.call("d3X3domMouseOut", this, e);
 				});
 
-				shape.append("box").attr("size", "1.0 1.0 1.0");
+				shape.append("Box").attr("size", "1.0 1.0 1.0");
 
-				shape.append("appearance").append("material").attr("diffusecolor", function (d) {
+				shape.append("Appearance").append("Material").attr("diffuseColor", function (d) {
 					return colorScale(d.key);
-				}).attr("ambientintensity", 0.1);
+				}).attr("ambientIntensity", 0.1);
 
 				return shape;
 			};
@@ -1672,7 +1672,7 @@ function componentBars () {
 				return d.key;
 			});
 
-			bars.enter().append("transform").classed("bar", true).call(shape).merge(bars).transition().attr("scale", function (d) {
+			bars.enter().append("Transform").classed("bar", true).call(shape).merge(bars).transition().attr("scale", function (d) {
 				var x = xScale.bandwidth();
 				var y = yScale(d.value);
 				var z = dimensions.z;
@@ -1839,7 +1839,7 @@ function componentBarsMultiSeries () {
 				return d.key;
 			});
 
-			barGroup.enter().append("transform").classed("barGroup", true).merge(barGroup).transition().attr("translation", function (d) {
+			barGroup.enter().append("Transform").classed("barGroup", true).merge(barGroup).transition().attr("translation", function (d) {
 				var x = 0;
 				var y = 0;
 				var z = zScale(d.key);
@@ -1997,7 +1997,7 @@ function componentBubbles () {
 			});
 
 			var shape = function shape(el) {
-				var shape = el.append("shape").attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
+				var shape = el.append("Shape").attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
 					dispatch.call("d3X3domClick", this, e);
 				}).attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").on("mouseover", function (e) {
 					dispatch.call("d3X3domMouseOver", this, e);
@@ -2008,15 +2008,15 @@ function componentBubbles () {
 				/*
     // FIXME: Due to a bug with x3dom `._quality`, `fieldChanged()`, we must to use .html() rather than .attr().
     // SEE: https://github.com/x3dom/x3dom/pull/949
-    shape.append("sphere")
+    shape.append("Sphere")
     	.attr("radius", (d) => sizeScale(d.value));
     */
 
 				shape.html(function (d) {
-					return "<sphere radius='" + sizeScale(d.value) + "'></sphere>";
+					return "<Sphere radius='" + sizeScale(d.value) + "'></Sphere>";
 				});
 
-				shape.append("appearance").append("material").attr("diffusecolor", color).attr("ambientintensity", 0.1);
+				shape.append("Appearance").append("Material").attr("diffuseColor", color).attr("ambientIntensity", 0.1);
 
 				return shape;
 			};
@@ -2027,9 +2027,9 @@ function componentBubbles () {
 				return d.key;
 			});
 
-			bubbles.enter().append("transform").attr("class", "bubble").call(shape).merge(bubbles).transition().attr("translation", function (d) {
+			bubbles.enter().append("Transform").attr("class", "bubble").call(shape).merge(bubbles).transition().attr("translation", function (d) {
 				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-			}).select("shape").select("appearance").select("material").attr("diffusecolor", color);
+			}).select("Shape").select("Appearance").select("Material").attr("diffuseColor", color);
 
 			bubbles.exit().remove();
 		});
@@ -2239,7 +2239,7 @@ function componentBubblesMultiSeries () {
 				return d.key;
 			});
 
-			bubbleGroup.enter().append("group").classed("bubbleGroup", true).merge(bubbleGroup).transition().each(addBubbles);
+			bubbleGroup.enter().append("Group").classed("bubbleGroup", true).merge(bubbleGroup).transition().each(addBubbles);
 
 			bubbleGroup.exit().remove();
 		});
@@ -2418,13 +2418,13 @@ function componentCrosshair () {
 			// Origin Ball
 			var ballSelect = element.selectAll(".ball").data([data]);
 
-			var ball = ballSelect.enter().append("transform").attr("translation", function (d) {
+			var ball = ballSelect.enter().append("Transform").attr("translation", function (d) {
 				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-			}).classed("ball", true).append("shape");
+			}).classed("ball", true).append("Shape");
 
-			ball.append("appearance").append("material").attr("diffusecolor", "blue");
+			ball.append("Appearance").append("Material").attr("diffuseColor", "blue");
 
-			ball.append("sphere").attr("radius", 0.3);
+			ball.append("Sphere").attr("radius", 0.3);
 
 			ball.merge(ballSelect);
 
@@ -2435,17 +2435,17 @@ function componentCrosshair () {
 			// Crosshair Lines
 			var lineSelect = element.selectAll(".line").data(Object.keys(dimensions));
 
-			var line = lineSelect.enter().append("transform").classed("line", true).attr("translation", function (d) {
+			var line = lineSelect.enter().append("Transform").classed("line", true).attr("translation", function (d) {
 				return getPositionVector(d);
 			}).attr("rotation", function (d) {
 				return getRotationVector(d);
-			}).append("shape");
+			}).append("Shape");
 
 			line.append("cylinder").attr("radius", radius).attr("height", function (d) {
 				return dimensions[d];
 			});
 
-			line.append("appearance").append("material").attr("diffusecolor", function (d) {
+			line.append("Appearance").append("Material").attr("diffuseColor", function (d) {
 				return colorScale(d);
 			});
 
@@ -2553,19 +2553,19 @@ function componentLabel () {
 			});
 
 			var makeSolid = function makeSolid(selection, color) {
-				selection.append("appearance").append("material").attr("diffusecolor", color || "black");
+				selection.append("Appearance").append("Material").attr("diffuseColor", color || "black");
 				return selection;
 			};
 
 			var labelSelect = element.selectAll(".label").data([data]);
 
-			var label = labelSelect.enter().append("transform").attr("translation", function (d) {
+			var label = labelSelect.enter().append("Transform").attr("translation", function (d) {
 				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-			}).classed("label", true).append("billboard").attr("axisofrotation", "0 0 0").append("transform").attr("translation", function (d) {
+			}).classed("label", true).append("Billboard").attr("axisOfRotation", "0 0 0").append("Transform").attr("translation", function (d) {
 				return offset + " " + offset + " " + offset;
-			}).append("shape").call(makeSolid, color).append("text").attr("string", function (d) {
+			}).append("Shape").call(makeSolid, color).append("Text").attr("string", function (d) {
 				return d.key;
-			}).append("fontstyle").attr("size", 1).attr("family", "SANS").attr("style", "BOLD").attr("justify", "START");
+			}).append("FontStyle").attr("size", 1).attr("family", "SANS").attr("style", "BOLD").attr("justify", "START");
 
 			label.merge(labelSelect);
 
@@ -2676,9 +2676,9 @@ function componentLight () {
 			var element = d3.select(this).classed(classed, true);
 
 			// Main Lines
-			var light = element.selectAll("directionallight").data([null]);
+			var light = element.selectAll("DirectionalLight").data([null]);
 
-			light.enter().append("directionallight").attr("on", true).attr("direction", direction).attr("intensity", intensity).attr("shadowintensity", shadowIntensity).merge(light);
+			light.enter().append("DirectionalLight").attr("on", true).attr("direction", direction).attr("intensity", intensity).attr("shadowIntensity", shadowIntensity).merge(light);
 		});
 	};
 
@@ -2859,8 +2859,8 @@ function componentRibbon () {
     */
 
 				shape.html(function (d) {
-					var indexedfaceset = "<indexedfaceset coordindex=\"" + d.coordindex + "\"><coordinate point=\"" + d.point + "\"></coordinate></indexedfaceset>";
-					var appearance = "<appearance><twosidedmaterial diffusecolor=\"" + color + "\" transparency=\"" + transparency + "\"></twosidedmaterial></appearance>";
+					var indexedfaceset = "<IndexedFaceset coordIndex=\"" + d.coordindex + "\"><coordinate point=\"" + d.point + "\"></coordinate></IndexedFaceset>";
+					var appearance = "<Appearance><TwoSidedMaterial diffuseColor=\"" + color + "\" transparency=\"" + transparency + "\"></TwoSidedMaterial></Appearance>";
 
 					return indexedfaceset + appearance;
 				});
@@ -3057,7 +3057,7 @@ function componentRibbonMultiSeries () {
 				return d.key;
 			});
 
-			ribbonGroup.enter().append("transform").classed("ribbonGroup", true).merge(ribbonGroup).transition().attr("translation", function (d) {
+			ribbonGroup.enter().append("Transform").classed("ribbonGroup", true).merge(ribbonGroup).transition().attr("translation", function (d) {
 				var x = 0;
 				var y = 0;
 				var z = zScale(d.key);
@@ -3284,21 +3284,21 @@ function componentSurface () {
 
 			var surface = element.selectAll(".surface").data(surfaceData);
 
-			var surfaceSelect = surface.enter().append("shape").classed("surface", true).append("indexedfaceset").attr("coordindex", function (d) {
+			var surfaceSelect = surface.enter().append("Shape").classed("surface", true).append("IndexedFaceset").attr("coordIndex", function (d) {
 				return d.coordindex;
 			});
 
-			surfaceSelect.append("coordinate").attr("point", function (d) {
+			surfaceSelect.append("Coordinate").attr("point", function (d) {
 				return d.point;
 			});
 
-			surfaceSelect.append("color").attr("color", function (d) {
+			surfaceSelect.append("Color").attr("color", function (d) {
 				return d.color;
 			});
 
 			surfaceSelect.merge(surface);
 
-			var surfaceTransition = surface.transition().select("indexedfaceset").attr("coordindex", function (d) {
+			var surfaceTransition = surface.transition().select("IndexedFaceset").attr("coordIndex", function (d) {
 				return d.coordindex;
 			});
 
@@ -3560,16 +3560,16 @@ function componentVectorFields () {
 
 			var arrows = element.selectAll(".arrow").data(vectorData);
 
-			var arrowsEnter = arrows.enter().append("transform").attr("translation", function (d) {
+			var arrowsEnter = arrows.enter().append("Transform").attr("translation", function (d) {
 				return d.translation;
 			}).attr("rotation", function (d) {
 				return d.rotation;
-			}).attr("class", "arrow").append("transform").attr("translation", function (d) {
+			}).attr("class", "arrow").append("Transform").attr("translation", function (d) {
 				var offset = sizeScale(d.value) / 2;
 				return "0 " + offset + " 0";
-			}).append("group").attr("onclick", "d3.x3dom.events.forwardEvent(event);").attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").attr("onmouseout", "d3.x3dom.events.forwardEvent(event);");
+			}).append("Group").attr("onclick", "d3.x3dom.events.forwardEvent(event);").attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").attr("onmouseout", "d3.x3dom.events.forwardEvent(event);");
 
-			var arrowHead = arrowsEnter.append("shape").on("click", function (e) {
+			var arrowHead = arrowsEnter.append("Shape").on("click", function (e) {
 				dispatch.call("d3X3domClick", this, e);
 			}).on("mouseover", function (e) {
 				dispatch.call("d3X3domMouseOver", this, e);
@@ -3577,18 +3577,18 @@ function componentVectorFields () {
 				dispatch.call("d3X3domMouseOut", this, e);
 			});
 
-			arrowHead.append("appearance").append("material").attr("diffusecolor", function (d) {
+			arrowHead.append("Appearance").append("Material").attr("diffuseColor", function (d) {
 				return rgb2Hex(colorScale(d.value));
 			});
 
-			arrowHead.append("cylinder").attr("height", function (d) {
+			arrowHead.append("Cylinder").attr("height", function (d) {
 				return sizeScale(d.value);
 			}).attr("radius", 0.1);
 
-			var arrowShaft = arrowsEnter.append("transform").attr("translation", function (d) {
+			var arrowShaft = arrowsEnter.append("Transform").attr("translation", function (d) {
 				var offset = sizeScale(d.value) / 2;
 				return "0 " + offset + " 0";
-			}).append("shape").on("click", function (e) {
+			}).append("Shape").on("click", function (e) {
 				dispatch.call("d3X3domClick", this, e);
 			}).on("mouseover", function (e) {
 				dispatch.call("d3X3domMouseOver", this, e);
@@ -3596,11 +3596,11 @@ function componentVectorFields () {
 				dispatch.call("d3X3domMouseOut", this, e);
 			});
 
-			arrowShaft.append("appearance").append("material").attr("diffusecolor", function (d) {
+			arrowShaft.append("Appearance").append("Material").attr("diffuseColor", function (d) {
 				return rgb2Hex(colorScale(d.value));
 			});
 
-			arrowShaft.append("cone").attr("height", 1).attr("bottomradius", 0.4);
+			arrowShaft.append("cone").attr("height", 1).attr("bottomRadius", 0.4);
 
 			arrowsEnter.merge(arrows);
 
@@ -3791,7 +3791,7 @@ function componentViewpoint () {
 			// Main Lines
 			var viewpoint = element.selectAll("viewpoint").data([null]);
 
-			viewpoint.enter().append("viewpoint").attr("centerofrotation", centerOfRotation.join(" ")).attr("position", viewPosition.join(" ")).attr("orientation", viewOrientation.join(" ")).attr("fieldofview", fieldOfView).attr("set_bind", "true").merge(viewpoint);
+			viewpoint.enter().append("Viewpoint").attr("centerOfRotation", centerOfRotation.join(" ")).attr("position", viewPosition.join(" ")).attr("orientation", viewOrientation.join(" ")).attr("fieldOfView", fieldOfView).attr("set_bind", "true").merge(viewpoint);
 		});
 	};
 
@@ -3923,9 +3923,9 @@ function componentVolumeSlice () {
 			    dimensionZ = _dimensions.z;
 
 
-			var volumedata = element.append("transform").append("volumedata").attr("dimensions", dimensionX + " " + dimensionY + " " + dimensionZ);
+			var volumedata = element.append("Transform").append("VolumeData").attr("dimensions", dimensionX + " " + dimensionY + " " + dimensionZ);
 
-			volumedata.append("imagetextureatlas").attr("crossorigin", "anonymous").attr("containerfield", "voxels").attr("url", imageUrl).attr("numberofslices", numberOfSlices).attr("slicesoverx", slicesOverX).attr("slicesovery", slicesOverY);
+			volumedata.append("ImageTextureAtlas").attr("crossOrigin", "anonymous").attr("containerField", "voxels").attr("url", imageUrl).attr("numberOfSlices", numberOfSlices).attr("slicesOverX", slicesOverX).attr("slicesOverY", slicesOverY);
 
 			var plane = volumedata.selectAll(".plane").data(function (d) {
 				return d.values;
@@ -3936,16 +3936,16 @@ function componentVolumeSlice () {
 					// X3DOM does not currently support multiple planes inside a single VolumeData node.
 					// There are plans to add this functionality see:
 					//   https://github.com/x3dom/x3dom/issues/944
-					plane.enter().append("mprvolumestyle").classed("plane", true).attr("finalline", function (d) {
+					plane.enter().append("MPRVolumeStyle").classed("plane", true).attr("finalLine", function (d) {
 						return d.x + " " + d.y + " " + d.z;
-					}).attr("positionline", function (d) {
+					}).attr("positionLine", function (d) {
 						return d.value;
 					});
 					break;
 
 				case "opacitymap":
 				default:
-					volumedata.append("opacitymapvolumestyle").attr("lightfactor", 1.2).attr("opacityfactor", 6.0);
+					volumedata.append("OpacityMapVolumeStyle").attr("lightFactor", 1.2).attr("opacityFactor", 6.0);
 					break;
 			}
 		});
@@ -4126,15 +4126,15 @@ function chartAreaChartMultiSeries () {
 	var my = function my(selection) {
 		// Create x3d element (if it does not exist already)
 		if (!x3d) {
-			x3d = selection.append("x3d");
-			scene = x3d.append("scene");
+			x3d = selection.append("X3D");
+			scene = x3d.append("Scene");
 		}
 
 		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "areas"];
-		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+		scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
 			return d;
 		});
 
@@ -4369,15 +4369,15 @@ function chartBarChartMultiSeries () {
 	var my = function my(selection) {
 		// Create x3d element (if it does not exist already)
 		if (!x3d) {
-			x3d = selection.append("x3d");
-			scene = x3d.append("scene");
+			x3d = selection.append("X3D");
+			scene = x3d.append("Scene");
 		}
 
 		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "bars"];
-		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+		scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
 			return d;
 		});
 
@@ -4602,15 +4602,15 @@ function chartBarChartVertical () {
 	var my = function my(selection) {
 		// Create x3d element (if it does not exist already)
 		if (!x3d) {
-			x3d = selection.append("x3d");
-			scene = x3d.append("scene");
+			x3d = selection.append("X3D");
+			scene = x3d.append("Scene");
 		}
 
 		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["xAxis", "yAxis", "bars"];
-		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+		scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
 			return d;
 		});
 
@@ -4825,15 +4825,15 @@ function chartBubbleChart () {
 	var my = function my(selection) {
 		// Create x3d element (if it does not exist already)
 		if (!x3d) {
-			x3d = selection.append("x3d");
-			scene = x3d.append("scene");
+			x3d = selection.append("X3D");
+			scene = x3d.append("Scene");
 		}
 
 		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "bubbles"];
-		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+		scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
 			return d;
 		});
 
@@ -5067,15 +5067,15 @@ function chartCrosshairPlot () {
 	var my = function my(selection) {
 		// Create x3d element (if it does not exist already)
 		if (!x3d) {
-			x3d = selection.append("x3d");
-			scene = x3d.append("scene");
+			x3d = selection.append("X3D");
+			scene = x3d.append("Scene");
 		}
 
 		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "crosshairs"];
-		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+		scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
 			return d;
 		});
 
@@ -5271,15 +5271,15 @@ function chartRibbonChartMultiSeries () {
 	var my = function my(selection) {
 		// Create x3d element (if it does not exist already)
 		if (!x3d) {
-			x3d = selection.append("x3d");
-			scene = x3d.append("scene");
+			x3d = selection.append("X3D");
+			scene = x3d.append("Scene");
 		}
 
 		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "ribbons"];
-		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+		scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
 			return d;
 		});
 
@@ -5494,15 +5494,15 @@ function chartScatterPlot () {
 	var my = function my(selection) {
 		// Create x3d element (if it does not exist already)
 		if (!x3d) {
-			x3d = selection.append("x3d");
-			scene = x3d.append("scene");
+			x3d = selection.append("X3D");
+			scene = x3d.append("Scene");
 		}
 
 		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "bubbles", "crosshair", "label"];
-		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+		scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
 			return d;
 		});
 
@@ -5731,15 +5731,15 @@ function chartSurfacePlot () {
 	var my = function my(selection) {
 		// Create x3d element (if it does not exist already)
 		if (!x3d) {
-			x3d = selection.append("x3d");
-			scene = x3d.append("scene");
+			x3d = selection.append("X3D");
+			scene = x3d.append("Scene");
 		}
 
 		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "surface"];
-		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+		scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
 			return d;
 		});
 
@@ -6015,15 +6015,15 @@ function chartVectorField () {
 	var my = function my(selection) {
 		// Create x3d element (if it does not exist already)
 		if (!x3d) {
-			x3d = selection.append("x3d");
-			scene = x3d.append("scene");
+			x3d = selection.append("X3D");
+			scene = x3d.append("Scene");
 		}
 
 		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "vectorFields"];
-		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+		scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
 			return d;
 		});
 
@@ -6251,15 +6251,15 @@ function chartVolumeSlice () {
 	var my = function my(selection) {
 		// Create x3d element (if it does not exist already)
 		if (!x3d) {
-			x3d = selection.append("x3d");
-			scene = x3d.append("scene");
+			x3d = selection.append("X3D");
+			scene = x3d.append("Scene");
 		}
 
 		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "volumeSlice"];
-		scene.classed(classed, true).selectAll("group").data(layers).enter().append("group").attr("class", function (d) {
+		scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
 			return d;
 		});
 

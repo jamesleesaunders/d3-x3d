@@ -111,7 +111,7 @@ export default function() {
 				.data((d) => d, (d) => d.key);
 
 			areaGroup.enter()
-				.append("transform")
+				.append("Transform")
 				.classed("areaGroup", true)
 				.merge(areaGroup)
 				.transition()

@@ -85,7 +85,7 @@ export default function() {
 				.data((d) => d, (d) => d.key);
 
 			barGroup.enter()
-				.append("transform")
+				.append("Transform")
 				.classed("barGroup", true)
 				.merge(barGroup)
 				.transition()

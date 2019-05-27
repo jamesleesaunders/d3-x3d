@@ -68,16 +68,16 @@ export default function() {
 				.data([data]);
 
 			let ball = ballSelect.enter()
-				.append("transform")
+				.append("Transform")
 				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
 				.classed("ball", true)
-				.append("shape");
+				.append("Shape");
 
-			ball.append("appearance")
-				.append("material")
-				.attr("diffusecolor", "blue");
+			ball.append("Appearance")
+				.append("Material")
+				.attr("diffuseColor", "blue");
 
-			ball.append("sphere")
+			ball.append("Sphere")
 				.attr("radius", 0.3);
 
 			ball.merge(ballSelect);
@@ -91,19 +91,19 @@ export default function() {
 				.data(Object.keys(dimensions));
 
 			const line = lineSelect.enter()
-				.append("transform")
+				.append("Transform")
 				.classed("line", true)
 				.attr("translation", (d) => getPositionVector(d))
 				.attr("rotation", (d) => getRotationVector(d))
-				.append("shape");
+				.append("Shape");
 
 			line.append("cylinder")
 				.attr("radius", radius)
 				.attr("height", (d) => dimensions[d]);
 
-			line.append("appearance")
-				.append("material")
-				.attr("diffusecolor", (d) => colorScale(d));
+			line.append("Appearance")
+				.append("Material")
+				.attr("diffuseColor", (d) => colorScale(d));
 
 			line.merge(lineSelect);
 
