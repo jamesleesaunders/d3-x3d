@@ -2005,16 +2005,13 @@ function componentBubbles () {
 					dispatch.call("d3X3domMouseOut", this, e);
 				});
 
-				/*
-    // FIXME: Due to a bug with x3dom `._quality`, `fieldChanged()`, we must to use .html() rather than .attr().
-    // SEE: https://github.com/x3dom/x3dom/pull/949
-    shape.append("Sphere")
-    	.attr("radius", (d) => sizeScale(d.value));
-    */
-
-				shape.html(function (d) {
-					return "<Sphere radius='" + sizeScale(d.value) + "'></Sphere>";
+				// FIXME: Due to a bug with x3dom `._quality`, `fieldChanged()`, we must to use .html() rather than .attr().
+				// SEE: https://github.com/x3dom/x3dom/pull/949
+				shape.append("Sphere").attr("radius", function (d) {
+					return sizeScale(d.value);
 				});
+
+				// shape.html((d) => "<Sphere radius='" + sizeScale(d.value) + "'></Sphere>");
 
 				shape.append("Appearance").append("Material").attr("diffuseColor", color).attr("ambientIntensity", 0.1);
 
