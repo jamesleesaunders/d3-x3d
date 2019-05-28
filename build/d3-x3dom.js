@@ -3920,18 +3920,13 @@ function componentVolumeSlice () {
 
 			volumedata.append("ImageTextureAtlas").attr("crossOrigin", "anonymous").attr("containerField", "voxels").attr("url", imageUrl).attr("numberOfSlices", numberOfSlices).attr("slicesOverX", slicesOverX).attr("slicesOverY", slicesOverY);
 
-			var plane = volumedata.selectAll(".plane").data(function (d) {
-				return d.values;
-			});
-
 			switch (volumeStyle) {
 				case "mprvolume":
-					// X3DOM does not currently support multiple planes inside a single VolumeData node.
-					// There are plans to add this functionality see:
-					//   https://github.com/x3dom/x3dom/issues/944
-					plane.enter().append("MPRVolumeStyle").classed("plane", true).attr("finalLine", function (d) {
+					volumedata.append("MPRVolumeStyle").attr("forceOpaic", true).selectAll(".plane").data(function (d) {
+						return d.values;
+					}).enter().append("MPRPlane").classed("plane", true).attr("normal", function (d) {
 						return d.x + " " + d.y + " " + d.z;
-					}).attr("positionLine", function (d) {
+					}).attr("position", function (d) {
 						return d.value;
 					});
 					break;
@@ -6269,7 +6264,7 @@ function chartVolumeSlice () {
 			scene.select(".axis").datum(origin).call(axis);
 
 			// Add Volume Slice
-			volumeSlice.dimensions(dimensions).imageUrl(imageUrl).numberOfSlices(numberOfSlices).slicesOverX(slicesOverX).slicesOverY(slicesOverY);
+			volumeSlice.dimensions(dimensions).imageUrl(imageUrl).numberOfSlices(numberOfSlices).slicesOverX(slicesOverX).slicesOverY(slicesOverY).volumeStyle("opacitymap");
 
 			scene.select(".volumeSlice").append("transform").attr("translation", function (d) {
 				var x = dimensions.x / 2;

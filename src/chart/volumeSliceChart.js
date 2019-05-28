@@ -98,7 +98,8 @@ export default function() {
 				.imageUrl(imageUrl)
 				.numberOfSlices(numberOfSlices)
 				.slicesOverX(slicesOverX)
-				.slicesOverY(slicesOverY);
+				.slicesOverY(slicesOverY)
+				.volumeStyle("mprvolume");
 
 			scene.select(".volumeSlice")
 				.append("transform")

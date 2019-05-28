@@ -47,25 +47,22 @@ export default function() {
 				.attr("slicesOverX", slicesOverX)
 				.attr("slicesOverY", slicesOverY);
 
-			const plane = volumedata.selectAll(".plane")
-				.data((d) => d.values);
-
 			switch (volumeStyle) {
 				case "mprvolume":
-					// X3DOM does not currently support multiple planes inside a single VolumeData node.
-					// There are plans to add this functionality see:
-					//   https://github.com/x3dom/x3dom/issues/944
-					plane.enter()
-						.append("MPRVolumeStyle")
+					volumedata.append("MPRVolumeStyle")
+						.attr("forceOpaic", true)
+						.selectAll(".plane")
+						.data((d) => d.values)
+						.enter()
+						.append("MPRPlane")
 						.classed("plane", true)
-						.attr("finalLine", (d) => `${d.x} ${d.y} ${d.z}`)
-						.attr("positionLine", (d) => d.value);
+						.attr("normal", (d) => `${d.x} ${d.y} ${d.z}`)
+						.attr("position", (d) => d.value);
 					break;
 
 				case "opacitymap":
 				default:
-					volumedata
-						.append("OpacityMapVolumeStyle")
+					volumedata.append("OpacityMapVolumeStyle")
 						.attr("lightFactor", 1.2)
 						.attr("opacityFactor", 6.0);
 					break;
