@@ -41,7 +41,7 @@ export default function() {
 	let numberOfSlices;
 	let slicesOverX;
 	let slicesOverY;
-	let volumeStyle = "opacitymap";
+	let volumeStyle = "OpacityMap";
 
 	/* Components */
 	const viewpoint = component.viewpoint();
@@ -52,7 +52,7 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
-	 * @alias volumeSliceChartVertical
+	 * @alias volumeSliceChart
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
@@ -68,7 +68,7 @@ export default function() {
 			.attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
-		const layers = ["axis", "volumeSlice"];
+		const layers = ["axis", "volume"];
 		scene.classed(classed, true)
 			.selectAll("Group")
 			.data(layers)
@@ -99,11 +99,11 @@ export default function() {
 				.numberOfSlices(numberOfSlices)
 				.slicesOverX(slicesOverX)
 				.slicesOverY(slicesOverY)
-				.volumeStyle("mprvolume");
+				.volumeStyle(volumeStyle);
 
-			scene.select(".volumeSlice")
+			scene.select(".volume")
 				.append("transform")
-				.attr("translation", (d) => {
+				.attr("translation", () => {
 					const x = dimensions.x / 2;
 					const y = dimensions.y / 2;
 					const z = dimensions.z / 2;
@@ -237,7 +237,7 @@ export default function() {
 	/**
 	 * Volume Style Getter / Setter
 	 *
-	 * @param {string} _v - Volume render style (either 'mprvolume' or 'opacitymap')
+	 * @param {string} _v - Volume render style (either 'MPRVolume' or 'OpacityMap')
 	 * @returns {*}
 	 */
 	my.volumeStyle = function(_v) {

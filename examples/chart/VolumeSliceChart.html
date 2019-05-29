@@ -32,14 +32,15 @@
 
     // Declare the chart component
     var myChart = d3.x3dom.chart.volumeSliceChart()
-      .dimensions({ x: 40, y: 40, z: 30 })
-      .imageUrl("../assets/scan2.png")
-      .numberOfSlices(34)
-      .slicesOverX(7)
-      .slicesOverY(5)
+      .dimensions({ x: 40, y: 40, z: 50 })
+      .imageUrl("../assets/scan1.png")
+      .numberOfSlices(97)
+      .slicesOverX(10)
+      .slicesOverY(10)
       .xScale(xScale)
       .yScale(yScale)
-      .zScale(zScale);
+      .zScale(zScale)
+      .volumeStyle("MPRVolume");
 
     // Attach chart and data to the chartholder
     chartHolder.datum(myData).call(myChart);

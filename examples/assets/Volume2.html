@@ -11,14 +11,16 @@
 <body>
 
 	<div>
-		<x3d showStat='true' showLog='true' width='500px' height='500px'>
+		<x3d showStat="true" showLog="true" width="500px" height="500px">
 			<Scene>
-				<Background skyColor='0.0 0.0 0.0'></Background>
-				<Viewpoint description='Default' zNear='0.0001' zFar='100' position="0.85713 1.49578 9.85028" orientation="-0.85521 0.50269 0.12614 0.17466"></Viewpoint>
+				<Background skyColor="0.0 0.0 0.0"></Background>
+				<Viewpoint description="Default" zNear="0.0001" zFar="100" position="0.85713 1.49578 9.85028" orientation="-0.85521 0.50269 0.12614 0.17466"></Viewpoint>
 				<Transform>
-					<VolumeData id='volume' dimensions='4.0 4.0 4.0'>
-						<ImageTextureAtlas containerField='voxels' url='scan1.png' numberOfSlices='96' slicesOverX='10' slicesOverY='10'></ImageTextureAtlas>
-						<MPRVolumeStyle id='position' positionLine='0.5'></MPRVolumeStyle>
+					<VolumeData id="volume" dimensions="4.0 4.0 4.0">
+						<ImageTextureAtlas containerField="voxels" url="scan1.png" numberOfSlices="96" slicesOverX="10" slicesOverY="10"></ImageTextureAtlas>
+						<MPRVolumeStyle forceOpaic="true">
+              <MPRPlane id="position" normal="0.0 0.0 1.0" position="0.5"></MPRPlane>
+            </MPRVolumeStyle>
 					</VolumeData>
 				</Transform>
 			</Scene>
@@ -30,10 +32,10 @@
 	<script>
 		var threshold = 0.5;
 
-		$(document).on('input change', '#slider', function() {
-			$('#slider_value').html( $(this).val() );
+		$(document).on("input change", "#slider", function() {
+			$("#slider_value").html( $(this).val() );
 			threshold = $(this).val() / 100;
-			document.getElementById("position").setAttribute('positionLine', threshold);
+			document.getElementById("position").setAttribute("position", threshold);
 		});
 
 	</script>

@@ -17,7 +17,7 @@ export default function() {
 	let numberOfSlices;
 	let slicesOverX;
 	let slicesOverY;
-	let volumeStyle = "opacitymap";
+	let volumeStyle = "OpacityMap";
 
 	/**
 	 * Constructor
@@ -48,7 +48,7 @@ export default function() {
 				.attr("slicesOverY", slicesOverY);
 
 			switch (volumeStyle) {
-				case "mprvolume":
+				case "MPRVolume":
 					volumedata.append("MPRVolumeStyle")
 						.attr("forceOpaic", true)
 						.selectAll(".plane")
@@ -60,7 +60,7 @@ export default function() {
 						.attr("position", (d) => d.value);
 					break;
 
-				case "opacitymap":
+				case "OpacityMap":
 				default:
 					volumedata.append("OpacityMapVolumeStyle")
 						.attr("lightFactor", 1.2)
@@ -133,7 +133,7 @@ export default function() {
 	/**
 	 * Volume Style Getter / Setter
 	 *
-	 * @param {string} _v - Volume render style (either 'mprvolume' or 'opacitymap')
+	 * @param {string} _v - Volume render style (either 'MPRVolume' or 'OpacityMap')
 	 * @returns {*}
 	 */
 	my.volumeStyle = function(_v) {

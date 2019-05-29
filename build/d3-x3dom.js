@@ -3894,7 +3894,7 @@ function componentVolumeSlice () {
 	var numberOfSlices = void 0;
 	var slicesOverX = void 0;
 	var slicesOverY = void 0;
-	var volumeStyle = "opacitymap";
+	var volumeStyle = "OpacityMap";
 
 	/**
   * Constructor
@@ -3921,7 +3921,7 @@ function componentVolumeSlice () {
 			volumedata.append("ImageTextureAtlas").attr("crossOrigin", "anonymous").attr("containerField", "voxels").attr("url", imageUrl).attr("numberOfSlices", numberOfSlices).attr("slicesOverX", slicesOverX).attr("slicesOverY", slicesOverY);
 
 			switch (volumeStyle) {
-				case "mprvolume":
+				case "MPRVolume":
 					volumedata.append("MPRVolumeStyle").attr("forceOpaic", true).selectAll(".plane").data(function (d) {
 						return d.values;
 					}).enter().append("MPRPlane").classed("plane", true).attr("normal", function (d) {
@@ -3931,7 +3931,7 @@ function componentVolumeSlice () {
 					});
 					break;
 
-				case "opacitymap":
+				case "OpacityMap":
 				default:
 					volumedata.append("OpacityMapVolumeStyle").attr("lightFactor", 1.2).attr("opacityFactor", 6.0);
 					break;
@@ -4002,7 +4002,7 @@ function componentVolumeSlice () {
 	/**
   * Volume Style Getter / Setter
   *
-  * @param {string} _v - Volume render style (either 'mprvolume' or 'opacitymap')
+  * @param {string} _v - Volume render style (either 'MPRVolume' or 'OpacityMap')
   * @returns {*}
   */
 	my.volumeStyle = function (_v) {
@@ -6222,7 +6222,7 @@ function chartVolumeSlice () {
 	var numberOfSlices = void 0;
 	var slicesOverX = void 0;
 	var slicesOverY = void 0;
-	var volumeStyle = "opacitymap";
+	var volumeStyle = "OpacityMap";
 
 	/* Components */
 	var viewpoint = component.viewpoint();
@@ -6233,7 +6233,7 @@ function chartVolumeSlice () {
   * Constructor
   *
   * @constructor
-  * @alias volumeSliceChartVertical
+  * @alias volumeSliceChart
   * @param {d3.selection} selection - The chart holder D3 selection.
   */
 	var my = function my(selection) {
@@ -6246,7 +6246,7 @@ function chartVolumeSlice () {
 		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
-		var layers = ["axis", "volumeSlice"];
+		var layers = ["axis", "volume"];
 		scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
 			return d;
 		});
@@ -6264,9 +6264,9 @@ function chartVolumeSlice () {
 			scene.select(".axis").datum(origin).call(axis);
 
 			// Add Volume Slice
-			volumeSlice.dimensions(dimensions).imageUrl(imageUrl).numberOfSlices(numberOfSlices).slicesOverX(slicesOverX).slicesOverY(slicesOverY).volumeStyle("opacitymap");
+			volumeSlice.dimensions(dimensions).imageUrl(imageUrl).numberOfSlices(numberOfSlices).slicesOverX(slicesOverX).slicesOverY(slicesOverY).volumeStyle(volumeStyle);
 
-			scene.select(".volumeSlice").append("transform").attr("translation", function (d) {
+			scene.select(".volume").append("transform").attr("translation", function () {
 				var x = dimensions.x / 2;
 				var y = dimensions.y / 2;
 				var z = dimensions.z / 2;
@@ -6400,7 +6400,7 @@ function chartVolumeSlice () {
 	/**
   * Volume Style Getter / Setter
   *
-  * @param {string} _v - Volume render style (either 'mprvolume' or 'opacitymap')
+  * @param {string} _v - Volume render style (either 'MPRVolume' or 'OpacityMap')
   * @returns {*}
   */
 	my.volumeStyle = function (_v) {
