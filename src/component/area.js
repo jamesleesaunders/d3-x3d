@@ -14,7 +14,7 @@ export default function() {
 	let color = "blue";
 	let transparency = 0.1;
 	let classed = "d3X3domArea";
-	let smoothing = d3.curveMonotoneX;
+	let smoothed = d3.curveMonotoneX;
 
 	/* Scales */
 	let xScale;
@@ -58,8 +58,8 @@ export default function() {
 			let areaData = function(data) {
 				const dimensionX = dimensions.x;
 
-				if (smoothing) {
-					data = dataTransform(data).smooth(smoothing);
+				if (smoothed) {
+					data = dataTransform(data).smooth(smoothed);
 
 					const keys = d3.extent(data.values.map((d) => d.key));
 					xScale = d3.scaleLinear()
@@ -195,8 +195,8 @@ export default function() {
 	 * @returns {*}
 	 */
 	my.smoothed = function(_v) {
-		if (!arguments.length) return smoothing;
-		smoothing = _v;
+		if (!arguments.length) return smoothed;
+		smoothed = _v;
 		return my;
 	};
 

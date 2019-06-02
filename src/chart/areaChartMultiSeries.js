@@ -30,7 +30,7 @@ export default function() {
 	let colors = ["green", "red", "yellow", "steelblue", "orange"];
 	let classed = "d3X3domAreaChartMultiSeries";
 	let debug = false;
-	let smoothing = d3.curveMonotoneX;
+	let smoothed = d3.curveMonotoneX;
 
 	/* Scales */
 	let xScale;
@@ -125,7 +125,7 @@ export default function() {
 				.yScale(yScale)
 				.zScale(zScale)
 				.colors(colors)
-				.smoothed(smoothing)
+				.smoothed(smoothed)
 				.dimensions(dimensions);
 
 			scene.select(".areas")
@@ -257,8 +257,8 @@ export default function() {
 	 * @returns {*}
 	 */
 	my.smoothed = function(_v) {
-		if (!arguments.length) return smoothing;
-		smoothing = _v;
+		if (!arguments.length) return smoothed;
+		smoothed = _v;
 		return my;
 	};
 
