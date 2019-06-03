@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.3.1";
+var version = "1.3.2";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -656,7 +656,7 @@ function componentArea () {
 	var color = "blue";
 	var transparency = 0.1;
 	var classed = "d3X3domArea";
-	var smoothing = d3.curveMonotoneX;
+	var smoothed = d3.curveMonotoneX;
 
 	/* Scales */
 	var xScale = void 0;
@@ -702,8 +702,8 @@ function componentArea () {
 			var areaData = function areaData(data) {
 				var dimensionX = dimensions.x;
 
-				if (smoothing) {
-					data = dataTransform(data).smooth(smoothing);
+				if (smoothed) {
+					data = dataTransform(data).smooth(smoothed);
 
 					var keys = d3.extent(data.values.map(function (d) {
 						return d.key;
@@ -833,8 +833,8 @@ function componentArea () {
   * @returns {*}
   */
 	my.smoothed = function (_v) {
-		if (!arguments.length) return smoothing;
-		smoothing = _v;
+		if (!arguments.length) return smoothed;
+		smoothed = _v;
 		return my;
 	};
 
@@ -852,7 +852,7 @@ function componentAreaMultiSeries () {
 	var dimensions = { x: 40, y: 40, z: 40 };
 	var colors = ["orange", "red", "yellow", "steelblue", "green"];
 	var classed = "d3X3domAreaMultiSeries";
-	var smoothing = d3.curveMonotoneX;
+	var smoothed = d3.curveMonotoneX;
 
 	/* Scales */
 	var xScale = void 0;
@@ -932,7 +932,7 @@ function componentAreaMultiSeries () {
 				x: dimensions.x,
 				y: dimensions.y,
 				z: zScale.bandwidth()
-			}).smoothed(smoothing);
+			}).smoothed(smoothed);
 
 			var addArea = function addArea(d) {
 				var color = colorScale(d.key);
@@ -1041,8 +1041,8 @@ function componentAreaMultiSeries () {
   * @returns {*}
   */
 	my.smoothed = function (_v) {
-		if (!arguments.length) return smoothing;
-		smoothing = _v;
+		if (!arguments.length) return smoothed;
+		smoothed = _v;
 		return my;
 	};
 
@@ -4062,7 +4062,7 @@ function chartAreaChartMultiSeries () {
 	var colors = ["green", "red", "yellow", "steelblue", "orange"];
 	var classed = "d3X3domAreaChartMultiSeries";
 	var debug = false;
-	var smoothing = d3.curveMonotoneX;
+	var smoothed = d3.curveMonotoneX;
 
 	/* Scales */
 	var xScale = void 0;
@@ -4140,7 +4140,7 @@ function chartAreaChartMultiSeries () {
 			scene.select(".axis").call(axis);
 
 			// Add Areas
-			areas.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors).smoothed(smoothing).dimensions(dimensions);
+			areas.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors).smoothed(smoothed).dimensions(dimensions);
 
 			scene.select(".areas").datum(data).call(areas);
 
@@ -4269,8 +4269,8 @@ function chartAreaChartMultiSeries () {
   * @returns {*}
   */
 	my.smoothed = function (_v) {
-		if (!arguments.length) return smoothing;
-		smoothing = _v;
+		if (!arguments.length) return smoothed;
+		smoothed = _v;
 		return my;
 	};
 
