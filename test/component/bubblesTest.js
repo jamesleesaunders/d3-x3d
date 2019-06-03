@@ -1,6 +1,6 @@
-let test = require('tape');
-let window = require('browser-env')();
-let d3 = require('d3');
+let test = require("tape");
+let window = require("browser-env")();
+let d3 = require("d3");
 let d3X3dom = require("../../");
 
 test("Test Bubbles Component, component.bubbles()", function(t) {
