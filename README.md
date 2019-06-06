@@ -12,12 +12,12 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Examples](#examples)
 * [Getting Started](#getting-started)
 * [API Reference](https://jamesleesaunders.github.io/d3-x3dom/)
-* [Charts and Components](#components-and-charts)
+* [Components and Charts](#components-and-charts)
 * [Data Structures](#data-structures)
 * [Download from GitHub](https://github.com/jamesleesaunders/d3-x3dom)
 * [Download from NPM](https://www.npmjs.com/package/d3-x3dom)
 
-### Examples
+### <a name="examples"></a>Examples
 * [Area Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/AreaChartMultiSeries.html)
 * [Multi Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/BarChartMultiSeries.html)
 * [Vertical Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/BarChartVertical.html)
@@ -31,7 +31,7 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Components Showcase](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/component/Showcase.html)
 * [Observable Examples](https://beta.observablehq.com/collection/@jamesleesaunders/d3-x3dom)
 
-### Getting Started
+### <a name="getting-started"></a>Getting Started
 
 Include D3.js, X3DOM and d3-x3dom js and css files in the `<head>` section of your page:
 
@@ -116,7 +116,7 @@ Then in your project:
 let d3X3dom = require("d3-x3dom");
 ```
 
-### Components and Charts
+### <a name="components-and-charts"></a>Components and Charts
 
 d3-x3dom has two types of reusable modules: `component` and `chart`. For more information see the [API Reference](https://jamesleesaunders.github.io/d3-x3dom/).
 
@@ -161,7 +161,7 @@ Chart modules also generate the `x3d` tag, these should be attached to a `div` t
 | chart.vectorFieldChart()       | Vector Field Chart            | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/VectorFieldChart.html)       | [View](https://jamesleesaunders.github.io/d3-x3dom/vectorFieldChart.html)       |
 | chart.volumeSliceChart()       | Volume Slice Chart            | [View](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/chart/VolumeSliceChart.html)       | [View](https://jamesleesaunders.github.io/d3-x3dom/volumeSliceChart.html)       |
 
-### Data Structures
+### <a name="data-structures"></a>Data Structures
 
 At its most basic description, the format of the d3-x3dom data is a series of key / value pairs. Depending on whether the chart is a single series or multi series chart the data structure differs slightly.
 
