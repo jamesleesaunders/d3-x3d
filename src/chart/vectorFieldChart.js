@@ -95,25 +95,35 @@ export default function() {
 			return new x3dom.fields.SFVec3f(vx, vy, vz).length();
 		}));
 
-		xScale = d3.scaleLinear()
-			.domain([minX, maxX])
-			.range([0, dimensionX]);
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleLinear()
+				.domain([minX, maxX])
+				.range([0, dimensionX]);
+		}
 
-		yScale = d3.scaleLinear()
-			.domain([minY, maxY])
-			.range([0, dimensionY]);
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear()
+				.domain([minY, maxY])
+				.range([0, dimensionY]);
+		}
 
-		zScale = d3.scaleLinear()
-			.domain([minZ, maxZ])
-			.range([0, dimensionZ]);
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleLinear()
+				.domain([minZ, maxZ])
+				.range([0, dimensionZ]);
+		}
 
-		colorScale = d3.scaleSequential()
-			.domain(extent.slice().reverse())
-			.interpolator(colors);
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleSequential()
+				.domain(extent.slice().reverse())
+				.interpolator(colors);
+		}
 
-		sizeScale = d3.scaleLinear()
-			.domain(extent)
-			.range(sizeDomain);
+		if (typeof sizeScale === "undefined") {
+			sizeScale = d3.scaleLinear()
+				.domain(extent)
+				.range(sizeDomain);
+		}
 
 		// TODO: Have a think about whether this is appropriate?
 		// Or, do we always want the origin to be 0,0,0 ?

@@ -905,14 +905,22 @@ function componentAreaMultiSeries () {
 		    dimensionZ = _dimensions.z;
 
 
-		xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
+		if (typeof xScale === "undefined") {
+			xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
+		}
 
-		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+		}
 
-		zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
+		}
 
-		colorDomain = arrayUnique(colorDomain, rowKeys);
-		colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
+		if (typeof colorScale === "undefined") {
+			colorDomain = arrayUnique(colorDomain, rowKeys);
+			colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
+		}
 	};
 
 	/**
@@ -1801,13 +1809,21 @@ function componentBarsMultiSeries () {
 		    dimensionZ = _dimensions.z;
 
 
-		xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
+		}
 
-		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+		}
 
-		zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.7);
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.7);
+		}
 
-		colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+		}
 	};
 
 	/**
@@ -2193,16 +2209,26 @@ function componentBubblesMultiSeries () {
 		    dimensionZ = _dimensions.z;
 
 
-		xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
+		}
 
-		yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
+		}
 
-		zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
+		}
 
-		colorDomain = arrayUnique(colorDomain, rowKeys);
-		colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
+		if (typeof colorScale === "undefined") {
+			colorDomain = arrayUnique(colorDomain, rowKeys);
+			colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
+		}
 
-		sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeDomain);
+		if (typeof sizeScale === "undefined") {
+			sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeDomain);
+		}
 	};
 
 	/**
@@ -3009,14 +3035,22 @@ function componentRibbonMultiSeries () {
 		    dimensionZ = _dimensions.z;
 
 
-		xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
+		if (typeof xScale === "undefined") {
+			xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
+		}
 
-		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+		}
 
-		zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
+		}
 
-		colorDomain = arrayUnique(colorDomain, rowKeys);
-		colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
+		if (typeof colorScale === "undefined") {
+			colorDomain = arrayUnique(colorDomain, rowKeys);
+			colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
+		}
 	};
 
 	/**
@@ -4095,13 +4129,21 @@ function chartAreaChartMultiSeries () {
 		    dimensionZ = _dimensions.z;
 
 
-		xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
+		if (typeof xScale === "undefined") {
+			xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
+		}
 
-		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+		}
 
-		zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
+		}
 
-		colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+		}
 	};
 
 	/**
@@ -4338,13 +4380,21 @@ function chartBarChartMultiSeries () {
 		    dimensionZ = _dimensions.z;
 
 
-		xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
+		}
 
-		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+		}
 
-		zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.7);
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.7);
+		}
 
-		colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+		}
 	};
 
 	/**
@@ -4573,11 +4623,17 @@ function chartBarChartVertical () {
 		    dimensionY = _dimensions.y;
 
 
-		xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
+		}
 
-		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+		}
 
-		colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+		}
 	};
 
 	/**
@@ -4792,15 +4848,25 @@ function chartBubbleChart () {
 		    dimensionZ = _dimensions.z;
 
 
-		xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
+		}
 
-		yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
+		}
 
-		zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
+		}
 
-		colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
+		}
 
-		sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeDomain);
+		if (typeof sizeScale === "undefined") {
+			sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeDomain);
+		}
 	};
 
 	/**
@@ -5038,11 +5104,17 @@ function chartCrosshairPlot () {
 		    dimensionZ = _dimensions.z;
 
 
-		xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
+		}
 
-		yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
+		}
 
-		zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
+		}
 	};
 
 	/**
@@ -5240,13 +5312,21 @@ function chartRibbonChartMultiSeries () {
 		    dimensionZ = _dimensions.z;
 
 
-		xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
+		if (typeof xScale === "undefined") {
+			xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
+		}
 
-		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+		}
 
-		zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
+		}
 
-		colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+		}
 	};
 
 	/**
@@ -5465,11 +5545,17 @@ function chartScatterPlot () {
 		    dimensionZ = _dimensions.z;
 
 
-		xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
+		}
 
-		yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
+		}
 
-		zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
+		}
 	};
 
 	/**
@@ -5700,13 +5786,21 @@ function chartSurfacePlot () {
 		    dimensionZ = _dimensions.z;
 
 
-		xScale = d3.scalePoint().domain(rowKeys).range([0, dimensionX]);
+		if (typeof xScale === "undefined") {
+			xScale = d3.scalePoint().domain(rowKeys).range([0, dimensionX]);
+		}
 
-		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+		}
 
-		zScale = d3.scalePoint().domain(columnKeys).range([0, dimensionZ]);
+		if (typeof zScale === "undefined") {
+			zScale = d3.scalePoint().domain(columnKeys).range([0, dimensionZ]);
+		}
 
-		colorScale = d3.scaleLinear().domain(valueExtent).range(colors).interpolate(d3.interpolateLab);
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleLinear().domain(valueExtent).range(colors).interpolate(d3.interpolateLab);
+		}
 	};
 
 	/**
@@ -5974,15 +6068,25 @@ function chartVectorField () {
 			return new x3dom.fields.SFVec3f(vx, vy, vz).length();
 		}));
 
-		xScale = d3.scaleLinear().domain([minX, maxX]).range([0, dimensionX]);
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleLinear().domain([minX, maxX]).range([0, dimensionX]);
+		}
 
-		yScale = d3.scaleLinear().domain([minY, maxY]).range([0, dimensionY]);
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear().domain([minY, maxY]).range([0, dimensionY]);
+		}
 
-		zScale = d3.scaleLinear().domain([minZ, maxZ]).range([0, dimensionZ]);
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleLinear().domain([minZ, maxZ]).range([0, dimensionZ]);
+		}
 
-		colorScale = d3.scaleSequential().domain(extent.slice().reverse()).interpolator(colors);
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleSequential().domain(extent.slice().reverse()).interpolator(colors);
+		}
 
-		sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
+		if (typeof sizeScale === "undefined") {
+			sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
+		}
 
 		// TODO: Have a think about whether this is appropriate?
 		// Or, do we always want the origin to be 0,0,0 ?
