@@ -57,29 +57,27 @@ export default function() {
 
 		if (typeof xScale === "undefined") {
 			xScale = d3.scalePoint()
-				.domain(columnKeys)
 				.range([0, dimensionX]);
 		}
+		xScale.domain(columnKeys);
 
 		if (typeof yScale === "undefined") {
 			yScale = d3.scaleLinear()
-				.domain(valueExtent)
-				.range([0, dimensionY])
-				.nice();
+				.range([0, dimensionY]).nice();
 		}
+		yScale.domain(valueExtent);
 
 		if (typeof zScale === "undefined") {
 			zScale = d3.scaleBand()
-				.domain(rowKeys)
-				.range([0, dimensionZ])
-				.padding(0.4);
+				.range([0, dimensionZ]).padding(0.4);
 		}
+		zScale.domain(rowKeys);
 
 		if (typeof colorScale === "undefined") {
 			colorScale = d3.scaleOrdinal()
-				.domain(columnKeys)
 				.range(colors);
 		}
+		colorScale.domain(columnKeys);
 	};
 
 	/**

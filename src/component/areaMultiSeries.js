@@ -59,31 +59,32 @@ export default function() {
 		const valueExtent = [0, valueMax];
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
+		// Adds new colours
+		colorDomain = arrayUnique(colorDomain, rowKeys);
+
 		if (typeof xScale === "undefined") {
 			xScale = d3.scalePoint()
-				.domain(columnKeys)
 				.range([0, dimensionX]);
 		}
+		xScale.domain(columnKeys);
 
 		if (typeof yScale === "undefined") {
 			yScale = d3.scaleLinear()
-				.domain(valueExtent)
 				.range([0, dimensionY]);
 		}
+		yScale.domain(valueExtent);
 
 		if (typeof zScale === "undefined") {
 			zScale = d3.scaleBand()
-				.domain(rowKeys)
-				.range([0, dimensionZ])
-				.padding(0.4);
+				.range([0, dimensionZ]).padding(0.4);
 		}
+		zScale.domain(rowKeys);
 
 		if (typeof colorScale === "undefined") {
-			colorDomain = arrayUnique(colorDomain, rowKeys);
 			colorScale = d3.scaleOrdinal()
-				.domain(colorDomain)
 				.range(colors);
 		}
+		colorScale.domain(colorDomain);
 	};
 
 	/**

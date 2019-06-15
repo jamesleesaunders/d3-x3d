@@ -33,15 +33,15 @@ export default function() {
 
 		if (typeof xScale === "undefined") {
 			xScale = d3.scalePoint()
-				.domain(columnKeys)
 				.range([0, dimensionX]);
 		}
+		xScale.domain(columnKeys);
 
 		if (typeof yScale === "undefined") {
 			yScale = d3.scaleLinear()
-				.domain(valueExtent)
 				.range([0, dimensionY]);
 		}
+		yScale.domain(valueExtent);
 	};
 
 	/**
