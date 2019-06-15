@@ -407,7 +407,36 @@ export default function dataTransform(data) {
 	};
 
 	/**
-	 * Smooth Data
+	 * Smooth Data (Basic Version)
+	 *
+	 * Returns a copy of the input data series which is subsampled into a 100 samples,
+	 * and has the smoothed values based on a provided d3.curve function.
+	 *
+	 * @returns {{values: *, key: *}}
+	 */
+	const smoothBasic = function() {
+		const maxIter = 100;
+
+		const vals = data.values.map((d) => d.value);
+		const splinePolator = d3.interpolateBasis(vals);
+
+		const keyPolator = function(t) {
+			return Number((t * maxIter).toFixed(0)) + 1;
+		};
+
+		const sampler = d3.range(0, 1, 1 / maxIter);
+
+		return {
+			key: data.key,
+			values: sampler.map((t) => ({
+				key: keyPolator(t),
+				value: splinePolator(t)
+			}))
+		};
+	};
+
+	/**
+	 * Smooth Data (Advanced Version)
 	 *
 	 * Returns a copy of the input data series which is subsampled into a 100 samples,
 	 * and has the smoothed values based on a provided d3.curve function.
@@ -415,7 +444,7 @@ export default function dataTransform(data) {
 	 * @param curve
 	 * @returns {{values: *, key: *}}
 	 */
-	const smoothV2 = function(curve) {
+	const smoothAdvanced = function(curve) {
 		const epsilon = 0.00001;
 		const samples = 100;
 
@@ -552,7 +581,7 @@ export default function dataTransform(data) {
 	return {
 		summary: summary,
 		rotate: rotate,
-		smooth: smoothV2
+		smooth: smoothBasic
 	};
 }
 
