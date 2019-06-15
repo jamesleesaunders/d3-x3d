@@ -17,44 +17,30 @@
     var chartHolder = d3.select("#chartholder");
 
     // Generate some data
-    var data = [
-      {
-        key: "A",
-        values: [
-          { key: 'One', value: 1 },
-          { key: 'Two', value: 2 },
-          { key: 'Three', value: 3 },
-          { key: 'Four', value: 4 },
-          { key: 'Five', value: 3 },
-          { key: 'Six', value: 2 },
-          { key: 'One', value: 1 },
-          { key: 'Two', value: 2 },
-          { key: 'Three', value: 3 },
-          { key: 'Four', value: 4 },
-          { key: 'Five', value: 3 },
-          { key: 'Six', value: 2 },
-          { key: 'Six', value: 1 }
-        ]
-      },
-      {
-        key: "B",
-        values: [
-          { key: 'One', value: 1 },
-          { key: 'Two', value: 2 },
-          { key: 'Three', value: 1 },
-          { key: 'Four', value: 0 },
-          { key: 'Five', value: -1 },
-          { key: 'Six', value: -2 },
-          { key: 'One', value: -1 },
-          { key: 'Two', value: 0 },
-          { key: 'Three', value: -1 },
-          { key: 'Four', value: -2 },
-          { key: 'Five', value: -1 },
-          { key: 'Six', value: 0 },
-          { key: 'Six', value: 1 }
-        ]
-      }
-    ];
+    var cx = 1.1;
+    var cy = 0.9;
+    var f = function(vx, vz) {
+      return ((vx - cx) * (vx - cx) + (vz - cy) ) * (1 + Math.random());
+    };
+
+    var xRange = d3.range(0, 1, 0.1);
+    var zRange = d3.range(0, 1, 0.1);
+    var nx = xRange.length;
+    var nz = zRange.length;
+
+    var data = d3.range(nx).map(function(i) {
+      var values = d3.range(nz).map(function(j) {
+        return {
+          key: j,
+          value: f(xRange[i], zRange[j])
+        };
+      });
+
+      return {
+        key: i,
+        values: values
+      };
+    });
 
     // Declare the bar chart component
     var myChart = d3.x3dom.chart.areaChartMultiSeries();
