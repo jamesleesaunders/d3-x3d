@@ -62,36 +62,38 @@ export default function() {
 		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
+		// Adds new colours
+		colorDomain = arrayUnique(colorDomain, rowKeys);
+
 		if (typeof xScale === "undefined") {
 			xScale = d3.scaleLinear()
-				.domain([0, maxX])
 				.range([0, dimensionX]);
 		}
+		xScale.domain([0, maxX]);
 
 		if (typeof yScale === "undefined") {
 			yScale = d3.scaleLinear()
-				.domain([0, maxY])
 				.range([0, dimensionY]);
 		}
+		yScale.domain([0, maxY]);
 
 		if (typeof zScale === "undefined") {
 			zScale = d3.scaleLinear()
-				.domain([0, maxZ])
 				.range([0, dimensionZ]);
 		}
+		zScale.domain([0, maxZ]);
 
 		if (typeof colorScale === "undefined") {
-			colorDomain = arrayUnique(colorDomain, rowKeys);
 			colorScale = d3.scaleOrdinal()
-				.domain(colorDomain)
 				.range(colors);
 		}
+		colorScale.domain(colorDomain);
 
 		if (typeof sizeScale === "undefined") {
 			sizeScale = d3.scaleLinear()
-				.domain(valueExtent)
 				.range(sizeDomain);
 		}
+		sizeScale.domain(valueExtent);
 	};
 
 	/**

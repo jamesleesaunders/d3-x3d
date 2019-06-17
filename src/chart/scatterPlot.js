@@ -55,23 +55,17 @@ export default function() {
 		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear()
-				.domain([0, maxX])
-				.range([0, dimensionX]);
-		}
+		xScale = d3.scaleLinear()
+			.domain([0, maxX])
+			.range([0, dimensionX]);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
-				.domain([0, maxY])
-				.range([0, dimensionY]);
-		}
+		yScale = d3.scaleLinear()
+			.domain([0, maxY])
+			.range([0, dimensionY]);
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear()
-				.domain([0, maxZ])
-				.range([0, dimensionZ]);
-		}
+		zScale = d3.scaleLinear()
+			.domain([0, maxZ])
+			.range([0, dimensionZ]);
 	};
 
 	/**

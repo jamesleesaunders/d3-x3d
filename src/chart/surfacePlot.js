@@ -53,30 +53,22 @@ export default function() {
 		const valueExtent = [0, valueMax];
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scalePoint()
-				.domain(rowKeys)
-				.range([0, dimensionX]);
-		}
+		xScale = d3.scalePoint()
+			.domain(rowKeys)
+			.range([0, dimensionX]);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
-				.domain(valueExtent)
-				.range([0, dimensionY]).nice();
-		}
+		yScale = d3.scaleLinear()
+			.domain(valueExtent)
+			.range([0, dimensionY]).nice();
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scalePoint()
-				.domain(columnKeys)
-				.range([0, dimensionZ]);
-		}
+		zScale = d3.scalePoint()
+			.domain(columnKeys)
+			.range([0, dimensionZ]);
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleLinear()
-				.domain(valueExtent)
-				.range(colors)
-				.interpolate(d3.interpolateLab);
-		}
+		colorScale = d3.scaleLinear()
+			.domain(valueExtent)
+			.range(colors)
+			.interpolate(d3.interpolateLab);
 	};
 
 	/**

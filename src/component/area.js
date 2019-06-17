@@ -33,15 +33,15 @@ export default function() {
 
 		if (typeof xScale === "undefined") {
 			xScale = d3.scalePoint()
+				.domain(columnKeys)
 				.range([0, dimensionX]);
 		}
-		xScale.domain(columnKeys);
 
 		if (typeof yScale === "undefined") {
 			yScale = d3.scaleLinear()
+				.domain(valueExtent)
 				.range([0, dimensionY]);
 		}
-		yScale.domain(valueExtent);
 	};
 
 	/**
@@ -128,7 +128,7 @@ export default function() {
 			const areaTransition = area.transition().select("Shape");
 
 			areaTransition.select("IndexedFaceset")
-				.attr("coordIndex", (d) => d.coordIndex)
+				.attr("coordIndex", function(d) { console.log(d); return d.coordIndex; })
 				.select("Coordinate")
 				.attr("point", (d) => d.point);
 

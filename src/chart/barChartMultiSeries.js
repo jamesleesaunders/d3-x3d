@@ -55,32 +55,24 @@ export default function() {
 		const valueExtent = [0, valueMax];
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleBand()
-				.domain(columnKeys)
-				.rangeRound([0, dimensionX])
-				.padding(0.5);
-		}
+		xScale = d3.scaleBand()
+			.domain(columnKeys)
+			.rangeRound([0, dimensionX])
+			.padding(0.5);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
-				.domain(valueExtent)
-				.range([0, dimensionY])
-				.nice();
-		}
+		yScale = d3.scaleLinear()
+			.domain(valueExtent)
+			.range([0, dimensionY])
+			.nice();
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleBand()
-				.domain(rowKeys)
-				.range([0, dimensionZ])
-				.padding(0.7);
-		}
+		zScale = d3.scaleBand()
+			.domain(rowKeys)
+			.range([0, dimensionZ])
+			.padding(0.7);
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal()
-				.domain(columnKeys)
-				.range(colors);
-		}
+		colorScale = d3.scaleOrdinal()
+			.domain(columnKeys)
+			.range(colors);
 	};
 
 	/**
