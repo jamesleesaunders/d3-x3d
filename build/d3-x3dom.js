@@ -629,7 +629,7 @@ function componentArea () {
 			var shape = function shape(el) {
 				var shape = el.append("Shape");
 
-				// FIXME: x3dom cannot have empty IFS nodes
+				// FIXME: x3dom cannot have empty IFS nodes, we must to use .html() rather than .append() & .attr().
 				shape.html(function (d) {
 					return "\n\t\t\t\t\t<IndexedFaceset coordIndex='" + d.coordIndex + "' solid='false'>\n\t\t\t\t\t\t<Coordinate point='" + d.point + "' ></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<Material diffuseColor='" + color + "' transparency='" + transparency + "'></Material>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
 				});
@@ -649,7 +649,15 @@ function componentArea () {
 
 			area.enter().append("Group").classed("area", true).call(shape).merge(area);
 
-			area.transition().select("Shape").select("Appearance").select("Material").attr("diffuseColor", function (d) {
+			var areaTransition = area.transition().select("Shape");
+
+			areaTransition.select("IndexedFaceset").attr("coordIndex", function (d) {
+				return d.coordIndex;
+			}).select("Coordinate").attr("point", function (d) {
+				return d.point;
+			});
+
+			areaTransition.select("Appearance").select("Material").attr("diffuseColor", function (d) {
 				return d.color;
 			});
 
@@ -2925,22 +2933,14 @@ function componentRibbonMultiSeries () {
 		    dimensionZ = _dimensions.z;
 
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
-		}
+		xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
-		}
+		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
-		}
+		zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
 
-		if (typeof colorScale === "undefined") {
-			colorDomain = arrayUnique(colorDomain, rowKeys);
-			colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
-		}
+		colorDomain = arrayUnique(colorDomain, rowKeys);
+		colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
 	};
 
 	/**
@@ -5206,21 +5206,13 @@ function chartRibbonChartMultiSeries () {
 		    dimensionZ = _dimensions.z;
 
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
-		}
+		xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-		}
+		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
-		}
+		zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
-		}
+		colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
 	};
 
 	/**

@@ -42,8 +42,18 @@
       };
     });
 
+
+    var jim = d3.x3dom.dataTransform(data).summary();
+    var columnKeys = jim.columnKeys;
+    var valueMax = jim.valueMax;
+    var valueExtent = [0, valueMax];
+
+    var yScale = d3.scaleLinear()
+      .range([0, 20])
+      .domain(valueExtent);
+
     // Declare the bar chart component
-    var myChart = d3.x3dom.chart.areaChartMultiSeries();
+    var myChart = d3.x3dom.chart.areaChartMultiSeries().yScale(yScale);
 
     chartHolder.datum(data).call(myChart);
 
