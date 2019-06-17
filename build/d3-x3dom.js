@@ -1061,7 +1061,9 @@ function componentAxis () {
 			domain.exit().remove();
 
 			// Tick Lines
-			var ticks = element.selectAll(".tick").data(tickValues);
+			var ticks = element.selectAll(".tick").data(tickValues, function (d) {
+				return d;
+			});
 
 			var ticksEnter = ticks.enter().append("Transform").attr("class", "tick").attr("translation", function (t) {
 				return axisDirectionVector.map(function (a) {
@@ -1083,7 +1085,9 @@ function componentAxis () {
 
 			// Labels
 			if (tickFormat !== "") {
-				var labels = element.selectAll(".label").data(tickValues);
+				var labels = element.selectAll(".label").data(tickValues, function (d) {
+					return d;
+				});
 
 				var labelsEnter = ticks.enter().append("Transform").attr("class", "label").attr("translation", function (t) {
 					return axisDirectionVector.map(function (a) {
