@@ -960,7 +960,7 @@ function componentAxis () {
 	var tickArguments = [];
 	var tickValues = null;
 	var tickFormat = null;
-	var tickSize = 1;
+	var tickSize = 1.0;
 	var tickPadding = 1.5;
 
 	var axisDirectionVectors = {
@@ -1038,11 +1038,9 @@ function componentAxis () {
 			// Main Lines
 			var domain = element.selectAll(".domain").data([null]);
 
-			var domainEnter = domain.enter().append("Transform").attr("class", "domain").attr("rotation", axisRotationVector.join(" ")).attr("translation", axisDirectionVector.map(function (d) {
+			domain.enter().append("Transform").attr("class", "domain").attr("rotation", axisRotationVector.join(" ")).attr("translation", axisDirectionVector.map(function (d) {
 				return d * (range0 + range1) / 2;
-			}).join(" ")).append("Shape").call(makeSolid, color).append("Cylinder").attr("radius", 0.1).attr("height", range1 - range0);
-
-			domainEnter.merge(domain);
+			}).join(" ")).append("Shape").call(makeSolid, color).append("Cylinder").attr("radius", 0.1).attr("height", range1 - range0).merge(domain);
 
 			domain.exit().remove();
 
@@ -1051,15 +1049,13 @@ function componentAxis () {
 				return d;
 			});
 
-			var ticksEnter = ticks.enter().append("Transform").attr("class", "tick").attr("translation", function (t) {
+			ticks.enter().append("Transform").attr("class", "tick").attr("translation", function (t) {
 				return axisDirectionVector.map(function (a) {
 					return scale(t) * a;
 				}).join(" ");
 			}).append("Transform").attr("translation", tickDirectionVector.map(function (d) {
 				return d * tickSize / 2;
-			}).join(" ")).attr("rotation", tickRotationVector.join(" ")).append("Shape").call(makeSolid, "#d3d3d3").append("Cylinder").attr("radius", 0.05).attr("height", tickSize);
-
-			ticksEnter.merge(ticks);
+			}).join(" ")).attr("rotation", tickRotationVector.join(" ")).append("Shape").call(makeSolid, "#d3d3d3").append("Cylinder").attr("radius", 0.05).attr("height", tickSize).merge(ticks);
 
 			ticks.transition().attr("translation", function (t) {
 				return axisDirectionVector.map(function (a) {
@@ -1089,10 +1085,10 @@ function componentAxis () {
 					return axisDirectionVector.map(function (a) {
 						return scale(t) * a;
 					}).join(" ");
-				}).select("transform").attr("translation", tickDirectionVector.map(function (d, i) {
+				}).select("Transform").attr("translation", tickDirectionVector.map(function (d, i) {
 					return labelInset * d * tickPadding + (labelInset + 1) / 2 * (range1 - range0) * tickDirectionVector[i];
 				})).on("start", function () {
-					d3.select(this).select("billboard").select("shape").select("text").attr("string", tickFormat);
+					d3.select(this).select("Billboard").select("Shape").select("Text").attr("string", tickFormat);
 				});
 
 				labels.exit().remove();
@@ -1273,7 +1269,6 @@ function componentAxisThreePlane () {
 			var element = d3.select(this).classed(classed, true);
 
 			var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
-
 			element.selectAll("group").data(layers).enter().append("Group").attr("class", function (d) {
 				return d;
 			});

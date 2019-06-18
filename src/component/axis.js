@@ -21,7 +21,7 @@ export default function() {
 	let tickArguments = [];
 	let tickValues = null;
 	let tickFormat = null;
-	let tickSize = 1;
+	let tickSize = 1.0;
 	let tickPadding = 1.5;
 
 	const axisDirectionVectors = {
@@ -101,7 +101,7 @@ export default function() {
 			const domain = element.selectAll(".domain")
 				.data([null]);
 
-			const domainEnter = domain.enter()
+			domain.enter()
 				.append("Transform")
 				.attr("class", "domain")
 				.attr("rotation", axisRotationVector.join(" "))
@@ -110,17 +110,17 @@ export default function() {
 				.call(makeSolid, color)
 				.append("Cylinder")
 				.attr("radius", 0.1)
-				.attr("height", range1 - range0);
+				.attr("height", range1 - range0)
+				.merge(domain);
 
-			domainEnter.merge(domain);
-
-			domain.exit().remove();
+			domain.exit()
+				.remove();
 
 			// Tick Lines
 			const ticks = element.selectAll(".tick")
 				.data(tickValues, (d) => d);
 
-			const ticksEnter = ticks.enter()
+			ticks.enter()
 				.append("Transform")
 				.attr("class", "tick")
 				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
@@ -131,9 +131,8 @@ export default function() {
 				.call(makeSolid, "#d3d3d3")
 				.append("Cylinder")
 				.attr("radius", 0.05)
-				.attr("height", tickSize);
-
-			ticksEnter.merge(ticks);
+				.attr("height", tickSize)
+				.merge(ticks);
 
 			ticks.transition()
 				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")));
@@ -168,13 +167,13 @@ export default function() {
 
 				labels.transition()
 					.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
-					.select("transform")
+					.select("Transform")
 					.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * (range1 - range0) * tickDirectionVector[i])))
 					.on("start", function() {
 						d3.select(this)
-							.select("billboard")
-							.select("shape")
-							.select("text")
+							.select("Billboard")
+							.select("Shape")
+							.select("Text")
 							.attr("string", tickFormat);
 					});
 
