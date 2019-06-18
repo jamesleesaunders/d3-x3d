@@ -19,32 +19,9 @@ export default function() {
 	let yScale;
 	let zScale;
 	let colorScale;
-	let colorDomain = [];
 
 	/* Components */
 	const bars = componentBars();
-
-	/**
-	 * Unique Array
-	 *
-	 * @param {array} array1
-	 * @param {array} array2
-	 * @returns {array}
-	 */
-	const arrayUnique = function(array1, array2) {
-		let array = array1.concat(array2);
-
-		let a = array.concat();
-		for (let i = 0; i < a.length; ++i) {
-			for (let j = i + 1; j < a.length; ++j) {
-				if (a[i] === a[j]) {
-					a.splice(j--, 1);
-				}
-			}
-		}
-
-		return a;
-	};
 
 	/**
 	 * Initialise Data and Scales
@@ -57,32 +34,24 @@ export default function() {
 		const valueExtent = [0, valueMax];
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
-		// Adds new colours
-		colorDomain = arrayUnique(colorDomain, rowKeys);
+		xScale = d3.scaleBand()
+			.domain(columnKeys)
+			.rangeRound([0, dimensionX])
+			.padding(0.5);
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scalePoint()
-				.range([0, dimensionX]).padding(0.5);
-		}
-		xScale.domain(columnKeys);
+		yScale = d3.scaleLinear()
+			.domain(valueExtent)
+			.range([0, dimensionY])
+			.nice();
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
-				.range([0, dimensionY]).nice();
-		}
-		yScale.domain(valueExtent);
+		zScale = d3.scaleBand()
+			.domain(rowKeys)
+			.range([0, dimensionZ])
+			.padding(0.7);
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleBand()
-				.range([0, dimensionZ]).padding(0.7);
-		}
-		zScale.domain(rowKeys);
-
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal()
-				.range(colors);
-		}
-		colorScale.domain(colorDomain);
+		colorScale = d3.scaleOrdinal()
+			.domain(columnKeys)
+			.range(colors);
 	};
 
 	/**

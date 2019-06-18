@@ -794,29 +794,15 @@ function componentAreaMultiSeries () {
 		    dimensionY = _dimensions.y,
 		    dimensionZ = _dimensions.z;
 
-		// Adds new colours
+
+		xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
+
+		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+
+		zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
 
 		colorDomain = arrayUnique(colorDomain, rowKeys);
-
-		if (typeof xScale === "undefined") {
-			xScale = d3.scalePoint().range([0, dimensionX]);
-		}
-		xScale.domain(columnKeys);
-
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().range([0, dimensionY]);
-		}
-		yScale.domain(valueExtent);
-
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleBand().range([0, dimensionZ]).padding(0.4);
-		}
-		zScale.domain(rowKeys);
-
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal().range(colors);
-		}
-		colorScale.domain(colorDomain);
+		colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
 	};
 
 	/**
@@ -1686,32 +1672,9 @@ function componentBarsMultiSeries () {
 	var yScale = void 0;
 	var zScale = void 0;
 	var colorScale = void 0;
-	var colorDomain = [];
 
 	/* Components */
 	var bars = componentBars();
-
-	/**
-  * Unique Array
-  *
-  * @param {array} array1
-  * @param {array} array2
-  * @returns {array}
-  */
-	var arrayUnique = function arrayUnique(array1, array2) {
-		var array = array1.concat(array2);
-
-		var a = array.concat();
-		for (var i = 0; i < a.length; ++i) {
-			for (var j = i + 1; j < a.length; ++j) {
-				if (a[i] === a[j]) {
-					a.splice(j--, 1);
-				}
-			}
-		}
-
-		return a;
-	};
 
 	/**
   * Initialise Data and Scales
@@ -1731,29 +1694,14 @@ function componentBarsMultiSeries () {
 		    dimensionY = _dimensions.y,
 		    dimensionZ = _dimensions.z;
 
-		// Adds new colours
 
-		colorDomain = arrayUnique(colorDomain, rowKeys);
+		xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scalePoint().range([0, dimensionX]).padding(0.5);
-		}
-		xScale.domain(columnKeys);
+		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().range([0, dimensionY]).nice();
-		}
-		yScale.domain(valueExtent);
+		zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.7);
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleBand().range([0, dimensionZ]).padding(0.7);
-		}
-		zScale.domain(rowKeys);
-
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal().range(colors);
-		}
-		colorScale.domain(colorDomain);
+		colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
 	};
 
 	/**
@@ -2138,34 +2086,17 @@ function componentBubblesMultiSeries () {
 		    dimensionY = _dimensions.y,
 		    dimensionZ = _dimensions.z;
 
-		// Adds new colours
+
+		xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
+
+		yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
+
+		zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
 
 		colorDomain = arrayUnique(colorDomain, rowKeys);
+		colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear().range([0, dimensionX]);
-		}
-		xScale.domain([0, maxX]);
-
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().range([0, dimensionY]);
-		}
-		yScale.domain([0, maxY]);
-
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear().range([0, dimensionZ]);
-		}
-		zScale.domain([0, maxZ]);
-
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal().range(colors);
-		}
-		colorScale.domain(colorDomain);
-
-		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear().range(sizeDomain);
-		}
-		sizeScale.domain(valueExtent);
+		sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeDomain);
 	};
 
 	/**
@@ -2971,29 +2902,15 @@ function componentRibbonMultiSeries () {
 		    dimensionY = _dimensions.y,
 		    dimensionZ = _dimensions.z;
 
-		// Adds new colours
+
+		xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
+
+		yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+
+		zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
 
 		colorDomain = arrayUnique(colorDomain, rowKeys);
-
-		if (typeof xScale === "undefined") {
-			xScale = d3.scalePoint().range([0, dimensionX]);
-		}
-		xScale.domain(columnKeys);
-
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear().range([0, dimensionY]);
-		}
-		yScale.domain(valueExtent);
-
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleBand().range([0, dimensionZ]).padding(0.4);
-		}
-		zScale.domain(rowKeys);
-
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal().range(colors);
-		}
-		colorScale.domain(colorDomain);
+		colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
 	};
 
 	/**

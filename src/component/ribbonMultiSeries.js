@@ -58,32 +58,23 @@ export default function() {
 		const valueExtent = [0, valueMax];
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
-		// Adds new colours
+		xScale = d3.scalePoint()
+			.domain(columnKeys)
+			.range([0, dimensionX]);
+
+		yScale = d3.scaleLinear()
+			.domain(valueExtent)
+			.range([0, dimensionY]);
+
+		zScale = d3.scaleBand()
+			.domain(rowKeys)
+			.range([0, dimensionZ])
+			.padding(0.4);
+
 		colorDomain = arrayUnique(colorDomain, rowKeys);
-
-		if (typeof xScale === "undefined") {
-			xScale = d3.scalePoint()
-				.range([0, dimensionX]);
-		}
-		xScale.domain(columnKeys);
-
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
-				.range([0, dimensionY]);
-		}
-		yScale.domain(valueExtent);
-
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleBand()
-				.range([0, dimensionZ]).padding(0.4);
-		}
-		zScale.domain(rowKeys);
-
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal()
-				.range(colors);
-		}
-		colorScale.domain(colorDomain);
+		colorScale = d3.scaleOrdinal()
+			.domain(colorDomain)
+			.range(colors);
 	};
 
 	/**
