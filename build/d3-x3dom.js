@@ -650,7 +650,7 @@ function componentArea () {
 			var areaTransition = area.transition().select("Shape");
 
 			areaTransition.select("IndexedFaceset").attr("coordIndex", function (d) {
-				console.log(d);return d.coordIndex;
+				return d.coordIndex;
 			}).select("Coordinate").attr("point", function (d) {
 				return d.point;
 			});

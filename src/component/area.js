@@ -128,7 +128,7 @@ export default function() {
 			const areaTransition = area.transition().select("Shape");
 
 			areaTransition.select("IndexedFaceset")
-				.attr("coordIndex", function(d) { console.log(d); return d.coordIndex; })
+				.attr("coordIndex", (d) => d.coordIndex)
 				.select("Coordinate")
 				.attr("point", (d) => d.point);
 
