@@ -487,22 +487,20 @@ function dataTransform(data) {
 	};
 
 	/**
-  * Smooth Data
+  * Smooth Data (Basic Version)
   *
   * Returns a copy of the input data series which is subsampled into a 100 samples,
   * and has the smoothed values based on a provided d3.curve function.
   *
-  * @param curve
   * @returns {{values: *, key: *}}
   */
-	var smoothV2 = function smoothV2(curve) {
-		var epsilon = 0.00001;
+	var smoothBasic = function smoothBasic() {
 		var samples = 100;
 
 		var values = data.values.map(function (d) {
 			return d.value;
 		});
-		var valuePolator = interpolateCurve(values, curve, epsilon, samples);
+		var splinePolator = d3.interpolateBasis(values);
 
 		var keyPolator = function keyPolator(t) {
 			return Number((t * samples).toFixed(0)) + 1;
@@ -515,132 +513,16 @@ function dataTransform(data) {
 			values: sampler.map(function (t) {
 				return {
 					key: keyPolator(t),
-					value: valuePolator(t).y
+					value: splinePolator(t)
 				};
 			})
-		};
-	};
-
-	/**
-  * Interpolate Curve
-  *
-  * Returns an interpolator function similar to d3.interpoleBasis(values).
-  * The returned function expects input in the range [0, 1] and returns a smoothed value. For example:
-  *
-  * - interpolateCurve(values)(0) returns the the first value.
-  *
-  * - interpolateCurve uses curvePolator(points) which returns a similar interpolator function.
-  *   However, the returned function works in the arbitrary domain defined by the provided points
-  *   and expects an input x in this domain.
-  *
-  * - curvePolator uses svgPathInterpolator(svgpath) which returns a similar interpolator function.
-  *   However, the returned function is constructed based on an SVG path string.
-  *   d3.line(points) outputs such SVG path strings.
-  *
-  * @private
-  *
-  * @param values
-  * @param curve
-  * @param epsilon
-  * @param samples
-  *
-  * @returns {*}
-  */
-	var interpolateCurve = function interpolateCurve(values, curve, epsilon, samples) {
-		var length = values.length;
-		var xrange = d3.range(length).map(function (d, i) {
-			return i * (1 / (length - 1));
-		});
-		var points = values.map(function (v, i) {
-			return [xrange[i], v];
-		});
-
-		return curvePolator(points, curve, epsilon, samples);
-	};
-
-	/**
-  * Curve Polator
-  *
-  * @private
-  *
-  * @param points
-  * @param curve
-  * @param epsilon
-  * @param samples
-  *
-  * @returns {*}
-  */
-	var curvePolator = function curvePolator(points, curve, epsilon, samples) {
-		var path = d3.line().curve(curve)(points);
-
-		return svgPathInterpolator(path, epsilon, samples);
-	};
-
-	/**
-  * SVG Path Interpolator
-  *
-  * @private
-  *
-  * @param path
-  * @param epsilon
-  * @param samples
-  *
-  * @returns {interpolator}
-  */
-	var svgPathInterpolator = function svgPathInterpolator(path, epsilon, samples) {
-		// Create SVG Path
-		path = path || "M0,0L1,1";
-		var area = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-		area.innerHTML = '<path d=\'' + path + '\'></path>';
-		var svgpath = area.querySelector('path');
-		svgpath.setAttribute('d', path);
-
-		// Calculate lengths and max points
-		var totalLength = svgpath.getTotalLength();
-		var minPoint = svgpath.getPointAtLength(0);
-		var maxPoint = svgpath.getPointAtLength(totalLength);
-		var reverse = maxPoint.x < minPoint.x;
-		var range = reverse ? [maxPoint, minPoint] : [minPoint, maxPoint];
-		reverse = reverse ? -1 : 1;
-
-		// Return function
-		return function (x) {
-			var targetX = x === 0 ? 0 : x || minPoint.x; // Check for 0 and null/undefined
-			if (targetX < range[0].x) return range[0]; // Clamp
-			if (targetX > range[1].x) return range[1];
-
-			function estimateLength(l, mn, mx) {
-				var delta = svgpath.getPointAtLength(l).x - targetX;
-				var nextDelta = 0;
-				var iter = 0;
-				// console.log(delta, targetX, epsilon);
-				while (Math.abs(delta) > epsilon && iter < samples) {
-					iter++;
-					// console.log(iter, Math.abs(delta) > epsilon);
-					if (reverse * delta < 0) {
-						mn = l;
-						l = (l + mx) / 2;
-					} else {
-						mx = l;
-						l = (mn + l) / 2;
-					}
-					nextDelta = svgpath.getPointAtLength(l).x - targetX;
-					if (Math.abs(Math.abs(delta) - Math.abs(nextDelta)) < epsilon) break; // Not improving, targetX may be in a gap
-					delta = nextDelta;
-				}
-
-				return l;
-			}
-
-			var estimatedLength = estimateLength(totalLength / 2, 0, totalLength);
-			return svgpath.getPointAtLength(estimatedLength);
 		};
 	};
 
 	return {
 		summary: summary,
 		rotate: rotate,
-		smooth: smoothV2
+		smooth: smoothBasic
 	};
 }
 
@@ -699,6 +581,10 @@ function componentArea () {
 		selection.each(function (data) {
 			init(data);
 
+			var element = d3.select(this).classed(classed, true).attr("id", function (d) {
+				return d.key;
+			});
+
 			var areaData = function areaData(data) {
 				var dimensionX = dimensions.x;
 
@@ -745,17 +631,13 @@ function componentArea () {
 			var shape = function shape(el) {
 				var shape = el.append("Shape");
 
-				// FIXME: x3dom cannot have empty IFS nodes
+				// FIXME: x3dom cannot have empty IFS nodes, we must to use .html() rather than .append() & .attr().
 				shape.html(function (d) {
 					return "\n\t\t\t\t\t<IndexedFaceset coordIndex='" + d.coordIndex + "' solid='false'>\n\t\t\t\t\t\t<Coordinate point='" + d.point + "' ></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<Material diffuseColor='" + color + "' transparency='" + transparency + "'></Material>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
 				});
 
 				return shape;
 			};
-
-			var element = d3.select(this).classed(classed, true).attr("id", function (d) {
-				return d.key;
-			});
 
 			var area = element.selectAll(".area").data(function (d) {
 				return areaData(d);
@@ -765,7 +647,15 @@ function componentArea () {
 
 			area.enter().append("Group").classed("area", true).call(shape).merge(area);
 
-			area.transition().select("Shape").select("Appearance").select("Material").attr("diffuseColor", function (d) {
+			var areaTransition = area.transition().select("Shape");
+
+			areaTransition.select("IndexedFaceset").attr("coordIndex", function (d) {
+				console.log(d);return d.coordIndex;
+			}).select("Coordinate").attr("point", function (d) {
+				return d.point;
+			});
+
+			areaTransition.select("Appearance").select("Material").attr("diffuseColor", function (d) {
 				return d.color;
 			});
 
@@ -1157,7 +1047,9 @@ function componentAxis () {
 			domain.exit().remove();
 
 			// Tick Lines
-			var ticks = element.selectAll(".tick").data(tickValues);
+			var ticks = element.selectAll(".tick").data(tickValues, function (d) {
+				return d;
+			});
 
 			var ticksEnter = ticks.enter().append("Transform").attr("class", "tick").attr("translation", function (t) {
 				return axisDirectionVector.map(function (a) {
@@ -1179,7 +1071,9 @@ function componentAxis () {
 
 			// Labels
 			if (tickFormat !== "") {
-				var labels = element.selectAll(".label").data(tickValues);
+				var labels = element.selectAll(".label").data(tickValues, function (d) {
+					return d;
+				});
 
 				var labelsEnter = ticks.enter().append("Transform").attr("class", "label").attr("translation", function (t) {
 					return axisDirectionVector.map(function (a) {

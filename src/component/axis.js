@@ -118,7 +118,7 @@ export default function() {
 
 			// Tick Lines
 			const ticks = element.selectAll(".tick")
-				.data(tickValues);
+				.data(tickValues, (d) => d);
 
 			const ticksEnter = ticks.enter()
 				.append("Transform")
@@ -144,7 +144,7 @@ export default function() {
 			// Labels
 			if (tickFormat !== "") {
 				const labels = element.selectAll(".label")
-					.data(tickValues);
+					.data(tickValues, (d) => d);
 
 				const labelsEnter = ticks.enter()
 					.append("Transform")

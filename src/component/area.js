@@ -55,7 +55,11 @@ export default function() {
 		selection.each(function(data) {
 			init(data);
 
-			let areaData = function(data) {
+			const element = d3.select(this)
+				.classed(classed, true)
+				.attr("id", (d) => d.key);
+
+			const areaData = function(data) {
 				const dimensionX = dimensions.x;
 
 				if (smoothed) {
@@ -99,7 +103,7 @@ export default function() {
 			let shape = function(el) {
 				const shape = el.append("Shape");
 
-				// FIXME: x3dom cannot have empty IFS nodes
+				// FIXME: x3dom cannot have empty IFS nodes, we must to use .html() rather than .append() & .attr().
 				shape.html((d) => `
 					<IndexedFaceset coordIndex='${d.coordIndex}' solid='false'>
 						<Coordinate point='${d.point}' ></Coordinate>
@@ -112,11 +116,7 @@ export default function() {
 				return shape;
 			};
 
-			let element = d3.select(this)
-				.classed(classed, true)
-				.attr("id", (d) => d.key);
-
-			let area = element.selectAll(".area")
+			const area = element.selectAll(".area")
 				.data((d) => areaData(d), (d) => d.key);
 
 			area.enter()
@@ -125,13 +125,19 @@ export default function() {
 				.call(shape)
 				.merge(area);
 
-			area.transition()
-				.select("Shape")
-				.select("Appearance")
+			const areaTransition = area.transition().select("Shape");
+
+			areaTransition.select("IndexedFaceset")
+				.attr("coordIndex", function(d) { console.log(d); return d.coordIndex; })
+				.select("Coordinate")
+				.attr("point", (d) => d.point);
+
+			areaTransition.select("Appearance")
 				.select("Material")
 				.attr("diffuseColor", (d) => d.color);
 
-			area.exit().remove();
+			area.exit()
+				.remove();
 		});
 	};
 
