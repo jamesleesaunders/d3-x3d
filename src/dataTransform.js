@@ -415,16 +415,16 @@ export default function dataTransform(data) {
 	 * @returns {{values: *, key: *}}
 	 */
 	const smoothBasic = function() {
-		const maxIter = 100;
+		const samples = 100;
 
-		const vals = data.values.map((d) => d.value);
-		const splinePolator = d3.interpolateBasis(vals);
+		const values = data.values.map((d) => d.value);
+		const splinePolator = d3.interpolateBasis(values);
 
 		const keyPolator = function(t) {
-			return Number((t * maxIter).toFixed(0)) + 1;
+			return Number((t * samples).toFixed(0)) + 1;
 		};
 
-		const sampler = d3.range(0, 1, 1 / maxIter);
+		const sampler = d3.range(0, 1, 1 / samples);
 
 		return {
 			key: data.key,

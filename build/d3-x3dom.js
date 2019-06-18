@@ -495,18 +495,18 @@ function dataTransform(data) {
   * @returns {{values: *, key: *}}
   */
 	var smoothBasic = function smoothBasic() {
-		var maxIter = 100;
+		var samples = 100;
 
-		var vals = data.values.map(function (d) {
+		var values = data.values.map(function (d) {
 			return d.value;
 		});
-		var splinePolator = d3.interpolateBasis(vals);
+		var splinePolator = d3.interpolateBasis(values);
 
 		var keyPolator = function keyPolator(t) {
-			return Number((t * maxIter).toFixed(0)) + 1;
+			return Number((t * samples).toFixed(0)) + 1;
 		};
 
-		var sampler = d3.range(0, 1, 1 / maxIter);
+		var sampler = d3.range(0, 1, 1 / samples);
 
 		return {
 			key: data.key,
