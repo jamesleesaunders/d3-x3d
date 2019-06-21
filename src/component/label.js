@@ -32,12 +32,11 @@ export default function() {
 				.classed(classed, true)
 				.attr("id", (d) => d.key);
 
-			const makeSolid = (selection, color) => {
-				selection
-					.append("Appearance")
+			const makeSolid = (el, color) => {
+				el.append("Appearance")
 					.append("Material")
 					.attr("diffuseColor", color || "black");
-				return selection;
+				return el;
 			};
 
 			const labelSelect = element.selectAll(".label")

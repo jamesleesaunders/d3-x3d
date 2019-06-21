@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import { dispatch } from "../events";
 
 /**
  * Reusable 3D Axis Component
@@ -71,13 +72,6 @@ export default function() {
 			const element = d3.select(this)
 				.classed(classed, true);
 
-			const makeSolid = (shape, color) => {
-				shape.append("Appearance")
-					.append("Material")
-					.attr("diffuseColor", color || "black");
-				return shape;
-			};
-
 			const range = scale.range();
 			const range0 = range[0];
 			const range1 = range[range.length - 1];
@@ -96,6 +90,38 @@ export default function() {
 
 			const tickFormatDefault = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : (d) => d;
 			tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
+
+
+			const makeSolid = (el, color) => {
+				el.append("Appearance")
+					.append("Material")
+					.attr("diffuseColor", color || "black");
+				return el;
+			};
+
+			const shape = (el) => {
+				const shape = el.append("Shape");
+
+				/*
+				// FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
+				shape.append("Appearance")
+					.append("Material")
+					.attr("diffuseColor", "#d3d3d3");
+
+				shape.append("Cylinder")
+					.attr("radius", 0.05)
+					.attr("height", tickSize);
+				*/
+
+				shape.html(() => {
+					let appearance = `<Appearance><Material diffuseColor="#d3d3d3"></Material></Appearance>`;
+					let cylinder = `<Cylinder radius="0.05" height="${tickSize}"></Cylinder>`;
+
+					return appearance + cylinder;
+				});
+
+				return shape;
+			};
 
 			// Main Lines
 			const domain = element.selectAll(".domain")
@@ -127,11 +153,7 @@ export default function() {
 				.append("Transform")
 				.attr("translation", tickDirectionVector.map((d) => (d * tickSize / 2)).join(" "))
 				.attr("rotation", tickRotationVector.join(" "))
-				.append("Shape")
-				.call(makeSolid, "#d3d3d3")
-				.append("Cylinder")
-				.attr("radius", 0.05)
-				.attr("height", tickSize)
+				.call(shape)
 				.merge(ticks);
 
 			ticks.transition()
