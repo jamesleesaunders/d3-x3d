@@ -39,7 +39,6 @@ export default function() {
 				.classed(classed, true);
 
 			const layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
-
 			element.selectAll("group")
 				.data(layers)
 				.enter()

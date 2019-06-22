@@ -100,13 +100,13 @@ export default function() {
 				return [data];
 			};
 
-			let shape = function(el) {
+			const shape = (el) => {
 				const shape = el.append("Shape");
 
 				// FIXME: x3dom cannot have empty IFS nodes, we must to use .html() rather than .append() & .attr().
 				shape.html((d) => `
 					<IndexedFaceset coordIndex='${d.coordIndex}' solid='false'>
-						<Coordinate point='${d.point}' ></Coordinate>
+						<Coordinate point='${d.point}'></Coordinate>
 					</IndexedFaceset>
 					<Appearance>
 						<Material diffuseColor='${color}' transparency='${transparency}'></Material>
@@ -128,7 +128,7 @@ export default function() {
 			const areaTransition = area.transition().select("Shape");
 
 			areaTransition.select("IndexedFaceset")
-				.attr("coordIndex", function(d) { console.log(d); return d.coordIndex; })
+				.attr("coordIndex", (d) => d.coordIndex)
 				.select("Coordinate")
 				.attr("point", (d) => d.point);
 

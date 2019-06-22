@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.3.2";
+var version = "1.3.3";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -633,7 +633,7 @@ function componentArea () {
 
 				// FIXME: x3dom cannot have empty IFS nodes, we must to use .html() rather than .append() & .attr().
 				shape.html(function (d) {
-					return "\n\t\t\t\t\t<IndexedFaceset coordIndex='" + d.coordIndex + "' solid='false'>\n\t\t\t\t\t\t<Coordinate point='" + d.point + "' ></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<Material diffuseColor='" + color + "' transparency='" + transparency + "'></Material>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
+					return "\n\t\t\t\t\t<IndexedFaceset coordIndex='" + d.coordIndex + "' solid='false'>\n\t\t\t\t\t\t<Coordinate point='" + d.point + "'></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<Material diffuseColor='" + color + "' transparency='" + transparency + "'></Material>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
 				});
 
 				return shape;
@@ -650,7 +650,7 @@ function componentArea () {
 			var areaTransition = area.transition().select("Shape");
 
 			areaTransition.select("IndexedFaceset").attr("coordIndex", function (d) {
-				console.log(d);return d.coordIndex;
+				return d.coordIndex;
 			}).select("Coordinate").attr("point", function (d) {
 				return d.point;
 			});
@@ -940,6 +940,115 @@ function componentAreaMultiSeries () {
 }
 
 /**
+ * Custom Dispatch Events
+ *
+ * @type {d3.dispatch}
+ */
+var dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
+
+/**
+ * Forward X3DOM Event to D3
+ *
+ * In X3DOM, it is the canvas which captures onclick events, therefore defining a D3 event handler
+ * on an single X3DOM element does not work. A workaround is to define an onclick handler which then
+ * forwards the call to the D3 'click' event handler with the event.
+ * Note: X3DOM and D3 event members slightly differ, so d3.mouse() function does not work.
+ *
+ * @param {event} event
+ * @see https://bl.ocks.org/hlvoorhees/5376764
+ */
+function forwardEvent(event) {
+	var type = event.type;
+	var target = d3.select(event.target);
+	target.on(type)(event);
+}
+
+/**
+ * Show Alert With Event Coordinate
+ *
+ * @param {event} event
+ * @returns {{canvas: {x: (*|number), y: (*|number)}, world: {x: *, y: *, z: *}, page: {x: number, y: number}}}
+ */
+function getEventCoordinates(event) {
+	var pagePoint = getEventPagePoint(event);
+
+	return {
+		world: { x: event.hitPnt[0], y: event.hitPnt[1], z: event.hitPnt[2] },
+		canvas: { x: event.layerX, y: event.layerY },
+		page: { x: pagePoint.x, y: pagePoint.y }
+	};
+}
+
+/**
+ * Inverse of coordinate transform defined by function mousePosition(evt) in x3dom.js
+ *
+ * @param {event} event
+ * @returns {{x: number, y: number}}
+ */
+function getEventPagePoint(event) {
+	var pageX = -1;
+	var pageY = -1;
+
+	var convertPoint = window.webkitConvertPointFromPageToNode;
+
+	if ("getBoundingClientRect" in document.documentElement) {
+		var holder = getX3domHolder(event);
+		var computedStyle = document.defaultView.getComputedStyle(holder, null);
+		var paddingLeft = parseFloat(computedStyle.getPropertyValue('padding-left'));
+		var borderLeftWidth = parseFloat(computedStyle.getPropertyValue('border-left-width'));
+		var paddingTop = parseFloat(computedStyle.getPropertyValue('padding-top'));
+		var borderTopWidth = parseFloat(computedStyle.getPropertyValue('border-top-width'));
+		var box = holder.getBoundingClientRect();
+		var scrolLeft = window.pageXOffset || document.body.scrollLeft;
+		var scrollTop = window.pageYOffset || document.body.scrollTop;
+		pageX = Math.round(event.layerX + (box.left + paddingLeft + borderLeftWidth + scrolLeft));
+		pageY = Math.round(event.layerY + (box.top + paddingTop + borderTopWidth + scrollTop));
+	} else if (convertPoint) {
+		var pagePoint = convertPoint(event.target, new WebKitPoint(0, 0));
+		pageX = Math.round(pagePoint.x);
+		pageY = Math.round(pagePoint.y);
+	} else {
+		x3dom.debug.logError('Unable to find getBoundingClientRect or webkitConvertPointFromPageToNode');
+	}
+
+	return { x: pageX, y: pageY };
+}
+
+/**
+ * Return the x3d Parent Holder
+ *
+ * Find clicked element, walk up DOM until we find the parent x3d.
+ * Then return the x3d's parent.
+ *
+ * @param event
+ * @returns {*}
+ */
+function getX3domHolder(event) {
+	var target = d3.select(event.target);
+
+	var x3d = target.select(function () {
+		var el = this;
+		while (el.nodeName.toLowerCase() !== "x3d") {
+			el = el.parentElement;
+		}
+
+		return el;
+	});
+
+	return x3d.select(function () {
+		return this.parentNode;
+	}).node();
+}
+
+var events = Object.freeze({
+	dispatch: dispatch,
+	forwardEvent: forwardEvent,
+	getEventCoordinates: getEventCoordinates,
+	getEventPagePoint: getEventPagePoint,
+	getX3domHolder: getX3domHolder
+});
+
+/**
  * Reusable 3D Axis Component
  *
  * @module
@@ -960,7 +1069,7 @@ function componentAxis () {
 	var tickArguments = [];
 	var tickValues = null;
 	var tickFormat = null;
-	var tickSize = 1;
+	var tickSize = 1.0;
 	var tickPadding = 1.5;
 
 	var axisDirectionVectors = {
@@ -1009,11 +1118,6 @@ function componentAxis () {
 
 			var element = d3.select(this).classed(classed, true);
 
-			var makeSolid = function makeSolid(shape, color) {
-				shape.append("Appearance").append("Material").attr("diffuseColor", color || "black");
-				return shape;
-			};
-
 			var range = scale.range();
 			var range0 = range[0];
 			var range1 = range[range.length - 1];
@@ -1035,14 +1139,40 @@ function componentAxis () {
 			};
 			tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
 
+			var shape = function shape(el, radius, height, color) {
+				var shape = el.append("Shape");
+
+				/*
+    // FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
+    shape.append("Appearance")
+    	.append("Material")
+    	.attr("diffuseColor", color);
+    	shape.append("Cylinder")
+    	.attr("radius", radius)
+    	.attr("height", height);
+    */
+
+				shape.html(function () {
+					var cylinder = "<Cylinder radius=\"" + radius + "\" height=\"" + height + "\"></Cylinder>";
+					var appearance = "<Appearance><Material diffuseColor=\"" + color + "\"></Material></Appearance>";
+
+					return appearance + cylinder;
+				});
+
+				return shape;
+			};
+
+			var makeSolid = function makeSolid(el, color) {
+				el.append("Appearance").append("Material").attr("diffuseColor", color || "black");
+				return el;
+			};
+
 			// Main Lines
 			var domain = element.selectAll(".domain").data([null]);
 
-			var domainEnter = domain.enter().append("Transform").attr("class", "domain").attr("rotation", axisRotationVector.join(" ")).attr("translation", axisDirectionVector.map(function (d) {
+			domain.enter().append("Transform").attr("class", "domain").attr("rotation", axisRotationVector.join(" ")).attr("translation", axisDirectionVector.map(function (d) {
 				return d * (range0 + range1) / 2;
-			}).join(" ")).append("Shape").call(makeSolid, color).append("Cylinder").attr("radius", 0.1).attr("height", range1 - range0);
-
-			domainEnter.merge(domain);
+			}).join(" ")).call(shape, 0.1, range1 - range0, color).merge(domain);
 
 			domain.exit().remove();
 
@@ -1051,15 +1181,13 @@ function componentAxis () {
 				return d;
 			});
 
-			var ticksEnter = ticks.enter().append("Transform").attr("class", "tick").attr("translation", function (t) {
+			ticks.enter().append("Transform").attr("class", "tick").attr("translation", function (t) {
 				return axisDirectionVector.map(function (a) {
 					return scale(t) * a;
 				}).join(" ");
 			}).append("Transform").attr("translation", tickDirectionVector.map(function (d) {
 				return d * tickSize / 2;
-			}).join(" ")).attr("rotation", tickRotationVector.join(" ")).append("Shape").call(makeSolid, "#d3d3d3").append("Cylinder").attr("radius", 0.05).attr("height", tickSize);
-
-			ticksEnter.merge(ticks);
+			}).join(" ")).attr("rotation", tickRotationVector.join(" ")).call(shape, 0.05, tickSize, "#d3d3d3").merge(ticks);
 
 			ticks.transition().attr("translation", function (t) {
 				return axisDirectionVector.map(function (a) {
@@ -1089,10 +1217,10 @@ function componentAxis () {
 					return axisDirectionVector.map(function (a) {
 						return scale(t) * a;
 					}).join(" ");
-				}).select("transform").attr("translation", tickDirectionVector.map(function (d, i) {
+				}).select("Transform").attr("translation", tickDirectionVector.map(function (d, i) {
 					return labelInset * d * tickPadding + (labelInset + 1) / 2 * (range1 - range0) * tickDirectionVector[i];
 				})).on("start", function () {
-					d3.select(this).select("billboard").select("shape").select("text").attr("string", tickFormat);
+					d3.select(this).select("Billboard").select("Shape").select("Text").attr("string", tickFormat);
 				});
 
 				labels.exit().remove();
@@ -1273,7 +1401,6 @@ function componentAxisThreePlane () {
 			var element = d3.select(this).classed(classed, true);
 
 			var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
-
 			element.selectAll("group").data(layers).enter().append("Group").attr("class", function (d) {
 				return d;
 			});
@@ -1370,115 +1497,6 @@ function componentAxisThreePlane () {
 
 	return my;
 }
-
-/**
- * Custom Dispatch Events
- *
- * @type {d3.dispatch}
- */
-var dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
-
-/**
- * Forward X3DOM Event to D3
- *
- * In X3DOM, it is the canvas which captures onclick events, therefore defining a D3 event handler
- * on an single X3DOM element does not work. A workaround is to define an onclick handler which then
- * forwards the call to the D3 'click' event handler with the event.
- * Note: X3DOM and D3 event members slightly differ, so d3.mouse() function does not work.
- *
- * @param {event} event
- * @see https://bl.ocks.org/hlvoorhees/5376764
- */
-function forwardEvent(event) {
-	var type = event.type;
-	var target = d3.select(event.target);
-	target.on(type)(event);
-}
-
-/**
- * Show Alert With Event Coordinate
- *
- * @param {event} event
- * @returns {{canvas: {x: (*|number), y: (*|number)}, world: {x: *, y: *, z: *}, page: {x: number, y: number}}}
- */
-function getEventCoordinates(event) {
-	var pagePoint = getEventPagePoint(event);
-
-	return {
-		world: { x: event.hitPnt[0], y: event.hitPnt[1], z: event.hitPnt[2] },
-		canvas: { x: event.layerX, y: event.layerY },
-		page: { x: pagePoint.x, y: pagePoint.y }
-	};
-}
-
-/**
- * Inverse of coordinate transform defined by function mousePosition(evt) in x3dom.js
- *
- * @param {event} event
- * @returns {{x: number, y: number}}
- */
-function getEventPagePoint(event) {
-	var pageX = -1;
-	var pageY = -1;
-
-	var convertPoint = window.webkitConvertPointFromPageToNode;
-
-	if ("getBoundingClientRect" in document.documentElement) {
-		var holder = getX3domHolder(event);
-		var computedStyle = document.defaultView.getComputedStyle(holder, null);
-		var paddingLeft = parseFloat(computedStyle.getPropertyValue('padding-left'));
-		var borderLeftWidth = parseFloat(computedStyle.getPropertyValue('border-left-width'));
-		var paddingTop = parseFloat(computedStyle.getPropertyValue('padding-top'));
-		var borderTopWidth = parseFloat(computedStyle.getPropertyValue('border-top-width'));
-		var box = holder.getBoundingClientRect();
-		var scrolLeft = window.pageXOffset || document.body.scrollLeft;
-		var scrollTop = window.pageYOffset || document.body.scrollTop;
-		pageX = Math.round(event.layerX + (box.left + paddingLeft + borderLeftWidth + scrolLeft));
-		pageY = Math.round(event.layerY + (box.top + paddingTop + borderTopWidth + scrollTop));
-	} else if (convertPoint) {
-		var pagePoint = convertPoint(event.target, new WebKitPoint(0, 0));
-		pageX = Math.round(pagePoint.x);
-		pageY = Math.round(pagePoint.y);
-	} else {
-		x3dom.debug.logError('Unable to find getBoundingClientRect or webkitConvertPointFromPageToNode');
-	}
-
-	return { x: pageX, y: pageY };
-}
-
-/**
- * Return the x3d Parent Holder
- *
- * Find clicked element, walk up DOM until we find the parent x3d.
- * Then return the x3d's parent.
- *
- * @param event
- * @returns {*}
- */
-function getX3domHolder(event) {
-	var target = d3.select(event.target);
-
-	var x3d = target.select(function () {
-		var el = this;
-		while (el.nodeName.toLowerCase() !== "x3d") {
-			el = el.parentElement;
-		}
-
-		return el;
-	});
-
-	return x3d.select(function () {
-		return this.parentNode;
-	}).node();
-}
-
-var events = Object.freeze({
-	dispatch: dispatch,
-	forwardEvent: forwardEvent,
-	getEventCoordinates: getEventCoordinates,
-	getEventPagePoint: getEventPagePoint,
-	getX3domHolder: getX3domHolder
-});
 
 /**
  * Reusable 3D Bar Chart Component
@@ -2439,9 +2457,9 @@ function componentLabel () {
 				return d.key;
 			});
 
-			var makeSolid = function makeSolid(selection, color) {
-				selection.append("Appearance").append("Material").attr("diffuseColor", color || "black");
-				return selection;
+			var makeSolid = function makeSolid(el, color) {
+				el.append("Appearance").append("Material").attr("diffuseColor", color || "black");
+				return el;
 			};
 
 			var labelSelect = element.selectAll(".label").data([data]);
@@ -2746,7 +2764,7 @@ function componentRibbon () {
     */
 
 				shape.html(function (d) {
-					var indexedfaceset = "<IndexedFaceset coordIndex=\"" + d.coordIndex + "\"><coordinate point=\"" + d.point + "\"></coordinate></IndexedFaceset>";
+					var indexedfaceset = "<IndexedFaceset coordIndex=\"" + d.coordIndex + "\"><Coordinate point=\"" + d.point + "\"></Coordinate></IndexedFaceset>";
 					var appearance = "<Appearance><TwoSidedMaterial diffuseColor=\"" + color + "\" transparency=\"" + transparency + "\"></TwoSidedMaterial></Appearance>";
 
 					return indexedfaceset + appearance;
