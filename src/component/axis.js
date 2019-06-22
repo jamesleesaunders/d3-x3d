@@ -91,36 +91,35 @@ export default function() {
 			const tickFormatDefault = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : (d) => d;
 			tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
 
-
-			const makeSolid = (el, color) => {
-				el.append("Appearance")
-					.append("Material")
-					.attr("diffuseColor", color || "black");
-				return el;
-			};
-
-			const shape = (el) => {
+			const shape = (el, radius, height, color) => {
 				const shape = el.append("Shape");
 
 				/*
 				// FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
 				shape.append("Appearance")
 					.append("Material")
-					.attr("diffuseColor", "#d3d3d3");
+					.attr("diffuseColor", color);
 
 				shape.append("Cylinder")
-					.attr("radius", 0.05)
-					.attr("height", tickSize);
+					.attr("radius", radius)
+					.attr("height", height);
 				*/
 
 				shape.html(() => {
-					let appearance = `<Appearance><Material diffuseColor="#d3d3d3"></Material></Appearance>`;
-					let cylinder = `<Cylinder radius="0.05" height="${tickSize}"></Cylinder>`;
+					let cylinder = `<Cylinder radius="${radius}" height="${height}"></Cylinder>`;
+					let appearance = `<Appearance><Material diffuseColor="${color}"></Material></Appearance>`;
 
 					return appearance + cylinder;
 				});
 
 				return shape;
+			};
+
+			const makeSolid = (el, color) => {
+				el.append("Appearance")
+					.append("Material")
+					.attr("diffuseColor", color || "black");
+				return el;
 			};
 
 			// Main Lines
@@ -132,11 +131,7 @@ export default function() {
 				.attr("class", "domain")
 				.attr("rotation", axisRotationVector.join(" "))
 				.attr("translation", axisDirectionVector.map((d) => (d * (range0 + range1) / 2)).join(" "))
-				.append("Shape")
-				.call(makeSolid, color)
-				.append("Cylinder")
-				.attr("radius", 0.1)
-				.attr("height", range1 - range0)
+				.call(shape, 0.1, range1 - range0, color)
 				.merge(domain);
 
 			domain.exit()
@@ -153,7 +148,7 @@ export default function() {
 				.append("Transform")
 				.attr("translation", tickDirectionVector.map((d) => (d * tickSize / 2)).join(" "))
 				.attr("rotation", tickRotationVector.join(" "))
-				.call(shape)
+				.call(shape, 0.05, tickSize, "#d3d3d3")
 				.merge(ticks);
 
 			ticks.transition()
@@ -202,8 +197,6 @@ export default function() {
 				labels.exit()
 					.remove();
 			}
-
-
 		});
 	};
 

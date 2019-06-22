@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.3.2";
+var version = "1.3.3";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -1139,27 +1139,22 @@ function componentAxis () {
 			};
 			tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
 
-			var makeSolid = function makeSolid(el, color) {
-				el.append("Appearance").append("Material").attr("diffuseColor", color || "black");
-				return el;
-			};
-
-			var shape = function shape(el) {
+			var shape = function shape(el, radius, height, color) {
 				var shape = el.append("Shape");
 
 				/*
     // FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
     shape.append("Appearance")
     	.append("Material")
-    	.attr("diffuseColor", "#d3d3d3");
+    	.attr("diffuseColor", color);
     	shape.append("Cylinder")
-    	.attr("radius", 0.05)
-    	.attr("height", tickSize);
+    	.attr("radius", radius)
+    	.attr("height", height);
     */
 
 				shape.html(function () {
-					var appearance = "<Appearance><Material diffuseColor=\"#d3d3d3\"></Material></Appearance>";
-					var cylinder = "<Cylinder radius=\"0.05\" height=\"" + tickSize + "\"></Cylinder>";
+					var cylinder = "<Cylinder radius=\"" + radius + "\" height=\"" + height + "\"></Cylinder>";
+					var appearance = "<Appearance><Material diffuseColor=\"" + color + "\"></Material></Appearance>";
 
 					return appearance + cylinder;
 				});
@@ -1167,12 +1162,17 @@ function componentAxis () {
 				return shape;
 			};
 
+			var makeSolid = function makeSolid(el, color) {
+				el.append("Appearance").append("Material").attr("diffuseColor", color || "black");
+				return el;
+			};
+
 			// Main Lines
 			var domain = element.selectAll(".domain").data([null]);
 
 			domain.enter().append("Transform").attr("class", "domain").attr("rotation", axisRotationVector.join(" ")).attr("translation", axisDirectionVector.map(function (d) {
 				return d * (range0 + range1) / 2;
-			}).join(" ")).append("Shape").call(makeSolid, color).append("Cylinder").attr("radius", 0.1).attr("height", range1 - range0).merge(domain);
+			}).join(" ")).call(shape, 0.1, range1 - range0, color).merge(domain);
 
 			domain.exit().remove();
 
@@ -1187,7 +1187,7 @@ function componentAxis () {
 				}).join(" ");
 			}).append("Transform").attr("translation", tickDirectionVector.map(function (d) {
 				return d * tickSize / 2;
-			}).join(" ")).attr("rotation", tickRotationVector.join(" ")).call(shape).merge(ticks);
+			}).join(" ")).attr("rotation", tickRotationVector.join(" ")).call(shape, 0.05, tickSize, "#d3d3d3").merge(ticks);
 
 			ticks.transition().attr("translation", function (t) {
 				return axisDirectionVector.map(function (a) {
