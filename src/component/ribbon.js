@@ -136,16 +136,18 @@ export default function() {
 
 				shape.append("Appearance")
 					.append("TwoSidedMaterial")
-					.attr("diffuseColor", (d) => d.color)
-					.attr("transparency", (d) => d.transparency);
+					.attr("diffuseColor", color)
+					.attr("transparency", transparency);
 				*/
 
-				shape.html((d) => {
-					let indexedfaceset = `<IndexedFaceset coordIndex="${d.coordIndex}"><Coordinate point="${d.point}"></Coordinate></IndexedFaceset>`;
-					let appearance = `<Appearance><TwoSidedMaterial diffuseColor="${color}" transparency="${transparency}"></TwoSidedMaterial></Appearance>`;
-
-					return indexedfaceset + appearance;
-				});
+				shape.html((d) => `
+					<IndexedFaceset coordIndex="${d.coordIndex}">
+						<Coordinate point="${d.point}"></Coordinate>
+					</IndexedFaceset>
+					<Appearance>
+						<TwoSidedMaterial diffuseColor="${color}" transparency="${transparency}"></TwoSidedMaterial>
+					</Appearance>
+				`);
 
 				return shape;
 			};

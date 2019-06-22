@@ -631,9 +631,20 @@ function componentArea () {
 			var shape = function shape(el) {
 				var shape = el.append("Shape");
 
-				// FIXME: x3dom cannot have empty IFS nodes, we must to use .html() rather than .append() & .attr().
+				/*
+    // FIXME: x3dom cannot have empty IFS nodes, we must to use .html() rather than .append() & .attr().
+    shape.append("IndexedFaceset")
+    	.attr("coordIndex", (d) => d.coordIndex)
+    	.append("Coordinate")
+    	.attr("point", (d) => d.point);
+    	shape.append("Appearance")
+    	.append("Material")
+    	.attr("diffuseColor", color)
+    	.attr("transparency", transparency);
+    */
+
 				shape.html(function (d) {
-					return "\n\t\t\t\t\t<IndexedFaceset coordIndex='" + d.coordIndex + "' solid='false'>\n\t\t\t\t\t\t<Coordinate point='" + d.point + "'></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<Material diffuseColor='" + color + "' transparency='" + transparency + "'></Material>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
+					return "\n\t\t\t\t\t<IndexedFaceset coordIndex=\"" + d.coordIndex + "\" solid=\"false\">\n\t\t\t\t\t\t<Coordinate point=\"" + d.point + "\"></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<Material diffuseColor=\"" + color + "\" transparency=\"" + transparency + "\"></Material>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
 				});
 
 				return shape;
@@ -1144,19 +1155,16 @@ function componentAxis () {
 
 				/*
     // FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
-    shape.append("Appearance")
-    	.append("Material")
-    	.attr("diffuseColor", color);
-    	shape.append("Cylinder")
+    shape.append("Cylinder")
     	.attr("radius", radius)
     	.attr("height", height);
+    	shape.append("Appearance")
+    	.append("Material")
+    	.attr("diffuseColor", color);
     */
 
 				shape.html(function () {
-					var cylinder = "<Cylinder radius=\"" + radius + "\" height=\"" + height + "\"></Cylinder>";
-					var appearance = "<Appearance><Material diffuseColor=\"" + color + "\"></Material></Appearance>";
-
-					return appearance + cylinder;
+					return "\n\t\t\t\t\t<Cylinder radius=\"" + radius + "\" height=\"" + height + "\"></Cylinder>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<Material diffuseColor=\"" + color + "\"></Material>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
 				});
 
 				return shape;
@@ -2759,15 +2767,12 @@ function componentRibbon () {
     	.attr("point", (d) => d.point);
     	shape.append("Appearance")
     	.append("TwoSidedMaterial")
-    	.attr("diffuseColor", (d) => d.color)
-    	.attr("transparency", (d) => d.transparency);
+    	.attr("diffuseColor", color)
+    	.attr("transparency", transparency);
     */
 
 				shape.html(function (d) {
-					var indexedfaceset = "<IndexedFaceset coordIndex=\"" + d.coordIndex + "\"><Coordinate point=\"" + d.point + "\"></Coordinate></IndexedFaceset>";
-					var appearance = "<Appearance><TwoSidedMaterial diffuseColor=\"" + color + "\" transparency=\"" + transparency + "\"></TwoSidedMaterial></Appearance>";
-
-					return indexedfaceset + appearance;
+					return "\n\t\t\t\t\t<IndexedFaceset coordIndex=\"" + d.coordIndex + "\">\n\t\t\t\t\t\t<Coordinate point=\"" + d.point + "\"></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<TwoSidedMaterial diffuseColor=\"" + color + "\" transparency=\"" + transparency + "\"></TwoSidedMaterial>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
 				});
 
 				return shape;

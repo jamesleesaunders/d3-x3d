@@ -96,21 +96,21 @@ export default function() {
 
 				/*
 				// FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
-				shape.append("Appearance")
-					.append("Material")
-					.attr("diffuseColor", color);
-
 				shape.append("Cylinder")
 					.attr("radius", radius)
 					.attr("height", height);
+
+				shape.append("Appearance")
+					.append("Material")
+					.attr("diffuseColor", color);
 				*/
 
-				shape.html(() => {
-					let cylinder = `<Cylinder radius="${radius}" height="${height}"></Cylinder>`;
-					let appearance = `<Appearance><Material diffuseColor="${color}"></Material></Appearance>`;
-
-					return appearance + cylinder;
-				});
+				shape.html(() => `
+					<Cylinder radius="${radius}" height="${height}"></Cylinder>
+					<Appearance>
+						<Material diffuseColor="${color}"></Material>
+					</Appearance>
+				`);
 
 				return shape;
 			};
