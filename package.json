@@ -32,12 +32,12 @@
 		"build:docs": "jsdoc -c config/jsdoc.conf.json",
 		"deploy:docs": "npm run build:docs && gh-pages -d docs"
 	},
-	"peerDependencies": {
-		"d3": "^5.0.0"
-	},
 	"dependencies": {
 		"d3": "^5.9.2",
 		"x3dom": "^1.7.2"
+	},
+	"peerDependencies": {
+		"d3": "^5.0.0"
 	},
 	"devDependencies": {
 		"babel-core": "^6.26.0",
@@ -49,7 +49,7 @@
 		"eslint": "^4.19.1",
 		"gh-pages": "^2.0.1",
 		"jsdoc": "^3.6.2",
-		"jsdom": "^11.11.0",
+		"jsdom": "^15.1.1",
 		"minami": "^1.2.3",
 		"mocha": "^6.1.4",
 		"rollup": "^0.56.2",
