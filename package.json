@@ -37,7 +37,7 @@
 	},
 	"dependencies": {
 		"d3": "^5.9.2",
-		"x3dom": "1.7.2"
+		"x3dom": "^1.7.2"
 	},
 	"devDependencies": {
 		"babel-core": "^6.26.0",
