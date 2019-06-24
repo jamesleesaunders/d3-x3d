@@ -94,7 +94,6 @@ export default function() {
 			const shape = (el, radius, height, color) => {
 				const shape = el.append("Shape");
 
-				/*
 				// FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
 				shape.append("Cylinder")
 					.attr("radius", radius)
@@ -103,14 +102,15 @@ export default function() {
 				shape.append("Appearance")
 					.append("Material")
 					.attr("diffuseColor", color);
-				*/
 
+				/*
 				shape.html(() => `
 					<Cylinder radius="${radius}" height="${height}"></Cylinder>
 					<Appearance>
 						<Material diffuseColor="${color}"></Material>
 					</Appearance>
 				`);
+				*/
 
 				return shape;
 			};
