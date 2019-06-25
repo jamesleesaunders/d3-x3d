@@ -47,12 +47,12 @@ test("Test Axis Component, component.axis()", function(t) {
 	t.deepEqual(axis.tickFormat(), '', "Changd tickFormat is set");
 
 	// Test tickSize getter / setter function
-	t.deepEqual(axis.tickSize(), 1, "Default tickSize");
+	t.deepEqual(axis.tickSize(), 1.5, "Default tickSize");
 	axis.tickSize(5);
 	t.deepEqual(axis.tickSize(), 5, "Changed tickSize is set");
 
 	// Test tickPadding getter / setter function
-	t.deepEqual(axis.tickPadding(), 1.5, "Default tickPadding");
+	t.deepEqual(axis.tickPadding(), 2, "Default tickPadding");
 	axis.tickPadding(5);
 	t.deepEqual(axis.tickPadding(), 5, "Changed tickPadding is set");
 

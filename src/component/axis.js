@@ -22,8 +22,8 @@ export default function() {
 	let tickArguments = [];
 	let tickValues = null;
 	let tickFormat = null;
-	let tickSize = 1.0;
-	let tickPadding = 1.5;
+	let tickSize = 1.5;
+	let tickPadding = 2.0;
 
 	const axisDirectionVectors = {
 		x: [1, 0, 0],
@@ -148,7 +148,7 @@ export default function() {
 				.append("Transform")
 				.attr("translation", tickDirectionVector.map((d) => (d * tickSize / 2)).join(" "))
 				.attr("rotation", tickRotationVector.join(" "))
-				.call(shape, 0.05, tickSize, "#d3d3d3")
+				.call(shape, 0.05, tickSize, "#e3e3e3")
 				.merge(ticks);
 
 			ticks.transition()
@@ -167,7 +167,7 @@ export default function() {
 					.attr("class", "label")
 					.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
 					.append("Transform")
-					.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * (range1 - range0) * tickDirectionVector[i])))
+					.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * tickSize * tickDirectionVector[i])))
 					.append("Billboard")
 					.attr("axisOfRotation", "0 0 0")
 					.append("Shape")
@@ -185,7 +185,7 @@ export default function() {
 				labels.transition()
 					.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
 					.select("Transform")
-					.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * (range1 - range0) * tickDirectionVector[i])))
+					.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * tickSize * tickDirectionVector[i])))
 					.on("start", function() {
 						d3.select(this)
 							.select("Billboard")

@@ -1080,8 +1080,8 @@ function componentAxis () {
 	var tickArguments = [];
 	var tickValues = null;
 	var tickFormat = null;
-	var tickSize = 1.0;
-	var tickPadding = 1.5;
+	var tickSize = 1.5;
+	var tickPadding = 2.0;
 
 	var axisDirectionVectors = {
 		x: [1, 0, 0],
@@ -1195,7 +1195,7 @@ function componentAxis () {
 				}).join(" ");
 			}).append("Transform").attr("translation", tickDirectionVector.map(function (d) {
 				return d * tickSize / 2;
-			}).join(" ")).attr("rotation", tickRotationVector.join(" ")).call(shape, 0.05, tickSize, "#d3d3d3").merge(ticks);
+			}).join(" ")).attr("rotation", tickRotationVector.join(" ")).call(shape, 0.05, tickSize, "#e3e3e3").merge(ticks);
 
 			ticks.transition().attr("translation", function (t) {
 				return axisDirectionVector.map(function (a) {
@@ -1216,7 +1216,7 @@ function componentAxis () {
 						return scale(t) * a;
 					}).join(" ");
 				}).append("Transform").attr("translation", tickDirectionVector.map(function (d, i) {
-					return labelInset * d * tickPadding + (labelInset + 1) / 2 * (range1 - range0) * tickDirectionVector[i];
+					return labelInset * d * tickPadding + (labelInset + 1) / 2 * tickSize * tickDirectionVector[i];
 				})).append("Billboard").attr("axisOfRotation", "0 0 0").append("Shape").call(makeSolid, "black").append("Text").attr("string", tickFormat).append("FontStyle").attr("size", 1.3).attr("family", "SANS").attr("style", "BOLD").attr("justify", "MIDDLE");
 
 				labelsEnter.merge(labels);
@@ -1226,7 +1226,7 @@ function componentAxis () {
 						return scale(t) * a;
 					}).join(" ");
 				}).select("Transform").attr("translation", tickDirectionVector.map(function (d, i) {
-					return labelInset * d * tickPadding + (labelInset + 1) / 2 * (range1 - range0) * tickDirectionVector[i];
+					return labelInset * d * tickPadding + (labelInset + 1) / 2 * tickSize * tickDirectionVector[i];
 				})).on("start", function () {
 					d3.select(this).select("Billboard").select("Shape").select("Text").attr("string", tickFormat);
 				});
@@ -1417,9 +1417,14 @@ function componentAxisThreePlane () {
 
 			yzAxis.scale(yScale).direction("y").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("red").labelPosition(labelPosition);
 
-			yxAxis.scale(yScale).direction("y").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).tickFormat("").color("red").labelPosition(labelPosition);
+			yxAxis.scale(yScale).direction("y").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color("red").labelPosition(labelPosition);
 
 			zxAxis.scale(zScale).direction("z").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color("black").labelPosition(labelPosition);
+
+			if (labelPosition === "proximal") {
+				// We only want 2 sets of labels on the y axis if they are in distal position.
+				yxAxis.tickFormat("");
+			}
 
 			element.select(".xzAxis").call(xzAxis);
 
@@ -3989,7 +3994,7 @@ function chartAreaChartMultiSeries () {
 
 	/* Components */
 	var viewpoint = component.viewpoint();
-	var axis = component.axisThreePlane();
+	var axis = component.axisThreePlane().labelPosition('distal');
 	var areas = component.areaMultiSeries();
 	var light = component.light();
 

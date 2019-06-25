@@ -63,7 +63,6 @@ export default function() {
 				.direction("y")
 				.tickDirection("x")
 				.tickSize(xScale.range()[1] - xScale.range()[0])
-				.tickFormat("")
 				.color("red")
 				.labelPosition(labelPosition);
 
@@ -73,6 +72,11 @@ export default function() {
 				.tickSize(xScale.range()[1] - xScale.range()[0])
 				.color("black")
 				.labelPosition(labelPosition);
+
+			if(labelPosition === "proximal") {
+				// We only want 2 sets of labels on the y axis if they are in distal position.
+				yxAxis.tickFormat("");
+			}
 
 			element.select(".xzAxis")
 				.call(xzAxis);
