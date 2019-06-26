@@ -36,6 +36,13 @@
   </table>
 
   <script>
+    if (!Array.prototype.includes) {
+        Array.prototype.includes = function() {
+          'use strict';
+          return Array.prototype.indexOf.apply(this, arguments) !== -1;
+        };
+    }
+    
     // Select chartholder
     var chartHolder = d3.select("#chartholder");
 
