@@ -36,7 +36,6 @@ export default function() {
 				el.append("Appearance")
 					.append("Material")
 					.attr("diffuseColor", color || "black");
-				return el;
 			};
 
 			const labelSelect = element.selectAll(".label")

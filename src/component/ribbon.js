@@ -119,8 +119,9 @@ export default function() {
 			};
 
 			const shape = (el) => {
-				const shape = el.append("Shape")
-					.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
+				const shape = el.append("Shape");
+
+				shape.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
 					.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
 					.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
 					.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
@@ -128,7 +129,7 @@ export default function() {
 					.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
 
 				/*
-				// FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
+				// FIXME: x3dom cannot have empty IFS nodes, we must to use .html() rather than .append() & .attr().
 				shape.append("IndexedFaceset")
 					.attr("coordIndex", (d) => d.coordIndex)
 					.append("Coordinate")
@@ -148,8 +149,6 @@ export default function() {
 						<TwoSidedMaterial diffuseColor="${color}" transparency="${transparency}"></TwoSidedMaterial>
 					</Appearance>
 				`);
-
-				return shape;
 			};
 
 			const ribbon = element.selectAll(".ribbon")

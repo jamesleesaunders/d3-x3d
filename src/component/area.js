@@ -124,8 +124,6 @@ export default function() {
 						<Material diffuseColor="${color}" transparency="${transparency}"></Material>
 					</Appearance>
 				`);
-
-				return shape;
 			};
 
 			const area = element.selectAll(".area")

@@ -101,15 +101,12 @@ export default function() {
 				shape.append("Appearance")
 					.append("Material")
 					.attr("diffuseColor", color);
-
-				return shape;
 			};
 
 			const makeSolid = (el, color) => {
 				el.append("Appearance")
 					.append("Material")
 					.attr("diffuseColor", color || "black");
-				return el;
 			};
 
 			// Main Lines

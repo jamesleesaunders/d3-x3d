@@ -646,8 +646,6 @@ function componentArea () {
 				shape.html(function (d) {
 					return "\n\t\t\t\t\t<IndexedFaceset coordIndex=\"" + d.coordIndex + "\" solid=\"false\">\n\t\t\t\t\t\t<Coordinate point=\"" + d.point + "\"></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<Material diffuseColor=\"" + color + "\" transparency=\"" + transparency + "\"></Material>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
 				});
-
-				return shape;
 			};
 
 			var area = element.selectAll(".area").data(function (d) {
@@ -1156,13 +1154,10 @@ function componentAxis () {
 				shape.append("Cylinder").attr("radius", radius).attr("height", height);
 
 				shape.append("Appearance").append("Material").attr("diffuseColor", color);
-
-				return shape;
 			};
 
 			var makeSolid = function makeSolid(el, color) {
 				el.append("Appearance").append("Material").attr("diffuseColor", color || "black");
-				return el;
 			};
 
 			// Main Lines
@@ -2462,7 +2457,6 @@ function componentLabel () {
 
 			var makeSolid = function makeSolid(el, color) {
 				el.append("Appearance").append("Material").attr("diffuseColor", color || "black");
-				return el;
 			};
 
 			var labelSelect = element.selectAll(".label").data([data]);
@@ -2746,7 +2740,9 @@ function componentRibbon () {
 			};
 
 			var shape = function shape(el) {
-				var shape = el.append("Shape").attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
+				var shape = el.append("Shape");
+
+				shape.attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
 					dispatch.call("d3X3domClick", this, e);
 				}).attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").on("mouseover", function (e) {
 					dispatch.call("d3X3domMouseOver", this, e);
@@ -2755,7 +2751,7 @@ function componentRibbon () {
 				});
 
 				/*
-    // FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
+    // FIXME: x3dom cannot have empty IFS nodes, we must to use .html() rather than .append() & .attr().
     shape.append("IndexedFaceset")
     	.attr("coordIndex", (d) => d.coordIndex)
     	.append("Coordinate")
@@ -2769,8 +2765,6 @@ function componentRibbon () {
 				shape.html(function (d) {
 					return "\n\t\t\t\t\t<IndexedFaceset coordIndex=\"" + d.coordIndex + "\">\n\t\t\t\t\t\t<Coordinate point=\"" + d.point + "\"></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<TwoSidedMaterial diffuseColor=\"" + color + "\" transparency=\"" + transparency + "\"></TwoSidedMaterial>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
 				});
-
-				return shape;
 			};
 
 			var ribbon = element.selectAll(".ribbon").data(function (d) {
