@@ -37,7 +37,7 @@
   "dependencies": {
     "d3": "^5.9.2",
     "x3dom": "^1.7.2",
-    "snyk": "^1.189.0"
+    "snyk": "^1.192.0"
   },
   "peerDependencies": {
     "d3": "^5.0.0"
