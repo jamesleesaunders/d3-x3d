@@ -19,6 +19,7 @@
   <div id="chartholder7"></div>
   <div id="chartholder8"></div>
   <div id="chartholder9"></div>
+  <div id="chartholder10"></div>
 
   <script>
     // Chart dimensions
@@ -170,6 +171,26 @@
       .call(ribbonMultiSeriesComponent);
 
     /**
+     * Area Multi Component
+     */
+    var areaMultiSeriesData = d3.x3dom.randomData.dataset5();
+    var areaMultiSeriesComponent = d3.x3dom.component.areaMultiSeries();
+
+    // Create scene
+    var scene8 = d3.select("#chartholder8")
+      .append("x3d")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("scene");
+
+    // Add chart component
+    scene8.call(viewpoint)
+      .append("group")
+      .attr("class", "chart")
+      .datum(areaMultiSeriesData)
+      .call(areaMultiSeriesComponent);
+
+    /**
      * Vector Field Component
      */
     var vectorValues = [];
@@ -190,7 +211,7 @@
     var vectorComponent = d3.x3dom.component.vectorFields();
 
     // Create scene
-    var scene8 = d3.select("#chartholder8")
+    var scene9 = d3.select("#chartholder9")
       .append("x3d")
       .attr("id", "vectorFields")
       .attr("width", width + "px")
@@ -198,7 +219,7 @@
       .append("scene");
 
     // Add chart component
-    scene8.call(viewpoint)
+    scene9.call(viewpoint)
       .append("group")
       .attr("class", "chart")
       .datum(vectorData)
@@ -218,7 +239,7 @@
       .zScale(zScale);
 
     // Create scene
-    var scene9 = d3.select("#chartholder9")
+    var scene10 = d3.select("#chartholder10")
       .append("x3d")
       .attr("id", "axis")
       .attr("width", width + "px")
@@ -226,7 +247,7 @@
       .append("scene");
 
     // Add chart component
-    scene9.call(viewpoint)
+    scene10.call(viewpoint)
       .append("group")
       .attr("class", "chart")
       .call(axisThreePlaneComponent);
