@@ -1,6 +1,6 @@
 {
   "name": "d3-x3dom",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "3D Charts and Data Visualizations",
   "license": "GPL-2.0",
   "keywords": [
@@ -35,9 +35,9 @@
     "prepare": "npm run snyk-protect"
   },
   "dependencies": {
-    "d3": "^5.9.2",
-    "x3dom": "^1.7.2",
-    "snyk": "^1.192.0"
+    "d3": "^5.9.7",
+    "snyk": "^1.192.0",
+    "x3dom": "^1.7.2"
   },
   "peerDependencies": {
     "d3": "^5.0.0"
@@ -59,7 +59,7 @@
     "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-json": "^2.3.1",
     "tap-spec": "^5.0.0",
-    "tape": "^4.10.2",
+    "tape": "^4.11.0",
     "toast-jsdoc": "^1.0.2",
     "uglify-es": "^3.3.9",
     "vows": "^0.8.2"
