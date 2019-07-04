@@ -111,15 +111,12 @@ export default function() {
 						<Material diffuseColor="${color}"></Material>
 					</Appearance>
 				`);
-
-				return shape;
 			};
 
 			const makeSolid = (el, color) => {
 				el.append("Appearance")
 					.append("Material")
 					.attr("diffuseColor", color || "black");
-				return el;
 			};
 
 			// Main Lines

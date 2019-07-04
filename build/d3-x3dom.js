@@ -12,7 +12,7 @@
 	(global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3));
 }(this, (function (d3) { 'use strict';
 
-var version = "1.3.3";
+var version = "1.3.4";
 var license = "GPL-2.0";
 
 var _extends = Object.assign || function (target) {
@@ -646,8 +646,6 @@ function componentArea () {
 				shape.html(function (d) {
 					return "\n\t\t\t\t\t<IndexedFaceset coordIndex=\"" + d.coordIndex + "\" solid=\"false\">\n\t\t\t\t\t\t<Coordinate point=\"" + d.point + "\"></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<Material diffuseColor=\"" + color + "\" transparency=\"" + transparency + "\"></Material>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
 				});
-
-				return shape;
 			};
 
 			var area = element.selectAll(".area").data(function (d) {
@@ -1166,13 +1164,10 @@ function componentAxis () {
 				shape.html(function () {
 					return "\n\t\t\t\t\t<Cylinder radius=\"" + radius + "\" height=\"" + height + "\"></Cylinder>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<Material diffuseColor=\"" + color + "\"></Material>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
 				});
-
-				return shape;
 			};
 
 			var makeSolid = function makeSolid(el, color) {
 				el.append("Appearance").append("Material").attr("diffuseColor", color || "black");
-				return el;
 			};
 
 			// Main Lines
@@ -2472,7 +2467,6 @@ function componentLabel () {
 
 			var makeSolid = function makeSolid(el, color) {
 				el.append("Appearance").append("Material").attr("diffuseColor", color || "black");
-				return el;
 			};
 
 			var labelSelect = element.selectAll(".label").data([data]);
@@ -2756,7 +2750,9 @@ function componentRibbon () {
 			};
 
 			var shape = function shape(el) {
-				var shape = el.append("Shape").attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
+				var shape = el.append("Shape");
+
+				shape.attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
 					dispatch.call("d3X3domClick", this, e);
 				}).attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").on("mouseover", function (e) {
 					dispatch.call("d3X3domMouseOver", this, e);
@@ -2765,7 +2761,7 @@ function componentRibbon () {
 				});
 
 				/*
-    // FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
+    // FIXME: x3dom cannot have empty IFS nodes, we must to use .html() rather than .append() & .attr().
     shape.append("IndexedFaceset")
     	.attr("coordIndex", (d) => d.coordIndex)
     	.append("Coordinate")
@@ -2779,8 +2775,6 @@ function componentRibbon () {
 				shape.html(function (d) {
 					return "\n\t\t\t\t\t<IndexedFaceset coordIndex=\"" + d.coordIndex + "\">\n\t\t\t\t\t\t<Coordinate point=\"" + d.point + "\"></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<TwoSidedMaterial diffuseColor=\"" + color + "\" transparency=\"" + transparency + "\"></TwoSidedMaterial>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
 				});
-
-				return shape;
 			};
 
 			var ribbon = element.selectAll(".ribbon").data(function (d) {
@@ -4040,7 +4034,7 @@ function chartAreaChartMultiSeries () {
 			scene = x3d.append("Scene");
 		}
 
-		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
+		x3d.attr("width", width + "px").attr("useGeoCache", false).attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "areas"];
@@ -4283,7 +4277,7 @@ function chartBarChartMultiSeries () {
 			scene = x3d.append("Scene");
 		}
 
-		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
+		x3d.attr("width", width + "px").attr("useGeoCache", false).attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "bars"];
@@ -4516,7 +4510,7 @@ function chartBarChartVertical () {
 			scene = x3d.append("Scene");
 		}
 
-		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
+		x3d.attr("width", width + "px").attr("useGeoCache", false).attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["xAxis", "yAxis", "bars"];
@@ -4739,7 +4733,7 @@ function chartBubbleChart () {
 			scene = x3d.append("Scene");
 		}
 
-		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
+		x3d.attr("width", width + "px").attr("useGeoCache", false).attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "bubbles"];
@@ -4981,7 +4975,7 @@ function chartCrosshairPlot () {
 			scene = x3d.append("Scene");
 		}
 
-		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
+		x3d.attr("width", width + "px").attr("useGeoCache", false).attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "crosshairs"];
@@ -5185,7 +5179,7 @@ function chartRibbonChartMultiSeries () {
 			scene = x3d.append("Scene");
 		}
 
-		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
+		x3d.attr("width", width + "px").attr("useGeoCache", false).attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "ribbons"];
@@ -5408,7 +5402,7 @@ function chartScatterPlot () {
 			scene = x3d.append("Scene");
 		}
 
-		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
+		x3d.attr("width", width + "px").attr("useGeoCache", false).attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "bubbles", "crosshair", "label"];
@@ -5645,7 +5639,7 @@ function chartSurfacePlot () {
 			scene = x3d.append("Scene");
 		}
 
-		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
+		x3d.attr("width", width + "px").attr("useGeoCache", false).attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "surface"];
@@ -5929,7 +5923,7 @@ function chartVectorField () {
 			scene = x3d.append("Scene");
 		}
 
-		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
+		x3d.attr("width", width + "px").attr("useGeoCache", false).attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "vectorFields"];
@@ -6165,7 +6159,7 @@ function chartVolumeSlice () {
 			scene = x3d.append("Scene");
 		}
 
-		x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
+		x3d.attr("width", width + "px").attr("useGeoCache", false).attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
 
 		// Update the chart dimensions and add layer groups
 		var layers = ["axis", "volume"];
