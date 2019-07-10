@@ -487,42 +487,160 @@ function dataTransform(data) {
 	};
 
 	/**
-  * Smooth Data (Basic Version)
+  * Smooth Data (Advanced Version)
   *
   * Returns a copy of the input data series which is subsampled into a 100 samples,
   * and has the smoothed values based on a provided d3.curve function.
   *
+  * @param curve
   * @returns {{values: *, key: *}}
   */
-	var smoothBasic = function smoothBasic() {
+	var smoothAdvanced = function smoothAdvanced(curve) {
+		var epsilon = 0.00001;
 		var samples = 100;
 
 		var values = data.values.map(function (d) {
 			return d.value;
 		});
-		var splinePolator = d3.interpolateBasis(values);
 
+		var sampler = d3.range(0, 1, 1 / samples);
 		var keyPolator = function keyPolator(t) {
 			return Number((t * samples).toFixed(0)) + 1;
 		};
-
-		var sampler = d3.range(0, 1, 1 / samples);
+		var valuePolator = interpolateCurve(values, curve, epsilon, samples);
 
 		return {
 			key: data.key,
 			values: sampler.map(function (t) {
 				return {
 					key: keyPolator(t),
-					value: splinePolator(t)
+					value: valuePolator(t)
 				};
 			})
+		};
+	};
+
+	/**
+  * Interpolate Curve
+  *
+  * Returns an interpolator function similar to d3.interpoleBasis(values).
+  * The returned function expects input in the range [0, 1] and returns a smoothed value. For example:
+  *
+  * - interpolateCurve(values)(0) returns the the first value.
+  *
+  * - interpolateCurve uses curvePolator(points) which returns a similar interpolator function.
+  *   However, the returned function works in the arbitrary domain defined by the provided points
+  *   and expects an input x in this domain.
+  *
+  * - curvePolator uses svgPathInterpolator(svgpath) which returns a similar interpolator function.
+  *   However, the returned function is constructed based on an SVG path string.
+  *   d3.line(points) outputs such SVG path strings.
+  *
+  * @private
+  *
+  * @param values
+  * @param curve
+  * @param epsilon
+  * @param samples
+  *
+  * @returns {*}
+  */
+	var interpolateCurve = function interpolateCurve(values, curve, epsilon, samples) {
+		var length = values.length;
+		var xrange = d3.range(length).map(function (d, i) {
+			return i * (1 / (length - 1));
+		});
+		var points = values.map(function (v, i) {
+			return [xrange[i], v];
+		});
+
+		return curvePolator(points, curve, epsilon, samples);
+	};
+
+	/**
+  * Curve Polator
+  *
+  * @private
+  *
+  * @param points
+  * @param curve
+  * @param epsilon
+  * @param samples
+  *
+  * @returns {*}
+  */
+	var curvePolator = function curvePolator(points, curve, epsilon, samples) {
+		var path = d3.line().curve(curve)(points);
+
+		return svgPathInterpolator(path, epsilon, samples);
+	};
+
+	/**
+  * SVG Path Interpolator
+  *
+  * @private
+  *
+  * @param path
+  * @param epsilon
+  * @param samples
+  *
+  * @returns {interpolator}
+  */
+	var svgPathInterpolator = function svgPathInterpolator(path, epsilon, samples) {
+		// Create SVG Path
+		path = path || "M0,0L1,1";
+
+		var svgpath = d3.create("svg").attr("xmlns", "http://www.w3.org/2000/svg").append("path").attr("d", path).node();
+
+		// Calculate lengths and max points
+		var totalLength = svgpath.getTotalLength();
+		var minPoint = svgpath.getPointAtLength(0);
+		var maxPoint = svgpath.getPointAtLength(totalLength);
+		var reverse = maxPoint.x < minPoint.x;
+		var range = reverse ? [maxPoint, minPoint] : [minPoint, maxPoint];
+		reverse = reverse ? -1 : 1;
+
+		// Return function
+		return function (x) {
+			var targetX = x === 0 ? 0 : x || minPoint.x; // Check for 0 and null/undefined
+			if (targetX < range[0].x) return range[0]; // Clamp
+			if (targetX > range[1].x) return range[1];
+
+			function estimateLength(l, mn, mx) {
+				var delta = svgpath.getPointAtLength(l).x - targetX;
+				var nextDelta = 0;
+				var iter = 0;
+
+				while (Math.abs(delta) > epsilon && iter < samples) {
+					iter++;
+
+					if (reverse * delta < 0) {
+						mn = l;
+						l = (l + mx) / 2;
+					} else {
+						mx = l;
+						l = (mn + l) / 2;
+					}
+					nextDelta = svgpath.getPointAtLength(l).x - targetX;
+					if (Math.abs(Math.abs(delta) - Math.abs(nextDelta)) < epsilon) {
+						break;
+					}
+					delta = nextDelta;
+				}
+
+				return l;
+			}
+
+			var estimatedLength = estimateLength(totalLength / 2, 0, totalLength);
+
+			return svgpath.getPointAtLength(estimatedLength).y;
 		};
 	};
 
 	return {
 		summary: summary,
 		rotate: rotate,
-		smooth: smoothBasic
+		smooth: smoothAdvanced
 	};
 }
 

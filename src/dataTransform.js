@@ -418,19 +418,16 @@ export default function dataTransform(data) {
 		const samples = 100;
 
 		const values = data.values.map((d) => d.value);
-		const splinePolator = d3.interpolateBasis(values);
-
-		const keyPolator = function(t) {
-			return Number((t * samples).toFixed(0)) + 1;
-		};
 
 		const sampler = d3.range(0, 1, 1 / samples);
+		const keyPolator = (t) => (Number((t * samples).toFixed(0)) + 1);
+		const valuePolator = d3.interpolateBasis(values);
 
 		return {
 			key: data.key,
 			values: sampler.map((t) => ({
 				key: keyPolator(t),
-				value: splinePolator(t)
+				value: valuePolator(t)
 			}))
 		};
 	};
@@ -449,19 +446,16 @@ export default function dataTransform(data) {
 		const samples = 100;
 
 		const values = data.values.map((d) => d.value);
-		const valuePolator = interpolateCurve(values, curve, epsilon, samples);
-
-		const keyPolator = function(t) {
-			return Number((t * samples).toFixed(0)) + 1;
-		};
 
 		const sampler = d3.range(0, 1, 1 / samples);
+		const keyPolator = (t) => (Number((t * samples).toFixed(0)) + 1);
+		const valuePolator = interpolateCurve(values, curve, epsilon, samples);
 
 		return {
 			key: data.key,
 			values: sampler.map((t) => ({
 				key: keyPolator(t),
-				value: valuePolator(t).y
+				value: valuePolator(t)
 			}))
 		};
 	};
@@ -531,10 +525,11 @@ export default function dataTransform(data) {
 	const svgPathInterpolator = function(path, epsilon, samples) {
 		// Create SVG Path
 		path = path || "M0,0L1,1";
-		const area = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-		area.innerHTML = `<path d='${path}'></path>`;
-		const svgpath = area.querySelector('path');
-		svgpath.setAttribute('d', path);
+		var svgpath = d3.create("svg")
+			.attr("xmlns", "http://www.w3.org/2000/svg")
+			.append("path")
+			.attr("d", path)
+			.node();
 
 		// Calculate lengths and max points
 		const totalLength = svgpath.getTotalLength();
@@ -554,10 +549,10 @@ export default function dataTransform(data) {
 				let delta = svgpath.getPointAtLength(l).x - targetX;
 				let nextDelta = 0;
 				let iter = 0;
-				// console.log(delta, targetX, epsilon);
+
 				while (Math.abs(delta) > epsilon && iter < samples) {
 					iter++;
-					// console.log(iter, Math.abs(delta) > epsilon);
+
 					if (reverse * delta < 0) {
 						mn = l;
 						l = (l + mx) / 2;
@@ -566,7 +561,9 @@ export default function dataTransform(data) {
 						l = (mn + l) / 2;
 					}
 					nextDelta = svgpath.getPointAtLength(l).x - targetX;
-					if (Math.abs(Math.abs(delta) - Math.abs(nextDelta)) < epsilon) break; // Not improving, targetX may be in a gap
+					if (Math.abs(Math.abs(delta) - Math.abs(nextDelta)) < epsilon) {
+						break;
+					}
 					delta = nextDelta;
 				}
 
@@ -574,14 +571,15 @@ export default function dataTransform(data) {
 			}
 
 			const estimatedLength = estimateLength(totalLength / 2, 0, totalLength);
-			return svgpath.getPointAtLength(estimatedLength);
+
+			return svgpath.getPointAtLength(estimatedLength).y;
 		}
 	};
 
 	return {
 		summary: summary,
 		rotate: rotate,
-		smooth: smoothBasic
+		smooth: smoothAdvanced
 	};
 }
 
