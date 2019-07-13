@@ -589,7 +589,6 @@ function dataTransform(data) {
 	var svgPathInterpolator = function svgPathInterpolator(path, epsilon, samples) {
 		// Create SVG Path
 		path = path || "M0,0L1,1";
-
 		var svgpath = d3.create("svg").attr("xmlns", "http://www.w3.org/2000/svg").append("path").attr("d", path).node();
 
 		// Calculate lengths and max points
