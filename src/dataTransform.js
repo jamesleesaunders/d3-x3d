@@ -449,7 +449,7 @@ export default function dataTransform(data) {
 
 		const sampler = d3.range(0, 1, 1 / samples);
 		const keyPolator = (t) => (Number((t * samples).toFixed(0)) + 1);
-		const valuePolator = interpolateCurve(values, curve, epsilon, samples);
+		const valuePolator = d3.interpolateFromCurve(values, curve);
 
 		return {
 			key: data.key,
@@ -458,122 +458,6 @@ export default function dataTransform(data) {
 				value: valuePolator(t)
 			}))
 		};
-	};
-
-	/**
-	 * Interpolate Curve
-	 *
-	 * Returns an interpolator function similar to d3.interpoleBasis(values).
-	 * The returned function expects input in the range [0, 1] and returns a smoothed value. For example:
-	 *
-	 * - interpolateCurve(values)(0) returns the the first value.
-	 *
-	 * - interpolateCurve uses curvePolator(points) which returns a similar interpolator function.
-	 *   However, the returned function works in the arbitrary domain defined by the provided points
-	 *   and expects an input x in this domain.
-	 *
-	 * - curvePolator uses svgPathInterpolator(svgpath) which returns a similar interpolator function.
-	 *   However, the returned function is constructed based on an SVG path string.
-	 *   d3.line(points) outputs such SVG path strings.
-	 *
-	 * @private
-	 *
-	 * @param values
-	 * @param curve
-	 * @param epsilon
-	 * @param samples
-	 *
-	 * @returns {*}
-	 */
-	const interpolateCurve = function(values, curve, epsilon, samples) {
-		const length = values.length;
-		const xrange = d3.range(length).map(function(d, i) { return i * (1 / (length - 1)); });
-		const points = values.map((v, i) => [xrange[i], v]);
-
-		return curvePolator(points, curve, epsilon, samples);
-	};
-
-	/**
-	 * Curve Polator
-	 *
-	 * @private
-	 *
-	 * @param points
-	 * @param curve
-	 * @param epsilon
-	 * @param samples
-	 *
-	 * @returns {*}
-	 */
-	const curvePolator = function(points, curve, epsilon, samples) {
-		const path = d3.line().curve(curve)(points);
-
-		return svgPathInterpolator(path, epsilon, samples);
-	};
-
-	/**
-	 * SVG Path Interpolator
-	 *
-	 * @private
-	 *
-	 * @param path
-	 * @param epsilon
-	 * @param samples
-	 *
-	 * @returns {interpolator}
-	 */
-	const svgPathInterpolator = function(path, epsilon, samples) {
-		// Create SVG Path
-		path = path || "M0,0L1,1";
-		var svgpath = d3.create("svg")
-			.attr("xmlns", "http://www.w3.org/2000/svg")
-			.append("path")
-			.attr("d", path)
-			.node();
-
-		// Calculate lengths and max points
-		const totalLength = svgpath.getTotalLength();
-		const minPoint = svgpath.getPointAtLength(0);
-		const maxPoint = svgpath.getPointAtLength(totalLength);
-		let reverse = maxPoint.x < minPoint.x;
-		const range = reverse ? [maxPoint, minPoint] : [minPoint, maxPoint];
-		reverse = reverse ? -1 : 1;
-
-		// Return function
-		return function(x) {
-			const targetX = x === 0 ? 0 : x || minPoint.x; // Check for 0 and null/undefined
-			if (targetX < range[0].x) return range[0];     // Clamp
-			if (targetX > range[1].x) return range[1];
-
-			function estimateLength(l, mn, mx) {
-				let delta = svgpath.getPointAtLength(l).x - targetX;
-				let nextDelta = 0;
-				let iter = 0;
-
-				while (Math.abs(delta) > epsilon && iter < samples) {
-					iter++;
-
-					if (reverse * delta < 0) {
-						mn = l;
-						l = (l + mx) / 2;
-					} else {
-						mx = l;
-						l = (mn + l) / 2;
-					}
-					nextDelta = svgpath.getPointAtLength(l).x - targetX;
-					if (Math.abs(Math.abs(delta) - Math.abs(nextDelta)) < epsilon) {
-						break;
-					}
-					delta = nextDelta;
-				}
-
-				return l;
-			}
-
-			const estimatedLength = estimateLength(totalLength / 2, 0, totalLength);
-
-			return svgpath.getPointAtLength(estimatedLength).y;
-		}
 	};
 
 	return {

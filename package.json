@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "d3": "^5.9.7",
-    "snyk": "^1.192.0",
+		"d3-interpolate-curve": "^0.0.1",
     "x3dom": "^1.7.2"
   },
   "peerDependencies": {
@@ -51,13 +51,14 @@
     "chai": "^4.2.0",
     "eslint": "^4.19.1",
     "gh-pages": "^2.0.1",
-    "jsdoc": "^3.6.2",
+    "jsdoc": "^3.6.3",
     "jsdom": "^15.1.1",
     "minami": "^1.2.3",
     "mocha": "^6.1.4",
     "rollup": "^0.56.2",
     "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-json": "^2.3.1",
+    "snyk": "^1.193.1",
     "tap-spec": "^5.0.0",
     "tape": "^4.11.0",
     "toast-jsdoc": "^1.0.2",
