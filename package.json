@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "d3": "^5.9.7",
-    "d3-interpolate-curve": "^0.0.1",
+    "d3-interpolate-curve": "^0.0.2",
     "x3dom": "^1.7.2"
   },
   "peerDependencies": {

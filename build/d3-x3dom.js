@@ -50,6 +50,7 @@ function svgPathInterpolator(path, epsilon, samples) {
       let iter = 0;
 
       while (Math.abs(delta) > epsilon && iter < samples) {
+        if (iter > samples) return false;
         iter++;
 
         if (reverse * delta < 0) {
@@ -60,9 +61,7 @@ function svgPathInterpolator(path, epsilon, samples) {
           l = (mn + l) / 2;
         }
         nextDelta = svgpath.getPointAtLength(l).x - targetX;
-        if (Math.abs(Math.abs(delta) - Math.abs(nextDelta)) < epsilon) {
-          break;
-        }
+
         delta = nextDelta;
       }
 
