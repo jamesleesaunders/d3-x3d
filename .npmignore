@@ -1,4 +1,4 @@
-build/*.zip
+dist/*.zip
 test/
 .DS_Store
 .idea

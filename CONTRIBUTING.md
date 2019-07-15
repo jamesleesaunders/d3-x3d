@@ -3,8 +3,8 @@
 
 **d3-x3dom** makes it easy to quickly produce beautiful 3D data visualisations with minimal code.
 
-The `build/d3-x3dom.js` and `build/d3-x3dom.css` files are built from source files in the `src` directory.
-Do NOT edit the `build` files directly, but rather edit the `src` files and then run `make` or `npm test` to generate the `build` files.
+The `dist/d3-x3dom.js` and `dist/d3-x3dom.css` files are built from source files in the `src` directory.
+Do NOT edit the `dist` files directly, but rather edit the `src` files and then run `make` or `npm test` to generate the `dist` files.
 
 ## Unit Testing
 Note, d3-x3dom is currently transitioning unit testing framework from the tape to mocha. Currently running with a combination of the two. All new unit tests should be written using mocha. In time all tape tests should be re-written in mocha.

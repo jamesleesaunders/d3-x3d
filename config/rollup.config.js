@@ -13,7 +13,7 @@ let banner = `/**
 export default {
 	input: "index.js",
 	output: {
-		file: "build/d3-x3dom.js",
+		file: "dist/d3-x3dom.js",
 		format: "umd",
 		extend: true,
 		name: "d3.x3dom",

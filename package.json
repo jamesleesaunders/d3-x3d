@@ -23,8 +23,8 @@
   "bugs": {
     "url": "https://github.com/jamesleesaunders/d3-x3dom/issues"
   },
-  "main": "build/d3-x3dom.js",
-  "unpkg": "build/d3-x3dom.min.js",
+  "main": "dist/d3-x3dom.js",
+  "unpkg": "dist/d3-x3dom.min.js",
   "module": "index.js",
   "scripts": {
     "pretest": "make",

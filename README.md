@@ -40,7 +40,7 @@ Include D3.js, X3DOM and d3-x3dom js and css files in the `<head>` section of yo
    <script src="https://d3js.org/d3.v5.min.js"></script>
    <script src="https://x3dom.org/download/1.7.2/x3dom-full.js"></script>
    <link rel="stylesheet" href="https://x3dom.org/download/1.7.2/x3dom.css" />
-   <script src="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/build/d3-x3dom.js"></script>
+   <script src="https://raw.githack.com/jamesleesaunders/d3-x3dom/master/dist/d3-x3dom.js"></script>
 </head>
 ```
 
