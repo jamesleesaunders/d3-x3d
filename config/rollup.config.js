@@ -19,7 +19,7 @@ export default {
 		name: "d3.x3dom",
 		banner: banner,
 		strict: true,
-		globals: { d3: "d3", x3dom: "x3dom" }
+		globals: { "d3": "d3", "x3dom": "x3dom", "d3-array": "d3", "d3-shape": "d3" }
 	},
 	external: ["d3", "x3dom"],
 	plugins: [

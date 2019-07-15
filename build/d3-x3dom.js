@@ -9,14 +9,14 @@
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('d3-shape'), require('d3-array'), require('d3')) :
 	typeof define === 'function' && define.amd ? define(['d3-shape', 'd3-array', 'd3'], factory) :
-	(global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3Shape,global.d3Array,global.d3));
+	(global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3,global.d3,global.d3));
 }(this, (function (d3Shape,d3Array,d3) { 'use strict';
 
 var version = "1.3.4";
 var license = "GPL-2.0";
 
 function curvePolator(points, curve, epsilon, samples) {
-  const path = d3.line().curve(curve)(points);
+  const path = d3Shape.line().curve(curve)(points);
 
   return svgPathInterpolator(path, epsilon, samples);
 }
@@ -77,7 +77,7 @@ function svgPathInterpolator(path, epsilon, samples) {
 
 function fromCurve(values, curve, epsilon = 0.00001, samples = 100) {
   const length = values.length;
-  const xrange = d3.range(length).map(function(d, i) { return i * (1 / (length - 1)); });
+  const xrange = d3Array.range(length).map(function(d, i) { return i * (1 / (length - 1)); });
   const points = values.map((v, i) => [xrange[i], v]);
 
   return curvePolator(points, curve, epsilon, samples);
@@ -555,15 +555,16 @@ function dataTransform(data) {
 	};
 
 	/**
-  * Smooth Data (Advanced Version)
+  * Smooth Data
   *
   * Returns a copy of the input data series which is subsampled into a 100 samples,
   * and has the smoothed values based on a provided d3.curve function.
   *
-  * @param curve
+  * @param curveFunction
   * @returns {{values: *, key: *}}
   */
-	var smoothAdvanced = function smoothAdvanced(curve) {
+	var smooth = function smooth(curveFunction) {
+		var epsilon = 0.00001;
 		var samples = 100;
 
 		var values = data.values.map(function (d) {
@@ -574,7 +575,8 @@ function dataTransform(data) {
 		var keyPolator = function keyPolator(t) {
 			return Number((t * samples).toFixed(0)) + 1;
 		};
-		var valuePolator = fromCurve(values, curve);
+		var valuePolator = fromCurve(values, curveFunction, epsilon, samples);
+		// const valuePolator = d3.interpolateBasis(values);
 
 		return {
 			key: data.key,
@@ -590,7 +592,7 @@ function dataTransform(data) {
 	return {
 		summary: summary,
 		rotate: rotate,
-		smooth: smoothAdvanced
+		smooth: smooth
 	};
 }
 

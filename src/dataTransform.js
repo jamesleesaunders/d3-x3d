@@ -408,41 +408,15 @@ export default function dataTransform(data) {
 	};
 
 	/**
-	 * Smooth Data (Basic Version)
+	 * Smooth Data
 	 *
 	 * Returns a copy of the input data series which is subsampled into a 100 samples,
 	 * and has the smoothed values based on a provided d3.curve function.
 	 *
+	 * @param curveFunction
 	 * @returns {{values: *, key: *}}
 	 */
-	const smoothBasic = function() {
-		const samples = 100;
-
-		const values = data.values.map((d) => d.value);
-
-		const sampler = d3.range(0, 1, 1 / samples);
-		const keyPolator = (t) => (Number((t * samples).toFixed(0)) + 1);
-		const valuePolator = d3.interpolateBasis(values);
-
-		return {
-			key: data.key,
-			values: sampler.map((t) => ({
-				key: keyPolator(t),
-				value: valuePolator(t)
-			}))
-		};
-	};
-
-	/**
-	 * Smooth Data (Advanced Version)
-	 *
-	 * Returns a copy of the input data series which is subsampled into a 100 samples,
-	 * and has the smoothed values based on a provided d3.curve function.
-	 *
-	 * @param curve
-	 * @returns {{values: *, key: *}}
-	 */
-	const smoothAdvanced = function(curve) {
+	const smooth = function(curveFunction) {
 		const epsilon = 0.00001;
 		const samples = 100;
 
@@ -450,7 +424,8 @@ export default function dataTransform(data) {
 
 		const sampler = d3.range(0, 1, 1 / samples);
 		const keyPolator = (t) => (Number((t * samples).toFixed(0)) + 1);
-		const valuePolator = d3Interpolate.interpolateFromCurve(values, curve);
+		const valuePolator = d3Interpolate.interpolateFromCurve(values, curveFunction, epsilon, samples);
+		// const valuePolator = d3.interpolateBasis(values);
 
 		return {
 			key: data.key,
@@ -464,7 +439,7 @@ export default function dataTransform(data) {
 	return {
 		summary: summary,
 		rotate: rotate,
-		smooth: smoothAdvanced
+		smooth: smooth
 	};
 }
 
