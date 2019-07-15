@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import * as d3Interpolate from "../node_modules/d3-interpolate-curve/src/index";
 
 /**
  * Data Transform
@@ -449,7 +450,7 @@ export default function dataTransform(data) {
 
 		const sampler = d3.range(0, 1, 1 / samples);
 		const keyPolator = (t) => (Number((t * samples).toFixed(0)) + 1);
-		const valuePolator = d3.interpolateFromCurve(values, curve);
+		const valuePolator = d3Interpolate.interpolateFromCurve(values, curve);
 
 		return {
 			key: data.key,
