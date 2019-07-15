@@ -16,7 +16,7 @@ var version = "1.3.4";
 var license = "GPL-2.0";
 
 function curvePolator(points, curve, epsilon, samples) {
-  const path = d3Shape.line().curve(curve)(points);
+  var path = d3Shape.line().curve(curve)(points);
 
   return svgPathInterpolator(path, epsilon, samples);
 }
@@ -25,29 +25,29 @@ function svgPathInterpolator(path, epsilon, samples) {
   // Create detached SVG path
   path = path || "M0,0L1,1";
 
-  const area = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  area.innerHTML = `<path></path>`;
-  const svgpath = area.querySelector('path');
+  var area = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  area.innerHTML = "<path></path>";
+  var svgpath = area.querySelector('path');
   svgpath.setAttribute('d', path);
 
   // Calculate lengths and max points
-  const totalLength = svgpath.getTotalLength();
-  const minPoint = svgpath.getPointAtLength(0);
-  const maxPoint = svgpath.getPointAtLength(totalLength);
-  let reverse = maxPoint.x < minPoint.x;
-  const range = reverse ? [maxPoint, minPoint] : [minPoint, maxPoint];
+  var totalLength = svgpath.getTotalLength();
+  var minPoint = svgpath.getPointAtLength(0);
+  var maxPoint = svgpath.getPointAtLength(totalLength);
+  var reverse = maxPoint.x < minPoint.x;
+  var range = reverse ? [maxPoint, minPoint] : [minPoint, maxPoint];
   reverse = reverse ? -1 : 1;
 
   // Return function
-  return function(x) {
-    const targetX = x === 0 ? 0 : x || minPoint.x; // Check for 0 and null/undefined
-    if (targetX < range[0].x) return range[0];     // Clamp
+  return function (x) {
+    var targetX = x === 0 ? 0 : x || minPoint.x; // Check for 0 and null/undefined
+    if (targetX < range[0].x) return range[0]; // Clamp
     if (targetX > range[1].x) return range[1];
 
     function estimateLength(l, mn, mx) {
-      let delta = svgpath.getPointAtLength(l).x - targetX;
-      let nextDelta = 0;
-      let iter = 0;
+      var delta = svgpath.getPointAtLength(l).x - targetX;
+      var nextDelta = 0;
+      var iter = 0;
 
       while (Math.abs(delta) > epsilon && iter < samples) {
         if (iter > samples) return false;
@@ -68,16 +68,23 @@ function svgPathInterpolator(path, epsilon, samples) {
       return l;
     }
 
-    const estimatedLength = estimateLength(totalLength / 2, 0, totalLength);
+    var estimatedLength = estimateLength(totalLength / 2, 0, totalLength);
 
     return svgpath.getPointAtLength(estimatedLength).y;
-  }
+  };
 }
 
-function fromCurve(values, curve, epsilon = 0.00001, samples = 100) {
-  const length = values.length;
-  const xrange = d3Array.range(length).map(function(d, i) { return i * (1 / (length - 1)); });
-  const points = values.map((v, i) => [xrange[i], v]);
+function fromCurve (values, curve) {
+  var epsilon = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.00001;
+  var samples = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 100;
+
+  var length = values.length;
+  var xrange = d3Array.range(length).map(function (d, i) {
+    return i * (1 / (length - 1));
+  });
+  var points = values.map(function (v, i) {
+    return [xrange[i], v];
+  });
 
   return curvePolator(points, curve, epsilon, samples);
 }

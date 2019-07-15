@@ -24,7 +24,7 @@ export default {
 	external: ["d3", "x3dom", "d3-shape", "d3-array"],
 	plugins: [
 		babel({
-			exclude: ["node_modules/**", "*.json"],
+			include: ["index.js", "src/**", "node_modules/d3-interpolate-curve/**"],
 			babelrc: false,
 			presets: [["env", { modules: false }]],
 			plugins: [
