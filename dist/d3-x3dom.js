@@ -25,10 +25,10 @@
     // Create detached SVG path
     path = path || "M0,0L1,1";
 
-    var area = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    var area = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     area.innerHTML = "<path></path>";
-    var svgpath = area.querySelector('path');
-    svgpath.setAttribute('d', path);
+    var svgpath = area.querySelector("path");
+    svgpath.setAttribute("d", path);
 
     // Calculate lengths and max points
     var totalLength = svgpath.getTotalLength();
