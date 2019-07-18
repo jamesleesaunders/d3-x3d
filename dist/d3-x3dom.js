@@ -142,6 +142,52 @@
   }();
 
   /**
+   * Union Two Arrays
+   *
+   * @private
+   * @param {Array} array1 - First Array.
+   * @param {Array} array2 - First Array.
+   * @returns {Array}
+   */
+  var union = function union(array1, array2) {
+  	var ret = [];
+  	var arr = array1.concat(array2);
+  	var len = arr.length;
+  	var assoc = {};
+
+  	while (len--) {
+  		var item = arr[len];
+
+  		if (!assoc[item]) {
+  			ret.unshift(item);
+  			assoc[item] = true;
+  		}
+  	}
+
+  	return ret;
+  };
+
+  /**
+   * How Many Decimal Places?
+   *
+   * @private
+   * @param {number} num - Float.
+   * @returns {number}
+   */
+  var decimalPlaces = function decimalPlaces(num) {
+  	var match = ("" + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+  	if (!match) {
+  		return 0;
+  	}
+
+  	return Math.max(0,
+  	// Number of digits right of decimal point.
+  	(match[1] ? match[1].length : 0) - (
+  	// Adjust for scientific notation.
+  	match[2] ? +match[2] : 0));
+  };
+
+  /**
    * Data Transform
    *
    * @module
@@ -161,61 +207,11 @@
   	var dataType = data.key !== undefined ? SINGLE_SERIES : MULTI_SERIES;
 
   	/**
-    * ************ HELPER FUNCTIONS ************
-    */
-
-  	/**
-    * Union Two Arrays
-    *
-    * @private
-    * @param {Array} array1 - First Array.
-    * @param {Array} array2 - First Array.
-    * @returns {Array}
-    */
-  	var union = function union(array1, array2) {
-  		var ret = [];
-  		var arr = array1.concat(array2);
-  		var len = arr.length;
-  		var assoc = {};
-
-  		while (len--) {
-  			var item = arr[len];
-
-  			if (!assoc[item]) {
-  				ret.unshift(item);
-  				assoc[item] = true;
-  			}
-  		}
-
-  		return ret;
-  	};
-
-  	/**
-    * How Many Decimal Places?
-    *
-    * @private
-    * @param {number} num - Float.
-    * @returns {number}
-    */
-  	var decimalPlaces = function decimalPlaces(num) {
-  		var match = ("" + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
-  		if (!match) {
-  			return 0;
-  		}
-
-  		return Math.max(0,
-  		// Number of digits right of decimal point.
-  		(match[1] ? match[1].length : 0) - (
-  		// Adjust for scientific notation.
-  		match[2] ? +match[2] : 0));
-  	};
-
-  	/**
     * ************ SINGLE SERIES FUNCTIONS ************
     */
 
   	/**
-    * Row Key
+    * Row Key (Single Series)
     *
     * @returns {Array}
     */
@@ -224,9 +220,9 @@
   	};
 
   	/**
-    * Row Total
+    * Row Total (Single Series)
     *
-    * @returns {Array}
+    * @returns {number}
     */
   	var singleRowTotal = function singleRowTotal() {
   		return d3.sum(data.values, function (d) {
@@ -235,7 +231,7 @@
   	};
 
   	/**
-    * Row Value Keys
+    * Row Value Keys (Single Series)
     *
     * @returns {Array}
     */
@@ -244,7 +240,7 @@
   	};
 
   	/**
-    * Column Keys
+    * Column Keys (Single Series)
     *
     * @returns {Array}
     */
@@ -255,7 +251,7 @@
   	};
 
   	/**
-    * Value Min
+    * Value Min (Single Series)
     *
     * @returns {number}
     */
@@ -266,24 +262,7 @@
   	};
 
   	/**
-    * Coordinates Max
-    *
-    * @returns {Array}
-    */
-  	var singleCoordinatesMax = function singleCoordinatesMax() {
-  		var ret = {};
-
-  		coordinateKeys.forEach(function (key) {
-  			ret[key] = d3.max(data.values, function (d) {
-  				return +d[key];
-  			});
-  		});
-
-  		return ret;
-  	};
-
-  	/**
-    * Value Max
+    * Value Max (Single Series)
     *
     * @returns {number}
     */
@@ -294,48 +273,66 @@
   	};
 
   	/**
-    * Coordinates Min
-    *
-    * @returns {Array}
-    */
-  	var singleCoordinatesMin = function singleCoordinatesMin() {
-  		var ret = {};
-
-  		coordinateKeys.forEach(function (key) {
-  			ret[key] = d3.min(data.values, function (d) {
-  				return +d[key];
-  			});
-  		});
-
-  		return ret;
-  	};
-
-  	/**
-    * Value Extent
+    * Value Extent (Single Series)
     *
     * @returns {Array}
     */
   	var singleValueExtent = function singleValueExtent() {
-  		return [singleValueMin(), singleValueMax()];
+  		return d3.extent(data.values, function (d) {
+  			return +d.value;
+  		});
   	};
 
   	/**
-    * Coordinates Extent
+    * Coordinates Min (Single Series)
     *
-    * @returns {Array}
+    * @returns {Object}
     */
-  	var singleCoordinatesExtent = function singleCoordinatesExtent() {
-  		var ret = {};
+  	var singleCoordinatesMin = function singleCoordinatesMin() {
+  		var minimums = {};
 
   		coordinateKeys.forEach(function (key) {
-  			ret[key] = [singleCoordinatesMin()[key], singleCoordinatesMax()[key]];
+  			minimums[key] = d3.min(data.values, function (d) {
+  				return +d[key];
+  			});
   		});
 
-  		return ret;
+  		return minimums;
   	};
 
   	/**
-    * Thresholds
+    * Coordinates Max (Single Series)
+    *
+    * @returns {Object}
+    */
+  	var singleCoordinatesMax = function singleCoordinatesMax() {
+  		var maximums = {};
+
+  		coordinateKeys.forEach(function (key) {
+  			maximums[key] = d3.max(data.values, function (d) {
+  				return +d[key];
+  			});
+  		});
+
+  		return maximums;
+  	};
+
+  	/**
+    * Coordinates Extent (Single Series)
+    *
+    * @returns {Object}
+    */
+  	var singleCoordinatesExtent = function singleCoordinatesExtent() {
+  		return coordinateKeys.reduce(function (extents, key) {
+  			extents[key] = d3.extent(data.values, function (d) {
+  				return +d[key];
+  			});
+  			return extents;
+  		}, {});
+  	};
+
+  	/**
+    * Thresholds (Single Series)
     *
     * @returns {Array}
     */
@@ -349,10 +346,9 @@
   	};
 
   	/**
-    * Max Decimal Place
+    * Max Decimal Place (Single Series)
     *
     * @returns {number}
-    * @todo Not currently implemented for single series.
     */
   	var singleMaxDecimalPlace = function singleMaxDecimalPlace() {
   		var places = 0;
@@ -393,7 +389,7 @@
     */
 
   	/**
-    * Row Keys
+    * Row Keys (Multi Series)
     *
     * @returns {Array}
     */
@@ -404,26 +400,26 @@
   	};
 
   	/**
-    * Row Totals
+    * Row Totals (Multi Series)
     *
-    * @returns {Array}
+    * @returns {Object}
     */
   	var multiRowTotals = function multiRowTotals() {
-  		var ret = {};
+  		var totals = {};
 
   		d3.map(data).values().forEach(function (d) {
   			var rowKey = d.key;
   			d.values.forEach(function (d) {
-  				ret[rowKey] = typeof ret[rowKey] === "undefined" ? 0 : ret[rowKey];
-  				ret[rowKey] += d.value;
+  				totals[rowKey] = typeof totals[rowKey] === "undefined" ? 0 : totals[rowKey];
+  				totals[rowKey] += d.value;
   			});
   		});
 
-  		return ret;
+  		return totals;
   	};
 
   	/**
-    * Row Totals Max
+    * Row Totals Max (Multi Series)
     *
     * @returns {number}
     */
@@ -432,7 +428,7 @@
   	};
 
   	/**
-    * Row Value Keys
+    * Row Value Keys (Multi Series)
     *
     * @returns {Array}
     */
@@ -441,126 +437,88 @@
   	};
 
   	/**
-    * Column Keys
+    * Column Keys (Multi Series)
     *
     * @returns {Array}
     */
   	var multiColumnKeys = function multiColumnKeys() {
-  		var ret = [];
+  		var keys = [];
 
   		d3.map(data).values().forEach(function (d) {
   			var tmp = [];
   			d.values.forEach(function (d, i) {
   				tmp[i] = d.key;
   			});
-  			ret = union(tmp, ret);
+  			keys = union(tmp, keys);
   		});
 
-  		return ret;
+  		return keys;
   	};
 
   	/**
-    * Column Totals
+    * Column Totals (Multi Series)
     *
-    * @returns {Array}
+    * @returns {Object}
     */
   	var multiColumnTotals = function multiColumnTotals() {
-  		var ret = {};
+  		var totals = {};
 
   		d3.map(data).values().forEach(function (d) {
   			d.values.forEach(function (d) {
   				var columnName = d.key;
-  				ret[columnName] = typeof ret[columnName] === "undefined" ? 0 : ret[columnName];
-  				ret[columnName] += d.value;
+  				totals[columnName] = typeof totals[columnName] === "undefined" ? 0 : totals[columnName];
+  				totals[columnName] += d.value;
   			});
   		});
 
-  		return ret;
+  		return totals;
   	};
 
   	/**
-    * Column Totals Max
+    * Column Totals Max (Multi Series)
     *
-    * @returns {Array}
+    * @returns {number}
     */
   	var multiColumnTotalsMax = function multiColumnTotalsMax() {
   		return d3.max(d3.values(multiColumnTotals()));
   	};
 
   	/**
-    * Value Min
+    * Value Min (Multi Series)
     *
     * @returns {number}
     */
   	var multiValueMin = function multiValueMin() {
-  		var ret = void 0;
+  		var minimum = undefined;
 
   		d3.map(data).values().forEach(function (d) {
   			d.values.forEach(function (d) {
-  				ret = typeof ret === "undefined" ? d.value : d3.min([ret, +d.value]);
+  				minimum = typeof minimum === "undefined" ? d.value : d3.min([minimum, +d.value]);
   			});
   		});
 
-  		return ret;
+  		return minimum;
   	};
 
   	/**
-    * Coordinates Max
-    *
-    * @returns {Array}
-    */
-  	var multiCoordinatesMax = function multiCoordinatesMax() {
-  		var ret = {};
-
-  		d3.map(data).values().forEach(function (d) {
-  			d.values.forEach(function (d) {
-  				coordinateKeys.forEach(function (key) {
-  					ret[key] = key in ret ? d3.max([ret[key], +d[key]]) : d[key];
-  				});
-  			});
-  		});
-
-  		return ret;
-  	};
-
-  	/**
-    * Value Max
+    * Value Max (Multi Series)
     *
     * @returns {number}
     */
   	var multiValueMax = function multiValueMax() {
-  		var ret = void 0;
+  		var maximum = undefined;
 
   		d3.map(data).values().forEach(function (d) {
   			d.values.forEach(function (d) {
-  				ret = typeof ret !== "undefined" ? d3.max([ret, +d.value]) : +d.value;
+  				maximum = typeof maximum !== "undefined" ? d3.max([maximum, +d.value]) : +d.value;
   			});
   		});
 
-  		return ret;
+  		return maximum;
   	};
 
   	/**
-    * Coordinates Min
-    *
-    * @returns {Array}
-    */
-  	var multiCoordinatesMin = function multiCoordinatesMin() {
-  		var ret = {};
-
-  		d3.map(data).values().forEach(function (d) {
-  			d.values.forEach(function (d) {
-  				coordinateKeys.forEach(function (key) {
-  					ret[key] = key in ret ? d3.min([ret[key], +d[key]]) : d[key];
-  				});
-  			});
-  		});
-
-  		return ret;
-  	};
-
-  	/**
-    * Value Extent
+    * Value Extent (Multi Series)
     *
     * @returns {Array}
     */
@@ -569,22 +527,60 @@
   	};
 
   	/**
-    * Coordinates Extent
+    * Coordinates Min (Multi Series)
     *
-    * @returns {Array}
+    * @returns {Object}
     */
-  	var multiCoordinatesExtent = function multiCoordinatesExtent() {
-  		var ret = {};
+  	var multiCoordinatesMin = function multiCoordinatesMin() {
+  		var minimums = {};
 
-  		coordinateKeys.forEach(function (key) {
-  			ret[key] = [multiCoordinatesMin()[key], multiCoordinatesMax()[key]];
+  		d3.map(data).values().forEach(function (d) {
+  			d.values.forEach(function (d) {
+  				coordinateKeys.forEach(function (key) {
+  					minimums[key] = key in minimums ? d3.min([minimums[key], +d[key]]) : d[key];
+  				});
+  			});
   		});
 
-  		return ret;
+  		return minimums;
   	};
 
   	/**
-    * Thresholds
+    * Coordinates Max (Multi Series)
+    *
+    * @returns {Object}
+    */
+  	var multiCoordinatesMax = function multiCoordinatesMax() {
+  		var maximums = {};
+
+  		d3.map(data).values().forEach(function (d) {
+  			d.values.forEach(function (d) {
+  				coordinateKeys.forEach(function (key) {
+  					maximums[key] = key in maximums ? d3.max([maximums[key], +d[key]]) : d[key];
+  				});
+  			});
+  		});
+
+  		return maximums;
+  	};
+
+  	/**
+    * Coordinates Extent (Multi Series)
+    *
+    * @returns {Object}
+    */
+  	var multiCoordinatesExtent = function multiCoordinatesExtent() {
+  		var extents = {};
+
+  		coordinateKeys.forEach(function (key) {
+  			extents[key] = [multiCoordinatesMin()[key], multiCoordinatesMax()[key]];
+  		});
+
+  		return extents;
+  	};
+
+  	/**
+    * Thresholds (Multi Series)
     *
     * @returns {Array}
     */
@@ -598,7 +594,7 @@
   	};
 
   	/**
-    * Max Decimal Place
+    * Max Decimal Place (Multi Series)
     *
     * @returns {number}
     */
@@ -644,7 +640,7 @@
   	/**
     * Summary
     *
-    * @returns {Array}
+    * @returns {Object}
     */
   	var summary = function summary() {
   		if (dataType === SINGLE_SERIES) {

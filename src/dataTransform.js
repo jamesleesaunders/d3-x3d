@@ -2,6 +2,55 @@ import * as d3 from "d3";
 import * as d3Interpolate from "d3-interpolate-curve";
 
 /**
+ * Union Two Arrays
+ *
+ * @private
+ * @param {Array} array1 - First Array.
+ * @param {Array} array2 - First Array.
+ * @returns {Array}
+ */
+const union = function(array1, array2) {
+	const ret = [];
+	const arr = array1.concat(array2);
+	let len = arr.length;
+	const assoc = {};
+
+	while (len--) {
+		const item = arr[len];
+
+		if (!assoc[item]) {
+			ret.unshift(item);
+			assoc[item] = true;
+		}
+	}
+
+	return ret;
+};
+
+/**
+ * How Many Decimal Places?
+ *
+ * @private
+ * @param {number} num - Float.
+ * @returns {number}
+ */
+const decimalPlaces = function(num) {
+	const match = ("" + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+	if (!match) {
+		return 0;
+	}
+
+	return Math.max(
+		0,
+		// Number of digits right of decimal point.
+		(match[1] ? match[1].length : 0)
+		// Adjust for scientific notation.
+		-
+		(match[2] ? +match[2] : 0)
+	);
+};
+
+/**
  * Data Transform
  *
  * @module
@@ -21,65 +70,11 @@ export default function dataTransform(data) {
 	const dataType = data.key !== undefined ? SINGLE_SERIES : MULTI_SERIES;
 
 	/**
-	 * ************ HELPER FUNCTIONS ************
-	 */
-
-	/**
-	 * Union Two Arrays
-	 *
-	 * @private
-	 * @param {Array} array1 - First Array.
-	 * @param {Array} array2 - First Array.
-	 * @returns {Array}
-	 */
-	const union = function(array1, array2) {
-		const ret = [];
-		const arr = array1.concat(array2);
-		let len = arr.length;
-		const assoc = {};
-
-		while (len--) {
-			const item = arr[len];
-
-			if (!assoc[item]) {
-				ret.unshift(item);
-				assoc[item] = true;
-			}
-		}
-
-		return ret;
-	};
-
-	/**
-	 * How Many Decimal Places?
-	 *
-	 * @private
-	 * @param {number} num - Float.
-	 * @returns {number}
-	 */
-	const decimalPlaces = function(num) {
-		const match = ("" + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
-		if (!match) {
-			return 0;
-		}
-
-		return Math.max(
-			0,
-			// Number of digits right of decimal point.
-			(match[1] ? match[1].length : 0)
-			// Adjust for scientific notation.
-			-
-			(match[2] ? +match[2] : 0)
-		);
-	};
-
-
-	/**
 	 * ************ SINGLE SERIES FUNCTIONS ************
 	 */
 
 	/**
-	 * Row Key
+	 * Row Key (Single Series)
 	 *
 	 * @returns {Array}
 	 */
@@ -88,16 +83,16 @@ export default function dataTransform(data) {
 	};
 
 	/**
-	 * Row Total
+	 * Row Total (Single Series)
 	 *
-	 * @returns {Array}
+	 * @returns {number}
 	 */
 	const singleRowTotal = function() {
 		return d3.sum(data.values, (d) => d.value);
 	};
 
 	/**
-	 * Row Value Keys
+	 * Row Value Keys (Single Series)
 	 *
 	 * @returns {Array}
 	 */
@@ -106,7 +101,7 @@ export default function dataTransform(data) {
 	};
 
 	/**
-	 * Column Keys
+	 * Column Keys (Single Series)
 	 *
 	 * @returns {Array}
 	 */
@@ -115,7 +110,7 @@ export default function dataTransform(data) {
 	};
 
 	/**
-	 * Value Min
+	 * Value Min (Single Series)
 	 *
 	 * @returns {number}
 	 */
@@ -124,22 +119,7 @@ export default function dataTransform(data) {
 	};
 
 	/**
-	 * Coordinates Max
-	 *
-	 * @returns {Array}
-	 */
-	const singleCoordinatesMax = function() {
-		let ret = {};
-
-		coordinateKeys.forEach((key) => {
-			ret[key] = d3.max(data.values, (d) => +d[key]);
-		});
-
-		return ret;
-	};
-
-	/**
-	 * Value Max
+	 * Value Max (Single Series)
 	 *
 	 * @returns {number}
 	 */
@@ -148,46 +128,58 @@ export default function dataTransform(data) {
 	};
 
 	/**
-	 * Coordinates Min
-	 *
-	 * @returns {Array}
-	 */
-	const singleCoordinatesMin = function() {
-		let ret = {};
-
-		coordinateKeys.forEach((key) => {
-			ret[key] = d3.min(data.values, (d) => +d[key]);
-		});
-
-		return ret;
-	};
-
-	/**
-	 * Value Extent
+	 * Value Extent (Single Series)
 	 *
 	 * @returns {Array}
 	 */
 	const singleValueExtent = function() {
-		return [singleValueMin(), singleValueMax()];
+		return d3.extent(data.values, (d) => +d.value);
 	};
 
 	/**
-	 * Coordinates Extent
+	 * Coordinates Min (Single Series)
 	 *
-	 * @returns {Array}
+	 * @returns {Object}
 	 */
-	const singleCoordinatesExtent = function() {
-		let ret = {};
+	const singleCoordinatesMin = function() {
+		let minimums = {};
 
-		coordinateKeys.forEach(function(key) {
-			ret[key] = [singleCoordinatesMin()[key], singleCoordinatesMax()[key]];
+		coordinateKeys.forEach((key) => {
+			minimums[key] = d3.min(data.values, (d) => +d[key]);
 		});
 
-		return ret;
+		return minimums;
 	};
 
 	/**
-	 * Thresholds
+	 * Coordinates Max (Single Series)
+	 *
+	 * @returns {Object}
+	 */
+	const singleCoordinatesMax = function() {
+		let maximums = {};
+
+		coordinateKeys.forEach((key) => {
+			maximums[key] = d3.max(data.values, (d) => +d[key]);
+		});
+
+		return maximums;
+	};
+
+	/**
+	 * Coordinates Extent (Single Series)
+	 *
+	 * @returns {Object}
+	 */
+	const singleCoordinatesExtent = function() {
+		return coordinateKeys.reduce((extents, key) => {
+			extents[key] = d3.extent(data.values, (d) => +d[key]);
+			return extents;
+		}, {});
+	};
+
+	/**
+	 * Thresholds (Single Series)
 	 *
 	 * @returns {Array}
 	 */
@@ -199,10 +191,9 @@ export default function dataTransform(data) {
 	};
 
 	/**
-	 * Max Decimal Place
+	 * Max Decimal Place (Single Series)
 	 *
 	 * @returns {number}
-	 * @todo Not currently implemented for single series.
 	 */
 	const singleMaxDecimalPlace = function() {
 		let places = 0;
@@ -243,7 +234,7 @@ export default function dataTransform(data) {
 	 */
 
 	/**
-	 * Row Keys
+	 * Row Keys (Multi Series)
 	 *
 	 * @returns {Array}
 	 */
@@ -252,26 +243,26 @@ export default function dataTransform(data) {
 	};
 
 	/**
-	 * Row Totals
+	 * Row Totals (Multi Series)
 	 *
-	 * @returns {Array}
+	 * @returns {Object}
 	 */
 	const multiRowTotals = function() {
-		const ret = {};
+		const totals = {};
 
 		d3.map(data).values().forEach((d) => {
 			const rowKey = d.key;
 			d.values.forEach((d) => {
-				ret[rowKey] = (typeof ret[rowKey] === "undefined") ? 0 : ret[rowKey];
-				ret[rowKey] += d.value;
+				totals[rowKey] = (typeof totals[rowKey] === "undefined") ? 0 : totals[rowKey];
+				totals[rowKey] += d.value;
 			});
 		});
 
-		return ret;
+		return totals;
 	};
 
 	/**
-	 * Row Totals Max
+	 * Row Totals Max (Multi Series)
 	 *
 	 * @returns {number}
 	 */
@@ -280,7 +271,7 @@ export default function dataTransform(data) {
 	};
 
 	/**
-	 * Row Value Keys
+	 * Row Value Keys (Multi Series)
 	 *
 	 * @returns {Array}
 	 */
@@ -289,126 +280,88 @@ export default function dataTransform(data) {
 	};
 
 	/**
-	 * Column Keys
+	 * Column Keys (Multi Series)
 	 *
 	 * @returns {Array}
 	 */
 	const multiColumnKeys = function() {
-		let ret = [];
+		let keys = [];
 
 		d3.map(data).values().forEach((d) => {
 			const tmp = [];
 			d.values.forEach((d, i) => {
 				tmp[i] = d.key;
 			});
-			ret = union(tmp, ret);
+			keys = union(tmp, keys);
 		});
 
-		return ret;
+		return keys;
 	};
 
 	/**
-	 * Column Totals
+	 * Column Totals (Multi Series)
 	 *
-	 * @returns {Array}
+	 * @returns {Object}
 	 */
 	const multiColumnTotals = function() {
-		let ret = {};
+		let totals = {};
 
 		d3.map(data).values().forEach((d) => {
 			d.values.forEach((d) => {
 				const columnName = d.key;
-				ret[columnName] = (typeof (ret[columnName]) === "undefined" ? 0 : ret[columnName]);
-				ret[columnName] += d.value;
+				totals[columnName] = (typeof (totals[columnName]) === "undefined" ? 0 : totals[columnName]);
+				totals[columnName] += d.value;
 			});
 		});
 
-		return ret;
+		return totals;
 	};
 
 	/**
-	 * Column Totals Max
+	 * Column Totals Max (Multi Series)
 	 *
-	 * @returns {Array}
+	 * @returns {number}
 	 */
 	const multiColumnTotalsMax = function() {
 		return d3.max(d3.values(multiColumnTotals()));
 	};
 
 	/**
-	 * Value Min
+	 * Value Min (Multi Series)
 	 *
 	 * @returns {number}
 	 */
 	const multiValueMin = function() {
-		let ret;
+		let minimum = undefined;
 
 		d3.map(data).values().forEach((d) => {
 			d.values.forEach((d) => {
-				ret = (typeof (ret) === "undefined" ? d.value : d3.min([ret, +d.value]));
+				minimum = (typeof (minimum) === "undefined" ? d.value : d3.min([minimum, +d.value]));
 			});
 		});
 
-		return ret;
+		return minimum;
 	};
 
 	/**
-	 * Coordinates Max
-	 *
-	 * @returns {Array}
-	 */
-	const multiCoordinatesMax = function() {
-		let ret = {};
-
-		d3.map(data).values().forEach((d) => {
-			d.values.forEach((d) => {
-				coordinateKeys.forEach((key) => {
-					ret[key] = (key in ret ? d3.max([ret[key], +d[key]]) : d[key]);
-				});
-			});
-		});
-
-		return ret;
-	};
-
-	/**
-	 * Value Max
+	 * Value Max (Multi Series)
 	 *
 	 * @returns {number}
 	 */
 	const multiValueMax = function() {
-		let ret;
+		let maximum = undefined;
 
 		d3.map(data).values().forEach((d) => {
 			d.values.forEach((d) => {
-				ret = (typeof ret !== "undefined" ? d3.max([ret, +d.value]) : +d.value);
+				maximum = (typeof maximum !== "undefined" ? d3.max([maximum, +d.value]) : +d.value);
 			});
 		});
 
-		return ret;
+		return maximum;
 	};
 
 	/**
-	 * Coordinates Min
-	 *
-	 * @returns {Array}
-	 */
-	const multiCoordinatesMin = function() {
-		let ret = {};
-
-		d3.map(data).values().forEach((d) => {
-			d.values.forEach((d) => {
-				coordinateKeys.forEach((key) => {
-					ret[key] = (key in ret ? d3.min([ret[key], +d[key]]) : d[key]);
-				});
-			});
-		});
-
-		return ret;
-	};
-
-	/**
-	 * Value Extent
+	 * Value Extent (Multi Series)
 	 *
 	 * @returns {Array}
 	 */
@@ -417,22 +370,60 @@ export default function dataTransform(data) {
 	};
 
 	/**
-	 * Coordinates Extent
+	 * Coordinates Min (Multi Series)
 	 *
-	 * @returns {Array}
+	 * @returns {Object}
 	 */
-	const multiCoordinatesExtent = function() {
-		let ret = {};
+	const multiCoordinatesMin = function() {
+		let minimums = {};
 
-		coordinateKeys.forEach(function(key) {
-			ret[key] = [multiCoordinatesMin()[key], multiCoordinatesMax()[key]];
+		d3.map(data).values().forEach((d) => {
+			d.values.forEach((d) => {
+				coordinateKeys.forEach((key) => {
+					minimums[key] = (key in minimums ? d3.min([minimums[key], +d[key]]) : d[key]);
+				});
+			});
 		});
 
-		return ret;
+		return minimums;
 	};
 
 	/**
-	 * Thresholds
+	 * Coordinates Max (Multi Series)
+	 *
+	 * @returns {Object}
+	 */
+	const multiCoordinatesMax = function() {
+		let maximums = {};
+
+		d3.map(data).values().forEach((d) => {
+			d.values.forEach((d) => {
+				coordinateKeys.forEach((key) => {
+					maximums[key] = (key in maximums ? d3.max([maximums[key], +d[key]]) : d[key]);
+				});
+			});
+		});
+
+		return maximums;
+	};
+
+	/**
+	 * Coordinates Extent (Multi Series)
+	 *
+	 * @returns {Object}
+	 */
+	const multiCoordinatesExtent = function() {
+		let extents = {};
+
+		coordinateKeys.forEach(function(key) {
+			extents[key] = [multiCoordinatesMin()[key], multiCoordinatesMax()[key]];
+		});
+
+		return extents;
+	};
+
+	/**
+	 * Thresholds (Multi Series)
 	 *
 	 * @returns {Array}
 	 */
@@ -444,7 +435,7 @@ export default function dataTransform(data) {
 	};
 
 	/**
-	 * Max Decimal Place
+	 * Max Decimal Place (Multi Series)
 	 *
 	 * @returns {number}
 	 */
@@ -491,7 +482,7 @@ export default function dataTransform(data) {
 	/**
 	 * Summary
 	 *
-	 * @returns {Array}
+	 * @returns {Object}
 	 */
 	const summary = function() {
 		if (dataType === SINGLE_SERIES) {
