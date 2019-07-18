@@ -592,25 +592,50 @@ export default function dataTransform(data) {
 	 * @returns {Array}
 	 */
 	const summary = function() {
-		return {
-			dataType: dataType,
-			rowKey: rowKey,
-			rowTotal: rowTotal,
-			rowKeys: rowKeys,
-			rowTotals: rowTotals,
-			rowTotalsMax: rowTotalsMax,
-			rowValuesKeys: rowValuesKeys,
-			columnKeys: columnKeys,
-			columnTotals: columnTotals,
-			columnTotalsMax: columnTotalsMax,
-			valueMin: valueMin,
-			valueMax: valueMax,
-			valueExtent: valueExtent,
-			coordinatesMin: coordinatesMin,
-			coordinatesMax: coordinatesMax,
-			coordinatesExtent: coordinatesExtent,
-			maxDecimalPlace: maxDecimalPlace,
-			thresholds: thresholds
+		const type = data.key !== undefined ? "single" : "multi";
+
+		if (type === "single") {
+			return {
+				dataType: dataType,
+				rowKey: rowKey,
+				rowTotal: rowTotal,
+				rowKeys: rowKeys,
+				rowTotals: rowTotals,
+				rowTotalsMax: rowTotalsMax,
+				rowValuesKeys: rowValuesKeys,
+				columnKeys: columnKeys,
+				columnTotals: columnTotals,
+				columnTotalsMax: columnTotalsMax,
+				valueMin: valueMin,
+				valueMax: valueMax,
+				valueExtent: valueExtent,
+				coordinatesMin: coordinatesMin,
+				coordinatesMax: coordinatesMax,
+				coordinatesExtent: coordinatesExtent,
+				maxDecimalPlace: maxDecimalPlace,
+				thresholds: thresholds
+			}
+		} else {
+			return {
+				dataType: dataType,
+				rowKey: rowKey,
+				rowTotal: rowTotal,
+				rowKeys: rowKeys,
+				rowTotals: rowTotals,
+				rowTotalsMax: rowTotalsMax,
+				rowValuesKeys: rowValuesKeys,
+				columnKeys: columnKeys,
+				columnTotals: columnTotals,
+				columnTotalsMax: columnTotalsMax,
+				valueMin: valueMin,
+				valueMax: valueMax,
+				valueExtent: valueExtent,
+				coordinatesMin: coordinatesMin,
+				coordinatesMax: coordinatesMax,
+				coordinatesExtent: coordinatesExtent,
+				maxDecimalPlace: maxDecimalPlace,
+				thresholds: thresholds
+			}
 		}
 	};
 
