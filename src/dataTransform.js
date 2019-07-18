@@ -592,20 +592,13 @@ export default function dataTransform(data) {
 	 * @returns {Array}
 	 */
 	const summary = function() {
-		const type = data.key !== undefined ? "single" : "multi";
-
-		if (type === "single") {
+		if (dataType === SINGLE_SERIES) {
 			return {
 				dataType: dataType,
 				rowKey: rowKey,
 				rowTotal: rowTotal,
-				rowKeys: rowKeys,
-				rowTotals: rowTotals,
-				rowTotalsMax: rowTotalsMax,
 				rowValuesKeys: rowValuesKeys,
 				columnKeys: columnKeys,
-				columnTotals: columnTotals,
-				columnTotalsMax: columnTotalsMax,
 				valueMin: valueMin,
 				valueMax: valueMax,
 				valueExtent: valueExtent,
@@ -618,8 +611,6 @@ export default function dataTransform(data) {
 		} else {
 			return {
 				dataType: dataType,
-				rowKey: rowKey,
-				rowTotal: rowTotal,
 				rowKeys: rowKeys,
 				rowTotals: rowTotals,
 				rowTotalsMax: rowTotalsMax,

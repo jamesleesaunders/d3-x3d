@@ -149,96 +149,280 @@
    */
   function dataTransform(data) {
 
-  	var SINGLE_SERIES = 1;
-  	var MULTI_SERIES = 2;
-  	var coordinateKeys = ['x', 'y', 'z'];
-
   	/**
-    * Data Type
-    *
-    * @type {Number}
+    * ************ SINGLE SERIES FUNCTIONS ************
     */
-  	var dataType = data.key !== undefined ? SINGLE_SERIES : MULTI_SERIES;
 
   	/**
     * Row Key
     *
     * @returns {Array}
     */
-  	var rowKey = function () {
-  		if (dataType === SINGLE_SERIES) {
-  			return d3.values(data)[0];
-  		}
-  	}();
+  	var singleRowKey = function singleRowKey() {
+  		return d3.values(data)[0];
+  	};
 
   	/**
     * Row Total
     *
     * @returns {Array}
     */
-  	var rowTotal = function () {
-  		if (dataType === SINGLE_SERIES) {
-  			return d3.sum(data.values, function (d) {
-  				return d.value;
-  			});
-  		}
-  	}();
-
-  	/**
-    * Row Keys
-    *
-    * @returns {Array}
-    */
-  	var rowKeys = function () {
-  		if (dataType === MULTI_SERIES) {
-  			return data.map(function (d) {
-  				return d.key;
-  			});
-  		}
-  	}();
-
-  	/**
-    * Row Totals
-    *
-    * @returns {Array}
-    */
-  	var rowTotals = function () {
-  		if (dataType === MULTI_SERIES) {
-  			var ret = {};
-  			d3.map(data).values().forEach(function (d) {
-  				var rowKey = d.key;
-  				d.values.forEach(function (d) {
-  					ret[rowKey] = typeof ret[rowKey] === "undefined" ? 0 : ret[rowKey];
-  					ret[rowKey] += d.value;
-  				});
-  			});
-  			return ret;
-  		}
-  	}();
-
-  	/**
-    * Row Totals Max
-    *
-    * @returns {number}
-    */
-  	var rowTotalsMax = function () {
-  		if (dataType === MULTI_SERIES) {
-  			return d3.max(d3.values(rowTotals));
-  		}
-  	}();
+  	var singleRowTotal = function singleRowTotal() {
+  		return d3.sum(data.values, function (d) {
+  			return d.value;
+  		});
+  	};
 
   	/**
     * Row Value Keys
     *
     * @returns {Array}
     */
-  	var rowValuesKeys = function () {
-  		if (dataType === SINGLE_SERIES) {
-  			return Object.keys(data.values[0]);
-  		} else {
-  			return Object.keys(data[0].values[0]);
-  		}
-  	}();
+  	var singleRowValuesKeys = function singleRowValuesKeys() {
+  		return Object.keys(data.values[0]);
+  	};
+
+  	/**
+    * Column Keys
+    *
+    * @returns {Array}
+    */
+  	var singleColumnKeys = function singleColumnKeys() {
+  		return d3.values(data.values).map(function (d) {
+  			return d.key;
+  		});
+  	};
+
+  	/**
+    * Value Min
+    *
+    * @returns {number}
+    */
+  	var singleValueMin = function singleValueMin() {
+  		return d3.min(data.values, function (d) {
+  			return +d.value;
+  		});
+  	};
+
+  	/**
+    * Coordinates Max
+    *
+    * @returns {Array}
+    */
+  	var singleCoordinatesMax = function singleCoordinatesMax() {
+  		var ret = {};
+
+  		coordinateKeys.forEach(function (key) {
+  			ret[key] = d3.max(data.values, function (d) {
+  				return +d[key];
+  			});
+  		});
+
+  		return ret;
+  	};
+
+  	/**
+    * Value Max
+    *
+    * @returns {number}
+    */
+  	var singleValueMax = function singleValueMax() {
+  		return d3.max(data.values, function (d) {
+  			return +d.value;
+  		});
+  	};
+
+  	/**
+    * Coordinates Min
+    *
+    * @returns {Array}
+    */
+  	var singleCoordinatesMin = function singleCoordinatesMin() {
+  		var ret = {};
+
+  		coordinateKeys.forEach(function (key) {
+  			ret[key] = d3.min(data.values, function (d) {
+  				return +d[key];
+  			});
+  		});
+
+  		return ret;
+  	};
+
+  	/**
+    * ************ MULTI SERIES FUNCTIONS ************
+    */
+
+  	/**
+    * Row Keys
+    *
+    * @returns {Array}
+    */
+  	var multiRowKeys = function multiRowKeys() {
+  		return data.map(function (d) {
+  			return d.key;
+  		});
+  	};
+
+  	/**
+    * Row Totals
+    *
+    * @returns {Array}
+    */
+  	var multiRowTotals = function multiRowTotals() {
+  		var ret = {};
+
+  		d3.map(data).values().forEach(function (d) {
+  			var rowKey = d.key;
+  			d.values.forEach(function (d) {
+  				ret[rowKey] = typeof ret[rowKey] === "undefined" ? 0 : ret[rowKey];
+  				ret[rowKey] += d.value;
+  			});
+  		});
+
+  		return ret;
+  	};
+
+  	/**
+    * Row Totals Max
+    *
+    * @returns {number}
+    */
+  	var multiRowTotalsMax = function multiRowTotalsMax() {
+  		return d3.max(d3.values(multiRowTotals()));
+  	};
+
+  	/**
+    * Row Value Keys
+    *
+    * @returns {Array}
+    */
+  	var multiRowValuesKeys = function multiRowValuesKeys() {
+  		return Object.keys(data[0].values[0]);
+  	};
+
+  	/**
+    * Column Keys
+    *
+    * @returns {Array}
+    */
+  	var multiColumnKeys = function multiColumnKeys() {
+  		var ret = [];
+
+  		d3.map(data).values().forEach(function (d) {
+  			var tmp = [];
+  			d.values.forEach(function (d, i) {
+  				tmp[i] = d.key;
+  			});
+  			ret = union(tmp, ret);
+  		});
+
+  		return ret;
+  	};
+
+  	/**
+    * Column Totals
+    *
+    * @returns {Array}
+    */
+  	var multiColumnTotals = function multiColumnTotals() {
+  		var ret = {};
+
+  		d3.map(data).values().forEach(function (d) {
+  			d.values.forEach(function (d) {
+  				var columnName = d.key;
+  				ret[columnName] = typeof ret[columnName] === "undefined" ? 0 : ret[columnName];
+  				ret[columnName] += d.value;
+  			});
+  		});
+
+  		return ret;
+  	};
+
+  	/**
+    * Column Totals Max
+    *
+    * @returns {Array}
+    */
+  	var multiColumnTotalsMax = function multiColumnTotalsMax() {
+  		return d3.max(d3.values(multiColumnTotals()));
+  	};
+
+  	/**
+    * Value Min
+    *
+    * @returns {number}
+    */
+  	var multiValueMin = function multiValueMin() {
+  		var ret = void 0;
+
+  		d3.map(data).values().forEach(function (d) {
+  			d.values.forEach(function (d) {
+  				ret = typeof ret === "undefined" ? d.value : d3.min([ret, +d.value]);
+  			});
+  		});
+
+  		return +ret;
+  	};
+
+  	/**
+    * Coordinates Max
+    *
+    * @returns {Array}
+    */
+  	var multiCoordinatesMax = function multiCoordinatesMax() {
+  		var ret = {};
+
+  		d3.map(data).values().forEach(function (d) {
+  			d.values.forEach(function (d) {
+  				coordinateKeys.forEach(function (key) {
+  					ret[key] = key in ret ? d3.max([ret[key], +d[key]]) : d[key];
+  				});
+  			});
+  		});
+
+  		return ret;
+  	};
+
+  	/**
+    * Value Max
+    *
+    * @returns {number}
+    */
+  	var multiValueMax = function multiValueMax() {
+  		var ret = void 0;
+
+  		d3.map(data).values().forEach(function (d) {
+  			d.values.forEach(function (d) {
+  				ret = typeof ret !== "undefined" ? d3.max([ret, +d.value]) : +d.value;
+  			});
+  		});
+
+  		return ret;
+  	};
+
+  	/**
+    * Coordinates Min
+    *
+    * @returns {Array}
+    */
+  	var multiCoordinatesMin = function multiCoordinatesMin() {
+  		var ret = {};
+
+  		d3.map(data).values().forEach(function (d) {
+  			d.values.forEach(function (d) {
+  				coordinateKeys.forEach(function (key) {
+  					ret[key] = key in ret ? d3.min([ret[key], +d[key]]) : d[key];
+  				});
+  			});
+  		});
+
+  		return ret;
+  	};
+
+  	/**
+    * ************ HELPER FUNCTIONS ************
+    */
 
   	/**
     * Union Two Arrays
@@ -267,187 +451,6 @@
   	};
 
   	/**
-    * Column Keys
-    *
-    * @returns {Array}
-    */
-  	var columnKeys = function () {
-  		if (dataType === SINGLE_SERIES) {
-  			return d3.values(data.values).map(function (d) {
-  				return d.key;
-  			});
-  		}
-
-  		var ret = [];
-  		d3.map(data).values().forEach(function (d) {
-  			var tmp = [];
-  			d.values.forEach(function (d, i) {
-  				tmp[i] = d.key;
-  			});
-  			ret = union(tmp, ret);
-  		});
-
-  		return ret;
-  	}();
-
-  	/**
-    * Column Totals
-    *
-    * @returns {Array}
-    */
-  	var columnTotals = function () {
-  		if (dataType !== MULTI_SERIES) {
-  			return;
-  		}
-
-  		var ret = {};
-  		d3.map(data).values().forEach(function (d) {
-  			d.values.forEach(function (d) {
-  				var columnName = d.key;
-  				ret[columnName] = typeof ret[columnName] === "undefined" ? 0 : ret[columnName];
-  				ret[columnName] += d.value;
-  			});
-  		});
-
-  		return ret;
-  	}();
-
-  	/**
-    * Column Totals Max
-    *
-    * @returns {Array}
-    */
-  	var columnTotalsMax = function () {
-  		if (dataType === MULTI_SERIES) {
-  			return d3.max(d3.values(columnTotals));
-  		}
-  	}();
-
-  	/**
-    * Value Min
-    *
-    * @returns {number}
-    */
-  	var valueMin = function () {
-  		if (dataType === SINGLE_SERIES) {
-  			return d3.min(data.values, function (d) {
-  				return +d.value;
-  			});
-  		}
-
-  		var ret = void 0;
-  		d3.map(data).values().forEach(function (d) {
-  			d.values.forEach(function (d) {
-  				ret = typeof ret === "undefined" ? d.value : d3.min([ret, +d.value]);
-  			});
-  		});
-
-  		return +ret;
-  	}();
-
-  	/**
-    * Value Max
-    *
-    * @returns {number}
-    */
-  	var valueMax = function () {
-  		var ret = void 0;
-
-  		if (dataType === SINGLE_SERIES) {
-  			ret = d3.max(data.values, function (d) {
-  				return +d.value;
-  			});
-  		} else {
-  			d3.map(data).values().forEach(function (d) {
-  				d.values.forEach(function (d) {
-  					ret = typeof ret !== "undefined" ? d3.max([ret, +d.value]) : +d.value;
-  				});
-  			});
-  		}
-
-  		return ret;
-  	}();
-
-  	/**
-    * Value Extent
-    *
-    * @returns {Array}
-    */
-  	var valueExtent = function () {
-  		return [valueMin, valueMax];
-  	}();
-
-  	/**
-    * Coordinates Min
-    *
-    * @returns {Array}
-    */
-  	var coordinatesMin = function () {
-  		var ret = {};
-
-  		if (dataType === SINGLE_SERIES) {
-  			coordinateKeys.forEach(function (key) {
-  				ret[key] = d3.min(data.values, function (d) {
-  					return +d[key];
-  				});
-  			});
-  			return ret;
-  		} else {
-  			d3.map(data).values().forEach(function (d) {
-  				d.values.forEach(function (d) {
-  					coordinateKeys.forEach(function (key) {
-  						ret[key] = key in ret ? d3.min([ret[key], +d[key]]) : d[key];
-  					});
-  				});
-  			});
-  		}
-
-  		return ret;
-  	}();
-
-  	/**
-    * Coordinates Max
-    *
-    * @returns {Array}
-    */
-  	var coordinatesMax = function () {
-  		var ret = {};
-
-  		if (dataType === SINGLE_SERIES) {
-  			coordinateKeys.forEach(function (key) {
-  				ret[key] = d3.max(data.values, function (d) {
-  					return +d[key];
-  				});
-  			});
-  			return ret;
-  		} else {
-  			d3.map(data).values().forEach(function (d) {
-  				d.values.forEach(function (d) {
-  					coordinateKeys.forEach(function (key) {
-  						ret[key] = key in ret ? d3.max([ret[key], +d[key]]) : d[key];
-  					});
-  				});
-  			});
-  		}
-
-  		return ret;
-  	}();
-
-  	/**
-    * Coordinates Extent
-    *
-    * @returns {Array}
-    */
-  	var coordinatesExtent = function () {
-  		var ret = {};
-  		coordinateKeys.forEach(function (key) {
-  			ret[key] = [coordinatesMin[key], coordinatesMax[key]];
-  		});
-
-  		return ret;
-  	}();
-
-  	/**
     * How Many Decimal Places?
     *
     * @private
@@ -468,9 +471,240 @@
   	};
 
   	/**
+    * ************ ORIGINAL FUNCTIONS ************
+    */
+
+  	var SINGLE_SERIES = 1;
+  	var MULTI_SERIES = 2;
+  	var coordinateKeys = ['x', 'y', 'z'];
+
+  	/**
+    * Data Type
+    *
+    * @type {Number}
+    */
+  	var dataType = data.key !== undefined ? SINGLE_SERIES : MULTI_SERIES;
+
+  	/**
+    * Row Key
+    *
+    * @returns {Array}
+    * @done
+    */
+  	var rowKey = function () {
+  		if (dataType === SINGLE_SERIES) {
+  			return singleRowKey();
+  		} else {
+  			return undefined;
+  		}
+  	}();
+
+  	/**
+    * Row Total
+    *
+    * @returns {Array}
+    * @done
+    */
+  	var rowTotal = function () {
+  		if (dataType === SINGLE_SERIES) {
+  			return singleRowTotal();
+  		} else {
+  			return undefined;
+  		}
+  	}();
+
+  	/**
+    * Row Keys
+    *
+    * @returns {Array}
+    * @done
+    */
+  	var rowKeys = function () {
+  		if (dataType === SINGLE_SERIES) {
+  			return undefined;
+  		} else {
+  			return multiRowKeys();
+  		}
+  	}();
+
+  	/**
+    * Row Totals
+    *
+    * @returns {Array}
+    * @done
+    */
+  	var rowTotals = function () {
+  		if (dataType === SINGLE_SERIES) {
+  			return undefined;
+  		} else {
+  			return multiRowTotals();
+  		}
+  	}();
+
+  	/**
+    * Row Totals Max
+    *
+    * @returns {number}
+    * @done
+    */
+  	var rowTotalsMax = function () {
+  		if (dataType === SINGLE_SERIES) {
+  			return undefined;
+  		} else {
+  			return multiRowTotalsMax();
+  		}
+  	}();
+
+  	/**
+    * Row Value Keys
+    *
+    * @returns {Array}
+    * @done
+    */
+  	var rowValuesKeys = function () {
+  		if (dataType === SINGLE_SERIES) {
+  			return singleRowValuesKeys();
+  		} else {
+  			return multiRowValuesKeys();
+  		}
+  	}();
+
+  	/**
+    * Column Keys
+    *
+    * @returns {Array}
+    * @done
+    */
+  	var columnKeys = function () {
+  		if (dataType === SINGLE_SERIES) {
+  			return singleColumnKeys();
+  		} else {
+  			return multiColumnKeys();
+  		}
+  	}();
+
+  	/**
+    * Column Totals
+    *
+    * @returns {Array}
+    * @done
+    */
+  	var columnTotals = function () {
+  		if (dataType === SINGLE_SERIES) {
+  			return undefined;
+  		} else {
+  			return multiColumnTotals();
+  		}
+  	}();
+
+  	/**
+    * Column Totals Max
+    *
+    * @returns {Array}
+    * @done
+    */
+  	var columnTotalsMax = function () {
+  		if (dataType === SINGLE_SERIES) {
+  			return undefined;
+  		} else {
+  			return multiColumnTotalsMax();
+  		}
+  	}();
+
+  	/**
+    * Value Min
+    *
+    * @returns {number}
+    * @done
+    */
+  	var valueMin = function () {
+  		if (dataType === SINGLE_SERIES) {
+  			return singleValueMin();
+  		} else {
+  			return multiValueMin();
+  		}
+  	}();
+
+  	/**
+    * Value Max
+    *
+    * @returns {number}
+    * @done
+    */
+  	var valueMax = function () {
+  		if (dataType === SINGLE_SERIES) {
+  			return singleValueMax();
+  		} else {
+  			return multiValueMax();
+  		}
+  	}();
+
+  	/**
+    * Value Extent
+    *
+    * @returns {Array}
+    * @done
+    */
+  	var valueExtent = function () {
+  		if (dataType === SINGLE_SERIES) {
+  			return [singleValueMin(), singleValueMax()];
+  		} else {
+  			return [multiValueMin(), multiValueMax()];
+  		}
+  	}();
+
+  	/**
+    * Coordinates Min
+    *
+    * @returns {Array}
+    * @done
+    */
+  	var coordinatesMin = function () {
+  		if (dataType === SINGLE_SERIES) {
+  			return singleCoordinatesMin();
+  		} else {
+  			return multiCoordinatesMin();
+  		}
+  	}();
+
+  	/**
+    * Coordinates Max
+    *
+    * @returns {Array}
+    * @done
+    */
+  	var coordinatesMax = function () {
+  		if (dataType === SINGLE_SERIES) {
+  			return singleCoordinatesMax();
+  		} else {
+  			return multiCoordinatesMax();
+  		}
+  	}();
+
+  	/**
+    * Coordinates Extent
+    *
+    * @returns {Array}
+    * @done
+    */
+  	var coordinatesExtent = function () {
+  		var ret = {};
+  		coordinateKeys.forEach(function (key) {
+  			if (dataType === SINGLE_SERIES) {
+  				ret[key] = [singleCoordinatesMin()[key], singleCoordinatesMax()[key]];
+  			} else {
+  				ret[key] = [multiCoordinatesMin()[key], multiCoordinatesMax()[key]];
+  			}
+  		});
+
+  		return ret;
+  	}();
+
+  	/**
     * Max Decimal Place
     *
     * @returns {number}
+    * @todo Refactor.
     */
   	var maxDecimalPlace = function () {
   		var ret = 0;
@@ -490,6 +724,7 @@
     * Thresholds
     *
     * @returns {Array}
+    * @todo Refactor.
     */
   	var thresholds = function () {
   		var distance = valueMax - valueMin;
@@ -506,26 +741,42 @@
     * @returns {Array}
     */
   	var summary = function summary() {
-  		return {
-  			dataType: dataType,
-  			rowKey: rowKey,
-  			rowTotal: rowTotal,
-  			rowKeys: rowKeys,
-  			rowTotals: rowTotals,
-  			rowTotalsMax: rowTotalsMax,
-  			rowValuesKeys: rowValuesKeys,
-  			columnKeys: columnKeys,
-  			columnTotals: columnTotals,
-  			columnTotalsMax: columnTotalsMax,
-  			valueMin: valueMin,
-  			valueMax: valueMax,
-  			valueExtent: valueExtent,
-  			coordinatesMin: coordinatesMin,
-  			coordinatesMax: coordinatesMax,
-  			coordinatesExtent: coordinatesExtent,
-  			maxDecimalPlace: maxDecimalPlace,
-  			thresholds: thresholds
-  		};
+  		if (dataType === SINGLE_SERIES) {
+  			return {
+  				dataType: dataType,
+  				rowKey: rowKey,
+  				rowTotal: rowTotal,
+  				rowValuesKeys: rowValuesKeys,
+  				columnKeys: columnKeys,
+  				valueMin: valueMin,
+  				valueMax: valueMax,
+  				valueExtent: valueExtent,
+  				coordinatesMin: coordinatesMin,
+  				coordinatesMax: coordinatesMax,
+  				coordinatesExtent: coordinatesExtent,
+  				maxDecimalPlace: maxDecimalPlace,
+  				thresholds: thresholds
+  			};
+  		} else {
+  			return {
+  				dataType: dataType,
+  				rowKeys: rowKeys,
+  				rowTotals: rowTotals,
+  				rowTotalsMax: rowTotalsMax,
+  				rowValuesKeys: rowValuesKeys,
+  				columnKeys: columnKeys,
+  				columnTotals: columnTotals,
+  				columnTotalsMax: columnTotalsMax,
+  				valueMin: valueMin,
+  				valueMax: valueMax,
+  				valueExtent: valueExtent,
+  				coordinatesMin: coordinatesMin,
+  				coordinatesMax: coordinatesMax,
+  				coordinatesExtent: coordinatesExtent,
+  				maxDecimalPlace: maxDecimalPlace,
+  				thresholds: thresholds
+  			};
+  		}
   	};
 
   	/**
@@ -581,10 +832,11 @@
   		var keyPolator = function keyPolator(t) {
   			return Number((t * samples).toFixed(0)) + 1;
   		};
-  		var valuePolator = fromCurve(values, curveFunction, epsilon, samples);
-  		// const valuePolator = d3.interpolateBasis(values);
 
-  		return {
+  		// const valuePolator = d3.interpolateBasis(values);
+  		var valuePolator = fromCurve(values, curveFunction, epsilon, samples);
+
+  		var smoothed = {
   			key: data.key,
   			values: sampler.map(function (t) {
   				return {
@@ -593,6 +845,8 @@
   				};
   			})
   		};
+
+  		return smoothed;
   	};
 
   	return {

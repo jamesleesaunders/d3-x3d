@@ -111,13 +111,8 @@ test("Test Summary Single Dimension", function(t) {
 		dataType: 1,
 		rowKey: "Fruit",
 		rowTotal: 24,
-		rowKeys: undefined,
-		rowTotals: undefined,
-		rowTotalsMax: undefined,
 		rowValuesKeys: ["key", "value", "x", "y", "z"],
 		columnKeys: ["Apples", "Oranges", "Pears", "Bananas"],
-		columnTotals: undefined,
-		columnTotalsMax: undefined,
 		valueMin: 3,
 		valueMax: 9,
 		valueExtent: [3, 9],
@@ -136,8 +131,6 @@ test("Test Summary Multi Dimension", function(t) {
 	let actual = d3X3dom.dataTransform(dataset2).summary();
 	let expected = {
 		dataType: 2,
-		rowKey: undefined,
-		rowTotal: undefined,
 		rowKeys: ["Apples", "Oranges", "Pears", "Bananas"],
 		rowTotals: { Apples: 43, Oranges: 34, Pears: 45, Bananas: 47 },
 		rowTotalsMax: 47,
