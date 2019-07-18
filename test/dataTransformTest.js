@@ -6,7 +6,7 @@ let d3X3dom = require("../");
 let dataset1 = {
 	key: "Fruit",
 	values: [
-		{ key: "Apples", value: 9, x: 1, y: 1, z: 1 },
+		{ key: "Apples", value: 9.11, x: 1, y: 1, z: 1 },
 		{ key: "Oranges", value: 3, x: 2, y: 2, z: 2 },
 		{ key: "Pears", value: 5, x: 3, y: 3, z: 3 },
 		{ key: "Bananas", value: 7, x: 4, y: 4, z: 4 }
@@ -16,7 +16,7 @@ let dataset1 = {
 let dataset2 = [{
 	key: "Apples",
 	values: [
-		{ key: "UK", value: 9, x: 1, y: 1, z: 1 },
+		{ key: "UK", value: 9.11, x: 1, y: 1, z: 1 },
 		{ key: "France", value: 2, x: 2, y: 2, z: 2 },
 		{ key: "Spain", value: 18, x: 3, y: 3, z: 3 },
 		{ key: "Germany", value: 5, x: 4, y: 4, z: 4 },
@@ -58,7 +58,7 @@ let dataset2 = [{
 let dataset3 = [{
 	key: "UK",
 	values: [
-		{ key: "Apples", value: 9, x: 1, y: 1, z: 1 },
+		{ key: "Apples", value: 9.11, x: 1, y: 1, z: 1 },
 		{ key: "Oranges", value: 10, x: 1, y: 1, z: 1 },
 		{ key: "Pears", value: 18, x: 1, y: 1, z: 1 },
 		{ key: "Bananas", value: 13, x: 1, y: 1, z: 1 }
@@ -110,17 +110,17 @@ test("Test Summary Single Dimension", function(t) {
 	let expected = {
 		dataType: 1,
 		rowKey: "Fruit",
-		rowTotal: 24,
+		rowTotal: 24.11,
 		rowValuesKeys: ["key", "value", "x", "y", "z"],
 		columnKeys: ["Apples", "Oranges", "Pears", "Bananas"],
 		valueMin: 3,
-		valueMax: 9,
-		valueExtent: [3, 9],
+		valueMax: 9.11,
+		valueExtent: [3, 9.11],
 		coordinatesMin: { x: 1, y: 1, z: 1 },
 		coordinatesMax: { x: 4, y: 4, z: 4 },
 		coordinatesExtent: { x: [1, 4], y: [1, 4], z: [1, 4] },
-		maxDecimalPlace: 0,
-		thresholds: [4, 5, 6, 8]
+		maxDecimalPlace: 2,
+		thresholds: [3.92, 5.44, 6.36, 8.5]
 	};
 	t.deepEqual(actual, expected);
 
@@ -132,20 +132,20 @@ test("Test Summary Multi Dimension", function(t) {
 	let expected = {
 		dataType: 2,
 		rowKeys: ["Apples", "Oranges", "Pears", "Bananas"],
-		rowTotals: { Apples: 43, Oranges: 34, Pears: 45, Bananas: 47 },
+		rowTotals: { Apples: 43.11, Oranges: 34, Pears: 45, Bananas: 47 },
 		rowTotalsMax: 47,
 		rowValuesKeys: ["key", "value", "x", "y", "z"],
 		columnKeys: ["UK", "France", "Spain", "Germany", "Italy", "Portugal"],
-		columnTotals: { UK: 50, France: 24, Spain: 30, Germany: 20, Italy: 24, Portugal: 21 },
-		columnTotalsMax: 50,
+		columnTotals: { UK: 50.11, France: 24, Spain: 30, Germany: 20, Italy: 24, Portugal: 21 },
+		columnTotalsMax: 50.11,
 		valueMin: 0,
 		valueMax: 18,
 		valueExtent: [0, 18],
 		coordinatesMin: { x: 1, y: 1, z: 1 },
 		coordinatesMax: { x: 6, y: 6, z: 6 },
 		coordinatesExtent: { x: [1, 6], y: [1, 6], z: [1, 6] },
-		maxDecimalPlace: 0,
-		thresholds: [3, 7, 10, 16]
+		maxDecimalPlace: 2,
+		thresholds: [2.7, 7.2, 9.9, 16.2]
 	};
 	t.deepEqual(actual, expected);
 
