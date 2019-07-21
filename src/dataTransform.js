@@ -493,8 +493,10 @@ export default function dataTransform(data) {
 		const sampler = d3.range(0, 1, 1 / samples);
 		const keyPolator = (t) => (Number((t * samples).toFixed(0)) + 1);
 
-		// const valuePolator = d3.interpolateBasis(values);
-		const valuePolator = d3Interpolate.interpolateFromCurve(values, curveFunction, epsilon, samples);
+		// If curveFunction is Basis then reach straight for D3's native 'interpolateBasis' function (it's faster!)
+		const valuePolator = curveFunction === d3.curveBasis
+			? d3.interpolateBasis(values)
+			: d3Interpolate.interpolateFromCurve(values, curveFunction, epsilon, samples);
 
 		const smoothed = {
 			key: data.key,
