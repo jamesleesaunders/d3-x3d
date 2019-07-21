@@ -12,7 +12,7 @@
   (global = global || self, (global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3, global.d3, global.d3)));
 }(this, function (d3, d3Shape, d3Array) { 'use strict';
 
-  var version = "1.3.4";
+  var version = "1.3.5";
   var license = "GPL-2.0";
 
   function curvePolator(points, curve, epsilon, samples) {
@@ -668,8 +668,8 @@
   			return Number((t * samples).toFixed(0)) + 1;
   		};
 
-  		// const valuePolator = d3.interpolateBasis(values);
-  		var valuePolator = fromCurve(values, curveFunction, epsilon, samples);
+  		// If curveFunction is Basis then reach straight for D3's native 'interpolateBasis' function (it is quicker!)
+  		var valuePolator = curveFunction === d3.curveBasis ? d3.interpolateBasis(values) : fromCurve(values, curveFunction, epsilon, samples);
 
   		var smoothed = {
   			key: data.key,
