@@ -1,5 +1,5 @@
 # d3-x3dom
-## 3D Data Driven Charts with D3 and X3DOM
+## Data Driven 3D Charts with D3 and X3DOM
 
 [![npm version](https://badge.fury.io/js/d3-x3dom.svg)](https://badge.fury.io/js/d3-x3dom)
 [![Build Status](https://travis-ci.org/jamesleesaunders/d3-x3dom.svg?branch=master)](https://travis-ci.org/jamesleesaunders/d3-x3dom)
