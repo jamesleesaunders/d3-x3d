@@ -237,7 +237,7 @@
     *
     * @returns {Array}
     */
-  	var singleRowValuesKeys = function singleRowValuesKeys(data) {
+  	var singleRowValueKeys = function singleRowValueKeys(data) {
   		return Object.keys(data.values[0]);
   	};
 
@@ -367,7 +367,6 @@
   			dataType: dataType(data),
   			rowKey: singleRowKey(data),
   			rowTotal: singleRowTotal(data),
-  			rowValuesKeys: singleRowValuesKeys(data),
   			columnKeys: singleColumnKeys(data),
   			valueMin: singleValueMin(data),
   			valueMax: singleValueMax(data),
@@ -376,7 +375,8 @@
   			coordinatesMax: singleCoordinatesMax(data),
   			coordinatesExtent: singleCoordinatesExtent(data),
   			maxDecimalPlace: singleMaxDecimalPlace(data),
-  			thresholds: singleThresholds(data)
+  			thresholds: singleThresholds(data),
+  			rowValuesKeys: singleRowValueKeys(data)
   		};
   	};
 
@@ -419,7 +419,7 @@
     *
     * @returns {Array}
     */
-  	var multiRowValuesKeys = function multiRowValuesKeys(data) {
+  	var multiRowValueKeys = function multiRowValueKeys(data) {
   		return Object.keys(data[0].values[0]);
   	};
 
@@ -541,7 +541,7 @@
   			extents[coord] = [multiCoordinatesMin(data)[coord], multiCoordinatesMax(data)[coord]];
 
   			return extents;
-  		}, []);
+  		}, {});
   	};
 
   	/**
@@ -584,7 +584,6 @@
   			rowKeys: multiRowKeys(data),
   			rowTotals: multiRowTotals(data),
   			rowTotalsMax: multiRowTotalsMax(data),
-  			rowValuesKeys: multiRowValuesKeys(data),
   			columnKeys: multiColumnKeys(data),
   			columnTotals: multiColumnTotals(data),
   			columnTotalsMax: multiColumnTotalsMax(data),
@@ -595,7 +594,8 @@
   			coordinatesMax: multiCoordinatesMax(data),
   			coordinatesExtent: multiCoordinatesExtent(data),
   			maxDecimalPlace: multiMaxDecimalPlace(data),
-  			thresholds: multiThresholds(data)
+  			thresholds: multiThresholds(data),
+  			rowValuesKeys: multiRowValueKeys(data)
   		};
   	};
 

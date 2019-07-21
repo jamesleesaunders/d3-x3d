@@ -98,7 +98,7 @@ export default function dataTransform(data) {
 	 *
 	 * @returns {Array}
 	 */
-	const singleRowValuesKeys = function(data) {
+	const singleRowValueKeys = function(data) {
 		return Object.keys(data.values[0]);
 	};
 
@@ -212,7 +212,6 @@ export default function dataTransform(data) {
 			dataType: dataType(data),
 			rowKey: singleRowKey(data),
 			rowTotal: singleRowTotal(data),
-			rowValuesKeys: singleRowValuesKeys(data),
 			columnKeys: singleColumnKeys(data),
 			valueMin: singleValueMin(data),
 			valueMax: singleValueMax(data),
@@ -221,7 +220,8 @@ export default function dataTransform(data) {
 			coordinatesMax: singleCoordinatesMax(data),
 			coordinatesExtent: singleCoordinatesExtent(data),
 			maxDecimalPlace: singleMaxDecimalPlace(data),
-			thresholds: singleThresholds(data)
+			thresholds: singleThresholds(data),
+			rowValuesKeys: singleRowValueKeys(data),
 		}
 	};
 
@@ -262,7 +262,7 @@ export default function dataTransform(data) {
 	 *
 	 * @returns {Array}
 	 */
-	const multiRowValuesKeys = function(data) {
+	const multiRowValueKeys = function(data) {
 		return Object.keys(data[0].values[0]);
 	};
 
@@ -376,7 +376,7 @@ export default function dataTransform(data) {
 			extents[coord] = [multiCoordinatesMin(data)[coord], multiCoordinatesMax(data)[coord]];
 
 			return extents;
-		}, []);
+		}, {});
 	};
 
 	/**
@@ -417,7 +417,6 @@ export default function dataTransform(data) {
 			rowKeys: multiRowKeys(data),
 			rowTotals: multiRowTotals(data),
 			rowTotalsMax: multiRowTotalsMax(data),
-			rowValuesKeys: multiRowValuesKeys(data),
 			columnKeys: multiColumnKeys(data),
 			columnTotals: multiColumnTotals(data),
 			columnTotalsMax: multiColumnTotalsMax(data),
@@ -428,7 +427,8 @@ export default function dataTransform(data) {
 			coordinatesMax: multiCoordinatesMax(data),
 			coordinatesExtent: multiCoordinatesExtent(data),
 			maxDecimalPlace: multiMaxDecimalPlace(data),
-			thresholds: multiThresholds(data)
+			thresholds: multiThresholds(data),
+			rowValuesKeys: multiRowValueKeys(data)
 		}
 	};
 
