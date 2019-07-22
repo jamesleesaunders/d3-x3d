@@ -668,7 +668,7 @@
   			return Number((t * samples).toFixed(0)) + 1;
   		};
 
-  		// If curveFunction is Basis then reach straight for D3's native 'interpolateBasis' function (it is quicker!)
+  		// If curveFunction is Basis then reach straight for D3's native 'interpolateBasis' function (it's faster!)
   		var valuePolator = curveFunction === d3.curveBasis ? d3.interpolateBasis(values) : fromCurve(values, curveFunction, epsilon, samples);
 
   		var smoothed = {
@@ -1316,19 +1316,9 @@
   			var shape = function shape(el, radius, height, color) {
   				var shape = el.append("Shape");
 
-  				/*
-      // FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
-      shape.append("Cylinder")
-      	.attr("radius", radius)
-      	.attr("height", height);
-      	shape.append("Appearance")
-      	.append("Material")
-      	.attr("diffuseColor", color);
-      */
+  				shape.append("Cylinder").attr("radius", radius).attr("height", height);
 
-  				shape.html(function () {
-  					return "\n\t\t\t\t\t<Cylinder radius=\"" + radius + "\" height=\"" + height + "\"></Cylinder>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<Material diffuseColor=\"" + color + "\"></Material>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
-  				});
+  				shape.append("Appearance").append("Material").attr("diffuseColor", color);
   			};
 
   			var makeSolid = function makeSolid(el, color) {
@@ -2816,34 +2806,6 @@
   	var yScale = void 0;
 
   	/**
-    * Array to String
-    *
-    * @private
-    * @param {array} arr
-    * @returns {string}
-    */
-  	var array2dToString = function array2dToString(arr) {
-  		return arr.reduce(function (a, b) {
-  			return a.concat(b);
-  		}, []).reduce(function (a, b) {
-  			return a.concat(b);
-  		}, []).join(" ");
-  	};
-
-  	/**
-    * Array to Coordinate Index
-    *
-    * @private
-    * @param {array} arr
-    * @returns {string}
-    */
-  	var arrayToCoordIndex = function arrayToCoordIndex(arr) {
-  		return arr.map(function (d, i) {
-  			return i;
-  		}).join(" ").concat(" -1");
-  	};
-
-  	/**
     * Initialise Data and Scales
     *
     * @private
@@ -2887,7 +2849,8 @@
   			var ribbonData = function ribbonData(data) {
   				var values = data.values;
 
-  				return values.map(function (pointThis, indexThis, array) {
+  				// Convert values into IFS coordinates
+  				var coords = values.map(function (pointThis, indexThis, array) {
   					var indexNext = indexThis + 1;
   					if (indexNext >= array.length) {
   						return null;
@@ -2901,17 +2864,20 @@
   					var z1 = 1 - dimensions.z / 2;
   					var z2 = dimensions.z / 2;
 
-  					var points = [[x1, y1, z1], [x1, y1, z2], [x2, y2, z2], [x2, y2, z1], [x1, y1, z1]];
-
-  					return {
-  						key: pointThis.key,
-  						value: pointThis.value,
-  						coordIndex: arrayToCoordIndex(points),
-  						point: array2dToString(points)
-  					};
+  					return [x1, y1, z1, x1, y1, z2, x2, y2, z2, x2, y2, z1];
   				}).filter(function (d) {
   					return d !== null;
   				});
+
+  				data.point = coords.map(function (d) {
+  					return d.join(" ");
+  				}).join(" ");
+  				data.coordIndex = coords.map(function (d, i) {
+  					var offset = i * 4;
+  					return [offset, offset + 1, offset + 2, offset + 3, -1].join(" ");
+  				}).join(" ");
+
+  				return [data];
   			};
 
   			var shape = function shape(el) {
@@ -2948,7 +2914,7 @@
   				return d.key;
   			});
 
-  			ribbon.enter().append("group").classed("ribbon", true).call(shape).merge(ribbon);
+  			ribbon.enter().append("Group").classed("ribbon", true).call(shape).merge(ribbon);
 
   			var ribbonTransition = ribbon.transition().select("Shape");
 
