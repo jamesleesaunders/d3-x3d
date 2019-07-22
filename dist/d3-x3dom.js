@@ -1316,19 +1316,9 @@
   			var shape = function shape(el, radius, height, color) {
   				var shape = el.append("Shape");
 
-  				/*
-      // FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
-      shape.append("Cylinder")
-      	.attr("radius", radius)
-      	.attr("height", height);
-      	shape.append("Appearance")
-      	.append("Material")
-      	.attr("diffuseColor", color);
-      */
+  				shape.append("Cylinder").attr("radius", radius).attr("height", height);
 
-  				shape.html(function () {
-  					return "\n\t\t\t\t\t<Cylinder radius=\"" + radius + "\" height=\"" + height + "\"></Cylinder>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<Material diffuseColor=\"" + color + "\"></Material>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
-  				});
+  				shape.append("Appearance").append("Material").attr("diffuseColor", color);
   			};
 
   			var makeSolid = function makeSolid(el, color) {
