@@ -235,18 +235,6 @@ export default function() {
 	};
 
 	/**
-	 * Debug Getter / Setter
-	 *
-	 * @param {boolean} _v - Show debug log and stats. True/False.
-	 * @returns {*}
-	 */
-	my.debug = function(_v) {
-		if (!arguments.length) return debug;
-		debug = _v;
-		return my;
-	};
-
-	/**
 	 * Smooth Interpolation Getter / Setter
 	 *
 	 * Options:
@@ -262,6 +250,20 @@ export default function() {
 		smoothed = _v;
 		return my;
 	};
+
+	/**
+	 * Debug Getter / Setter
+	 *
+	 * @param {boolean} _v - Show debug log and stats. True/False.
+	 * @returns {*}
+	 */
+	my.debug = function(_v) {
+		if (!arguments.length) return debug;
+		debug = _v;
+		return my;
+	};
+
+
 
 	return my;
 }

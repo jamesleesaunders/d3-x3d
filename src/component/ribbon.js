@@ -14,6 +14,7 @@ export default function() {
 	let color = "red";
 	let transparency = 0.2;
 	let classed = "d3X3domRibbon";
+	let smoothed = d3.curveBasis;
 
 	/* Scales */
 	let xScale;
@@ -85,6 +86,17 @@ export default function() {
 				.attr("id", (d) => d.key);
 
 			const ribbonData = function(data) {
+				const dimensionX = dimensions.x;
+
+				if (smoothed) {
+					data = dataTransform(data).smooth(smoothed);
+
+					const keys = d3.extent(data.values.map((d) => d.key));
+					xScale = d3.scaleLinear()
+						.domain(keys)
+						.range([0, dimensionX]);
+				}
+
 				let values = data.values;
 
 				// Convert values into IFS coordinates
@@ -218,6 +230,23 @@ export default function() {
 	my.color = function(_v) {
 		if (!arguments.length) return color;
 		color = _v;
+		return my;
+	};
+
+	/**
+	 * Smooth Interpolation Getter / Setter
+	 *
+	 * Options:
+	 *   d3.curveBasis
+	 *   d3.curveLinear
+	 *   d3.curveMonotoneX
+	 *
+	 * @param {d3.curve} _v.
+	 * @returns {*}
+	 */
+	my.smoothed = function(_v) {
+		if (!arguments.length) return smoothed;
+		smoothed = _v;
 		return my;
 	};
 

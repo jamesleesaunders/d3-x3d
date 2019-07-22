@@ -30,6 +30,7 @@ export default function() {
 	let colors = ["green", "red", "yellow", "steelblue", "orange"];
 	let classed = "d3X3domRibbonChartMultiSeries";
 	let debug = false;
+	let smoothed = d3.curveBasis;
 
 	/* Scales */
 	let xScale;
@@ -125,6 +126,7 @@ export default function() {
 				.yScale(yScale)
 				.zScale(zScale)
 				.colors(colors)
+				.smoothed(smoothed)
 				.dimensions(dimensions);
 
 			scene.select(".ribbons")
@@ -229,6 +231,23 @@ export default function() {
 	my.colors = function(_v) {
 		if (!arguments.length) return colors;
 		colors = _v;
+		return my;
+	};
+
+	/**
+	 * Smooth Interpolation Getter / Setter
+	 *
+	 * Options:
+	 *   d3.curveBasis
+	 *   d3.curveLinear
+	 *   d3.curveMonotoneX
+	 *
+	 * @param {d3.curve} _v.
+	 * @returns {*}
+	 */
+	my.smoothed = function(_v) {
+		if (!arguments.length) return smoothed;
+		smoothed = _v;
 		return my;
 	};
 

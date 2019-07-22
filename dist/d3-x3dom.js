@@ -2800,6 +2800,7 @@
   	var color = "red";
   	var transparency = 0.2;
   	var classed = "d3X3domRibbon";
+  	var smoothed = d3.curveBasis;
 
   	/* Scales */
   	var xScale = void 0;
@@ -2847,6 +2848,17 @@
   			});
 
   			var ribbonData = function ribbonData(data) {
+  				var dimensionX = dimensions.x;
+
+  				if (smoothed) {
+  					data = dataTransform(data).smooth(smoothed);
+
+  					var keys = d3.extent(data.values.map(function (d) {
+  						return d.key;
+  					}));
+  					xScale = d3.scaleLinear().domain(keys).range([0, dimensionX]);
+  				}
+
   				var values = data.values;
 
   				// Convert values into IFS coordinates
@@ -2981,6 +2993,23 @@
   	};
 
   	/**
+    * Smooth Interpolation Getter / Setter
+    *
+    * Options:
+    *   d3.curveBasis
+    *   d3.curveLinear
+    *   d3.curveMonotoneX
+    *
+    * @param {d3.curve} _v.
+    * @returns {*}
+    */
+  	my.smoothed = function (_v) {
+  		if (!arguments.length) return smoothed;
+  		smoothed = _v;
+  		return my;
+  	};
+
+  	/**
     * Dispatch On Getter
     *
     * @returns {*}
@@ -3004,6 +3033,7 @@
   	var dimensions = { x: 40, y: 40, z: 40 };
   	var colors = ["orange", "red", "yellow", "steelblue", "green"];
   	var classed = "d3X3domRibbonMultiSeries";
+  	var smoothed = d3.curveBasis;
 
   	/* Scales */
   	var xScale = void 0;
@@ -3083,7 +3113,7 @@
   				x: dimensions.x,
   				y: dimensions.y,
   				z: zScale.bandwidth()
-  			});
+  			}).smoothed(smoothed);
 
   			var addRibbon = function addRibbon(d) {
   				var color = colorScale(d.key);
@@ -3177,6 +3207,23 @@
   	my.colors = function (_v) {
   		if (!arguments.length) return colors;
   		colors = _v;
+  		return my;
+  	};
+
+  	/**
+    * Smooth Interpolation Getter / Setter
+    *
+    * Options:
+    *   d3.curveBasis
+    *   d3.curveLinear
+    *   d3.curveMonotoneX
+    *
+    * @param {d3.curve} _v.
+    * @returns {*}
+    */
+  	my.smoothed = function (_v) {
+  		if (!arguments.length) return smoothed;
+  		smoothed = _v;
   		return my;
   	};
 
@@ -4293,18 +4340,6 @@
   	};
 
   	/**
-    * Debug Getter / Setter
-    *
-    * @param {boolean} _v - Show debug log and stats. True/False.
-    * @returns {*}
-    */
-  	my.debug = function (_v) {
-  		if (!arguments.length) return debug;
-  		debug = _v;
-  		return my;
-  	};
-
-  	/**
     * Smooth Interpolation Getter / Setter
     *
     * Options:
@@ -4318,6 +4353,18 @@
   	my.smoothed = function (_v) {
   		if (!arguments.length) return smoothed;
   		smoothed = _v;
+  		return my;
+  	};
+
+  	/**
+    * Debug Getter / Setter
+    *
+    * @param {boolean} _v - Show debug log and stats. True/False.
+    * @returns {*}
+    */
+  	my.debug = function (_v) {
+  		if (!arguments.length) return debug;
+  		debug = _v;
   		return my;
   	};
 
@@ -5255,6 +5302,7 @@
   	var colors = ["green", "red", "yellow", "steelblue", "orange"];
   	var classed = "d3X3domRibbonChartMultiSeries";
   	var debug = false;
+  	var smoothed = d3.curveBasis;
 
   	/* Scales */
   	var xScale = void 0;
@@ -5332,7 +5380,7 @@
   			scene.select(".axis").call(axis);
 
   			// Add Ribbons
-  			ribbons.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors).dimensions(dimensions);
+  			ribbons.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors).smoothed(smoothed).dimensions(dimensions);
 
   			scene.select(".ribbons").datum(data).call(ribbons);
 
@@ -5434,6 +5482,23 @@
   	my.colors = function (_v) {
   		if (!arguments.length) return colors;
   		colors = _v;
+  		return my;
+  	};
+
+  	/**
+    * Smooth Interpolation Getter / Setter
+    *
+    * Options:
+    *   d3.curveBasis
+    *   d3.curveLinear
+    *   d3.curveMonotoneX
+    *
+    * @param {d3.curve} _v.
+    * @returns {*}
+    */
+  	my.smoothed = function (_v) {
+  		if (!arguments.length) return smoothed;
+  		smoothed = _v;
   		return my;
   	};
 
