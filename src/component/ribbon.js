@@ -95,32 +95,14 @@ export default function() {
 					}
 					let pointNext = array[indexNext];
 
-					const x1 = xScale(pointThis.key);
-					const x2 = xScale(pointNext.key);
-					const y1 = yScale(pointThis.value);
-					const y2 = yScale(pointNext.value);
-					const z1 = 1 - (dimensions.z) / 2;
-					const z2 = (dimensions.z) / 2;
+					let x1 = xScale(pointThis.key);
+					let x2 = xScale(pointNext.key);
+					let y1 = yScale(pointThis.value);
+					let y2 = yScale(pointNext.value);
+					let z1 = 1 - (dimensions.z) / 2;
+					let z2 = (dimensions.z) / 2;
 
-					const points = [
-						[x1, y1, z1],
-						[x1, y1, z2],
-						[x2, y2, z2],
-						[x2, y2, z1]
-					];
-
-					const points2 = [
-						[x1, y1, z1, x1, y1, z2, x2, y2, z2, x2, y2, z1]
-					];
-
-					//return {
-					//	key: pointThis.key,
-					//	value: pointThis.value,
-					//	coordIndex: arrayToCoordIndex(points),
-					//	point: array2dToString(points)
-					//};
-
-					return points2;
+					return [x1, y1, z1, x1, y1, z2, x2, y2, z2, x2, y2, z1];
 				}).filter((d) => d !== null);
 
 				data.point = coords.map((d) => d.join(" ")).join(" ");
@@ -169,7 +151,7 @@ export default function() {
 				.data((d) => ribbonData(d), (d) => d.key);
 
 			ribbon.enter()
-				.append("group")
+				.append("Group")
 				.classed("ribbon", true)
 				.call(shape)
 				.merge(ribbon);

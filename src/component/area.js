@@ -74,7 +74,7 @@ export default function() {
 				let values = data.values;
 
 				// Convert values into IFS coordinates
-				let coords = values.map(function(pointThis, indexThis, array) {
+				let coords = values.map((pointThis, indexThis, array) => {
 					let indexNext = indexThis + 1;
 					if (indexNext >= array.length) {
 						return null;

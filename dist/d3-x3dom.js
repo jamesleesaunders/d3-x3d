@@ -2864,16 +2864,7 @@
   					var z1 = 1 - dimensions.z / 2;
   					var z2 = dimensions.z / 2;
 
-  					var points2 = [[x1, y1, z1, x1, y1, z2, x2, y2, z2, x2, y2, z1]];
-
-  					//return {
-  					//	key: pointThis.key,
-  					//	value: pointThis.value,
-  					//	coordIndex: arrayToCoordIndex(points),
-  					//	point: array2dToString(points)
-  					//};
-
-  					return points2;
+  					return [x1, y1, z1, x1, y1, z2, x2, y2, z2, x2, y2, z1];
   				}).filter(function (d) {
   					return d !== null;
   				});
@@ -2923,7 +2914,7 @@
   				return d.key;
   			});
 
-  			ribbon.enter().append("group").classed("ribbon", true).call(shape).merge(ribbon);
+  			ribbon.enter().append("Group").classed("ribbon", true).call(shape).merge(ribbon);
 
   			var ribbonTransition = ribbon.transition().select("Shape");
 
