@@ -87,13 +87,11 @@ export default function() {
 					let y2 = yScale(pointNext.value);
 
 					return [x1, 0, 0, x1, y1, 0, x2, y2, 0, x2, 0, 0];
-				}).filter(function(d) {
-					return d !== null;
-				});
+				}).filter((d) => d !== null);
 
 				data.point = coords.map((d) => d.join(" ")).join(" ");
 				data.coordIndex = coords.map((d, i) => {
-					let offset = i * 4;
+					const offset = i * 4;
 					return [offset, offset + 1, offset + 2, offset + 3, -1].join(" ");
 				}).join(" ");
 

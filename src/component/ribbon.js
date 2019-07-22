@@ -87,7 +87,8 @@ export default function() {
 			const ribbonData = function(data) {
 				let values = data.values;
 
-				return values.map((pointThis, indexThis, array) => {
+				// Convert values into IFS coordinates
+				let coords = values.map((pointThis, indexThis, array) => {
 					let indexNext = indexThis + 1;
 					if (indexNext >= array.length) {
 						return null;
@@ -105,17 +106,30 @@ export default function() {
 						[x1, y1, z1],
 						[x1, y1, z2],
 						[x2, y2, z2],
-						[x2, y2, z1],
-						[x1, y1, z1]
+						[x2, y2, z1]
 					];
 
-					return {
-						key: pointThis.key,
-						value: pointThis.value,
-						coordIndex: arrayToCoordIndex(points),
-						point: array2dToString(points)
-					};
+					const points2 = [
+						[x1, y1, z1, x1, y1, z2, x2, y2, z2, x2, y2, z1]
+					];
+
+					//return {
+					//	key: pointThis.key,
+					//	value: pointThis.value,
+					//	coordIndex: arrayToCoordIndex(points),
+					//	point: array2dToString(points)
+					//};
+
+					return points2;
 				}).filter((d) => d !== null);
+
+				data.point = coords.map((d) => d.join(" ")).join(" ");
+				data.coordIndex = coords.map((d, i) => {
+					const offset = i * 4;
+					return [offset, offset + 1, offset + 2, offset + 3, -1].join(" ");
+				}).join(" ");
+
+				return [data];
 			};
 
 			const shape = (el) => {

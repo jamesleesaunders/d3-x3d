@@ -668,7 +668,7 @@
   			return Number((t * samples).toFixed(0)) + 1;
   		};
 
-  		// If curveFunction is Basis then reach straight for D3's native 'interpolateBasis' function (it is quicker!)
+  		// If curveFunction is Basis then reach straight for D3's native 'interpolateBasis' function (it's faster!)
   		var valuePolator = curveFunction === d3.curveBasis ? d3.interpolateBasis(values) : fromCurve(values, curveFunction, epsilon, samples);
 
   		var smoothed = {
@@ -2816,34 +2816,6 @@
   	var yScale = void 0;
 
   	/**
-    * Array to String
-    *
-    * @private
-    * @param {array} arr
-    * @returns {string}
-    */
-  	var array2dToString = function array2dToString(arr) {
-  		return arr.reduce(function (a, b) {
-  			return a.concat(b);
-  		}, []).reduce(function (a, b) {
-  			return a.concat(b);
-  		}, []).join(" ");
-  	};
-
-  	/**
-    * Array to Coordinate Index
-    *
-    * @private
-    * @param {array} arr
-    * @returns {string}
-    */
-  	var arrayToCoordIndex = function arrayToCoordIndex(arr) {
-  		return arr.map(function (d, i) {
-  			return i;
-  		}).join(" ").concat(" -1");
-  	};
-
-  	/**
     * Initialise Data and Scales
     *
     * @private
@@ -2887,7 +2859,8 @@
   			var ribbonData = function ribbonData(data) {
   				var values = data.values;
 
-  				return values.map(function (pointThis, indexThis, array) {
+  				// Convert values into IFS coordinates
+  				var coords = values.map(function (pointThis, indexThis, array) {
   					var indexNext = indexThis + 1;
   					if (indexNext >= array.length) {
   						return null;
@@ -2901,17 +2874,29 @@
   					var z1 = 1 - dimensions.z / 2;
   					var z2 = dimensions.z / 2;
 
-  					var points = [[x1, y1, z1], [x1, y1, z2], [x2, y2, z2], [x2, y2, z1], [x1, y1, z1]];
+  					var points2 = [[x1, y1, z1, x1, y1, z2, x2, y2, z2, x2, y2, z1]];
 
-  					return {
-  						key: pointThis.key,
-  						value: pointThis.value,
-  						coordIndex: arrayToCoordIndex(points),
-  						point: array2dToString(points)
-  					};
+  					//return {
+  					//	key: pointThis.key,
+  					//	value: pointThis.value,
+  					//	coordIndex: arrayToCoordIndex(points),
+  					//	point: array2dToString(points)
+  					//};
+
+  					return points2;
   				}).filter(function (d) {
   					return d !== null;
   				});
+
+  				data.point = coords.map(function (d) {
+  					return d.join(" ");
+  				}).join(" ");
+  				data.coordIndex = coords.map(function (d, i) {
+  					var offset = i * 4;
+  					return [offset, offset + 1, offset + 2, offset + 3, -1].join(" ");
+  				}).join(" ");
+
+  				return [data];
   			};
 
   			var shape = function shape(el) {
