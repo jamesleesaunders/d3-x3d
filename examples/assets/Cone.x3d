@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.3//EN" "http://www.web3d.org/specifications/x3d-3.3.dtd">
+<X3D profile='Immersive' version='3.3' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.3.xsd'>
+  <head>
+    <component name='EnvironmentalEffects' level='3'/>
+    <component name='Shape' level='4'/>
+    <meta name='comment' content='World of Titania'/>
+    <meta name='created' content='Fri, 05 Jan 2018 14:05:05 GMT'/>
+    <meta name='creator' content='Holger Seelig'/>
+    <meta name='generator' content='Titania V4.0.4, http://titania.create3000.de'/>
+    <meta name='identifier' content='file:///home/holger/Projekte/Server/create3000.de/media/htdocs/components/Geometry3D/Cone/Cone.O.x3d'/>
+    <meta name='modified' content='Fri, 26 Jan 2018 13:40:16 GMT'/>
+    <meta name='titania-add-metadata' content='true'/>
+  </head>
+  <Scene>
+    <WorldInfo
+        title='Cone.O'/>
+    <NavigationInfo
+        type='"EXAMINE"'
+        transitionType='"ANIMATE"'/>
+    <Background
+        skyAngle='1.5708'
+        skyColor='0.1 0.1 0.1, 0.3 0.3 0.3'
+        groundAngle='1.5708'
+        groundColor='0.1 0.1 0.1, 0.3 0.3 0.3'/>
+    <Viewpoint
+        description='Initial View'
+        position='1.69574 1.67644 3.99636'
+        orientation='-0.704047440947535 0.695566770035024 0.143192420603437 0.568942006035104'
+        centerOfRotation='8.07257e-07 1.16639e-06 -8.87304e-07'/>
+    <Transform DEF='Cone'>
+      <Shape>
+        <Appearance>
+          <Material
+              ambientIntensity='0.712006'
+              diffuseColor='1 1 1'
+              specularColor='1 1 0.7'
+              shininess='0.81'/>
+          <ImageTexture
+              url='"pattern.png"'/>
+          <TextureTransform
+              scale='16 16'/>
+        </Appearance>
+        <Cone
+            height='2.5'/>
+      </Shape>
+    </Transform>
+    <Script DEF='EnterWorldScript'>
+<![CDATA[ecmascript:
+
+function initialize ()
+{
+	Browser .setBrowserOption ("Shading",          "PHONG");
+	Browser .setBrowserOption ("PrimitiveQuality", "HIGH");
+}
+]]>
+    </Script>
+  </Scene>
+</X3D>
