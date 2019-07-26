@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import { dispatch } from "../events";
+import { colorParse } from "../colorHelper";
 
 /**
  * Reusable 3D Axis Component
@@ -100,7 +101,7 @@ export default function() {
 
 				shape.append("Appearance")
 					.append("Material")
-					.attr("diffuseColor", color);
+					.attr("diffuseColor", colorParse(color));
 			};
 
 			const makeSolid = (el, color) => {
@@ -158,7 +159,7 @@ export default function() {
 					.append("Billboard")
 					.attr("axisOfRotation", "0 0 0")
 					.append("Shape")
-					.call(makeSolid, "black")
+					.call(makeSolid, colorParse("black"))
 					.append("Text")
 					.attr("string", tickFormat)
 					.append("FontStyle")

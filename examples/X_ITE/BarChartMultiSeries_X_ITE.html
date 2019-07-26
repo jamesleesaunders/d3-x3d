@@ -56,11 +56,11 @@
     // Declare the bar chart component
     var myChart = d3.x3dom.chart.barChartMultiSeries()
       .colors([
-        d3.x3dom.colorHelper.colourNameToX3d("green"),
-        d3.x3dom.colorHelper.colourNameToX3d("red"),
-        d3.x3dom.colorHelper.colourNameToX3d("yellow"),
-        d3.x3dom.colorHelper.colourNameToX3d("steelblue"),
-        d3.x3dom.colorHelper.colourNameToX3d("orange")
+        d3.x3dom.colorHelper.colorParse("green"),
+        d3.x3dom.colorHelper.colorParse("red"),
+        d3.x3dom.colorHelper.colorParse("yellow"),
+        d3.x3dom.colorHelper.colorParse("steelblue"),
+        d3.x3dom.colorHelper.colorParse("orange")
       ]);
 
     var checks = d3.selectAll('input[type=checkbox]');
