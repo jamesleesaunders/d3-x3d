@@ -31,6 +31,10 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Components Showcase](https://raw.githack.com/jamesleesaunders/d3-x3dom/master/examples/component/Showcase.html)
 * [Observable Examples](https://beta.observablehq.com/collection/@jamesleesaunders/d3-x3dom)
 
+### X_ITE Experiments
+* [Multi Series Bar Chart](https://raw.githack.com/jamesleesaunders/d3-x3dom/X_ITE/examples/X_ITE/BarChartMultiSeries_X_ITE.html)
+* [Multi Series Bar Component](https://raw.githack.com/jamesleesaunders/d3-x3dom/X_ITE/examples/X_ITE/BarsMultiSeries_X_ITE.html)
+
 ### <a name="getting-started"></a>Getting Started
 
 Include D3.js, X3DOM and d3-x3dom js and css files in the `<head>` section of your page:
