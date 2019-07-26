@@ -16,6 +16,7 @@ import component from "./src/component";
 import dataTransform from "./src/dataTransform";
 import * as randomData from "./src/randomData";
 import * as events from "./src/events";
+import * as colorHelper from "./src/colorHelper"
 
 export default {
 	version: version,
@@ -26,5 +27,6 @@ export default {
 	component: component,
 	dataTransform: dataTransform,
 	randomData: randomData,
-	events: events
+	events: events,
+	colorHelper: colorHelper
 };
