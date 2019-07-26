@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3d : 3D Component Showcase</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
+  <script src="../../../dist/d3-x3dom.js"></script>
+</head>
+
+<body>
+  <div id="chartholder1"></div>
+  <div id="chartholder2"></div>
+  <div id="chartholder3"></div>
+  <div id="chartholder4"></div>
+  <div id="chartholder5"></div>
+  <div id="chartholder6"></div>
+  <div id="chartholder7"></div>
+  <div id="chartholder8"></div>
+  <div id="chartholder9"></div>
+  <div id="chartholder10"></div>
+
+  <script>
+    // Chart dimensions
+    var width = 300;
+    var height = 300;
+
+    var viewpoint = d3.x3dom.component.viewpoint();
+
+    /**
+     * Bubbles Component
+     */
+    var bubblesData = d3.x3dom.randomData.dataset3();
+    var bubblesComponent = d3.x3dom.component.bubbles();
+
+    // Create scene
+    var scene1 = d3.select("#chartholder1")
+      .append("X3D")
+      .attr("id", "bubbles")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("Scene");
+
+    // Add chart component
+    scene1.call(viewpoint)
+      .append("Group")
+      .attr("class", "chart")
+      .datum(bubblesData)
+      .call(bubblesComponent);
+
+    /**
+     * Bubbles Multi Component
+     */
+    var bubblesMultiSeriesData = d3.x3dom.randomData.dataset2();
+    var bubblesMultiSeriesComponent = d3.x3dom.component.bubblesMultiSeries();
+
+    // Create scene
+    var scene2 = d3.select("#chartholder2")
+      .append("X3D")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("Scene");
+
+    // Add chart component
+    scene2.call(viewpoint)
+      .append("Group")
+      .attr("class", "chart")
+      .datum(bubblesMultiSeriesData)
+      .call(bubblesMultiSeriesComponent);
+
+    /**
+     * Bars Component
+     */
+    var barsData = d3.x3dom.randomData.dataset1();
+    var barsComponent = d3.x3dom.component.bars();
+
+    // Create scene
+    var scene3 = d3.select("#chartholder3")
+      .append("X3D")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("Scene");
+
+    // Add chart component
+    scene3.call(viewpoint)
+      .append("Group")
+      .attr("class", "chart")
+      .datum(barsData)
+      .call(barsComponent);
+
+    /**
+     * Bars Multi Component
+     */
+    var barsMultiSeriesData = d3.x3dom.randomData.dataset2();
+    var barsMultiSeriesComponent = d3.x3dom.component.barsMultiSeries();
+
+    // Create scene
+    var scene4 = d3.select("#chartholder4")
+      .append("X3D")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("Scene");
+
+    // Add chart component
+    scene4.call(viewpoint)
+      .append("Group")
+      .attr("class", "chart")
+      .datum(barsMultiSeriesData)
+      .call(barsMultiSeriesComponent);
+
+    /**
+     * Surface Component
+     */
+    var surfaceData = d3.x3dom.randomData.dataset5();
+    var surfaceComponent = d3.x3dom.component.surface();
+
+    // Create scene
+    var scene5 = d3.select("#chartholder5")
+      .append("X3D")
+      .attr("id", "surface")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("Scene");
+
+    // Add chart component
+    scene5.call(viewpoint)
+      .append("Group")
+      .attr("class", "chart")
+      .datum(surfaceData)
+      .call(surfaceComponent);
+
+    /**
+     * Ribbon Component
+     */
+    var ribbonData = d3.x3dom.randomData.dataset3(20);
+    var ribbonComponent = d3.x3dom.component.ribbon();
+
+    // Create scene
+    var scene6 = d3.select("#chartholder6")
+      .append("X3D")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("Scene");
+
+    // Add chart component
+    scene6.call(viewpoint)
+      .append("Group")
+      .attr("class", "chart")
+      .datum(ribbonData)
+      .call(ribbonComponent);
+
+    /**
+     * Ribbon Multi Component
+     */
+    var ribbonMultiSeriesData = d3.x3dom.randomData.dataset5();
+    var ribbonMultiSeriesComponent = d3.x3dom.component.ribbonMultiSeries();
+
+    // Create scene
+    var scene7 = d3.select("#chartholder7")
+      .append("X3D")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("Scene");
+
+    // Add chart component
+    scene7.call(viewpoint)
+      .append("Group")
+      .attr("class", "chart")
+      .datum(ribbonMultiSeriesData)
+      .call(ribbonMultiSeriesComponent);
+
+    /**
+     * Area Multi Component
+     */
+    var areaMultiSeriesData = d3.x3dom.randomData.dataset5();
+    var areaMultiSeriesComponent = d3.x3dom.component.areaMultiSeries();
+
+    // Create scene
+    var scene8 = d3.select("#chartholder8")
+      .append("X3D")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("Scene");
+
+    // Add chart component
+    scene8.call(viewpoint)
+      .append("Group")
+      .attr("class", "chart")
+      .datum(areaMultiSeriesData)
+      .call(areaMultiSeriesComponent);
+
+    /**
+     * Vector Field Component
+     */
+    var vectorValues = [];
+
+    // Generate some data
+    d3.range(-4, 5, 1).forEach(function(x) {
+      d3.range(-4, 5, 1).forEach(function(y) {
+        d3.range(-4, 5, 1).forEach(function(z) {
+          vectorValues.push({ key: null, value: null, x: x, y: y, z: z });
+        });
+      });
+    });
+
+    var vectorData = {
+      key: 'VectorFields',
+      values: vectorValues
+    };
+    var vectorComponent = d3.x3dom.component.vectorFields();
+
+    // Create scene
+    var scene9 = d3.select("#chartholder9")
+      .append("X3D")
+      .attr("id", "vectorFields")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("Scene");
+
+    // Add chart component
+    scene9.call(viewpoint)
+      .append("Group")
+      .attr("class", "chart")
+      .datum(vectorData)
+      .call(vectorComponent);
+
+    /**
+     * Axis Component
+     */
+    var countries = d3.x3dom.randomData.countries;
+    var fruit = d3.x3dom.randomData.fruit;
+    var xScale = d3.scaleBand().domain(countries).rangeRound([0, 40]);
+    var yScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
+    var zScale = d3.scaleBand().domain(fruit).range([0, 40]);
+    var axisThreePlaneComponent = d3.x3dom.component.axisThreePlane()
+      .xScale(xScale)
+      .yScale(yScale)
+      .zScale(zScale);
+
+    // Create scene
+    var scene10 = d3.select("#chartholder10")
+      .append("X3D")
+      .attr("id", "axis")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("Scene");
+
+    // Add chart component
+    scene10.call(viewpoint)
+      .append("Group")
+      .attr("class", "chart")
+      .call(axisThreePlaneComponent);
+
+    /**
+     * Sync Viewpoints
+     */
+    function syncViewpoints(e) {
+      viewpoints.forEach(function(viewpoint) {
+        viewpoint.setFieldValue("orientation", x3dom.fields.Quaternion.axisAngle(e.orientation[0], e.orientation[1]));
+        viewpoint.setFieldValue("position", e.position);
+      });
+    }
+
+    var viewpoints = document.querySelectorAll("viewpoint");
+    document.onload = function() {
+      viewpoints.forEach(function(viewpoint) {
+        viewpoint.addEventListener("viewpointChanged", syncViewpoints, false);
+      });
+    };
+
+  </script>
+
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.</div>
+</body>
+
+</html>

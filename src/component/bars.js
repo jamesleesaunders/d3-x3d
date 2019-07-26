@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import { dispatch } from "../events";
+import { colorParse } from "../colorHelper";
 
 /**
  * Reusable 3D Bar Chart Component
@@ -79,7 +80,7 @@ export default function() {
 
 				shape.append("Appearance")
 					.append("Material")
-					.attr("diffuseColor", (d) => colorScale(d.key))
+					.attr("diffuseColor", (d) => colorParse(colorScale(d.key)))
 					.attr("ambientIntensity", 0.1);
 
 				return shape;

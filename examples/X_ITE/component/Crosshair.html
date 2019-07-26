@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3d : 3D Crosshair Component Example</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://code.create3000.de/x_ite/latest/dist/x_ite.min.js"></script>
+  <script src="https://raw.githack.com/andreasplesch/x_ite_dom/master/release/x_ite_dom.1.2.js"></script>
+  <link rel="stylesheet" href="https://code.create3000.de/x_ite/latest/dist/x_ite.css" />
+  <script src="../../../dist/d3-x3dom.js"></script>
+</head>
+
+<body>
+  <X3DCanvas id="chartholder" style="width: 500px; height: 500px;"></X3DCanvas>
+
+  <script>
+    // Chart dimensions
+    var width = 500;
+    var height = 500;
+
+    var xScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
+    var yScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
+    var zScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
+
+    var viewpointComponent = d3.x3dom.component.viewpoint();
+
+    var axisThreePlaneComponent = d3.x3dom.component.axisThreePlane()
+      .xScale(xScale)
+      .yScale(yScale)
+      .zScale(zScale);
+
+    var crosshairComponent = d3.x3dom.component.crosshair()
+      .xScale(xScale)
+      .yScale(yScale)
+      .zScale(zScale);
+
+    // Create scene
+    var chartHolder = d3.select("#chartholder")
+      .append("X3D")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("Scene");
+
+    var ranNum = function() { return d3.x3dom.randomData.randomNum(); };
+
+    // Add to page
+    chartHolder.call(viewpointComponent);
+
+    chartHolder.append("Group")
+      .call(axisThreePlaneComponent);
+
+    var crosshairGroup = chartHolder.append("Group");
+
+    function update() {
+      var data = { x: ranNum(), y: ranNum(), z: ranNum() };
+      crosshairGroup.datum(data)
+        .call(crosshairComponent);
+    }
+
+    update();
+    setInterval(update, 1000);
+
+  </script>
+
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.</div>
+</body>
+
+</html>

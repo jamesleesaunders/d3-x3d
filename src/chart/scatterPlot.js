@@ -88,6 +88,10 @@ export default function() {
 			.attr("showLog", debug ? "true" : "false")
 			.attr("showStat", debug ? "true" : "false");
 
+		scene.append("Background")
+			.attr("groundColor", "1 1 1")
+			.attr("skyColor", "1 1 1");
+
 		// Update the chart dimensions and add layer groups
 		const layers = ["axis", "bubbles", "crosshair", "label"];
 		scene.classed(classed, true)

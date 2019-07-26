@@ -2,6 +2,7 @@ import * as d3 from "d3";
 // import * as x3dom from "x3dom";
 import dataTransform from "../dataTransform";
 import { dispatch } from "../events";
+import { colorParse } from "../colorHelper";
 
 /**
  * Reusable 3D Vector Fields Component

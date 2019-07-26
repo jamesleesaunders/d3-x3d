@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import { dispatch } from "../events";
+import { colorParse } from "../colorHelper";
 
 /**
  * Reusable 3D Ribbon Chart Component
@@ -145,7 +146,7 @@ export default function() {
 
 				shape.append("Appearance")
 					.append("TwoSidedMaterial")
-					.attr("diffuseColor", color)
+					.attr("diffuseColor", colorParse(color))
 					.attr("transparency", transparency);
 				*/
 
@@ -154,7 +155,7 @@ export default function() {
 						<Coordinate point="${d.point}"></Coordinate>
 					</IndexedFaceset>
 					<Appearance>
-						<TwoSidedMaterial diffuseColor="${color}" transparency="${transparency}"></TwoSidedMaterial>
+						<TwoSidedMaterial diffuseColor="${colorParse(color)}" transparency="${transparency}"></TwoSidedMaterial>
 					</Appearance>
 				`);
 			};
@@ -177,7 +178,7 @@ export default function() {
 
 			ribbonTransition.select("Appearance")
 				.select("TwoSidedMaterial")
-				.attr("diffuseColor", (d) => d.color);
+				.attr("diffuseColor", (d) => colorParse(d.color));
 
 			ribbon.exit()
 				.remove();

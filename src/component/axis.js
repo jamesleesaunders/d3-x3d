@@ -107,7 +107,7 @@ export default function() {
 			const makeSolid = (el, color) => {
 				el.append("Appearance")
 					.append("Material")
-					.attr("diffuseColor", color || "black");
+					.attr("diffuseColor", colorParse(color) || "0 0 0");
 			};
 
 			// Main Lines

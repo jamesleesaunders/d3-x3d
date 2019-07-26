@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
+import { colorParse } from "../colorHelper";
 
 
 /**
@@ -110,7 +111,7 @@ export default function() {
 
 				shape.append("Appearance")
 					.append("Material")
-					.attr("diffuseColor", color)
+					.attr("diffuseColor", colorParse(color))
 					.attr("transparency", transparency);
 				*/
 
@@ -119,7 +120,7 @@ export default function() {
 						<Coordinate point="${d.point}"></Coordinate>
 					</IndexedFaceset>
 					<Appearance>
-						<Material diffuseColor="${color}" transparency="${transparency}"></Material>
+						<Material diffuseColor="${colorParse(color)}" transparency="${transparency}"></Material>
 					</Appearance>
 				`);
 			};
@@ -142,7 +143,7 @@ export default function() {
 
 			areaTransition.select("Appearance")
 				.select("Material")
-				.attr("diffuseColor", (d) => d.color);
+				.attr("diffuseColor", (d) => colorParse(d.color));
 
 			area.exit()
 				.remove();

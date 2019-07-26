@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import { dispatch } from "../events";
+import { colorParse } from "../colorHelper";
 
 /**
  * Reusable 3D Bubble Chart Component
@@ -86,7 +87,7 @@ export default function() {
 
 				shape.append("Appearance")
 					.append("Material")
-					.attr("diffuseColor", color)
+					.attr("diffuseColor", colorParse(color))
 					.attr("ambientIntensity", 0.1);
 
 				return shape;
@@ -105,7 +106,7 @@ export default function() {
 				.select("Shape")
 				.select("Appearance")
 				.select("Material")
-				.attr("diffuseColor", color);
+				.attr("diffuseColor", colorParse(color));
 
 			bubbles.exit()
 				.remove();
