@@ -35,20 +35,20 @@
 
     // Create scene
     var chartHolder = d3.select("#chartholder")
-      .append("x3d")
+      .append("X3D")
       .attr("width", width + "px")
       .attr("height", height + "px")
-      .append("scene");
+      .append("Scene");
 
     var ranNum = function() { return d3.x3dom.randomData.randomNum(); };
 
     // Add to page
     chartHolder.call(viewpointComponent);
 
-    chartHolder.append("group")
+    chartHolder.append("Group")
       .call(axisThreePlaneComponent);
 
-    var crosshairGroup = chartHolder.append("group");
+    var crosshairGroup = chartHolder.append("Group");
 
     function update() {
       var data = { x: ranNum(), y: ranNum(), z: ranNum() };

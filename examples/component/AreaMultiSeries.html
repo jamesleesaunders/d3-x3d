@@ -26,14 +26,14 @@
 
     // Create scene
     var scene = d3.select("#chartholder")
-      .append("x3d")
+      .append("X3D")
       .attr("width", width + "px")
       .attr("height", height + "px")
-      .append("scene");
+      .append("Scene");
 
     // Add chart component
     scene.call(viewpoint)
-      .append("group")
+      .append("Group")
       .attr("class", "chart")
       .datum(areaMultiSeriesData)
       .call(areaMultiSeriesComponent);

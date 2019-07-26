@@ -11,9 +11,7 @@
 </head>
 
 <body>
-  <X3DCanvas style="width: 500px; height: 500px;">
-    <X3D id="chartholder" profile='Full' version='3.3' xmlns='http://www.web3d.org/specifications/x3d-namespace'>
-    </X3D>
+  <X3DCanvas id="chartholder" style="width: 500px; height: 500px;">
   </X3DCanvas>
 
   <table>
@@ -49,17 +47,20 @@
 
     // Declare the bar chart component
     var viewpoint = d3.x3dom.component.viewpoint();
-    var component = d3.x3dom.component.barsMultiSeries();
+    var component = d3.x3dom.component.barsMultiSeries()
+      .colors(["1 0.5 0", "1 0 0", "1 1 0", "0.27 0.11 0.7", "0 0.5 0"]);
 
     // Create scene
     var scene = d3.select("#chartholder")
+      .append("X3D")
+      .attr("id", "d3X3dom")
       .attr("width", width + "px")
       .attr("height", height + "px")
-      .append("scene");
+      .append("Scene");
 
     scene.call(viewpoint);
 
-    var chart = scene.append("group")
+    var chart = scene.append("Group")
       .attr("class", "chart");
 
     var checks = d3.selectAll('input[type=checkbox]');

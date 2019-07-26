@@ -49,15 +49,15 @@
 
     // Create scene
     var scene = d3.select("#chartholder")
-      .append("x3d")
+      .append("X3D")
       .attr("id", "d3X3dom")
       .attr("width", width + "px")
       .attr("height", height + "px")
-      .append("scene");
+      .append("Scene");
 
     scene.call(viewpoint);
 
-    var chart = scene.append("group")
+    var chart = scene.append("Group")
       .attr("class", "chart");
 
     var checks = d3.selectAll('input[type=checkbox]');
