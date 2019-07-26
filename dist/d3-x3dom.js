@@ -4453,6 +4453,7 @@
   		if (!x3d) {
   			x3d = selection.append("X3D");
   			scene = x3d.append("Scene");
+  			scene.append("Background").attr("groundColor", "1 1 1").attr("skyColor", "1 1 1");
   		}
 
   		x3d.attr("width", width + "px").attr("useGeoCache", false).attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
