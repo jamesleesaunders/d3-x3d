@@ -3,7 +3,7 @@ import babel from "rollup-plugin-babel";
 import resolve from 'rollup-plugin-node-resolve';
 
 let banner = `/**
- * d3-x3dom
+ * d3-x3d
  *
  * @author James Saunders [james@saunders-family.net]
  * @copyright Copyright (C) 2019 James Saunders
@@ -14,10 +14,10 @@ let banner = `/**
 export default {
 	input: "index.js",
 	output: {
-		file: "dist/d3-x3dom.js",
+		file: "dist/d3-x3d.js",
 		format: "umd",
 		extend: true,
-		name: "d3.x3dom",
+		name: "d3.x3d",
 		banner: banner,
 		strict: true,
 		globals: { "d3": "d3", "x3dom": "x3dom", "d3-array": "d3", "d3-shape": "d3" }

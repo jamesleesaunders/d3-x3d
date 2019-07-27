@@ -1,10 +1,10 @@
 let test = require("tape");
 let window = require("browser-env")();
 let d3 = require("d3");
-let d3X3dom = require("../../");
+let d3X3d = require("../../");
 
 test("Test Multi Series Ribbon Component, component.ribbon()", function(t) {
-	let ribbonMultiSeries = d3X3dom.component.ribbonMultiSeries();
+	let ribbonMultiSeries = d3X3d.component.ribbonMultiSeries();
 
 	// Test dimensions getter / setter function
 	t.deepEqual(ribbonMultiSeries.dimensions(), { x: 40, y: 40, z: 40 }, "Default dimensions");

@@ -1,14 +1,14 @@
 import * as d3 from "d3";
 
 /**
- * Reusable X3DOM Light Component
+ * Reusable X3D Light Component
  *
  * @module
  */
 export default function() {
 
 	/* Default Properties */
-	let classed = "d3X3domLight";
+	let classed = "d3X3dLight";
 	let direction = "1 0 -1";
 	let intensity = 0.5;
 	let shadowIntensity = 0;

@@ -14,17 +14,17 @@
     "3D",
     "dataviz"
   ],
-  "homepage": "https://jamesleesaunders.github.io/d3-x3dom/",
+  "homepage": "https://jamesleesaunders.github.io/d3-x3d/",
   "author": "James Saunders (james@saunders-family.net)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jamesleesaunders/d3-x3dom.git"
+    "url": "https://github.com/jamesleesaunders/d3-x3d.git"
   },
   "bugs": {
-    "url": "https://github.com/jamesleesaunders/d3-x3dom/issues"
+    "url": "https://github.com/jamesleesaunders/d3-x3d/issues"
   },
-  "main": "dist/d3-x3dom.js",
-  "unpkg": "dist/d3-x3dom.min.js",
+  "main": "dist/d3-x3d.js",
+  "unpkg": "dist/d3-x3d.min.js",
   "module": "index.js",
   "scripts": {
     "pretest": "make",

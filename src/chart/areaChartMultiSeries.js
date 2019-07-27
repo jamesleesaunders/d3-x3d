@@ -12,7 +12,7 @@ import component from "../component";
  *
  * let myData = [...];
  *
- * let myChart = d3.x3dom.chart.areaChartMultiSeries();
+ * let myChart = d3.x3d.chart.areaChartMultiSeries();
  *
  * chartHolder.datum(myData).call(myChart);
  *
@@ -28,7 +28,7 @@ export default function() {
 	let height = 500;
 	let dimensions = { x: 60, y: 40, z: 40 };
 	let colors = ["green", "red", "yellow", "steelblue", "orange"];
-	let classed = "d3X3domAreaChartMultiSeries";
+	let classed = "d3X3dAreaChartMultiSeries";
 	let debug = false;
 	let smoothed = d3.curveMonotoneX;
 

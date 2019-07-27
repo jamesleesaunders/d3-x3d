@@ -1,10 +1,10 @@
 let test = require("tape");
 let window = require("browser-env")();
 let d3 = require("d3");
-let d3X3dom = require("../../");
+let d3X3d = require("../../");
 
 test("Test Multi Series Bars Component, component.barMultiSeries()", function(t) {
-	let barsMultiSeries = d3X3dom.component.barsMultiSeries();
+	let barsMultiSeries = d3X3d.component.barsMultiSeries();
 
 	// Test dimensions getter / setter function
 	t.deepEqual(barsMultiSeries.dimensions(), { x: 40, y: 40, z: 40 }, "Default dimensions");

@@ -12,7 +12,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let color = "black";
-	let classed = "d3X3domLabel";
+	let classed = "d3X3dLabel";
 	let offset = 0;
 
 	/* Scales */

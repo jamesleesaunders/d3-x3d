@@ -6,7 +6,7 @@
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
   <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
-  <script src="../../../dist/d3-x3dom.js"></script>
+  <script src="../../../dist/d3-x3d.js"></script>
 </head>
 
 <body>
@@ -43,9 +43,9 @@
     });
 
 
-    var jim = d3.x3dom.dataTransform(data).summary();
-    var columnKeys = jim.columnKeys;
-    var valueMax = jim.valueMax;
+    var summary = d3.x3d.dataTransform(data).summary();
+    var columnKeys = summary.columnKeys;
+    var valueMax = summary.valueMax;
     var valueExtent = [0, valueMax];
 
     var yScale = d3.scaleLinear()
@@ -53,13 +53,13 @@
       .domain(valueExtent);
 
     // Declare the bar chart component
-    var myChart = d3.x3dom.chart.areaChartMultiSeries().yScale(yScale);
+    var myChart = d3.x3d.chart.areaChartMultiSeries().yScale(yScale);
 
     chartHolder.datum(data).call(myChart);
 
   </script>
 
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D
     Data Visualization Library.
   </div>
 </body>

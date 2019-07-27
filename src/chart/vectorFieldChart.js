@@ -21,7 +21,7 @@ import component from "../component";
  *    };
  * };
  *
- * let myChart = d3.x3dom.chart.vectorFieldChart()
+ * let myChart = d3.x3d.chart.vectorFieldChart()
  *    .vectorFunction(vectorFunction);
  *
  * chartHolder.datum(myData).call(myChart);
@@ -38,7 +38,7 @@ export default function() {
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = d3.interpolateRdYlGn;
-	let classed = "d3X3domVectorFieldChart";
+	let classed = "d3X3dVectorFieldChart";
 	let debug = false;
 
 	/* Scales */

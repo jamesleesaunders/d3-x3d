@@ -14,7 +14,7 @@ export default function() {
 	let dimensions = { x: 40, y: 40, z: 5 };
 	let color = "blue";
 	let transparency = 0.1;
-	let classed = "d3X3domArea";
+	let classed = "d3X3dArea";
 	let smoothed = d3.curveMonotoneX;
 
 	/* Scales */

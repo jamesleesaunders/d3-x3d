@@ -12,7 +12,7 @@ import component from "../component";
  *
  * let myData = [...];
  *
- * let myChart = d3.x3dom.chart.crosshairPlot();
+ * let myChart = d3.x3d.chart.crosshairPlot();
  *
  * chartHolder.datum(myData).call(myChart);
  */
@@ -25,7 +25,7 @@ export default function() {
 	let width = 500;
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let classed = "d3X3domCrosshairPlot";
+	let classed = "d3X3dCrosshairPlot";
 	let debug = false;
 
 	/* Scales */

@@ -1,10 +1,10 @@
 let test = require("tape");
 let window = require("browser-env")();
 let d3 = require("d3");
-let d3X3dom = require("../../");
+let d3X3d = require("../../");
 
 test("Test Vector Field Chart, chart.vectorFieldChart()", function(t) {
-	let vectorFieldChart = d3X3dom.chart.vectorFieldChart();
+	let vectorFieldChart = d3X3d.chart.vectorFieldChart();
 
 	// Test width getter / setter function
 	t.equal(vectorFieldChart.width(), 500, "Default width");

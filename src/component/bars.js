@@ -13,7 +13,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 2 };
 	let colors = ["orange", "red", "yellow", "steelblue", "green"];
-	let classed = "d3X3domBars";
+	let classed = "d3X3dBars";
 
 	/* Scales */
 	let xScale;
@@ -68,12 +68,12 @@ export default function() {
 
 			const shape = (el) => {
 				const shape = el.append("Shape")
-					.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
-					.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
-					.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
-					.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
-					.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);")
-					.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
+					.attr("onclick", "d3.x3d.events.forwardEvent(event);")
+					.on("click", function(e) { dispatch.call("d3X3dClick", this, e); })
+					.attr("onmouseover", "d3.x3d.events.forwardEvent(event);")
+					.on("mouseover", function(e) { dispatch.call("d3X3dMouseOver", this, e); })
+					.attr("onmouseout", "d3.x3d.events.forwardEvent(event);")
+					.on("mouseout", function(e) { dispatch.call("d3X3dMouseOut", this, e); });
 
 				shape.append("Box")
 					.attr("size", "1.0 1.0 1.0");

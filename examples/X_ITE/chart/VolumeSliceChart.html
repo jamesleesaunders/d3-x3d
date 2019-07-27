@@ -7,7 +7,7 @@
   <script src="https://code.create3000.de/x_ite/latest/dist/x_ite.min.js"></script>
   <script src="https://raw.githack.com/andreasplesch/x_ite_dom/master/release/x_ite_dom.1.2.js"></script>
   <link rel="stylesheet" href="https://code.create3000.de/x_ite/latest/dist/x_ite.css" />
-  <script src="../../../dist/d3-x3dom.js"></script>
+  <script src="../../../dist/d3-x3d.js"></script>
 </head>
 
 <body>
@@ -32,9 +32,9 @@
     var zScale = d3.scaleLinear().domain([0, 10]).range([0, 30]);
 
     // Declare the chart component
-    var myChart = d3.x3dom.chart.volumeSliceChart()
+    var myChart = d3.x3d.chart.volumeSliceChart()
       .dimensions({ x: 40, y: 40, z: 50 })
-      .imageUrl("../assets/scan1.png")
+      .imageUrl("../../assets/scan1.png")
       .numberOfSlices(97)
       .slicesOverX(10)
       .slicesOverY(10)
@@ -48,7 +48,7 @@
 
   </script>
 
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.</div>
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data Visualization Library.</div>
 </body>
 
 </html>

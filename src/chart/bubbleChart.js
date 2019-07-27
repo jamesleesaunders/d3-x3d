@@ -12,7 +12,7 @@ import component from "../component";
  *
  * let myData = [...];
  *
- * let myChart = d3.x3dom.chart.bubbleChart();
+ * let myChart = d3.x3d.chart.bubbleChart();
  *
  * chartHolder.datum(myData).call(myChart);
  *
@@ -28,7 +28,7 @@ export default function() {
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["green", "red", "yellow", "steelblue", "orange"];
-	let classed = "d3X3domBubbleChart";
+	let classed = "d3X3dBubbleChart";
 	let debug = false;
 
 	/* Scales */

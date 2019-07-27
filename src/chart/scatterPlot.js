@@ -13,7 +13,7 @@ import { dispatch } from "../events";
  *
  * let myData = [...];
  *
- * let myChart = d3.x3dom.chart.scatterPlot();
+ * let myChart = d3.x3d.chart.scatterPlot();
  *
  * chartHolder.datum(myData).call(myChart);
  *
@@ -29,7 +29,7 @@ export default function() {
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let color = "orange";
-	let classed = "d3X3domScatterPlot";
+	let classed = "d3X3dScatterPlot";
 	let debug = false;
 
 	/* Scales */
@@ -134,7 +134,7 @@ export default function() {
 				.zScale(zScale)
 				.color(color)
 				.sizeDomain([0.5, 0.5])
-				.on("d3X3domClick", function(e) {
+				.on("d3X3dClick", function(e) {
 					const d = d3.select(e.target).datum();
 					scene.select(".crosshair")
 						.datum(d)
@@ -143,7 +143,7 @@ export default function() {
 							d3.select(this).call(crosshair);
 						});
 				})
-				.on("d3X3domMouseOver", function(e) {
+				.on("d3X3dMouseOver", function(e) {
 					const d = d3.select(e.target).datum();
 					scene.select(".label")
 						.datum(d)
@@ -151,7 +151,7 @@ export default function() {
 							d3.select(this).call(label);
 						});
 				})
-				.on("d3X3domMouseOut", function(e) {
+				.on("d3X3dMouseOut", function(e) {
 					scene.select(".label")
 						.selectAll("*")
 						.remove();

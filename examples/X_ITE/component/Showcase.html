@@ -7,7 +7,7 @@
   <script src="https://code.create3000.de/x_ite/latest/dist/x_ite.min.js"></script>
   <script src="https://raw.githack.com/andreasplesch/x_ite_dom/master/release/x_ite_dom.1.2.js"></script>
   <link rel="stylesheet" href="https://code.create3000.de/x_ite/latest/dist/x_ite.css" />
-  <script src="../../../dist/d3-x3dom.js"></script>
+  <script src="../../../dist/d3-x3d.js"></script>
 </head>
 
 <body>
@@ -27,13 +27,13 @@
     var width = 300;
     var height = 300;
 
-    var viewpoint = d3.x3dom.component.viewpoint();
+    var viewpoint = d3.x3d.component.viewpoint();
 
     /**
      * Bubbles Component
      */
-    var bubblesData = d3.x3dom.randomData.dataset3();
-    var bubblesComponent = d3.x3dom.component.bubbles();
+    var bubblesData = d3.x3d.randomData.dataset3();
+    var bubblesComponent = d3.x3d.component.bubbles();
 
     // Create scene
     var scene1 = d3.select("#chartholder1")
@@ -53,8 +53,8 @@
     /**
      * Bubbles Multi Component
      */
-    var bubblesMultiSeriesData = d3.x3dom.randomData.dataset2();
-    var bubblesMultiSeriesComponent = d3.x3dom.component.bubblesMultiSeries();
+    var bubblesMultiSeriesData = d3.x3d.randomData.dataset2();
+    var bubblesMultiSeriesComponent = d3.x3d.component.bubblesMultiSeries();
 
     // Create scene
     var scene2 = d3.select("#chartholder2")
@@ -73,8 +73,8 @@
     /**
      * Bars Component
      */
-    var barsData = d3.x3dom.randomData.dataset1();
-    var barsComponent = d3.x3dom.component.bars();
+    var barsData = d3.x3d.randomData.dataset1();
+    var barsComponent = d3.x3d.component.bars();
 
     // Create scene
     var scene3 = d3.select("#chartholder3")
@@ -93,8 +93,8 @@
     /**
      * Bars Multi Component
      */
-    var barsMultiSeriesData = d3.x3dom.randomData.dataset2();
-    var barsMultiSeriesComponent = d3.x3dom.component.barsMultiSeries();
+    var barsMultiSeriesData = d3.x3d.randomData.dataset2();
+    var barsMultiSeriesComponent = d3.x3d.component.barsMultiSeries();
 
     // Create scene
     var scene4 = d3.select("#chartholder4")
@@ -113,8 +113,8 @@
     /**
      * Surface Component
      */
-    var surfaceData = d3.x3dom.randomData.dataset5();
-    var surfaceComponent = d3.x3dom.component.surface();
+    var surfaceData = d3.x3d.randomData.dataset5();
+    var surfaceComponent = d3.x3d.component.surface();
 
     // Create scene
     var scene5 = d3.select("#chartholder5")
@@ -134,8 +134,8 @@
     /**
      * Ribbon Component
      */
-    var ribbonData = d3.x3dom.randomData.dataset3(20);
-    var ribbonComponent = d3.x3dom.component.ribbon();
+    var ribbonData = d3.x3d.randomData.dataset3(20);
+    var ribbonComponent = d3.x3d.component.ribbon();
 
     // Create scene
     var scene6 = d3.select("#chartholder6")
@@ -154,8 +154,8 @@
     /**
      * Ribbon Multi Component
      */
-    var ribbonMultiSeriesData = d3.x3dom.randomData.dataset5();
-    var ribbonMultiSeriesComponent = d3.x3dom.component.ribbonMultiSeries();
+    var ribbonMultiSeriesData = d3.x3d.randomData.dataset5();
+    var ribbonMultiSeriesComponent = d3.x3d.component.ribbonMultiSeries();
 
     // Create scene
     var scene7 = d3.select("#chartholder7")
@@ -174,8 +174,8 @@
     /**
      * Area Multi Component
      */
-    var areaMultiSeriesData = d3.x3dom.randomData.dataset5();
-    var areaMultiSeriesComponent = d3.x3dom.component.areaMultiSeries();
+    var areaMultiSeriesData = d3.x3d.randomData.dataset5();
+    var areaMultiSeriesComponent = d3.x3d.component.areaMultiSeries();
 
     // Create scene
     var scene8 = d3.select("#chartholder8")
@@ -209,7 +209,7 @@
       key: 'VectorFields',
       values: vectorValues
     };
-    var vectorComponent = d3.x3dom.component.vectorFields();
+    var vectorComponent = d3.x3d.component.vectorFields();
 
     // Create scene
     var scene9 = d3.select("#chartholder9")
@@ -229,12 +229,12 @@
     /**
      * Axis Component
      */
-    var countries = d3.x3dom.randomData.countries;
-    var fruit = d3.x3dom.randomData.fruit;
+    var countries = d3.x3d.randomData.countries;
+    var fruit = d3.x3d.randomData.fruit;
     var xScale = d3.scaleBand().domain(countries).rangeRound([0, 40]);
     var yScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
     var zScale = d3.scaleBand().domain(fruit).range([0, 40]);
-    var axisThreePlaneComponent = d3.x3dom.component.axisThreePlane()
+    var axisThreePlaneComponent = d3.x3d.component.axisThreePlane()
       .xScale(xScale)
       .yScale(yScale)
       .zScale(zScale);
@@ -272,7 +272,7 @@
 
   </script>
 
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.</div>
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data Visualization Library.</div>
 </body>
 
 </html>

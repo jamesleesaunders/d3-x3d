@@ -1,5 +1,5 @@
 /**
- * d3-x3dom
+ * d3-x3d
  *
  * @author James Saunders [james@saunders-family.net]
  * @copyright Copyright (C) 2019 James Saunders
@@ -9,7 +9,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('d3'), require('d3-shape'), require('d3-array')) :
   typeof define === 'function' && define.amd ? define(['d3', 'd3-shape', 'd3-array'], factory) :
-  (global = global || self, (global.d3 = global.d3 || {}, global.d3.x3dom = factory(global.d3, global.d3, global.d3)));
+  (global = global || self, (global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3, global.d3, global.d3)));
 }(this, function (d3, d3Shape, d3Array) { 'use strict';
 
   var version = "2.0.0-dev";
@@ -1008,7 +1008,7 @@
   	var dimensions = { x: 40, y: 40, z: 5 };
   	var color = "blue";
   	var transparency = 0.1;
-  	var classed = "d3X3domArea";
+  	var classed = "d3X3dArea";
   	var smoothed = d3.curveMonotoneX;
 
   	/* Scales */
@@ -1221,7 +1221,7 @@
   	/* Default Properties */
   	var dimensions = { x: 40, y: 40, z: 40 };
   	var colors = ["orange", "red", "yellow", "steelblue", "green"];
-  	var classed = "d3X3domAreaMultiSeries";
+  	var classed = "d3X3dAreaMultiSeries";
   	var smoothed = d3.curveMonotoneX;
 
   	/* Scales */
@@ -1424,7 +1424,7 @@
    *
    * @type {d3.dispatch}
    */
-  var dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
+  var dispatch = d3.dispatch("d3X3dClick", "d3X3dMouseOver", "d3X3dMouseOut");
 
   /**
    * Forward X3DOM Event to D3
@@ -1538,7 +1538,7 @@
   	/* Default Properties */
   	var dimensions = { x: 40, y: 40, z: 40 };
   	var color = "black";
-  	var classed = "d3X3domAxis";
+  	var classed = "d3X3dAxis";
   	var labelPosition = "proximal";
   	var labelInset = labelPosition === "distal" ? 1 : -1;
 
@@ -1838,7 +1838,7 @@
   	/* Default Properties */
   	var dimensions = { x: 40, y: 40, z: 40 };
   	var colors = ["blue", "red", "green"];
-  	var classed = "d3X3domAxisThreePlane";
+  	var classed = "d3X3dAxisThreePlane";
   	var labelPosition = "proximal";
 
   	/* Scales */
@@ -1977,7 +1977,7 @@
   	/* Default Properties */
   	var dimensions = { x: 40, y: 40, z: 2 };
   	var colors = ["orange", "red", "yellow", "steelblue", "green"];
-  	var classed = "d3X3domBars";
+  	var classed = "d3X3dBars";
 
   	/* Scales */
   	var xScale = void 0;
@@ -2030,12 +2030,12 @@
   			});
 
   			var shape = function shape(el) {
-  				var shape = el.append("Shape").attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
-  					dispatch.call("d3X3domClick", this, e);
-  				}).attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").on("mouseover", function (e) {
-  					dispatch.call("d3X3domMouseOver", this, e);
-  				}).attr("onmouseout", "d3.x3dom.events.forwardEvent(event);").on("mouseout", function (e) {
-  					dispatch.call("d3X3domMouseOut", this, e);
+  				var shape = el.append("Shape").attr("onclick", "d3.x3d.events.forwardEvent(event);").on("click", function (e) {
+  					dispatch.call("d3X3dClick", this, e);
+  				}).attr("onmouseover", "d3.x3d.events.forwardEvent(event);").on("mouseover", function (e) {
+  					dispatch.call("d3X3dMouseOver", this, e);
+  				}).attr("onmouseout", "d3.x3d.events.forwardEvent(event);").on("mouseout", function (e) {
+  					dispatch.call("d3X3dMouseOut", this, e);
   				});
 
   				shape.append("Box").attr("size", "1.0 1.0 1.0");
@@ -2152,7 +2152,7 @@
   	/* Default Properties */
   	var dimensions = { x: 40, y: 40, z: 40 };
   	var colors = ["orange", "red", "yellow", "steelblue", "green"];
-  	var classed = "d3X3domBarsMultiSeries";
+  	var classed = "d3X3dBarsMultiSeries";
 
   	/* Scales */
   	var xScale = void 0;
@@ -2316,7 +2316,7 @@
   	/* Default Properties */
   	var dimensions = { x: 40, y: 40, z: 40 };
   	var color = "orange";
-  	var classed = "d3X3domBubbles";
+  	var classed = "d3X3dBubbles";
 
   	/* Scales */
   	var xScale = void 0;
@@ -2378,12 +2378,12 @@
   			});
 
   			var shape = function shape(el) {
-  				var shape = el.append("Shape").attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
-  					dispatch.call("d3X3domClick", this, e);
-  				}).attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").on("mouseover", function (e) {
-  					dispatch.call("d3X3domMouseOver", this, e);
-  				}).attr("onmouseout", "d3.x3dom.events.forwardEvent(event);").on("mouseout", function (e) {
-  					dispatch.call("d3X3domMouseOut", this, e);
+  				var shape = el.append("Shape").attr("onclick", "d3.x3d.events.forwardEvent(event);").on("click", function (e) {
+  					dispatch.call("d3X3dClick", this, e);
+  				}).attr("onmouseover", "d3.x3d.events.forwardEvent(event);").on("mouseover", function (e) {
+  					dispatch.call("d3X3dMouseOver", this, e);
+  				}).attr("onmouseout", "d3.x3d.events.forwardEvent(event);").on("mouseout", function (e) {
+  					dispatch.call("d3X3dMouseOut", this, e);
   				});
 
   				shape.append("Sphere").attr("radius", function (d) {
@@ -2516,7 +2516,7 @@
   	/* Default Properties */
   	var dimensions = { x: 40, y: 40, z: 40 };
   	var colors = ["green", "red", "yellow", "steelblue", "orange"];
-  	var classed = "d3X3domBubblesMultiSeries";
+  	var classed = "d3X3dBubblesMultiSeries";
 
   	/* Scales */
   	var xScale = void 0;
@@ -2738,7 +2738,7 @@
   	/* Default Properties */
   	var dimensions = { x: 40, y: 40, z: 40 };
   	var colors = ["blue", "red", "green"];
-  	var classed = "d3X3domCrosshair";
+  	var classed = "d3X3dCrosshair";
   	var radius = 0.1;
 
   	/* Scales */
@@ -2904,7 +2904,7 @@
   	/* Default Properties */
   	var dimensions = { x: 40, y: 40, z: 40 };
   	var color = "black";
-  	var classed = "d3X3domLabel";
+  	var classed = "d3X3dLabel";
   	var offset = 0;
 
   	/* Scales */
@@ -3024,14 +3024,14 @@
   }
 
   /**
-   * Reusable X3DOM Light Component
+   * Reusable X3D Light Component
    *
    * @module
    */
   function componentLight () {
 
   	/* Default Properties */
-  	var classed = "d3X3domLight";
+  	var classed = "d3X3dLight";
   	var direction = "1 0 -1";
   	var intensity = 0.5;
   	var shadowIntensity = 0;
@@ -3105,7 +3105,7 @@
   	var dimensions = { x: 40, y: 40, z: 5 };
   	var color = "red";
   	var transparency = 0.2;
-  	var classed = "d3X3domRibbon";
+  	var classed = "d3X3dRibbon";
   	var smoothed = d3.curveBasis;
 
   	/* Scales */
@@ -3201,12 +3201,12 @@
   			var shape = function shape(el) {
   				var shape = el.append("Shape");
 
-  				shape.attr("onclick", "d3.x3dom.events.forwardEvent(event);").on("click", function (e) {
-  					dispatch.call("d3X3domClick", this, e);
-  				}).attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").on("mouseover", function (e) {
-  					dispatch.call("d3X3domMouseOver", this, e);
-  				}).attr("onmouseout", "d3.x3dom.events.forwardEvent(event);").on("mouseout", function (e) {
-  					dispatch.call("d3X3domMouseOut", this, e);
+  				shape.attr("onclick", "d3.x3d.events.forwardEvent(event);").on("click", function (e) {
+  					dispatch.call("d3X3dClick", this, e);
+  				}).attr("onmouseover", "d3.x3d.events.forwardEvent(event);").on("mouseover", function (e) {
+  					dispatch.call("d3X3dMouseOver", this, e);
+  				}).attr("onmouseout", "d3.x3d.events.forwardEvent(event);").on("mouseout", function (e) {
+  					dispatch.call("d3X3dMouseOut", this, e);
   				});
 
   				/*
@@ -3338,7 +3338,7 @@
   	/* Default Properties */
   	var dimensions = { x: 40, y: 40, z: 40 };
   	var colors = ["orange", "red", "yellow", "steelblue", "green"];
-  	var classed = "d3X3domRibbonMultiSeries";
+  	var classed = "d3X3dRibbonMultiSeries";
   	var smoothed = d3.curveBasis;
 
   	/* Scales */
@@ -3556,7 +3556,7 @@
   	/* Default Properties */
   	var dimensions = { x: 40, y: 40, z: 40 };
   	var colors = ["orange", "maroon"];
-  	var classed = "d3X3domSurface";
+  	var classed = "d3X3dSurface";
 
   	/* Scales */
   	var xScale = void 0;
@@ -3802,7 +3802,7 @@
   	/* Default Properties */
   	var dimensions = { x: 40, y: 40, z: 40 };
   	var colors = d3.interpolateRdYlGn;
-  	var classed = "d3X3domVectorFields";
+  	var classed = "d3X3dVectorFields";
 
   	/* Scales */
   	var xScale = void 0;
@@ -3960,14 +3960,14 @@
   			}).attr("class", "arrow").append("Transform").attr("translation", function (d) {
   				var offset = sizeScale(d.value) / 2;
   				return "0 " + offset + " 0";
-  			}).append("Group").attr("onclick", "d3.x3dom.events.forwardEvent(event);").attr("onmouseover", "d3.x3dom.events.forwardEvent(event);").attr("onmouseout", "d3.x3dom.events.forwardEvent(event);");
+  			}).append("Group").attr("onclick", "d3.x3d.events.forwardEvent(event);").attr("onmouseover", "d3.x3d.events.forwardEvent(event);").attr("onmouseout", "d3.x3d.events.forwardEvent(event);");
 
   			var arrowHead = arrowsEnter.append("Shape").on("click", function (e) {
-  				dispatch.call("d3X3domClick", this, e);
+  				dispatch.call("d3X3dClick", this, e);
   			}).on("mouseover", function (e) {
-  				dispatch.call("d3X3domMouseOver", this, e);
+  				dispatch.call("d3X3dMouseOver", this, e);
   			}).on("mouseout", function (e) {
-  				dispatch.call("d3X3domMouseOut", this, e);
+  				dispatch.call("d3X3dMouseOut", this, e);
   			});
 
   			arrowHead.append("Appearance").append("Material").attr("diffuseColor", function (d) {
@@ -3982,11 +3982,11 @@
   				var offset = sizeScale(d.value) / 2;
   				return "0 " + offset + " 0";
   			}).append("Shape").on("click", function (e) {
-  				dispatch.call("d3X3domClick", this, e);
+  				dispatch.call("d3X3dClick", this, e);
   			}).on("mouseover", function (e) {
-  				dispatch.call("d3X3domMouseOver", this, e);
+  				dispatch.call("d3X3dMouseOver", this, e);
   			}).on("mouseout", function (e) {
-  				dispatch.call("d3X3domMouseOut", this, e);
+  				dispatch.call("d3X3dMouseOut", this, e);
   			});
 
   			arrowShaft.append("Appearance").append("Material").attr("diffuseColor", function (d) {
@@ -4156,7 +4156,7 @@
   }
 
   /**
-   * Reusable X3DOM Viewpoint Component
+   * Reusable X3D Viewpoint Component
    *
    * @module
    */
@@ -4167,7 +4167,7 @@
   	var viewPosition = [80.0, 15.0, 80.0];
   	var viewOrientation = [0.0, 1.0, 0.0, 0.8];
   	var fieldOfView = 0.8;
-  	var classed = "d3X3domViewpoint";
+  	var classed = "d3X3dViewpoint";
 
   	/**
     * Constructor
@@ -4287,7 +4287,7 @@
 
   	/* Default Properties */
   	var dimensions = { x: 40, y: 40, z: 40 };
-  	var classed = "d3X3domVolumeSlice";
+  	var classed = "d3X3dVolumeSlice";
 
   	/* Other Volume Properties */
   	var imageUrl = void 0;
@@ -4444,7 +4444,7 @@
    *
    * let myData = [...];
    *
-   * let myChart = d3.x3dom.chart.areaChartMultiSeries();
+   * let myChart = d3.x3d.chart.areaChartMultiSeries();
    *
    * chartHolder.datum(myData).call(myChart);
    *
@@ -4460,7 +4460,7 @@
   	var height = 500;
   	var dimensions = { x: 60, y: 40, z: 40 };
   	var colors = ["green", "red", "yellow", "steelblue", "orange"];
-  	var classed = "d3X3domAreaChartMultiSeries";
+  	var classed = "d3X3dAreaChartMultiSeries";
   	var debug = false;
   	var smoothed = d3.curveMonotoneX;
 
@@ -4689,7 +4689,7 @@
    *
    * let myData = [...];
    *
-   * let myChart = d3.x3dom.chart.barChartMultiSeries();
+   * let myChart = d3.x3d.chart.barChartMultiSeries();
    *
    * chartHolder.datum(myData).call(myChart);
    *
@@ -4705,7 +4705,7 @@
   	var height = 500;
   	var dimensions = { x: 40, y: 40, z: 40 };
   	var colors = ["green", "red", "yellow", "steelblue", "orange"];
-  	var classed = "d3X3domBarChartMultiSeries";
+  	var classed = "d3X3dBarChartMultiSeries";
   	var labelPosition = "distal";
   	var debug = false;
 
@@ -4929,7 +4929,7 @@
    *
    * let myData = [...];
    *
-   * let myChart = d3.x3dom.chart.barChartVertical();
+   * let myChart = d3.x3d.chart.barChartVertical();
    *
    * chartHolder.datum(myData).call(myChart);
    *
@@ -4945,7 +4945,7 @@
   	var height = 500;
   	var dimensions = { x: 40, y: 40, z: 40 };
   	var colors = ["green", "red", "yellow", "steelblue", "orange"];
-  	var classed = "d3X3domBarChartVertical";
+  	var classed = "d3X3dBarChartVertical";
   	var debug = false;
 
   	/* Scales */
@@ -5144,7 +5144,7 @@
    *
    * let myData = [...];
    *
-   * let myChart = d3.x3dom.chart.bubbleChart();
+   * let myChart = d3.x3d.chart.bubbleChart();
    *
    * chartHolder.datum(myData).call(myChart);
    *
@@ -5160,7 +5160,7 @@
   	var height = 500;
   	var dimensions = { x: 40, y: 40, z: 40 };
   	var colors = ["green", "red", "yellow", "steelblue", "orange"];
-  	var classed = "d3X3domBubbleChart";
+  	var classed = "d3X3dBubbleChart";
   	var debug = false;
 
   	/* Scales */
@@ -5401,7 +5401,7 @@
    *
    * let myData = [...];
    *
-   * let myChart = d3.x3dom.chart.crosshairPlot();
+   * let myChart = d3.x3d.chart.crosshairPlot();
    *
    * chartHolder.datum(myData).call(myChart);
    */
@@ -5414,7 +5414,7 @@
   	var width = 500;
   	var height = 500;
   	var dimensions = { x: 40, y: 40, z: 40 };
-  	var classed = "d3X3domCrosshairPlot";
+  	var classed = "d3X3dCrosshairPlot";
   	var debug = false;
 
   	/* Scales */
@@ -5600,7 +5600,7 @@
    *
    * let myData = [...];
    *
-   * let myChart = d3.x3dom.chart.ribbonChartMultiSeries();
+   * let myChart = d3.x3d.chart.ribbonChartMultiSeries();
    *
    * chartHolder.datum(myData).call(myChart);
    *
@@ -5616,7 +5616,7 @@
   	var height = 500;
   	var dimensions = { x: 60, y: 40, z: 40 };
   	var colors = ["green", "red", "yellow", "steelblue", "orange"];
-  	var classed = "d3X3domRibbonChartMultiSeries";
+  	var classed = "d3X3dRibbonChartMultiSeries";
   	var debug = false;
   	var smoothed = d3.curveBasis;
 
@@ -5845,7 +5845,7 @@
    *
    * let myData = [...];
    *
-   * let myChart = d3.x3dom.chart.scatterPlot();
+   * let myChart = d3.x3d.chart.scatterPlot();
    *
    * chartHolder.datum(myData).call(myChart);
    *
@@ -5861,7 +5861,7 @@
   	var height = 500;
   	var dimensions = { x: 40, y: 40, z: 40 };
   	var color = "orange";
-  	var classed = "d3X3domScatterPlot";
+  	var classed = "d3X3dScatterPlot";
   	var debug = false;
 
   	/* Scales */
@@ -5946,17 +5946,17 @@
   			label.xScale(xScale).yScale(yScale).zScale(zScale).offset(0.5);
 
   			// Add Bubbles
-  			bubbles.xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([0.5, 0.5]).on("d3X3domClick", function (e) {
+  			bubbles.xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([0.5, 0.5]).on("d3X3dClick", function (e) {
   				var d = d3.select(e.target).datum();
   				scene.select(".crosshair").datum(d).classed("crosshair", true).each(function () {
   					d3.select(this).call(crosshair);
   				});
-  			}).on("d3X3domMouseOver", function (e) {
+  			}).on("d3X3dMouseOver", function (e) {
   				var d = d3.select(e.target).datum();
   				scene.select(".label").datum(d).each(function () {
   					d3.select(this).call(label);
   				});
-  			}).on("d3X3domMouseOut", function (e) {
+  			}).on("d3X3dMouseOut", function (e) {
   				scene.select(".label").selectAll("*").remove();
   			});
 
@@ -6083,7 +6083,7 @@
    *
    * let myData = [...];
    *
-   * let myChart = d3.x3dom.chart.surfacePlot();
+   * let myChart = d3.x3d.chart.surfacePlot();
    *
    * chartHolder.datum(myData).call(myChart);
    *
@@ -6099,7 +6099,7 @@
   	var height = 500;
   	var dimensions = { x: 40, y: 40, z: 40 };
   	var colors = ["blue", "red"];
-  	var classed = "d3X3domSurfacePlot";
+  	var classed = "d3X3dSurfacePlot";
   	var debug = false;
 
   	/* Scales */
@@ -6314,7 +6314,7 @@
    *    };
    * };
    *
-   * let myChart = d3.x3dom.chart.vectorFieldChart()
+   * let myChart = d3.x3d.chart.vectorFieldChart()
    *    .vectorFunction(vectorFunction);
    *
    * chartHolder.datum(myData).call(myChart);
@@ -6331,7 +6331,7 @@
   	var height = 500;
   	var dimensions = { x: 40, y: 40, z: 40 };
   	var colors = d3.interpolateRdYlGn;
-  	var classed = "d3X3domVectorFieldChart";
+  	var classed = "d3X3dVectorFieldChart";
   	var debug = false;
 
   	/* Scales */
@@ -6626,7 +6626,7 @@
    * @example
    * let chartHolder = d3.select("#chartholder");
    *
-   * let myChart = d3.x3dom.chart.volumeSliceChart();
+   * let myChart = d3.x3d.chart.volumeSliceChart();
    *    .dimensions({ x: 40, y: 40, z: 30 })
    *    .imageUrl("assets/scan2.png")
    *    .numberOfSlices(35)
@@ -6644,7 +6644,7 @@
   	var width = 500;
   	var height = 500;
   	var dimensions = { x: 40, y: 40, z: 40 };
-  	var classed = "d3X3domVolumeSliceChart";
+  	var classed = "d3X3dVolumeSliceChart";
   	var debug = false;
 
   	/* Scales */
@@ -7042,7 +7042,7 @@
   });
 
   /**
-   * d3-x3dom
+   * d3-x3d
    *
    * @author James Saunders [james@saunders-family.net]
    * @copyright Copyright (C) 2019 James Saunders

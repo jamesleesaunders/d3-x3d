@@ -7,7 +7,7 @@
   <script src="https://raw.githack.com/andreasplesch/x_ite_dom/master/release/x_ite_dom.1.2.js"></script>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <link rel="stylesheet" href="https://code.create3000.de/x_ite/latest/dist/x_ite.css" />
-  <script src="../../../dist/d3-x3dom.js"></script>
+  <script src="../../../dist/d3-x3d.js"></script>
 </head>
 
 <body>
@@ -48,10 +48,10 @@
     var chartHolder = d3.select("#chartholder");
 
     // Generate some data
-    var data = d3.x3dom.randomData.dataset2();
+    var data = d3.x3d.randomData.dataset2();
 
     // Declare the bar chart component
-    var myChart = d3.x3dom.chart.areaChartMultiSeries();
+    var myChart = d3.x3d.chart.areaChartMultiSeries();
 
     var checks = d3.selectAll('input[type=checkbox]');
 
@@ -84,7 +84,7 @@
 
   </script>
 
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.</div>
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data Visualization Library.</div>
 </body>
 
 </html>

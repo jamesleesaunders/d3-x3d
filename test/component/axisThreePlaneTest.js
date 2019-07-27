@@ -1,10 +1,10 @@
 let test = require("tape");
 let window = require("browser-env")();
 let d3 = require("d3");
-let d3X3dom = require("../../");
+let d3X3d = require("../../");
 
 test("Test Three Plane Axis Component, component.axisThreePlane()", function(t) {
-	let axisThreePlane = d3X3dom.component.axisThreePlane();
+	let axisThreePlane = d3X3d.component.axisThreePlane();
 
 	// Test dimensions getter / setter function
 	t.deepEqual(axisThreePlane.dimensions(), { x: 40, y: 40, z: 40 }, "Default dimensions");

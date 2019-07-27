@@ -6,7 +6,7 @@
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
   <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
-  <script src="../../../dist/d3-x3dom.js"></script>
+  <script src="../../../dist/d3-x3d.js"></script>
 </head>
 
 <body>
@@ -20,13 +20,12 @@
     var height = 500;
 
     // Declare the bar chart component
-    var viewpoint = d3.x3dom.component.viewpoint();
-    var component = d3.x3dom.component.surface();
+    var viewpoint = d3.x3d.component.viewpoint();
+    var component = d3.x3d.component.surface();
 
     // Create scene
     var scene = d3.select("#chartholder")
       .append("X3D")
-      .attr("id", "d3X3dom")
       .attr("width", width + "px")
       .attr("height", height + "px")
       .append("Scene");
@@ -38,7 +37,7 @@
 
     var refreshChart = function() {
       // Generate some data
-      var data = d3.x3dom.randomData.dataset5();
+      var data = d3.x3d.randomData.dataset5();
 
       chart.datum(data).call(component);
     };
@@ -49,7 +48,7 @@
 
   </script>
 
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.</div>
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data Visualization Library.</div>
 </body>
 
 </html>

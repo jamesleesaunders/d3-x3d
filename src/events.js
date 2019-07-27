@@ -5,7 +5,7 @@ import * as d3 from "d3";
  *
  * @type {d3.dispatch}
  */
-export const dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
+export const dispatch = d3.dispatch("d3X3dClick", "d3X3dMouseOver", "d3X3dMouseOut");
 
 /**
  * Forward X3DOM Event to D3

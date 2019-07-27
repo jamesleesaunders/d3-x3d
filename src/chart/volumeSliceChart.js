@@ -9,7 +9,7 @@ import component from "../component";
  * @example
  * let chartHolder = d3.select("#chartholder");
  *
- * let myChart = d3.x3dom.chart.volumeSliceChart();
+ * let myChart = d3.x3d.chart.volumeSliceChart();
  *    .dimensions({ x: 40, y: 40, z: 30 })
  *    .imageUrl("assets/scan2.png")
  *    .numberOfSlices(35)
@@ -27,7 +27,7 @@ export default function() {
 	let width = 500;
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let classed = "d3X3domVolumeSliceChart";
+	let classed = "d3X3dVolumeSliceChart";
 	let debug = false;
 
 	/* Scales */

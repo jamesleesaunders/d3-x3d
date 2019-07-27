@@ -6,7 +6,7 @@
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
   <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
-  <script src="../../../dist/d3-x3dom.js"></script>
+  <script src="../../../dist/d3-x3d.js"></script>
 </head>
 
 <body>
@@ -21,14 +21,14 @@
     var yScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
     var zScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
 
-    var viewpointComponent = d3.x3dom.component.viewpoint();
+    var viewpointComponent = d3.x3d.component.viewpoint();
 
-    var axisThreePlaneComponent = d3.x3dom.component.axisThreePlane()
+    var axisThreePlaneComponent = d3.x3d.component.axisThreePlane()
       .xScale(xScale)
       .yScale(yScale)
       .zScale(zScale);
 
-    var crosshairComponent = d3.x3dom.component.crosshair()
+    var crosshairComponent = d3.x3d.component.crosshair()
       .xScale(xScale)
       .yScale(yScale)
       .zScale(zScale);
@@ -40,7 +40,7 @@
       .attr("height", height + "px")
       .append("Scene");
 
-    var ranNum = function() { return d3.x3dom.randomData.randomNum(); };
+    var ranNum = function() { return d3.x3d.randomData.randomNum(); };
 
     // Add to page
     chartHolder.call(viewpointComponent);
@@ -61,7 +61,7 @@
 
   </script>
 
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3dom">d3-x3dom</a> D3 X3DOM Data Visualization Library.</div>
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data Visualization Library.</div>
 </body>
 
 </html>
