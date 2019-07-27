@@ -5,7 +5,7 @@
 [![Build Status](https://travis-ci.org/jamesleesaunders/d3-x3d.svg?branch=master)](https://travis-ci.org/jamesleesaunders/d3-x3d)
 [![Known Vulnerabilities](https://snyk.io/test/github/jamesleesaunders/d3-x3d/badge.svg?targetFile=package.json)](https://snyk.io/test/github/jamesleesaunders/d3-x3d?targetFile=package.json)
 
-Combining the power of the [D3.js](http://www.d3js.org/) data-driven documents visualisation library, and the [X3D](https://www.web3d.org/x3d/what-x3d) declarative 3D DOM framework, **d3-x3d** makes it easy to quickly produce beautiful 3D data visualisations with minimal code.
+Supports X3DOM and X_ITE. Combining the power of the [D3.js](http://www.d3js.org/) data-driven documents visualisation library, and the [X3D](https://www.web3d.org/x3d/what-x3d) declarative 3D DOM framework, **d3-x3d** makes it easy to quickly produce beautiful 3D data visualisations with minimal code.
 
 Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), **d3-x3d** is built on a foundation of building blocks, called components, which can be combined to create a variety of different data visualisations.
 
@@ -47,6 +47,7 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 Include D3.js, X3DOM and d3-x3d js and css files in the `<head>` section of your page:
 
 ```html
+If using X3DOM:
 <head>
    <script src="https://d3js.org/d3.v5.min.js"></script>
    <script src="https://x3dom.org/download/1.7.2/x3dom-full.js"></script>
@@ -54,8 +55,7 @@ Include D3.js, X3DOM and d3-x3d js and css files in the `<head>` section of your
    <script src="https://raw.githack.com/jamesleesaunders/d3-x3d/master/dist/d3-x3d.js"></script>
 </head>
 
-or:
-
+If using X_ITE:
 <head>
    <script src="https://code.create3000.de/x_ite/latest/dist/x_ite.min.js"></script>
    <script src="https://raw.githack.com/andreasplesch/x_ite_dom/master/release/x_ite_dom.1.2.js"></script>
@@ -69,13 +69,13 @@ or:
 Add a chartholder `<div>` and `<script>` tags to your page `<body>`:
 
 ```html
+If using X3DOM:
 <body>
    <div id="chartholder"></div>
    <script></script>
 </body>
 
-or:
-
+If using X_ITE:
 <body>
    <X3DCanvas id="chartholder" style="width: 500px; height: 500px;"></X3DCanvas>
    <script></script>
