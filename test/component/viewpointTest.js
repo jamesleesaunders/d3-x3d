@@ -1,10 +1,10 @@
 let test = require("tape");
 let window = require("browser-env")();
 let d3 = require("d3");
-let d3X3dom = require("../../");
+let d3X3d = require("../../");
 
 test("Test Viewpoint Base Component, component.viewpoint()", function(t) {
-	let viewPoint = d3X3dom.component.viewpoint();
+	let viewPoint = d3X3d.component.viewpoint();
 
 	// Test centerOfRotation getter / setter function
 	t.deepEqual(viewPoint.centerOfRotation(), [0.0, 0.0, 0.0], "Default centerOfRotation");
@@ -30,7 +30,7 @@ test("Test Viewpoint Base Component, component.viewpoint()", function(t) {
 });
 
 test("Test Component Viewpoint Quick View, viewpoint.quickView()", function(t) {
-	let viewPoint = d3X3dom.component.viewpoint();
+	let viewPoint = d3X3d.component.viewpoint();
 	let viewPoints = {
 		left: {
 			centerOfRotation: [0.0, 0.0, 0.0],
@@ -60,7 +60,7 @@ test("Test Component Viewpoint Quick View, viewpoint.quickView()", function(t) {
 	let { left, side, top, dimetric } = viewPoints;
 
 	test("Test default values for left view", function(t) {
-		viewPoint = d3X3dom.component.viewpoint();
+		viewPoint = d3X3d.component.viewpoint();
 		viewPoint.quickView('left');
 
 		t.deepEqual(viewPoint.centerOfRotation(), left.centerOfRotation);
@@ -72,7 +72,7 @@ test("Test Component Viewpoint Quick View, viewpoint.quickView()", function(t) {
 	});
 
 	test("Test default values for top view", function(t) {
-		viewPoint = d3X3dom.component.viewpoint();
+		viewPoint = d3X3d.component.viewpoint();
 		viewPoint.quickView('top');
 
 		t.deepEqual(viewPoint.centerOfRotation(), top.centerOfRotation);
@@ -84,7 +84,7 @@ test("Test Component Viewpoint Quick View, viewpoint.quickView()", function(t) {
 	});
 
 	test("Test default values for side view", function(t) {
-		viewPoint = d3X3dom.component.viewpoint();
+		viewPoint = d3X3d.component.viewpoint();
 		viewPoint.quickView('side');
 
 		t.deepEqual(viewPoint.centerOfRotation(), side.centerOfRotation);
@@ -96,7 +96,7 @@ test("Test Component Viewpoint Quick View, viewpoint.quickView()", function(t) {
 	});
 
 	test("Test default values for dimetric view", function(t) {
-		viewPoint = d3X3dom.component.viewpoint();
+		viewPoint = d3X3d.component.viewpoint();
 		viewPoint.quickView('dimetric');
 
 		t.deepEqual(viewPoint.centerOfRotation(), dimetric.centerOfRotation);

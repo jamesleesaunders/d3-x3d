@@ -1,10 +1,10 @@
 let test = require("tape");
 let window = require("browser-env")();
 let d3 = require("d3");
-let d3X3dom = require("../../");
+let d3X3d = require("../../");
 
 test("Test Crosshair Component, component.crosshair()", function(t) {
-	let crosshair = d3X3dom.component.crosshair();
+	let crosshair = d3X3d.component.crosshair();
 
 	// Test dimensions getter / setter function
 	t.deepEqual(crosshair.dimensions(), { x: 40, y: 40, z: 40 }, "Default dimensions");

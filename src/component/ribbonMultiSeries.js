@@ -13,7 +13,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["orange", "red", "yellow", "steelblue", "green"];
-	let classed = "d3X3domRibbonMultiSeries";
+	let classed = "d3X3dRibbonMultiSeries";
 	let smoothed = d3.curveBasis;
 
 	/* Scales */

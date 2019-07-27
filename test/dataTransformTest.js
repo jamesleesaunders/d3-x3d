@@ -1,7 +1,7 @@
 let test = require("tape");
 let window = require("browser-env")();
 let d3 = require("d3");
-let d3X3dom = require("../");
+let d3X3d = require("../");
 
 let dataset1 = {
 	key: "UK",
@@ -106,7 +106,7 @@ let dataset3 = [{
 }];
 
 test("Test Summary Single Dimension", function(t) {
-	let actual = d3X3dom.dataTransform(dataset1).summary();
+	let actual = d3X3d.dataTransform(dataset1).summary();
 	let expected = {
 		dataType: 1,
 		rowKey: "UK",
@@ -128,7 +128,7 @@ test("Test Summary Single Dimension", function(t) {
 });
 
 test("Test Summary Multi Dimension", function(t) {
-	let actual = d3X3dom.dataTransform(dataset2).summary();
+	let actual = d3X3d.dataTransform(dataset2).summary();
 	let expected = {
 		dataType: 2,
 		rowKeys: ["UK", "France", "Spain", "Germany", "Italy", "Portugal"],
@@ -153,8 +153,9 @@ test("Test Summary Multi Dimension", function(t) {
 });
 
 test("Test Rotate", function(t) {
-	t.deepEqual(d3X3dom.dataTransform(dataset2).rotate(), dataset3);
-	t.deepEqual(d3X3dom.dataTransform(dataset3).rotate(), dataset2);
+	t.deepEqual(d3X3d.dataTransform(dataset2).rotate(), dataset3);
+	// eslint-disable-next-line no-undef
+	t.deepEqual(d3X3d.dataTransform(dataset3).rotate(), dataset2);
 
 	t.end();
 });

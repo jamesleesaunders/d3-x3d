@@ -2,10 +2,10 @@ let test = require("mocha");
 let chai = require("chai");
 let window = require("browser-env")();
 let d3 = require("d3");
-let d3X3dom = require("../");
+let d3X3d = require("../");
 
 test.describe("Test Random Data Generation", () => {
-	let randomData = d3X3dom.randomData;
+	let randomData = d3X3d.randomData;
 	let countries = ["UK", "France", "Spain", "Germany", "Italy", "Portugal"];
 	let fruit = ["Apples", "Oranges", "Pears", "Bananas"];
 	let data = randomData.dataset1();

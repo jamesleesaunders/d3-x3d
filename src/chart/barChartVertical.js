@@ -12,7 +12,7 @@ import component from "../component";
  *
  * let myData = [...];
  *
- * let myChart = d3.x3dom.chart.barChartVertical();
+ * let myChart = d3.x3d.chart.barChartVertical();
  *
  * chartHolder.datum(myData).call(myChart);
  *
@@ -28,7 +28,7 @@ export default function() {
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["green", "red", "yellow", "steelblue", "orange"];
-	let classed = "d3X3domBarChartVertical";
+	let classed = "d3X3dBarChartVertical";
 	let debug = false;
 
 	/* Scales */
@@ -88,6 +88,10 @@ export default function() {
 			.attr("height", height + "px")
 			.attr("showLog", debug ? "true" : "false")
 			.attr("showStat", debug ? "true" : "false");
+
+		scene.append("Background")
+			.attr("groundColor", "1 1 1")
+			.attr("skyColor", "1 1 1");
 
 		// Update the chart dimensions and add layer groups
 		const layers = ["xAxis", "yAxis", "bars"];

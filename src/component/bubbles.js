@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import { dispatch } from "../events";
+import { colorParse } from "../colorHelper";
 
 /**
  * Reusable 3D Bubble Chart Component
@@ -12,7 +13,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let color = "orange";
-	let classed = "d3X3domBubbles";
+	let classed = "d3X3dBubbles";
 
 	/* Scales */
 	let xScale;
@@ -74,19 +75,19 @@ export default function() {
 
 			const shape = (el) => {
 				const shape = el.append("Shape")
-					.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
-					.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
-					.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
-					.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
-					.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);")
-					.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
+					.attr("onclick", "d3.x3d.events.forwardEvent(event);")
+					.on("click", function(e) { dispatch.call("d3X3dClick", this, e); })
+					.attr("onmouseover", "d3.x3d.events.forwardEvent(event);")
+					.on("mouseover", function(e) { dispatch.call("d3X3dMouseOver", this, e); })
+					.attr("onmouseout", "d3.x3d.events.forwardEvent(event);")
+					.on("mouseout", function(e) { dispatch.call("d3X3dMouseOut", this, e); });
 
 				shape.append("Sphere")
 					.attr("radius", (d) => sizeScale(d.value));
 
 				shape.append("Appearance")
 					.append("Material")
-					.attr("diffuseColor", color)
+					.attr("diffuseColor", colorParse(color))
 					.attr("ambientIntensity", 0.1);
 
 				return shape;
@@ -105,7 +106,7 @@ export default function() {
 				.select("Shape")
 				.select("Appearance")
 				.select("Material")
-				.attr("diffuseColor", color);
+				.attr("diffuseColor", colorParse(color));
 
 			bubbles.exit()
 				.remove();

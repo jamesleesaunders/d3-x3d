@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import { colorParse } from "../colorHelper";
 
 /**
  * Reusable 3D Crosshair Component
@@ -10,7 +11,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["blue", "red", "green"];
-	let classed = "d3X3domCrosshair";
+	let classed = "d3X3dCrosshair";
 	let radius = 0.1;
 
 	/* Scales */
@@ -75,7 +76,7 @@ export default function() {
 
 			ball.append("Appearance")
 				.append("Material")
-				.attr("diffuseColor", "blue");
+				.attr("diffuseColor", colorParse("blue"));
 
 			ball.append("Sphere")
 				.attr("radius", 0.3);
@@ -103,7 +104,7 @@ export default function() {
 
 			line.append("Appearance")
 				.append("Material")
-				.attr("diffuseColor", (d) => colorScale(d));
+				.attr("diffuseColor", (d) => colorParse(colorScale(d)));
 
 			line.merge(lineSelect);
 

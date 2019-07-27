@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import { dispatch } from "../events";
+import { colorParse } from "../colorHelper";
 
 /**
  * Reusable 3D Ribbon Chart Component
@@ -13,7 +14,7 @@ export default function() {
 	let dimensions = { x: 40, y: 40, z: 5 };
 	let color = "red";
 	let transparency = 0.2;
-	let classed = "d3X3domRibbon";
+	let classed = "d3X3dRibbon";
 	let smoothed = d3.curveBasis;
 
 	/* Scales */
@@ -129,12 +130,12 @@ export default function() {
 			const shape = (el) => {
 				const shape = el.append("Shape");
 
-				shape.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
-					.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
-					.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
-					.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
-					.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);")
-					.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
+				shape.attr("onclick", "d3.x3d.events.forwardEvent(event);")
+					.on("click", function(e) { dispatch.call("d3X3dClick", this, e); })
+					.attr("onmouseover", "d3.x3d.events.forwardEvent(event);")
+					.on("mouseover", function(e) { dispatch.call("d3X3dMouseOver", this, e); })
+					.attr("onmouseout", "d3.x3d.events.forwardEvent(event);")
+					.on("mouseout", function(e) { dispatch.call("d3X3dMouseOut", this, e); });
 
 				/*
 				// FIXME: x3dom cannot have empty IFS nodes, we must to use .html() rather than .append() & .attr().
@@ -145,7 +146,7 @@ export default function() {
 
 				shape.append("Appearance")
 					.append("TwoSidedMaterial")
-					.attr("diffuseColor", color)
+					.attr("diffuseColor", colorParse(color))
 					.attr("transparency", transparency);
 				*/
 
@@ -154,7 +155,7 @@ export default function() {
 						<Coordinate point="${d.point}"></Coordinate>
 					</IndexedFaceset>
 					<Appearance>
-						<TwoSidedMaterial diffuseColor="${color}" transparency="${transparency}"></TwoSidedMaterial>
+						<TwoSidedMaterial diffuseColor="${colorParse(color)}" transparency="${transparency}"></TwoSidedMaterial>
 					</Appearance>
 				`);
 			};
@@ -177,7 +178,7 @@ export default function() {
 
 			ribbonTransition.select("Appearance")
 				.select("TwoSidedMaterial")
-				.attr("diffuseColor", (d) => d.color);
+				.attr("diffuseColor", (d) => colorParse(d.color));
 
 			ribbon.exit()
 				.remove();

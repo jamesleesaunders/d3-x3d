@@ -2,6 +2,7 @@ import * as d3 from "d3";
 // import * as x3dom from "x3dom";
 import dataTransform from "../dataTransform";
 import { dispatch } from "../events";
+import { colorParse } from "../colorHelper";
 
 /**
  * Reusable 3D Vector Fields Component
@@ -13,7 +14,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = d3.interpolateRdYlGn;
-	let classed = "d3X3domVectorFields";
+	let classed = "d3X3dVectorFields";
 
 	/* Scales */
 	let xScale;
@@ -158,14 +159,14 @@ export default function() {
 					return "0 " + offset + " 0";
 				})
 				.append("Group")
-				.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
-				.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
-				.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);");
+				.attr("onclick", "d3.x3d.events.forwardEvent(event);")
+				.attr("onmouseover", "d3.x3d.events.forwardEvent(event);")
+				.attr("onmouseout", "d3.x3d.events.forwardEvent(event);");
 
 			const arrowHead = arrowsEnter.append("Shape")
-				.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
-				.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
-				.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
+				.on("click", function(e) { dispatch.call("d3X3dClick", this, e); })
+				.on("mouseover", function(e) { dispatch.call("d3X3dMouseOver", this, e); })
+				.on("mouseout", function(e) { dispatch.call("d3X3dMouseOut", this, e); });
 
 			arrowHead.append("Appearance")
 				.append("Material")
@@ -182,9 +183,9 @@ export default function() {
 					return "0 " + offset + " 0";
 				})
 				.append("Shape")
-				.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
-				.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
-				.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
+				.on("click", function(e) { dispatch.call("d3X3dClick", this, e); })
+				.on("mouseover", function(e) { dispatch.call("d3X3dMouseOver", this, e); })
+				.on("mouseout", function(e) { dispatch.call("d3X3dMouseOut", this, e); });
 
 			arrowShaft.append("Appearance")
 				.append("Material")

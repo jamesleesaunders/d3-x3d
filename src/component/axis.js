@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import { dispatch } from "../events";
+import { colorParse } from "../colorHelper";
 
 /**
  * Reusable 3D Axis Component
@@ -11,7 +12,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let color = "black";
-	let classed = "d3X3domAxis";
+	let classed = "d3X3dAxis";
 	let labelPosition = "proximal";
 	let labelInset = labelPosition === "distal" ? 1 : -1;
 
@@ -100,13 +101,13 @@ export default function() {
 
 				shape.append("Appearance")
 					.append("Material")
-					.attr("diffuseColor", color);
+					.attr("diffuseColor", colorParse(color));
 			};
 
 			const makeSolid = (el, color) => {
 				el.append("Appearance")
 					.append("Material")
-					.attr("diffuseColor", color || "black");
+					.attr("diffuseColor", colorParse(color) || "0 0 0");
 			};
 
 			// Main Lines
@@ -158,7 +159,7 @@ export default function() {
 					.append("Billboard")
 					.attr("axisOfRotation", "0 0 0")
 					.append("Shape")
-					.call(makeSolid, "black")
+					.call(makeSolid, colorParse("black"))
 					.append("Text")
 					.attr("string", tickFormat)
 					.append("FontStyle")

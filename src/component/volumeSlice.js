@@ -10,7 +10,7 @@ export default function() {
 
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let classed = "d3X3domVolumeSlice";
+	let classed = "d3X3dVolumeSlice";
 
 	/* Other Volume Properties */
 	let imageUrl;

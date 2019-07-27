@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 
 /**
- * Reusable X3DOM Viewpoint Component
+ * Reusable X3D Viewpoint Component
  *
  * @module
  */
@@ -12,7 +12,7 @@ export default function() {
 	let viewPosition = [80.0, 15.0, 80.0];
 	let viewOrientation = [0.0, 1.0, 0.0, 0.8];
 	let fieldOfView = 0.8;
-	let classed = "d3X3domViewpoint";
+	let classed = "d3X3dViewpoint";
 
 	/**
 	 * Constructor

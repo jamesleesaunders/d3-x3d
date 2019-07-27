@@ -1,4 +1,6 @@
 import * as d3 from "d3";
+import { colorParse } from "../colorHelper";
+
 
 /**
  * Reusable 3D Label Component
@@ -10,7 +12,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let color = "black";
-	let classed = "d3X3domLabel";
+	let classed = "d3X3dLabel";
 	let offset = 0;
 
 	/* Scales */
@@ -35,7 +37,7 @@ export default function() {
 			const makeSolid = (el, color) => {
 				el.append("Appearance")
 					.append("Material")
-					.attr("diffuseColor", color || "black");
+					.attr("diffuseColor", colorParse(color) || "0 0 0");
 			};
 
 			const labelSelect = element.selectAll(".label")

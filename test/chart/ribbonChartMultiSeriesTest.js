@@ -1,10 +1,10 @@
 let test = require("tape");
 let window = require("browser-env")();
 let d3 = require("d3");
-let d3X3dom = require("../../");
+let d3X3d = require("../../");
 
 test("Test Multi Series Ribbon Chart, chart.ribbonChartMultiSeries()", function(t) {
-	let ribbonChartMultiSeries = d3X3dom.chart.ribbonChartMultiSeries();
+	let ribbonChartMultiSeries = d3X3d.chart.ribbonChartMultiSeries();
 
 	// Test width getter / setter function
 	t.equal(ribbonChartMultiSeries.width(), 500, "Default width");
