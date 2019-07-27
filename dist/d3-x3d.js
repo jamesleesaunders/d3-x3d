@@ -12,15 +12,33 @@
   (global = global || self, (global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3, global.d3, global.d3)));
 }(this, function (d3, d3Shape, d3Array) { 'use strict';
 
-  var version = "2.0.0";
+  var version = "2.0.1-dev";
   var license = "GPL-2.0";
 
+  /**
+   * Curve Polator
+   *
+   * @param points
+   * @param curve
+   * @param epsilon
+   * @param samples
+   * @returns {Function}
+   */
   function curvePolator(points, curve, epsilon, samples) {
+    // eslint-disable-line max-params
     var path = d3Shape.line().curve(curve)(points);
 
     return svgPathInterpolator(path, epsilon, samples);
   }
 
+  /**
+   * SVG Psth Interpolator
+   *
+   * @param path
+   * @param epsilon
+   * @param samples
+   * @returns {Function}
+   */
   function svgPathInterpolator(path, epsilon, samples) {
     // Create detached SVG path
     path = path || "M0,0L1,1";
@@ -40,8 +58,10 @@
 
     // Return function
     return function (x) {
-      var targetX = x === 0 ? 0 : x || minPoint.x; // Check for 0 and null/undefined
-      if (targetX < range[0].x) return range[0]; // Clamp
+      // Check for 0 and null/undefined
+      var targetX = x === 0 ? 0 : x || minPoint.x;
+      // Clamp
+      if (targetX < range[0].x) return range[0];
       if (targetX > range[1].x) return range[1];
 
       function estimateLength(l, mn, mx) {
@@ -74,10 +94,19 @@
     };
   }
 
+  /**
+   * Interpolate From Curve
+   *
+   * @param values
+   * @param curve
+   * @param epsilon
+   * @param samples
+   * @returns {Function}
+   */
   function fromCurve (values, curve) {
     var epsilon = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.00001;
     var samples = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 100;
-
+    // eslint-disable-line max-params
     var length = values.length;
     var xrange = d3Array.range(length).map(function (d, i) {
       return i * (1 / (length - 1));
@@ -698,7 +727,7 @@
    * @returns {boolean|*}
    */
   function colourNameToHex(colorName) {
-  	var colours = {
+  	var colorNames = {
   		"aliceblue": "#f0f8ff",
   		"antiquewhite": "#faebd7",
   		"aqua": "#00ffff",
@@ -842,8 +871,8 @@
   		"yellowgreen": "#9acd32"
   	};
 
-  	if (typeof colours[colorName.toLowerCase()] !== 'undefined') {
-  		return colours[colorName.toLowerCase()];
+  	if (typeof colorNames[colorName.toLowerCase()] !== 'undefined') {
+  		return colorNames[colorName.toLowerCase()];
   	}
   	return false;
   }
@@ -868,6 +897,23 @@
    */
   function rgbToHex(r, g, b) {
   	return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+  }
+
+  /**
+   * RGB Colour to Hex Converter
+   *
+   * @param {string} rgbStr - RGB colour string (e.g. 'rgb(155, 102, 102)').
+   * @returns {string} - Hex Color (e.g. '#9b6666').
+   */
+  function rgb2Hex(rgbStr) {
+  	var _rgbStr$substring$rep = rgbStr.substring(4, rgbStr.length - 1).replace(/ /g, '').split(','),
+  	    _rgbStr$substring$rep2 = slicedToArray(_rgbStr$substring$rep, 3),
+  	    red = _rgbStr$substring$rep2[0],
+  	    green = _rgbStr$substring$rep2[1],
+  	    blue = _rgbStr$substring$rep2[2];
+
+  	var rgb = blue | green << 8 | red << 16; // eslint-disable-line no-bitwise
+  	return '#' + (0x1000000 + rgb).toString(16).slice(1);
   }
 
   /**
@@ -913,7 +959,7 @@
   	    blue = 0;
 
   	// definition of css color names
-  	var color_names = {
+  	var colorNames = {
   		aliceblue: 'f0f8ff', antiquewhite: 'faebd7', aqua: '00ffff',
   		aquamarine: '7fffd4', azure: 'f0ffff', beige: 'f5f5dc',
   		bisque: 'ffe4c4', black: '000000', blanchedalmond: 'ffebcd',
@@ -964,11 +1010,27 @@
   		yellow: 'ffff00', yellowgreen: '9acd32'
   	};
 
-  	if (color_names[color]) {
-  		// first check if color is given as colorname
-  		color = "#" + color_names[color];
+  	// Matches x3d rgb.
+  	if (color.match(/(0+\.?\d*|1\.?0) (0+\.?\d*|1\.?0) (0+\.?\d*|1\.?0)/)) {
+  		return color;
   	}
 
+  	// Matches color name
+  	if (colorNames[color]) {
+  		// first check if color is given as colorname
+  		color = "#" + colorNames[color];
+  	}
+
+  	// rgb(xxx)
+  	var matchColors = /rgb\((\d{1,3}), (\d{1,3}), (\d{1,3})\)/;
+  	var match = matchColors.exec(color);
+  	if (match !== null) {
+  		red = match[1] / 255.0;
+  		green = match[2] / 255.0;
+  		blue = match[3] / 255.0;
+  	}
+
+  	// Hash color
   	if (color.substr && color.substr(0, 1) === "#") {
   		color = color.substr(1);
   		var len = color.length;
@@ -991,6 +1053,7 @@
     colourNameToHex: colourNameToHex,
     componentToHex: componentToHex,
     rgbToHex: rgbToHex,
+    rgb2Hex: rgb2Hex,
     hexToRgb: hexToRgb,
     hexToX3d: hexToX3d,
     colourNameToX3d: colourNameToX3d,
@@ -3971,7 +4034,7 @@
   			});
 
   			arrowHead.append("Appearance").append("Material").attr("diffuseColor", function (d) {
-  				return rgb2Hex(colorScale(d.value));
+  				return colorParse(colorScale(d.value));
   			});
 
   			arrowHead.append("Cylinder").attr("height", function (d) {
@@ -3990,7 +4053,7 @@
   			});
 
   			arrowShaft.append("Appearance").append("Material").attr("diffuseColor", function (d) {
-  				return rgb2Hex(colorScale(d.value));
+  				return colorParse(colorScale(d.value));
   			});
 
   			arrowShaft.append("cone").attr("height", 1).attr("bottomRadius", 0.4);
@@ -4004,23 +4067,6 @@
   			arrows.exit().remove();
   		});
   	};
-
-  	/**
-    * RGB Colour to Hex Converter
-    *
-    * @param {string} rgbStr - RGB colour string (e.g. 'rgb(155, 102, 102)').
-    * @returns {string} - Hex Color (e.g. '#9b6666').
-    */
-  	function rgb2Hex(rgbStr) {
-  		var _rgbStr$substring$rep = rgbStr.substring(4, rgbStr.length - 1).replace(/ /g, '').split(','),
-  		    _rgbStr$substring$rep2 = slicedToArray(_rgbStr$substring$rep, 3),
-  		    red = _rgbStr$substring$rep2[0],
-  		    green = _rgbStr$substring$rep2[1],
-  		    blue = _rgbStr$substring$rep2[2];
-
-  		var rgb = blue | green << 8 | red << 16; // eslint-disable-line no-bitwise
-  		return '#' + (0x1000000 + rgb).toString(16).slice(1);
-  	}
 
   	/**
     * Dimensions Getter / Setter

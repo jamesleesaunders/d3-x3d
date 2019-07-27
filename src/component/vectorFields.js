@@ -2,7 +2,7 @@ import * as d3 from "d3";
 // import * as x3dom from "x3dom";
 import dataTransform from "../dataTransform";
 import { dispatch } from "../events";
-import { colorParse } from "../colorHelper";
+import { colorParse, rgb2Hex } from "../colorHelper";
 
 /**
  * Reusable 3D Vector Fields Component
@@ -170,7 +170,7 @@ export default function() {
 
 			arrowHead.append("Appearance")
 				.append("Material")
-				.attr("diffuseColor", (d) => rgb2Hex(colorScale(d.value)));
+				.attr("diffuseColor", (d) => colorParse(colorScale(d.value)));
 
 			arrowHead.append("Cylinder")
 				.attr("height", (d) => sizeScale(d.value))
@@ -189,7 +189,7 @@ export default function() {
 
 			arrowShaft.append("Appearance")
 				.append("Material")
-				.attr("diffuseColor", (d) => rgb2Hex(colorScale(d.value)));
+				.attr("diffuseColor", (d) => colorParse(colorScale(d.value)));
 
 			arrowShaft
 				.append("cone")
@@ -205,18 +205,6 @@ export default function() {
 				.remove();
 		});
 	};
-
-	/**
-	 * RGB Colour to Hex Converter
-	 *
-	 * @param {string} rgbStr - RGB colour string (e.g. 'rgb(155, 102, 102)').
-	 * @returns {string} - Hex Color (e.g. '#9b6666').
-	 */
-	function rgb2Hex(rgbStr) {
-		const [red, green, blue] = rgbStr.substring(4, rgbStr.length - 1).replace(/ /g, '').split(',');
-		let rgb = blue | (green << 8) | (red << 16); // eslint-disable-line no-bitwise
-		return '#' + (0x1000000 + rgb).toString(16).slice(1);
-	}
 
 	/**
 	 * Dimensions Getter / Setter
