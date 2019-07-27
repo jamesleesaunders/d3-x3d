@@ -120,7 +120,7 @@ export default function() {
 						<Coordinate point="${d.point}"></Coordinate>
 					</IndexedFaceset>
 					<Appearance>
-						<Material diffuseColor="${colorParse(color)}" transparency="${transparency}"></Material>
+						<Material diffuseColor="${color}" transparency="${transparency}"></Material>
 					</Appearance>
 				`);
 			};
@@ -143,7 +143,7 @@ export default function() {
 
 			areaTransition.select("Appearance")
 				.select("Material")
-				.attr("diffuseColor", (d) => colorParse(d.color));
+				.attr("diffuseColor", (d) => d.color);
 
 			area.exit()
 				.remove();
