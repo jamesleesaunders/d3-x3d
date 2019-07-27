@@ -1,6 +1,6 @@
 {
   "name": "d3-x3d",
-  "version": "2.0.0",
+  "version": "2.0.1-dev",
   "description": "3D Charts and Data Visualizations",
   "license": "GPL-2.0",
   "keywords": [
@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "d3": "^5.9.7",
-    "d3-interpolate-curve": "^1.0.0",
+    "d3-interpolate-curve": "^1.0.1",
     "x3dom": "^1.7.2"
   },
   "peerDependencies": {
@@ -59,7 +59,7 @@
     "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "snyk": "^1.195.1",
+    "snyk": "^1.199.2",
     "tap-spec": "^5.0.0",
     "tape": "^4.11.0",
     "toast-jsdoc": "^1.0.2",

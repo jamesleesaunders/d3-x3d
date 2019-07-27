@@ -1,4 +1,4 @@
-# d3-x3dom Makefile
+# d3-x3d Makefile
 
 COMPRESS_FILES := dist/d3-x3d.js \
                   dist/d3-x3d.min.js \
