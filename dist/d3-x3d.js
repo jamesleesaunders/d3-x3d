@@ -1196,7 +1196,7 @@
       */
 
   				shape.html(function (d) {
-  					return "\n\t\t\t\t\t<IndexedFaceset coordIndex=\"" + d.coordIndex + "\" solid=\"false\">\n\t\t\t\t\t\t<Coordinate point=\"" + d.point + "\"></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<Material diffuseColor=\"" + color + "\" transparency=\"" + transparency + "\"></Material>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
+  					return "\n\t\t\t\t\t<IndexedFaceset coordIndex=\"" + d.coordIndex + "\" solid=\"false\">\n\t\t\t\t\t\t<Coordinate point=\"" + d.point + "\"></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<Material diffuseColor=\"" + colorParse(color) + "\" transparency=\"" + transparency + "\"></Material>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
   				});
   			};
 
@@ -1216,9 +1216,7 @@
   				return d.point;
   			});
 
-  			areaTransition.select("Appearance").select("Material").attr("diffuseColor", function (d) {
-  				return d.color;
-  			});
+  			areaTransition.select("Appearance").select("Material").attr("diffuseColor", colorParse(color));
 
   			area.exit().remove();
   		});
@@ -3303,7 +3301,7 @@
       */
 
   				shape.html(function (d) {
-  					return "\n\t\t\t\t\t<IndexedFaceset coordIndex=\"" + d.coordIndex + "\">\n\t\t\t\t\t\t<Coordinate point=\"" + d.point + "\"></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<TwoSidedMaterial diffuseColor=\"" + color + "\" transparency=\"" + transparency + "\"></TwoSidedMaterial>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
+  					return "\n\t\t\t\t\t<IndexedFaceset coordIndex=\"" + d.coordIndex + "\">\n\t\t\t\t\t\t<Coordinate point=\"" + d.point + "\"></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<TwoSidedMaterial diffuseColor=\"" + colorParse(color) + "\" transparency=\"" + transparency + "\"></TwoSidedMaterial>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
   				});
   			};
 
@@ -3323,9 +3321,7 @@
   				return d.point;
   			});
 
-  			ribbonTransition.select("Appearance").select("TwoSidedMaterial").attr("diffuseColor", function (d) {
-  				return d.color;
-  			});
+  			ribbonTransition.select("Appearance").select("TwoSidedMaterial").attr("diffuseColor", colorParse(color));
 
   			ribbon.exit().remove();
   		});
@@ -3709,19 +3705,19 @@
 
   			var element = d3.select(this).classed(classed, true);
 
-  			var surfaceData = function surfaceData(d) {
+  			var surfaceData = function surfaceData(data) {
 
-  				var coordPoints = function coordPoints(data) {
-  					return data.map(function (X) {
+  				var coordPoints = function coordPoints(Y) {
+  					return Y.map(function (X) {
   						return X.values.map(function (d) {
   							return [xScale(X.key), yScale(d.value), zScale(d.key)];
   						});
   					});
   				};
 
-  				var coordIndex = function coordIndex(data) {
-  					var ny = data.length;
-  					var nx = data[0].values.length;
+  				var coordIndex = function coordIndex(Y) {
+  					var ny = Y.length;
+  					var nx = Y[0].values.length;
 
   					var coordIndexFront = Array.apply(0, Array(ny - 1)).map(function (_, j) {
   						return Array.apply(0, Array(nx - 1)).map(function (_, i) {
@@ -3740,8 +3736,8 @@
   					return coordIndexFront.concat(coordIndexBack);
   				};
 
-  				var colorFaceSet = function colorFaceSet(data) {
-  					return data.map(function (X) {
+  				var colorFaceSet = function colorFaceSet(Y) {
+  					return Y.map(function (X) {
   						return X.values.map(function (d) {
   							var color = d3.color(colorScale(d.value));
   							return colorParse(color);
@@ -3749,14 +3745,18 @@
   					});
   				};
 
-  				return [{
-  					coordIndex: array2dToString(coordIndex(d)),
-  					point: array2dToString(coordPoints(d)),
-  					color: array2dToString(colorFaceSet(d))
-  				}];
+  				data.coordIndex = array2dToString(coordIndex(data));
+  				data.point = array2dToString(coordPoints(data));
+  				data.color = array2dToString(colorFaceSet(data));
+
+  				return [data];
   			};
 
-  			var surface = element.selectAll(".surface").data(surfaceData);
+  			var surface = element.selectAll(".surface").data(function (d) {
+  				return surfaceData(d);
+  			}, function (d) {
+  				return d.key;
+  			});
 
   			var surfaceSelect = surface.enter().append("Shape").classed("surface", true).append("IndexedFaceset").attr("coordIndex", function (d) {
   				return d.coordIndex;
