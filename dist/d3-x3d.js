@@ -3743,8 +3743,8 @@
   				var colorFaceSet = function colorFaceSet(data) {
   					return data.map(function (X) {
   						return X.values.map(function (d) {
-  							var col = d3.color(colorScale(d.value));
-  							return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
+  							var color = d3.color(colorScale(d.value));
+  							return colorParse(color);
   						});
   					});
   				};

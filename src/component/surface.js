@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import { dispatch } from "../events";
+import { colorParse } from "../colorHelper";
 
 /**
  * Reusable 3D Surface Area Component
@@ -118,8 +119,8 @@ export default function() {
 				const colorFaceSet = function(data) {
 					return data.map(function(X) {
 						return X.values.map(function(d) {
-							const col = d3.color(colorScale(d.value));
-							return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
+							const color = d3.color(colorScale(d.value));
+							return colorParse(color);
 						})
 					});
 				};
