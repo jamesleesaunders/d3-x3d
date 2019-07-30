@@ -159,7 +159,7 @@ export default function() {
 					.append("Billboard")
 					.attr("axisOfRotation", "0 0 0")
 					.append("Shape")
-					.call(makeSolid, colorParse("black"))
+					.call(makeSolid, "black")
 					.append("Text")
 					.attr("string", tickFormat)
 					.append("FontStyle")
