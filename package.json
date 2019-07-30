@@ -28,7 +28,7 @@
   "module": "index.js",
   "scripts": {
     "pretest": "make",
-    "test": "mocha test/indexTest.js && mocha test/randomDataTest.js && mocha test/colorHelperTest.js && tape 'test/dataTransformTest.js' | tap-spec && tape 'test/c*/*Test.js' | tap-spec",
+    "test": "snyk test && mocha test/indexTest.js && mocha test/randomDataTest.js && mocha test/colorHelperTest.js && tape 'test/dataTransformTest.js' | tap-spec && tape 'test/c*/*Test.js' | tap-spec",
     "build:docs": "jsdoc -c config/jsdoc.conf.json",
     "deploy:docs": "npm run build:docs && gh-pages -d docs",
     "snyk-protect": "snyk protect",
@@ -59,7 +59,7 @@
     "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "snyk": "^1.203.0",
+    "snyk": "^1.205.0",
     "tap-spec": "^5.0.0",
     "tape": "^4.11.0",
     "toast-jsdoc": "^1.0.2",
