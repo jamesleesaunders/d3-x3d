@@ -161,12 +161,12 @@ export default function() {
 					.append("Shape")
 					.call(makeSolid, "black")
 					.append("Text")
-					.attr("string", tickFormat)
+					.attr("string", (d) => `"${tickFormat(d)}"`)
 					.append("FontStyle")
 					.attr("size", 1.3)
 					.attr("family", "SANS")
 					.attr("style", "BOLD")
-					.attr("justify", "MIDDLE");
+					.attr("justify", "\"MIDDLE\"");
 
 				labelsEnter.merge(labels);
 
@@ -179,7 +179,7 @@ export default function() {
 							.select("Billboard")
 							.select("Shape")
 							.select("Text")
-							.attr("string", tickFormat);
+							.attr("string", (d) => `"${tickFormat(d)}"`);
 					});
 
 				labels.exit()
