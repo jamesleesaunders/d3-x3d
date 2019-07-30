@@ -12,7 +12,7 @@
   (global = global || self, (global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3, global.d3, global.d3)));
 }(this, function (d3, d3Shape, d3Array) { 'use strict';
 
-  var version = "2.0.1-dev";
+  var version = "2.0.1";
   var license = "GPL-2.0";
 
   /**
