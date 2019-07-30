@@ -12,15 +12,33 @@
   (global = global || self, (global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3, global.d3, global.d3)));
 }(this, function (d3, d3Shape, d3Array) { 'use strict';
 
-  var version = "2.0.0";
+  var version = "2.0.1";
   var license = "GPL-2.0";
 
+  /**
+   * Curve Polator
+   *
+   * @param points
+   * @param curve
+   * @param epsilon
+   * @param samples
+   * @returns {Function}
+   */
   function curvePolator(points, curve, epsilon, samples) {
+    // eslint-disable-line max-params
     var path = d3Shape.line().curve(curve)(points);
 
     return svgPathInterpolator(path, epsilon, samples);
   }
 
+  /**
+   * SVG Psth Interpolator
+   *
+   * @param path
+   * @param epsilon
+   * @param samples
+   * @returns {Function}
+   */
   function svgPathInterpolator(path, epsilon, samples) {
     // Create detached SVG path
     path = path || "M0,0L1,1";
@@ -40,8 +58,10 @@
 
     // Return function
     return function (x) {
-      var targetX = x === 0 ? 0 : x || minPoint.x; // Check for 0 and null/undefined
-      if (targetX < range[0].x) return range[0]; // Clamp
+      // Check for 0 and null/undefined
+      var targetX = x === 0 ? 0 : x || minPoint.x;
+      // Clamp
+      if (targetX < range[0].x) return range[0];
       if (targetX > range[1].x) return range[1];
 
       function estimateLength(l, mn, mx) {
@@ -74,10 +94,19 @@
     };
   }
 
+  /**
+   * Interpolate From Curve
+   *
+   * @param values
+   * @param curve
+   * @param epsilon
+   * @param samples
+   * @returns {Function}
+   */
   function fromCurve (values, curve) {
     var epsilon = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.00001;
     var samples = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 100;
-
+    // eslint-disable-line max-params
     var length = values.length;
     var xrange = d3Array.range(length).map(function (d, i) {
       return i * (1 / (length - 1));
@@ -698,7 +727,7 @@
    * @returns {boolean|*}
    */
   function colourNameToHex(colorName) {
-  	var colours = {
+  	var colorNames = {
   		"aliceblue": "#f0f8ff",
   		"antiquewhite": "#faebd7",
   		"aqua": "#00ffff",
@@ -842,8 +871,8 @@
   		"yellowgreen": "#9acd32"
   	};
 
-  	if (typeof colours[colorName.toLowerCase()] !== 'undefined') {
-  		return colours[colorName.toLowerCase()];
+  	if (typeof colorNames[colorName.toLowerCase()] !== 'undefined') {
+  		return colorNames[colorName.toLowerCase()];
   	}
   	return false;
   }
@@ -868,6 +897,23 @@
    */
   function rgbToHex(r, g, b) {
   	return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+  }
+
+  /**
+   * RGB Colour to Hex Converter
+   *
+   * @param {string} rgbStr - RGB colour string (e.g. 'rgb(155, 102, 102)').
+   * @returns {string} - Hex Color (e.g. '#9b6666').
+   */
+  function rgb2Hex(rgbStr) {
+  	var _rgbStr$substring$rep = rgbStr.substring(4, rgbStr.length - 1).replace(/ /g, '').split(','),
+  	    _rgbStr$substring$rep2 = slicedToArray(_rgbStr$substring$rep, 3),
+  	    red = _rgbStr$substring$rep2[0],
+  	    green = _rgbStr$substring$rep2[1],
+  	    blue = _rgbStr$substring$rep2[2];
+
+  	var rgb = blue | green << 8 | red << 16; // eslint-disable-line no-bitwise
+  	return '#' + (0x1000000 + rgb).toString(16).slice(1);
   }
 
   /**
@@ -910,79 +956,113 @@
   function colorParse(color) {
   	var red = 0,
   	    green = 0,
-  	    blue = 0;
+  	    blue = 0,
+  	    alpha = 0;
 
-  	// definition of css color names
-  	var color_names = {
-  		aliceblue: 'f0f8ff', antiquewhite: 'faebd7', aqua: '00ffff',
-  		aquamarine: '7fffd4', azure: 'f0ffff', beige: 'f5f5dc',
-  		bisque: 'ffe4c4', black: '000000', blanchedalmond: 'ffebcd',
-  		blue: '0000ff', blueviolet: '8a2be2', brown: 'a52a2a',
-  		burlywood: 'deb887', cadetblue: '5f9ea0', chartreuse: '7fff00',
-  		chocolate: 'd2691e', coral: 'ff7f50', cornflowerblue: '6495ed',
-  		cornsilk: 'fff8dc', crimson: 'dc143c', cyan: '00ffff',
-  		darkblue: '00008b', darkcyan: '008b8b', darkgoldenrod: 'b8860b',
-  		darkgray: 'a9a9a9', darkgreen: '006400', darkkhaki: 'bdb76b',
-  		darkmagenta: '8b008b', darkolivegreen: '556b2f', darkorange: 'ff8c00',
-  		darkorchid: '9932cc', darkred: '8b0000', darksalmon: 'e9967a',
-  		darkseagreen: '8fbc8f', darkslateblue: '483d8b', darkslategray: '2f4f4f',
-  		darkturquoise: '00ced1', darkviolet: '9400d3', deeppink: 'ff1493',
-  		deepskyblue: '00bfff', dimgray: '696969', dodgerblue: '1e90ff',
-  		feldspar: 'd19275', firebrick: 'b22222', floralwhite: 'fffaf0',
-  		forestgreen: '228b22', fuchsia: 'ff00ff', gainsboro: 'dcdcdc',
-  		ghostwhite: 'f8f8ff', gold: 'ffd700', goldenrod: 'daa520',
-  		gray: '808080', green: '008000', greenyellow: 'adff2f',
-  		honeydew: 'f0fff0', hotpink: 'ff69b4', indianred: 'cd5c5c',
-  		indigo: '4b0082', ivory: 'fffff0', khaki: 'f0e68c',
-  		lavender: 'e6e6fa', lavenderblush: 'fff0f5', lawngreen: '7cfc00',
-  		lemonchiffon: 'fffacd', lightblue: 'add8e6', lightcoral: 'f08080',
-  		lightcyan: 'e0ffff', lightgoldenrodyellow: 'fafad2', lightgrey: 'd3d3d3',
-  		lightgreen: '90ee90', lightpink: 'ffb6c1', lightsalmon: 'ffa07a',
-  		lightseagreen: '20b2aa', lightskyblue: '87cefa', lightslateblue: '8470ff',
-  		lightslategray: '778899', lightsteelblue: 'b0c4de', lightyellow: 'ffffe0',
-  		lime: '00ff00', limegreen: '32cd32', linen: 'faf0e6',
-  		magenta: 'ff00ff', maroon: '800000', mediumaquamarine: '66cdaa',
-  		mediumblue: '0000cd', mediumorchid: 'ba55d3', mediumpurple: '9370d8',
-  		mediumseagreen: '3cb371', mediumslateblue: '7b68ee', mediumspringgreen: '00fa9a',
-  		mediumturquoise: '48d1cc', mediumvioletred: 'c71585', midnightblue: '191970',
-  		mintcream: 'f5fffa', mistyrose: 'ffe4e1', moccasin: 'ffe4b5',
-  		navajowhite: 'ffdead', navy: '000080', oldlace: 'fdf5e6',
-  		olive: '808000', olivedrab: '6b8e23', orange: 'ffa500',
-  		orangered: 'ff4500', orchid: 'da70d6', palegoldenrod: 'eee8aa',
-  		palegreen: '98fb98', paleturquoise: 'afeeee', palevioletred: 'd87093',
-  		papayawhip: 'ffefd5', peachpuff: 'ffdab9', peru: 'cd853f',
-  		pink: 'ffc0cb', plum: 'dda0dd', powderblue: 'b0e0e6',
-  		purple: '800080', red: 'ff0000', rosybrown: 'bc8f8f',
-  		royalblue: '4169e1', saddlebrown: '8b4513', salmon: 'fa8072',
-  		sandybrown: 'f4a460', seagreen: '2e8b57', seashell: 'fff5ee',
-  		sienna: 'a0522d', silver: 'c0c0c0', skyblue: '87ceeb',
-  		slateblue: '6a5acd', slategray: '708090', snow: 'fffafa',
-  		springgreen: '00ff7f', steelblue: '4682b4', tan: 'd2b48c',
-  		teal: '008080', thistle: 'd8bfd8', tomato: 'ff6347',
-  		turquoise: '40e0d0', violet: 'ee82ee', violetred: 'd02090',
-  		wheat: 'f5deb3', white: 'ffffff', whitesmoke: 'f5f5f5',
-  		yellow: 'ffff00', yellowgreen: '9acd32'
+  	// Definition of CSS color names
+  	var colorNames = {
+  		aliceblue: '#f0f8ff', antiquewhite: '#faebd7', aqua: '#00ffff',
+  		aquamarine: '#7fffd4', azure: '#f0ffff', beige: '#f5f5dc',
+  		bisque: '#ffe4c4', black: '#000000', blanchedalmond: '#ffebcd',
+  		blue: '#0000ff', blueviolet: '#8a2be2', brown: '#a52a2a',
+  		burlywood: '#deb887', cadetblue: '#5f9ea0', chartreuse: '#7fff00',
+  		chocolate: '#d2691e', coral: '#ff7f50', cornflowerblue: '#6495ed',
+  		cornsilk: '#fff8dc', crimson: '#dc143c', cyan: '#00ffff',
+  		darkblue: '#00008b', darkcyan: '#008b8b', darkgoldenrod: '#b8860b',
+  		darkgray: '#a9a9a9', darkgreen: '#006400', darkkhaki: '#bdb76b',
+  		darkmagenta: '#8b008b', darkolivegreen: '#556b2f', darkorange: '#ff8c00',
+  		darkorchid: '#9932cc', darkred: '#8b0000', darksalmon: '#e9967a',
+  		darkseagreen: '#8fbc8f', darkslateblue: '#483d8b', darkslategray: '#2f4f4f',
+  		darkturquoise: '#00ced1', darkviolet: '#9400d3', deeppink: '#ff1493',
+  		deepskyblue: '#00bfff', dimgray: '#696969', dodgerblue: '#1e90ff',
+  		feldspar: '#d19275', firebrick: '#b22222', floralwhite: '#fffaf0',
+  		forestgreen: '#228b22', fuchsia: '#ff00ff', gainsboro: '#dcdcdc',
+  		ghostwhite: '#f8f8ff', gold: '#ffd700', goldenrod: '#daa520',
+  		gray: '#808080', green: '#008000', greenyellow: '#adff2f',
+  		honeydew: '#f0fff0', hotpink: '#ff69b4', indianred: '#cd5c5c',
+  		indigo: '#4b0082', ivory: '#fffff0', khaki: '#f0e68c',
+  		lavender: '#e6e6fa', lavenderblush: '#fff0f5', lawngreen: '#7cfc00',
+  		lemonchiffon: '#fffacd', lightblue: '#add8e6', lightcoral: '#f08080',
+  		lightcyan: '#e0ffff', lightgoldenrodyellow: '#fafad2', lightgrey: '#d3d3d3',
+  		lightgreen: '#90ee90', lightpink: '#ffb6c1', lightsalmon: '#ffa07a',
+  		lightseagreen: '#20b2aa', lightskyblue: '#87cefa', lightslateblue: '#8470ff',
+  		lightslategray: '#778899', lightsteelblue: '#b0c4de', lightyellow: '#ffffe0',
+  		lime: '#00ff00', limegreen: '#32cd32', linen: '#faf0e6',
+  		magenta: '#ff00ff', maroon: '#800000', mediumaquamarine: '#66cdaa',
+  		mediumblue: '#0000cd', mediumorchid: '#ba55d3', mediumpurple: '#9370d8',
+  		mediumseagreen: '#3cb371', mediumslateblue: '#7b68ee', mediumspringgreen: '#00fa9a',
+  		mediumturquoise: '#48d1cc', mediumvioletred: '#c71585', midnightblue: '#191970',
+  		mintcream: '#f5fffa', mistyrose: '#ffe4e1', moccasin: '#ffe4b5',
+  		navajowhite: '#ffdead', navy: '#000080', oldlace: '#fdf5e6',
+  		olive: '#808000', olivedrab: '#6b8e23', orange: '#ffa500',
+  		orangered: '#ff4500', orchid: '#da70d6', palegoldenrod: '#eee8aa',
+  		palegreen: '#98fb98', paleturquoise: '#afeeee', palevioletred: '#d87093',
+  		papayawhip: '#ffefd5', peachpuff: '#ffdab9', peru: '#cd853f',
+  		pink: '#ffc0cb', plum: '#dda0dd', powderblue: '#b0e0e6',
+  		purple: '#800080', red: '#ff0000', rosybrown: '#bc8f8f',
+  		royalblue: '#4169e1', saddlebrown: '#8b4513', salmon: '#fa8072',
+  		sandybrown: '#f4a460', seagreen: '#2e8b57', seashell: '#fff5ee',
+  		sienna: '#a0522d', silver: '#c0c0c0', skyblue: '#87ceeb',
+  		slateblue: '#6a5acd', slategray: '#708090', snow: '#fffafa',
+  		springgreen: '#00ff7f', steelblue: '#4682b4', tan: '#d2b48c',
+  		teal: '#008080', thistle: '#d8bfd8', tomato: '#ff6347',
+  		turquoise: '#40e0d0', violet: '#ee82ee', violetred: '#d02090',
+  		wheat: '#f5deb3', white: '#ffffff', whitesmoke: '#f5f5f5',
+  		yellow: '#ffff00', yellowgreen: '#9acd32'
   	};
 
-  	if (color_names[color]) {
-  		// first check if color is given as colorname
-  		color = "#" + color_names[color];
+  	// Already matches X3D RGB
+  	var x3dMatch = /^(0+\.?\d*|1\.?0*)\s+(0+\.?\d*|1\.?0*)\s+(0+\.?\d*|1\.?0*)$/.exec(color);
+  	if (x3dMatch !== null) {
+  		red = +x3dMatch[1];
+  		green = +x3dMatch[2];
+  		blue = +x3dMatch[3];
   	}
 
-  	if (color.substr && color.substr(0, 1) === "#") {
-  		color = color.substr(1);
-  		var len = color.length;
+  	// Matches CSS rgb() function
+  	var rgbMatch = /^rgb\((\d{1,3}),\s{0,1}(\d{1,3}),\s{0,1}(\d{1,3})\)$/.exec(color);
+  	if (rgbMatch !== null) {
+  		red = rgbMatch[1] / 255.0;
+  		green = rgbMatch[2] / 255.0;
+  		blue = rgbMatch[3] / 255.0;
+  	}
 
-  		if (len === 6) {
-  			red = parseInt("0x" + color.substr(0, 2), 16) / 255.0;
-  			green = parseInt("0x" + color.substr(2, 2), 16) / 255.0;
-  			blue = parseInt("0x" + color.substr(4, 2), 16) / 255.0;
+  	// Matches CSS color name
+  	if (colorNames[color]) {
+  		color = colorNames[color];
+  	}
+
+  	// Hexadecimal color codes
+  	if (color.substr && color.substr(0, 1) === "#") {
+  		var hex = color.substr(1);
+  		var len = hex.length;
+
+  		if (len === 8) {
+  			red = parseInt("0x" + hex.substr(0, 2), 16) / 255.0;
+  			green = parseInt("0x" + hex.substr(2, 2), 16) / 255.0;
+  			blue = parseInt("0x" + hex.substr(4, 2), 16) / 255.0;
+  			alpha = parseInt("0x" + hex.substr(6, 2), 16) / 255.0;
+  		} else if (len === 6) {
+  			red = parseInt("0x" + hex.substr(0, 2), 16) / 255.0;
+  			green = parseInt("0x" + hex.substr(2, 2), 16) / 255.0;
+  			blue = parseInt("0x" + hex.substr(4, 2), 16) / 255.0;
+  			alpha = 1.0;
+  		} else if (len === 4) {
+  			red = parseInt("0x" + hex.substr(0, 1), 16) / 15.0;
+  			green = parseInt("0x" + hex.substr(1, 1), 16) / 15.0;
+  			blue = parseInt("0x" + hex.substr(2, 1), 16) / 15.0;
+  			alpha = parseInt("0x" + hex.substr(3, 1), 16) / 15.0;
   		} else if (len === 3) {
-  			red = parseInt("0x" + color.substr(0, 1), 16) / 15.0;
-  			green = parseInt("0x" + color.substr(1, 1), 16) / 15.0;
-  			blue = parseInt("0x" + color.substr(2, 1), 16) / 15.0;
+  			red = parseInt("0x" + hex.substr(0, 1), 16) / 15.0;
+  			green = parseInt("0x" + hex.substr(1, 1), 16) / 15.0;
+  			blue = parseInt("0x" + hex.substr(2, 1), 16) / 15.0;
+  			alpha = 1.0;
   		}
   	}
+
+  	red = red.toFixed(4);
+  	green = green.toFixed(4);
+  	blue = blue.toFixed(4);
 
   	return red + " " + green + " " + blue;
   }
@@ -991,6 +1071,7 @@
     colourNameToHex: colourNameToHex,
     componentToHex: componentToHex,
     rgbToHex: rgbToHex,
+    rgb2Hex: rgb2Hex,
     hexToRgb: hexToRgb,
     hexToX3d: hexToX3d,
     colourNameToX3d: colourNameToX3d,
@@ -1115,7 +1196,7 @@
       */
 
   				shape.html(function (d) {
-  					return "\n\t\t\t\t\t<IndexedFaceset coordIndex=\"" + d.coordIndex + "\" solid=\"false\">\n\t\t\t\t\t\t<Coordinate point=\"" + d.point + "\"></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<Material diffuseColor=\"" + color + "\" transparency=\"" + transparency + "\"></Material>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
+  					return "\n\t\t\t\t\t<IndexedFaceset coordIndex=\"" + d.coordIndex + "\" solid=\"false\">\n\t\t\t\t\t\t<Coordinate point=\"" + d.point + "\"></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<Material diffuseColor=\"" + colorParse(color) + "\" transparency=\"" + transparency + "\"></Material>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
   				});
   			};
 
@@ -1135,9 +1216,7 @@
   				return d.point;
   			});
 
-  			areaTransition.select("Appearance").select("Material").attr("diffuseColor", function (d) {
-  				return d.color;
-  			});
+  			areaTransition.select("Appearance").select("Material").attr("diffuseColor", colorParse(color));
 
   			area.exit().remove();
   		});
@@ -3222,7 +3301,7 @@
       */
 
   				shape.html(function (d) {
-  					return "\n\t\t\t\t\t<IndexedFaceset coordIndex=\"" + d.coordIndex + "\">\n\t\t\t\t\t\t<Coordinate point=\"" + d.point + "\"></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<TwoSidedMaterial diffuseColor=\"" + color + "\" transparency=\"" + transparency + "\"></TwoSidedMaterial>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
+  					return "\n\t\t\t\t\t<IndexedFaceset coordIndex=\"" + d.coordIndex + "\">\n\t\t\t\t\t\t<Coordinate point=\"" + d.point + "\"></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<TwoSidedMaterial diffuseColor=\"" + colorParse(color) + "\" transparency=\"" + transparency + "\"></TwoSidedMaterial>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
   				});
   			};
 
@@ -3242,9 +3321,7 @@
   				return d.point;
   			});
 
-  			ribbonTransition.select("Appearance").select("TwoSidedMaterial").attr("diffuseColor", function (d) {
-  				return d.color;
-  			});
+  			ribbonTransition.select("Appearance").select("TwoSidedMaterial").attr("diffuseColor", colorParse(color));
 
   			ribbon.exit().remove();
   		});
@@ -3628,19 +3705,19 @@
 
   			var element = d3.select(this).classed(classed, true);
 
-  			var surfaceData = function surfaceData(d) {
+  			var surfaceData = function surfaceData(data) {
 
-  				var coordPoints = function coordPoints(data) {
-  					return data.map(function (X) {
+  				var coordPoints = function coordPoints(Y) {
+  					return Y.map(function (X) {
   						return X.values.map(function (d) {
   							return [xScale(X.key), yScale(d.value), zScale(d.key)];
   						});
   					});
   				};
 
-  				var coordIndex = function coordIndex(data) {
-  					var ny = data.length;
-  					var nx = data[0].values.length;
+  				var coordIndex = function coordIndex(Y) {
+  					var ny = Y.length;
+  					var nx = Y[0].values.length;
 
   					var coordIndexFront = Array.apply(0, Array(ny - 1)).map(function (_, j) {
   						return Array.apply(0, Array(nx - 1)).map(function (_, i) {
@@ -3659,23 +3736,27 @@
   					return coordIndexFront.concat(coordIndexBack);
   				};
 
-  				var colorFaceSet = function colorFaceSet(data) {
-  					return data.map(function (X) {
+  				var colorFaceSet = function colorFaceSet(Y) {
+  					return Y.map(function (X) {
   						return X.values.map(function (d) {
-  							var col = d3.color(colorScale(d.value));
-  							return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
+  							var color = d3.color(colorScale(d.value));
+  							return colorParse(color);
   						});
   					});
   				};
 
-  				return [{
-  					coordIndex: array2dToString(coordIndex(d)),
-  					point: array2dToString(coordPoints(d)),
-  					color: array2dToString(colorFaceSet(d))
-  				}];
+  				data.coordIndex = array2dToString(coordIndex(data));
+  				data.point = array2dToString(coordPoints(data));
+  				data.color = array2dToString(colorFaceSet(data));
+
+  				return [data];
   			};
 
-  			var surface = element.selectAll(".surface").data(surfaceData);
+  			var surface = element.selectAll(".surface").data(function (d) {
+  				return surfaceData(d);
+  			}, function (d) {
+  				return d.key;
+  			});
 
   			var surfaceSelect = surface.enter().append("Shape").classed("surface", true).append("IndexedFaceset").attr("coordIndex", function (d) {
   				return d.coordIndex;
@@ -3971,7 +4052,7 @@
   			});
 
   			arrowHead.append("Appearance").append("Material").attr("diffuseColor", function (d) {
-  				return rgb2Hex(colorScale(d.value));
+  				return colorParse(colorScale(d.value));
   			});
 
   			arrowHead.append("Cylinder").attr("height", function (d) {
@@ -3990,7 +4071,7 @@
   			});
 
   			arrowShaft.append("Appearance").append("Material").attr("diffuseColor", function (d) {
-  				return rgb2Hex(colorScale(d.value));
+  				return colorParse(colorScale(d.value));
   			});
 
   			arrowShaft.append("cone").attr("height", 1).attr("bottomRadius", 0.4);
@@ -4004,23 +4085,6 @@
   			arrows.exit().remove();
   		});
   	};
-
-  	/**
-    * RGB Colour to Hex Converter
-    *
-    * @param {string} rgbStr - RGB colour string (e.g. 'rgb(155, 102, 102)').
-    * @returns {string} - Hex Color (e.g. '#9b6666').
-    */
-  	function rgb2Hex(rgbStr) {
-  		var _rgbStr$substring$rep = rgbStr.substring(4, rgbStr.length - 1).replace(/ /g, '').split(','),
-  		    _rgbStr$substring$rep2 = slicedToArray(_rgbStr$substring$rep, 3),
-  		    red = _rgbStr$substring$rep2[0],
-  		    green = _rgbStr$substring$rep2[1],
-  		    blue = _rgbStr$substring$rep2[2];
-
-  		var rgb = blue | green << 8 | red << 16; // eslint-disable-line no-bitwise
-  		return '#' + (0x1000000 + rgb).toString(16).slice(1);
-  	}
 
   	/**
     * Dimensions Getter / Setter

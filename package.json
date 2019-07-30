@@ -1,6 +1,6 @@
 {
   "name": "d3-x3d",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "3D Charts and Data Visualizations",
   "license": "GPL-2.0",
   "keywords": [
@@ -28,7 +28,7 @@
   "module": "index.js",
   "scripts": {
     "pretest": "make",
-    "test": "mocha test/indexTest.js && mocha test/randomDataTest.js && tape 'test/dataTransformTest.js' | tap-spec && tape 'test/c*/*Test.js' | tap-spec",
+    "test": "mocha test/indexTest.js && mocha test/randomDataTest.js && mocha test/colorHelperTest.js && tape 'test/dataTransformTest.js' | tap-spec && tape 'test/c*/*Test.js' | tap-spec",
     "build:docs": "jsdoc -c config/jsdoc.conf.json",
     "deploy:docs": "npm run build:docs && gh-pages -d docs",
     "snyk-protect": "snyk protect",
@@ -36,8 +36,8 @@
   },
   "dependencies": {
     "d3": "^5.9.7",
-    "d3-interpolate-curve": "^1.0.0",
-    "x3dom": "^1.7.2"
+    "d3-interpolate-curve": "^1.0.1",
+    "x3dom": "^1.8.0"
   },
   "peerDependencies": {
     "d3": "^5.0.0"
@@ -59,7 +59,7 @@
     "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "snyk": "^1.195.1",
+    "snyk": "^1.203.0",
     "tap-spec": "^5.0.0",
     "tape": "^4.11.0",
     "toast-jsdoc": "^1.0.2",

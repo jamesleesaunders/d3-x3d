@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import { dispatch } from "../events";
+import { colorParse } from "../colorHelper";
 
 /**
  * Reusable 3D Surface Area Component
@@ -84,19 +85,19 @@ export default function() {
 			const element = d3.select(this)
 				.classed(classed, true);
 
-			const surfaceData = function(d) {
+			const surfaceData = function(data) {
 
-				const coordPoints = function(data) {
-					return data.map(function(X) {
+				const coordPoints = function(Y) {
+					return Y.map(function(X) {
 						return X.values.map(function(d) {
 							return [xScale(X.key), yScale(d.value), zScale(d.key)];
 						})
 					});
 				};
 
-				const coordIndex = function(data) {
-					let ny = data.length;
-					let nx = data[0].values.length;
+				const coordIndex = function(Y) {
+					let ny = Y.length;
+					let nx = Y[0].values.length;
 
 					let coordIndexFront = Array.apply(0, Array(ny - 1)).map(function(_, j) {
 						return Array.apply(0, Array(nx - 1)).map(function(_, i) {
@@ -115,24 +116,24 @@ export default function() {
 					return coordIndexFront.concat(coordIndexBack);
 				};
 
-				const colorFaceSet = function(data) {
-					return data.map(function(X) {
+				const colorFaceSet = function(Y) {
+					return Y.map(function(X) {
 						return X.values.map(function(d) {
-							const col = d3.color(colorScale(d.value));
-							return '' + Math.round(col.r / 2.55) / 100 + ' ' + Math.round(col.g / 2.55) / 100 + ' ' + Math.round(col.b / 2.55) / 100;
+							const color = d3.color(colorScale(d.value));
+							return colorParse(color);
 						})
 					});
 				};
 
-				return [{
-					coordIndex: array2dToString(coordIndex(d)),
-					point: array2dToString(coordPoints(d)),
-					color: array2dToString(colorFaceSet(d))
-				}];
+				data.coordIndex = array2dToString(coordIndex(data));
+				data.point = array2dToString(coordPoints(data));
+				data.color = array2dToString(colorFaceSet(data));
+
+				return [data];
 			};
 
 			const surface = element.selectAll(".surface")
-				.data(surfaceData);
+				.data((d) => surfaceData(d), (d) => d.key);
 
 			const surfaceSelect = surface
 				.enter()

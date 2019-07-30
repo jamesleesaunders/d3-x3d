@@ -155,7 +155,7 @@ export default function() {
 						<Coordinate point="${d.point}"></Coordinate>
 					</IndexedFaceset>
 					<Appearance>
-						<TwoSidedMaterial diffuseColor="${color}" transparency="${transparency}"></TwoSidedMaterial>
+						<TwoSidedMaterial diffuseColor="${colorParse(color)}" transparency="${transparency}"></TwoSidedMaterial>
 					</Appearance>
 				`);
 			};
@@ -178,7 +178,7 @@ export default function() {
 
 			ribbonTransition.select("Appearance")
 				.select("TwoSidedMaterial")
-				.attr("diffuseColor", (d) => d.color);
+				.attr("diffuseColor", colorParse(color));
 
 			ribbon.exit()
 				.remove();
