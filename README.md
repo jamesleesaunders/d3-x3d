@@ -18,13 +18,9 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Download from GitHub](https://github.com/jamesleesaunders/d3-x3d)
 * [Download from NPM](https://www.npmjs.com/package/d3-x3d)
 
-The goal of the X3D Working Group is to establish a solid foundation for the X3D specification to properly support 3D graphics in HTML5, in a similar manner to That of SVG (Scalable Vector Graphics) and MathML (Mathematical Markup Language).
-The aspiration is that one day X3D will be integrated as standard into all browsers without the need for additional plugins. In the mean time, there are two JavaScript based players for X3D which run in all modern browsers suppotring HTML5 and enable X3D to be embedded in any HTML page:
-
-[X3DOM](https://www.x3dom.org/)
-, [X_ITE](http://create3000.de/x_ite/)
-
-d3-x3d has been tested with both of the above players (with the exception of a couple of advanced features and components which presently only work on X3DOM).
+The goal of the X3D Working Group is to establish a solid foundation for the X3D specification to properly support 3D graphics in HTML5 in a similar manner to that of SVG (Scalable Vector Graphics) and MathML (Mathematical Markup Language).
+The aspiration is that one day X3D will be integrated as standard into all browsers, without the need for additional plugins. In the mean time, there are two JavaScript based players for X3D; [X3DOM](https://www.x3dom.org/)
+& [X_ITE](http://create3000.de/x_ite/) which are compatible with modern browsers supporting HTML5 and enable X3D to be embedded in any HTML page. *d3-x3d* has been tested with both X3DOM and X_ITE players (with the exception of a couple of more advanced features which currently only work with X3DOM).
 
 ### <a name="examples"></a>Examples
 
