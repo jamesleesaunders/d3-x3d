@@ -18,29 +18,31 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Download from GitHub](https://github.com/jamesleesaunders/d3-x3d)
 * [Download from NPM](https://www.npmjs.com/package/d3-x3d)
 
-The goal of the X3D Working Group is to establish a solid foundation for the X3D specification to properly support 3D graphics in HTML5 in a similar manner to that of SVG (Scalable Vector Graphics) and MathML (Mathematical Markup Language).
-The aspiration is that one day X3D will be integrated as standard into all browsers, without the need for additional plugins. In the mean time, there are two JavaScript based players for X3D; [X3DOM](https://www.x3dom.org/)
-& [X_ITE](http://create3000.de/x_ite/) which are compatible with modern browsers supporting HTML5 and enable X3D to be embedded in any HTML page. *d3-x3d* has been tested with both X3DOM and X_ITE players (with the exception of a couple of more advanced features which currently only work with X3DOM).
+The goal of the X3D Working Group is to establish a solid foundation for the X3D specification to properly support 3D graphics in HTML5 in a similar manner to that of SVG (Scalable Vector Graphics).
+The aspiration is that one day X3D will be integrated as standard into all browsers, without the need for additional plugins. For the mean time, there are two JavaScript based players for X3D: 
+
+* [X3DOM](https://www.x3dom.org/)
+* [X_ITE](http://create3000.de/x_ite/) 
+
+Both these players are compatible with modern browsers supporting HTML5 and enable X3D scenes to be embedded in any HTML page. *d3-x3d* has been tested to work with both X3DOM and X_ITE (there are a couple of more advanced features which currently only work with X3DOM).
 
 ### <a name="examples"></a>Examples
 
-|                        | X3DOM                                                                                                           | X_ITE                                                                                                           |
-|------------------------|-----------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
-| Area Chart             | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/AreaChartMultiSeries.html)   | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/AreaChartMultiSeries.html)   |
-| Multi Series Bar Chart | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/BarChartMultiSeries.html)    | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/BarChartMultiSeries.html)    |
-| Vertical Bar Chart     | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/BarChartVertical.html)       | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/BarChartVertical.html)       |
-| Bubble Chart           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/BubbleChart.html)            | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/BubbleChart.html)            |
-| Scatter Plot           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/ScatterPlot.html)            | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/ScatterPlot.html)            |
-| Surface Plot           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/SurfacePlot.html)            | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/SurfacePlot.html)            |
-| Ribbon Chart           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/RibbonChartMultiSeries.html) | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/RibbonChartMultiSeries.html) |
-| Vector Field Chart     | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/VectorFieldChart.html)       | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/VectorFieldChart.html)       |
-| Volume Slice           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/VolumeSliceChart.html)       | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/VolumeSliceChart.html)       |
-
-* [Observable Examples](https://beta.observablehq.com/collection/@jamesleesaunders/d3-x3d)
+| Example                | X3DOM                                                                                                           | X_ITE                                                                                                           | Observable                                                                              |
+|------------------------|-----------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|
+| Area Chart             | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/AreaChartMultiSeries.html)   | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/AreaChartMultiSeries.html)   | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-area-chart)         |
+| Multi Series Bar Chart | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/BarChartMultiSeries.html)    | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/BarChartMultiSeries.html)    | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-bar-charts)         |
+| Vertical Bar Chart     | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/BarChartVertical.html)       | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/BarChartVertical.html)       | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-bar-charts)         |
+| Bubble Chart           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/BubbleChart.html)            | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/BubbleChart.html)            | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-bubbles)            |
+| Scatter Plot           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/ScatterPlot.html)            | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/ScatterPlot.html)            | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-bubbles)            |
+| Surface Plot           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/SurfacePlot.html)            | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/SurfacePlot.html)            | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-surface-plot)       |
+| Ribbon Chart           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/RibbonChartMultiSeries.html) | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/RibbonChartMultiSeries.html) | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-ribbon-chart)       |
+| Vector Field Chart     | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/VectorFieldChart.html)       |                                                                                                                 | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-vector-field-chart) |
+| Volume Slice           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/VolumeSliceChart.html)       |                                                                                                                 |                                                                                         |
 
 ### <a name="getting-started"></a>Getting Started
 
-Include D3.js, X3DOM and d3-x3d js and css files in the `<head>` section of your page:
+Include JavaScript and CSS files in the `<head>` section of your page:
 
 If using X3DOM:
 ```html
@@ -51,6 +53,7 @@ If using X3DOM:
    <script src="https://raw.githack.com/jamesleesaunders/d3-x3d/master/dist/d3-x3d.js"></script>
 </head>
 ```
+
 If using X_ITE:
 ```html
 <head>
@@ -62,10 +65,9 @@ If using X_ITE:
 </head>
 ```
 
-Add `<div>` or `<X3DCanvas>` chartholder and `<script>` tags to your page `<body>`:
+Add `<div>` / `<X3DCanvas>` chartholder and `<script>` tags to your page `<body>`:
 
 If using X3DOM:
-
 ```html
 <body>
    <div id="chartholder"></div>
@@ -74,7 +76,6 @@ If using X3DOM:
 ```
 
 If using X_ITE:
-
 ```html
 <body>
    <X3DCanvas id="chartholder" style="width: 500px; height: 500px;"></X3DCanvas>
@@ -83,16 +84,11 @@ If using X_ITE:
 ```
 
 Place the following code between the `<script></script>` tags:
-
-Select chartholder:
-
 ```javascript
+// Select chartholder
 var chartHolder = d3.select("#chartholder");
-```
 
-Generate some [data](#data-structures):
-
-```javascript
+// Generate some data
 var myData = [
 	{
 		key: "UK",
@@ -113,17 +109,11 @@ var myData = [
 		]
 	}
 ];
-```
 
-Declare the [chart](#components-and-charts) component:
-
-```javascript
+// Declare the chart component
 var myChart = d3.x3d.chart.barChartMultiSeries();
-```
 
-Attach chart and data to the chartholder:
-
-```javascript
+// Attach chart and data to the chartholder
 chartHolder
 	.datum(myData)
 	.call(myChart);
@@ -153,43 +143,43 @@ d3-x3d has two types of reusable module: `component` and `chart`. For more infor
 
 The `component` modules are lower level building blocks which can be used independently, or combined to build higher level `chart` modules.
 For example, combining `component.bars()`, `component.axis()` and `component.viewpoint()` modules together we have built the `chart.barChartMultiSeries()`.
-Component modules do not generate a `x3d` tag, these should be attached to an exiting `x3d` tag.
+Component modules do not generate a `<X3D>` tag, these should be attached to an exiting `<X3D>` tag.
 
-| Function                       | Description                         | Example                                                                                                         | Documentation                                                             |
-|--------------------------------|-------------------------------------|-----------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|
-| component.area()               | Single series Area Chart            | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/Area.html)               | [View](https://jamesleesaunders.github.io/d3-x3d/area.html)               |
-| component.areaMultiSeries()    | Multi series Area Chart             | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/AreaMultiSeries.html)    | [View](https://jamesleesaunders.github.io/d3-x3d/areaMultiSeries.html)    |
-| component.axis()               | Single plane x/y Axis               | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/Showcase.html)           | [View](https://jamesleesaunders.github.io/d3-x3d/axis.html)               |
-| component.axisThreePlane()     | Three plane x/y/z Axis              | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/Showcase.html)           | [View](https://jamesleesaunders.github.io/d3-x3d/axisThreePlane.html)     |
-| component.bars()               | Single series Bar Chart             | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/Showcase.html)           | [View](https://jamesleesaunders.github.io/d3-x3d/bars.html)               |
-| component.barsMultiSeries()    | Multi series Bar Chart              | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/BarsMultiSeries.html)    | [View](https://jamesleesaunders.github.io/d3-x3d/barsMultiSeries.html)    |
-| component.bubbles()            | Bubble / Scatter Plot               | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/Showcase.html)           | [View](https://jamesleesaunders.github.io/d3-x3d/bubbles.html)            |
-| component.bubblesMultiSeries() | Multi series Bubbles / Scatter Plot | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/BubblesMultiSeries.html) | [View](https://jamesleesaunders.github.io/d3-x3d/bubblesMultiSeries.html) |
-| component.crosshair()          | Crosshair                           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/Crosshair.html)          | [View](https://jamesleesaunders.github.io/d3-x3d/crosshair.html)          |
-| component.ribbon()             | Ribbon Chart / Line Chart           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/Showcase.html)           | [View](https://jamesleesaunders.github.io/d3-x3d/ribbon.html)             |
-| component.ribbonMultiSeries()  | Multi series Ribbon Chart           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/RibbonMultiSeries.html)  | [View](https://jamesleesaunders.github.io/d3-x3d/ribbonMultiSeries.html)  |
-| component.surface()            | Surface Area                        | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/Surface.html)            | [View](https://jamesleesaunders.github.io/d3-x3d/surface.html)            |
-| component.vectorFields()       | Vector Field Chart                  | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/Showcase.html)           | [View](https://jamesleesaunders.github.io/d3-x3d/vectorFields.html)       |
-| component.viewpoint()          | Camera position                     | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/Showcase.html)           | [View](https://jamesleesaunders.github.io/d3-x3d/viewpoint.html)          |
-| component.volumeSlice()        | Volume Slice (MRI Scan)             | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/Showcase.html)           | [View](https://jamesleesaunders.github.io/d3-x3d/volumeSlice.html)        |
+| Function                       | Description                         | Documentation                                                             |
+|--------------------------------|-------------------------------------|---------------------------------------------------------------------------|
+| component.area()               | Single series Area Chart            | [View](https://jamesleesaunders.github.io/d3-x3d/area.html)               |
+| component.areaMultiSeries()    | Multi series Area Chart             | [View](https://jamesleesaunders.github.io/d3-x3d/areaMultiSeries.html)    |
+| component.axis()               | Single plane x/y Axis               | [View](https://jamesleesaunders.github.io/d3-x3d/axis.html)               |
+| component.axisThreePlane()     | Three plane x/y/z Axis              | [View](https://jamesleesaunders.github.io/d3-x3d/axisThreePlane.html)     |
+| component.bars()               | Single series Bar Chart             | [View](https://jamesleesaunders.github.io/d3-x3d/bars.html)               |
+| component.barsMultiSeries()    | Multi series Bar Chart              | [View](https://jamesleesaunders.github.io/d3-x3d/barsMultiSeries.html)    |
+| component.bubbles()            | Bubble / Scatter Plot               | [View](https://jamesleesaunders.github.io/d3-x3d/bubbles.html)            |
+| component.bubblesMultiSeries() | Multi series Bubbles / Scatter Plot | [View](https://jamesleesaunders.github.io/d3-x3d/bubblesMultiSeries.html) |
+| component.crosshair()          | Crosshair                           | [View](https://jamesleesaunders.github.io/d3-x3d/crosshair.html)          |
+| component.ribbon()             | Ribbon Chart / Line Chart           | [View](https://jamesleesaunders.github.io/d3-x3d/ribbon.html)             |
+| component.ribbonMultiSeries()  | Multi series Ribbon Chart           | [View](https://jamesleesaunders.github.io/d3-x3d/ribbonMultiSeries.html)  |
+| component.surface()            | Surface Area                        | [View](https://jamesleesaunders.github.io/d3-x3d/surface.html)            |
+| component.vectorFields()       | Vector Field Chart                  | [View](https://jamesleesaunders.github.io/d3-x3d/vectorFields.html)       |
+| component.viewpoint()          | Camera position                     | [View](https://jamesleesaunders.github.io/d3-x3d/viewpoint.html)          |
+| component.volumeSlice()        | Volume Slice (MRI Scan)             | [View](https://jamesleesaunders.github.io/d3-x3d/volumeSlice.html)        |
 
 #### Charts
 
 The `chart` modules are higher level, pre-combined components, making it even easier to quickly create charts.
 All the chart modules are typically constructed from viewpoint, axis and one or more of the other components above.
-Chart modules also generate the `x3d` tag, these should be attached to a regular html `div` tag.
+Chart modules also generate the `<X3D>` tag, these should be attached to a regular HTML `<div>` tag.
 
-| Function                       | Description                    | Example                                                                                                         | Documentation                                                                 |
-|--------------------------------|--------------------------------|-----------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
-| chart.areaChartMultiSeries()   | Multi series Area Chart & Axis | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/AreaChartMultiSeries.html)   | [View](https://jamesleesaunders.github.io/d3-x3d/areaChartMultiSeries.html)   |
-| chart.barChartMultiSeries()    | Multi series Bar Chart & Axis  | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/BarChartMultiSeries.html)    | [View](https://jamesleesaunders.github.io/d3-x3d/barChartMultiSeries.html)    |
-| chart.barChartVertical()       | Vertical Bar Chart & Axis      | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/BarChartVertical.html)       | [View](https://jamesleesaunders.github.io/d3-x3d/barChartVertical.html)       |
-| chart.bubbleChart()            | Bubble Chart & Axis            | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/BubbleChart.html)            | [View](https://jamesleesaunders.github.io/d3-x3d/bubbleChart.html)            |
-| chart.ribbonChartMultiSeries() | Multi series Ribbon Chart      | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/RibbonChartMultiSeries.html) | [View](https://jamesleesaunders.github.io/d3-x3d/ribbonChartMultiSeries.html) |
-| chart.scatterPlot()            | Scatter Plot & Axis            | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/ScatterPlot.html)            | [View](https://jamesleesaunders.github.io/d3-x3d/scatterPlot.html)            |
-| chart.surfacePlot()            | Surface Plot & Axis            | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/SurfacePlot.html)            | [View](https://jamesleesaunders.github.io/d3-x3d/surfacePlot.html)            |
-| chart.vectorFieldChart()       | Vector Field Chart             | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/VectorFieldChart.html)       | [View](https://jamesleesaunders.github.io/d3-x3d/vectorFieldChart.html)       |
-| chart.volumeSliceChart()       | Volume Slice Chart             | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/VolumeSliceChart.html)       | [View](https://jamesleesaunders.github.io/d3-x3d/volumeSliceChart.html)       |
+| Function                       | Description                    | Documentation                                                                 |
+|--------------------------------|--------------------------------|-------------------------------------------------------------------------------|
+| chart.areaChartMultiSeries()   | Multi series Area Chart & Axis | [View](https://jamesleesaunders.github.io/d3-x3d/areaChartMultiSeries.html)   |
+| chart.barChartMultiSeries()    | Multi series Bar Chart & Axis  | [View](https://jamesleesaunders.github.io/d3-x3d/barChartMultiSeries.html)    |
+| chart.barChartVertical()       | Vertical Bar Chart & Axis      | [View](https://jamesleesaunders.github.io/d3-x3d/barChartVertical.html)       |
+| chart.bubbleChart()            | Bubble Chart & Axis            | [View](https://jamesleesaunders.github.io/d3-x3d/bubbleChart.html)            |
+| chart.ribbonChartMultiSeries() | Multi series Ribbon Chart      | [View](https://jamesleesaunders.github.io/d3-x3d/ribbonChartMultiSeries.html) |
+| chart.scatterPlot()            | Scatter Plot & Axis            | [View](https://jamesleesaunders.github.io/d3-x3d/scatterPlot.html)            |
+| chart.surfacePlot()            | Surface Plot & Axis            | [View](https://jamesleesaunders.github.io/d3-x3d/surfacePlot.html)            |
+| chart.vectorFieldChart()       | Vector Field Chart             | [View](https://jamesleesaunders.github.io/d3-x3d/vectorFieldChart.html)       |
+| chart.volumeSliceChart()       | Volume Slice Chart             | [View](https://jamesleesaunders.github.io/d3-x3d/volumeSliceChart.html)       |
 
 ### <a name="data-structures"></a>Data Structures
 
@@ -252,4 +242,3 @@ var myData = [
 * Victor Glindås - Various contributions to JSDoc and ES6 standardisation.
 * Jefferson Hudson - For contributions to axis labels and transitions.
 * Andreas Plesch - For contributing the Area Chart and Components (and generally being an x3dom hero!).
-* You may also be interested in the sister project [d3-ez](https://github.com/jamesleesaunders/d3-ez) Reusable 2D Charts Library.
