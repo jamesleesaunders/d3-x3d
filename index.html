@@ -53,7 +53,7 @@
 <p><a href="https://badge.fury.io/js/d3-x3d"><img src="https://badge.fury.io/js/d3-x3d.svg" alt="npm version"></a>
 <a href="https://travis-ci.org/jamesleesaunders/d3-x3d"><img src="https://travis-ci.org/jamesleesaunders/d3-x3d.svg?branch=master" alt="Build Status"></a>
 <a href="https://snyk.io/test/github/jamesleesaunders/d3-x3d?targetFile=package.json"><img src="https://snyk.io/test/github/jamesleesaunders/d3-x3d/badge.svg?targetFile=package.json" alt="Known Vulnerabilities"></a></p>
-<p>Combining the power of the <a href="http://www.d3js.org/">D3.js</a> data-driven documents visualisation library and the Extensible 3D <a href="https://www.web3d.org/x3d/what-x3d">X3D</a> Graphics Standard, <strong>d3-x3d</strong> makes it easy to quickly produce beautiful 3D data visualisations with minimal code.</p>
+<p>Combining the power of the <a href="http://www.d3js.org/">D3.js</a> data-driven documents visualisation library and the Extensible 3D <a href="https://www.web3d.org/x3d/what-x3d">X3D</a> 3D graphics standard, <strong>d3-x3d</strong> makes it simple to produce beautiful 3D data visualisations with minimal code.</p>
 <p>Inspired by Mike Bostock's <a href="http://bost.ocks.org/mike/chart/">reusable charts</a>, <strong>d3-x3d</strong> is built on a foundation of building blocks, called components, which can be combined to create a variety of different data visualisations.</p>
 <ul>
 <li><a href="#examples">Examples</a></li>
@@ -64,14 +64,21 @@
 <li><a href="https://github.com/jamesleesaunders/d3-x3d">Download from GitHub</a></li>
 <li><a href="https://www.npmjs.com/package/d3-x3d">Download from NPM</a></li>
 </ul>
-<h3><a name="examples"></a>X3DOM and X_ITE Examples</h3>
-<p>Supports X3DOM and X_ITE.</p>
+<p>The goal of the X3D Working Group is to establish a solid foundation for the X3D specification to properly support 3D graphics in HTML5 in a similar manner to that of SVG (Scalable Vector Graphics).
+The aspiration is that one day X3D will be integrated as standard into all browsers, without the need for additional plugins. For the mean time, there are two JavaScript based players for X3D:</p>
+<ul>
+<li><a href="https://www.x3dom.org/">X3DOM</a></li>
+<li><a href="http://create3000.de/x_ite/">X_ITE</a></li>
+</ul>
+<p>Both these players are compatible with modern browsers supporting HTML5 and enable X3D scenes to be embedded in any HTML page. <em>d3-x3d</em> has been tested to work with both X3DOM and X_ITE (there are a couple of more advanced features which currently only work with X3DOM).</p>
+<h3><a name="examples"></a>Examples</h3>
 <table>
 <thead>
 <tr>
 <th>Example</th>
 <th>X3DOM</th>
 <th>X_ITE</th>
+<th>Observable</th>
 </tr>
 </thead>
 <tbody>
@@ -79,93 +86,96 @@
 <td>Area Chart</td>
 <td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/AreaChartMultiSeries.html">View</a></td>
 <td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/AreaChartMultiSeries.html">View</a></td>
+<td><a href="https://observablehq.com/@jamesleesaunders/d3-x3d-components-area-chart">View</a></td>
 </tr>
 <tr>
 <td>Multi Series Bar Chart</td>
 <td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/BarChartMultiSeries.html">View</a></td>
 <td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/BarChartMultiSeries.html">View</a></td>
+<td><a href="https://observablehq.com/@jamesleesaunders/d3-x3d-components-bar-charts">View</a></td>
 </tr>
 <tr>
 <td>Vertical Bar Chart</td>
 <td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/BarChartVertical.html">View</a></td>
 <td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/BarChartVertical.html">View</a></td>
+<td><a href="https://observablehq.com/@jamesleesaunders/d3-x3d-components-bar-charts">View</a></td>
 </tr>
 <tr>
 <td>Bubble Chart</td>
 <td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/BubbleChart.html">View</a></td>
 <td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/BubbleChart.html">View</a></td>
+<td><a href="https://observablehq.com/@jamesleesaunders/d3-x3d-components-bubbles">View</a></td>
 </tr>
 <tr>
 <td>Scatter Plot</td>
 <td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/ScatterPlot.html">View</a></td>
 <td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/ScatterPlot.html">View</a></td>
+<td><a href="https://observablehq.com/@jamesleesaunders/d3-x3d-components-bubbles">View</a></td>
 </tr>
 <tr>
 <td>Surface Plot</td>
 <td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/SurfacePlot.html">View</a></td>
 <td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/SurfacePlot.html">View</a></td>
+<td><a href="https://observablehq.com/@jamesleesaunders/d3-x3d-components-surface-plot">View</a></td>
 </tr>
 <tr>
 <td>Ribbon Chart</td>
 <td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/RibbonChartMultiSeries.html">View</a></td>
 <td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/RibbonChartMultiSeries.html">View</a></td>
+<td><a href="https://observablehq.com/@jamesleesaunders/d3-x3d-components-ribbon-chart">View</a></td>
 </tr>
 <tr>
 <td>Vector Field Chart</td>
 <td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/VectorFieldChart.html">View</a></td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/VectorFieldChart.html">View</a></td>
+<td></td>
+<td><a href="https://observablehq.com/@jamesleesaunders/d3-x3d-components-vector-field-chart">View</a></td>
 </tr>
 <tr>
 <td>Volume Slice</td>
 <td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/VolumeSliceChart.html">View</a></td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/VolumeSliceChart.html">View</a></td>
+<td></td>
+<td></td>
 </tr>
 </tbody>
 </table>
-<h3>Observable Examples</h3>
-<ul>
-<li><a href="https://beta.observablehq.com/collection/@jamesleesaunders/d3-x3d">Observable Examples</a></li>
-</ul>
 <h3><a name="getting-started"></a>Getting Started</h3>
-<p>Include D3.js, X3DOM and d3-x3d js and css files in the <code>&lt;head&gt;</code> section of your page:</p>
-<pre class="prettyprint source lang-html"><code>If using X3DOM:
-&lt;head>
+<p>Include JavaScript and CSS files in the <code>&lt;head&gt;</code> section of your page:</p>
+<p>If using X3DOM:</p>
+<pre class="prettyprint source lang-html"><code>&lt;head>
    &lt;script src=&quot;https://d3js.org/d3.v5.min.js&quot;>&lt;/script>
    &lt;script src=&quot;https://x3dom.org/download/1.7.2/x3dom-full.js&quot;>&lt;/script>
    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://x3dom.org/download/1.7.2/x3dom.css&quot; />
    &lt;script src=&quot;https://raw.githack.com/jamesleesaunders/d3-x3d/master/dist/d3-x3d.js&quot;>&lt;/script>
 &lt;/head>
-
-If using X_ITE:
-&lt;head>
+</code></pre>
+<p>If using X_ITE:</p>
+<pre class="prettyprint source lang-html"><code>&lt;head>
    &lt;script src=&quot;https://code.create3000.de/x_ite/latest/dist/x_ite.min.js&quot;>&lt;/script>
    &lt;script src=&quot;https://raw.githack.com/andreasplesch/x_ite_dom/master/release/x_ite_dom.1.2.js&quot;>&lt;/script>
    &lt;script src=&quot;https://d3js.org/d3.v5.min.js&quot;>&lt;/script>
    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://code.create3000.de/x_ite/latest/dist/x_ite.css&quot; />
    &lt;script src=&quot;https://raw.githack.com/jamesleesaunders/d3-x3d/master/dist/d3-x3d.js&quot;>&lt;/script>
 &lt;/head>
-
 </code></pre>
-<p>Add a chartholder <code>&lt;div&gt;</code> and <code>&lt;script&gt;</code> tags to your page <code>&lt;body&gt;</code>:</p>
-<pre class="prettyprint source lang-html"><code>If using X3DOM:
-&lt;body>
+<p>Add <code>&lt;div&gt;</code> / <code>&lt;X3DCanvas&gt;</code> chartholder and <code>&lt;script&gt;</code> tags to your page <code>&lt;body&gt;</code>:</p>
+<p>If using X3DOM:</p>
+<pre class="prettyprint source lang-html"><code>&lt;body>
    &lt;div id=&quot;chartholder&quot;>&lt;/div>
    &lt;script>&lt;/script>
 &lt;/body>
-
-If using X_ITE:
-&lt;body>
+</code></pre>
+<p>If using X_ITE:</p>
+<pre class="prettyprint source lang-html"><code>&lt;body>
    &lt;X3DCanvas id=&quot;chartholder&quot; style=&quot;width: 500px; height: 500px;&quot;>&lt;/X3DCanvas>
    &lt;script>&lt;/script>
 &lt;/body>
-
 </code></pre>
 <p>Place the following code between the <code>&lt;script&gt;&lt;/script&gt;</code> tags:</p>
-<p>Select chartholder:</p>
-<pre class="prettyprint source lang-javascript"><code>var chartHolder = d3.select(&quot;#chartholder&quot;);
-</code></pre>
-<p>Generate some <a href="#data-structures">data</a>:</p>
-<pre class="prettyprint source lang-javascript"><code>var myData = [
+<pre class="prettyprint source lang-javascript"><code>// Select chartholder
+var chartHolder = d3.select(&quot;#chartholder&quot;);
+
+// Generate some data
+var myData = [
 	{
 		key: &quot;UK&quot;,
 		values: [
@@ -185,12 +195,12 @@ If using X_ITE:
 		]
 	}
 ];
-</code></pre>
-<p>Declare the <a href="#components-and-charts">chart</a> component:</p>
-<pre class="prettyprint source lang-javascript"><code>var myChart = d3.x3d.chart.barChartMultiSeries();
-</code></pre>
-<p>Attach chart and data to the chartholder:</p>
-<pre class="prettyprint source lang-javascript"><code>chartHolder
+
+// Declare the chart component
+var myChart = d3.x3d.chart.barChartMultiSeries();
+
+// Attach chart and data to the chartholder
+chartHolder
 	.datum(myData)
 	.call(myChart);
 </code></pre>
@@ -207,13 +217,12 @@ If using X_ITE:
 <h4>Components</h4>
 <p>The <code>component</code> modules are lower level building blocks which can be used independently, or combined to build higher level <code>chart</code> modules.
 For example, combining <code>component.bars()</code>, <code>component.axis()</code> and <code>component.viewpoint()</code> modules together we have built the <code>chart.barChartMultiSeries()</code>.
-Component modules do not generate a <code>x3d</code> tag, these should be attached to an exiting <code>x3d</code> tag.</p>
+Component modules do not generate a <code>&lt;X3D&gt;</code> tag, these should be attached to an exiting <code>&lt;X3D&gt;</code> tag.</p>
 <table>
 <thead>
 <tr>
 <th>Function</th>
 <th>Description</th>
-<th>Example</th>
 <th>Documentation</th>
 </tr>
 </thead>
@@ -221,91 +230,76 @@ Component modules do not generate a <code>x3d</code> tag, these should be attach
 <tr>
 <td>component.area()</td>
 <td>Single series Area Chart</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/Area.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/area.html">View</a></td>
 </tr>
 <tr>
 <td>component.areaMultiSeries()</td>
 <td>Multi series Area Chart</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/AreaMultiSeries.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/areaMultiSeries.html">View</a></td>
 </tr>
 <tr>
 <td>component.axis()</td>
 <td>Single plane x/y Axis</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/Showcase.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/axis.html">View</a></td>
 </tr>
 <tr>
 <td>component.axisThreePlane()</td>
 <td>Three plane x/y/z Axis</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/Showcase.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/axisThreePlane.html">View</a></td>
 </tr>
 <tr>
 <td>component.bars()</td>
 <td>Single series Bar Chart</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/Showcase.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/bars.html">View</a></td>
 </tr>
 <tr>
 <td>component.barsMultiSeries()</td>
 <td>Multi series Bar Chart</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/BarsMultiSeries.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/barsMultiSeries.html">View</a></td>
 </tr>
 <tr>
 <td>component.bubbles()</td>
 <td>Bubble / Scatter Plot</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/Showcase.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/bubbles.html">View</a></td>
 </tr>
 <tr>
 <td>component.bubblesMultiSeries()</td>
 <td>Multi series Bubbles / Scatter Plot</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/BubblesMultiSeries.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/bubblesMultiSeries.html">View</a></td>
 </tr>
 <tr>
 <td>component.crosshair()</td>
 <td>Crosshair</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/Crosshair.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/crosshair.html">View</a></td>
 </tr>
 <tr>
 <td>component.ribbon()</td>
 <td>Ribbon Chart / Line Chart</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/Showcase.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/ribbon.html">View</a></td>
 </tr>
 <tr>
 <td>component.ribbonMultiSeries()</td>
 <td>Multi series Ribbon Chart</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/RibbonMultiSeries.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/ribbonMultiSeries.html">View</a></td>
 </tr>
 <tr>
 <td>component.surface()</td>
 <td>Surface Area</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/Surface.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/surface.html">View</a></td>
 </tr>
 <tr>
 <td>component.vectorFields()</td>
 <td>Vector Field Chart</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/Showcase.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/vectorFields.html">View</a></td>
 </tr>
 <tr>
 <td>component.viewpoint()</td>
 <td>Camera position</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/Showcase.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/viewpoint.html">View</a></td>
 </tr>
 <tr>
 <td>component.volumeSlice()</td>
 <td>Volume Slice (MRI Scan)</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/component/Showcase.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/volumeSlice.html">View</a></td>
 </tr>
 </tbody>
@@ -313,13 +307,12 @@ Component modules do not generate a <code>x3d</code> tag, these should be attach
 <h4>Charts</h4>
 <p>The <code>chart</code> modules are higher level, pre-combined components, making it even easier to quickly create charts.
 All the chart modules are typically constructed from viewpoint, axis and one or more of the other components above.
-Chart modules also generate the <code>x3d</code> tag, these should be attached to a regular html <code>div</code> tag.</p>
+Chart modules also generate the <code>&lt;X3D&gt;</code> tag, these should be attached to a regular HTML <code>&lt;div&gt;</code> tag.</p>
 <table>
 <thead>
 <tr>
 <th>Function</th>
 <th>Description</th>
-<th>Example</th>
 <th>Documentation</th>
 </tr>
 </thead>
@@ -327,55 +320,46 @@ Chart modules also generate the <code>x3d</code> tag, these should be attached t
 <tr>
 <td>chart.areaChartMultiSeries()</td>
 <td>Multi series Area Chart &amp; Axis</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/AreaChartMultiSeries.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/areaChartMultiSeries.html">View</a></td>
 </tr>
 <tr>
 <td>chart.barChartMultiSeries()</td>
 <td>Multi series Bar Chart &amp; Axis</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/BarChartMultiSeries.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/barChartMultiSeries.html">View</a></td>
 </tr>
 <tr>
 <td>chart.barChartVertical()</td>
 <td>Vertical Bar Chart &amp; Axis</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/BarChartVertical.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/barChartVertical.html">View</a></td>
 </tr>
 <tr>
 <td>chart.bubbleChart()</td>
 <td>Bubble Chart &amp; Axis</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/BubbleChart.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/bubbleChart.html">View</a></td>
 </tr>
 <tr>
 <td>chart.ribbonChartMultiSeries()</td>
 <td>Multi series Ribbon Chart</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/RibbonChartMultiSeries.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/ribbonChartMultiSeries.html">View</a></td>
 </tr>
 <tr>
 <td>chart.scatterPlot()</td>
 <td>Scatter Plot &amp; Axis</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/ScatterPlot.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/scatterPlot.html">View</a></td>
 </tr>
 <tr>
 <td>chart.surfacePlot()</td>
 <td>Surface Plot &amp; Axis</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/SurfacePlot.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/surfacePlot.html">View</a></td>
 </tr>
 <tr>
 <td>chart.vectorFieldChart()</td>
 <td>Vector Field Chart</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/VectorFieldChart.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/vectorFieldChart.html">View</a></td>
 </tr>
 <tr>
 <td>chart.volumeSliceChart()</td>
 <td>Volume Slice Chart</td>
-<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/VolumeSliceChart.html">View</a></td>
 <td><a href="https://jamesleesaunders.github.io/d3-x3d/volumeSliceChart.html">View</a></td>
 </tr>
 </tbody>
@@ -435,7 +419,6 @@ Chart modules also generate the <code>x3d</code> tag, these should be attached t
 <li>Victor Glindås - Various contributions to JSDoc and ES6 standardisation.</li>
 <li>Jefferson Hudson - For contributions to axis labels and transitions.</li>
 <li>Andreas Plesch - For contributing the Area Chart and Components (and generally being an x3dom hero!).</li>
-<li>You may also be interested in the sister project <a href="https://github.com/jamesleesaunders/d3-ez">d3-ez</a> Reusable 2D Charts Library.</li>
 </ul></article>
     </section>
 
@@ -449,7 +432,7 @@ Chart modules also generate the <code>x3d</code> tag, these should be attached t
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Jul 30 2019 21:07:18 GMT+0100 (British Summer Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Jul 31 2019 21:43:08 GMT+0100 (British Summer Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
