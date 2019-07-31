@@ -17,11 +17,17 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Download from GitHub](https://github.com/jamesleesaunders/d3-x3d)
 * [Download from NPM](https://www.npmjs.com/package/d3-x3d)
 
-### <a name="examples"></a>X3DOM and X_ITE Examples
+The goal for the X3D Working Group is to establish a solid foundation for the X3D specification to properly support 3D graphics in HTML5, in a similar manner to the support provided for SVG (Scalable Vector Graphics) and MathML (Mathematical Markup Language).
+The hope is that one day X3D will be integrated as standard into all browsers without the need for additional plugins. In the mean time there are two JavaScript based players for X3D which run in any browser which supports HTML5 and enable X3D to work within any HTML page:
 
-Supports X3DOM and X_ITE.
+* [X3DOM](https://www.x3dom.org/)
+* [X_ITE](http://create3000.de/x_ite/)
 
-| Example                | X3DOM                                                                                                           | X_ITE                                                                                                           |
+d3-x3d has been tested with both of the above players (with the exception of a couple of advanced features and components which presently only work on X3DOM).
+
+### <a name="examples"></a>Examples
+
+|                        | X3DOM                                                                                                           | X_ITE                                                                                                           |
 |------------------------|-----------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
 | Area Chart             | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/AreaChartMultiSeries.html)   | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/AreaChartMultiSeries.html)   |
 | Multi Series Bar Chart | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/BarChartMultiSeries.html)    | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/BarChartMultiSeries.html)    |
@@ -33,24 +39,23 @@ Supports X3DOM and X_ITE.
 | Vector Field Chart     | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/VectorFieldChart.html)       | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/VectorFieldChart.html)       |
 | Volume Slice           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/VolumeSliceChart.html)       | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/VolumeSliceChart.html)       |
 
-### Observable Examples
-
 * [Observable Examples](https://beta.observablehq.com/collection/@jamesleesaunders/d3-x3d)
 
 ### <a name="getting-started"></a>Getting Started
 
 Include D3.js, X3DOM and d3-x3d js and css files in the `<head>` section of your page:
 
-```html
 If using X3DOM:
+```html
 <head>
    <script src="https://d3js.org/d3.v5.min.js"></script>
    <script src="https://x3dom.org/download/1.7.2/x3dom-full.js"></script>
    <link rel="stylesheet" href="https://x3dom.org/download/1.7.2/x3dom.css" />
    <script src="https://raw.githack.com/jamesleesaunders/d3-x3d/master/dist/d3-x3d.js"></script>
 </head>
-
+```
 If using X_ITE:
+```html
 <head>
    <script src="https://code.create3000.de/x_ite/latest/dist/x_ite.min.js"></script>
    <script src="https://raw.githack.com/andreasplesch/x_ite_dom/master/release/x_ite_dom.1.2.js"></script>
@@ -58,24 +63,26 @@ If using X_ITE:
    <link rel="stylesheet" href="https://code.create3000.de/x_ite/latest/dist/x_ite.css" />
    <script src="https://raw.githack.com/jamesleesaunders/d3-x3d/master/dist/d3-x3d.js"></script>
 </head>
-
 ```
 
-Add a chartholder `<div>` and `<script>` tags to your page `<body>`:
+Add `<div>` or `<X3DCanvas>` chartholder and `<script>` tags to your page `<body>`:
+
+If using X3DOM:
 
 ```html
-If using X3DOM:
 <body>
    <div id="chartholder"></div>
    <script></script>
 </body>
+```
 
 If using X_ITE:
+
+```html
 <body>
    <X3DCanvas id="chartholder" style="width: 500px; height: 500px;"></X3DCanvas>
    <script></script>
 </body>
-
 ```
 
 Place the following code between the `<script></script>` tags:
