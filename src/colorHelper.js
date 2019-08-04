@@ -1,15 +1,9 @@
-/**
- * Color Name to Hex
- *
- * @param colorName
- * @returns {boolean|*}
- */
-
+// @formatter:off
 /**
  * Definition of CSS color names
  * @type {Array}
  */
-var colorNames = {
+const colorNames = {
 		aliceblue: '#f0f8ff',          antiquewhite: '#faebd7',         aqua: '#00ffff',
 		aquamarine: '#7fffd4',         azure: '#f0ffff',                beige: '#f5f5dc',
 		bisque: '#ffe4c4',             black: '#000000',                blanchedalmond: '#ffebcd',
@@ -59,8 +53,15 @@ var colorNames = {
 		wheat: '#f5deb3',              white: '#ffffff',                whitesmoke: '#f5f5f5',
 		yellow: '#ffff00',             yellowgreen: '#9acd32'
 	};
+// @formatter:on
 
-export function colourNameToHex(colorName) {
+/**
+ * Color Name to Hex
+ *
+ * @param {string} colorName
+ * @returns {boolean|*}
+ */
+function colourNameToHex(colorName) {
 	if (typeof colorNames[colorName.toLowerCase()] !== 'undefined') {
 		return colorNames[colorName.toLowerCase()];
 	}
@@ -68,11 +69,12 @@ export function colourNameToHex(colorName) {
 }
 
 /**
- * Color Colponent to Hex
- * @param c
+ * Color Component to Hex
+ *
+ * @param {number} c
  * @returns {string}
  */
-export function componentToHex(c) {
+function componentToHex(c) {
 	const hex = c.toString(16);
 	return hex.length === 1 ? "0" + hex : hex;
 }
@@ -80,12 +82,12 @@ export function componentToHex(c) {
 /**
  * Color RGB to Hex
  *
- * @param r
- * @param g
- * @param b
+ * @param {number} r
+ * @param {number} g
+ * @param {number} b
  * @returns {string}
  */
-export function rgbToHex(r, g, b) {
+function rgbToHex(r, g, b) {
 	return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 
@@ -95,7 +97,7 @@ export function rgbToHex(r, g, b) {
  * @param {string} rgbStr - RGB colour string (e.g. 'rgb(155, 102, 102)').
  * @returns {string} - Hex Color (e.g. '#9b6666').
  */
-export function rgb2Hex(rgbStr) {
+function rgb2Hex(rgbStr) {
 	const [red, green, blue] = rgbStr.substring(4, rgbStr.length - 1).replace(/ /g, '').split(',');
 	let rgb = blue | (green << 8) | (red << 16); // eslint-disable-line no-bitwise
 	return '#' + (0x1000000 + rgb).toString(16).slice(1);
@@ -104,10 +106,10 @@ export function rgb2Hex(rgbStr) {
 /**
  * Color Hex to RGB
  *
- * @param hex
+ * @param {string} hex
  * @returns {*}
  */
-export function hexToRgb(hex) {
+function hexToRgb(hex) {
 	const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 	return result ? {
 		r: parseInt(result[1], 16),
@@ -119,31 +121,39 @@ export function hexToRgb(hex) {
 /**
  * Color Hex to X3D RGB
  *
- * @param hex
+ * @param {string} hex
  * @returns {string}
  */
-export function hexToX3d(hex) {
+function hexToX3d(hex) {
 	const rgb = hexToRgb(hex);
 	return `${rgb.r / 255} ${rgb.g / 255} ${rgb.b / 255}`;
 }
 
-
 /**
  * Color Name to X3D RGB
  *
- * @param colorName
+ * @param {string} colorName
  * @returns {string}
  */
-export function colourNameToX3d(colorName) {
+function colourNameToX3d(colorName) {
 	const rgb = hexToRgb(colourNameToHex(colorName));
 	return `${rgb.r / 255} ${rgb.g / 255} ${rgb.b / 255}`;
 }
 
+/**
+ * X3D Color Parser
+ *
+ * @param {string} color
+ * @returns {string}
+ */
 export function colorParse(color) {
-	var red = 0, green = 0, blue = 0, alpha = 0;
+	let red = 0;
+	let green = 0;
+	let blue = 0;
+	let alpha = 0;
 
 	// Already matches X3D RGB
-	var x3dMatch = /^(0+\.?\d*|1\.?0*)\s+(0+\.?\d*|1\.?0*)\s+(0+\.?\d*|1\.?0*)$/.exec(color);
+	const x3dMatch = /^(0+\.?\d*|1\.?0*)\s+(0+\.?\d*|1\.?0*)\s+(0+\.?\d*|1\.?0*)$/.exec(color);
 	if (x3dMatch !== null) {
 		red = +x3dMatch[1];
 		green = +x3dMatch[2];
@@ -151,11 +161,11 @@ export function colorParse(color) {
 	}
 
 	// Matches CSS rgb() function
-	var rgbMatch = /^rgb\((\d{1,3}),\s{0,1}(\d{1,3}),\s{0,1}(\d{1,3})\)$/.exec(color);
+	const rgbMatch = /^rgb\((\d{1,3}),\s{0,1}(\d{1,3}),\s{0,1}(\d{1,3})\)$/.exec(color);
 	if (rgbMatch !== null) {
-		red   = rgbMatch[1] / 255.0;
+		red = rgbMatch[1] / 255.0;
 		green = rgbMatch[2] / 255.0;
-		blue  = rgbMatch[3] / 255.0;
+		blue = rgbMatch[3] / 255.0;
 	}
 
 	// Matches CSS color name
@@ -165,28 +175,28 @@ export function colorParse(color) {
 
 	// Hexadecimal color codes
 	if (color.substr && color.substr(0, 1) === "#") {
-		var hex = color.substr(1);
-		var len = hex.length;
+		const hex = color.substr(1);
+		const len = hex.length;
 
 		if (len === 8) {
-			red   = parseInt("0x" + hex.substr(0, 2), 16) / 255.0;
+			red = parseInt("0x" + hex.substr(0, 2), 16) / 255.0;
 			green = parseInt("0x" + hex.substr(2, 2), 16) / 255.0;
-			blue  = parseInt("0x" + hex.substr(4, 2), 16) / 255.0;
+			blue = parseInt("0x" + hex.substr(4, 2), 16) / 255.0;
 			alpha = parseInt("0x" + hex.substr(6, 2), 16) / 255.0;
 		} else if (len === 6) {
-			red   = parseInt("0x" + hex.substr(0, 2), 16) / 255.0;
+			red = parseInt("0x" + hex.substr(0, 2), 16) / 255.0;
 			green = parseInt("0x" + hex.substr(2, 2), 16) / 255.0;
-			blue  = parseInt("0x" + hex.substr(4, 2), 16) / 255.0;
+			blue = parseInt("0x" + hex.substr(4, 2), 16) / 255.0;
 			alpha = 1.0;
 		} else if (len === 4) {
-			red   = parseInt("0x" + hex.substr(0, 1), 16) / 15.0;
+			red = parseInt("0x" + hex.substr(0, 1), 16) / 15.0;
 			green = parseInt("0x" + hex.substr(1, 1), 16) / 15.0;
-			blue  = parseInt("0x" + hex.substr(2, 1), 16) / 15.0;
+			blue = parseInt("0x" + hex.substr(2, 1), 16) / 15.0;
 			alpha = parseInt("0x" + hex.substr(3, 1), 16) / 15.0;
 		} else if (len === 3) {
-			red   = parseInt("0x" + hex.substr(0, 1), 16) / 15.0;
+			red = parseInt("0x" + hex.substr(0, 1), 16) / 15.0;
 			green = parseInt("0x" + hex.substr(1, 1), 16) / 15.0;
-			blue  = parseInt("0x" + hex.substr(2, 1), 16) / 15.0;
+			blue = parseInt("0x" + hex.substr(2, 1), 16) / 15.0;
 			alpha = 1.0;
 		}
 	}
