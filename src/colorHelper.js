@@ -143,7 +143,7 @@ function colourNameToX3d(colorName) {
 /**
  * X3D Color Parser
  *
- * @param {string} color
+ * @param {Rgb|Hsl|null} color
  * @returns {string}
  */
 export function colorParse(color) {

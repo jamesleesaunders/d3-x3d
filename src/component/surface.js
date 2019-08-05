@@ -99,21 +99,12 @@ export default function() {
 					let ny = Y.length;
 					let nx = Y[0].values.length;
 
-					let coordIndexFront = Array.apply(0, Array(ny - 1)).map(function(_, j) {
-						return Array.apply(0, Array(nx - 1)).map(function(_, i) {
-							const start = i + j * nx;
-							return [start, start + nx, start + nx + 1, start + 1, start, -1];
-						});
-					});
-
-					let coordIndexBack = Array.apply(0, Array(ny - 1)).map(function(_, j) {
+					return Array.apply(0, Array(ny - 1)).map(function(_, j) {
 						return Array.apply(0, Array(nx - 1)).map(function(_, i) {
 							const start = i + j * nx;
 							return [start, start + 1, start + nx + 1, start + nx, start, -1];
 						});
 					});
-
-					return coordIndexFront.concat(coordIndexBack);
 				};
 
 				const colorFaceSet = function(Y) {
@@ -140,7 +131,8 @@ export default function() {
 				.append("Shape")
 				.classed("surface", true)
 				.append("IndexedFaceset")
-				.attr("coordIndex", (d) => d.coordIndex);
+				.attr("coordIndex", (d) => d.coordIndex)
+				.attr("solid", false);
 
 			surfaceSelect.append("Coordinate")
 				.attr("point", (d) => d.point);

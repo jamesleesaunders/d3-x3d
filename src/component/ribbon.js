@@ -13,7 +13,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 5 };
 	let color = "red";
-	let transparency = 0.2;
+	let transparency = 0.1;
 	let classed = "d3X3dRibbon";
 	let smoothed = d3.curveBasis;
 
@@ -145,17 +145,17 @@ export default function() {
 					.attr("point", (d) => d.point);
 
 				shape.append("Appearance")
-					.append("TwoSidedMaterial")
+					.append("Material")
 					.attr("diffuseColor", colorParse(color))
 					.attr("transparency", transparency);
 				*/
 
 				shape.html((d) => `
-					<IndexedFaceset coordIndex="${d.coordIndex}">
+					<IndexedFaceset coordIndex="${d.coordIndex}"  solid="false">
 						<Coordinate point="${d.point}"></Coordinate>
 					</IndexedFaceset>
 					<Appearance>
-						<TwoSidedMaterial diffuseColor="${colorParse(color)}" transparency="${transparency}"></TwoSidedMaterial>
+						<Material diffuseColor="${colorParse(color)}" transparency="${transparency}"></Material>
 					</Appearance>
 				`);
 			};
@@ -177,7 +177,7 @@ export default function() {
 				.attr("point", (d) => d.point);
 
 			ribbonTransition.select("Appearance")
-				.select("TwoSidedMaterial")
+				.select("Material")
 				.attr("diffuseColor", colorParse(color));
 
 			ribbon.exit()

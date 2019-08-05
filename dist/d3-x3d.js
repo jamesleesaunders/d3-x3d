@@ -132,44 +132,6 @@
     return target;
   };
 
-  var slicedToArray = function () {
-    function sliceIterator(arr, i) {
-      var _arr = [];
-      var _n = true;
-      var _d = false;
-      var _e = undefined;
-
-      try {
-        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-          _arr.push(_s.value);
-
-          if (i && _arr.length === i) break;
-        }
-      } catch (err) {
-        _d = true;
-        _e = err;
-      } finally {
-        try {
-          if (!_n && _i["return"]) _i["return"]();
-        } finally {
-          if (_d) throw _e;
-        }
-      }
-
-      return _arr;
-    }
-
-    return function (arr, i) {
-      if (Array.isArray(arr)) {
-        return arr;
-      } else if (Symbol.iterator in Object(arr)) {
-        return sliceIterator(arr, i);
-      } else {
-        throw new TypeError("Invalid attempt to destructure non-iterable instance");
-      }
-    };
-  }();
-
   /**
    * Data Transform
    *
@@ -720,13 +682,7 @@
   	};
   }
 
-  /**
-   * Color Name to Hex
-   *
-   * @param colorName
-   * @returns {boolean|*}
-   */
-
+  // @formatter:off
   /**
    * Definition of CSS color names
    * @type {Array}
@@ -782,94 +738,17 @@
   	yellow: '#ffff00', yellowgreen: '#9acd32'
   };
 
-  function colourNameToHex(colorName) {
-  	if (typeof colorNames[colorName.toLowerCase()] !== 'undefined') {
-  		return colorNames[colorName.toLowerCase()];
-  	}
-  	return false;
-  }
-
   /**
-   * Color Colponent to Hex
-   * @param c
+   * X3D Color Parser
+   *
+   * @param {Rgb|Hsl|null} color
    * @returns {string}
    */
-  function componentToHex(c) {
-  	var hex = c.toString(16);
-  	return hex.length === 1 ? "0" + hex : hex;
-  }
-
-  /**
-   * Color RGB to Hex
-   *
-   * @param r
-   * @param g
-   * @param b
-   * @returns {string}
-   */
-  function rgbToHex(r, g, b) {
-  	return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
-  }
-
-  /**
-   * RGB Colour to Hex Converter
-   *
-   * @param {string} rgbStr - RGB colour string (e.g. 'rgb(155, 102, 102)').
-   * @returns {string} - Hex Color (e.g. '#9b6666').
-   */
-  function rgb2Hex(rgbStr) {
-  	var _rgbStr$substring$rep = rgbStr.substring(4, rgbStr.length - 1).replace(/ /g, '').split(','),
-  	    _rgbStr$substring$rep2 = slicedToArray(_rgbStr$substring$rep, 3),
-  	    red = _rgbStr$substring$rep2[0],
-  	    green = _rgbStr$substring$rep2[1],
-  	    blue = _rgbStr$substring$rep2[2];
-
-  	var rgb = blue | green << 8 | red << 16; // eslint-disable-line no-bitwise
-  	return '#' + (0x1000000 + rgb).toString(16).slice(1);
-  }
-
-  /**
-   * Color Hex to RGB
-   *
-   * @param hex
-   * @returns {*}
-   */
-  function hexToRgb(hex) {
-  	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  	return result ? {
-  		r: parseInt(result[1], 16),
-  		g: parseInt(result[2], 16),
-  		b: parseInt(result[3], 16)
-  	} : null;
-  }
-
-  /**
-   * Color Hex to X3D RGB
-   *
-   * @param hex
-   * @returns {string}
-   */
-  function hexToX3d(hex) {
-  	var rgb = hexToRgb(hex);
-  	return rgb.r / 255 + ' ' + rgb.g / 255 + ' ' + rgb.b / 255;
-  }
-
-  /**
-   * Color Name to X3D RGB
-   *
-   * @param colorName
-   * @returns {string}
-   */
-  function colourNameToX3d(colorName) {
-  	var rgb = hexToRgb(colourNameToHex(colorName));
-  	return rgb.r / 255 + ' ' + rgb.g / 255 + ' ' + rgb.b / 255;
-  }
-
   function colorParse(color) {
-  	var red = 0,
-  	    green = 0,
-  	    blue = 0,
-  	    alpha = 0;
+  	var red = 0;
+  	var green = 0;
+  	var blue = 0;
+  	var alpha = 0;
 
   	// Already matches X3D RGB
   	var x3dMatch = /^(0+\.?\d*|1\.?0*)\s+(0+\.?\d*|1\.?0*)\s+(0+\.?\d*|1\.?0*)$/.exec(color);
@@ -928,13 +807,6 @@
   }
 
   var colorHelper = /*#__PURE__*/Object.freeze({
-    colourNameToHex: colourNameToHex,
-    componentToHex: componentToHex,
-    rgbToHex: rgbToHex,
-    rgb2Hex: rgb2Hex,
-    hexToRgb: hexToRgb,
-    hexToX3d: hexToX3d,
-    colourNameToX3d: colourNameToX3d,
     colorParse: colorParse
   });
 
@@ -3047,7 +2919,7 @@
   	/* Default Properties */
   	var dimensions = { x: 40, y: 40, z: 5 };
   	var color = "red";
-  	var transparency = 0.2;
+  	var transparency = 0.1;
   	var classed = "d3X3dRibbon";
   	var smoothed = d3.curveBasis;
 
@@ -3159,13 +3031,13 @@
       	.append("Coordinate")
       	.attr("point", (d) => d.point);
       	shape.append("Appearance")
-      	.append("TwoSidedMaterial")
+      	.append("Material")
       	.attr("diffuseColor", colorParse(color))
       	.attr("transparency", transparency);
       */
 
   				shape.html(function (d) {
-  					return "\n\t\t\t\t\t<IndexedFaceset coordIndex=\"" + d.coordIndex + "\">\n\t\t\t\t\t\t<Coordinate point=\"" + d.point + "\"></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<TwoSidedMaterial diffuseColor=\"" + colorParse(color) + "\" transparency=\"" + transparency + "\"></TwoSidedMaterial>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
+  					return "\n\t\t\t\t\t<IndexedFaceset coordIndex=\"" + d.coordIndex + "\"  solid=\"false\">\n\t\t\t\t\t\t<Coordinate point=\"" + d.point + "\"></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<Material diffuseColor=\"" + colorParse(color) + "\" transparency=\"" + transparency + "\"></Material>\n\t\t\t\t\t</Appearance>\n\t\t\t\t";
   				});
   			};
 
@@ -3185,7 +3057,7 @@
   				return d.point;
   			});
 
-  			ribbonTransition.select("Appearance").select("TwoSidedMaterial").attr("diffuseColor", colorParse(color));
+  			ribbonTransition.select("Appearance").select("Material").attr("diffuseColor", colorParse(color));
 
   			ribbon.exit().remove();
   		});
@@ -3583,21 +3455,12 @@
   					var ny = Y.length;
   					var nx = Y[0].values.length;
 
-  					var coordIndexFront = Array.apply(0, Array(ny - 1)).map(function (_, j) {
-  						return Array.apply(0, Array(nx - 1)).map(function (_, i) {
-  							var start = i + j * nx;
-  							return [start, start + nx, start + nx + 1, start + 1, start, -1];
-  						});
-  					});
-
-  					var coordIndexBack = Array.apply(0, Array(ny - 1)).map(function (_, j) {
+  					return Array.apply(0, Array(ny - 1)).map(function (_, j) {
   						return Array.apply(0, Array(nx - 1)).map(function (_, i) {
   							var start = i + j * nx;
   							return [start, start + 1, start + nx + 1, start + nx, start, -1];
   						});
   					});
-
-  					return coordIndexFront.concat(coordIndexBack);
   				};
 
   				var colorFaceSet = function colorFaceSet(Y) {
@@ -3624,7 +3487,7 @@
 
   			var surfaceSelect = surface.enter().append("Shape").classed("surface", true).append("IndexedFaceset").attr("coordIndex", function (d) {
   				return d.coordIndex;
-  			});
+  			}).attr("solid", false);
 
   			surfaceSelect.append("Coordinate").attr("point", function (d) {
   				return d.point;
