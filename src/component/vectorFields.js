@@ -158,15 +158,9 @@ export default function() {
 					let offset = sizeScale(d.value) / 2;
 					return "0 " + offset + " 0";
 				})
-				.append("Group")
-				.attr("onclick", "d3.x3d.events.forwardEvent(event);")
-				.attr("onmouseover", "d3.x3d.events.forwardEvent(event);")
-				.attr("onmouseout", "d3.x3d.events.forwardEvent(event);");
+				.append("Group");
 
-			const arrowHead = arrowsEnter.append("Shape")
-				.on("click", function(e) { dispatch.call("d3X3dClick", this, e); })
-				.on("mouseover", function(e) { dispatch.call("d3X3dMouseOver", this, e); })
-				.on("mouseout", function(e) { dispatch.call("d3X3dMouseOut", this, e); });
+			const arrowHead = arrowsEnter.append("Shape");
 
 			arrowHead.append("Appearance")
 				.append("Material")
@@ -182,10 +176,7 @@ export default function() {
 					let offset = sizeScale(d.value) / 2;
 					return "0 " + offset + " 0";
 				})
-				.append("Shape")
-				.on("click", function(e) { dispatch.call("d3X3dClick", this, e); })
-				.on("mouseover", function(e) { dispatch.call("d3X3dMouseOver", this, e); })
-				.on("mouseout", function(e) { dispatch.call("d3X3dMouseOut", this, e); });
+				.append("Shape");
 
 			arrowShaft.append("Appearance")
 				.append("Material")

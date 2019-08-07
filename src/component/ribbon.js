@@ -130,13 +130,6 @@ export default function() {
 			const shape = (el) => {
 				const shape = el.append("Shape");
 
-				shape.attr("onclick", "d3.x3d.events.forwardEvent(event);")
-					.on("click", function(e) { dispatch.call("d3X3dClick", this, e); })
-					.attr("onmouseover", "d3.x3d.events.forwardEvent(event);")
-					.on("mouseover", function(e) { dispatch.call("d3X3dMouseOver", this, e); })
-					.attr("onmouseout", "d3.x3d.events.forwardEvent(event);")
-					.on("mouseout", function(e) { dispatch.call("d3X3dMouseOut", this, e); });
-
 				/*
 				// FIXME: x3dom cannot have empty IFS nodes, we must to use .html() rather than .append() & .attr().
 				shape.append("IndexedFaceset")

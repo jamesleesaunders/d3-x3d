@@ -8,6 +8,24 @@ import * as d3 from "d3";
 export const dispatch = d3.dispatch("d3X3dClick", "d3X3dMouseOver", "d3X3dMouseOut");
 
 /**
+ * Attach Event Listeners to Shape
+ *
+ * Detect X3DOM events and convert them into D3 dispatch events.
+ *
+ * @param el
+ */
+export function attachEventListners(el) {
+	el.attr("onclick", "d3.x3d.events.forwardEvent(event);")
+		.on("click", function(e) { dispatch.call("d3X3dClick", this, e); });
+
+	el.attr("onmouseover", "d3.x3d.events.forwardEvent(event);")
+		.on("mouseover", function(e) { dispatch.call("d3X3dMouseOver", this, e); });
+
+	el.attr("onmouseout", "d3.x3d.events.forwardEvent(event);")
+		.on("mouseout", function(e) { dispatch.call("d3X3dMouseOut", this, e); });
+}
+
+/**
  * Forward X3DOM Event to D3
  *
  * In X3DOM, it is the canvas which captures onclick events, therefore defining a D3 event handler
