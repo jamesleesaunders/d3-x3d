@@ -1,14 +1,14 @@
 # d3-x3d
 
-## Data Driven 3D Charts with D3 and X3D
+## 3D Data Driven Charting Library with D3 and X3D
 
 [![npm version](https://badge.fury.io/js/d3-x3d.svg)](https://badge.fury.io/js/d3-x3d)
 [![Build Status](https://travis-ci.org/jamesleesaunders/d3-x3d.svg?branch=master)](https://travis-ci.org/jamesleesaunders/d3-x3d)
 [![Known Vulnerabilities](https://snyk.io/test/github/jamesleesaunders/d3-x3d/badge.svg?targetFile=package.json)](https://snyk.io/test/github/jamesleesaunders/d3-x3d?targetFile=package.json)
 
-Combining the power of the [D3.js](http://www.d3js.org/) data-driven documents visualisation library and the Extensible 3D [X3D](https://www.web3d.org/x3d/what-x3d) 3D graphics standard, **d3-x3d** makes it simple to produce beautiful 3D data visualisations with minimal code.
+Combining the power of the [D3.js](http://www.d3js.org/) data-driven documents visualisation library and the Extensible 3D [X3D](https://www.web3d.org/x3d/what-x3d) 3D graphics standard, d3-x3d makes it simple to produce beautiful 3D data visualisations with minimal code.
 
-Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), **d3-x3d** is built on a foundation of building blocks, called components, which can be combined to create a variety of different data visualisations.
+Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), d3-x3d is built on a foundation of building blocks, called components, which can be combined to create a variety of different data visualisations.
 
 * [Examples](#examples)
 * [Getting Started](#getting-started)
@@ -18,13 +18,13 @@ Inspired by Mike Bostock's [reusable charts](http://bost.ocks.org/mike/chart/), 
 * [Download from GitHub](https://github.com/jamesleesaunders/d3-x3d)
 * [Download from NPM](https://www.npmjs.com/package/d3-x3d)
 
-The goal of the X3D Working Group is to establish a solid foundation for the X3D specification to properly support 3D graphics in HTML5 in a similar manner to that of SVG (Scalable Vector Graphics).
-The aspiration is that one day X3D will be integrated as standard into all browsers, without the need for additional plugins. For the mean time, there are two JavaScript based players for X3D: 
+The aspiration for the X3D specification is for it to become the de facto HTML5 standard for 3D graphics in the browser, in a similar manner to that of SVG (Scalable Vector Graphics). 
+The aim is that one day X3D will be integrated as standard into all browsers, without the need for additional plugins. For the time being, there are two JavaScript based players for X3D:
 
 * [X3DOM](https://www.x3dom.org/)
 * [X_ITE](http://create3000.de/x_ite/) 
 
-Both these players are compatible with modern browsers supporting HTML5 and enable X3D scenes to be embedded in any HTML page. *d3-x3d* has been tested to work with both X3DOM and X_ITE (there are a couple of more advanced features which currently only work with X3DOM).
+Both these players are compatible with modern browsers supporting HTML5 and enable X3D scenes to be embedded in any HTML page. d3-x3d has been tested to work with both X3DOM and X_ITE (there are a couple of more advanced features and charts which currently only work with X3DOM).
 
 ### <a name="examples"></a>Examples
 
@@ -37,8 +37,8 @@ Both these players are compatible with modern browsers supporting HTML5 and enab
 | Scatter Plot           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/ScatterPlot.html)            | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/ScatterPlot.html)            | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-bubbles)            |
 | Surface Plot           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/SurfacePlot.html)            | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/SurfacePlot.html)            | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-surface-plot)       |
 | Ribbon Chart           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/RibbonChartMultiSeries.html) | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/RibbonChartMultiSeries.html) | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-ribbon-chart)       |
-| Vector Field Chart     | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/VectorFieldChart.html)       |                                                                                                                 | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-vector-field-chart) |
-| Volume Slice           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/VolumeSliceChart.html)       |                                                                                                                 |                                                                                         |
+| Vector Field Chart     | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/VectorFieldChart.html)       | -                                                                                                               | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-vector-field-chart) |
+| Volume Slice           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/VolumeSliceChart.html)       | -                                                                                                               | -                                                                                       |
 
 ### <a name="getting-started"></a>Getting Started
 
@@ -48,8 +48,8 @@ If using X3DOM:
 ```html
 <head>
    <script src="https://d3js.org/d3.v5.min.js"></script>
-   <script src="https://x3dom.org/download/1.7.2/x3dom-full.js"></script>
-   <link rel="stylesheet" href="https://x3dom.org/download/1.7.2/x3dom.css" />
+   <script src="https://x3dom.org/download/1.8.0/x3dom-full.js"></script>
+   <link rel="stylesheet" href="https://x3dom.org/download/1.8.0/x3dom.css" />
    <script src="https://raw.githack.com/jamesleesaunders/d3-x3d/master/dist/d3-x3d.js"></script>
 </head>
 ```
@@ -57,9 +57,9 @@ If using X3DOM:
 If using X_ITE:
 ```html
 <head>
+   <script src="https://d3js.org/d3.v5.min.js"></script>
    <script src="https://code.create3000.de/x_ite/latest/dist/x_ite.min.js"></script>
    <script src="https://raw.githack.com/andreasplesch/x_ite_dom/master/release/x_ite_dom.1.2.js"></script>
-   <script src="https://d3js.org/d3.v5.min.js"></script>
    <link rel="stylesheet" href="https://code.create3000.de/x_ite/latest/dist/x_ite.css" />
    <script src="https://raw.githack.com/jamesleesaunders/d3-x3d/master/dist/d3-x3d.js"></script>
 </head>
@@ -78,7 +78,7 @@ If using X3DOM:
 If using X_ITE:
 ```html
 <body>
-   <X3DCanvas id="chartholder" style="width: 500px; height: 500px;"></X3DCanvas>
+   <X3DCanvas id="chartholder"></X3DCanvas>
    <script></script>
 </body>
 ```
