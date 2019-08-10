@@ -42,14 +42,14 @@
           return Array.prototype.indexOf.apply(this, arguments) !== -1;
         };
     }
-    
+
     // Select chartholder
     var chartHolder = d3.select("#chartholder");
 
     // Generate some data
     var data = d3.x3d.randomData.dataset2();
 
-    // Declare the bar chart component
+    // Declare the chart component
     var myChart = d3.x3d.chart.areaChartMultiSeries();
 
     var checks = d3.selectAll('input[type=checkbox]');

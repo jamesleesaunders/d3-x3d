@@ -12,7 +12,7 @@
 
 <body>
   <X3DCanvas id="chartholder" style="width: 500px; height: 500px;"></X3DCanvas>
-  
+
   <script>
     // Chart dimensions
     var width = 500;
@@ -20,9 +20,10 @@
 
     var viewpoint = d3.x3d.component.viewpoint();
 
-    // Area Component
+    // Generate some data
     var areaData = d3.x3d.randomData.dataset3(20);
 
+    // Declare the chart component
     var areaComponent = d3.x3d.component.area();
 
     // Create scene

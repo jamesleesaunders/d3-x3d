@@ -43,7 +43,6 @@
       };
     });
 
-
     var summary = d3.x3d.dataTransform(data).summary();
     var columnKeys = summary.columnKeys;
     var valueMax = summary.valueMax;
@@ -53,7 +52,7 @@
       .range([0, 20])
       .domain(valueExtent);
 
-    // Declare the bar chart component
+    // Declare the chart component
     var myChart = d3.x3d.chart.areaChartMultiSeries().yScale(yScale);
 
     chartHolder.datum(data).call(myChart);

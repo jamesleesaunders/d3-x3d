@@ -11,7 +11,7 @@
 
 <body>
   <div id="chartholder"></div>
- 
+
   <script>
     // Chart dimensions
     var width = 500;
@@ -19,9 +19,10 @@
 
     var viewpoint = d3.x3d.component.viewpoint();
 
-    // Area Multi Component
+    // Generate some data
     var areaMultiSeriesData = d3.x3d.randomData.dataset5();
 
+    // Declare the chart component
     var areaMultiSeriesComponent = d3.x3d.component.areaMultiSeries();
 
     // Create scene
