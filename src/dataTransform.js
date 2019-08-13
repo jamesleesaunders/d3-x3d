@@ -5,7 +5,7 @@ import * as d3Interpolate from "d3-interpolate-curve";
  * Data Transform
  *
  * @module
- * @returns {Array}
+ * @returns {Object}
  */
 export default function dataTransform(data) {
 
@@ -221,7 +221,7 @@ export default function dataTransform(data) {
 			coordinatesExtent: singleCoordinatesExtent(data),
 			maxDecimalPlace: singleMaxDecimalPlace(data),
 			thresholds: singleThresholds(data),
-			rowValuesKeys: singleRowValueKeys(data),
+			rowValuesKeys: singleRowValueKeys(data)
 		}
 	};
 
@@ -292,7 +292,7 @@ export default function dataTransform(data) {
 		return data.reduce((totals, row) => {
 			row.values.forEach((d) => {
 				const columnName = d.key;
-				totals[columnName] = (typeof (totals[columnName]) === "undefined" ? 0 : totals[columnName]);
+				totals[columnName] = (typeof totals[columnName] === "undefined" ? 0 : totals[columnName]);
 				totals[columnName] += d.value;
 			});
 
@@ -493,10 +493,7 @@ export default function dataTransform(data) {
 		const sampler = d3.range(0, 1, 1 / samples);
 		const keyPolator = (t) => (Number((t * samples).toFixed(0)) + 1);
 
-		// If curveFunction is Basis then reach straight for D3's native 'interpolateBasis' function (it's faster!)
-		const valuePolator = curveFunction === d3.curveBasis
-			? d3.interpolateBasis(values)
-			: d3Interpolate.interpolateFromCurve(values, curveFunction, epsilon, samples);
+		const valuePolator = d3Interpolate.interpolateFromCurve(values, curveFunction, epsilon, samples);
 
 		const smoothed = {
 			key: data.key,

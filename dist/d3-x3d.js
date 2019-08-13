@@ -7,32 +7,32 @@
  */
 
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('d3'), require('d3-shape'), require('d3-array')) :
-  typeof define === 'function' && define.amd ? define(['d3', 'd3-shape', 'd3-array'], factory) :
-  (global = global || self, (global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3, global.d3, global.d3)));
-}(this, function (d3, d3Shape, d3Array) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('d3'), require('d3-shape'), require('d3-array'), require('d3-interpolate')) :
+  typeof define === 'function' && define.amd ? define(['d3', 'd3-shape', 'd3-array', 'd3-interpolate'], factory) :
+  (global = global || self, (global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3, global.d3, global.d3, global.d3)));
+}(this, function (d3, d3Shape, d3Array, d3Interpolate) { 'use strict';
 
-  var version = "2.0.2";
+  var version = "2.0.3";
   var license = "GPL-2.0";
 
   /**
    * Curve Polator
    *
    * @param points
-   * @param curve
+   * @param curveFunction
    * @param epsilon
    * @param samples
    * @returns {Function}
    */
-  function curvePolator(points, curve, epsilon, samples) {
+  function curvePolator(points, curveFunction, epsilon, samples) {
     // eslint-disable-line max-params
-    var path = d3Shape.line().curve(curve)(points);
+    var path = d3Shape.line().curve(curveFunction)(points);
 
     return svgPathInterpolator(path, epsilon, samples);
   }
 
   /**
-   * SVG Psth Interpolator
+   * SVG Path Interpolator
    *
    * @param path
    * @param epsilon
@@ -98,12 +98,12 @@
    * Interpolate From Curve
    *
    * @param values
-   * @param curve
+   * @param curveFunction
    * @param epsilon
    * @param samples
    * @returns {Function}
    */
-  function fromCurve (values, curve) {
+  function fromCurve (values, curveFunction) {
     var epsilon = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.00001;
     var samples = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 100;
     // eslint-disable-line max-params
@@ -115,7 +115,12 @@
       return [xrange[i], v];
     });
 
-    return curvePolator(points, curve, epsilon, samples);
+    // If curveFunction is curveBasis then reach straight for D3's native 'interpolateBasis' function (it's faster!)
+    if (curveFunction === d3Shape.curveBasis) {
+      return d3Interpolate.interpolateBasis(values);
+    } else {
+      return curvePolator(points, curveFunction, epsilon, samples);
+    }
   }
 
   var _extends = Object.assign || function (target) {
@@ -136,7 +141,7 @@
    * Data Transform
    *
    * @module
-   * @returns {Array}
+   * @returns {Object}
    */
   function dataTransform(data) {
 
@@ -659,8 +664,7 @@
   			return Number((t * samples).toFixed(0)) + 1;
   		};
 
-  		// If curveFunction is Basis then reach straight for D3's native 'interpolateBasis' function (it's faster!)
-  		var valuePolator = curveFunction === d3.curveBasis ? d3.interpolateBasis(values) : fromCurve(values, curveFunction, epsilon, samples);
+  		var valuePolator = fromCurve(values, curveFunction, epsilon, samples);
 
   		var smoothed = {
   			key: data.key,
