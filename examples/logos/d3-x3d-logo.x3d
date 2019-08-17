@@ -22,7 +22,7 @@
 							<Material diffuseColor='1 1 1' />
 						</Appearance>
 						<Text string='"D3   3D"' solid="false">
-							<FontStyle justify='"MIDDLE" "MIDDLE"' size='2.3' family='"SANS"' />
+							<FontStyle justify='"MIDDLE" "MIDDLE"' size='2.3' family='"HandScribbleSketchRockL-Light" "SANS"' />
 						</Text>
 					</Shape>
 				</Transform>
@@ -46,7 +46,7 @@
 							<Material diffuseColor='0 0 0' />
 						</Appearance>
 						<Text string='"D3   3D"' solid="false">
-							<FontStyle justify='"MIDDLE" "MIDDLE"' size='2.3' family='"SANS"' />
+							<FontStyle justify='"MIDDLE" "MIDDLE"' size='2.3' family='"HandScribbleSketchRockL-Light" "SANS"' />
 						</Text>
 					</Shape>
 				</Transform>
