@@ -7,7 +7,7 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/jamesleesaunders/d3-x3d/badge.svg?targetFile=package.json)](https://snyk.io/test/github/jamesleesaunders/d3-x3d?targetFile=package.json)
 
 <a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/logos/d3-x3d-logo-x3dom.html">
-   <img src="https://raw.githubusercontent.com/jamesleesaunders/d3-x3d/master/examples/logos/d3-x3d-logo.png" align="left" width="150px" hspace="10" vspace="6">
+   <img src="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/logos/d3-x3d-logo.png" align="left" width="150px" hspace="10" vspace="6">
 </a>
 
 Combining the power of the [D3.js](http://www.d3js.org/) data-driven documents visualisation library and the Extensible 3D [X3D](https://www.web3d.org/x3d/what-x3d) 3D graphics standard, d3-x3d makes it simple to produce beautiful 3D data visualisations with minimal code.
@@ -123,7 +123,9 @@ chartHolder
 	.call(myChart);
 ```
 
-That's all there is to it! View the page in your browser and you should see a basic 3D bar chart.
+That's all there is to it! View the page in your browser and you should see a basic 3D bar chart:
+
+<img src="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/assets/BarChartMultiSeries.png" width="400px">
 
 #### Install from NPM
 
