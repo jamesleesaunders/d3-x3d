@@ -164,7 +164,7 @@ export default function() {
 					.attr("string", (d) => `"${tickFormat(d)}"`)
 					.append("FontStyle")
 					.attr("size", 1.3)
-					.attr("family", "SANS")
+					.attr("family", "\"SANS\"")
 					.attr("style", "BOLD")
 					.attr("justify", "\"MIDDLE\"");
 
