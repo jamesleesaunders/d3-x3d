@@ -166,7 +166,7 @@ export default function() {
 					.attr("size", 1.3)
 					.attr("family", "\"SANS\"")
 					.attr("style", "BOLD")
-					.attr("justify", "\"MIDDLE\"");
+					.attr("justify", "\"MIDDLE\" \"MIDDLE\"");
 
 				labelsEnter.merge(labels);
 

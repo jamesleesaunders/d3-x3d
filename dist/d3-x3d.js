@@ -1512,7 +1512,7 @@
   					return labelInset * d * tickPadding + (labelInset + 1) / 2 * tickSize * tickDirectionVector[i];
   				})).append("Billboard").attr("axisOfRotation", "0 0 0").append("Shape").call(makeSolid, "black").append("Text").attr("string", function (d) {
   					return "\"" + tickFormat(d) + "\"";
-  				}).append("FontStyle").attr("size", 1.3).attr("family", "SANS").attr("style", "BOLD").attr("justify", "\"MIDDLE\"");
+  				}).append("FontStyle").attr("size", 1.3).attr("family", "\"SANS\"").attr("style", "BOLD").attr("justify", "\"MIDDLE\" \"MIDDLE\"");
 
   				labelsEnter.merge(labels);
 
