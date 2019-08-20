@@ -75,13 +75,12 @@ export default function() {
 	};
 
 	/**
-	 * Constructor
+	 * Create X3D base and scene
 	 *
-	 * @constructor
-	 * @alias areaChartMultiSeries
-	 * @param {d3.selection} selection - The chart holder D3 selection.
+	 * @param selection
+	 * @param layers
 	 */
-	const my = function(selection) {
+	function createBase(selection, layers) {
 		// Create x3d element (if it does not exist already)
 		if (!x3d) {
 			x3d = selection.append("X3D");
@@ -89,23 +88,35 @@ export default function() {
 		}
 
 		x3d.attr("width", width + "px")
-			.attr("useGeoCache", false)
 			.attr("height", height + "px")
 			.attr("showLog", debug ? "true" : "false")
-			.attr("showStat", debug ? "true" : "false");
+			.attr("showStat", debug ? "true" : "false")
+			.attr("useGeoCache", false);
 
+		// Add a white background
 		scene.append("Background")
 			.attr("groundColor", "1 1 1")
 			.attr("skyColor", "1 1 1");
 
-		// Update the chart dimensions and add layer groups
-		const layers = ["axis", "areas"];
+		// Add layer groups
 		scene.classed(classed, true)
 			.selectAll("Group")
 			.data(layers)
 			.enter()
 			.append("Group")
 			.attr("class", (d) => d);
+	}
+
+	/**
+	 * Constructor
+	 *
+	 * @constructor
+	 * @alias areaChartMultiSeries
+	 * @param {d3.selection} selection - The chart holder D3 selection.
+	 */
+	const my = function(selection) {
+		let layers = ["axis", "areas"];
+		createBase(selection, layers);
 
 		selection.each((data) => {
 			init(data);
