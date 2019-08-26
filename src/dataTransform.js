@@ -99,7 +99,7 @@ export default function dataTransform(data) {
 	 * @returns {Array}
 	 */
 	const singleRowValueKeys = function(data) {
-		return Object.keys(data.values[0]);
+		return data.values.length ? Object.keys(data.values[0]) : [];
 	};
 
 	/**

@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-import { dispatch } from "../events";
 import { colorParse } from "../colorHelper";
 
 /**
@@ -150,7 +149,7 @@ export default function() {
 				const labels = element.selectAll(".label")
 					.data(tickValues, (d) => d);
 
-				const labelsEnter = ticks.enter()
+				ticks.enter()
 					.append("Transform")
 					.attr("class", "label")
 					.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
@@ -166,9 +165,8 @@ export default function() {
 					.attr("size", 1.3)
 					.attr("family", "\"SANS\"")
 					.attr("style", "BOLD")
-					.attr("justify", "\"MIDDLE\" \"MIDDLE\"");
-
-				labelsEnter.merge(labels);
+					.attr("justify", "\"MIDDLE\" \"MIDDLE\"")
+					.merge(labels);
 
 				labels.transition()
 					.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))

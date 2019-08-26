@@ -73,9 +73,11 @@ export default function() {
 				.color("black")
 				.labelPosition(labelPosition);
 
-			if(labelPosition === "proximal") {
-				// We only want 2 sets of labels on the y axis if they are in distal position.
+			// We only want 2 sets of labels on the y axis if they are in distal position.
+			if (labelPosition === "proximal") {
 				yxAxis.tickFormat("");
+			} else {
+				yxAxis.tickFormat((d) => d);
 			}
 
 			element.select(".xzAxis")

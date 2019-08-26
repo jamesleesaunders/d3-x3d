@@ -1,7 +1,7 @@
 import * as d3 from "d3";
-// import * as x3dom from "x3dom";
 import dataTransform from "../dataTransform";
 import component from "../component";
+// import * as x3dom from "x3dom";
 
 /**
  * Reusable 3D Vector Field Chart
@@ -310,18 +310,6 @@ export default function() {
 	};
 
 	/**
-	 * Debug Getter / Setter
-	 *
-	 * @param {boolean} _v - Show debug log and stats. True/False.
-	 * @returns {*}
-	 */
-	my.debug = function(_v) {
-		if (!arguments.length) return debug;
-		debug = _v;
-		return my;
-	};
-
-	/**
 	 * Vector Function Getter / Setter
 	 *
 	 * @param {function} _f - Vector Function.
@@ -330,6 +318,18 @@ export default function() {
 	my.vectorFunction = function(_f) {
 		if (!arguments.length) return vectorFunction;
 		vectorFunction = _f;
+		return my;
+	};
+
+	/**
+	 * Debug Getter / Setter
+	 *
+	 * @param {boolean} _v - Show debug log and stats. True/False.
+	 * @returns {*}
+	 */
+	my.debug = function(_v) {
+		if (!arguments.length) return debug;
+		debug = _v;
 		return my;
 	};
 

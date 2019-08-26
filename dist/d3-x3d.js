@@ -234,7 +234,7 @@
     * @returns {Array}
     */
   	var singleRowValueKeys = function singleRowValueKeys(data) {
-  		return Object.keys(data.values[0]);
+  		return data.values.length ? Object.keys(data.values[0]) : [];
   	};
 
   	/**
@@ -1235,137 +1235,6 @@
   }
 
   /**
-   * Custom Dispatch Events
-   *
-   * @type {d3.dispatch}
-   */
-  var dispatch = d3.dispatch("d3X3dClick", "d3X3dMouseOver", "d3X3dMouseOut");
-
-  /**
-   * Attach Event Listeners to Shape
-   *
-   * Detect X3DOM events and convert them into D3 dispatch events.
-   *
-   * @param el
-   */
-  function attachEventListners(el) {
-  	el.attr("onclick", "d3.x3d.events.forwardEvent(event);").on("click", function (e) {
-  		dispatch.call("d3X3dClick", this, e);
-  	});
-
-  	el.attr("onmouseover", "d3.x3d.events.forwardEvent(event);").on("mouseover", function (e) {
-  		dispatch.call("d3X3dMouseOver", this, e);
-  	});
-
-  	el.attr("onmouseout", "d3.x3d.events.forwardEvent(event);").on("mouseout", function (e) {
-  		dispatch.call("d3X3dMouseOut", this, e);
-  	});
-  }
-
-  /**
-   * Forward X3DOM Event to D3
-   *
-   * In X3DOM, it is the canvas which captures onclick events, therefore defining a D3 event handler
-   * on an single X3DOM element does not work. A workaround is to define an onclick handler which then
-   * forwards the call to the D3 'click' event handler with the event.
-   * Note: X3DOM and D3 event members slightly differ, so d3.mouse() function does not work.
-   *
-   * @param {event} event
-   * @see https://bl.ocks.org/hlvoorhees/5376764
-   */
-  function forwardEvent(event) {
-  	var type = event.type;
-  	var target = d3.select(event.target);
-  	target.on(type)(event);
-  }
-
-  /**
-   * Show Alert With Event Coordinate
-   *
-   * @param {event} event
-   * @returns {{canvas: {x: (*|number), y: (*|number)}, world: {x: *, y: *, z: *}, page: {x: number, y: number}}}
-   */
-  function getEventCoordinates(event) {
-  	var pagePoint = getEventPagePoint(event);
-
-  	return {
-  		world: { x: event.hitPnt[0], y: event.hitPnt[1], z: event.hitPnt[2] },
-  		canvas: { x: event.layerX, y: event.layerY },
-  		page: { x: pagePoint.x, y: pagePoint.y }
-  	};
-  }
-
-  /**
-   * Inverse of coordinate transform defined by function mousePosition(evt) in x3dom.js
-   *
-   * @param {event} event
-   * @returns {{x: number, y: number}}
-   */
-  function getEventPagePoint(event) {
-  	var pageX = -1;
-  	var pageY = -1;
-
-  	var convertPoint = window.webkitConvertPointFromPageToNode;
-
-  	if ("getBoundingClientRect" in document.documentElement) {
-  		var holder = getX3domHolder(event);
-  		var computedStyle = document.defaultView.getComputedStyle(holder, null);
-  		var paddingLeft = parseFloat(computedStyle.getPropertyValue('padding-left'));
-  		var borderLeftWidth = parseFloat(computedStyle.getPropertyValue('border-left-width'));
-  		var paddingTop = parseFloat(computedStyle.getPropertyValue('padding-top'));
-  		var borderTopWidth = parseFloat(computedStyle.getPropertyValue('border-top-width'));
-  		var box = holder.getBoundingClientRect();
-  		var scrolLeft = window.pageXOffset || document.body.scrollLeft;
-  		var scrollTop = window.pageYOffset || document.body.scrollTop;
-  		pageX = Math.round(event.layerX + (box.left + paddingLeft + borderLeftWidth + scrolLeft));
-  		pageY = Math.round(event.layerY + (box.top + paddingTop + borderTopWidth + scrollTop));
-  	} else if (convertPoint) {
-  		var pagePoint = convertPoint(event.target, new WebKitPoint(0, 0));
-  		pageX = Math.round(pagePoint.x);
-  		pageY = Math.round(pagePoint.y);
-  	} else {
-  		x3dom.debug.logError('Unable to find getBoundingClientRect or webkitConvertPointFromPageToNode');
-  	}
-
-  	return { x: pageX, y: pageY };
-  }
-
-  /**
-   * Return the x3d Parent Holder
-   *
-   * Find clicked element, walk up DOM until we find the parent x3d.
-   * Then return the x3d's parent.
-   *
-   * @param event
-   * @returns {*}
-   */
-  function getX3domHolder(event) {
-  	var target = d3.select(event.target);
-
-  	var x3d = target.select(function () {
-  		var el = this;
-  		while (el.nodeName.toLowerCase() !== "x3d") {
-  			el = el.parentElement;
-  		}
-
-  		return el;
-  	});
-
-  	return x3d.select(function () {
-  		return this.parentNode;
-  	}).node();
-  }
-
-  var events = /*#__PURE__*/Object.freeze({
-    dispatch: dispatch,
-    attachEventListners: attachEventListners,
-    forwardEvent: forwardEvent,
-    getEventCoordinates: getEventCoordinates,
-    getEventPagePoint: getEventPagePoint,
-    getX3domHolder: getX3domHolder
-  });
-
-  /**
    * Reusable 3D Axis Component
    *
    * @module
@@ -1504,7 +1373,7 @@
   					return d;
   				});
 
-  				var labelsEnter = ticks.enter().append("Transform").attr("class", "label").attr("translation", function (t) {
+  				ticks.enter().append("Transform").attr("class", "label").attr("translation", function (t) {
   					return axisDirectionVector.map(function (a) {
   						return scale(t) * a;
   					}).join(" ");
@@ -1512,9 +1381,7 @@
   					return labelInset * d * tickPadding + (labelInset + 1) / 2 * tickSize * tickDirectionVector[i];
   				})).append("Billboard").attr("axisOfRotation", "0 0 0").append("Shape").call(makeSolid, "black").append("Text").attr("string", function (d) {
   					return "\"" + tickFormat(d) + "\"";
-  				}).append("FontStyle").attr("size", 1.3).attr("family", "\"SANS\"").attr("style", "BOLD").attr("justify", "\"MIDDLE\" \"MIDDLE\"");
-
-  				labelsEnter.merge(labels);
+  				}).append("FontStyle").attr("size", 1.3).attr("family", "\"SANS\"").attr("style", "BOLD").attr("justify", "\"MIDDLE\" \"MIDDLE\"").merge(labels);
 
   				labels.transition().attr("translation", function (t) {
   					return axisDirectionVector.map(function (a) {
@@ -1718,9 +1585,13 @@
 
   			zxAxis.scale(zScale).direction("z").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color("black").labelPosition(labelPosition);
 
+  			// We only want 2 sets of labels on the y axis if they are in distal position.
   			if (labelPosition === "proximal") {
-  				// We only want 2 sets of labels on the y axis if they are in distal position.
   				yxAxis.tickFormat("");
+  			} else {
+  				yxAxis.tickFormat(function (d) {
+  					return d;
+  				});
   			}
 
   			element.select(".xzAxis").call(xzAxis);
@@ -1807,6 +1678,137 @@
 
   	return my;
   }
+
+  /**
+   * Custom Dispatch Events
+   *
+   * @type {d3.dispatch}
+   */
+  var dispatch = d3.dispatch("d3X3dClick", "d3X3dMouseOver", "d3X3dMouseOut");
+
+  /**
+   * Attach Event Listeners to Shape
+   *
+   * Detect X3DOM events and convert them into D3 dispatch events.
+   *
+   * @param el
+   */
+  function attachEventListners(el) {
+  	el.attr("onclick", "d3.x3d.events.forwardEvent(event);").on("click", function (e) {
+  		dispatch.call("d3X3dClick", this, e);
+  	});
+
+  	el.attr("onmouseover", "d3.x3d.events.forwardEvent(event);").on("mouseover", function (e) {
+  		dispatch.call("d3X3dMouseOver", this, e);
+  	});
+
+  	el.attr("onmouseout", "d3.x3d.events.forwardEvent(event);").on("mouseout", function (e) {
+  		dispatch.call("d3X3dMouseOut", this, e);
+  	});
+  }
+
+  /**
+   * Forward X3DOM Event to D3
+   *
+   * In X3DOM, it is the canvas which captures onclick events, therefore defining a D3 event handler
+   * on an single X3DOM element does not work. A workaround is to define an onclick handler which then
+   * forwards the call to the D3 'click' event handler with the event.
+   * Note: X3DOM and D3 event members slightly differ, so d3.mouse() function does not work.
+   *
+   * @param {event} event
+   * @see https://bl.ocks.org/hlvoorhees/5376764
+   */
+  function forwardEvent(event) {
+  	var type = event.type;
+  	var target = d3.select(event.target);
+  	target.on(type)(event);
+  }
+
+  /**
+   * Show Alert With Event Coordinate
+   *
+   * @param {event} event
+   * @returns {{canvas: {x: (*|number), y: (*|number)}, world: {x: *, y: *, z: *}, page: {x: number, y: number}}}
+   */
+  function getEventCoordinates(event) {
+  	var pagePoint = getEventPagePoint(event);
+
+  	return {
+  		world: { x: event.hitPnt[0], y: event.hitPnt[1], z: event.hitPnt[2] },
+  		canvas: { x: event.layerX, y: event.layerY },
+  		page: { x: pagePoint.x, y: pagePoint.y }
+  	};
+  }
+
+  /**
+   * Inverse of coordinate transform defined by function mousePosition(evt) in x3dom.js
+   *
+   * @param {event} event
+   * @returns {{x: number, y: number}}
+   */
+  function getEventPagePoint(event) {
+  	var pageX = -1;
+  	var pageY = -1;
+
+  	var convertPoint = window.webkitConvertPointFromPageToNode;
+
+  	if ("getBoundingClientRect" in document.documentElement) {
+  		var holder = getX3domHolder(event);
+  		var computedStyle = document.defaultView.getComputedStyle(holder, null);
+  		var paddingLeft = parseFloat(computedStyle.getPropertyValue('padding-left'));
+  		var borderLeftWidth = parseFloat(computedStyle.getPropertyValue('border-left-width'));
+  		var paddingTop = parseFloat(computedStyle.getPropertyValue('padding-top'));
+  		var borderTopWidth = parseFloat(computedStyle.getPropertyValue('border-top-width'));
+  		var box = holder.getBoundingClientRect();
+  		var scrolLeft = window.pageXOffset || document.body.scrollLeft;
+  		var scrollTop = window.pageYOffset || document.body.scrollTop;
+  		pageX = Math.round(event.layerX + (box.left + paddingLeft + borderLeftWidth + scrolLeft));
+  		pageY = Math.round(event.layerY + (box.top + paddingTop + borderTopWidth + scrollTop));
+  	} else if (convertPoint) {
+  		var pagePoint = convertPoint(event.target, new WebKitPoint(0, 0));
+  		pageX = Math.round(pagePoint.x);
+  		pageY = Math.round(pagePoint.y);
+  	} else {
+  		x3dom.debug.logError('Unable to find getBoundingClientRect or webkitConvertPointFromPageToNode');
+  	}
+
+  	return { x: pageX, y: pageY };
+  }
+
+  /**
+   * Return the x3d Parent Holder
+   *
+   * Find clicked element, walk up DOM until we find the parent x3d.
+   * Then return the x3d's parent.
+   *
+   * @param event
+   * @returns {*}
+   */
+  function getX3domHolder(event) {
+  	var target = d3.select(event.target);
+
+  	var x3d = target.select(function () {
+  		var el = this;
+  		while (el.nodeName.toLowerCase() !== "x3d") {
+  			el = el.parentElement;
+  		}
+
+  		return el;
+  	});
+
+  	return x3d.select(function () {
+  		return this.parentNode;
+  	}).node();
+  }
+
+  var events = /*#__PURE__*/Object.freeze({
+    dispatch: dispatch,
+    attachEventListners: attachEventListners,
+    forwardEvent: forwardEvent,
+    getEventCoordinates: getEventCoordinates,
+    getEventPagePoint: getEventPagePoint,
+    getX3domHolder: getX3domHolder
+  });
 
   /**
    * Reusable 3D Bar Chart Component
@@ -3605,6 +3607,8 @@
   	return my;
   }
 
+  // import * as x3dom from "x3dom";
+
   /**
    * Reusable 3D Vector Fields Component
    *
@@ -4683,18 +4687,6 @@
   	};
 
   	/**
-    * Debug Getter / Setter
-    *
-    * @param {boolean} _v - Show debug log and stats. True/False.
-    * @returns {*}
-    */
-  	my.debug = function (_v) {
-  		if (!arguments.length) return debug;
-  		debug = _v;
-  		return my;
-  	};
-
-  	/**
     * Label Position Getter / Setter
     *
     * @param {string} _v - Position ('proximal' or 'distal')
@@ -4703,6 +4695,18 @@
   	my.labelPosition = function (_v) {
   		if (!arguments.length) return labelPosition;
   		labelPosition = _v;
+  		return my;
+  	};
+
+  	/**
+    * Debug Getter / Setter
+    *
+    * @param {boolean} _v - Show debug log and stats. True/False.
+    * @returns {*}
+    */
+  	my.debug = function (_v) {
+  		if (!arguments.length) return debug;
+  		debug = _v;
   		return my;
   	};
 
@@ -6086,6 +6090,8 @@
   	return my;
   }
 
+  // import * as x3dom from "x3dom";
+
   /**
    * Reusable 3D Vector Field Chart
    *
@@ -6382,18 +6388,6 @@
   	};
 
   	/**
-    * Debug Getter / Setter
-    *
-    * @param {boolean} _v - Show debug log and stats. True/False.
-    * @returns {*}
-    */
-  	my.debug = function (_v) {
-  		if (!arguments.length) return debug;
-  		debug = _v;
-  		return my;
-  	};
-
-  	/**
     * Vector Function Getter / Setter
     *
     * @param {function} _f - Vector Function.
@@ -6402,6 +6396,18 @@
   	my.vectorFunction = function (_f) {
   		if (!arguments.length) return vectorFunction;
   		vectorFunction = _f;
+  		return my;
+  	};
+
+  	/**
+    * Debug Getter / Setter
+    *
+    * @param {boolean} _v - Show debug log and stats. True/False.
+    * @returns {*}
+    */
+  	my.debug = function (_v) {
+  		if (!arguments.length) return debug;
+  		debug = _v;
   		return my;
   	};
 

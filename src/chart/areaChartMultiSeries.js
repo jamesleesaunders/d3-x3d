@@ -278,7 +278,5 @@ export default function() {
 		return my;
 	};
 
-
-
 	return my;
 }

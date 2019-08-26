@@ -236,18 +236,6 @@ export default function() {
 		return my;
 	};
 
-	/**
-	 * Debug Getter / Setter
-	 *
-	 * @param {boolean} _v - Show debug log and stats. True/False.
-	 * @returns {*}
-	 */
-	my.debug = function(_v) {
-		if (!arguments.length) return debug;
-		debug = _v;
-		return my;
-	};
-
   /**
    * Label Position Getter / Setter
    *
@@ -259,6 +247,18 @@ export default function() {
     labelPosition = _v;
     return my;
   };
+
+	/**
+	 * Debug Getter / Setter
+	 *
+	 * @param {boolean} _v - Show debug log and stats. True/False.
+	 * @returns {*}
+	 */
+	my.debug = function(_v) {
+		if (!arguments.length) return debug;
+		debug = _v;
+		return my;
+	};
 
 	return my;
 }
