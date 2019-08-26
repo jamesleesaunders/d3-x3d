@@ -263,7 +263,7 @@ export default function dataTransform(data) {
 	 * @returns {Array}
 	 */
 	const multiRowValueKeys = function(data) {
-		return Object.keys(data[0].values[0]);
+		return data.length ? Object.keys(data[0].values[0]) : [];
 	};
 
 	/**

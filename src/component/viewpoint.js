@@ -12,7 +12,6 @@ export default function() {
 	let viewPosition = [80.0, 15.0, 80.0];
 	let viewOrientation = [0.0, 1.0, 0.0, 0.8];
 	let fieldOfView = 0.8;
-	let classed = "d3X3dViewpoint";
 
 	/**
 	 * Constructor
@@ -23,12 +22,7 @@ export default function() {
 	 */
 	const my = function(selection) {
 		selection.each(function() {
-
-			const element = d3.select(this)
-				.classed(classed, true);
-
-			// Main Lines
-			const viewpoint = element.selectAll("viewpoint")
+			const viewpoint = d3.select(this).selectAll("viewpoint")
 				.data([null]);
 
 			viewpoint.enter()
@@ -39,7 +33,6 @@ export default function() {
 				.attr("fieldOfView", fieldOfView)
 				.attr("set_bind", "true")
 				.merge(viewpoint);
-
 		});
 	};
 

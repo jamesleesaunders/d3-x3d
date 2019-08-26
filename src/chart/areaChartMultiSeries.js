@@ -115,7 +115,7 @@ export default function() {
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
-		let layers = ["axis", "areas"];
+		const layers = ["axis", "areas"];
 		createBase(selection, layers);
 
 		selection.each((data) => {

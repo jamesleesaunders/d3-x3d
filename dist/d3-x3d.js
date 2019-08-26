@@ -416,7 +416,7 @@
     * @returns {Array}
     */
   	var multiRowValueKeys = function multiRowValueKeys(data) {
-  		return Object.keys(data[0].values[0]);
+  		return data.length ? Object.keys(data[0].values[0]) : [];
   	};
 
   	/**
@@ -2864,7 +2864,6 @@
   function componentLight () {
 
   	/* Default Properties */
-  	var classed = "d3X3dLight";
   	var direction = "1 0 -1";
   	var intensity = 0.5;
   	var shadowIntensity = 0;
@@ -2878,11 +2877,7 @@
     */
   	var my = function my(selection) {
   		selection.each(function () {
-
-  			var element = d3.select(this).classed(classed, true);
-
-  			// Main Lines
-  			var light = element.selectAll("DirectionalLight").data([null]);
+  			var light = d3.select(this).selectAll("DirectionalLight").data([null]);
 
   			light.enter().append("DirectionalLight").attr("on", true).attr("direction", direction).attr("intensity", intensity).attr("shadowIntensity", shadowIntensity).merge(light);
   		});
@@ -3956,7 +3951,6 @@
   	var viewPosition = [80.0, 15.0, 80.0];
   	var viewOrientation = [0.0, 1.0, 0.0, 0.8];
   	var fieldOfView = 0.8;
-  	var classed = "d3X3dViewpoint";
 
   	/**
     * Constructor
@@ -3967,11 +3961,7 @@
     */
   	var my = function my(selection) {
   		selection.each(function () {
-
-  			var element = d3.select(this).classed(classed, true);
-
-  			// Main Lines
-  			var viewpoint = element.selectAll("viewpoint").data([null]);
+  			var viewpoint = d3.select(this).selectAll("viewpoint").data([null]);
 
   			viewpoint.enter().append("Viewpoint").attr("centerOfRotation", centerOfRotation.join(" ")).attr("position", viewPosition.join(" ")).attr("orientation", viewOrientation.join(" ")).attr("fieldOfView", fieldOfView).attr("set_bind", "true").merge(viewpoint);
   		});
