@@ -11,7 +11,7 @@ all: js css min zip docs
 js:
 	@echo Compiling JS Files...
 	@rm -f dist/d3-x3d.js
-	@./node_modules/rollup/bin/rollup -c config/rollup.config.js
+	@./node_modules/rollup/dist//bin/rollup -c config/rollup.config.js
 
 min:
 	@echo Minifying...

@@ -35,7 +35,7 @@
     "prepare": "npm run snyk-protect"
   },
   "dependencies": {
-    "d3": "^5.10.0",
+    "d3": "^5.11.0",
     "d3-interpolate-curve": "^1.0.2",
     "x3dom": "^1.8.0"
   },
@@ -50,16 +50,16 @@
     "browser-env": "^3.2.6",
     "chai": "^4.2.0",
     "eslint": "^4.19.1",
-    "gh-pages": "^2.0.1",
+    "gh-pages": "^2.1.1",
     "jsdoc": "^3.6.3",
     "jsdom": "^15.1.1",
     "minami": "^1.2.3",
     "mocha": "^6.2.0",
-    "rollup": "^1.17.0",
+    "rollup": "^1.20.2",
     "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "snyk": "^1.205.0",
+    "snyk": "^1.221.0",
     "tap-spec": "^5.0.0",
     "tape": "^4.11.0",
     "toast-jsdoc": "^1.0.2",
