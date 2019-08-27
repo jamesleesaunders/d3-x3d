@@ -1373,7 +1373,7 @@
   					return d;
   				});
 
-  				ticks.enter().append("Transform").attr("class", "label").attr("translation", function (t) {
+  				labels.enter().append("Transform").attr("class", "label").attr("translation", function (t) {
   					return axisDirectionVector.map(function (a) {
   						return scale(t) * a;
   					}).join(" ");
@@ -1396,6 +1396,8 @@
   				});
 
   				labels.exit().remove();
+  			} else {
+  				element.selectAll(".label").remove();
   			}
   		});
   	};

@@ -149,7 +149,7 @@ export default function() {
 				const labels = element.selectAll(".label")
 					.data(tickValues, (d) => d);
 
-				ticks.enter()
+				labels.enter()
 					.append("Transform")
 					.attr("class", "label")
 					.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
@@ -181,6 +181,9 @@ export default function() {
 					});
 
 				labels.exit()
+					.remove();
+			} else {
+				element.selectAll(".label")
 					.remove();
 			}
 		});
