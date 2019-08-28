@@ -3,6 +3,7 @@ import dataTransform from "../dataTransform";
 import { dispatch } from "../events";
 import { colorParse } from "../colorHelper";
 // import * as x3dom from "x3dom";
+import { Quaternion, Vector3, Matrix3 } from 'math.gl';
 
 /**
  * Reusable 3D Vector Fields Component
@@ -124,6 +125,22 @@ export default function() {
 					let toVector = new x3dom.fields.SFVec3f(vx, vy, vz);
 					let qDir = x3dom.fields.Quaternion.rotateFromTo(fromVector, toVector);
 					let rot = qDir.toAxisAngle();
+					console.log(rot);
+
+					let fromVector2 = new Vector3(0, 1, 0);
+					let toVector2 = new Vector3(vx, vy, vz);
+					let foo = fromVector2.cross(toVector2);
+					// let qDir2 = new Quaternion().rotationTo(toVector2, fromVector2);
+					let qDir2 = new Quaternion(vx, vy, vz).fromMatrix3(new Matrix3([0,1,0]));
+					console.log(qDir2);
+
+					/*
+					const jim1 = new Vector3(vx, vy, vz).angle(new Matrix3([0, 1, 0]));
+					console.log(jim1);
+					 */
+
+					let rot2 = [{x: qDir2.x, y: qDir2.y, z: qDir2.z}, qDir2.w];
+					console.log(rot2);
 
 					if (!toVector.length()) {
 						// If there is no vector length return null (and filter them out after)
@@ -137,7 +154,8 @@ export default function() {
 					f.value = toVector.length();
 
 					// Calculate transform-rotation attr
-					f.rotation = rot[0].x + " " + rot[0].y + " " + rot[0].z + " " + rot[1];
+					//f.rotation = rot[0].x + " " + rot[0].y + " " + rot[0].z + " " + rot[1];
+					f.rotation = qDir2.x + " " + qDir2.y + " " + qDir2.z + " " + qDir2.w;
 
 					return f;
 				}).filter(function(f) {
