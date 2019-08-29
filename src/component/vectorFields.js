@@ -124,23 +124,24 @@ export default function() {
 					let fromVector = new x3dom.fields.SFVec3f(0, 1, 0);
 					let toVector = new x3dom.fields.SFVec3f(vx, vy, vz);
 					let qDir = x3dom.fields.Quaternion.rotateFromTo(fromVector, toVector);
+					console.log(qDir);
 					let rot = qDir.toAxisAngle();
 					console.log(rot);
 
 					let fromVector2 = new Vector3(0, 1, 0);
 					let toVector2 = new Vector3(vx, vy, vz);
-					let foo = fromVector2.cross(toVector2);
-					// let qDir2 = new Quaternion().rotationTo(toVector2, fromVector2);
-					let qDir2 = new Quaternion(vx, vy, vz).fromMatrix3(new Matrix3([0,1,0]));
+					let qDir2 = new Quaternion().rotationTo(toVector2, fromVector2);
 					console.log(qDir2);
-
-					/*
-					const jim1 = new Vector3(vx, vy, vz).angle(new Matrix3([0, 1, 0]));
-					console.log(jim1);
-					 */
-
 					let rot2 = [{x: qDir2.x, y: qDir2.y, z: qDir2.z}, qDir2.w];
 					console.log(rot2);
+
+					const angle = toVector2.angle(new Matrix3([0, 1, 0]));
+					console.log(angle);
+
+					const foo = new Vector3(0, 1, 0);
+					console.log(foo);
+					const bar = foo.transformVector3(toVector2);
+					console.log(bar);
 
 					if (!toVector.length()) {
 						// If there is no vector length return null (and filter them out after)
