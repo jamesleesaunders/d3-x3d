@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import { dispatch } from "../events";
 import { colorParse } from "../colorHelper";
-// import * as x3dom from "x3dom";
+import { vec3, quat } from 'gl-matrix';
 
 /**
  * Reusable 3D Vector Fields Component
@@ -61,7 +61,8 @@ export default function() {
 				({ vx, vy, vz } = vectorFunction(f.x, f.y, f.z, f.value));
 			}
 
-			return new x3dom.fields.SFVec3f(vx, vy, vz).length();
+			let vector = vec3.fromValues(vx, vy, vz);
+			return vec3.length(vector);
 		}));
 
 		if (typeof xScale === "undefined") {
@@ -120,12 +121,19 @@ export default function() {
 						({ vx, vy, vz } = vectorFunction(f.x, f.y, f.z, f.value));
 					}
 
-					let fromVector = new x3dom.fields.SFVec3f(0, 1, 0);
-					let toVector = new x3dom.fields.SFVec3f(vx, vy, vz);
-					let qDir = x3dom.fields.Quaternion.rotateFromTo(fromVector, toVector);
-					let rot = qDir.toAxisAngle();
+					let fromVector = vec3.fromValues(0, 1, 0);
+					let toVector = vec3.fromValues(vx, vy, vz);
+					let vLen = vec3.length(toVector);
 
-					if (!toVector.length()) {
+					vec3.normalize(toVector, toVector);
+
+					let qOut = quat.create();
+					let qDir = quat.rotationTo(qOut, fromVector, toVector);
+
+					let rotVector = vec3.create();
+					let rotAngle = quat.getAxisAngle(rotVector, qDir);
+
+					if (!vLen) {
 						// If there is no vector length return null (and filter them out after)
 						return null;
 					}
@@ -134,10 +142,10 @@ export default function() {
 					f.translation = xScale(f.x) + " " + yScale(f.y) + " " + zScale(f.z);
 
 					// Calculate vector length
-					f.value = toVector.length();
+					f.value = vLen;
 
 					// Calculate transform-rotation attr
-					f.rotation = rot[0].x + " " + rot[0].y + " " + rot[0].z + " " + rot[1];
+					f.rotation = [rotVector[0], rotVector[1], rotVector[2], rotAngle].join(" ");
 
 					return f;
 				}).filter(function(f) {
