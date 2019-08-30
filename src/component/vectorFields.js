@@ -3,7 +3,7 @@ import dataTransform from "../dataTransform";
 import { dispatch } from "../events";
 import { colorParse } from "../colorHelper";
 // import * as x3dom from "x3dom";
-import { Quaternion, Vector3, Matrix3 } from 'math.gl';
+import * as glMatrix from 'gl-matrix';
 
 /**
  * Reusable 3D Vector Fields Component
@@ -124,24 +124,15 @@ export default function() {
 					let fromVector = new x3dom.fields.SFVec3f(0, 1, 0);
 					let toVector = new x3dom.fields.SFVec3f(vx, vy, vz);
 					let qDir = x3dom.fields.Quaternion.rotateFromTo(fromVector, toVector);
-					console.log(qDir);
 					let rot = qDir.toAxisAngle();
-					console.log(rot);
 
-					let fromVector2 = new Vector3(0, 1, 0);
-					let toVector2 = new Vector3(vx, vy, vz);
-					let qDir2 = new Quaternion().rotationTo(toVector2, fromVector2);
-					console.log(qDir2);
-					let rot2 = [{x: qDir2.x, y: qDir2.y, z: qDir2.z}, qDir2.w];
-					console.log(rot2);
-
-					const angle = toVector2.angle(new Matrix3([0, 1, 0]));
-					console.log(angle);
-
-					const foo = new Vector3(0, 1, 0);
-					console.log(foo);
-					const bar = foo.transformVector3(toVector2);
-					console.log(bar);
+					let fromVector2 = glMatrix.vec3.fromValues(0, 1, 0);
+					let toVector2 = glMatrix.vec3.fromValues(vx, vy, vz);
+					glMatrix.vec3.normalize(toVector2, toVector2); // rotationTo requires unit vectors
+					let quat = glMatrix.quat.create();
+					let qDir2 = glMatrix.quat.rotationTo(quat, fromVector2, toVector2);
+					let out = glMatrix.vec3.create();
+					let angle = glMatrix.quat.getAxisAngle(out, qDir2);
 
 					if (!toVector.length()) {
 						// If there is no vector length return null (and filter them out after)
@@ -155,8 +146,8 @@ export default function() {
 					f.value = toVector.length();
 
 					// Calculate transform-rotation attr
-					//f.rotation = rot[0].x + " " + rot[0].y + " " + rot[0].z + " " + rot[1];
-					f.rotation = qDir2.x + " " + qDir2.y + " " + qDir2.z + " " + qDir2.w;
+					//f.rotation = [rot[0].x, rot[0].y, rot[0].z, rot[1]].join(" ");
+					f.rotation = [out[0], out[1], out[2], angle].join(" ");
 
 					return f;
 				}).filter(function(f) {
