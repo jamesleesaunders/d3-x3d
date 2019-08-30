@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import { dispatch } from "../events";
 import { colorParse } from "../colorHelper";
-import { vec3, quat } from 'gl-matrix';
+import * as glMatrix from "gl-matrix";
 
 /**
  * Reusable 3D Vector Fields Component
@@ -61,8 +61,8 @@ export default function() {
 				({ vx, vy, vz } = vectorFunction(f.x, f.y, f.z, f.value));
 			}
 
-			let vector = vec3.fromValues(vx, vy, vz);
-			return vec3.length(vector);
+			let vector = glMatrix.vec3.fromValues(vx, vy, vz);
+			return glMatrix.vec3.length(vector);
 		}));
 
 		if (typeof xScale === "undefined") {
@@ -121,17 +121,17 @@ export default function() {
 						({ vx, vy, vz } = vectorFunction(f.x, f.y, f.z, f.value));
 					}
 
-					let fromVector = vec3.fromValues(0, 1, 0);
-					let toVector = vec3.fromValues(vx, vy, vz);
-					let vLen = vec3.length(toVector);
+					let fromVector = glMatrix.vec3.fromValues(0, 1, 0);
+					let toVector = glMatrix.vec3.fromValues(vx, vy, vz);
+					let vLen = glMatrix.vec3.length(toVector);
 
-					vec3.normalize(toVector, toVector);
+					glMatrix.vec3.normalize(toVector, toVector);
 
-					let qOut = quat.create();
-					let qDir = quat.rotationTo(qOut, fromVector, toVector);
+					let quat = glMatrix.quat.create();
+					let qDir = glMatrix.quat.rotationTo(quat, fromVector, toVector);
 
-					let rotVector = vec3.create();
-					let rotAngle = quat.getAxisAngle(rotVector, qDir);
+					let rotVector = glMatrix.vec3.create();
+					let rotAngle = glMatrix.quat.getAxisAngle(rotVector, qDir);
 
 					if (!vLen) {
 						// If there is no vector length return null (and filter them out after)

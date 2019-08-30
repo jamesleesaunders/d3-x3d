@@ -4325,8 +4325,8 @@
 
   					normalize(toVector, toVector);
 
-  					var qOut = create$3();
-  					var qDir = rotationTo(qOut, fromVector, toVector);
+  					var quat = create$3();
+  					var qDir = rotationTo(quat, fromVector, toVector);
 
   					var rotVector = create$1();
   					var rotAngle = getAxisAngle(rotVector, qDir);
