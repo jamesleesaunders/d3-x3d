@@ -12,7 +12,7 @@
   (global = global || self, (global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3, global.d3, global.d3, global.d3)));
 }(this, function (d3, d3Shape, d3Array, d3Interpolate) { 'use strict';
 
-  var version = "2.0.3";
+  var version = "2.0.4";
   var license = "GPL-2.0";
 
   /**
@@ -4321,17 +4321,17 @@
 
   					var fromVector = fromValues(0, 1, 0);
   					var toVector = fromValues(vx, vy, vz);
-  					var length$1 = length(toVector);
+  					var vLen = length(toVector);
 
   					normalize(toVector, toVector);
 
-  					var quat = create$3();
-  					var qDir = rotationTo(quat, fromVector, toVector);
+  					var qOut = create$3();
+  					var qDir = rotationTo(qOut, fromVector, toVector);
 
   					var rotVector = create$1();
   					var rotAngle = getAxisAngle(rotVector, qDir);
 
-  					if (!length$1) {
+  					if (!vLen) {
   						// If there is no vector length return null (and filter them out after)
   						return null;
   					}
@@ -4340,7 +4340,7 @@
   					f.translation = xScale(f.x) + " " + yScale(f.y) + " " + zScale(f.z);
 
   					// Calculate vector length
-  					f.value = length$1;
+  					f.value = vLen;
 
   					// Calculate transform-rotation attr
   					f.rotation = [rotVector[0], rotVector[1], rotVector[2], rotAngle].join(" ");
