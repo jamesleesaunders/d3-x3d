@@ -4261,7 +4261,8 @@
   				vz = _vectorFunction.vz;
   			}
 
-  			return new x3dom.fields.SFVec3f(vx, vy, vz).length();
+  			var vector = fromValues(vx, vy, vz);
+  			return length(vector);
   		}));
 
   		if (typeof xScale === "undefined") {
@@ -4318,20 +4319,19 @@
   						vz = _vectorFunction2.vz;
   					}
 
-  					var fromVector = new x3dom.fields.SFVec3f(0, 1, 0);
-  					var toVector = new x3dom.fields.SFVec3f(vx, vy, vz);
-  					var qDir = x3dom.fields.Quaternion.rotateFromTo(fromVector, toVector);
-  					var rot = qDir.toAxisAngle();
+  					var fromVector = fromValues(0, 1, 0);
+  					var toVector = fromValues(vx, vy, vz);
+  					var length$1 = length(toVector);
 
-  					var fromVector2 = fromValues(0, 1, 0);
-  					var toVector2 = fromValues(vx, vy, vz);
-  					normalize(toVector2, toVector2); // rotationTo requires unit vectors
+  					normalize(toVector, toVector);
+
   					var quat = create$3();
-  					var qDir2 = rotationTo(quat, fromVector2, toVector2);
-  					var out = create$1();
-  					var angle = getAxisAngle(out, qDir2);
+  					var qDir = rotationTo(quat, fromVector, toVector);
 
-  					if (!toVector.length()) {
+  					var rotVector = create$1();
+  					var rotAngle = getAxisAngle(rotVector, qDir);
+
+  					if (!length$1) {
   						// If there is no vector length return null (and filter them out after)
   						return null;
   					}
@@ -4340,11 +4340,10 @@
   					f.translation = xScale(f.x) + " " + yScale(f.y) + " " + zScale(f.z);
 
   					// Calculate vector length
-  					f.value = toVector.length();
+  					f.value = length$1;
 
   					// Calculate transform-rotation attr
-  					//f.rotation = [rot[0].x, rot[0].y, rot[0].z, rot[1]].join(" ");
-  					f.rotation = [out[0], out[1], out[2], angle].join(" ");
+  					f.rotation = [rotVector[0], rotVector[1], rotVector[2], rotAngle].join(" ");
 
   					return f;
   				}).filter(function (f) {
@@ -6674,8 +6673,6 @@
   	return my;
   }
 
-  // import * as x3dom from "x3dom";
-
   /**
    * Reusable 3D Vector Field Chart
    *
@@ -6785,7 +6782,8 @@
   				vz = _vectorFunction.vz;
   			}
 
-  			return new x3dom.fields.SFVec3f(vx, vy, vz).length();
+  			var vector = fromValues(vx, vy, vz);
+  			return length(vector);
   		}));
 
   		xScale = d3.scaleLinear().domain([minX, maxX]).range([0, dimensionX]);

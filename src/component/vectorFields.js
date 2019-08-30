@@ -2,7 +2,6 @@ import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import { dispatch } from "../events";
 import { colorParse } from "../colorHelper";
-// import * as x3dom from "x3dom";
 import * as glMatrix from 'gl-matrix';
 
 /**
@@ -62,7 +61,8 @@ export default function() {
 				({ vx, vy, vz } = vectorFunction(f.x, f.y, f.z, f.value));
 			}
 
-			return new x3dom.fields.SFVec3f(vx, vy, vz).length();
+			let vector = glMatrix.vec3.fromValues(vx, vy, vz);
+			return glMatrix.vec3.length(vector);
 		}));
 
 		if (typeof xScale === "undefined") {
@@ -121,20 +121,19 @@ export default function() {
 						({ vx, vy, vz } = vectorFunction(f.x, f.y, f.z, f.value));
 					}
 
-					let fromVector = new x3dom.fields.SFVec3f(0, 1, 0);
-					let toVector = new x3dom.fields.SFVec3f(vx, vy, vz);
-					let qDir = x3dom.fields.Quaternion.rotateFromTo(fromVector, toVector);
-					let rot = qDir.toAxisAngle();
+					let fromVector = glMatrix.vec3.fromValues(0, 1, 0);
+					let toVector = glMatrix.vec3.fromValues(vx, vy, vz);
+					let length = glMatrix.vec3.length(toVector);
 
-					let fromVector2 = glMatrix.vec3.fromValues(0, 1, 0);
-					let toVector2 = glMatrix.vec3.fromValues(vx, vy, vz);
-					glMatrix.vec3.normalize(toVector2, toVector2); // rotationTo requires unit vectors
+					glMatrix.vec3.normalize(toVector, toVector);
+
 					let quat = glMatrix.quat.create();
-					let qDir2 = glMatrix.quat.rotationTo(quat, fromVector2, toVector2);
-					let out = glMatrix.vec3.create();
-					let angle = glMatrix.quat.getAxisAngle(out, qDir2);
+					let qDir = glMatrix.quat.rotationTo(quat, fromVector, toVector);
 
-					if (!toVector.length()) {
+					let rotVector = glMatrix.vec3.create();
+					let rotAngle = glMatrix.quat.getAxisAngle(rotVector, qDir);
+
+					if (!length) {
 						// If there is no vector length return null (and filter them out after)
 						return null;
 					}
@@ -143,11 +142,10 @@ export default function() {
 					f.translation = xScale(f.x) + " " + yScale(f.y) + " " + zScale(f.z);
 
 					// Calculate vector length
-					f.value = toVector.length();
+					f.value = length;
 
 					// Calculate transform-rotation attr
-					//f.rotation = [rot[0].x, rot[0].y, rot[0].z, rot[1]].join(" ");
-					f.rotation = [out[0], out[1], out[2], angle].join(" ");
+					f.rotation = [rotVector[0], rotVector[1], rotVector[2], rotAngle].join(" ");
 
 					return f;
 				}).filter(function(f) {

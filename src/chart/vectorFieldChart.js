@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import component from "../component";
-// import * as x3dom from "x3dom";
+import * as glMatrix from "gl-matrix";
 
 /**
  * Reusable 3D Vector Field Chart
@@ -92,7 +92,8 @@ export default function() {
 				({ vx, vy, vz } = vectorFunction(f.x, f.y, f.z, f.value));
 			}
 
-			return new x3dom.fields.SFVec3f(vx, vy, vz).length();
+			let vector = glMatrix.vec3.fromValues(vx, vy, vz);
+			return glMatrix.vec3.length(vector);
 		}));
 
 		xScale = d3.scaleLinear()
