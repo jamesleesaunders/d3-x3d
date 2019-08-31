@@ -4319,19 +4319,20 @@
   						vz = _vectorFunction2.vz;
   					}
 
-  					var fromVector = fromValues(0, 1, 0);
-  					var toVector = fromValues(vx, vy, vz);
-  					var vLen = length(toVector);
+  					var vecStart = fromValues(0, 1, 0);
+  					var vecEnd = fromValues(vx, vy, vz);
+  					var vecLen = length(vecEnd);
 
-  					normalize(toVector, toVector);
+  					// rotationTo required unit vectors
+  					var vecNormal = create$1();
+  					normalize(vecNormal, vecEnd);
 
   					var quat = create$3();
-  					var qDir = rotationTo(quat, fromVector, toVector);
+  					rotationTo(quat, vecStart, vecNormal);
+  					var vecRotate = create$1();
+  					var angleRotate = getAxisAngle(vecRotate, quat);
 
-  					var rotVector = create$1();
-  					var rotAngle = getAxisAngle(rotVector, qDir);
-
-  					if (!vLen) {
+  					if (!vecLen) {
   						// If there is no vector length return null (and filter them out after)
   						return null;
   					}
@@ -4340,10 +4341,10 @@
   					f.translation = xScale(f.x) + " " + yScale(f.y) + " " + zScale(f.z);
 
   					// Calculate vector length
-  					f.value = vLen;
+  					f.value = vecLen;
 
   					// Calculate transform-rotation attr
-  					f.rotation = [rotVector[0], rotVector[1], rotVector[2], rotAngle].join(" ");
+  					f.rotation = [vecRotate[0], vecRotate[1], vecRotate[2], angleRotate].join(" ");
 
   					return f;
   				}).filter(function (f) {

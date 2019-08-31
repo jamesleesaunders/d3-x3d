@@ -121,19 +121,20 @@ export default function() {
 						({ vx, vy, vz } = vectorFunction(f.x, f.y, f.z, f.value));
 					}
 
-					let fromVector = glMatrix.vec3.fromValues(0, 1, 0);
-					let toVector = glMatrix.vec3.fromValues(vx, vy, vz);
-					let vLen = glMatrix.vec3.length(toVector);
+					const vecStart = glMatrix.vec3.fromValues(0, 1, 0);
+					const vecEnd = glMatrix.vec3.fromValues(vx, vy, vz);
+					const vecLen = glMatrix.vec3.length(vecEnd);
 
-					glMatrix.vec3.normalize(toVector, toVector);
+					// rotationTo required unit vectors
+					const vecNormal = glMatrix.vec3.create();
+					glMatrix.vec3.normalize(vecNormal, vecEnd);
 
-					let quat = glMatrix.quat.create();
-					let qDir = glMatrix.quat.rotationTo(quat, fromVector, toVector);
+					const quat = glMatrix.quat.create();
+					glMatrix.quat.rotationTo(quat, vecStart, vecNormal);
+					const vecRotate = glMatrix.vec3.create();
+					const angleRotate = glMatrix.quat.getAxisAngle(vecRotate, quat);
 
-					let rotVector = glMatrix.vec3.create();
-					let rotAngle = glMatrix.quat.getAxisAngle(rotVector, qDir);
-
-					if (!vLen) {
+					if (!vecLen) {
 						// If there is no vector length return null (and filter them out after)
 						return null;
 					}
@@ -142,10 +143,10 @@ export default function() {
 					f.translation = xScale(f.x) + " " + yScale(f.y) + " " + zScale(f.z);
 
 					// Calculate vector length
-					f.value = vLen;
+					f.value = vecLen;
 
 					// Calculate transform-rotation attr
-					f.rotation = [rotVector[0], rotVector[1], rotVector[2], rotAngle].join(" ");
+					f.rotation = [vecRotate[0], vecRotate[1], vecRotate[2], angleRotate].join(" ");
 
 					return f;
 				}).filter(function(f) {
