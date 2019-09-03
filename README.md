@@ -46,14 +46,14 @@ Both these players are compatible with modern browsers supporting HTML5 and enab
 
 ### <a name="getting-started"></a>Getting Started
 
-Include JavaScript and CSS files in the `<head>` section of your page:
+Include the following JavaScript and CSS files in the `<head>` section of your page:
 
 If using X3DOM:
 ```html
 <head>
    <script src="https://d3js.org/d3.v5.min.js"></script>
-   <script src="https://x3dom.org/download/1.8.0/x3dom-full.js"></script>
-   <link rel="stylesheet" href="https://x3dom.org/download/1.8.0/x3dom.css" />
+   <script src="http://x3dom.org/release/x3dom.js"></script>
+   <link rel="stylesheet" href="http://x3dom.org/release/x3dom.css" />
    <script src="https://raw.githack.com/jamesleesaunders/d3-x3d/master/dist/d3-x3d.js"></script>
 </head>
 ```
@@ -69,7 +69,7 @@ If using X_ITE:
 </head>
 ```
 
-Add `<div>` / `<X3DCanvas>` chartholder and `<script>` tags to your page `<body>`:
+Add the following chartholder `<div>` (or `<X3DCanvas>`) and `<script>` tags to your page `<body>`:
 
 If using X3DOM:
 ```html
