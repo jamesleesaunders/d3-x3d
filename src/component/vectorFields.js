@@ -146,7 +146,7 @@ export default function() {
 					f.value = vecLen;
 
 					// Calculate transform-rotation attr
-					f.rotation = [vecRotate[0], vecRotate[1], vecRotate[2], angleRotate].join(" ");
+					f.rotation = [...vecRotate, angleRotate].join(" ");
 
 					return f;
 				}).filter(function(f) {

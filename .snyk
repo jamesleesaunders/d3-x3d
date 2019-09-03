@@ -4,8 +4,8 @@ version: v1.13.5
 ignore:
   'npm:concat-stream:20160901':
     - d3-interpolate-curve > tape-run > browser-run > xhr-write-stream > concat-stream:
-        reason: None given
-        expires: '2019-08-29T19:47:22.738Z'
+        reason: Dev dependency only
+        expires: '2019-10-03T06:05:55.011Z'
 # patches apply the minimum changes required to fix a vulnerability
 patch:
   SNYK-JS-LODASH-450202:
