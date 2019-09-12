@@ -1,70 +1,70 @@
 {
-  "name": "d3-x3d",
-  "version": "2.0.4",
-  "description": "3D Data Driven Charting Library with D3 and X3D",
-  "license": "GPL-2.0",
-  "keywords": [
-    "d3",
-    "d3-module",
-    "visualization",
-    "chart",
-    "graph",
-    "data",
-    "x3d",
-    "3D",
-    "dataviz"
-  ],
-  "homepage": "https://jamesleesaunders.github.io/d3-x3d/",
-  "author": "James Saunders (james@saunders-family.net)",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jamesleesaunders/d3-x3d.git"
-  },
-	publishConfig: {
-		registry: "https://npm.pkg.github.com/@jamesleesaunders"
+	"name": "d3-x3d",
+	"version": "2.0.4",
+	"description": "3D Data Driven Charting Library with D3 and X3D",
+	"license": "GPL-2.0",
+	"keywords": [
+		"d3",
+		"d3-module",
+		"visualization",
+		"chart",
+		"graph",
+		"data",
+		"x3d",
+		"3D",
+		"dataviz"
+	],
+	"homepage": "https://jamesleesaunders.github.io/d3-x3d/",
+	"author": "James Saunders (james@saunders-family.net)",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/jamesleesaunders/d3-x3d.git"
 	},
-  "bugs": {
-    "url": "https://github.com/jamesleesaunders/d3-x3d/issues"
-  },
-  "main": "dist/d3-x3d.js",
-  "unpkg": "dist/d3-x3d.min.js",
-  "module": "index.js",
-  "scripts": {
-    "pretest": "make",
-    "test": "mocha test/indexTest.js && mocha test/randomDataTest.js && mocha test/colorHelperTest.js && tape 'test/dataTransformTest.js' | tap-spec && tape 'test/c*/*Test.js' | tap-spec",
-    "build:docs": "jsdoc -c config/jsdoc.conf.json",
-    "deploy:docs": "npm run build:docs && gh-pages -d docs",
-    "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect"
-  },
-  "dependencies": {
-    "d3": "^5.11.0",
-    "d3-interpolate-curve": "^1.0.2",
-    "gl-matrix": "^3.1.0"
-  },
-  "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-plugin-external-helpers": "^6.22.0",
-    "babel-plugin-transform-object-assign": "^6.22.0",
-    "babel-preset-env": "^1.7.0",
-    "browser-env": "^3.2.6",
-    "chai": "^4.2.0",
-    "eslint": "^4.19.1",
-    "gh-pages": "^2.1.1",
-    "jsdoc": "^3.6.3",
-    "jsdom": "^15.1.1",
-    "minami": "^1.2.3",
-    "mocha": "^6.2.0",
-    "rollup": "^1.20.2",
-    "rollup-plugin-babel": "^3.0.7",
-    "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "snyk": "^1.223.0",
-    "tap-spec": "^5.0.0",
-    "tape": "^4.11.0",
-    "toast-jsdoc": "^1.0.2",
-    "uglify-es": "^3.3.10",
-    "vows": "^0.8.2"
-  },
-  "snyk": true
+	"publishConfig": {
+		"registry": "https://npm.pkg.github.com/@jamesleesaunders"
+	},
+	"bugs": {
+		"url": "https://github.com/jamesleesaunders/d3-x3d/issues"
+	},
+	"main": "dist/d3-x3d.js",
+	"unpkg": "dist/d3-x3d.min.js",
+	"module": "index.js",
+	"scripts": {
+		"pretest": "make",
+		"test": "mocha test/indexTest.js && mocha test/randomDataTest.js && mocha test/colorHelperTest.js && tape 'test/dataTransformTest.js' | tap-spec && tape 'test/c*/*Test.js' | tap-spec",
+		"build:docs": "jsdoc -c config/jsdoc.conf.json",
+		"deploy:docs": "npm run build:docs && gh-pages -d docs",
+		"snyk-protect": "snyk protect",
+		"prepare": "npm run snyk-protect"
+	},
+	"dependencies": {
+		"d3": "^5.11.0",
+		"d3-interpolate-curve": "^1.0.2",
+		"gl-matrix": "^3.1.0"
+	},
+	"devDependencies": {
+		"babel-core": "^6.26.0",
+		"babel-plugin-external-helpers": "^6.22.0",
+		"babel-plugin-transform-object-assign": "^6.22.0",
+		"babel-preset-env": "^1.7.0",
+		"browser-env": "^3.2.6",
+		"chai": "^4.2.0",
+		"eslint": "^4.19.1",
+		"gh-pages": "^2.1.1",
+		"jsdoc": "^3.6.3",
+		"jsdom": "^15.1.1",
+		"minami": "^1.2.3",
+		"mocha": "^6.2.0",
+		"rollup": "^1.20.2",
+		"rollup-plugin-babel": "^3.0.7",
+		"rollup-plugin-json": "^4.0.0",
+		"rollup-plugin-node-resolve": "^5.2.0",
+		"snyk": "^1.223.0",
+		"tap-spec": "^5.0.0",
+		"tape": "^4.11.0",
+		"toast-jsdoc": "^1.0.2",
+		"uglify-es": "^3.3.10",
+		"vows": "^0.8.2"
+	},
+	"snyk": true
 }
