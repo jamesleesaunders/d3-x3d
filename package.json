@@ -64,7 +64,7 @@
     "tape": "^4.11.0",
     "toast-jsdoc": "^1.0.2",
     "uglify-es": "^3.3.10",
-    "vows": "^0.8.2"
+    "vows": "^0.8.3"
   },
   "snyk": true
 }
