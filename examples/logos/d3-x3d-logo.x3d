@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' profile='Full' version='3.0' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.0.xsd'>
+	<Scene>
+		<Viewpoint position='8.89389 6.04320 -10.54649' orientation='0.61409 0.69342 0.37692 2.95035' centerOfRotation='0.00000 0.00000 0.00000' fieldOfView='0.78540' description='defaultX3DViewpointNode' />
+		<Background groundColor='1 1 1' skyColor='1 1 1' />
+
+		<Transform rotation='0 0 1 -0.90' translation='0 0 0'>
+			<Shape>
+				<Appearance>
+					<Material diffuseColor='0 0 0' />
+				</Appearance>
+				<Box size='9 0.2 2.5' />
+			</Shape>
+		</Transform>
+
+		<Transform rotation='0 0 1 -0.90' translation='0.21 0 -0.3'>
+			<Transform rotation='1 0 0 1.5708' translation='0 0 0'>
+				<Transform rotation='0 1 0 3.14159'>
+					<Shape>
+						<Appearance>
+							<Material diffuseColor='1 1 1' />
+						</Appearance>
+						<Text string='"D3   3D"' solid="false">
+							<FontStyle justify='"MIDDLE" "MIDDLE"' size='2.3' family='"HandScribbleSketchRockL-Light" "SANS"' />
+						</Text>
+					</Shape>
+				</Transform>
+			</Transform>
+		</Transform>
+
+		<Transform rotation='0 0 1 0.90' translation='0 0 0'>
+			<Shape>
+				<Appearance>
+					<Material diffuseColor='1 1 1' />
+				</Appearance>
+				<Box size='9 0.2 2.5' />
+			</Shape>
+		</Transform>
+
+		<Transform rotation='0 0 1 0.90' translation='0.21 0 -0.3'>
+			<Transform rotation='1 0 0 1.5708' translation='0 0 0'>
+				<Transform rotation='0 1 0 3.14159'>
+					<Shape>
+						<Appearance>
+							<Material diffuseColor='0 0 0' />
+						</Appearance>
+						<Text string='"D3   3D"' solid="false">
+							<FontStyle justify='"MIDDLE" "MIDDLE"' size='2.3' family='"HandScribbleSketchRockL-Light" "SANS"' />
+						</Text>
+					</Shape>
+				</Transform>
+			</Transform>
+		</Transform>
+
+	</Scene>
+</X3D>

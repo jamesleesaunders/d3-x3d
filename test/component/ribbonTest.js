@@ -1,10 +1,10 @@
-let test = require('tape');
-let window = require('browser-env')();
-let d3 = require('d3');
-let d3X3dom = require("../../");
+let test = require("tape");
+let window = require("browser-env")();
+let d3 = require("d3");
+let d3X3d = require("../../");
 
 test("Test Ribbon Component, component.ribbon()", function(t) {
-	let ribbon = d3X3dom.component.ribbon();
+	let ribbon = d3X3d.component.ribbon();
 
 	// Test dimensions getter / setter function
 	t.deepEqual(ribbon.dimensions(), { x: 40, y: 40, z: 5 }, "Default dimensions");

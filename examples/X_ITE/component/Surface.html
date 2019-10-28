@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3d : 3D Surface Area Component Example</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://code.create3000.de/x_ite/latest/dist/x_ite.min.js"></script>
+  <script src="https://raw.githack.com/andreasplesch/x_ite_dom/master/latest/x_ite_dom.js"></script>
+  <link rel="stylesheet" href="https://code.create3000.de/x_ite/latest/dist/x_ite.css" />
+  <script src="../../../dist/d3-x3d.js"></script>
+</head>
+
+<body>
+  <X3DCanvas id="chartholder" style="width: 500px; height: 500px;"></X3DCanvas>
+
+  <input type="button" id="refresh" value="Refresh" />
+
+  <script>
+    // Chart dimensions
+    var width = 500;
+    var height = 500;
+
+    // Declare the chart component
+    var viewpoint = d3.x3d.component.viewpoint();
+    var component = d3.x3d.component.surface();
+
+    // Create scene
+    var scene = d3.select("#chartholder")
+      .append("X3D")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("Scene");
+
+    scene.call(viewpoint);
+
+    var chart = scene.append("Group")
+      .attr("class", "chart");
+
+    var refreshChart = function() {
+      // Generate some data
+      var data = d3.x3d.randomData.dataset5();
+
+      chart.datum(data).call(component);
+    };
+
+    d3.select("#refresh").attr("onclick", "refreshChart()");
+
+    refreshChart();
+
+  </script>
+
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data Visualization Library.</div>
+</body>
+
+</html>

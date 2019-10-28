@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import { dispatch } from "../events";
+import { colorParse } from "../colorHelper";
 
 /**
  * Reusable 3D Ribbon Chart Component
@@ -12,7 +13,9 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 5 };
 	let color = "red";
-	let classed = "d3X3domRibbon";
+	let transparency = 0.1;
+	let classed = "d3X3dRibbon";
+	let smoothed = d3.curveBasis;
 
 	/* Scales */
 	let xScale;
@@ -83,91 +86,92 @@ export default function() {
 				.classed(classed, true)
 				.attr("id", (d) => d.key);
 
-			const ribbonData = function(d) {
-				return d.map((pointThis, indexThis, array) => {
+			const ribbonData = function(data) {
+				const dimensionX = dimensions.x;
+
+				if (smoothed) {
+					data = dataTransform(data).smooth(smoothed);
+
+					const keys = d3.extent(data.values.map((d) => d.key));
+					xScale = d3.scaleLinear()
+						.domain(keys)
+						.range([0, dimensionX]);
+				}
+
+				let values = data.values;
+
+				// Convert values into IFS coordinates
+				let coords = values.map((pointThis, indexThis, array) => {
 					let indexNext = indexThis + 1;
 					if (indexNext >= array.length) {
 						return null;
 					}
 					let pointNext = array[indexNext];
 
-					const x1 = xScale(pointThis.key);
-					const x2 = xScale(pointNext.key);
-					const y1 = yScale(pointThis.value);
-					const y2 = yScale(pointNext.value);
-					const z1 = 1 - (dimensions.z) / 2;
-					const z2 = (dimensions.z) / 2;
+					let x1 = xScale(pointThis.key);
+					let x2 = xScale(pointNext.key);
+					let y1 = yScale(pointThis.value);
+					let y2 = yScale(pointNext.value);
+					let z1 = 1 - (dimensions.z) / 2;
+					let z2 = (dimensions.z) / 2;
 
-					const points = [
-						[x1, y1, z1],
-						[x1, y1, z2],
-						[x2, y2, z2],
-						[x2, y2, z1],
-						[x1, y1, z1]
-					];
-
-					return {
-						key: pointThis.key,
-						value: pointThis.value,
-						coordindex: arrayToCoordIndex(points),
-						point: array2dToString(points),
-						color: color,
-						transparency: 0.2
-					};
+					return [x1, y1, z1, x1, y1, z2, x2, y2, z2, x2, y2, z1];
 				}).filter((d) => d !== null);
+
+				data.point = coords.map((d) => d.join(" ")).join(" ");
+				data.coordIndex = coords.map((d, i) => {
+					const offset = i * 4;
+					return [offset, offset + 1, offset + 2, offset + 3, -1].join(" ");
+				}).join(" ");
+
+				return [data];
 			};
 
 			const shape = (el) => {
-				const shape = el.append("shape")
-					.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
-					.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
-					.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
-					.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
-					.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);")
-					.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
+				const shape = el.append("Shape");
 
 				/*
-				// FIXME: Due to a bug in x3dom, we must to use .html() rather than .append() & .attr().
-				shape.append("indexedfaceset")
-					.attr("coordindex", (d) => d.coordindex)
-					.append("coordinate")
+				// FIXME: x3dom cannot have empty IFS nodes, we must to use .html() rather than .append() & .attr().
+				shape.append("IndexedFaceset")
+					.attr("coordIndex", (d) => d.coordIndex)
+					.append("Coordinate")
 					.attr("point", (d) => d.point);
 
-				shape.append("appearance")
-					.append("twosidedmaterial")
-					.attr("diffusecolor", (d) => d.color)
-					.attr("transparency", (d) => d.transparency);
+				shape.append("Appearance")
+					.append("Material")
+					.attr("diffuseColor", colorParse(color))
+					.attr("transparency", transparency);
 				*/
 
-				shape.html((d) => {
-					var indexedfaceset = `<indexedfaceset coordindex="${d.coordindex}"><coordinate point="${d.point}"></coordinate></indexedfaceset>`;
-					var appearance = `<appearance><twosidedmaterial diffusecolor="${d.color}" transparency="${d.transparency}"></twosidedmaterial></appearance>`;
-
-					return indexedfaceset + appearance;
-				});
-
-				return shape;
+				shape.html((d) => `
+					<IndexedFaceset coordIndex="${d.coordIndex}"  solid="false">
+						<Coordinate point="${d.point}"></Coordinate>
+					</IndexedFaceset>
+					<Appearance>
+						<Material diffuseColor="${colorParse(color)}" transparency="${transparency}"></Material>
+					</Appearance>
+				`);
 			};
 
 			const ribbon = element.selectAll(".ribbon")
-				.data((d) => ribbonData(d.values), (d) => d.key);
+				.data((d) => ribbonData(d), (d) => d.key);
 
 			ribbon.enter()
-				.append("group")
+				.append("Group")
 				.classed("ribbon", true)
 				.call(shape)
 				.merge(ribbon);
 
-			const ribbonTransition = ribbon.transition().select("shape");
+			const ribbonTransition = ribbon.transition().select("Shape");
 
-			ribbonTransition.select("indexedfaceset")
-				.attr("coordindex", (d) => d.coordindex)
-				.select("coordinate")
+			ribbonTransition.select("IndexedFaceset")
+				.attr("coordIndex", (d) => d.coordIndex)
+				.select("Coordinate")
 				.attr("point", (d) => d.point);
 
-			ribbonTransition.select("appearance")
-				.select("twosidedmaterial")
-				.attr("diffusecolor", (d) => d.color);
+			ribbonTransition.select("Appearance")
+				.select("Material")
+				.attr("diffuseColor", colorParse(color));
 
 			ribbon.exit()
 				.remove();
@@ -220,6 +224,23 @@ export default function() {
 	my.color = function(_v) {
 		if (!arguments.length) return color;
 		color = _v;
+		return my;
+	};
+
+	/**
+	 * Smooth Interpolation Getter / Setter
+	 *
+	 * Options:
+	 *   d3.curveBasis
+	 *   d3.curveLinear
+	 *   d3.curveMonotoneX
+	 *
+	 * @param {d3.curve} _v.
+	 * @returns {*}
+	 */
+	my.smoothed = function(_v) {
+		if (!arguments.length) return smoothed;
+		smoothed = _v;
 		return my;
 	};
 

@@ -1,10 +1,10 @@
-let test = require('tape');
-let window = require('browser-env')();
-let d3 = require('d3');
-let d3X3dom = require("../../");
+let test = require("tape");
+let window = require("browser-env")();
+let d3 = require("d3");
+let d3X3d = require("../../");
 
 test("Test Vector Fields Component, component.vectorFields()", function(t) {
-	let vectorFields = d3X3dom.component.vectorFields();
+	let vectorFields = d3X3d.component.vectorFields();
 
 	// Test dimensions getter / setter function
 	t.deepEqual(vectorFields.dimensions(), { x: 40, y: 40, z: 40 }, "Default dimensions");

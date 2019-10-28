@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
-import { dispatch } from "../events";
+import { dispatch, attachEventListners } from "../events";
+import { colorParse } from "../colorHelper";
 
 /**
  * Reusable 3D Bubble Chart Component
@@ -12,7 +13,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let color = "orange";
-	let classed = "d3X3domBubbles";
+	let classed = "d3X3dBubbles";
 
 	/* Scales */
 	let xScale;
@@ -73,27 +74,17 @@ export default function() {
 				.attr("id", (d) => d.key);
 
 			const shape = (el) => {
-				const shape = el.append("shape")
-					.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
-					.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
-					.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
-					.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
-					.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);")
-					.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
+				const shape = el.append("Shape");
 
-				/*
-				// FIXME: Due to a bug with x3dom `._quality`, `fieldChanged()`, we must to use .html() rather than .attr().
-				// SEE: https://github.com/x3dom/x3dom/pull/949
-				shape.append("sphere")
+				attachEventListners(shape);
+
+				shape.append("Sphere")
 					.attr("radius", (d) => sizeScale(d.value));
-				*/
 
-				shape.html((d) => "<sphere radius='" + sizeScale(d.value) + "'></sphere>");
-
-				shape.append("appearance")
-					.append("material")
-					.attr("diffusecolor", color)
-					.attr("ambientintensity", 0.1);
+				shape.append("Appearance")
+					.append("Material")
+					.attr("diffuseColor", colorParse(color))
+					.attr("ambientIntensity", 0.1);
 
 				return shape;
 			};
@@ -102,16 +93,16 @@ export default function() {
 				.data((d) => d.values, (d) => d.key);
 
 			bubbles.enter()
-				.append("transform")
+				.append("Transform")
 				.attr("class", "bubble")
 				.call(shape)
 				.merge(bubbles)
 				.transition()
 				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
-				.select("shape")
-				.select("appearance")
-				.select("material")
-				.attr("diffusecolor", color);
+				.select("Shape")
+				.select("Appearance")
+				.select("Material")
+				.attr("diffuseColor", colorParse(color));
 
 			bubbles.exit()
 				.remove();

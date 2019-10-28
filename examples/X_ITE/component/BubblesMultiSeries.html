@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3d : 3D Multi Series Bubbles Component Example</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://code.create3000.de/x_ite/latest/dist/x_ite.min.js"></script>
+  <script src="https://raw.githack.com/andreasplesch/x_ite_dom/master/latest/x_ite_dom.js"></script>
+  <link rel="stylesheet" href="https://code.create3000.de/x_ite/latest/dist/x_ite.css" />
+  <script src="../../../dist/d3-x3d.js"></script>
+</head>
+
+<body>
+  <X3DCanvas id="chartholder" style="width: 500px; height: 500px;"></X3DCanvas>
+
+  <table>
+    <tr>
+      <td>UK</td>
+      <td><input type="checkbox" name="country" id="uk" checked value="UK" /></td>
+    </tr>
+    <tr>
+      <td>France</td>
+      <td><input type="checkbox" name="country" id="france" checked value="France" /></td>
+    </tr>
+    <tr>
+      <td>Spain</td>
+      <td><input type="checkbox" name="country" id="spain" value="Spain" /></td>
+    </tr>
+    <tr>
+      <td>Germany</td>
+      <td><input type="checkbox" name="country" id="germany" checked value="Germany" /></td>
+    </tr>
+    <tr>
+      <td>Italy</td>
+      <td><input type="checkbox" name="country" id="italy" value="Italy" /></td>
+    </tr>
+  </table>
+
+  <script>
+    // Chart dimensions
+    var width = 500;
+    var height = 500;
+
+    // Generate some data
+    var data = d3.x3d.randomData.dataset2();
+
+    // Declare the chart component
+    var viewpoint = d3.x3d.component.viewpoint();
+    var component = d3.x3d.component.bubblesMultiSeries();
+
+    // Create scene
+    var scene = d3.select("#chartholder")
+      .append("X3D")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("Scene");
+
+    scene.call(viewpoint);
+
+    var chart = scene.append("Group")
+      .attr("class", "chart");
+
+    var checks = d3.selectAll('input[type=checkbox]');
+
+    var refreshChart = function() {
+      var filterArray = [];
+
+      checks.each(function() {
+        var check = d3.select(this);
+        var checked = check.property("checked");
+        if (checked) {
+          filterArray.push(check.attr("value"));
+        }
+      });
+
+      var filteredData = data.filter(function(series) { return filterArray.includes(series.key); });
+
+      chart.datum(filteredData).call(component);
+    };
+
+    for (var i = 0; i < checks.length; i++) {
+      checks[i].onchange = refreshChart;
+    }
+
+    checks.each(function() {
+      var check = d3.select(this);
+      check.attr("onchange", "refreshChart()");
+    });
+
+    refreshChart();
+
+  </script>
+
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data Visualization Library.</div>
+</body>
+
+</html>

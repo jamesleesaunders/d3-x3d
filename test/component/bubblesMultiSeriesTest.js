@@ -1,10 +1,10 @@
-let test = require('tape');
-let window = require('browser-env')();
-let d3 = require('d3');
-let d3X3dom = require("../../");
+let test = require("tape");
+let window = require("browser-env")();
+let d3 = require("d3");
+let d3X3d = require("../../");
 
 test("Test Multi Series Bubbles Component, component.bubbleMultiSeries()", function(t) {
-	let bubblesMultiSeries = d3X3dom.component.bubblesMultiSeries();
+	let bubblesMultiSeries = d3X3d.component.bubblesMultiSeries();
 
 	// Test dimensions getter / setter function
 	t.deepEqual(bubblesMultiSeries.dimensions(), { x: 40, y: 40, z: 40 }, "Default dimensions");

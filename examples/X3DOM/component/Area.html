@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3d : 3D Area Component Example</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
+  <script src="../../../dist/d3-x3d.js"></script>
+</head>
+
+<body>
+  <div id="chartholder"></div>
+
+  <script>
+    // Chart dimensions
+    var width = 500;
+    var height = 500;
+
+    var viewpoint = d3.x3d.component.viewpoint();
+
+    // Generate some data
+    var areaData = d3.x3d.randomData.dataset3(20);
+
+    // Declare the chart component
+    var areaComponent = d3.x3d.component.area();
+
+    // Create scene
+    var scene = d3.select("#chartholder")
+      .append("X3D")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("Scene");
+
+    // Add chart component
+    scene.call(viewpoint)
+      .append("Group")
+      .attr("class", "chart")
+      .datum(areaData)
+      .call(areaComponent);
+
+  </script>
+
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data Visualization Library.</div>
+</body>
+
+</html>

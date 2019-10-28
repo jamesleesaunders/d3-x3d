@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3d : 3D Surface Plot Chart Example</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://code.create3000.de/x_ite/latest/dist/x_ite.min.js"></script>
+  <script src="https://raw.githack.com/andreasplesch/x_ite_dom/master/latest/x_ite_dom.js"></script>
+  <link rel="stylesheet" href="https://code.create3000.de/x_ite/latest/dist/x_ite.css" />
+  <script src="../../../dist/d3-x3d.js"></script>
+</head>
+
+<body>
+  <X3DCanvas id="chartholder" style="width: 500px; height: 500px;"></X3DCanvas>
+
+  <script>
+    // Select chartholder
+    var chartHolder = d3.select("#chartholder");
+
+    // Generate some data
+    var myData = d3.x3d.randomData.dataset5();
+
+    // Declare the chart component
+    var myChart = d3.x3d.chart.surfacePlot();
+
+    // Attach chart and data to the chartholder
+    chartHolder.datum(myData).call(myChart);
+
+  </script>
+
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data Visualization Library.</div>
+</body>
+
+</html>

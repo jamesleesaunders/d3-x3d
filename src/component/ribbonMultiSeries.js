@@ -13,7 +13,8 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["orange", "red", "yellow", "steelblue", "green"];
-	let classed = "d3X3domRibbonMultiSeries";
+	let classed = "d3X3dRibbonMultiSeries";
+	let smoothed = d3.curveBasis;
 
 	/* Scales */
 	let xScale;
@@ -97,7 +98,8 @@ export default function() {
 					x: dimensions.x,
 					y: dimensions.y,
 					z: zScale.bandwidth()
-				});
+				})
+				.smoothed(smoothed);
 
 			const addRibbon = function(d) {
 				const color = colorScale(d.key);
@@ -109,7 +111,7 @@ export default function() {
 				.data((d) => d, (d) => d.key);
 
 			ribbonGroup.enter()
-				.append("transform")
+				.append("Transform")
 				.classed("ribbonGroup", true)
 				.merge(ribbonGroup)
 				.transition()
@@ -195,6 +197,23 @@ export default function() {
 	my.colors = function(_v) {
 		if (!arguments.length) return colors;
 		colors = _v;
+		return my;
+	};
+
+	/**
+	 * Smooth Interpolation Getter / Setter
+	 *
+	 * Options:
+	 *   d3.curveBasis
+	 *   d3.curveLinear
+	 *   d3.curveMonotoneX
+	 *
+	 * @param {d3.curve} _v.
+	 * @returns {*}
+	 */
+	my.smoothed = function(_v) {
+		if (!arguments.length) return smoothed;
+		smoothed = _v;
 		return my;
 	};
 

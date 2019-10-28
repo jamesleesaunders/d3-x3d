@@ -13,7 +13,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["green", "red", "yellow", "steelblue", "orange"];
-	let classed = "d3X3domBubblesMultiSeries";
+	let classed = "d3X3dBubblesMultiSeries";
 
 	/* Scales */
 	let xScale;
@@ -113,7 +113,7 @@ export default function() {
 				.data((d) => d, (d) => d.key);
 
 			bubbleGroup.enter()
-				.append("group")
+				.append("Group")
 				.classed("bubbleGroup", true)
 				.merge(bubbleGroup)
 				.transition()

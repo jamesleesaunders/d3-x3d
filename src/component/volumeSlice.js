@@ -10,14 +10,14 @@ export default function() {
 
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let classed = "d3X3domVolumeSlice";
+	let classed = "d3X3dVolumeSlice";
 
 	/* Other Volume Properties */
 	let imageUrl;
 	let numberOfSlices;
 	let slicesOverX;
 	let slicesOverY;
-	let volumeStyle = "opacitymap";
+	let volumeStyle = "OpacityMap";
 
 	/**
 	 * Constructor
@@ -35,39 +35,36 @@ export default function() {
 
 			const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
-			const volumedata = element.append("transform")
-				.append("volumedata")
+			const volumedata = element.append("Transform")
+				.append("VolumeData")
 				.attr("dimensions", `${dimensionX} ${dimensionY} ${dimensionZ}`);
 
-			volumedata.append("imagetextureatlas")
-				.attr("crossorigin", "anonymous")
-				.attr("containerfield", "voxels")
+			volumedata.append("ImageTextureAtlas")
+				.attr("crossOrigin", "anonymous")
+				.attr("containerField", "voxels")
 				.attr("url", imageUrl)
-				.attr("numberofslices", numberOfSlices)
-				.attr("slicesoverx", slicesOverX)
-				.attr("slicesovery", slicesOverY);
-
-			const plane = volumedata.selectAll(".plane")
-				.data((d) => d.values);
+				.attr("numberOfSlices", numberOfSlices)
+				.attr("slicesOverX", slicesOverX)
+				.attr("slicesOverY", slicesOverY);
 
 			switch (volumeStyle) {
-				case "mprvolume":
-					// X3DOM does not currently support multiple planes inside a single VolumeData node.
-					// There are plans to add this functionality see:
-					//   https://github.com/x3dom/x3dom/issues/944
-					plane.enter()
-						.append("mprvolumestyle")
+				case "MPRVolume":
+					volumedata.append("MPRVolumeStyle")
+						.attr("forceOpaic", true)
+						.selectAll(".plane")
+						.data((d) => d.values)
+						.enter()
+						.append("MPRPlane")
 						.classed("plane", true)
-						.attr("finalline", (d) => `${d.x} ${d.y} ${d.z}`)
-						.attr("positionline", (d) => d.value);
+						.attr("normal", (d) => `${d.x} ${d.y} ${d.z}`)
+						.attr("position", (d) => d.value);
 					break;
 
-				case "opacitymap":
+				case "OpacityMap":
 				default:
-					volumedata
-						.append("opacitymapvolumestyle")
-						.attr("lightfactor", 1.2)
-						.attr("opacityfactor", 6.0);
+					volumedata.append("OpacityMapVolumeStyle")
+						.attr("lightFactor", 1.2)
+						.attr("opacityFactor", 6.0);
 					break;
 			}
 		});
@@ -136,7 +133,7 @@ export default function() {
 	/**
 	 * Volume Style Getter / Setter
 	 *
-	 * @param {string} _v - Volume render style (either 'mprvolume' or 'opacitymap')
+	 * @param {string} _v - Volume render style (either 'MPRVolume' or 'OpacityMap')
 	 * @returns {*}
 	 */
 	my.volumeStyle = function(_v) {

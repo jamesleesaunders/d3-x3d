@@ -1,7 +1,8 @@
 import * as d3 from "d3";
-// import * as x3dom from "x3dom";
 import dataTransform from "../dataTransform";
 import { dispatch } from "../events";
+import { colorParse } from "../colorHelper";
+import * as glMatrix from "gl-matrix";
 
 /**
  * Reusable 3D Vector Fields Component
@@ -13,7 +14,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = d3.interpolateRdYlGn;
-	let classed = "d3X3domVectorFields";
+	let classed = "d3X3dVectorFields";
 
 	/* Scales */
 	let xScale;
@@ -60,7 +61,8 @@ export default function() {
 				({ vx, vy, vz } = vectorFunction(f.x, f.y, f.z, f.value));
 			}
 
-			return new x3dom.fields.SFVec3f(vx, vy, vz).length();
+			let vector = glMatrix.vec3.fromValues(vx, vy, vz);
+			return glMatrix.vec3.length(vector);
 		}));
 
 		if (typeof xScale === "undefined") {
@@ -119,12 +121,20 @@ export default function() {
 						({ vx, vy, vz } = vectorFunction(f.x, f.y, f.z, f.value));
 					}
 
-					let fromVector = new x3dom.fields.SFVec3f(0, 1, 0);
-					let toVector = new x3dom.fields.SFVec3f(vx, vy, vz);
-					let qDir = x3dom.fields.Quaternion.rotateFromTo(fromVector, toVector);
-					let rot = qDir.toAxisAngle();
+					const vecStart = glMatrix.vec3.fromValues(0, 1, 0);
+					const vecEnd = glMatrix.vec3.fromValues(vx, vy, vz);
+					const vecLen = glMatrix.vec3.length(vecEnd);
 
-					if (!toVector.length()) {
+					// rotationTo required unit vectors
+					const vecNormal = glMatrix.vec3.create();
+					glMatrix.vec3.normalize(vecNormal, vecEnd);
+
+					const quat = glMatrix.quat.create();
+					glMatrix.quat.rotationTo(quat, vecStart, vecNormal);
+					const vecRotate = glMatrix.vec3.create();
+					const angleRotate = glMatrix.quat.getAxisAngle(vecRotate, quat);
+
+					if (!vecLen) {
 						// If there is no vector length return null (and filter them out after)
 						return null;
 					}
@@ -133,10 +143,10 @@ export default function() {
 					f.translation = xScale(f.x) + " " + yScale(f.y) + " " + zScale(f.z);
 
 					// Calculate vector length
-					f.value = toVector.length();
+					f.value = vecLen;
 
 					// Calculate transform-rotation attr
-					f.rotation = rot[0].x + " " + rot[0].y + " " + rot[0].z + " " + rot[1];
+					f.rotation = [...vecRotate, angleRotate].join(" ");
 
 					return f;
 				}).filter(function(f) {
@@ -148,52 +158,43 @@ export default function() {
 				.data(vectorData);
 
 			const arrowsEnter = arrows.enter()
-				.append("transform")
+				.append("Transform")
 				.attr("translation", (d) => d.translation)
 				.attr("rotation", (d) => d.rotation)
 				.attr("class", "arrow")
-				.append("transform")
+				.append("Transform")
 				.attr("translation", (d) => {
 					let offset = sizeScale(d.value) / 2;
 					return "0 " + offset + " 0";
 				})
-				.append("group")
-				.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
-				.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
-				.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);");
+				.append("Group");
 
-			const arrowHead = arrowsEnter.append("shape")
-				.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
-				.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
-				.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
+			const arrowHead = arrowsEnter.append("Shape");
 
-			arrowHead.append("appearance")
-				.append("material")
-				.attr("diffusecolor", (d) => rgb2Hex(colorScale(d.value)));
+			arrowHead.append("Appearance")
+				.append("Material")
+				.attr("diffuseColor", (d) => colorParse(colorScale(d.value)));
 
-			arrowHead.append("cylinder")
+			arrowHead.append("Cylinder")
 				.attr("height", (d) => sizeScale(d.value))
 				.attr("radius", 0.1);
 
 			const arrowShaft = arrowsEnter
-				.append("transform")
+				.append("Transform")
 				.attr("translation", (d) => {
 					let offset = sizeScale(d.value) / 2;
 					return "0 " + offset + " 0";
 				})
-				.append("shape")
-				.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
-				.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
-				.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
+				.append("Shape");
 
-			arrowShaft.append("appearance")
-				.append("material")
-				.attr("diffusecolor", (d) => rgb2Hex(colorScale(d.value)));
+			arrowShaft.append("Appearance")
+				.append("Material")
+				.attr("diffuseColor", (d) => colorParse(colorScale(d.value)));
 
 			arrowShaft
 				.append("cone")
 				.attr("height", 1)
-				.attr("bottomradius", 0.4);
+				.attr("bottomRadius", 0.4);
 
 			arrowsEnter.merge(arrows);
 
@@ -204,18 +205,6 @@ export default function() {
 				.remove();
 		});
 	};
-
-	/**
-	 * RGB Colour to Hex Converter
-	 *
-	 * @param {string} rgbStr - RGB colour string (e.g. 'rgb(155, 102, 102)').
-	 * @returns {string} - Hex Color (e.g. '#9b6666').
-	 */
-	function rgb2Hex(rgbStr) {
-		const [red, green, blue] = rgbStr.substring(4, rgbStr.length - 1).replace(/ /g, '').split(',');
-		let rgb = blue | (green << 8) | (red << 16); // eslint-disable-line no-bitwise
-		return '#' + (0x1000000 + rgb).toString(16).slice(1);
-	}
 
 	/**
 	 * Dimensions Getter / Setter

@@ -12,7 +12,7 @@ import component from "../component";
  *
  * let myData = [...];
  *
- * let myChart = d3.x3dom.chart.ribbonChartMultiSeries();
+ * let myChart = d3.x3d.chart.ribbonChartMultiSeries();
  *
  * chartHolder.datum(myData).call(myChart);
  *
@@ -28,8 +28,9 @@ export default function() {
 	let height = 500;
 	let dimensions = { x: 60, y: 40, z: 40 };
 	let colors = ["green", "red", "yellow", "steelblue", "orange"];
-	let classed = "d3X3domRibbonChartMultiSeries";
+	let classed = "d3X3dRibbonChartMultiSeries";
 	let debug = false;
+	let smoothed = d3.curveBasis;
 
 	/* Scales */
 	let xScale;
@@ -83,22 +84,27 @@ export default function() {
 	const my = function(selection) {
 		// Create x3d element (if it does not exist already)
 		if (!x3d) {
-			x3d = selection.append("x3d");
-			scene = x3d.append("scene");
+			x3d = selection.append("X3D");
+			scene = x3d.append("Scene");
 		}
 
 		x3d.attr("width", width + "px")
+			.attr("useGeoCache", false)
 			.attr("height", height + "px")
 			.attr("showLog", debug ? "true" : "false")
 			.attr("showStat", debug ? "true" : "false");
 
+		scene.append("Background")
+			.attr("groundColor", "1 1 1")
+			.attr("skyColor", "1 1 1");
+
 		// Update the chart dimensions and add layer groups
 		const layers = ["axis", "ribbons"];
 		scene.classed(classed, true)
-			.selectAll("group")
+			.selectAll("Group")
 			.data(layers)
 			.enter()
-			.append("group")
+			.append("Group")
 			.attr("class", (d) => d);
 
 		selection.each((data) => {
@@ -124,6 +130,7 @@ export default function() {
 				.yScale(yScale)
 				.zScale(zScale)
 				.colors(colors)
+				.smoothed(smoothed)
 				.dimensions(dimensions);
 
 			scene.select(".ribbons")
@@ -228,6 +235,23 @@ export default function() {
 	my.colors = function(_v) {
 		if (!arguments.length) return colors;
 		colors = _v;
+		return my;
+	};
+
+	/**
+	 * Smooth Interpolation Getter / Setter
+	 *
+	 * Options:
+	 *   d3.curveBasis
+	 *   d3.curveLinear
+	 *   d3.curveMonotoneX
+	 *
+	 * @param {d3.curve} _v.
+	 * @returns {*}
+	 */
+	my.smoothed = function(_v) {
+		if (!arguments.length) return smoothed;
+		smoothed = _v;
 		return my;
 	};
 

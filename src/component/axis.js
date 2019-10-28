@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import { colorParse } from "../colorHelper";
 
 /**
  * Reusable 3D Axis Component
@@ -10,7 +11,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let color = "black";
-	let classed = "d3X3domAxis";
+	let classed = "d3X3dAxis";
 	let labelPosition = "proximal";
 	let labelInset = labelPosition === "distal" ? 1 : -1;
 
@@ -21,8 +22,8 @@ export default function() {
 	let tickArguments = [];
 	let tickValues = null;
 	let tickFormat = null;
-	let tickSize = 1;
-	let tickPadding = 1.5;
+	let tickSize = 1.5;
+	let tickPadding = 2.0;
 
 	const axisDirectionVectors = {
 		x: [1, 0, 0],
@@ -71,13 +72,6 @@ export default function() {
 			const element = d3.select(this)
 				.classed(classed, true);
 
-			const makeSolid = (shape, color) => {
-				shape.append("appearance")
-					.append("material")
-					.attr("diffuseColor", color || "black");
-				return shape;
-			};
-
 			const range = scale.range();
 			const range0 = range[0];
 			const range1 = range[range.length - 1];
@@ -97,43 +91,52 @@ export default function() {
 			const tickFormatDefault = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : (d) => d;
 			tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
 
+			const shape = (el, radius, height, color) => {
+				const shape = el.append("Shape");
+
+				shape.append("Cylinder")
+					.attr("radius", radius)
+					.attr("height", height);
+
+				shape.append("Appearance")
+					.append("Material")
+					.attr("diffuseColor", colorParse(color));
+			};
+
+			const makeSolid = (el, color) => {
+				el.append("Appearance")
+					.append("Material")
+					.attr("diffuseColor", colorParse(color) || "0 0 0");
+			};
+
 			// Main Lines
 			const domain = element.selectAll(".domain")
 				.data([null]);
 
-			const domainEnter = domain.enter()
-				.append("transform")
+			domain.enter()
+				.append("Transform")
 				.attr("class", "domain")
 				.attr("rotation", axisRotationVector.join(" "))
 				.attr("translation", axisDirectionVector.map((d) => (d * (range0 + range1) / 2)).join(" "))
-				.append("shape")
-				.call(makeSolid, color)
-				.append("cylinder")
-				.attr("radius", 0.1)
-				.attr("height", range1 - range0);
+				.call(shape, 0.1, range1 - range0, color)
+				.merge(domain);
 
-			domainEnter.merge(domain);
-
-			domain.exit().remove();
+			domain.exit()
+				.remove();
 
 			// Tick Lines
 			const ticks = element.selectAll(".tick")
-				.data(tickValues);
+				.data(tickValues, (d) => d);
 
-			const ticksEnter = ticks.enter()
-				.append("transform")
+			ticks.enter()
+				.append("Transform")
 				.attr("class", "tick")
 				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
-				.append("transform")
+				.append("Transform")
 				.attr("translation", tickDirectionVector.map((d) => (d * tickSize / 2)).join(" "))
 				.attr("rotation", tickRotationVector.join(" "))
-				.append("shape")
-				.call(makeSolid, "#d3d3d3")
-				.append("cylinder")
-				.attr("radius", 0.05)
-				.attr("height", tickSize);
-
-			ticksEnter.merge(ticks);
+				.call(shape, 0.05, tickSize, "#e3e3e3")
+				.merge(ticks);
 
 			ticks.transition()
 				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")));
@@ -144,45 +147,45 @@ export default function() {
 			// Labels
 			if (tickFormat !== "") {
 				const labels = element.selectAll(".label")
-					.data(tickValues);
+					.data(tickValues, (d) => d);
 
-				const labelsEnter = ticks.enter()
-					.append("transform")
+				labels.enter()
+					.append("Transform")
 					.attr("class", "label")
 					.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
-					.append("transform")
-					.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * (range1 - range0) * tickDirectionVector[i])))
-					.append("billboard")
-					.attr("axisofrotation", "0 0 0")
-					.append("shape")
+					.append("Transform")
+					.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * tickSize * tickDirectionVector[i])))
+					.append("Billboard")
+					.attr("axisOfRotation", "0 0 0")
+					.append("Shape")
 					.call(makeSolid, "black")
-					.append("text")
-					.attr("string", tickFormat)
-					.append("fontstyle")
+					.append("Text")
+					.attr("string", (d) => `"${tickFormat(d)}"`)
+					.append("FontStyle")
 					.attr("size", 1.3)
-					.attr("family", "SANS")
+					.attr("family", "\"SANS\"")
 					.attr("style", "BOLD")
-					.attr("justify", "MIDDLE");
-
-				labelsEnter.merge(labels);
+					.attr("justify", "\"MIDDLE\" \"MIDDLE\"")
+					.merge(labels);
 
 				labels.transition()
 					.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
-					.select("transform")
-					.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * (range1 - range0) * tickDirectionVector[i])))
+					.select("Transform")
+					.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * tickSize * tickDirectionVector[i])))
 					.on("start", function() {
 						d3.select(this)
-							.select("billboard")
-							.select("shape")
-							.select("text")
-							.attr("string", tickFormat);
+							.select("Billboard")
+							.select("Shape")
+							.select("Text")
+							.attr("string", (d) => `"${tickFormat(d)}"`);
 					});
 
 				labels.exit()
 					.remove();
+			} else {
+				element.selectAll(".label")
+					.remove();
 			}
-
-
 		});
 	};
 

@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
-import { dispatch } from "../events";
+import { attachEventListners, dispatch } from "../events";
+import { colorParse } from "../colorHelper";
 
 /**
  * Reusable 3D Bar Chart Component
@@ -12,7 +13,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 2 };
 	let colors = ["orange", "red", "yellow", "steelblue", "green"];
-	let classed = "d3X3domBars";
+	let classed = "d3X3dBars";
 
 	/* Scales */
 	let xScale;
@@ -66,21 +67,17 @@ export default function() {
 				.attr("id", (d) => d.key);
 
 			const shape = (el) => {
-				const shape = el.append("shape")
-					.attr("onclick", "d3.x3dom.events.forwardEvent(event);")
-					.on("click", function(e) { dispatch.call("d3X3domClick", this, e); })
-					.attr("onmouseover", "d3.x3dom.events.forwardEvent(event);")
-					.on("mouseover", function(e) { dispatch.call("d3X3domMouseOver", this, e); })
-					.attr("onmouseout", "d3.x3dom.events.forwardEvent(event);")
-					.on("mouseout", function(e) { dispatch.call("d3X3domMouseOut", this, e); });
+				const shape = el.append("Shape");
 
-				shape.append("box")
+				attachEventListners(shape);
+
+				shape.append("Box")
 					.attr("size", "1.0 1.0 1.0");
 
-				shape.append("appearance")
-					.append("material")
-					.attr("diffusecolor", (d) => colorScale(d.key))
-					.attr("ambientintensity", 0.1);
+				shape.append("Appearance")
+					.append("Material")
+					.attr("diffuseColor", (d) => colorParse(colorScale(d.key)))
+					.attr("ambientIntensity", 0.1);
 
 				return shape;
 			};
@@ -89,7 +86,7 @@ export default function() {
 				.data((d) => d.values, (d) => d.key);
 
 			bars.enter()
-				.append("transform")
+				.append("Transform")
 				.classed("bar", true)
 				.call(shape)
 				.merge(bars)

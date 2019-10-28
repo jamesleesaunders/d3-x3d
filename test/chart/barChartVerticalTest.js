@@ -1,10 +1,10 @@
-let test = require('tape');
-let window = require('browser-env')();
-let d3 = require('d3');
-let d3X3dom = require("../../");
+let test = require("tape");
+let window = require("browser-env")();
+let d3 = require("d3");
+let d3X3d = require("../../");
 
 test("Test Vertical Bar Chart, chart.barChartVertical()", function(t) {
-	let barChartVertical = d3X3dom.chart.barChartVertical();
+	let barChartVertical = d3X3d.chart.barChartVertical();
 
 	// Test width getter / setter function
 	t.equal(barChartVertical.width(), 500, "Default width");

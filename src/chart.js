@@ -1,3 +1,4 @@
+import chartAreaChartMultiSeries from "./chart/areaChartMultiSeries";
 import chartBarChartMultiSeries from "./chart/barChartMultiSeries";
 import chartBarChartVertical from "./chart/barChartVertical";
 import chartBubbleChart from "./chart/bubbleChart";
@@ -9,6 +10,7 @@ import chartVectorField from "./chart/vectorFieldChart";
 import chartVolumeSlice from "./chart/volumeSliceChart";
 
 export default {
+	areaChartMultiSeries: chartAreaChartMultiSeries,
 	barChartMultiSeries: chartBarChartMultiSeries,
 	barChartVertical: chartBarChartVertical,
 	bubbleChart: chartBubbleChart,

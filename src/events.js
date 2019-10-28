@@ -5,7 +5,25 @@ import * as d3 from "d3";
  *
  * @type {d3.dispatch}
  */
-export const dispatch = d3.dispatch("d3X3domClick", "d3X3domMouseOver", "d3X3domMouseOut");
+export const dispatch = d3.dispatch("d3X3dClick", "d3X3dMouseOver", "d3X3dMouseOut");
+
+/**
+ * Attach Event Listeners to Shape
+ *
+ * Detect X3DOM events and convert them into D3 dispatch events.
+ *
+ * @param el
+ */
+export function attachEventListners(el) {
+	el.attr("onclick", "d3.x3d.events.forwardEvent(event);")
+		.on("click", function(e) { dispatch.call("d3X3dClick", this, e); });
+
+	el.attr("onmouseover", "d3.x3d.events.forwardEvent(event);")
+		.on("mouseover", function(e) { dispatch.call("d3X3dMouseOver", this, e); });
+
+	el.attr("onmouseout", "d3.x3d.events.forwardEvent(event);")
+		.on("mouseout", function(e) { dispatch.call("d3X3dMouseOut", this, e); });
+}
 
 /**
  * Forward X3DOM Event to D3

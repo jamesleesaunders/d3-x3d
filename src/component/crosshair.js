@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import { colorParse } from "../colorHelper";
 
 /**
  * Reusable 3D Crosshair Component
@@ -10,7 +11,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["blue", "red", "green"];
-	let classed = "d3X3domCrosshair";
+	let classed = "d3X3dCrosshair";
 	let radius = 0.1;
 
 	/* Scales */
@@ -68,16 +69,16 @@ export default function() {
 				.data([data]);
 
 			let ball = ballSelect.enter()
-				.append("transform")
+				.append("Transform")
 				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
 				.classed("ball", true)
-				.append("shape");
+				.append("Shape");
 
-			ball.append("appearance")
-				.append("material")
-				.attr("diffusecolor", "blue");
+			ball.append("Appearance")
+				.append("Material")
+				.attr("diffuseColor", colorParse("blue"));
 
-			ball.append("sphere")
+			ball.append("Sphere")
 				.attr("radius", 0.3);
 
 			ball.merge(ballSelect);
@@ -91,19 +92,19 @@ export default function() {
 				.data(Object.keys(dimensions));
 
 			const line = lineSelect.enter()
-				.append("transform")
+				.append("Transform")
 				.classed("line", true)
 				.attr("translation", (d) => getPositionVector(d))
 				.attr("rotation", (d) => getRotationVector(d))
-				.append("shape");
+				.append("Shape");
 
 			line.append("cylinder")
 				.attr("radius", radius)
 				.attr("height", (d) => dimensions[d]);
 
-			line.append("appearance")
-				.append("material")
-				.attr("diffusecolor", (d) => colorScale(d));
+			line.append("Appearance")
+				.append("Material")
+				.attr("diffuseColor", (d) => colorParse(colorScale(d)));
 
 			line.merge(lineSelect);
 

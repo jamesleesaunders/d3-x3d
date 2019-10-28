@@ -11,7 +11,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["blue", "red", "green"];
-	let classed = "d3X3domAxisThreePlane";
+	let classed = "d3X3dAxisThreePlane";
 	let labelPosition = "proximal";
 
 	/* Scales */
@@ -39,11 +39,10 @@ export default function() {
 				.classed(classed, true);
 
 			const layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
-
 			element.selectAll("group")
 				.data(layers)
 				.enter()
-				.append("group")
+				.append("Group")
 				.attr("class", (d) => d);
 
 			xzAxis.scale(xScale)
@@ -64,7 +63,6 @@ export default function() {
 				.direction("y")
 				.tickDirection("x")
 				.tickSize(xScale.range()[1] - xScale.range()[0])
-				.tickFormat("")
 				.color("red")
 				.labelPosition(labelPosition);
 
@@ -74,6 +72,13 @@ export default function() {
 				.tickSize(xScale.range()[1] - xScale.range()[0])
 				.color("black")
 				.labelPosition(labelPosition);
+
+			// We only want 2 sets of labels on the y axis if they are in distal position.
+			if (labelPosition === "proximal") {
+				yxAxis.tickFormat("");
+			} else {
+				yxAxis.tickFormat((d) => d);
+			}
 
 			element.select(".xzAxis")
 				.call(xzAxis);

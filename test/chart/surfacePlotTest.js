@@ -1,10 +1,10 @@
-let test = require('tape');
-let window = require('browser-env')();
-let d3 = require('d3');
-let d3X3dom = require("../../");
+let test = require("tape");
+let window = require("browser-env")();
+let d3 = require("d3");
+let d3X3d = require("../../");
 
 test("Test Surface Plot Chart, chart.surfacePlot()", function(t) {
-	let surfacePlot = d3X3dom.chart.surfacePlot();
+	let surfacePlot = d3X3d.chart.surfacePlot();
 
 	// Test width getter / setter function
 	t.equal(surfacePlot.width(), 500, "Default width");

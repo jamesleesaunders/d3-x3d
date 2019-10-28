@@ -1,14 +1,13 @@
 import * as d3 from "d3";
 
 /**
- * Reusable X3DOM Light Component
+ * Reusable X3D Light Component
  *
  * @module
  */
 export default function() {
 
 	/* Default Properties */
-	let classed = "d3X3domLight";
 	let direction = "1 0 -1";
 	let intensity = 0.5;
 	let shadowIntensity = 0;
@@ -22,20 +21,15 @@ export default function() {
 	 */
 	const my = function(selection) {
 		selection.each(function() {
-
-			const element = d3.select(this)
-				.classed(classed, true);
-
-			// Main Lines
-			const light = element.selectAll("directionallight")
+			const light = d3.select(this).selectAll("DirectionalLight")
 				.data([null]);
 
 			light.enter()
-				.append("directionallight")
+				.append("DirectionalLight")
 				.attr("on", true)
 				.attr("direction", direction)
 				.attr("intensity", intensity)
-				.attr("shadowintensity", shadowIntensity)
+				.attr("shadowIntensity", shadowIntensity)
 				.merge(light);
 		});
 	};

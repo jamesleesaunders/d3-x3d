@@ -1,7 +1,7 @@
 import * as d3 from "d3";
-// import * as x3dom from "x3dom";
 import dataTransform from "../dataTransform";
 import component from "../component";
+import * as glMatrix from "gl-matrix";
 
 /**
  * Reusable 3D Vector Field Chart
@@ -21,7 +21,7 @@ import component from "../component";
  *    };
  * };
  *
- * let myChart = d3.x3dom.chart.vectorFieldChart()
+ * let myChart = d3.x3d.chart.vectorFieldChart()
  *    .vectorFunction(vectorFunction);
  *
  * chartHolder.datum(myData).call(myChart);
@@ -38,7 +38,7 @@ export default function() {
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = d3.interpolateRdYlGn;
-	let classed = "d3X3domVectorFieldChart";
+	let classed = "d3X3dVectorFieldChart";
 	let debug = false;
 
 	/* Scales */
@@ -92,7 +92,8 @@ export default function() {
 				({ vx, vy, vz } = vectorFunction(f.x, f.y, f.z, f.value));
 			}
 
-			return new x3dom.fields.SFVec3f(vx, vy, vz).length();
+			let vector = glMatrix.vec3.fromValues(vx, vy, vz);
+			return glMatrix.vec3.length(vector);
 		}));
 
 		xScale = d3.scaleLinear()
@@ -134,22 +135,27 @@ export default function() {
 	const my = function(selection) {
 		// Create x3d element (if it does not exist already)
 		if (!x3d) {
-			x3d = selection.append("x3d");
-			scene = x3d.append("scene");
+			x3d = selection.append("X3D");
+			scene = x3d.append("Scene");
 		}
 
 		x3d.attr("width", width + "px")
+			.attr("useGeoCache", false)
 			.attr("height", height + "px")
 			.attr("showLog", debug ? "true" : "false")
 			.attr("showStat", debug ? "true" : "false");
 
+		scene.append("Background")
+			.attr("groundColor", "1 1 1")
+			.attr("skyColor", "1 1 1");
+
 		// Update the chart dimensions and add layer groups
 		const layers = ["axis", "vectorFields"];
 		scene.classed(classed, true)
-			.selectAll("group")
+			.selectAll("Group")
 			.data(layers)
 			.enter()
-			.append("group")
+			.append("Group")
 			.attr("class", (d) => d);
 
 		selection.each((data) => {
@@ -305,18 +311,6 @@ export default function() {
 	};
 
 	/**
-	 * Debug Getter / Setter
-	 *
-	 * @param {boolean} _v - Show debug log and stats. True/False.
-	 * @returns {*}
-	 */
-	my.debug = function(_v) {
-		if (!arguments.length) return debug;
-		debug = _v;
-		return my;
-	};
-
-	/**
 	 * Vector Function Getter / Setter
 	 *
 	 * @param {function} _f - Vector Function.
@@ -325,6 +319,18 @@ export default function() {
 	my.vectorFunction = function(_f) {
 		if (!arguments.length) return vectorFunction;
 		vectorFunction = _f;
+		return my;
+	};
+
+	/**
+	 * Debug Getter / Setter
+	 *
+	 * @param {boolean} _v - Show debug log and stats. True/False.
+	 * @returns {*}
+	 */
+	my.debug = function(_v) {
+		if (!arguments.length) return debug;
+		debug = _v;
 		return my;
 	};
 

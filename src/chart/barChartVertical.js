@@ -12,7 +12,7 @@ import component from "../component";
  *
  * let myData = [...];
  *
- * let myChart = d3.x3dom.chart.barChartVertical();
+ * let myChart = d3.x3d.chart.barChartVertical();
  *
  * chartHolder.datum(myData).call(myChart);
  *
@@ -28,7 +28,7 @@ export default function() {
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["green", "red", "yellow", "steelblue", "orange"];
-	let classed = "d3X3domBarChartVertical";
+	let classed = "d3X3dBarChartVertical";
 	let debug = false;
 
 	/* Scales */
@@ -79,22 +79,27 @@ export default function() {
 	const my = function(selection) {
 		// Create x3d element (if it does not exist already)
 		if (!x3d) {
-			x3d = selection.append("x3d");
-			scene = x3d.append("scene");
+			x3d = selection.append("X3D");
+			scene = x3d.append("Scene");
 		}
 
 		x3d.attr("width", width + "px")
+			.attr("useGeoCache", false)
 			.attr("height", height + "px")
 			.attr("showLog", debug ? "true" : "false")
 			.attr("showStat", debug ? "true" : "false");
 
+		scene.append("Background")
+			.attr("groundColor", "1 1 1")
+			.attr("skyColor", "1 1 1");
+
 		// Update the chart dimensions and add layer groups
 		const layers = ["xAxis", "yAxis", "bars"];
 		scene.classed(classed, true)
-			.selectAll("group")
+			.selectAll("Group")
 			.data(layers)
 			.enter()
-			.append("group")
+			.append("Group")
 			.attr("class", (d) => d);
 
 		selection.each((data) => {

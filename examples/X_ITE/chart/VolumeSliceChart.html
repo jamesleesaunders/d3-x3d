@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3d : 3D Volume Slice Chart Example</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://code.create3000.de/x_ite/latest/dist/x_ite.min.js"></script>
+  <script src="https://raw.githack.com/andreasplesch/x_ite_dom/master/latest/x_ite_dom.js"></script>
+  <link rel="stylesheet" href="https://code.create3000.de/x_ite/latest/dist/x_ite.css" />
+  <script src="../../../dist/d3-x3d.js"></script>
+</head>
+
+<body>
+  <X3DCanvas id="chartholder" style="width: 500px; height: 500px;"></X3DCanvas>
+
+  <script>
+    // Select chartholder
+    var chartHolder = d3.select("#chartholder");
+
+    // Generate some data
+    var myData = {
+      key: "VolumeSlices",
+      values: [
+        { key: "Slice1", value: 0.5, x: 1, y: 0, z: 0 },
+        { key: "Slice2", value: 0.5, x: 0, y: 1, z: 0 },
+        { key: "Slice3", value: 0.5, x: 0, y: 1, z: 1 },
+      ]
+    };
+
+    var xScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
+    var yScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
+    var zScale = d3.scaleLinear().domain([0, 10]).range([0, 30]);
+
+    // Declare the chart component
+    var myChart = d3.x3d.chart.volumeSliceChart()
+      .dimensions({ x: 40, y: 40, z: 50 })
+      .imageUrl("../../assets/scan1.png")
+      .numberOfSlices(97)
+      .slicesOverX(10)
+      .slicesOverY(10)
+      .xScale(xScale)
+      .yScale(yScale)
+      .zScale(zScale)
+      .volumeStyle("MPRVolume");
+
+    // Attach chart and data to the chartholder
+    chartHolder.datum(myData).call(myChart);
+
+  </script>
+
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data Visualization Library.</div>
+</body>
+
+</html>

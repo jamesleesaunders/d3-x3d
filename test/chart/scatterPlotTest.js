@@ -1,10 +1,10 @@
-let test = require('tape');
-let window = require('browser-env')();
-let d3 = require('d3');
-let d3X3dom = require("../../");
+let test = require("tape");
+let window = require("browser-env")();
+let d3 = require("d3");
+let d3X3d = require("../../");
 
 test("Test Scatter Plot Chart, chart.scatterPlot()", function(t) {
-	let scatterPlot = d3X3dom.chart.scatterPlot();
+	let scatterPlot = d3X3d.chart.scatterPlot();
 
 	// Test width getter / setter function
 	t.equal(scatterPlot.width(), 500, "Default width");

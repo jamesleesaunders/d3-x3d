@@ -1,4 +1,6 @@
 import * as d3 from "d3";
+import { colorParse } from "../colorHelper";
+
 
 /**
  * Reusable 3D Label Component
@@ -10,7 +12,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let color = "black";
-	let classed = "d3X3domLabel";
+	let classed = "d3X3dLabel";
 	let offset = 0;
 
 	/* Scales */
@@ -32,30 +34,28 @@ export default function() {
 				.classed(classed, true)
 				.attr("id", (d) => d.key);
 
-			const makeSolid = (selection, color) => {
-				selection
-					.append("appearance")
-					.append("material")
-					.attr("diffusecolor", color || "black");
-				return selection;
+			const makeSolid = (el, color) => {
+				el.append("Appearance")
+					.append("Material")
+					.attr("diffuseColor", colorParse(color) || "0 0 0");
 			};
 
 			const labelSelect = element.selectAll(".label")
 				.data([data]);
 
 			let label = labelSelect.enter()
-				.append("transform")
+				.append("Transform")
 				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
 				.classed("label", true)
-				.append("billboard")
-				.attr("axisofrotation", "0 0 0")
-				.append("transform")
+				.append("Billboard")
+				.attr("axisOfRotation", "0 0 0")
+				.append("Transform")
 				.attr("translation", (d) => (offset + " " + offset + " " + offset))
-				.append("shape")
+				.append("Shape")
 				.call(makeSolid, color)
-				.append("text")
+				.append("Text")
 				.attr("string", (d) => d.key)
-				.append("fontstyle")
+				.append("FontStyle")
 				.attr("size", 1)
 				.attr("family", "SANS")
 				.attr("style", "BOLD")

@@ -9,7 +9,7 @@ import component from "../component";
  * @example
  * let chartHolder = d3.select("#chartholder");
  *
- * let myChart = d3.x3dom.chart.volumeSliceChart();
+ * let myChart = d3.x3d.chart.volumeSliceChart();
  *    .dimensions({ x: 40, y: 40, z: 30 })
  *    .imageUrl("assets/scan2.png")
  *    .numberOfSlices(35)
@@ -27,7 +27,7 @@ export default function() {
 	let width = 500;
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let classed = "d3X3domVolumeSliceChart";
+	let classed = "d3X3dVolumeSliceChart";
 	let debug = false;
 
 	/* Scales */
@@ -41,7 +41,7 @@ export default function() {
 	let numberOfSlices;
 	let slicesOverX;
 	let slicesOverY;
-	let volumeStyle = "opacitymap";
+	let volumeStyle = "OpacityMap";
 
 	/* Components */
 	const viewpoint = component.viewpoint();
@@ -52,28 +52,33 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
-	 * @alias volumeSliceChartVertical
+	 * @alias volumeSliceChart
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
 		// Create x3d element (if it does not exist already)
 		if (!x3d) {
-			x3d = selection.append("x3d");
-			scene = x3d.append("scene");
+			x3d = selection.append("X3D");
+			scene = x3d.append("Scene");
 		}
 
 		x3d.attr("width", width + "px")
+			.attr("useGeoCache", false)
 			.attr("height", height + "px")
 			.attr("showLog", debug ? "true" : "false")
 			.attr("showStat", debug ? "true" : "false");
 
+		scene.append("Background")
+			.attr("groundColor", "1 1 1")
+			.attr("skyColor", "1 1 1");
+
 		// Update the chart dimensions and add layer groups
-		const layers = ["axis", "volumeSlice"];
+		const layers = ["axis", "volume"];
 		scene.classed(classed, true)
-			.selectAll("group")
+			.selectAll("Group")
 			.data(layers)
 			.enter()
-			.append("group")
+			.append("Group")
 			.attr("class", (d) => d);
 
 		selection.each((data) => {
@@ -98,11 +103,12 @@ export default function() {
 				.imageUrl(imageUrl)
 				.numberOfSlices(numberOfSlices)
 				.slicesOverX(slicesOverX)
-				.slicesOverY(slicesOverY);
+				.slicesOverY(slicesOverY)
+				.volumeStyle(volumeStyle);
 
-			scene.select(".volumeSlice")
+			scene.select(".volume")
 				.append("transform")
-				.attr("translation", (d) => {
+				.attr("translation", () => {
 					const x = dimensions.x / 2;
 					const y = dimensions.y / 2;
 					const z = dimensions.z / 2;
@@ -236,7 +242,7 @@ export default function() {
 	/**
 	 * Volume Style Getter / Setter
 	 *
-	 * @param {string} _v - Volume render style (either 'mprvolume' or 'opacitymap')
+	 * @param {string} _v - Volume render style (either 'MPRVolume' or 'OpacityMap')
 	 * @returns {*}
 	 */
 	my.volumeStyle = function(_v) {

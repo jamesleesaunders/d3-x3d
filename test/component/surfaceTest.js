@@ -1,10 +1,10 @@
-let test = require('tape');
-let window = require('browser-env')();
-let d3 = require('d3');
-let d3X3dom = require("../../");
+let test = require("tape");
+let window = require("browser-env")();
+let d3 = require("d3");
+let d3X3d = require("../../");
 
 test("Test Surface Area Component, component.surface()", function(t) {
-	let surfaceArea = d3X3dom.component.surface();
+	let surfaceArea = d3X3d.component.surface();
 
 	// Test dimensions getter / setter function
 	t.deepEqual(surfaceArea.dimensions(), { x: 40, y: 40, z: 40 }, "Default dimensions");

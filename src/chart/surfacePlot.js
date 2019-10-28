@@ -12,7 +12,7 @@ import component from "../component";
  *
  * let myData = [...];
  *
- * let myChart = d3.x3dom.chart.surfacePlot();
+ * let myChart = d3.x3d.chart.surfacePlot();
  *
  * chartHolder.datum(myData).call(myChart);
  *
@@ -28,7 +28,7 @@ export default function() {
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["blue", "red"];
-	let classed = "d3X3domSurfacePlot";
+	let classed = "d3X3dSurfacePlot";
 	let debug = false;
 
 	/* Scales */
@@ -81,22 +81,27 @@ export default function() {
 	const my = function(selection) {
 		// Create x3d element (if it does not exist already)
 		if (!x3d) {
-			x3d = selection.append("x3d");
-			scene = x3d.append("scene");
+			x3d = selection.append("X3D");
+			scene = x3d.append("Scene");
 		}
 
 		x3d.attr("width", width + "px")
+			.attr("useGeoCache", false)
 			.attr("height", height + "px")
 			.attr("showLog", debug ? "true" : "false")
 			.attr("showStat", debug ? "true" : "false");
 
+		scene.append("Background")
+			.attr("groundColor", "1 1 1")
+			.attr("skyColor", "1 1 1");
+
 		// Update the chart dimensions and add layer groups
 		const layers = ["axis", "surface"];
 		scene.classed(classed, true)
-			.selectAll("group")
+			.selectAll("Group")
 			.data(layers)
 			.enter()
-			.append("group")
+			.append("Group")
 			.attr("class", (d) => d);
 
 		selection.each((data) => {

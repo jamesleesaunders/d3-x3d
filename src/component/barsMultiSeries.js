@@ -1,7 +1,6 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import componentBars from "./bars";
-import componentBubbles from "./bubbles";
 
 /**
  * Reusable 3D Multi Series Bar Chart Component
@@ -13,7 +12,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["orange", "red", "yellow", "steelblue", "green"];
-	let classed = "d3X3domBarsMultiSeries";
+	let classed = "d3X3dBarsMultiSeries";
 
 	/* Scales */
 	let xScale;
@@ -86,7 +85,7 @@ export default function() {
 				.data((d) => d, (d) => d.key);
 
 			barGroup.enter()
-				.append("transform")
+				.append("Transform")
 				.classed("barGroup", true)
 				.merge(barGroup)
 				.transition()

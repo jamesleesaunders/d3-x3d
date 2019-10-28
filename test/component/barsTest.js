@@ -1,10 +1,10 @@
-let test = require('tape');
-let window = require('browser-env')();
-let d3 = require('d3');
-let d3X3dom = require("../../");
+let test = require("tape");
+let window = require("browser-env")();
+let d3 = require("d3");
+let d3X3d = require("../../");
 
 test("Test Bars Component, component.bars()", function(t) {
-	let bars = d3X3dom.component.bars();
+	let bars = d3X3d.component.bars();
 
 	// Test dimensions getter / setter function
 	t.deepEqual(bars.dimensions(), { x: 40, y: 40, z: 2 }, "Default dimensions");

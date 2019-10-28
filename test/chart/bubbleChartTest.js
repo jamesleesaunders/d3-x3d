@@ -1,10 +1,10 @@
-let test = require('tape');
-let window = require('browser-env')();
-let d3 = require('d3');
-let d3X3dom = require("../../");
+let test = require("tape");
+let window = require("browser-env")();
+let d3 = require("d3");
+let d3X3d = require("../../");
 
 test("Test Bubble Chart, chart.bubbleChart()", function(t) {
-	let bubbleChart = d3X3dom.chart.bubbleChart();
+	let bubbleChart = d3X3d.chart.bubbleChart();
 
 	// Test width getter / setter function
 	t.equal(bubbleChart.width(), 500, "Default width");

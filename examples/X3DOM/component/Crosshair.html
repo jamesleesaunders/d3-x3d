@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3d : 3D Crosshair Component Example</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css" />
+  <script src="../../../dist/d3-x3d.js"></script>
+</head>
+
+<body>
+  <div id="chartholder"></div>
+
+  <script>
+    // Chart dimensions
+    var width = 500;
+    var height = 500;
+
+    var xScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
+    var yScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
+    var zScale = d3.scaleLinear().domain([0, 10]).range([0, 40]);
+
+    var viewpointComponent = d3.x3d.component.viewpoint();
+
+    var axisThreePlaneComponent = d3.x3d.component.axisThreePlane()
+      .xScale(xScale)
+      .yScale(yScale)
+      .zScale(zScale);
+
+    var crosshairComponent = d3.x3d.component.crosshair()
+      .xScale(xScale)
+      .yScale(yScale)
+      .zScale(zScale);
+
+    // Create scene
+    var chartHolder = d3.select("#chartholder")
+      .append("X3D")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("Scene");
+
+    var ranNum = function() { return d3.x3d.randomData.randomNum(); };
+
+    // Add to page
+    chartHolder.call(viewpointComponent);
+
+    chartHolder.append("Group")
+      .call(axisThreePlaneComponent);
+
+    var crosshairGroup = chartHolder.append("Group");
+
+    function update() {
+      var data = { x: ranNum(), y: ranNum(), z: ranNum() };
+      crosshairGroup.datum(data)
+        .call(crosshairComponent);
+    }
+
+    update();
+    setInterval(update, 1000);
+
+  </script>
+
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data Visualization Library.</div>
+</body>
+
+</html>
