@@ -12,7 +12,7 @@
   (global = global || self, (global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3, global.d3, global.d3, global.d3)));
 }(this, function (d3, d3Shape, d3Array, d3Interpolate) { 'use strict';
 
-  var version = "2.0.4";
+  var version = "2.0.5";
   var license = "GPL-2.0";
 
   /**
@@ -6257,6 +6257,8 @@
   	var xScale = void 0;
   	var yScale = void 0;
   	var zScale = void 0;
+  	var sizeScale = void 0;
+  	var sizeDomain = [0.2, 2.5];
 
   	/* Components */
   	var viewpoint = component.viewpoint();
@@ -6273,6 +6275,7 @@
     */
   	var init = function init(data) {
   		var _dataTransform$summar = dataTransform(data).summary(),
+  		    valueExtent = _dataTransform$summar.valueExtent,
   		    coordinatesMax = _dataTransform$summar.coordinatesMax;
 
   		var maxX = coordinatesMax.x,
@@ -6289,6 +6292,8 @@
   		yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
 
   		zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
+
+  		sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeDomain);
   	};
 
   	/**
@@ -6335,7 +6340,7 @@
   			label.xScale(xScale).yScale(yScale).zScale(zScale).offset(0.5);
 
   			// Add Bubbles
-  			bubbles.xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([0.5, 0.5]).on("d3X3dClick", function (e) {
+  			bubbles.xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeScale(sizeScale).on("d3X3dClick", function (e) {
   				var d = d3.select(e.target).datum();
   				scene.select(".crosshair").datum(d).classed("crosshair", true).each(function () {
   					d3.select(this).call(crosshair);
@@ -6434,6 +6439,30 @@
   	my.color = function (_v) {
   		if (!arguments.length) return color;
   		color = _v;
+  		return my;
+  	};
+
+  	/**
+    * Size Scale Getter / Setter
+    *
+    * @param {d3.scale} _v - D3 color scale.
+    * @returns {*}
+    */
+  	my.sizeScale = function (_v) {
+  		if (!arguments.length) return sizeScale;
+  		sizeScale = _v;
+  		return my;
+  	};
+
+  	/**
+    * Size Domain Getter / Setter
+    *
+    * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
+    * @returns {*}
+    */
+  	my.sizeDomain = function (_v) {
+  		if (!arguments.length) return sizeDomain;
+  		sizeDomain = _v;
   		return my;
   	};
 

@@ -36,6 +36,8 @@ export default function() {
 	let xScale;
 	let yScale;
 	let zScale;
+	let sizeScale;
+	let sizeDomain = [0.2, 2.5];
 
 	/* Components */
 	const viewpoint = component.viewpoint();
@@ -51,7 +53,7 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	const init = function(data) {
-		const { coordinatesMax } = dataTransform(data).summary();
+		const { valueExtent, coordinatesMax } = dataTransform(data).summary();
 		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
@@ -66,6 +68,10 @@ export default function() {
 		zScale = d3.scaleLinear()
 			.domain([0, maxZ])
 			.range([0, dimensionZ]);
+
+		sizeScale = d3.scaleLinear()
+			.domain(valueExtent)
+			.range(sizeDomain);
 	};
 
 	/**
@@ -133,7 +139,7 @@ export default function() {
 				.yScale(yScale)
 				.zScale(zScale)
 				.color(color)
-				.sizeDomain([0.5, 0.5])
+				.sizeScale(sizeScale)
 				.on("d3X3dClick", function(e) {
 					const d = d3.select(e.target).datum();
 					scene.select(".crosshair")
@@ -244,6 +250,30 @@ export default function() {
 	my.color = function(_v) {
 		if (!arguments.length) return color;
 		color = _v;
+		return my;
+	};
+
+	/**
+	 * Size Scale Getter / Setter
+	 *
+	 * @param {d3.scale} _v - D3 color scale.
+	 * @returns {*}
+	 */
+	my.sizeScale = function(_v) {
+		if (!arguments.length) return sizeScale;
+		sizeScale = _v;
+		return my;
+	};
+
+	/**
+	 * Size Domain Getter / Setter
+	 *
+	 * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
+	 * @returns {*}
+	 */
+	my.sizeDomain = function(_v) {
+		if (!arguments.length) return sizeDomain;
+		sizeDomain = _v;
 		return my;
 	};
 

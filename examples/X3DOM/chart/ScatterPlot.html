@@ -24,6 +24,7 @@
     var refreshChart = function() {
       // Generate some data
       var myData = d3.x3d.randomData.dataset3(200);
+      console.log(myData);
 
       chartHolder.datum(myData).call(myChart);
     };
