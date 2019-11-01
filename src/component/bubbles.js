@@ -104,17 +104,24 @@ export default function() {
 			const bubbles = element.selectAll(".bubble")
 				.data((d) => d.values, (d) => d.key);
 
-			bubbles.enter()
+			const bubblesEnter = bubbles.enter()
 				.append("Transform")
 				.attr("class", "bubble")
 				.call(shape)
 				.merge(bubbles)
-				.transition()
-				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
-				.select("Shape")
+				.transition();
+
+			bubblesEnter
+				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)));
+
+			bubblesEnter.select("Shape")
 				.select("Appearance")
 				.select("Material")
 				.attr("diffuseColor", (d) => colorParse(colorScale(d.value)));
+
+			bubblesEnter.select("Shape")
+				.select("Sphere")
+				.attr("radius", (d) => sizeScale(d.value));
 
 			bubbles.exit()
 				.remove();

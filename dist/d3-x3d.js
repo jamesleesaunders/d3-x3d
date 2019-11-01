@@ -2260,10 +2260,18 @@
   				return d.key;
   			});
 
-  			bubbles.enter().append("Transform").attr("class", "bubble").call(shape).merge(bubbles).transition().attr("translation", function (d) {
+  			var bubblesEnter = bubbles.enter().append("Transform").attr("class", "bubble").call(shape).merge(bubbles).transition();
+
+  			bubblesEnter.attr("translation", function (d) {
   				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-  			}).select("Shape").select("Appearance").select("Material").attr("diffuseColor", function (d) {
+  			});
+
+  			bubblesEnter.select("Shape").select("Appearance").select("Material").attr("diffuseColor", function (d) {
   				return colorParse(colorScale(d.value));
+  			});
+
+  			bubblesEnter.select("Shape").select("Sphere").attr("radius", function (d) {
+  				return sizeScale(d.value);
   			});
 
   			bubbles.exit().remove();
