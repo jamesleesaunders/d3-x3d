@@ -11,7 +11,7 @@ export default function dataTransform(data) {
 
 	const SINGLE_SERIES = 1;
 	const MULTI_SERIES = 2;
-	const coordinates = ['x', 'y', 'z'];
+	const coordinates = ["x", "y", "z"];
 
 	/**
 	 * Data Type (Single or Multi Series)

@@ -112,13 +112,13 @@ export default function() {
 
 			// Add Axis
 			xAxis.scale(xScale)
-				.direction('x')
-				.tickDirection('y')
+				.direction("x")
+				.tickDirection("y")
 				.tickSize(0);
 
 			yAxis.scale(yScale)
-				.direction('y')
-				.tickDirection('x')
+				.direction("y")
+				.tickDirection("x")
 				.tickSize(yScale.range()[1] - yScale.range()[0]);
 
 			scene.select(".xAxis")

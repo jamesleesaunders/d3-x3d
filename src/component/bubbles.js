@@ -215,7 +215,7 @@ export default function() {
 	/**
 	 * Color Getter / Setter
 	 *
-	 * @param {string} _v - Color (e.g. 'red' or '#ff0000').
+	 * @param {string} _v - Color (e.g. "red" or "#ff0000").
 	 * @returns {*}
 	 */
 	my.color = function(_v) {

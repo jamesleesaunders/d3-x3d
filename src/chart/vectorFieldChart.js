@@ -86,7 +86,7 @@ export default function() {
 
 		const extent = d3.extent(data.values.map((f) => {
 			let vx, vy, vz;
-			if ('vx' in f) {
+			if ("vx" in f) {
 				({ vx, vy, vz } = f);
 			} else {
 				({ vx, vy, vz } = vectorFunction(f.x, f.y, f.z, f.value));

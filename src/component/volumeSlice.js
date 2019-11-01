@@ -133,7 +133,7 @@ export default function() {
 	/**
 	 * Volume Style Getter / Setter
 	 *
-	 * @param {string} _v - Volume render style (either 'MPRVolume' or 'OpacityMap')
+	 * @param {string} _v - Volume render style (either "MPRVolume" or "OpacityMap")
 	 * @returns {*}
 	 */
 	my.volumeStyle = function(_v) {

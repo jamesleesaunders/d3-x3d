@@ -100,49 +100,49 @@ export function dataset3(points = 10) {
 export function dataset4() {
 	let data = [
 		{
-			key: 'a',
+			key: "a",
 			values: [
-				{ key: '1', value: 4 },
-				{ key: '2', value: 0 },
-				{ key: '3', value: 2 },
-				{ key: '4', value: 0 },
-				{ key: '5', value: 0 }
+				{ key: "1", value: 4 },
+				{ key: "2", value: 0 },
+				{ key: "3", value: 2 },
+				{ key: "4", value: 0 },
+				{ key: "5", value: 0 }
 			]
 		}, {
-			key: 'b',
+			key: "b",
 			values: [
-				{ key: '1', value: 4 },
-				{ key: '2', value: 0 },
-				{ key: '3', value: 2 },
-				{ key: '4', value: 0 },
-				{ key: '5', value: 0 }
+				{ key: "1", value: 4 },
+				{ key: "2", value: 0 },
+				{ key: "3", value: 2 },
+				{ key: "4", value: 0 },
+				{ key: "5", value: 0 }
 			]
 		}, {
-			key: 'c',
+			key: "c",
 			values: [
-				{ key: '1', value: 1 },
-				{ key: '2', value: 0 },
-				{ key: '3', value: 1 },
-				{ key: '4', value: 0 },
-				{ key: '5', value: 0 }
+				{ key: "1", value: 1 },
+				{ key: "2", value: 0 },
+				{ key: "3", value: 1 },
+				{ key: "4", value: 0 },
+				{ key: "5", value: 0 }
 			]
 		}, {
-			key: 'd',
+			key: "d",
 			values: [
-				{ key: '1', value: 4 },
-				{ key: '2', value: 0 },
-				{ key: '3', value: 2 },
-				{ key: '4', value: 0 },
-				{ key: '5', value: 0 }
+				{ key: "1", value: 4 },
+				{ key: "2", value: 0 },
+				{ key: "3", value: 2 },
+				{ key: "4", value: 0 },
+				{ key: "5", value: 0 }
 			]
 		}, {
-			key: 'e',
+			key: "e",
 			values: [
-				{ key: '1', value: 1 },
-				{ key: '2', value: 1 },
-				{ key: '3', value: 1 },
-				{ key: '4', value: 1 },
-				{ key: '5', value: 1 }
+				{ key: "1", value: 1 },
+				{ key: "2", value: 1 },
+				{ key: "3", value: 1 },
+				{ key: "4", value: 1 },
+				{ key: "5", value: 1 }
 			]
 		}
 	];

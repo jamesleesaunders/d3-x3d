@@ -157,7 +157,7 @@ export default function() {
 	/**
 	 * Label Position Getter / Setter
 	 *
-	 * @param {string} _v - Position ('proximal' or 'distal')
+	 * @param {string} _v - Position ("proximal" or "distal")
 	 * @returns {*}
 	 */
 	my.labelPosition = function(_v) {

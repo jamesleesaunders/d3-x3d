@@ -55,10 +55,10 @@
     // Declare the chart component
     var myChart = d3.x3d.chart.barChartMultiSeries();
 
-    var checks = d3.selectAll('input[type=checkbox]');
+    var checks = d3.selectAll("input[type=checkbox]");
 
     var refreshChart = function() {
-      var labelPosition = d3.select('#labelPosition').property('checked') ? 'distal' : 'proximal';
+      var labelPosition = d3.select("#labelPosition").property("checked") ? "distal" : "proximal";
 
       myChart.labelPosition(labelPosition);
 
