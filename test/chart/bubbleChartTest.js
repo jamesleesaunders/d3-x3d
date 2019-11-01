@@ -46,10 +46,10 @@ test("Test Bubble Chart, chart.bubbleChart()", function(t) {
 	bubbleChart.sizeScale(2);
 	t.equal(bubbleChart.sizeScale(), 2, "Changed sizeScale is set");
 
-	// Test sizeDomain getter / setter function
-	t.deepEqual(bubbleChart.sizeDomain(), [0.5, 3.5], "Default sizeDomain");
-	bubbleChart.sizeDomain([0.2, 5.0]);
-	t.deepEqual(bubbleChart.sizeDomain(), [0.2, 5.0], "Changed sizeDomain");
+	// Test sizeRange getter / setter function
+	t.deepEqual(bubbleChart.sizeRange(), [0.5, 3.5], "Default sizeRange");
+	bubbleChart.sizeRange([0.2, 5.0]);
+	t.deepEqual(bubbleChart.sizeRange(), [0.2, 5.0], "Changed sizeRange");
 
 	// Test colors getter / setter function
 	t.deepEqual(bubbleChart.colors(), ["green", "red", "yellow", "steelblue", "orange"], "Default colors");

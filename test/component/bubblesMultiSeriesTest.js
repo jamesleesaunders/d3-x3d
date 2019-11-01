@@ -36,10 +36,10 @@ test("Test Multi Series Bubbles Component, component.bubbleMultiSeries()", funct
 	bubblesMultiSeries.colorScale(0.2);
 	t.equal(bubblesMultiSeries.colorScale(), 0.2, "Changed colorScale is set");
 
-	// Test sizeDomain getter / setter function
-	t.deepEqual(bubblesMultiSeries.sizeDomain(), [0.5, 3.0], "Default sizeDomain");
-	bubblesMultiSeries.sizeDomain([0.2, 5.0]);
-	t.deepEqual(bubblesMultiSeries.sizeDomain(), [0.2, 5.0], "Changed sizeDomain");
+	// Test sizeRange getter / setter function
+	t.deepEqual(bubblesMultiSeries.sizeRange(), [0.5, 3.0], "Default sizeRange");
+	bubblesMultiSeries.sizeRange([0.2, 5.0]);
+	t.deepEqual(bubblesMultiSeries.sizeRange(), [0.2, 5.0], "Changed sizeRange");
 
 	// Test colors getter / setter function
 	t.deepEqual(bubblesMultiSeries.colors(), ["green", "red", "yellow", "steelblue", "orange"], "Default colors");

@@ -12,15 +12,17 @@ export default function() {
 
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let color = "orange";
+	let colors = d3.schemeRdYlGn[8];
+	let color;
 	let classed = "d3X3dBubbles";
 
 	/* Scales */
 	let xScale;
 	let yScale;
 	let zScale;
+	let colorScale;
 	let sizeScale;
-	let sizeDomain = [0.5, 4.0];
+	let sizeRange = [0.5, 4.0];
 
 	/**
 	 * Initialise Data and Scales
@@ -54,7 +56,17 @@ export default function() {
 		if (typeof sizeScale === "undefined") {
 			sizeScale = d3.scaleLinear()
 				.domain(valueExtent)
-				.range(sizeDomain);
+				.range(sizeRange);
+		}
+
+		if (color) {
+			colorScale = d3.scaleQuantize()
+				.domain(valueExtent)
+				.range([color, color]);
+		} else if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleQuantize()
+				.domain(valueExtent)
+				.range(colors);
 		}
 	};
 
@@ -83,7 +95,7 @@ export default function() {
 
 				shape.append("Appearance")
 					.append("Material")
-					.attr("diffuseColor", colorParse(color))
+					.attr("diffuseColor", (d) => colorParse(colorScale(d.value)))
 					.attr("ambientIntensity", 0.1);
 
 				return shape;
@@ -102,7 +114,7 @@ export default function() {
 				.select("Shape")
 				.select("Appearance")
 				.select("Material")
-				.attr("diffuseColor", colorParse(color));
+				.attr("diffuseColor", (d) => colorParse(colorScale(d.value)));
 
 			bubbles.exit()
 				.remove();
@@ -170,14 +182,26 @@ export default function() {
 	};
 
 	/**
-	 * Size Domain Getter / Setter
+	 * Size Range Getter / Setter
 	 *
 	 * @param {number[]} _v - Size min and max (e.g. [1, 9]).
 	 * @returns {*}
 	 */
-	my.sizeDomain = function(_v) {
-		if (!arguments.length) return sizeDomain;
-		sizeDomain = _v;
+	my.sizeRange = function(_v) {
+		if (!arguments.length) return sizeRange;
+		sizeRange = _v;
+		return my;
+	};
+
+	/**
+	 * Color Scale Getter / Setter
+	 *
+	 * @param {d3.scale} _v - D3 color scale.
+	 * @returns {*}
+	 */
+	my.colorScale = function(_v) {
+		if (!arguments.length) return colorScale;
+		colorScale = _v;
 		return my;
 	};
 
@@ -190,6 +214,18 @@ export default function() {
 	my.color = function(_v) {
 		if (!arguments.length) return color;
 		color = _v;
+		return my;
+	};
+
+	/**
+	 * Colors Getter / Setter
+	 *
+	 * @param {Array} _v - Array of colours used by color scale.
+	 * @returns {*}
+	 */
+	my.colors = function(_v) {
+		if (!arguments.length) return colors;
+		colors = _v;
 		return my;
 	};
 

@@ -13,7 +13,7 @@ export default function() {
 
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = d3.interpolateRdYlGn;
+	let colors = d3.schemeRdYlGn[8];
 	let classed = "d3X3dVectorFields";
 
 	/* Scales */
@@ -22,7 +22,7 @@ export default function() {
 	let zScale;
 	let colorScale;
 	let sizeScale;
-	let sizeDomain = [2.0, 5.0];
+	let sizeRange = [2.0, 5.0];
 
 	/**
 	 * Vector Field Function
@@ -83,16 +83,16 @@ export default function() {
 				.range([0, dimensionZ]);
 		}
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleSequential()
-				.domain(extent.slice().reverse())
-				.interpolator(colors);
-		}
-
 		if (typeof sizeScale === "undefined") {
 			sizeScale = d3.scaleLinear()
 				.domain(extent)
-				.range(sizeDomain);
+				.range(sizeRange);
+		}
+
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleQuantize()
+				.domain(extent)
+				.range(colors);
 		}
 	};
 
@@ -255,18 +255,6 @@ export default function() {
 	};
 
 	/**
-	 * Color Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 color scale.
-	 * @returns {*}
-	 */
-	my.colorScale = function(_v) {
-		if (!arguments.length) return colorScale;
-		colorScale = _v;
-		return my;
-	};
-
-	/**
 	 * Size Scale Getter / Setter
 	 *
 	 * @param {d3.scale} _v - D3 color scale.
@@ -279,14 +267,14 @@ export default function() {
 	};
 
 	/**
-	 * Size Domain Getter / Setter
+	 * Size Range Getter / Setter
 	 *
 	 * @param {number[]} _v - Size min and max (e.g. [1, 9]).
 	 * @returns {*}
 	 */
-	my.sizeDomain = function(_v) {
-		if (!arguments.length) return sizeDomain;
-		sizeDomain = _v;
+	my.sizeRange = function(_v) {
+		if (!arguments.length) return sizeRange;
+		sizeRange = _v;
 		return my;
 	};
 

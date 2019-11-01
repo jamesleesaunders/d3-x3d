@@ -46,10 +46,10 @@ test("Test Vector Field Chart, chart.vectorFieldChart()", function(t) {
 	vectorFieldChart.sizeScale(2);
 	t.equal(vectorFieldChart.sizeScale(), 2, "Changed sizeScale is set");
 
-	// Test sizeDomain getter / setter function
-	t.deepEqual(vectorFieldChart.sizeDomain(), [2.0, 5.0], "Default sizeDomain");
-	vectorFieldChart.sizeDomain([3.5, 7.0]);
-	t.deepEqual(vectorFieldChart.sizeDomain(), [3.5, 7.0], "Changed sizeDomain");
+	// Test sizeRange getter / setter function
+	t.deepEqual(vectorFieldChart.sizeRange(), [2.0, 5.0], "Default sizeDomain");
+	vectorFieldChart.sizeRange([3.5, 7.0]);
+	t.deepEqual(vectorFieldChart.sizeRange(), [3.5, 7.0], "Changed sizeRange");
 
 	// Test vectorFunction getter / setter function
 	t.equal(typeof vectorFieldChart.vectorFunction(), "function", "Default vectorFunction");
