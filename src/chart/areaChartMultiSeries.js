@@ -93,6 +93,10 @@ export default function() {
 			.attr("showStat", debug ? "true" : "false")
 			.attr("useGeoCache", false);
 
+		// Disable gamma correction
+		scene.append("Environment")
+			.attr("gammaCorrectionDefault", "none");
+
 		// Add a white background
 		scene.append("Background")
 			.attr("groundColor", "1 1 1")
