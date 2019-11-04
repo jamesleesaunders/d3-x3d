@@ -1392,7 +1392,7 @@
   					return labelInset * d * tickPadding + (labelInset + 1) / 2 * tickSize * tickDirectionVector[i];
   				})).append("Billboard").attr("axisOfRotation", "0 0 0").append("Shape").call(makeSolid, "black").append("Text").attr("string", function (d) {
   					return "\"" + tickFormat(d) + "\"";
-  				}).append("FontStyle").attr("size", 1.3).attr("family", "\"SANS\"").attr("style", "BOLD").attr("justify", "\"MIDDLE\" \"MIDDLE\"").merge(labels);
+  				}).append("FontStyle").attr("quality", 4).attr("size", 1.3).attr("family", "\"SANS\"").attr("style", "BOLD").attr("justify", "\"MIDDLE\" \"MIDDLE\"").merge(labels);
 
   				labels.transition().attr("translation", function (t) {
   					return axisDirectionVector.map(function (a) {
@@ -2831,7 +2831,7 @@
   				return offset + " " + offset + " " + offset;
   			}).append("Shape").call(makeSolid, color).append("Text").attr("string", function (d) {
   				return d.key;
-  			}).append("FontStyle").attr("size", 1).attr("family", "SANS").attr("style", "BOLD").attr("justify", "START");
+  			}).append("FontStyle").attr("quality", 4).attr("size", 1).attr("family", "SANS").attr("style", "BOLD").attr("justify", "START");
 
   			label.merge(labelSelect);
 
