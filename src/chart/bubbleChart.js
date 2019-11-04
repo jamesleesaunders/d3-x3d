@@ -97,6 +97,11 @@ export default function() {
 			.attr("showLog", debug ? "true" : "false")
 			.attr("showStat", debug ? "true" : "false");
 
+		// Disable gamma correction
+		scene.append("Environment")
+			.attr("gammaCorrectionDefault", "none");
+
+		// Add a white background
 		scene.append("Background")
 			.attr("groundColor", "1 1 1")
 			.attr("skyColor", "1 1 1");
