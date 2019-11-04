@@ -20,9 +20,6 @@
     "type": "git",
     "url": "https://github.com/jamesleesaunders/d3-x3d.git"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/@jamesleesaunders"
-  },
   "bugs": {
     "url": "https://github.com/jamesleesaunders/d3-x3d/issues"
   },
