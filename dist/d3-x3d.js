@@ -10,9 +10,9 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('d3'), require('d3-shape'), require('d3-array'), require('d3-interpolate')) :
   typeof define === 'function' && define.amd ? define(['d3', 'd3-shape', 'd3-array', 'd3-interpolate'], factory) :
   (global = global || self, (global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3, global.d3, global.d3, global.d3)));
-}(this, function (d3, d3Shape, d3Array, d3Interpolate) { 'use strict';
+}(this, (function (d3, d3Shape, d3Array, d3Interpolate) { 'use strict';
 
-  var version = "2.0.4";
+  var version = "2.0.5";
   var license = "GPL-2.0";
 
   /**
@@ -157,7 +157,7 @@
 
   	var SINGLE_SERIES = 1;
   	var MULTI_SERIES = 2;
-  	var coordinates = ['x', 'y', 'z'];
+  	var coordinates = ["x", "y", "z"];
 
   	/**
     * Data Type (Single or Multi Series)
@@ -702,54 +702,54 @@
    * @type {Array}
    */
   var colorNames = {
-  	aliceblue: '#f0f8ff', antiquewhite: '#faebd7', aqua: '#00ffff',
-  	aquamarine: '#7fffd4', azure: '#f0ffff', beige: '#f5f5dc',
-  	bisque: '#ffe4c4', black: '#000000', blanchedalmond: '#ffebcd',
-  	blue: '#0000ff', blueviolet: '#8a2be2', brown: '#a52a2a',
-  	burlywood: '#deb887', cadetblue: '#5f9ea0', chartreuse: '#7fff00',
-  	chocolate: '#d2691e', coral: '#ff7f50', cornflowerblue: '#6495ed',
-  	cornsilk: '#fff8dc', crimson: '#dc143c', cyan: '#00ffff',
-  	darkblue: '#00008b', darkcyan: '#008b8b', darkgoldenrod: '#b8860b',
-  	darkgray: '#a9a9a9', darkgreen: '#006400', darkkhaki: '#bdb76b',
-  	darkmagenta: '#8b008b', darkolivegreen: '#556b2f', darkorange: '#ff8c00',
-  	darkorchid: '#9932cc', darkred: '#8b0000', darksalmon: '#e9967a',
-  	darkseagreen: '#8fbc8f', darkslateblue: '#483d8b', darkslategray: '#2f4f4f',
-  	darkturquoise: '#00ced1', darkviolet: '#9400d3', deeppink: '#ff1493',
-  	deepskyblue: '#00bfff', dimgray: '#696969', dodgerblue: '#1e90ff',
-  	feldspar: '#d19275', firebrick: '#b22222', floralwhite: '#fffaf0',
-  	forestgreen: '#228b22', fuchsia: '#ff00ff', gainsboro: '#dcdcdc',
-  	ghostwhite: '#f8f8ff', gold: '#ffd700', goldenrod: '#daa520',
-  	gray: '#808080', green: '#008000', greenyellow: '#adff2f',
-  	honeydew: '#f0fff0', hotpink: '#ff69b4', indianred: '#cd5c5c',
-  	indigo: '#4b0082', ivory: '#fffff0', khaki: '#f0e68c',
-  	lavender: '#e6e6fa', lavenderblush: '#fff0f5', lawngreen: '#7cfc00',
-  	lemonchiffon: '#fffacd', lightblue: '#add8e6', lightcoral: '#f08080',
-  	lightcyan: '#e0ffff', lightgoldenrodyellow: '#fafad2', lightgrey: '#d3d3d3',
-  	lightgreen: '#90ee90', lightpink: '#ffb6c1', lightsalmon: '#ffa07a',
-  	lightseagreen: '#20b2aa', lightskyblue: '#87cefa', lightslateblue: '#8470ff',
-  	lightslategray: '#778899', lightsteelblue: '#b0c4de', lightyellow: '#ffffe0',
-  	lime: '#00ff00', limegreen: '#32cd32', linen: '#faf0e6',
-  	magenta: '#ff00ff', maroon: '#800000', mediumaquamarine: '#66cdaa',
-  	mediumblue: '#0000cd', mediumorchid: '#ba55d3', mediumpurple: '#9370d8',
-  	mediumseagreen: '#3cb371', mediumslateblue: '#7b68ee', mediumspringgreen: '#00fa9a',
-  	mediumturquoise: '#48d1cc', mediumvioletred: '#c71585', midnightblue: '#191970',
-  	mintcream: '#f5fffa', mistyrose: '#ffe4e1', moccasin: '#ffe4b5',
-  	navajowhite: '#ffdead', navy: '#000080', oldlace: '#fdf5e6',
-  	olive: '#808000', olivedrab: '#6b8e23', orange: '#ffa500',
-  	orangered: '#ff4500', orchid: '#da70d6', palegoldenrod: '#eee8aa',
-  	palegreen: '#98fb98', paleturquoise: '#afeeee', palevioletred: '#d87093',
-  	papayawhip: '#ffefd5', peachpuff: '#ffdab9', peru: '#cd853f',
-  	pink: '#ffc0cb', plum: '#dda0dd', powderblue: '#b0e0e6',
-  	purple: '#800080', red: '#ff0000', rosybrown: '#bc8f8f',
-  	royalblue: '#4169e1', saddlebrown: '#8b4513', salmon: '#fa8072',
-  	sandybrown: '#f4a460', seagreen: '#2e8b57', seashell: '#fff5ee',
-  	sienna: '#a0522d', silver: '#c0c0c0', skyblue: '#87ceeb',
-  	slateblue: '#6a5acd', slategray: '#708090', snow: '#fffafa',
-  	springgreen: '#00ff7f', steelblue: '#4682b4', tan: '#d2b48c',
-  	teal: '#008080', thistle: '#d8bfd8', tomato: '#ff6347',
-  	turquoise: '#40e0d0', violet: '#ee82ee', violetred: '#d02090',
-  	wheat: '#f5deb3', white: '#ffffff', whitesmoke: '#f5f5f5',
-  	yellow: '#ffff00', yellowgreen: '#9acd32'
+  	aliceblue: "#f0f8ff", antiquewhite: "#faebd7", aqua: "#00ffff",
+  	aquamarine: "#7fffd4", azure: "#f0ffff", beige: "#f5f5dc",
+  	bisque: "#ffe4c4", black: "#000000", blanchedalmond: "#ffebcd",
+  	blue: "#0000ff", blueviolet: "#8a2be2", brown: "#a52a2a",
+  	burlywood: "#deb887", cadetblue: "#5f9ea0", chartreuse: "#7fff00",
+  	chocolate: "#d2691e", coral: "#ff7f50", cornflowerblue: "#6495ed",
+  	cornsilk: "#fff8dc", crimson: "#dc143c", cyan: "#00ffff",
+  	darkblue: "#00008b", darkcyan: "#008b8b", darkgoldenrod: "#b8860b",
+  	darkgray: "#a9a9a9", darkgreen: "#006400", darkkhaki: "#bdb76b",
+  	darkmagenta: "#8b008b", darkolivegreen: "#556b2f", darkorange: "#ff8c00",
+  	darkorchid: "#9932cc", darkred: "#8b0000", darksalmon: "#e9967a",
+  	darkseagreen: "#8fbc8f", darkslateblue: "#483d8b", darkslategray: "#2f4f4f",
+  	darkturquoise: "#00ced1", darkviolet: "#9400d3", deeppink: "#ff1493",
+  	deepskyblue: "#00bfff", dimgray: "#696969", dodgerblue: "#1e90ff",
+  	feldspar: "#d19275", firebrick: "#b22222", floralwhite: "#fffaf0",
+  	forestgreen: "#228b22", fuchsia: "#ff00ff", gainsboro: "#dcdcdc",
+  	ghostwhite: "#f8f8ff", gold: "#ffd700", goldenrod: "#daa520",
+  	gray: "#808080", green: "#008000", greenyellow: "#adff2f",
+  	honeydew: "#f0fff0", hotpink: "#ff69b4", indianred: "#cd5c5c",
+  	indigo: "#4b0082", ivory: "#fffff0", khaki: "#f0e68c",
+  	lavender: "#e6e6fa", lavenderblush: "#fff0f5", lawngreen: "#7cfc00",
+  	lemonchiffon: "#fffacd", lightblue: "#add8e6", lightcoral: "#f08080",
+  	lightcyan: "#e0ffff", lightgoldenrodyellow: "#fafad2", lightgrey: "#d3d3d3",
+  	lightgreen: "#90ee90", lightpink: "#ffb6c1", lightsalmon: "#ffa07a",
+  	lightseagreen: "#20b2aa", lightskyblue: "#87cefa", lightslateblue: "#8470ff",
+  	lightslategray: "#778899", lightsteelblue: "#b0c4de", lightyellow: "#ffffe0",
+  	lime: "#00ff00", limegreen: "#32cd32", linen: "#faf0e6",
+  	magenta: "#ff00ff", maroon: "#800000", mediumaquamarine: "#66cdaa",
+  	mediumblue: "#0000cd", mediumorchid: "#ba55d3", mediumpurple: "#9370d8",
+  	mediumseagreen: "#3cb371", mediumslateblue: "#7b68ee", mediumspringgreen: "#00fa9a",
+  	mediumturquoise: "#48d1cc", mediumvioletred: "#c71585", midnightblue: "#191970",
+  	mintcream: "#f5fffa", mistyrose: "#ffe4e1", moccasin: "#ffe4b5",
+  	navajowhite: "#ffdead", navy: "#000080", oldlace: "#fdf5e6",
+  	olive: "#808000", olivedrab: "#6b8e23", orange: "#ffa500",
+  	orangered: "#ff4500", orchid: "#da70d6", palegoldenrod: "#eee8aa",
+  	palegreen: "#98fb98", paleturquoise: "#afeeee", palevioletred: "#d87093",
+  	papayawhip: "#ffefd5", peachpuff: "#ffdab9", peru: "#cd853f",
+  	pink: "#ffc0cb", plum: "#dda0dd", powderblue: "#b0e0e6",
+  	purple: "#800080", red: "#ff0000", rosybrown: "#bc8f8f",
+  	royalblue: "#4169e1", saddlebrown: "#8b4513", salmon: "#fa8072",
+  	sandybrown: "#f4a460", seagreen: "#2e8b57", seashell: "#fff5ee",
+  	sienna: "#a0522d", silver: "#c0c0c0", skyblue: "#87ceeb",
+  	slateblue: "#6a5acd", slategray: "#708090", snow: "#fffafa",
+  	springgreen: "#00ff7f", steelblue: "#4682b4", tan: "#d2b48c",
+  	teal: "#008080", thistle: "#d8bfd8", tomato: "#ff6347",
+  	turquoise: "#40e0d0", violet: "#ee82ee", violetred: "#d02090",
+  	wheat: "#f5deb3", white: "#ffffff", whitesmoke: "#f5f5f5",
+  	yellow: "#ffff00", yellowgreen: "#9acd32"
   };
 
   /**
@@ -817,7 +817,7 @@
   	green = green.toFixed(4);
   	blue = blue.toFixed(4);
 
-  	return red + ' ' + green + ' ' + blue;
+  	return red + " " + green + " " + blue;
   }
 
   var colorHelper = /*#__PURE__*/Object.freeze({
@@ -1008,7 +1008,7 @@
   	/**
     * Color Getter / Setter
     *
-    * @param {string} _v - Color (e.g. 'red' or '#ff0000').
+    * @param {string} _v - Color (e.g. "red" or "#ff0000").
     * @returns {*}
     */
   	my.color = function (_v) {
@@ -1440,7 +1440,7 @@
   	/**
     * Direction Getter / Setter
     *
-    * @param {string} _v - Direction of Axis (e.g. 'x', 'y', 'z').
+    * @param {string} _v - Direction of Axis (e.g. "x", "y", "z").
     * @returns {*}
     */
   	my.direction = function (_v) {
@@ -1452,7 +1452,7 @@
   	/**
     * Tick Direction Getter / Setter
     *
-    * @param {string} _v - Direction of Ticks (e.g. 'x', 'y', 'z').
+    * @param {string} _v - Direction of Ticks (e.g. "x", "y", "z").
     * @returns {*}
     */
   	my.tickDirection = function (_v) {
@@ -1524,7 +1524,7 @@
   	/**
     * Color Getter / Setter
     *
-    * @param {string} _v - Color (e.g. 'red' or '#ff0000').
+    * @param {string} _v - Color (e.g. "red" or "#ff0000").
     * @returns {*}
     */
   	my.color = function (_v) {
@@ -1536,7 +1536,7 @@
   	/**
     * Label Position Getter / Setter
     *
-    * @param {string} _v - Position ('proximal' or 'distal')
+    * @param {string} _v - Position ("proximal" or "distal")
     * @returns {*}
     */
   	my.labelPosition = function (_v) {
@@ -1680,7 +1680,7 @@
   	/**
     * Label Position Getter / Setter
     *
-    * @param {string} _v - Position ('proximal' or 'distal')
+    * @param {string} _v - Position ("proximal" or "distal")
     * @returns {*}
     */
   	my.labelPosition = function (_v) {
@@ -1725,7 +1725,7 @@
    *
    * In X3DOM, it is the canvas which captures onclick events, therefore defining a D3 event handler
    * on an single X3DOM element does not work. A workaround is to define an onclick handler which then
-   * forwards the call to the D3 'click' event handler with the event.
+   * forwards the call to the D3 "click" event handler with the event.
    * Note: X3DOM and D3 event members slightly differ, so d3.mouse() function does not work.
    *
    * @param {event} event
@@ -1768,10 +1768,10 @@
   	if ("getBoundingClientRect" in document.documentElement) {
   		var holder = getX3domHolder(event);
   		var computedStyle = document.defaultView.getComputedStyle(holder, null);
-  		var paddingLeft = parseFloat(computedStyle.getPropertyValue('padding-left'));
-  		var borderLeftWidth = parseFloat(computedStyle.getPropertyValue('border-left-width'));
-  		var paddingTop = parseFloat(computedStyle.getPropertyValue('padding-top'));
-  		var borderTopWidth = parseFloat(computedStyle.getPropertyValue('border-top-width'));
+  		var paddingLeft = parseFloat(computedStyle.getPropertyValue("padding-left"));
+  		var borderLeftWidth = parseFloat(computedStyle.getPropertyValue("border-left-width"));
+  		var paddingTop = parseFloat(computedStyle.getPropertyValue("padding-top"));
+  		var borderTopWidth = parseFloat(computedStyle.getPropertyValue("border-top-width"));
   		var box = holder.getBoundingClientRect();
   		var scrolLeft = window.pageXOffset || document.body.scrollLeft;
   		var scrollTop = window.pageYOffset || document.body.scrollTop;
@@ -1782,7 +1782,7 @@
   		pageX = Math.round(pagePoint.x);
   		pageY = Math.round(pagePoint.y);
   	} else {
-  		x3dom.debug.logError('Unable to find getBoundingClientRect or webkitConvertPointFromPageToNode');
+  		x3dom.debug.logError("Unable to find getBoundingClientRect or webkitConvertPointFromPageToNode");
   	}
 
   	return { x: pageX, y: pageY };
@@ -2168,15 +2168,17 @@
 
   	/* Default Properties */
   	var dimensions = { x: 40, y: 40, z: 40 };
-  	var color = "orange";
+  	var colors = d3.schemeRdYlGn[8];
+  	var color = void 0;
   	var classed = "d3X3dBubbles";
 
   	/* Scales */
   	var xScale = void 0;
   	var yScale = void 0;
   	var zScale = void 0;
+  	var colorScale = void 0;
   	var sizeScale = void 0;
-  	var sizeDomain = [0.5, 4.0];
+  	var sizeRange = [0.5, 4.0];
 
   	/**
     * Initialise Data and Scales
@@ -2211,7 +2213,13 @@
   		}
 
   		if (typeof sizeScale === "undefined") {
-  			sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeDomain);
+  			sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeRange);
+  		}
+
+  		if (color) {
+  			colorScale = d3.scaleQuantize().domain(valueExtent).range([color, color]);
+  		} else if (typeof colorScale === "undefined") {
+  			colorScale = d3.scaleQuantize().domain(valueExtent).range(colors);
   		}
   	};
 
@@ -2239,7 +2247,9 @@
   					return sizeScale(d.value);
   				});
 
-  				shape.append("Appearance").append("Material").attr("diffuseColor", colorParse(color)).attr("ambientIntensity", 0.1);
+  				shape.append("Appearance").append("Material").attr("diffuseColor", function (d) {
+  					return colorParse(colorScale(d.value));
+  				}).attr("ambientIntensity", 0.1);
 
   				return shape;
   			};
@@ -2250,9 +2260,19 @@
   				return d.key;
   			});
 
-  			bubbles.enter().append("Transform").attr("class", "bubble").call(shape).merge(bubbles).transition().attr("translation", function (d) {
+  			var bubblesEnter = bubbles.enter().append("Transform").attr("class", "bubble").call(shape).merge(bubbles).transition();
+
+  			bubblesEnter.attr("translation", function (d) {
   				return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-  			}).select("Shape").select("Appearance").select("Material").attr("diffuseColor", colorParse(color));
+  			});
+
+  			bubblesEnter.select("Shape").select("Appearance").select("Material").attr("diffuseColor", function (d) {
+  				return colorParse(colorScale(d.value));
+  			});
+
+  			bubblesEnter.select("Shape").select("Sphere").attr("radius", function (d) {
+  				return sizeScale(d.value);
+  			});
 
   			bubbles.exit().remove();
   		});
@@ -2319,26 +2339,50 @@
   	};
 
   	/**
-    * Size Domain Getter / Setter
+    * Size Range Getter / Setter
     *
     * @param {number[]} _v - Size min and max (e.g. [1, 9]).
     * @returns {*}
     */
-  	my.sizeDomain = function (_v) {
-  		if (!arguments.length) return sizeDomain;
-  		sizeDomain = _v;
+  	my.sizeRange = function (_v) {
+  		if (!arguments.length) return sizeRange;
+  		sizeRange = _v;
+  		return my;
+  	};
+
+  	/**
+    * Color Scale Getter / Setter
+    *
+    * @param {d3.scale} _v - D3 color scale.
+    * @returns {*}
+    */
+  	my.colorScale = function (_v) {
+  		if (!arguments.length) return colorScale;
+  		colorScale = _v;
   		return my;
   	};
 
   	/**
     * Color Getter / Setter
     *
-    * @param {string} _v - Color (e.g. 'red' or '#ff0000').
+    * @param {string} _v - Color (e.g. "red" or "#ff0000").
     * @returns {*}
     */
   	my.color = function (_v) {
   		if (!arguments.length) return color;
   		color = _v;
+  		return my;
+  	};
+
+  	/**
+    * Colors Getter / Setter
+    *
+    * @param {Array} _v - Array of colours used by color scale.
+    * @returns {*}
+    */
+  	my.colors = function (_v) {
+  		if (!arguments.length) return colors;
+  		colors = _v;
   		return my;
   	};
 
@@ -2372,9 +2416,9 @@
   	var yScale = void 0;
   	var zScale = void 0;
   	var colorScale = void 0;
-  	var sizeScale = void 0;
-  	var sizeDomain = [0.5, 3.0];
   	var colorDomain = [];
+  	var sizeScale = void 0;
+  	var sizeRange = [0.5, 3.0];
 
   	/* Components */
   	var bubbles = componentBubbles();
@@ -2432,7 +2476,7 @@
   		colorDomain = arrayUnique(colorDomain, rowKeys);
   		colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
 
-  		sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeDomain);
+  		sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeRange);
   	};
 
   	/**
@@ -2453,7 +2497,7 @@
   			var addBubbles = function addBubbles(d) {
   				var color = colorScale(d.key);
   				bubbles.color(color);
-  				d3.select(this).datum(d).call(bubbles);
+  				d3.select(this).call(bubbles);
   			};
 
   			var bubbleGroup = element.selectAll(".bubbleGroup").data(function (d) {
@@ -2541,14 +2585,14 @@
   	};
 
   	/**
-    * Size Domain Getter / Setter
+    * Size Range Getter / Setter
     *
     * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
     * @returns {*}
     */
-  	my.sizeDomain = function (_v) {
-  		if (!arguments.length) return sizeDomain;
-  		sizeDomain = _v;
+  	my.sizeRange = function (_v) {
+  		if (!arguments.length) return sizeRange;
+  		sizeRange = _v;
   		return my;
   	};
 
@@ -2848,7 +2892,7 @@
   	/**
     * Color Getter / Setter
     *
-    * @param {string} _v - Color (e.g. 'red' or '#ff0000').
+    * @param {string} _v - Color (e.g. "red" or "#ff0000").
     * @returns {*}
     */
   	my.color = function (_v) {
@@ -3123,7 +3167,7 @@
   	/**
     * Color Getter / Setter
     *
-    * @param {string} _v - Color (e.g. 'red' or '#ff0000').
+    * @param {string} _v - Color (e.g. "red" or "#ff0000").
     * @returns {*}
     */
   	my.color = function (_v) {
@@ -4204,7 +4248,7 @@
 
   	/* Default Properties */
   	var dimensions = { x: 40, y: 40, z: 40 };
-  	var colors = d3.interpolateRdYlGn;
+  	var colors = d3.schemeRdYlGn[8];
   	var classed = "d3X3dVectorFields";
 
   	/* Scales */
@@ -4213,7 +4257,7 @@
   	var zScale = void 0;
   	var colorScale = void 0;
   	var sizeScale = void 0;
-  	var sizeDomain = [2.0, 5.0];
+  	var sizeRange = [2.0, 5.0];
 
   	/**
     * Vector Field Function
@@ -4260,7 +4304,7 @@
   			var vx = void 0,
   			    vy = void 0,
   			    vz = void 0;
-  			if ('vx' in f) {
+  			if ("vx" in f) {
   				vx = f.vx;
   				vy = f.vy;
   				vz = f.vz;
@@ -4288,12 +4332,12 @@
   			zScale = d3.scaleLinear().domain([minZ, maxZ]).range([0, dimensionZ]);
   		}
 
-  		if (typeof colorScale === "undefined") {
-  			colorScale = d3.scaleSequential().domain(extent.slice().reverse()).interpolator(colors);
+  		if (typeof sizeScale === "undefined") {
+  			sizeScale = d3.scaleLinear().domain(extent).range(sizeRange);
   		}
 
-  		if (typeof sizeScale === "undefined") {
-  			sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
+  		if (typeof colorScale === "undefined") {
+  			colorScale = d3.scaleQuantize().domain(extent).range(colors);
   		}
   	};
 
@@ -4318,7 +4362,7 @@
   					var vx = void 0,
   					    vy = void 0,
   					    vz = void 0;
-  					if ('vx' in f) {
+  					if ("vx" in f) {
   						vx = f.vx;
   						vy = f.vy;
   						vz = f.vz;
@@ -4454,18 +4498,6 @@
   	};
 
   	/**
-    * Color Scale Getter / Setter
-    *
-    * @param {d3.scale} _v - D3 color scale.
-    * @returns {*}
-    */
-  	my.colorScale = function (_v) {
-  		if (!arguments.length) return colorScale;
-  		colorScale = _v;
-  		return my;
-  	};
-
-  	/**
     * Size Scale Getter / Setter
     *
     * @param {d3.scale} _v - D3 color scale.
@@ -4478,14 +4510,14 @@
   	};
 
   	/**
-    * Size Domain Getter / Setter
+    * Size Range Getter / Setter
     *
     * @param {number[]} _v - Size min and max (e.g. [1, 9]).
     * @returns {*}
     */
-  	my.sizeDomain = function (_v) {
-  		if (!arguments.length) return sizeDomain;
-  		sizeDomain = _v;
+  	my.sizeRange = function (_v) {
+  		if (!arguments.length) return sizeRange;
+  		sizeRange = _v;
   		return my;
   	};
 
@@ -4569,7 +4601,7 @@
   	/**
     * Set Quick Viewpoint
     *
-    * @param {string} view - 'left', 'side', 'top', 'dimetric'
+    * @param {string} view - "left", "side", "top", "dimetric"
     * @returns {my}
     */
   	my.quickView = function (view) {
@@ -4780,7 +4812,7 @@
   	/**
     * Volume Style Getter / Setter
     *
-    * @param {string} _v - Volume render style (either 'MPRVolume' or 'OpacityMap')
+    * @param {string} _v - Volume render style (either "MPRVolume" or "OpacityMap")
     * @returns {*}
     */
   	my.volumeStyle = function (_v) {
@@ -4850,7 +4882,7 @@
 
   	/* Components */
   	var viewpoint = component.viewpoint();
-  	var axis = component.axisThreePlane().labelPosition('distal');
+  	var axis = component.axisThreePlane().labelPosition("distal");
   	var areas = component.areaMultiSeries();
   	var light = component.light();
 
@@ -5284,7 +5316,7 @@
   	/**
     * Label Position Getter / Setter
     *
-    * @param {string} _v - Position ('proximal' or 'distal')
+    * @param {string} _v - Position ("proximal" or "distal")
     * @returns {*}
     */
   	my.labelPosition = function (_v) {
@@ -5406,9 +5438,9 @@
   			scene.call(viewpoint);
 
   			// Add Axis
-  			xAxis.scale(xScale).direction('x').tickDirection('y').tickSize(0);
+  			xAxis.scale(xScale).direction("x").tickDirection("y").tickSize(0);
 
-  			yAxis.scale(yScale).direction('y').tickDirection('x').tickSize(yScale.range()[1] - yScale.range()[0]);
+  			yAxis.scale(yScale).direction("y").tickDirection("x").tickSize(yScale.range()[1] - yScale.range()[0]);
 
   			scene.select(".xAxis").call(xAxis);
 
@@ -5549,6 +5581,7 @@
   	var height = 500;
   	var dimensions = { x: 40, y: 40, z: 40 };
   	var colors = ["green", "red", "yellow", "steelblue", "orange"];
+  	var sizeRange = [0.5, 3.5];
   	var classed = "d3X3dBubbleChart";
   	var debug = false;
 
@@ -5558,7 +5591,6 @@
   	var zScale = void 0;
   	var colorScale = void 0;
   	var sizeScale = void 0;
-  	var sizeDomain = [0.5, 3.5];
 
   	/* Components */
   	var viewpoint = component.viewpoint();
@@ -5595,7 +5627,7 @@
 
   		colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
 
-  		sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeDomain);
+  		sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeRange);
   	};
 
   	/**
@@ -5754,14 +5786,14 @@
   	};
 
   	/**
-    * Size Domain Getter / Setter
+    * Size Range Getter / Setter
     *
     * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
     * @returns {*}
     */
-  	my.sizeDomain = function (_v) {
-  		if (!arguments.length) return sizeDomain;
-  		sizeDomain = _v;
+  	my.sizeRange = function (_v) {
+  		if (!arguments.length) return sizeRange;
+  		sizeRange = _v;
   		return my;
   	};
 
@@ -6249,7 +6281,8 @@
   	var width = 500;
   	var height = 500;
   	var dimensions = { x: 40, y: 40, z: 40 };
-  	var color = "orange";
+  	var colors = ["orange"];
+  	var color = void 0;
   	var classed = "d3X3dScatterPlot";
   	var debug = false;
 
@@ -6257,6 +6290,9 @@
   	var xScale = void 0;
   	var yScale = void 0;
   	var zScale = void 0;
+  	var colorScale = void 0;
+  	var sizeScale = void 0;
+  	var sizeRange = [0.2];
 
   	/* Components */
   	var viewpoint = component.viewpoint();
@@ -6273,6 +6309,7 @@
     */
   	var init = function init(data) {
   		var _dataTransform$summar = dataTransform(data).summary(),
+  		    valueExtent = _dataTransform$summar.valueExtent,
   		    coordinatesMax = _dataTransform$summar.coordinatesMax;
 
   		var maxX = coordinatesMax.x,
@@ -6289,6 +6326,14 @@
   		yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
 
   		zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
+
+  		sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeRange);
+
+  		if (color) {
+  			colorScale = d3.scaleQuantize().domain(valueExtent).range([color, color]);
+  		} else {
+  			colorScale = d3.scaleQuantize().domain(valueExtent).range(colors);
+  		}
   	};
 
   	/**
@@ -6335,7 +6380,7 @@
   			label.xScale(xScale).yScale(yScale).zScale(zScale).offset(0.5);
 
   			// Add Bubbles
-  			bubbles.xScale(xScale).yScale(yScale).zScale(zScale).color(color).sizeDomain([0.5, 0.5]).on("d3X3dClick", function (e) {
+  			bubbles.xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).colorScale(colorScale).on("d3X3dClick", function (e) {
   				var d = d3.select(e.target).datum();
   				scene.select(".crosshair").datum(d).classed("crosshair", true).each(function () {
   					d3.select(this).call(crosshair);
@@ -6426,14 +6471,86 @@
   	};
 
   	/**
+    * Size Scale Getter / Setter
+    *
+    * @param {d3.scale} _v - D3 color scale.
+    * @returns {*}
+    */
+  	my.sizeScale = function (_v) {
+  		if (!arguments.length) return sizeScale;
+  		sizeScale = _v;
+  		return my;
+  	};
+
+  	/**
+    * Size Range Getter / Setter
+    *
+    * @param {number[]} _v - Size min and max (e.g. [1, 9]).
+    * @returns {*}
+    */
+  	my.sizeRange = function (_v) {
+  		if (!arguments.length) return sizeRange;
+  		sizeRange = _v;
+  		return my;
+  	};
+
+  	/**
+    * Color Scale Getter / Setter
+    *
+    * @param {d3.scale} _v - D3 color scale.
+    * @returns {*}
+    */
+  	my.colorScale = function (_v) {
+  		if (!arguments.length) return colorScale;
+  		colorScale = _v;
+  		return my;
+  	};
+
+  	/**
     * Color Getter / Setter
     *
-    * @param {string} _v - Color (e.g. 'red' or '#ff0000').
+    * @param {string} _v - Color (e.g. "red" or "#ff0000").
     * @returns {*}
     */
   	my.color = function (_v) {
   		if (!arguments.length) return color;
   		color = _v;
+  		return my;
+  	};
+
+  	/**
+    * Colors Getter / Setter
+    *
+    * @param {Array} _v - Array of colours used by color scale.
+    * @returns {*}
+    */
+  	my.colors = function (_v) {
+  		if (!arguments.length) return colors;
+  		colors = _v;
+  		return my;
+  	};
+
+  	/**
+    * Size Scale Getter / Setter
+    *
+    * @param {d3.scale} _v - D3 color scale.
+    * @returns {*}
+    */
+  	my.sizeScale = function (_v) {
+  		if (!arguments.length) return sizeScale;
+  		sizeScale = _v;
+  		return my;
+  	};
+
+  	/**
+    * Size Range Getter / Setter
+    *
+    * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
+    * @returns {*}
+    */
+  	my.sizeRange = function (_v) {
+  		if (!arguments.length) return sizeRange;
+  		sizeRange = _v;
   		return my;
   	};
 
@@ -6719,7 +6836,7 @@
   	var width = 500;
   	var height = 500;
   	var dimensions = { x: 40, y: 40, z: 40 };
-  	var colors = d3.interpolateRdYlGn;
+  	var colors = d3.schemeRdYlGn[8];
   	var classed = "d3X3dVectorFieldChart";
   	var debug = false;
 
@@ -6729,7 +6846,7 @@
   	var zScale = void 0;
   	var colorScale = void 0;
   	var sizeScale = void 0;
-  	var sizeDomain = [2.0, 5.0];
+  	var sizeRange = [2.0, 5.0];
   	var origin = { x: 0, y: 0, z: 0 };
 
   	/* Components */
@@ -6782,7 +6899,7 @@
   			var vx = void 0,
   			    vy = void 0,
   			    vz = void 0;
-  			if ('vx' in f) {
+  			if ("vx" in f) {
   				vx = f.vx;
   				vy = f.vy;
   				vz = f.vz;
@@ -6804,9 +6921,9 @@
 
   		zScale = d3.scaleLinear().domain([minZ, maxZ]).range([0, dimensionZ]);
 
-  		colorScale = d3.scaleSequential().domain(extent.slice().reverse()).interpolator(colors);
+  		sizeScale = d3.scaleLinear().domain(extent).range(sizeRange);
 
-  		sizeScale = d3.scaleLinear().domain(extent).range(sizeDomain);
+  		colorScale = d3.scaleQuantize().domain(extent).range(colors);
 
   		// TODO: Have a think about whether this is appropriate?
   		// Or, do we always want the origin to be 0,0,0 ?
@@ -6970,14 +7087,14 @@
   	};
 
   	/**
-    * Size Domain Getter / Setter
+    * Size Range Getter / Setter
     *
     * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
     * @returns {*}
     */
-  	my.sizeDomain = function (_v) {
-  		if (!arguments.length) return sizeDomain;
-  		sizeDomain = _v;
+  	my.sizeRange = function (_v) {
+  		if (!arguments.length) return sizeRange;
+  		sizeRange = _v;
   		return my;
   	};
 
@@ -7228,7 +7345,7 @@
   	/**
     * Volume Style Getter / Setter
     *
-    * @param {string} _v - Volume render style (either 'MPRVolume' or 'OpacityMap')
+    * @param {string} _v - Volume render style (either "MPRVolume" or "OpacityMap")
     * @returns {*}
     */
   	my.volumeStyle = function (_v) {
@@ -7366,20 +7483,20 @@
    */
   function dataset4() {
   	var data = [{
-  		key: 'a',
-  		values: [{ key: '1', value: 4 }, { key: '2', value: 0 }, { key: '3', value: 2 }, { key: '4', value: 0 }, { key: '5', value: 0 }]
+  		key: "a",
+  		values: [{ key: "1", value: 4 }, { key: "2", value: 0 }, { key: "3", value: 2 }, { key: "4", value: 0 }, { key: "5", value: 0 }]
   	}, {
-  		key: 'b',
-  		values: [{ key: '1', value: 4 }, { key: '2', value: 0 }, { key: '3', value: 2 }, { key: '4', value: 0 }, { key: '5', value: 0 }]
+  		key: "b",
+  		values: [{ key: "1", value: 4 }, { key: "2", value: 0 }, { key: "3", value: 2 }, { key: "4", value: 0 }, { key: "5", value: 0 }]
   	}, {
-  		key: 'c',
-  		values: [{ key: '1', value: 1 }, { key: '2', value: 0 }, { key: '3', value: 1 }, { key: '4', value: 0 }, { key: '5', value: 0 }]
+  		key: "c",
+  		values: [{ key: "1", value: 1 }, { key: "2", value: 0 }, { key: "3", value: 1 }, { key: "4", value: 0 }, { key: "5", value: 0 }]
   	}, {
-  		key: 'd',
-  		values: [{ key: '1', value: 4 }, { key: '2', value: 0 }, { key: '3', value: 2 }, { key: '4', value: 0 }, { key: '5', value: 0 }]
+  		key: "d",
+  		values: [{ key: "1", value: 4 }, { key: "2", value: 0 }, { key: "3", value: 2 }, { key: "4", value: 0 }, { key: "5", value: 0 }]
   	}, {
-  		key: 'e',
-  		values: [{ key: '1', value: 1 }, { key: '2', value: 1 }, { key: '3', value: 1 }, { key: '4', value: 1 }, { key: '5', value: 1 }]
+  		key: "e",
+  		values: [{ key: "1", value: 1 }, { key: "2", value: 1 }, { key: "3", value: 1 }, { key: "4", value: 1 }, { key: "5", value: 1 }]
   	}];
 
   	return data;
@@ -7459,4 +7576,4 @@
 
   return index;
 
-}));
+})));

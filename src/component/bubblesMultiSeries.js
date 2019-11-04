@@ -20,9 +20,9 @@ export default function() {
 	let yScale;
 	let zScale;
 	let colorScale;
-	let sizeScale;
-	let sizeDomain = [0.5, 3.0];
 	let colorDomain = [];
+	let sizeScale;
+	let sizeRange = [0.5, 3.0];
 
 	/* Components */
 	const bubbles = componentBubbles();
@@ -81,7 +81,7 @@ export default function() {
 
 		sizeScale = d3.scaleLinear()
 			.domain(valueExtent)
-			.range(sizeDomain);
+			.range(sizeRange);
 	};
 
 	/**
@@ -106,7 +106,7 @@ export default function() {
 			const addBubbles = function(d) {
 				const color = colorScale(d.key);
 				bubbles.color(color);
-				d3.select(this).datum(d).call(bubbles);
+				d3.select(this).call(bubbles);
 			};
 
 			const bubbleGroup = element.selectAll(".bubbleGroup")
@@ -197,14 +197,14 @@ export default function() {
 	};
 
 	/**
-	 * Size Domain Getter / Setter
+	 * Size Range Getter / Setter
 	 *
 	 * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
 	 * @returns {*}
 	 */
-	my.sizeDomain = function(_v) {
-		if (!arguments.length) return sizeDomain;
-		sizeDomain = _v;
+	my.sizeRange = function(_v) {
+		if (!arguments.length) return sizeRange;
+		sizeRange = _v;
 		return my;
 	};
 

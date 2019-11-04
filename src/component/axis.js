@@ -216,7 +216,7 @@ export default function() {
 	/**
 	 * Direction Getter / Setter
 	 *
-	 * @param {string} _v - Direction of Axis (e.g. 'x', 'y', 'z').
+	 * @param {string} _v - Direction of Axis (e.g. "x", "y", "z").
 	 * @returns {*}
 	 */
 	my.direction = function(_v) {
@@ -228,7 +228,7 @@ export default function() {
 	/**
 	 * Tick Direction Getter / Setter
 	 *
-	 * @param {string} _v - Direction of Ticks (e.g. 'x', 'y', 'z').
+	 * @param {string} _v - Direction of Ticks (e.g. "x", "y", "z").
 	 * @returns {*}
 	 */
 	my.tickDirection = function(_v) {
@@ -300,7 +300,7 @@ export default function() {
 	/**
 	 * Color Getter / Setter
 	 *
-	 * @param {string} _v - Color (e.g. 'red' or '#ff0000').
+	 * @param {string} _v - Color (e.g. "red" or "#ff0000").
 	 * @returns {*}
 	 */
 	my.color = function(_v) {
@@ -312,7 +312,7 @@ export default function() {
 	/**
 	 * Label Position Getter / Setter
 	 *
-	 * @param {string} _v - Position ('proximal' or 'distal')
+	 * @param {string} _v - Position ("proximal" or "distal")
 	 * @returns {*}
 	 */
 	my.labelPosition = function(_v) {

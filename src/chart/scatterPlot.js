@@ -28,7 +28,8 @@ export default function() {
 	let width = 500;
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let color = "orange";
+	let colors = ["orange"];
+	let color;
 	let classed = "d3X3dScatterPlot";
 	let debug = false;
 
@@ -36,6 +37,9 @@ export default function() {
 	let xScale;
 	let yScale;
 	let zScale;
+	let colorScale;
+	let sizeScale;
+	let sizeRange = [0.2];
 
 	/* Components */
 	const viewpoint = component.viewpoint();
@@ -51,7 +55,7 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	const init = function(data) {
-		const { coordinatesMax } = dataTransform(data).summary();
+		const { valueExtent, coordinatesMax } = dataTransform(data).summary();
 		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
@@ -66,6 +70,20 @@ export default function() {
 		zScale = d3.scaleLinear()
 			.domain([0, maxZ])
 			.range([0, dimensionZ]);
+
+		sizeScale = d3.scaleLinear()
+			.domain(valueExtent)
+			.range(sizeRange);
+
+		if (color) {
+			colorScale = d3.scaleQuantize()
+				.domain(valueExtent)
+				.range([color, color]);
+		} else {
+			colorScale = d3.scaleQuantize()
+				.domain(valueExtent)
+				.range(colors);
+		}
 	};
 
 	/**
@@ -132,8 +150,8 @@ export default function() {
 			bubbles.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
-				.color(color)
-				.sizeDomain([0.5, 0.5])
+				.sizeScale(sizeScale)
+				.colorScale(colorScale)
 				.on("d3X3dClick", function(e) {
 					const d = d3.select(e.target).datum();
 					scene.select(".crosshair")
@@ -236,14 +254,86 @@ export default function() {
 	};
 
 	/**
+	 * Size Scale Getter / Setter
+	 *
+	 * @param {d3.scale} _v - D3 color scale.
+	 * @returns {*}
+	 */
+	my.sizeScale = function(_v) {
+		if (!arguments.length) return sizeScale;
+		sizeScale = _v;
+		return my;
+	};
+
+	/**
+	 * Size Range Getter / Setter
+	 *
+	 * @param {number[]} _v - Size min and max (e.g. [1, 9]).
+	 * @returns {*}
+	 */
+	my.sizeRange = function(_v) {
+		if (!arguments.length) return sizeRange;
+		sizeRange = _v;
+		return my;
+	};
+
+	/**
+	 * Color Scale Getter / Setter
+	 *
+	 * @param {d3.scale} _v - D3 color scale.
+	 * @returns {*}
+	 */
+	my.colorScale = function(_v) {
+		if (!arguments.length) return colorScale;
+		colorScale = _v;
+		return my;
+	};
+
+	/**
 	 * Color Getter / Setter
 	 *
-	 * @param {string} _v - Color (e.g. 'red' or '#ff0000').
+	 * @param {string} _v - Color (e.g. "red" or "#ff0000").
 	 * @returns {*}
 	 */
 	my.color = function(_v) {
 		if (!arguments.length) return color;
 		color = _v;
+		return my;
+	};
+
+	/**
+	 * Colors Getter / Setter
+	 *
+	 * @param {Array} _v - Array of colours used by color scale.
+	 * @returns {*}
+	 */
+	my.colors = function(_v) {
+		if (!arguments.length) return colors;
+		colors = _v;
+		return my;
+	};
+
+	/**
+	 * Size Scale Getter / Setter
+	 *
+	 * @param {d3.scale} _v - D3 color scale.
+	 * @returns {*}
+	 */
+	my.sizeScale = function(_v) {
+		if (!arguments.length) return sizeScale;
+		sizeScale = _v;
+		return my;
+	};
+
+	/**
+	 * Size Range Getter / Setter
+	 *
+	 * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
+	 * @returns {*}
+	 */
+	my.sizeRange = function(_v) {
+		if (!arguments.length) return sizeRange;
+		sizeRange = _v;
 		return my;
 	};
 

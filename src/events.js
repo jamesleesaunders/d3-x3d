@@ -30,7 +30,7 @@ export function attachEventListners(el) {
  *
  * In X3DOM, it is the canvas which captures onclick events, therefore defining a D3 event handler
  * on an single X3DOM element does not work. A workaround is to define an onclick handler which then
- * forwards the call to the D3 'click' event handler with the event.
+ * forwards the call to the D3 "click" event handler with the event.
  * Note: X3DOM and D3 event members slightly differ, so d3.mouse() function does not work.
  *
  * @param {event} event
@@ -73,10 +73,10 @@ export function getEventPagePoint(event) {
 	if ("getBoundingClientRect" in document.documentElement) {
 		let holder = getX3domHolder(event);
 		let computedStyle = document.defaultView.getComputedStyle(holder, null);
-		let paddingLeft = parseFloat(computedStyle.getPropertyValue('padding-left'));
-		let borderLeftWidth = parseFloat(computedStyle.getPropertyValue('border-left-width'));
-		let paddingTop = parseFloat(computedStyle.getPropertyValue('padding-top'));
-		let borderTopWidth = parseFloat(computedStyle.getPropertyValue('border-top-width'));
+		let paddingLeft = parseFloat(computedStyle.getPropertyValue("padding-left"));
+		let borderLeftWidth = parseFloat(computedStyle.getPropertyValue("border-left-width"));
+		let paddingTop = parseFloat(computedStyle.getPropertyValue("padding-top"));
+		let borderTopWidth = parseFloat(computedStyle.getPropertyValue("border-top-width"));
 		let box = holder.getBoundingClientRect();
 		let scrolLeft = window.pageXOffset || document.body.scrollLeft;
 		let scrollTop = window.pageYOffset || document.body.scrollTop;
@@ -87,7 +87,7 @@ export function getEventPagePoint(event) {
 		pageX = Math.round(pagePoint.x);
 		pageY = Math.round(pagePoint.y);
 	} else {
-		x3dom.debug.logError('Unable to find getBoundingClientRect or webkitConvertPointFromPageToNode');
+		x3dom.debug.logError("Unable to find getBoundingClientRect or webkitConvertPointFromPageToNode");
 	}
 
 	return { x: pageX, y: pageY };

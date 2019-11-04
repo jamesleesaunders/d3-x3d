@@ -37,7 +37,7 @@ export default function() {
 	let width = 500;
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = d3.interpolateRdYlGn;
+	let colors = d3.schemeRdYlGn[8];
 	let classed = "d3X3dVectorFieldChart";
 	let debug = false;
 
@@ -47,7 +47,7 @@ export default function() {
 	let zScale;
 	let colorScale;
 	let sizeScale;
-	let sizeDomain = [2.0, 5.0];
+	let sizeRange = [2.0, 5.0];
 	let origin = { x: 0, y: 0, z: 0 };
 
 	/* Components */
@@ -86,7 +86,7 @@ export default function() {
 
 		const extent = d3.extent(data.values.map((f) => {
 			let vx, vy, vz;
-			if ('vx' in f) {
+			if ("vx" in f) {
 				({ vx, vy, vz } = f);
 			} else {
 				({ vx, vy, vz } = vectorFunction(f.x, f.y, f.z, f.value));
@@ -108,13 +108,13 @@ export default function() {
 			.domain([minZ, maxZ])
 			.range([0, dimensionZ]);
 
-		colorScale = d3.scaleSequential()
-			.domain(extent.slice().reverse())
-			.interpolator(colors);
-
 		sizeScale = d3.scaleLinear()
 			.domain(extent)
-			.range(sizeDomain);
+			.range(sizeRange);
+
+		colorScale = d3.scaleQuantize()
+			.domain(extent)
+			.range(colors);
 
 		// TODO: Have a think about whether this is appropriate?
 		// Or, do we always want the origin to be 0,0,0 ?
@@ -299,14 +299,14 @@ export default function() {
 	};
 
 	/**
-	 * Size Domain Getter / Setter
+	 * Size Range Getter / Setter
 	 *
 	 * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
 	 * @returns {*}
 	 */
-	my.sizeDomain = function(_v) {
-		if (!arguments.length) return sizeDomain;
-		sizeDomain = _v;
+	my.sizeRange = function(_v) {
+		if (!arguments.length) return sizeRange;
+		sizeRange = _v;
 		return my;
 	};
 

@@ -28,6 +28,7 @@ export default function() {
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["green", "red", "yellow", "steelblue", "orange"];
+	let sizeRange = [0.5, 3.5];
 	let classed = "d3X3dBubbleChart";
 	let debug = false;
 
@@ -37,7 +38,6 @@ export default function() {
 	let zScale;
 	let colorScale;
 	let sizeScale;
-	let sizeDomain = [0.5, 3.5];
 
 	/* Components */
 	const viewpoint = component.viewpoint();
@@ -74,7 +74,7 @@ export default function() {
 
 		sizeScale = d3.scaleLinear()
 			.domain(valueExtent)
-			.range(sizeDomain);
+			.range(sizeRange);
 	};
 
 	/**
@@ -251,14 +251,14 @@ export default function() {
 	};
 
 	/**
-	 * Size Domain Getter / Setter
+	 * Size Range Getter / Setter
 	 *
 	 * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
 	 * @returns {*}
 	 */
-	my.sizeDomain = function(_v) {
-		if (!arguments.length) return sizeDomain;
-		sizeDomain = _v;
+	my.sizeRange = function(_v) {
+		if (!arguments.length) return sizeRange;
+		sizeRange = _v;
 		return my;
 	};
 

@@ -1,6 +1,6 @@
 {
   "name": "d3-x3d",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "3D Data Driven Charting Library with D3 and X3D",
   "license": "GPL-2.0",
   "keywords": [
@@ -54,12 +54,12 @@
     "jsdoc": "^3.6.3",
     "jsdom": "^15.2.0",
     "minami": "^1.2.3",
-    "mocha": "^6.2.1",
-    "rollup": "^1.24.0",
+    "mocha": "^6.2.2",
+    "rollup": "^1.26.2",
     "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "snyk": "^1.235.1",
+    "snyk": "^1.241.0",
     "tap-spec": "^5.0.0",
     "tape": "^4.11.0",
     "toast-jsdoc": "^1.0.2",

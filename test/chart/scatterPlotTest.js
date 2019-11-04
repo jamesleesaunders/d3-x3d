@@ -37,9 +37,14 @@ test("Test Scatter Plot Chart, chart.scatterPlot()", function(t) {
 	t.equal(scatterPlot.zScale(), 0.1, "Changed zScale is set");
 
 	// Test color getter / setter function
-	t.equal(scatterPlot.color(), "orange", "Default color");
+	t.equal(scatterPlot.color(), undefined, "Default color");
 	scatterPlot.color("red");
 	t.equal(scatterPlot.color(), "red", "Changed color");
+
+	// Test colors getter / setter function
+	t.deepEqual(scatterPlot.colors(), ["orange"], "Default colors");
+	scatterPlot.colors(["red", "green"]);
+	t.deepEqual(scatterPlot.colors(), ["red", "green"], "Changed colors");
 
 	// Test debug getter / setter function
 	t.equal(scatterPlot.debug(), false, "Debug mode is false");

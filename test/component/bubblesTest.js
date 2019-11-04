@@ -31,15 +31,20 @@ test("Test Bubbles Component, component.bubbles()", function(t) {
 	bubbles.sizeScale(2);
 	t.equal(bubbles.sizeScale(), 2, "Changed sizeScale is set");
 
-	// Test sizeDomain getter / setter function
-	t.deepEqual(bubbles.sizeDomain(), [0.5, 4.0], "Default sizeDomain");
-	bubbles.sizeDomain([0.2, 5.0]);
-	t.deepEqual(bubbles.sizeDomain(), [0.2, 5.0], "Changed sizeDomain");
+	// Test sizeRange getter / setter function
+	t.deepEqual(bubbles.sizeRange(), [0.5, 4.0], "Default sizeRange");
+	bubbles.sizeRange([0.2, 5.0]);
+	t.deepEqual(bubbles.sizeRange(), [0.2, 5.0], "Changed sizeRange");
 
 	// Test color getter / setter function
-	t.equal(bubbles.color(), "orange", "Default color");
+	t.equal(bubbles.color(), undefined, "Default color");
 	bubbles.color("yellow");
 	t.equal(bubbles.color(), "yellow", "Changed color");
+
+	// Test colors getter / setter function
+	t.deepEqual(bubbles.colors(), ["#d73027", "#f46d43", "#fdae61", "#fee08b", "#d9ef8b", "#a6d96a", "#66bd63", "#1a9850"], "Default colors");
+	bubbles.colors(["red", "green"]);
+	t.deepEqual(bubbles.colors(), ["red", "green"], "Changed colors");
 
 	t.end();
 });

@@ -19,7 +19,9 @@
     var chartHolder = d3.select("#chartholder");
 
     // Declare the chart component
-    var myChart = d3.x3d.chart.scatterPlot();
+    var myChart = d3.x3d.chart.scatterPlot()
+      .colors(d3.schemeRdYlGn[8])
+      .sizeRange([0.1, 1.5]);
 
     var refreshChart = function() {
       // Generate some data

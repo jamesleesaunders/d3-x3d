@@ -40,7 +40,7 @@ export default function() {
 
 	/* Components */
 	const viewpoint = component.viewpoint();
-	const axis = component.axisThreePlane().labelPosition('distal');
+	const axis = component.axisThreePlane().labelPosition("distal");
 	const areas = component.areaMultiSeries();
 	const light = component.light();
 

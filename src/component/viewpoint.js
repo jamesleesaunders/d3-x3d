@@ -39,7 +39,7 @@ export default function() {
 	/**
 	 * Set Quick Viewpoint
 	 *
-	 * @param {string} view - 'left', 'side', 'top', 'dimetric'
+	 * @param {string} view - "left", "side", "top", "dimetric"
 	 * @returns {my}
 	 */
 	my.quickView = function(view) {
