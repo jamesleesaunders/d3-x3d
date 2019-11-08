@@ -1,9 +1,10 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import component from "../component";
+import { dispatch } from "../events";
 
 /**
- * Reusable 3D Bubble Chart
+ * Reusable 3D Scatter Plot Chart
  *
  * @module
  *
@@ -12,11 +13,11 @@ import component from "../component";
  *
  * let myData = [...];
  *
- * let myChart = d3.x3d.chart.bubbleChart();
+ * let myChart = d3.x3d.chart.scatterPlot();
  *
  * chartHolder.datum(myData).call(myChart);
  *
- * @see https://datavizproject.com/data-type/bubble-chart/
+ * @see https://datavizproject.com/data-type/3d-scatterplot/
  */
 export default function() {
 
@@ -27,10 +28,11 @@ export default function() {
 	let width = 500;
 	let height = 500;
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = ["green", "red", "yellow", "steelblue", "orange"];
-	let sizeRange = [0.5, 3.5];
-	let classed = "d3X3dBubbleChart";
+	let colors = ["orange"];
+	let color;
+	let classed = "d3X3dScatterPlot";
 	let debug = false;
+	let mappings;
 
 	/* Scales */
 	let xScale;
@@ -38,12 +40,12 @@ export default function() {
 	let zScale;
 	let colorScale;
 	let sizeScale;
+	let sizeRange = [0.2];
 
 	/* Components */
 	const viewpoint = component.viewpoint();
 	const axis = component.axisThreePlane();
-	const bubbles = component.bubblesMultiSeries();
-	const light = component.light();
+	const bubbles = component.bubbles2();
 
 	/**
 	 * Initialise Data and Scales
@@ -52,36 +54,61 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	const init = function(data) {
-		const { valueExtent, coordinatesExtent, rowKeys } = dataTransform(data).summary();
-		const { x: extentX, y: extentY, z: extentZ } = coordinatesExtent;
-		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
+
+		let newData = {};
+		['x', 'y', 'z', 'size', 'color'].forEach((dimension) => {
+			let set = {
+				key: dimension,
+				values: []
+			};
+
+			data.values.forEach((d) => {
+				let key = mappings[dimension];
+				let value = d.values.find((v) => v.key === key).value;
+				set.values.push({ key: key, value: value });
+			});
+
+			newData[dimension] = dataTransform(set).summary();
+		});
+
+		let extentX = newData.x.valueExtent;
+		let extentY = newData.y.valueExtent;
+		let extentZ = newData.z.valueExtent;
+		let extentSize = newData.size.valueExtent;
+		let extentColor = newData.color.valueExtent;
 
 		xScale = d3.scaleLinear()
 			.domain(extentX)
-			.range([0, dimensionX]);
+			.range([0, dimensions.x]);
 
 		yScale = d3.scaleLinear()
 			.domain(extentY)
-			.range([0, dimensionY]);
+			.range([0, dimensions.y]);
 
 		zScale = d3.scaleLinear()
 			.domain(extentZ)
-			.range([0, dimensionZ]);
-
-		colorScale = d3.scaleOrdinal()
-			.domain(rowKeys)
-			.range(colors);
+			.range([0, dimensions.z]);
 
 		sizeScale = d3.scaleLinear()
-			.domain(valueExtent)
+			.domain(extentSize)
 			.range(sizeRange);
+
+		if (color) {
+			colorScale = d3.scaleQuantize()
+				.domain(extentColor)
+				.range([color, color]);
+		} else {
+			colorScale = d3.scaleQuantize()
+				.domain(extentColor)
+				.range(colors);
+		}
 	};
 
 	/**
 	 * Constructor
 	 *
 	 * @constructor
-	 * @alias bubbleChart
+	 * @alias scatterPlot
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
@@ -97,17 +124,12 @@ export default function() {
 			.attr("showLog", debug ? "true" : "false")
 			.attr("showStat", debug ? "true" : "false");
 
-		// Disable gamma correction
-		scene.append("Environment")
-			.attr("gammaCorrectionDefault", "none");
-
-		// Add a white background
 		scene.append("Background")
 			.attr("groundColor", "1 1 1")
 			.attr("skyColor", "1 1 1");
 
 		// Update the chart dimensions and add layer groups
-		const layers = ["axis", "bubbles"];
+		const layers = ["axis", "bubbles", "crosshair", "label"];
 		scene.classed(classed, true)
 			.selectAll("Group")
 			.data(layers)
@@ -133,6 +155,7 @@ export default function() {
 
 			// Add Bubbles
 			bubbles.xScale(xScale)
+				.mappings(mappings)
 				.yScale(yScale)
 				.zScale(zScale)
 				.sizeScale(sizeScale)
@@ -141,9 +164,6 @@ export default function() {
 			scene.select(".bubbles")
 				.datum(data)
 				.call(bubbles);
-
-			// Add Light
-			scene.call(light);
 		});
 	};
 
@@ -220,6 +240,30 @@ export default function() {
 	};
 
 	/**
+	 * Size Scale Getter / Setter
+	 *
+	 * @param {d3.scale} _v - D3 color scale.
+	 * @returns {*}
+	 */
+	my.sizeScale = function(_v) {
+		if (!arguments.length) return sizeScale;
+		sizeScale = _v;
+		return my;
+	};
+
+	/**
+	 * Size Range Getter / Setter
+	 *
+	 * @param {number[]} _v - Size min and max (e.g. [1, 9]).
+	 * @returns {*}
+	 */
+	my.sizeRange = function(_v) {
+		if (!arguments.length) return sizeRange;
+		sizeRange = _v;
+		return my;
+	};
+
+	/**
 	 * Color Scale Getter / Setter
 	 *
 	 * @param {d3.scale} _v - D3 color scale.
@@ -228,6 +272,18 @@ export default function() {
 	my.colorScale = function(_v) {
 		if (!arguments.length) return colorScale;
 		colorScale = _v;
+		return my;
+	};
+
+	/**
+	 * Color Getter / Setter
+	 *
+	 * @param {string} _v - Color (e.g. "red" or "#ff0000").
+	 * @returns {*}
+	 */
+	my.color = function(_v) {
+		if (!arguments.length) return color;
+		color = _v;
 		return my;
 	};
 
@@ -268,6 +324,18 @@ export default function() {
 	};
 
 	/**
+	 * Mappings Getter / Setter
+	 *
+	 * @param {Object}
+	 * @returns {*}
+	 */
+	my.mappings = function(_v) {
+		if (!arguments.length) return mappings;
+		mappings = _v;
+		return my;
+	};
+
+	/**
 	 * Debug Getter / Setter
 	 *
 	 * @param {boolean} _v - Show debug log and stats. True/False.
@@ -277,6 +345,16 @@ export default function() {
 		if (!arguments.length) return debug;
 		debug = _v;
 		return my;
+	};
+
+	/**
+	 * Dispatch On Getter
+	 *
+	 * @returns {*}
+	 */
+	my.on = function() {
+		let value = dispatch.on.apply(dispatch, arguments);
+		return value === dispatch ? my : value;
 	};
 
 	return my;

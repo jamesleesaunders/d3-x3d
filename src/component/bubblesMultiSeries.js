@@ -58,20 +58,20 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	const init = function(data) {
-		const { rowKeys, valueExtent, coordinatesMax } = dataTransform(data).summary();
-		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
+		const { rowKeys, valueExtent, coordinatesExtent } = dataTransform(data).summary();
+		const { x: extentX, y: extentY, z: extentZ } = coordinatesExtent;
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
 		xScale = d3.scaleLinear()
-			.domain([0, maxX])
+			.domain(extentX)
 			.range([0, dimensionX]);
 
 		yScale = d3.scaleLinear()
-			.domain([0, maxY])
+			.domain(extentY)
 			.range([0, dimensionY]);
 
 		zScale = d3.scaleLinear()
-			.domain([0, maxZ])
+			.domain(extentZ)
 			.range([0, dimensionZ]);
 
 		colorDomain = arrayUnique(colorDomain, rowKeys);

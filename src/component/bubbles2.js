@@ -15,6 +15,7 @@ export default function() {
 	let colors = d3.schemeRdYlGn[8];
 	let color;
 	let classed = "d3X3dBubbles";
+	let mappings;
 
 	/* Scales */
 	let xScale;
@@ -31,41 +32,59 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	const init = function(data) {
-		const { valueExtent, coordinatesExtent } = dataTransform(data).summary();
-		const { x: extentX, y: extentY, z: extentZ } = coordinatesExtent;
-		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
+		let newData = {};
+		['x', 'y', 'z', 'size', 'color'].forEach((dimension) => {
+			let set = {
+				key: dimension,
+				values: []
+			};
+
+			data.values.forEach((d) => {
+				let key = mappings[dimension];
+				let value = d.values.find((v) => v.key === key).value;
+				set.values.push({ key: key, value: value });
+			});
+
+			newData[dimension] = dataTransform(set).summary();
+		});
+
+		let extentX = newData.x.valueExtent;
+		let extentY = newData.y.valueExtent;
+		let extentZ = newData.z.valueExtent;
+		let extentSize = newData.size.valueExtent;
+		let extentColor = newData.color.valueExtent;
 
 		if (typeof xScale === "undefined") {
 			xScale = d3.scaleLinear()
 				.domain(extentX)
-				.range([0, dimensionX]);
+				.range([0, dimensions.x]);
 		}
 
 		if (typeof yScale === "undefined") {
 			yScale = d3.scaleLinear()
 				.domain(extentY)
-				.range([0, dimensionY]);
+				.range([0, dimensions.y]);
 		}
 
 		if (typeof zScale === "undefined") {
 			zScale = d3.scaleLinear()
 				.domain(extentZ)
-				.range([0, dimensionZ]);
+				.range([0, dimensions.z]);
 		}
 
 		if (typeof sizeScale === "undefined") {
 			sizeScale = d3.scaleLinear()
-				.domain(valueExtent)
+				.domain(extentSize)
 				.range(sizeRange);
 		}
 
 		if (color) {
 			colorScale = d3.scaleQuantize()
-				.domain(valueExtent)
+				.domain(extentColor)
 				.range([color, color]);
 		} else if (typeof colorScale === "undefined") {
 			colorScale = d3.scaleQuantize()
-				.domain(valueExtent)
+				.domain(extentColor)
 				.range(colors);
 		}
 	};
@@ -91,11 +110,17 @@ export default function() {
 				attachEventListners(shape);
 
 				shape.append("Sphere")
-					.attr("radius", (d) => sizeScale(d.value));
+					.attr("radius", (d) => {
+						let sizeVal = d.values.find((v) => v.key === mappings.size).value;
+						return sizeScale(sizeVal);
+					});
 
 				shape.append("Appearance")
 					.append("Material")
-					.attr("diffuseColor", (d) => colorParse(colorScale(d.value)))
+					.attr("diffuseColor", (d) => {
+						let colorVal = d.values.find((v) => v.key === mappings.color).value;
+						return colorParse(colorScale(colorVal));
+					})
 					.attr("ambientIntensity", 0.1);
 
 				return shape;
@@ -112,16 +137,27 @@ export default function() {
 				.transition();
 
 			bubblesEnter
-				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)));
+				.attr("translation", (d) => {
+					let xVal = d.values.find((v) => v.key === mappings.x).value;
+					let yVal = d.values.find((v) => v.key === mappings.y).value;
+					let zVal = d.values.find((v) => v.key === mappings.z).value;
+					return xScale(xVal) + " " + yScale(yVal) + " " + zScale(zVal);
+				});
+
+			bubblesEnter.select("Shape")
+				.select("Sphere")
+				.attr("radius", (d) => {
+					let sizeVal = d.values.find((v) => v.key === mappings.size).value;
+					return sizeScale(sizeVal);
+				});
 
 			bubblesEnter.select("Shape")
 				.select("Appearance")
 				.select("Material")
-				.attr("diffuseColor", (d) => colorParse(colorScale(d.value)));
-
-			bubblesEnter.select("Shape")
-				.select("Sphere")
-				.attr("radius", (d) => sizeScale(d.value));
+				.attr("diffuseColor", (d) => {
+					let colorVal = d.values.find((v) => v.key === mappings.color).value;
+					return colorParse(colorScale(colorVal));
+				});
 
 			bubbles.exit()
 				.remove();
@@ -233,6 +269,18 @@ export default function() {
 	my.colors = function(_v) {
 		if (!arguments.length) return colors;
 		colors = _v;
+		return my;
+	};
+
+	/**
+	 * Mappings Getter / Setter
+	 *
+	 * @param {Object}
+	 * @returns {*}
+	 */
+	my.mappings = function(_v) {
+		if (!arguments.length) return mappings;
+		mappings = _v;
 		return my;
 	};
 

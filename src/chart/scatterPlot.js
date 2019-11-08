@@ -55,20 +55,20 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	const init = function(data) {
-		const { valueExtent, coordinatesMax } = dataTransform(data).summary();
-		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
+		const { valueExtent, coordinatesExtent } = dataTransform(data).summary();
+		const { x: extentX, y: extentY, z: extentZ } = coordinatesExtent;
 		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
 		xScale = d3.scaleLinear()
-			.domain([0, maxX])
+			.domain(extentX)
 			.range([0, dimensionX]);
 
 		yScale = d3.scaleLinear()
-			.domain([0, maxY])
+			.domain(extentY)
 			.range([0, dimensionY]);
 
 		zScale = d3.scaleLinear()
-			.domain([0, maxZ])
+			.domain(extentZ)
 			.range([0, dimensionZ]);
 
 		sizeScale = d3.scaleLinear()
