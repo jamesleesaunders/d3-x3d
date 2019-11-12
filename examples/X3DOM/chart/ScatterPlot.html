@@ -20,12 +20,13 @@
 
     // Declare the chart component
     var myChart = d3.x3d.chart.scatterPlot()
+      .mappings({ x: 'x', y: 'y', z: 'z', size: 'size', color: 'color' })
       .colors(d3.schemeRdYlGn[8])
       .sizeRange([0.1, 1.5]);
 
     var refreshChart = function() {
       // Generate some data
-      var myData = d3.x3d.randomData.dataset3(200);
+      var myData = d3.x3d.randomData.dataset6(200);
 
       chartHolder.datum(myData).call(myChart);
     };

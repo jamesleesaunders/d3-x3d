@@ -3,9 +3,9 @@ import chartBarChartMultiSeries from "./chart/barChartMultiSeries";
 import chartBarChartVertical from "./chart/barChartVertical";
 import chartBubbleChart from "./chart/bubbleChart";
 import chartCrosshairPlot from "./chart/crosshairPlot";
+import chartParticlePlot from "./chart/particlePlot";
 import chartRibbonChartMultiSeries from "./chart/ribbonChartMultiSeries";
 import chartScatterPlot from "./chart/scatterPlot";
-import chartScatterPlot2 from "./chart/scatterPlot2";
 import chartSurfacePlot from "./chart/surfacePlot";
 import chartVectorField from "./chart/vectorFieldChart";
 import chartVolumeSlice from "./chart/volumeSliceChart";
@@ -16,9 +16,9 @@ export default {
 	barChartVertical: chartBarChartVertical,
 	bubbleChart: chartBubbleChart,
 	crosshairPlot: chartCrosshairPlot,
+	particlePlot: chartParticlePlot,
 	ribbonChartMultiSeries: chartRibbonChartMultiSeries,
 	scatterPlot: chartScatterPlot,
-	scatterPlot2: chartScatterPlot2,
 	surfacePlot: chartSurfacePlot,
 	vectorFieldChart: chartVectorField,
 	volumeSliceChart: chartVolumeSlice

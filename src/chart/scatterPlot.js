@@ -31,6 +31,7 @@ export default function() {
 	let colors = ["orange"];
 	let color;
 	let classed = "d3X3dScatterPlot";
+	let mappings;
 	let debug = false;
 
 	/* Scales */
@@ -55,33 +56,52 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	const init = function(data) {
-		const { valueExtent, coordinatesExtent } = dataTransform(data).summary();
-		const { x: extentX, y: extentY, z: extentZ } = coordinatesExtent;
-		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
+
+		let newData = {};
+		['x', 'y', 'z', 'size', 'color'].forEach((dimension) => {
+			let set = {
+				key: dimension,
+				values: []
+			};
+
+			data.values.forEach((d) => {
+				let key = mappings[dimension];
+				let value = d.values.find((v) => v.key === key).value;
+				set.values.push({ key: key, value: value });
+			});
+
+			newData[dimension] = dataTransform(set).summary();
+		});
+
+		let extentX = newData.x.valueExtent;
+		let extentY = newData.y.valueExtent;
+		let extentZ = newData.z.valueExtent;
+		let extentSize = newData.size.valueExtent;
+		let extentColor = newData.color.valueExtent;
 
 		xScale = d3.scaleLinear()
 			.domain(extentX)
-			.range([0, dimensionX]);
+			.range([0, dimensions.x]);
 
 		yScale = d3.scaleLinear()
 			.domain(extentY)
-			.range([0, dimensionY]);
+			.range([0, dimensions.y]);
 
 		zScale = d3.scaleLinear()
 			.domain(extentZ)
-			.range([0, dimensionZ]);
+			.range([0, dimensions.z]);
 
 		sizeScale = d3.scaleLinear()
-			.domain(valueExtent)
+			.domain(extentSize)
 			.range(sizeRange);
 
 		if (color) {
 			colorScale = d3.scaleQuantize()
-				.domain(valueExtent)
+				.domain(extentColor)
 				.range([color, color]);
 		} else {
 			colorScale = d3.scaleQuantize()
-				.domain(valueExtent)
+				.domain(extentColor)
 				.range(colors);
 		}
 	};
@@ -153,6 +173,7 @@ export default function() {
 
 			// Add Bubbles
 			bubbles.xScale(xScale)
+				.mappings(mappings)
 				.yScale(yScale)
 				.zScale(zScale)
 				.sizeScale(sizeScale)
@@ -339,6 +360,18 @@ export default function() {
 	my.sizeRange = function(_v) {
 		if (!arguments.length) return sizeRange;
 		sizeRange = _v;
+		return my;
+	};
+
+	/**
+	 * Mappings Getter / Setter
+	 *
+	 * @param {Object} _v - Color, Size, Mappings.
+	 * @returns {*}
+	 */
+	my.mappings = function(_v) {
+		if (!arguments.length) return mappings;
+		mappings = _v;
 		return my;
 	};
 

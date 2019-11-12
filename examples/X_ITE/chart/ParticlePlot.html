@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3d : 3D Particle Plot Chart Example</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://code.create3000.de/x_ite/latest/dist/x_ite.min.js"></script>
+  <script src="https://raw.githack.com/andreasplesch/x_ite_dom/master/latest/x_ite_dom.js"></script>
+  <link rel="stylesheet" href="https://code.create3000.de/x_ite/latest/dist/x_ite.css" />
+  <script src="../../../dist/d3-x3d.js"></script>
+</head>
+
+<body>
+<X3DCanvas id="chartholder" style="width: 500px; height: 500px;"></X3DCanvas>
+
+<script>
+  function loadChart(data) {
+    // Select chartholder
+    var chartHolder = d3.select("#chartholder");
+
+    // Declare the chart component
+    var myChart = d3.x3d.chart.particlePlot()
+      .mappings({x: "ridge", y: "nub", z: "crack", size: "density", color: "weight"})
+      .colors(d3.schemeRdYlGn[8])
+      .sizeRange([2.0, 16.0]);
+
+    // Generate chart
+    chartHolder.datum(data).call(myChart);
+  }
+
+  // Generate Chart fro Pollen CSV Data
+  // Source: http://metagrid2.sv.vt.edu/~npolys/InfoVis2019/pollen.csv
+  d3.csv("../../assets/MNIST_PHATE_3D.csv")
+    .then((data) => {
+      var points = data.map((d) => {
+        return {
+          key: 'Point' + d.OBSERVATION_NUMBER,
+          values: [
+            { key: "weight", value: +d.WEIGHT },
+            { key: "density", value: +d.DENSITY },
+            { key: "ridge", value: +d.RIDGE },
+            { key: "nub", value: +d.NUB },
+            { key: "crack", value: +d.CRACK },
+          ]
+        };
+      });
+
+      var pollenData = {
+        key: 'Pollen',
+        values: points
+      };
+
+      loadChart(pollenData);
+    })
+    .finally(() => {
+      console.log("done");
+    });
+
+</script>
+</body>

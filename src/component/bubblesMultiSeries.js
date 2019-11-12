@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import componentBubbles from "./bubbles";
 import { dispatch } from "../events";
+import * as glMatrix from "gl-matrix";
 
 /**
  * Reusable 3D Multi Series Bubble Chart Component
@@ -25,7 +26,10 @@ export default function() {
 	let sizeRange = [0.5, 3.0];
 
 	/* Components */
-	const bubbles = componentBubbles();
+	const bubbles = componentBubbles()
+		.mappings({ x: 'x', y: 'y', z: 'z', size: 'size', color: 'color' })
+		.colors(d3.schemeRdYlGn[8])
+		.sizeRange([2, 2]);
 
 	/**
 	 * Unique Array
@@ -95,6 +99,26 @@ export default function() {
 		selection.each(function(data) {
 			init(data);
 
+			const bubbleData = function(d) {
+				return d.map((f) => {
+					return {
+						key: f.key,
+						values: f.values.map((g) => {
+							return {
+								key: g.key,
+								values: [
+									{ key: "size", value: g.value },
+									{ key: "color", value: g.value },
+									{ key: "x", value: g.x },
+									{ key: "y", value: g.y },
+									{ key: "z", value: g.z }
+								]
+							}
+						})
+					};
+				});
+			};
+
 			const element = d3.select(this)
 				.classed(classed, true);
 
@@ -110,7 +134,7 @@ export default function() {
 			};
 
 			const bubbleGroup = element.selectAll(".bubbleGroup")
-				.data((d) => d, (d) => d.key);
+				.data(bubbleData, (d) => d.key);
 
 			bubbleGroup.enter()
 				.append("Group")
