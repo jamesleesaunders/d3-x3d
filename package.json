@@ -52,7 +52,7 @@
     "jsdom": "^15.2.1",
     "minami": "^1.2.3",
     "mocha": "^6.2.2",
-    "rollup": "^1.27.5",
+    "rollup": "^1.27.8",
     "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
