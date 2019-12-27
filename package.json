@@ -37,7 +37,8 @@
   "dependencies": {
     "d3": "^5.14.2",
     "d3-interpolate-curve": "^1.0.2",
-    "gl-matrix": "^3.1.0"
+    "gl-matrix": "^3.1.0",
+    "snyk": "^1.260.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
