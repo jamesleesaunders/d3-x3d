@@ -1,4 +1,5 @@
-let test = require("tape");
+let test = require("mocha");
+let chai = require("chai");
 let window = require("browser-env")();
 let d3 = require("d3");
 let d3X3d = require("../");
@@ -105,7 +106,7 @@ let dataset3 = [{
 	]
 }];
 
-test("Test Summary Single Dimension", function(t) {
+test.describe("Test Summary Single Dimension", function() {
 	let actual = d3X3d.dataTransform(dataset1).summary();
 	let expected = {
 		dataType: 1,
@@ -122,12 +123,13 @@ test("Test Summary Single Dimension", function(t) {
 		thresholds: [4.19, 5.64, 6.5, 8.53],
 		rowValuesKeys: ["key", "value", "x", "y", "z"]
 	};
-	t.deepEqual(actual, expected);
-
-	t.end();
+	test.it("should be equivalent", function(done) {
+		chai.expect(actual).to.be.deep.equal(expected);
+		done();
+	});
 });
 
-test("Test Summary Multi Dimension", function(t) {
+test.describe("Test Summary Multi Dimension", function() {
 	let actual = d3X3d.dataTransform(dataset2).summary();
 	let expected = {
 		dataType: 2,
@@ -147,15 +149,19 @@ test("Test Summary Multi Dimension", function(t) {
 		thresholds: [2.745, 7.32, 10.065, 16.47],
 		rowValuesKeys: ["key", "value", "x", "y", "z"]
 	};
-	t.deepEqual(actual, expected);
-
-	t.end();
+	test.it("should be equivalent", function(done) {
+		chai.expect(actual).to.be.deep.equal(expected);
+		done();
+	});
 });
 
-test("Test Rotate", function(t) {
-	t.deepEqual(d3X3d.dataTransform(dataset2).rotate(), dataset3);
-	// eslint-disable-next-line no-undef
-	t.deepEqual(d3X3d.dataTransform(dataset3).rotate(), dataset2);
-
-	t.end();
+test.describe("Test Rotate", function() {
+	test.it("should return Dataset 3", function(done) {
+		chai.expect(d3X3d.dataTransform(dataset2).rotate()).to.be.deep.equal(dataset3);
+		done();
+	});
+	test.it("should return Dataset 2", function(done) {
+		chai.expect(d3X3d.dataTransform(dataset3).rotate()).to.be.deep.equal(dataset2);
+		done();
+	});
 });

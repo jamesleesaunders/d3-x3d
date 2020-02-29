@@ -4,18 +4,18 @@ let window = require("browser-env")();
 let d3 = require("d3");
 let d3X3d = require("../../");
 
-test.describe("Test Bubble Chart, chart.bubbleChart()", function() {
-	let bubbleChart = d3X3d.chart.bubbleChart();
+test.describe("Test Vector Field Chart, chart.vectorFieldChart()", function() {
+	let vectorFieldChart = d3X3d.chart.vectorFieldChart();
 
 	// Test width getter / setter function
 	test.describe("#width()", function() {
 		test.it("should default to 500", function(done) {
-			chai.expect(bubbleChart.width()).to.equal(500);
+			chai.expect(vectorFieldChart.width()).to.equal(500);
 			done();
 		});
 		test.it("should be changed to 300", function(done) {
-			bubbleChart.width(300);
-			chai.expect(bubbleChart.width()).to.equal(300);
+			vectorFieldChart.width(300);
+			chai.expect(vectorFieldChart.width()).to.equal(300);
 			done();
 		});
 	});
@@ -23,12 +23,12 @@ test.describe("Test Bubble Chart, chart.bubbleChart()", function() {
 	// Test height getter / setter function
 	test.describe("#height()", function() {
 		test.it("should default to 500", function(done) {
-			chai.expect(bubbleChart.height()).to.equal(500);
+			chai.expect(vectorFieldChart.height()).to.equal(500);
 			done();
 		});
 		test.it("should be changed to 300", function(done) {
-			bubbleChart.height(300);
-			chai.expect(bubbleChart.height()).to.equal(300);
+			vectorFieldChart.height(300);
+			chai.expect(vectorFieldChart.height()).to.equal(300);
 			done();
 		});
 	});
@@ -36,12 +36,12 @@ test.describe("Test Bubble Chart, chart.bubbleChart()", function() {
 	// Test dimensions getter / setter function
 	test.describe("#dimensions()", function() {
 		test.it("should default to { x: 40, y: 40, z: 40 }", function(done) {
-			chai.expect(bubbleChart.dimensions()).to.be.deep.equal({ x: 40, y: 40, z: 40 });
+			chai.expect(vectorFieldChart.dimensions()).to.be.deep.equal({ x: 40, y: 40, z: 40 });
 			done();
 		});
-		test.it("should be changed to { x: 20, y: 20, z: 20 }", function(done) {
-			bubbleChart.dimensions({ x: 20, y: 20, z: 20 });
-			chai.expect(bubbleChart.dimensions()).to.be.deep.equal({ x: 20, y: 20, z: 20 });
+		test.it("should be changed to { x: 10, y: 20, z: 30 }", function(done) {
+			vectorFieldChart.dimensions({ x: 10, y: 20, z: 30 });
+			chai.expect(vectorFieldChart.dimensions()).to.be.deep.equal({ x: 10, y: 20, z: 30 });
 			done();
 		});
 	});
@@ -49,12 +49,12 @@ test.describe("Test Bubble Chart, chart.bubbleChart()", function() {
 	// Test xScale getter / setter function
 	test.describe("#xScale()", function() {
 		test.it("should default to undefined", function(done) {
-			chai.expect(bubbleChart.xScale()).to.be.undefined;
+			chai.expect(vectorFieldChart.xScale()).to.be.undefined;
 			done();
 		});
 		test.it("should be changed to 0.2", function(done) {
-			bubbleChart.xScale(0.2);
-			chai.expect(bubbleChart.xScale()).to.equal(0.2);
+			vectorFieldChart.xScale(0.2);
+			chai.expect(vectorFieldChart.xScale()).to.equal(0.2);
 			done();
 		});
 	});
@@ -62,12 +62,12 @@ test.describe("Test Bubble Chart, chart.bubbleChart()", function() {
 	// Test yScale getter / setter function
 	test.describe("#yScale()", function() {
 		test.it("should default to undefined", function(done) {
-			chai.expect(bubbleChart.yScale()).to.be.undefined;
+			chai.expect(vectorFieldChart.yScale()).to.be.undefined;
 			done();
 		});
 		test.it("should be changed to 0.1", function(done) {
-			bubbleChart.yScale(0.1);
-			chai.expect(bubbleChart.yScale()).to.equal(0.1);
+			vectorFieldChart.yScale(0.1);
+			chai.expect(vectorFieldChart.yScale()).to.equal(0.1);
 			done();
 		});
 	});
@@ -75,12 +75,12 @@ test.describe("Test Bubble Chart, chart.bubbleChart()", function() {
 	// Test zScale getter / setter function
 	test.describe("#zScale()", function() {
 		test.it("should default to undefined", function(done) {
-			chai.expect(bubbleChart.zScale()).to.be.undefined;
+			chai.expect(vectorFieldChart.zScale()).to.be.undefined;
 			done();
 		});
 		test.it("should be changed to 0.2", function(done) {
-			bubbleChart.zScale(0.2);
-			chai.expect(bubbleChart.zScale()).to.equal(0.2);
+			vectorFieldChart.zScale(0.2);
+			chai.expect(vectorFieldChart.zScale()).to.equal(0.2);
 			done();
 		});
 	});
@@ -88,12 +88,12 @@ test.describe("Test Bubble Chart, chart.bubbleChart()", function() {
 	// Test colorScale getter / setter function
 	test.describe("#colorScale()", function() {
 		test.it("should default to undefined", function(done) {
-			chai.expect(bubbleChart.colorScale()).to.be.undefined;
+			chai.expect(vectorFieldChart.colorScale()).to.be.undefined;
 			done();
 		});
 		test.it("should be changed to 2", function(done) {
-			bubbleChart.colorScale(2);
-			chai.expect(bubbleChart.colorScale()).to.equal(2);
+			vectorFieldChart.colorScale(2);
+			chai.expect(vectorFieldChart.colorScale()).to.equal(2);
 			done();
 		});
 	});
@@ -101,38 +101,38 @@ test.describe("Test Bubble Chart, chart.bubbleChart()", function() {
 	// Test sizeScale getter / setter function
 	test.describe("#sizeScale()", function() {
 		test.it("should default to undefined", function(done) {
-			chai.expect(bubbleChart.sizeScale()).to.be.undefined;
+			chai.expect(vectorFieldChart.sizeScale()).to.be.undefined;
 			done();
 		});
 		test.it("should be changed to 2", function(done) {
-			bubbleChart.sizeScale(2);
-			chai.expect(bubbleChart.sizeScale()).to.equal(2);
+			vectorFieldChart.sizeScale(2);
+			chai.expect(vectorFieldChart.sizeScale()).to.equal(2);
 			done();
 		});
 	});
 
 	// Test sizeRange getter / setter function
 	test.describe("#sizeRange()", function() {
-		test.it("should default to [0.5, 3.5]", function(done) {
-			chai.expect(bubbleChart.sizeRange()).to.be.deep.equal([0.5, 3.5]);
+		test.it("should default to [2.0, 5.0]", function(done) {
+			chai.expect(vectorFieldChart.sizeRange()).to.be.deep.equal([2.0, 5.0]);
 			done();
 		});
-		test.it("should be changed to [0.2, 5.0]", function(done) {
-			bubbleChart.sizeRange([0.2, 5.0]);
-			chai.expect(bubbleChart.sizeRange()).to.be.deep.equal([0.2, 5.0]);
+		test.it("should be changed to [3.5, 7.0]", function(done) {
+			vectorFieldChart.sizeRange([3.5, 7.0]);
+			chai.expect(vectorFieldChart.sizeRange()).to.be.deep.equal([3.5, 7.0]);
 			done();
 		});
 	});
 
-	// Test colors getter / setter function
-	test.describe("#colors()", function() {
-		test.it("should default to ...", function(done) {
-			chai.expect(bubbleChart.colors()).to.be.deep.equal(["green", "red", "yellow", "steelblue", "orange"]);
+	// Test vectorFunction getter / setter function
+	test.describe("#vectorFunction()", function() {
+		test.it("show return a function", function(done) {
+			chai.expect(vectorFieldChart.vectorFunction()).to.be.a("function");
 			done();
 		});
-		test.it("should be changed to ...", function(done) {
-			bubbleChart.colors(["orange", "yellow", "red", "steelblue", "green"]);
-			chai.expect(bubbleChart.colors()).to.be.deep.equal(["orange", "yellow", "red", "steelblue", "green"]);
+		test.it("should return a function that returns \"Hello World\"", function(done) {
+			vectorFieldChart.vectorFunction(() => "Hello World");
+			chai.expect(vectorFieldChart.vectorFunction()()).to.equal("Hello World");
 			done();
 		});
 	});
@@ -140,12 +140,12 @@ test.describe("Test Bubble Chart, chart.bubbleChart()", function() {
 	// Test debug getter / setter function
 	test.describe("#debug()", function() {
 		test.it("should default to false", function(done) {
-			chai.expect(bubbleChart.debug()).to.be.false;
+			chai.expect(vectorFieldChart.debug()).to.be.false;
 			done();
 		});
 		test.it("should be changed to true", function(done) {
-			bubbleChart.debug(true);
-			chai.expect(bubbleChart.debug()).to.be.true;
+			vectorFieldChart.debug(true);
+			chai.expect(vectorFieldChart.debug()).to.be.true;
 			done();
 		});
 	});

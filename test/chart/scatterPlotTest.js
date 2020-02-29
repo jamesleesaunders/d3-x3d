@@ -1,55 +1,126 @@
-let test = require("tape");
+let test = require("mocha");
+let chai = require("chai");
 let window = require("browser-env")();
 let d3 = require("d3");
 let d3X3d = require("../../");
 
-test("Test Scatter Plot Chart, chart.scatterPlot()", function(t) {
+test.describe("Test Scatter Plot Chart, chart.scatterPlot()", function() {
 	let scatterPlot = d3X3d.chart.scatterPlot();
 
 	// Test width getter / setter function
-	t.equal(scatterPlot.width(), 500, "Default width");
-	scatterPlot.width(300);
-	t.equal(scatterPlot.width(), 300, "Changed width");
+	test.describe("#width()", function() {
+		test.it("should default to 500", function(done) {
+			chai.expect(scatterPlot.width()).to.equal(500);
+			done();
+		});
+		test.it("should be changed to 300", function(done) {
+			scatterPlot.width(300);
+			chai.expect(scatterPlot.width()).to.equal(300);
+			done();
+		});
+	});
 
 	// Test height getter / setter function
-	t.equal(scatterPlot.height(), 500, "Default height");
-	scatterPlot.height(300);
-	t.equal(scatterPlot.height(), 300, "Changed height");
+	test.describe("#height()", function() {
+		test.it("should default to 500", function(done) {
+			chai.expect(scatterPlot.height()).to.equal(500);
+			done();
+		});
+		test.it("should be changed to 300", function(done) {
+			scatterPlot.height(300);
+			chai.expect(scatterPlot.height()).to.equal(300);
+			done();
+		});
+	});
 
 	// Test dimensions getter / setter function
-	t.deepEqual(scatterPlot.dimensions(), { x: 40, y: 40, z: 40 }, "Default dimensions");
-	scatterPlot.dimensions({ x: 10, y: 20, z: 30 });
-	t.deepEqual(scatterPlot.dimensions(), { x: 10, y: 20, z: 30 }, "Changed dimensions");
+	test.describe("#dimensions()", function() {
+		test.it("should default to { x: 40, y: 40, z: 40 }", function(done) {
+			chai.expect(scatterPlot.dimensions()).to.be.deep.equal({ x: 40, y: 40, z: 40 });
+			done();
+		});
+		test.it("should be changed to { x: 10, y: 20, z: 30 }", function(done) {
+			scatterPlot.dimensions({ x: 10, y: 20, z: 30 });
+			chai.expect(scatterPlot.dimensions()).to.be.deep.equal({ x: 10, y: 20, z: 30 });
+			done();
+		});
+	});
 
 	// Test xScale getter / setter function
-	t.equal(scatterPlot.xScale(), undefined, "Default xScale is undefined");
-	scatterPlot.xScale(0.2);
-	t.equal(scatterPlot.xScale(), 0.2, "Changed xScale is set");
+	test.describe("#xScale()", function() {
+		test.it("should default to undefined", function(done) {
+			chai.expect(scatterPlot.xScale()).to.be.undefined;
+			done();
+		});
+		test.it("should be changed to 0.2", function(done) {
+			scatterPlot.xScale(0.2);
+			chai.expect(scatterPlot.xScale()).to.equal(0.2);
+			done();
+		});
+	});
 
 	// Test yScale getter / setter function
-	t.equal(scatterPlot.yScale(), undefined, "Default yScale is undefined");
-	scatterPlot.yScale(0.1);
-	t.equal(scatterPlot.yScale(), 0.1, "Changed yScale is set");
+	test.describe("#yScale()", function() {
+		test.it("should default to undefined", function(done) {
+			chai.expect(scatterPlot.yScale()).to.be.undefined;
+			done();
+		});
+		test.it("should be changed to 0.1", function(done) {
+			scatterPlot.yScale(0.1);
+			chai.expect(scatterPlot.yScale()).to.equal(0.1);
+			done();
+		});
+	});
 
 	// Test zScale getter / setter function
-	t.equal(scatterPlot.zScale(), undefined, "Default zScale is undefined");
-	scatterPlot.zScale(0.1);
-	t.equal(scatterPlot.zScale(), 0.1, "Changed zScale is set");
+	test.describe("#zScale()", function() {
+		test.it("should default to undefined", function(done) {
+			chai.expect(scatterPlot.zScale()).to.be.undefined;
+			done();
+		});
+		test.it("should be changed to 0.1", function(done) {
+			scatterPlot.zScale(0.1);
+			chai.expect(scatterPlot.zScale()).to.equal(0.1);
+			done();
+		});
+	});
 
 	// Test color getter / setter function
-	t.equal(scatterPlot.color(), undefined, "Default color");
-	scatterPlot.color("red");
-	t.equal(scatterPlot.color(), "red", "Changed color");
+	test.describe("#color()", function() {
+		test.it("should default to undefined", function(done) {
+			chai.expect(scatterPlot.color()).to.be.undefined;
+			done();
+		});
+		test.it("should be changed to \"red\"", function(done) {
+			scatterPlot.color("red");
+			chai.expect(scatterPlot.color()).to.equal("red");
+			done();
+		});
+	});
 
 	// Test colors getter / setter function
-	t.deepEqual(scatterPlot.colors(), ["orange"], "Default colors");
-	scatterPlot.colors(["red", "green"]);
-	t.deepEqual(scatterPlot.colors(), ["red", "green"], "Changed colors");
+	test.describe("#colors()", function() {
+		test.it("should default to [\"orange\"]", function(done) {
+			chai.expect(scatterPlot.colors()).to.be.deep.equal(["orange"]);
+			done();
+		});
+		test.it("should be changed to [\"red\", \"green\"]", function(done) {
+			scatterPlot.colors(["red", "green"]);
+			chai.expect(scatterPlot.colors()).to.be.deep.equal(["red", "green"]);
+			done();
+		});
+	});
 
 	// Test debug getter / setter function
-	t.equal(scatterPlot.debug(), false, "Debug mode is false");
-	scatterPlot.debug(true);
-	t.equal(scatterPlot.debug(), true, "Debug mode is true");
-
-	t.end();
+	test.describe("#debug()", function() {
+		test.it("should default to false", function(done) {
+			chai.expect(scatterPlot.debug()).to.be.false;
+			done();
+		});
+		test.it("should be changed to true", function(done) {
+			scatterPlot.debug(true);
+			chai.expect(scatterPlot.debug()).to.be.true;
+			done();
+		});
+	});
 });
