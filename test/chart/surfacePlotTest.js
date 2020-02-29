@@ -1,55 +1,127 @@
-let test = require("tape");
+let test = require("mocha");
+let chai = require("chai");
 let window = require("browser-env")();
 let d3 = require("d3");
 let d3X3d = require("../../");
 
-test("Test Surface Plot Chart, chart.surfacePlot()", function(t) {
+test.describe("Test Surface Plot Chart, chart.surfacePlot()", function() {
 	let surfacePlot = d3X3d.chart.surfacePlot();
 
 	// Test width getter / setter function
-	t.equal(surfacePlot.width(), 500, "Default width");
-	surfacePlot.width(300);
-	t.equal(surfacePlot.width(), 300, "Changed width");
+	test.describe("#width()", function() {
+		test.it("should default to 500", function(done) {
+			chai.expect(surfacePlot.width()).to.equal(500);
+			done();
+		});
+		test.it("should be changed to 300", function(done) {
+			surfacePlot.width(300);
+			chai.expect(surfacePlot.width()).to.equal(300);
+			done();
+		});
+	});
 
 	// Test height getter / setter function
-	t.equal(surfacePlot.height(), 500, "Default height");
-	surfacePlot.height(300);
-	t.equal(surfacePlot.height(), 300, "Changed height");
+	test.describe("#height()", function() {
+		test.it("should default to 500", function(done) {
+			chai.expect(surfacePlot.height()).to.equal(500);
+			done();
+		});
+		test.it("should be changed to 300", function(done) {
+			surfacePlot.height(300);
+			chai.expect(surfacePlot.height()).to.equal(300);
+			done();
+		});
+	});
+
 
 	// Test dimensions getter / setter function
-	t.deepEqual(surfacePlot.dimensions(), { x: 40, y: 40, z: 40 }, "Default dimensions");
-	surfacePlot.dimensions({ x: 10, y: 20, z: 30 });
-	t.deepEqual(surfacePlot.dimensions(), { x: 10, y: 20, z: 30 }, "Changed dimensions");
+	test.describe("#dimensions()", function() {
+		test.it("should default to { x: 40, y: 40, z: 40 }", function(done) {
+			chai.expect(surfacePlot.dimensions()).to.be.deep.equal({ x: 40, y: 40, z: 40 });
+			done();
+		});
+		test.it("should be changed to { x: 10, y: 20, z: 30 }", function(done) {
+			surfacePlot.dimensions({ x: 10, y: 20, z: 30 });
+			chai.expect(surfacePlot.dimensions()).to.be.deep.equal({ x: 10, y: 20, z: 30 });
+			done();
+		});
+	});
 
 	// Test xScale getter / setter function
-	t.equal(surfacePlot.xScale(), undefined, "Default xScale is undefined");
-	surfacePlot.xScale(0.2);
-	t.equal(surfacePlot.xScale(), 0.2, "Changed xScale is set");
+	test.describe("#xScale()", function() {
+		test.it("should default to undefined", function(done) {
+			chai.expect(surfacePlot.xScale()).to.be.undefined;
+			done();
+		});
+		test.it("should be changed to 0.2", function(done) {
+			surfacePlot.xScale(0.2);
+			chai.expect(surfacePlot.xScale()).to.equal(0.2);
+			done();
+		});
+	});
 
 	// Test yScale getter / setter function
-	t.equal(surfacePlot.yScale(), undefined, "Default yScale is undefined");
-	surfacePlot.yScale(0.1);
-	t.equal(surfacePlot.yScale(), 0.1, "Changed yScale is set");
+	test.describe("#yScale()", function() {
+		test.it("should default to undefined", function(done) {
+			chai.expect(surfacePlot.yScale()).to.be.undefined;
+			done();
+		});
+		test.it("should be changed to 0.1", function(done) {
+			surfacePlot.yScale(0.1);
+			chai.expect(surfacePlot.yScale()).to.equal(0.1);
+			done();
+		});
+	});
 
 	// Test zScale getter / setter function
-	t.equal(surfacePlot.zScale(), undefined, "Default zScale is undefined");
-	surfacePlot.zScale(0.1);
-	t.equal(surfacePlot.zScale(), 0.1, "Changed zScale is set");
+	test.describe("#zScale()", function() {
+		test.it("should default to undefined", function(done) {
+			chai.expect(surfacePlot.zScale()).to.be.undefined;
+			done();
+		});
+		test.it("should be changed to 0.1", function(done) {
+			surfacePlot.zScale(0.1);
+			chai.expect(surfacePlot.zScale()).to.equal(0.1);
+			done();
+		});
+	});
 
 	// Test colorScale getter / setter function
-	t.equal(surfacePlot.colorScale(), undefined, "Default colorScale is undefined");
-	surfacePlot.colorScale(2);
-	t.equal(surfacePlot.colorScale(), 2, "Changed colorScale is set");
+	test.describe("#colorScale()", function() {
+		test.it("should default to undefined", function(done) {
+			chai.expect(surfacePlot.colorScale()).to.be.undefined;
+			done();
+		});
+		test.it("should be changed to 2", function(done) {
+			surfacePlot.colorScale(2);
+			chai.expect(surfacePlot.colorScale()).to.equal(2);
+			done();
+		});
+	});
 
 	// Test colors getter / setter function
-	t.deepEqual(surfacePlot.colors(), ["blue", "red"], "Default colors");
-	surfacePlot.colors(["orange", "yellow"]);
-	t.deepEqual(surfacePlot.colors(), ["orange", "yellow"], "Changed colors");
+	test.describe("#colors()", function() {
+		test.it("should default to [\"blue\", \"red\"]", function(done) {
+			chai.expect(surfacePlot.colors()).to.be.deep.equal(["blue", "red"]);
+			done();
+		});
+		test.it("should be changed to [\"red\", \"green\"]", function(done) {
+			surfacePlot.colors(["orange", "yellow"]);
+			chai.expect(surfacePlot.colors()).to.be.deep.equal(["orange", "yellow"]);
+			done();
+		});
+	});
 
 	// Test debug getter / setter function
-	t.equal(surfacePlot.debug(), false, "Debug mode is false");
-	surfacePlot.debug(true);
-	t.equal(surfacePlot.debug(), true, "Debug mode is true");
-
-	t.end();
+	test.describe("#debug()", function() {
+		test.it("should default to false", function(done) {
+			chai.expect(surfacePlot.debug()).to.be.false;
+			done();
+		});
+		test.it("should be changed to true", function(done) {
+			surfacePlot.debug(true);
+			chai.expect(surfacePlot.debug()).to.be.true;
+			done();
+		});
+	});
 });
