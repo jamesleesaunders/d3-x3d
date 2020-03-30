@@ -37,7 +37,8 @@
   "dependencies": {
     "d3": "^5.15.0",
     "d3-interpolate-curve": "^1.0.2",
-    "gl-matrix": "^3.2.1"
+    "gl-matrix": "^3.2.1",
+    "snyk": "^1.298.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -46,7 +47,7 @@
     "babel-preset-env": "^1.7.0",
     "browser-env": "^3.3.0",
     "chai": "^4.2.0",
-    "eslint": "^4.19.1",
+    "eslint": "^6.0.0",
     "gh-pages": "^2.2.0",
     "jsdoc": "^3.6.3",
     "jsdom": "^15.2.1",
@@ -56,7 +57,7 @@
     "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "snyk": "^1.297.2",
+    "snyk": "^1.298.0",
     "tap-spec": "^5.0.0",
     "tape": "^4.13.0",
     "toast-jsdoc": "^1.0.2",
