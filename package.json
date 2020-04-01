@@ -37,7 +37,7 @@
   "dependencies": {
     "d3": "^5.15.0",
     "d3-interpolate-curve": "^1.0.2",
-    "gl-matrix": "^3.2.1",
+    "gl-matrix": "^3.3.0",
     "snyk": "^1.298.0"
   },
   "devDependencies": {
@@ -59,7 +59,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "snyk": "^1.298.0",
     "tap-spec": "^5.0.0",
-    "tape": "^4.13.0",
+    "tape": "^4.13.2",
     "toast-jsdoc": "^1.0.2",
     "uglify-es": "^3.3.10",
     "vows": "^0.8.3"
