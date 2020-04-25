@@ -35,7 +35,7 @@
     "prepare": "npm run snyk-protect"
   },
   "dependencies": {
-    "d3": "^5.15.0",
+    "d3": "^5.15.1",
     "d3-interpolate-curve": "^1.0.2",
     "gl-matrix": "^3.3.0",
     "snyk": "^1.298.0"
