@@ -38,7 +38,7 @@
     "d3": "^5.16.0",
     "d3-interpolate-curve": "^1.0.2",
     "gl-matrix": "^3.3.0",
-    "snyk": "^1.316.2"
+    "snyk": "^1.319.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -57,7 +57,7 @@
     "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "snyk": "^1.316.2",
+    "snyk": "^1.319.2",
     "tap-spec": "^5.0.0",
     "tape": "^4.13.2",
     "toast-jsdoc": "^1.0.2",
