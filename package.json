@@ -51,7 +51,7 @@
     "jsdom": "^15.2.1",
     "minami": "^1.2.3",
     "mocha": "^6.2.2",
-    "rollup": "^1.32.0",
+    "rollup": "latest",
     "@rollup/plugin-json": "latest",
     "@rollup/plugin-babel": "latest",
     "@rollup/plugin-node-resolve": "latest",
