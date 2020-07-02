@@ -37,8 +37,7 @@
   "dependencies": {
     "d3": "^5.16.0",
     "d3-interpolate-curve": "^1.0.2",
-    "gl-matrix": "^3.3.0",
-    "snyk": "^1.336.0"
+    "gl-matrix": "^3.3.0"
   },
   "devDependencies": {
     "@babel/core": "latest",
@@ -51,12 +50,12 @@
     "jsdoc": "^3.6.4",
     "jsdom": "^15.2.1",
     "minami": "^1.2.3",
-    "mocha": "^6.2.2",
-    "rollup": "^1.32.0",
+    "mocha": "latest",
+    "rollup": "latest",
     "@rollup/plugin-json": "latest",
     "@rollup/plugin-babel": "latest",
     "@rollup/plugin-node-resolve": "latest",
-    "snyk": "^1.336.0",
+    "snyk": "latest",
     "tap-spec": "^5.0.0",
     "tape": "^4.13.3",
     "toast-jsdoc": "^1.0.2",
