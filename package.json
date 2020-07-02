@@ -59,7 +59,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "snyk": "^1.336.0",
     "tap-spec": "^5.0.0",
-    "tape": "^4.13.2",
+    "tape": "^4.13.3",
     "toast-jsdoc": "^1.0.2",
     "uglify-es": "^3.3.10",
     "vows": "^0.8.3"
