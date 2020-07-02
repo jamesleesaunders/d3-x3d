@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>d3-x3d : 3D Scatter Plot Example</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://x3dom.org/release/x3dom.js"></script>
+    <link rel="stylesheet" href="https://x3dom.org/release/x3dom.css" />
+    <script src="../dist/d3-x3d.js"></script>
+  </head>
+  <body>
+    <div id="chartholder"></div>
+    <script>
+      // Select chartholder
+      var chartHolder = d3.select("#chartholder");
+
+      // Generate some data
+      var myData = [
+        {
+          key: "UK",
+          values: [
+            { key: "Apples", value: 9 },
+            { key: "Oranges", value: 3 },
+            { key: "Pears", value: 5 },
+            { key: "Bananas", value: 7 }
+          ]
+        },
+        {
+          key: "France",
+          values: [
+            { key: "Apples", value: 5 },
+            { key: "Oranges", value: 4 },
+            { key: "Pears", value: 6 },
+            { key: "Bananas", value: 2 }
+          ]
+        }
+      ];
+
+      // Declare the chart component
+      var myChart = d3.x3d.chart.barChartMultiSeries();
+
+      // Attach chart and data to the chartholder
+      chartHolder
+        .datum(myData)
+        .call(myChart);
+    </script>
+  </body>
+</html>
