@@ -50,7 +50,7 @@
     "jsdoc": "^3.6.4",
     "jsdom": "^15.2.1",
     "minami": "^1.2.3",
-    "mocha": "latest",
+    "mocha": "8.1.0",
     "rollup": "latest",
     "@rollup/plugin-json": "latest",
     "@rollup/plugin-babel": "latest",
