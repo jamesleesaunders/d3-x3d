@@ -9,7 +9,7 @@ import componentBubblesMultiSeries from "./component/bubblesMultiSeries";
 import componentCrosshair from "./component/crosshair";
 import componentLabel from "./component/label";
 import componentLight from "./component/light";
-import componentParticles from "./component/patticles";
+import componentParticles from "./component/particles";
 import componentRibbon from "./component/ribbon";
 import componentRibbonMultiSeries from "./component/ribbonMultiSeries";
 import componentSurface from "./component/surface";
