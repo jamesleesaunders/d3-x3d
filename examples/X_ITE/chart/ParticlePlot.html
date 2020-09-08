@@ -30,7 +30,7 @@
 
   // Generate Chart fro Pollen CSV Data
   // Source: http://metagrid2.sv.vt.edu/~npolys/InfoVis2019/pollen.csv
-  d3.csv("../../assets/MNIST_PHATE_3D.csv")
+  d3.csv("../../assets/pollen.csv")
     .then((data) => {
       var points = data.map((d) => {
         return {
