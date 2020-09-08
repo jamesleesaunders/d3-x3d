@@ -18,229 +18,239 @@ import component from "../component";
  *
  * @see https://datavizproject.com/data-type/3d-bar-chart/
  */
-export default function() {
+export default function () {
 
-	let x3d;
-	let scene;
+		let x3d;
+		let scene;
 
-	/* Default Properties */
-	let width = 500;
-	let height = 500;
-	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = ["green", "red", "yellow", "steelblue", "orange"];
-	let classed = "d3X3dBarChartVertical";
-	let debug = false;
+		/* Default Properties */
+		let width = 500;
+		let height = 500;
+		let dimensions = {x: 40, y: 40, z: 40};
+		let colors = ["green", "red", "yellow", "steelblue", "orange"];
+		let classed = "d3X3dBarChartVertical";
+		let debug = false;
 
-	/* Scales */
-	let xScale;
-	let yScale;
-	let colorScale;
+		/* Scales */
+		let xScale;
+		let yScale;
+		let colorScale;
 
-	/* Components */
-	const viewpoint = component.viewpoint();
-	const xAxis = component.axis();
-	const yAxis = component.axis();
-	const bars = component.bars();
-	const light = component.light();
+		/* Components */
+		const viewpoint = component.viewpoint();
+		const xAxis = component.axis();
+		const yAxis = component.axis();
+		const bars = component.bars();
+		const light = component.light();
 
-	/**
-	 * Initialise Data and Scales
-	 *
-	 * @private
-	 * @param {Array} data - Chart data.
-	 */
-	const init = function(data) {
-		const { columnKeys, valueMax } = dataTransform(data).summary();
-		const valueExtent = [0, valueMax];
-		const { x: dimensionX, y: dimensionY } = dimensions;
+		/**
+		 * Initialise Data and Scales
+		 *
+		 * @private
+		 * @param {Array} data - Chart data.
+		 */
+		const init = function (data) {
+				const {columnKeys, valueMax} = dataTransform(data).summary();
+				const valueExtent = [0, valueMax];
+				const {x: dimensionX, y: dimensionY} = dimensions;
 
-		xScale = d3.scaleBand()
-			.domain(columnKeys)
-			.rangeRound([0, dimensionX])
-			.padding(0.5);
+				xScale = d3.scaleBand()
+						.domain(columnKeys)
+						.rangeRound([0, dimensionX])
+						.padding(0.5);
 
-		yScale = d3.scaleLinear()
-			.domain(valueExtent)
-			.range([0, dimensionY])
-			.nice();
+				yScale = d3.scaleLinear()
+						.domain(valueExtent)
+						.range([0, dimensionY])
+						.nice();
 
-		colorScale = d3.scaleOrdinal()
-			.domain(columnKeys)
-			.range(colors);
-	};
+				colorScale = d3.scaleOrdinal()
+						.domain(columnKeys)
+						.range(colors);
+		};
 
-	/**
-	 * Constructor
-	 *
-	 * @constructor
-	 * @alias barChartVertical
-	 * @param {d3.selection} selection - The chart holder D3 selection.
-	 */
-	const my = function(selection) {
-		// Create x3d element (if it does not exist already)
-		if (!x3d) {
-			x3d = selection.append("X3D");
-			scene = x3d.append("Scene");
+		/**
+		 * Create X3D base and scene
+		 *
+		 * @param selection
+		 * @param layers
+		 */
+		function createBase(selection, layers) {
+				// Create x3d element (if it does not exist already)
+				if (!x3d) {
+						x3d = selection.append("X3D");
+						scene = x3d.append("Scene");
+
+						x3d.attr("width", width + "px")
+								.attr("height", height + "px")
+								.attr("showLog", debug ? "true" : "false")
+								.attr("showStat", debug ? "true" : "false")
+								.attr("useGeoCache", false);
+
+						// Disable gamma correction
+						scene.append("Environment")
+								.attr("gammaCorrectionDefault", "none");
+
+						// Add a white background
+						scene.append("Background")
+								.attr("groundColor", "1 1 1")
+								.attr("skyColor", "1 1 1");
+				}
+
+				// Add layer groups
+				scene.classed(classed, true)
+						.selectAll("Group")
+						.data(layers)
+						.enter()
+						.append("Group")
+						.attr("class", (d) => d);
 		}
 
-		x3d.attr("width", width + "px")
-			.attr("useGeoCache", false)
-			.attr("height", height + "px")
-			.attr("showLog", debug ? "true" : "false")
-			.attr("showStat", debug ? "true" : "false");
+		/**
+		 * Constructor
+		 *
+		 * @constructor
+		 * @alias barChartVertical
+		 * @param {d3.selection} selection - The chart holder D3 selection.
+		 */
+		const my = function (selection) {
+				const layers = ["xAxis", "yAxis", "bars"];
+				createBase(selection, layers);
 
-		// Disable gamma correction
-		scene.append("Environment")
-			.attr("gammaCorrectionDefault", "none");
+				selection.each((data) => {
+						init(data);
 
-		// Add a white background
-		scene.append("Background")
-			.attr("groundColor", "1 1 1")
-			.attr("skyColor", "1 1 1");
+						// Add Viewpoint
+						viewpoint.quickView("left");
 
-		// Update the chart dimensions and add layer groups
-		const layers = ["xAxis", "yAxis", "bars"];
-		scene.classed(classed, true)
-			.selectAll("Group")
-			.data(layers)
-			.enter()
-			.append("Group")
-			.attr("class", (d) => d);
+						scene.call(viewpoint);
 
-		selection.each((data) => {
-			init(data);
+						// Add Axis
+						xAxis.scale(xScale)
+								.direction("x")
+								.tickDirection("y")
+								.tickSize(0);
 
-			// Add Viewpoint
-			viewpoint.quickView("left");
+						yAxis.scale(yScale)
+								.direction("y")
+								.tickDirection("x")
+								.tickSize(yScale.range()[1] - yScale.range()[0]);
 
-			scene.call(viewpoint);
+						scene.select(".xAxis")
+								.call(xAxis);
 
-			// Add Axis
-			xAxis.scale(xScale)
-				.direction("x")
-				.tickDirection("y")
-				.tickSize(0);
+						scene.select(".yAxis")
+								.call(yAxis);
 
-			yAxis.scale(yScale)
-				.direction("y")
-				.tickDirection("x")
-				.tickSize(yScale.range()[1] - yScale.range()[0]);
+						// Add Bars
+						bars.xScale(xScale)
+								.yScale(yScale)
+								.colors(colors);
 
-			scene.select(".xAxis")
-				.call(xAxis);
+						scene.select(".bars")
+								.datum(data)
+								.call(bars);
 
-			scene.select(".yAxis")
-				.call(yAxis);
+						// Add Light
+						scene.call(light);
+				});
+		};
 
-			// Add Bars
-			bars.xScale(xScale)
-				.yScale(yScale)
-				.colors(colors);
+		/**
+		 * Width Getter / Setter
+		 *
+		 * @param {number} _v - X3D canvas width in px.
+		 * @returns {*}
+		 */
+		my.width = function (_v) {
+				if (!arguments.length) return width;
+				width = _v;
+				return this;
+		};
 
-			scene.select(".bars")
-				.datum(data)
-				.call(bars);
+		/**
+		 * Height Getter / Setter
+		 *
+		 * @param {number} _v - X3D canvas height in px.
+		 * @returns {*}
+		 */
+		my.height = function (_v) {
+				if (!arguments.length) return height;
+				height = _v;
+				return this;
+		};
 
-			// Add Light
-			scene.call(light);
-		});
-	};
+		/**
+		 * Dimensions Getter / Setter
+		 *
+		 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+		 * @returns {*}
+		 */
+		my.dimensions = function (_v) {
+				if (!arguments.length) return dimensions;
+				dimensions = _v;
+				return this;
+		};
 
-	/**
-	 * Width Getter / Setter
-	 *
-	 * @param {number} _v - X3D canvas width in px.
-	 * @returns {*}
-	 */
-	my.width = function(_v) {
-		if (!arguments.length) return width;
-		width = _v;
-		return this;
-	};
+		/**
+		 * X Scale Getter / Setter
+		 *
+		 * @param {d3.scale} _v - D3 scale.
+		 * @returns {*}
+		 */
+		my.xScale = function (_v) {
+				if (!arguments.length) return xScale;
+				xScale = _v;
+				return my;
+		};
 
-	/**
-	 * Height Getter / Setter
-	 *
-	 * @param {number} _v - X3D canvas height in px.
-	 * @returns {*}
-	 */
-	my.height = function(_v) {
-		if (!arguments.length) return height;
-		height = _v;
-		return this;
-	};
+		/**
+		 * Y Scale Getter / Setter
+		 *
+		 * @param {d3.scale} _v - D3 scale.
+		 * @returns {*}
+		 */
+		my.yScale = function (_v) {
+				if (!arguments.length) return yScale;
+				yScale = _v;
+				return my;
+		};
 
-	/**
-	 * Dimensions Getter / Setter
-	 *
-	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-	 * @returns {*}
-	 */
-	my.dimensions = function(_v) {
-		if (!arguments.length) return dimensions;
-		dimensions = _v;
-		return this;
-	};
+		/**
+		 * Color Scale Getter / Setter
+		 *
+		 * @param {d3.scale} _v - D3 color scale.
+		 * @returns {*}
+		 */
+		my.colorScale = function (_v) {
+				if (!arguments.length) return colorScale;
+				colorScale = _v;
+				return my;
+		};
 
-	/**
-	 * X Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.xScale = function(_v) {
-		if (!arguments.length) return xScale;
-		xScale = _v;
+		/**
+		 * Colors Getter / Setter
+		 *
+		 * @param {Array} _v - Array of colours used by color scale.
+		 * @returns {*}
+		 */
+		my.colors = function (_v) {
+				if (!arguments.length) return colors;
+				colors = _v;
+				return my;
+		};
+
+		/**
+		 * Debug Getter / Setter
+		 *
+		 * @param {boolean} _v - Show debug log and stats. True/False.
+		 * @returns {*}
+		 */
+		my.debug = function (_v) {
+				if (!arguments.length) return debug;
+				debug = _v;
+				return my;
+		};
+
 		return my;
-	};
-
-	/**
-	 * Y Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.yScale = function(_v) {
-		if (!arguments.length) return yScale;
-		yScale = _v;
-		return my;
-	};
-
-	/**
-	 * Color Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 color scale.
-	 * @returns {*}
-	 */
-	my.colorScale = function(_v) {
-		if (!arguments.length) return colorScale;
-		colorScale = _v;
-		return my;
-	};
-
-	/**
-	 * Colors Getter / Setter
-	 *
-	 * @param {Array} _v - Array of colours used by color scale.
-	 * @returns {*}
-	 */
-	my.colors = function(_v) {
-		if (!arguments.length) return colors;
-		colors = _v;
-		return my;
-	};
-
-	/**
-	 * Debug Getter / Setter
-	 *
-	 * @param {boolean} _v - Show debug log and stats. True/False.
-	 * @returns {*}
-	 */
-	my.debug = function(_v) {
-		if (!arguments.length) return debug;
-		debug = _v;
-		return my;
-	};
-
-	return my;
 }

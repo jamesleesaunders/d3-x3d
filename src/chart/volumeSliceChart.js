@@ -18,255 +18,265 @@ import component from "../component";
  *
  * chartHolder.call(myChart);
  */
-export default function() {
+export default function () {
 
-	let x3d;
-	let scene;
+		let x3d;
+		let scene;
 
-	/* Default Properties */
-	let width = 500;
-	let height = 500;
-	let dimensions = { x: 40, y: 40, z: 40 };
-	let classed = "d3X3dVolumeSliceChart";
-	let debug = false;
+		/* Default Properties */
+		let width = 500;
+		let height = 500;
+		let dimensions = {x: 40, y: 40, z: 40};
+		let classed = "d3X3dVolumeSliceChart";
+		let debug = false;
 
-	/* Scales */
-	let xScale;
-	let yScale;
-	let zScale;
-	let origin = { x: 0, y: 0, z: 0 };
+		/* Scales */
+		let xScale;
+		let yScale;
+		let zScale;
+		let origin = {x: 0, y: 0, z: 0};
 
-	/* Other Volume Properties */
-	let imageUrl;
-	let numberOfSlices;
-	let slicesOverX;
-	let slicesOverY;
-	let volumeStyle = "OpacityMap";
+		/* Other Volume Properties */
+		let imageUrl;
+		let numberOfSlices;
+		let slicesOverX;
+		let slicesOverY;
+		let volumeStyle = "OpacityMap";
 
-	/* Components */
-	const viewpoint = component.viewpoint();
-	const axis = component.crosshair();
-	const volumeSlice = component.volumeSlice();
+		/* Components */
+		const viewpoint = component.viewpoint();
+		const axis = component.crosshair();
+		const volumeSlice = component.volumeSlice();
 
-	/**
-	 * Constructor
-	 *
-	 * @constructor
-	 * @alias volumeSliceChart
-	 * @param {d3.selection} selection - The chart holder D3 selection.
-	 */
-	const my = function(selection) {
-		// Create x3d element (if it does not exist already)
-		if (!x3d) {
-			x3d = selection.append("X3D");
-			scene = x3d.append("Scene");
+		/**
+		 * Create X3D base and scene
+		 *
+		 * @param selection
+		 * @param layers
+		 */
+		function createBase(selection, layers) {
+				// Create x3d element (if it does not exist already)
+				if (!x3d) {
+						x3d = selection.append("X3D");
+						scene = x3d.append("Scene");
+
+						x3d.attr("width", width + "px")
+								.attr("height", height + "px")
+								.attr("showLog", debug ? "true" : "false")
+								.attr("showStat", debug ? "true" : "false")
+								.attr("useGeoCache", false);
+
+						// Disable gamma correction
+						scene.append("Environment")
+								.attr("gammaCorrectionDefault", "none");
+
+						// Add a white background
+						scene.append("Background")
+								.attr("groundColor", "1 1 1")
+								.attr("skyColor", "1 1 1");
+				}
+
+				// Add layer groups
+				scene.classed(classed, true)
+						.selectAll("Group")
+						.data(layers)
+						.enter()
+						.append("Group")
+						.attr("class", (d) => d);
 		}
 
-		x3d.attr("width", width + "px")
-			.attr("useGeoCache", false)
-			.attr("height", height + "px")
-			.attr("showLog", debug ? "true" : "false")
-			.attr("showStat", debug ? "true" : "false");
+		/**
+		 * Constructor
+		 *
+		 * @constructor
+		 * @alias volumeSliceChart
+		 * @param {d3.selection} selection - The chart holder D3 selection.
+		 */
+		const my = function (selection) {
+				const layers = ["axis", "volume"];
+				createBase(selection, layers);
 
-		// Disable gamma correction
-		scene.append("Environment")
-			.attr("gammaCorrectionDefault", "none");
+				selection.each((data) => {
 
-		// Add a white background
-		scene.append("Background")
-			.attr("groundColor", "1 1 1")
-			.attr("skyColor", "1 1 1");
+						// Add Viewpoint
+						viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
-		// Update the chart dimensions and add layer groups
-		const layers = ["axis", "volume"];
-		scene.classed(classed, true)
-			.selectAll("Group")
-			.data(layers)
-			.enter()
-			.append("Group")
-			.attr("class", (d) => d);
+						scene.call(viewpoint);
 
-		selection.each((data) => {
+						// Add Axis
+						axis.dimensions(dimensions)
+								.xScale(xScale)
+								.yScale(yScale)
+								.zScale(zScale);
 
-			// Add Viewpoint
-			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
+						scene.select(".axis")
+								.datum(origin)
+								.call(axis);
 
-			scene.call(viewpoint);
+						// Add Volume Slice
+						volumeSlice.dimensions(dimensions)
+								.imageUrl(imageUrl)
+								.numberOfSlices(numberOfSlices)
+								.slicesOverX(slicesOverX)
+								.slicesOverY(slicesOverY)
+								.volumeStyle(volumeStyle);
 
-			// Add Axis
-			axis.dimensions(dimensions)
-				.xScale(xScale)
-				.yScale(yScale)
-				.zScale(zScale);
+						scene.select(".volume")
+								.append("transform")
+								.attr("translation", () => {
+										const x = dimensions.x / 2;
+										const y = dimensions.y / 2;
+										const z = dimensions.z / 2;
+										return x + " " + y + " " + z;
+								})
+								.datum((d) => d)
+								.call(volumeSlice);
+				});
+		};
 
-			scene.select(".axis")
-				.datum(origin)
-				.call(axis);
+		/**
+		 * Width Getter / Setter
+		 *
+		 * @param {number} _v - X3D canvas width in px.
+		 * @returns {*}
+		 */
+		my.width = function (_v) {
+				if (!arguments.length) return width;
+				width = _v;
+				return this;
+		};
 
-			// Add Volume Slice
-			volumeSlice.dimensions(dimensions)
-				.imageUrl(imageUrl)
-				.numberOfSlices(numberOfSlices)
-				.slicesOverX(slicesOverX)
-				.slicesOverY(slicesOverY)
-				.volumeStyle(volumeStyle);
+		/**
+		 * Height Getter / Setter
+		 *
+		 * @param {number} _v - X3D canvas height in px.
+		 * @returns {*}
+		 */
+		my.height = function (_v) {
+				if (!arguments.length) return height;
+				height = _v;
+				return this;
+		};
 
-			scene.select(".volume")
-				.append("transform")
-				.attr("translation", () => {
-					const x = dimensions.x / 2;
-					const y = dimensions.y / 2;
-					const z = dimensions.z / 2;
-					return x + " " + y + " " + z;
-				})
-				.datum((d) => d)
-				.call(volumeSlice);
-		});
-	};
+		/**
+		 * X Scale Getter / Setter
+		 *
+		 * @param {d3.scale} _v - D3 scale.
+		 * @returns {*}
+		 */
+		my.xScale = function (_v) {
+				if (!arguments.length) return xScale;
+				xScale = _v;
+				return my;
+		};
 
-	/**
-	 * Width Getter / Setter
-	 *
-	 * @param {number} _v - X3D canvas width in px.
-	 * @returns {*}
-	 */
-	my.width = function(_v) {
-		if (!arguments.length) return width;
-		width = _v;
-		return this;
-	};
+		/**
+		 * Y Scale Getter / Setter
+		 *
+		 * @param {d3.scale} _v - D3 scale.
+		 * @returns {*}
+		 */
+		my.yScale = function (_v) {
+				if (!arguments.length) return yScale;
+				yScale = _v;
+				return my;
+		};
 
-	/**
-	 * Height Getter / Setter
-	 *
-	 * @param {number} _v - X3D canvas height in px.
-	 * @returns {*}
-	 */
-	my.height = function(_v) {
-		if (!arguments.length) return height;
-		height = _v;
-		return this;
-	};
+		/**
+		 * Z Scale Getter / Setter
+		 *
+		 * @param {d3.scale} _v - D3 scale.
+		 * @returns {*}
+		 */
+		my.zScale = function (_v) {
+				if (!arguments.length) return zScale;
+				zScale = _v;
+				return my;
+		};
 
-	/**
-	 * X Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.xScale = function(_v) {
-		if (!arguments.length) return xScale;
-		xScale = _v;
+		/**
+		 * Dimensions Getter / Setter
+		 *
+		 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+		 * @returns {*}
+		 */
+		my.dimensions = function (_v) {
+				if (!arguments.length) return dimensions;
+				dimensions = _v;
+				return this;
+		};
+
+		/**
+		 * Image URL Getter / Setter
+		 *
+		 * @param {string} _v - Image URL path.
+		 * @returns {*}
+		 */
+		my.imageUrl = function (_v) {
+				if (!arguments.length) return imageUrl;
+				imageUrl = _v;
+				return this;
+		};
+
+		/**
+		 * Number of Slices Getter / Setter
+		 *
+		 * @param {number} _v - Total number of slices.
+		 * @returns {*}
+		 */
+		my.numberOfSlices = function (_v) {
+				if (!arguments.length) return numberOfSlices;
+				numberOfSlices = _v;
+				return this;
+		};
+
+		/**
+		 * X Slices Getter / Setter
+		 *
+		 * @param {number} _v - Number of slices over X axis.
+		 * @returns {*}
+		 */
+		my.slicesOverX = function (_v) {
+				if (!arguments.length) return slicesOverX;
+				slicesOverX = _v;
+				return this;
+		};
+
+		/**
+		 * Y Slices Getter / Setter
+		 *
+		 * @param {number} _v - Number of slices over Y axis.
+		 * @returns {*}
+		 */
+		my.slicesOverY = function (_v) {
+				if (!arguments.length) return slicesOverY;
+				slicesOverY = _v;
+				return this;
+		};
+
+		/**
+		 * Volume Style Getter / Setter
+		 *
+		 * @param {string} _v - Volume render style (either "MPRVolume" or "OpacityMap")
+		 * @returns {*}
+		 */
+		my.volumeStyle = function (_v) {
+				if (!arguments.length) return volumeStyle;
+				volumeStyle = _v;
+				return this;
+		};
+
+		/**
+		 * Debug Getter / Setter
+		 *
+		 * @param {boolean} _v - Show debug log and stats. True/False.
+		 * @returns {*}
+		 */
+		my.debug = function (_v) {
+				if (!arguments.length) return debug;
+				debug = _v;
+				return my;
+		};
+
 		return my;
-	};
-
-	/**
-	 * Y Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.yScale = function(_v) {
-		if (!arguments.length) return yScale;
-		yScale = _v;
-		return my;
-	};
-
-	/**
-	 * Z Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.zScale = function(_v) {
-		if (!arguments.length) return zScale;
-		zScale = _v;
-		return my;
-	};
-
-	/**
-	 * Dimensions Getter / Setter
-	 *
-	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-	 * @returns {*}
-	 */
-	my.dimensions = function(_v) {
-		if (!arguments.length) return dimensions;
-		dimensions = _v;
-		return this;
-	};
-
-	/**
-	 * Image URL Getter / Setter
-	 *
-	 * @param {string} _v - Image URL path.
-	 * @returns {*}
-	 */
-	my.imageUrl = function(_v) {
-		if (!arguments.length) return imageUrl;
-		imageUrl = _v;
-		return this;
-	};
-
-	/**
-	 * Number of Slices Getter / Setter
-	 *
-	 * @param {number} _v - Total number of slices.
-	 * @returns {*}
-	 */
-	my.numberOfSlices = function(_v) {
-		if (!arguments.length) return numberOfSlices;
-		numberOfSlices = _v;
-		return this;
-	};
-
-	/**
-	 * X Slices Getter / Setter
-	 *
-	 * @param {number} _v - Number of slices over X axis.
-	 * @returns {*}
-	 */
-	my.slicesOverX = function(_v) {
-		if (!arguments.length) return slicesOverX;
-		slicesOverX = _v;
-		return this;
-	};
-
-	/**
-	 * Y Slices Getter / Setter
-	 *
-	 * @param {number} _v - Number of slices over Y axis.
-	 * @returns {*}
-	 */
-	my.slicesOverY = function(_v) {
-		if (!arguments.length) return slicesOverY;
-		slicesOverY = _v;
-		return this;
-	};
-
-	/**
-	 * Volume Style Getter / Setter
-	 *
-	 * @param {string} _v - Volume render style (either "MPRVolume" or "OpacityMap")
-	 * @returns {*}
-	 */
-	my.volumeStyle = function(_v) {
-		if (!arguments.length) return volumeStyle;
-		volumeStyle = _v;
-		return this;
-	};
-
-	/**
-	 * Debug Getter / Setter
-	 *
-	 * @param {boolean} _v - Show debug log and stats. True/False.
-	 * @returns {*}
-	 */
-	my.debug = function(_v) {
-		if (!arguments.length) return debug;
-		debug = _v;
-		return my;
-	};
-
-	return my;
 }
