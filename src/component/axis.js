@@ -125,12 +125,12 @@ export default function() {
 				.remove();
 
 			// Tick Lines
-			const ticks = element.selectAll(".tick")
+			const ticks = element.selectAll(".tickLine")
 				.data(tickValues, (d) => d);
 
 			ticks.enter()
 				.append("Transform")
-				.attr("class", "tick")
+				.attr("class", "tickLine")
 				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
 				.append("Transform")
 				.attr("translation", tickDirectionVector.map((d) => (d * tickSize / 2)).join(" "))
@@ -144,14 +144,14 @@ export default function() {
 			ticks.exit()
 				.remove();
 
-			// Labels
+			// Tick Labels
 			if (tickFormat !== "") {
-				const labels = element.selectAll(".label")
+				const labels = element.selectAll(".tickLabel")
 					.data(tickValues, (d) => d);
 
 				labels.enter()
 					.append("Transform")
-					.attr("class", "label")
+					.attr("class", "tickLabel")
 					.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
 					.append("Transform")
 					.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * tickSize * tickDirectionVector[i])))
@@ -183,7 +183,7 @@ export default function() {
 				labels.exit()
 					.remove();
 			} else {
-				element.selectAll(".label")
+				element.selectAll(".tickLabel")
 					.remove();
 			}
 		});

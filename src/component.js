@@ -9,6 +9,7 @@ import componentBubblesMultiSeries from "./component/bubblesMultiSeries";
 import componentCrosshair from "./component/crosshair";
 import componentLabel from "./component/label";
 import componentLight from "./component/light";
+import componentParticles from "./component/patticles";
 import componentRibbon from "./component/ribbon";
 import componentRibbonMultiSeries from "./component/ribbonMultiSeries";
 import componentSurface from "./component/surface";
@@ -28,6 +29,7 @@ export default {
 	crosshair: componentCrosshair,
 	label: componentLabel,
 	light: componentLight,
+	particles: componentParticles,
 	ribbon: componentRibbon,
 	ribbonMultiSeries: componentRibbonMultiSeries,
 	surface: componentSurface,

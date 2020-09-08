@@ -32,9 +32,9 @@ test("Test Bubbles Component, component.bubbles()", function(t) {
 	t.equal(bubbles.sizeScale(), 2, "Changed sizeScale is set");
 
 	// Test sizeRange getter / setter function
-	t.deepEqual(bubbles.sizeRange(), [0.5, 4.0], "Default sizeRange");
-	bubbles.sizeRange([0.2, 5.0]);
-	t.deepEqual(bubbles.sizeRange(), [0.2, 5.0], "Changed sizeRange");
+	t.deepEqual(bubbles.sizeRange(), [0.2, 4.0], "Default sizeRange");
+	bubbles.sizeRange([0.5, 5.0]);
+	t.deepEqual(bubbles.sizeRange(), [0.5, 5.0], "Changed sizeRange");
 
 	// Test color getter / setter function
 	t.equal(bubbles.color(), undefined, "Default color");

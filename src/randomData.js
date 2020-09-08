@@ -93,6 +93,32 @@ export function dataset3(points = 10) {
 }
 
 /**
+ * Random Dataset - Single Series Scatter Plot (with size and color values)
+ *
+ * @param {number} points - Number of data points.
+ * @returns {Array}
+ */
+export function dataset6(points = 10) {
+	let data = {
+		key: "Bubbles",
+		values: d3.range(points).map(function(d, i) {
+			return {
+				key: "Point" + i,
+				values: [
+					{ key: "size", value: randomNum() },
+					{ key: "color", value: randomNum() },
+					{ key: "x", value: randomNum() },
+					{ key: "y", value: randomNum() },
+					{ key: "z", value: randomNum() }
+				]
+			};
+		})
+	};
+
+	return data;
+}
+
+/**
  * Random Dataset - Surface Plot 1
  *
  * @returns {Array}
@@ -185,5 +211,3 @@ export function dataset5() {
 
 	return data;
 }
-
-
