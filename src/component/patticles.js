@@ -163,7 +163,7 @@ export default function() {
 				.attr("colorMode", "POINT_COLOR")
 				.attr("pointSizeMinValue", 1)
 				.attr("pointSizeMaxValue", 100)
-				.attr("pointSizeScaleFactor", 10);
+				.attr("pointSizeScaleFactor", 5);
 
 			const pointset = particlesEnter
 				.append("PointSet");

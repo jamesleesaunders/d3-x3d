@@ -3960,7 +3960,7 @@
         });
         var particlesEnter = particles.enter().append("Shape").classed("particle", true);
         var appearance = particlesEnter.append("Appearance");
-        appearance.append("PointProperties").attr("colorMode", "POINT_COLOR").attr("pointSizeMinValue", 1).attr("pointSizeMaxValue", 100).attr("pointSizeScaleFactor", 10);
+        appearance.append("PointProperties").attr("colorMode", "POINT_COLOR").attr("pointSizeMinValue", 1).attr("pointSizeMaxValue", 100).attr("pointSizeScaleFactor", 5);
         var pointset = particlesEnter.append("PointSet");
         pointset.append("Coordinate").attr("point", function (d) {
           return d.point;
