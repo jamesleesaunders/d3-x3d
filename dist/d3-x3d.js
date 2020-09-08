@@ -9,7 +9,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('d3'), require('d3-shape'), require('d3-array'), require('d3-interpolate')) :
   typeof define === 'function' && define.amd ? define(['d3', 'd3-shape', 'd3-array', 'd3-interpolate'], factory) :
-  (global = global || self, (global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3, global.d3, global.d3, global.d3)));
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3, global.d3, global.d3, global.d3)));
 }(this, (function (d3, d3Shape, d3Array, d3Interpolate) { 'use strict';
 
   var version = "2.0.5";
@@ -1494,10 +1494,10 @@
         }).join(" ")).call(shape, 0.1, range1 - range0, color).merge(domain);
         domain.exit().remove(); // Tick Lines
 
-        var ticks = element.selectAll(".tick").data(tickValues, function (d) {
+        var ticks = element.selectAll(".tickLine").data(tickValues, function (d) {
           return d;
         });
-        ticks.enter().append("Transform").attr("class", "tick").attr("translation", function (t) {
+        ticks.enter().append("Transform").attr("class", "tickLine").attr("translation", function (t) {
           return axisDirectionVector.map(function (a) {
             return scale(t) * a;
           }).join(" ");
@@ -1509,13 +1509,13 @@
             return scale(t) * a;
           }).join(" ");
         });
-        ticks.exit().remove(); // Labels
+        ticks.exit().remove(); // Tick Labels
 
         if (tickFormat !== "") {
-          var labels = element.selectAll(".label").data(tickValues, function (d) {
+          var labels = element.selectAll(".tickLabel").data(tickValues, function (d) {
             return d;
           });
-          labels.enter().append("Transform").attr("class", "label").attr("translation", function (t) {
+          labels.enter().append("Transform").attr("class", "tickLabel").attr("translation", function (t) {
             return axisDirectionVector.map(function (a) {
               return scale(t) * a;
             }).join(" ");
@@ -1537,7 +1537,7 @@
           });
           labels.exit().remove();
         } else {
-          element.selectAll(".label").remove();
+          element.selectAll(".tickLabel").remove();
         }
       });
     };
@@ -2329,6 +2329,7 @@
     var colors = d3.schemeRdYlGn[8];
     var color;
     var classed = "d3X3dBubbles";
+    var mappings;
     /* Scales */
 
     var xScale;
@@ -2336,7 +2337,7 @@
     var zScale;
     var colorScale;
     var sizeScale;
-    var sizeRange = [0.5, 4.0];
+    var sizeRange = [0.2, 4.0];
     /**
      * Initialise Data and Scales
      *
@@ -2345,38 +2346,50 @@
      */
 
     var init = function init(data) {
-      var _dataTransform$summar = dataTransform(data).summary(),
-          valueExtent = _dataTransform$summar.valueExtent,
-          coordinatesMax = _dataTransform$summar.coordinatesMax;
-
-      var maxX = coordinatesMax.x,
-          maxY = coordinatesMax.y,
-          maxZ = coordinatesMax.z;
-      var _dimensions = dimensions,
-          dimensionX = _dimensions.x,
-          dimensionY = _dimensions.y,
-          dimensionZ = _dimensions.z;
+      var newData = {};
+      ['x', 'y', 'z', 'size', 'color'].forEach(function (dimension) {
+        var set = {
+          key: dimension,
+          values: []
+        };
+        data.values.forEach(function (d) {
+          var key = mappings[dimension];
+          var value = d.values.find(function (v) {
+            return v.key === key;
+          }).value;
+          set.values.push({
+            key: key,
+            value: value
+          });
+        });
+        newData[dimension] = dataTransform(set).summary();
+      });
+      var extentX = newData.x.valueExtent;
+      var extentY = newData.y.valueExtent;
+      var extentZ = newData.z.valueExtent;
+      var extentSize = newData.size.valueExtent;
+      var extentColor = newData.color.valueExtent;
 
       if (typeof xScale === "undefined") {
-        xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
+        xScale = d3.scaleLinear().domain(extentX).range([0, dimensions.x]);
       }
 
       if (typeof yScale === "undefined") {
-        yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
+        yScale = d3.scaleLinear().domain(extentY).range([0, dimensions.y]);
       }
 
       if (typeof zScale === "undefined") {
-        zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
+        zScale = d3.scaleLinear().domain(extentZ).range([0, dimensions.z]);
       }
 
       if (typeof sizeScale === "undefined") {
-        sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeRange);
+        sizeScale = d3.scaleLinear().domain(extentSize).range(sizeRange);
       }
 
       if (color) {
-        colorScale = d3.scaleQuantize().domain(valueExtent).range([color, color]);
+        colorScale = d3.scaleQuantize().domain(extentColor).range([color, color]);
       } else if (typeof colorScale === "undefined") {
-        colorScale = d3.scaleQuantize().domain(valueExtent).range(colors);
+        colorScale = d3.scaleQuantize().domain(extentColor).range(colors);
       }
     };
     /**
@@ -2397,12 +2410,17 @@
 
         var shape = function shape(el) {
           var shape = el.append("Shape");
-          attachEventListners(shape);
           shape.append("Sphere").attr("radius", function (d) {
-            return sizeScale(d.value);
+            var sizeVal = d.values.find(function (v) {
+              return v.key === mappings.size;
+            }).value;
+            return sizeScale(sizeVal);
           });
           shape.append("Appearance").append("Material").attr("diffuseColor", function (d) {
-            return colorParse(colorScale(d.value));
+            var colorVal = d.values.find(function (v) {
+              return v.key === mappings.color;
+            }).value;
+            return colorParse(colorScale(colorVal));
           }).attr("ambientIntensity", 0.1);
           return shape;
         };
@@ -2414,13 +2432,28 @@
         });
         var bubblesEnter = bubbles.enter().append("Transform").attr("class", "bubble").call(shape).merge(bubbles).transition();
         bubblesEnter.attr("translation", function (d) {
-          return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-        });
-        bubblesEnter.select("Shape").select("Appearance").select("Material").attr("diffuseColor", function (d) {
-          return colorParse(colorScale(d.value));
+          var xVal = d.values.find(function (v) {
+            return v.key === mappings.x;
+          }).value;
+          var yVal = d.values.find(function (v) {
+            return v.key === mappings.y;
+          }).value;
+          var zVal = d.values.find(function (v) {
+            return v.key === mappings.z;
+          }).value;
+          return xScale(xVal) + " " + yScale(yVal) + " " + zScale(zVal);
         });
         bubblesEnter.select("Shape").select("Sphere").attr("radius", function (d) {
-          return sizeScale(d.value);
+          var sizeVal = d.values.find(function (v) {
+            return v.key === mappings.size;
+          }).value;
+          return sizeScale(sizeVal);
+        });
+        bubblesEnter.select("Shape").select("Appearance").select("Material").attr("diffuseColor", function (d) {
+          var colorVal = d.values.find(function (v) {
+            return v.key === mappings.color;
+          }).value;
+          return colorParse(colorScale(colorVal));
         });
         bubbles.exit().remove();
       });
@@ -2543,6 +2576,19 @@
       return my;
     };
     /**
+     * Mappings Getter / Setter
+     *
+     * @param {Object}
+     * @returns {*}
+     */
+
+
+    my.mappings = function (_v) {
+      if (!arguments.length) return mappings;
+      mappings = _v;
+      return my;
+    };
+    /**
      * Dispatch On Getter
      *
      * @returns {*}
@@ -2556,6 +2602,580 @@
 
     return my;
   }
+
+  /**
+   * Common utilities
+   * @module glMatrix
+   */
+  // Configuration Constants
+  var EPSILON = 0.000001;
+  var ARRAY_TYPE = typeof Float32Array !== 'undefined' ? Float32Array : Array;
+  if (!Math.hypot) Math.hypot = function () {
+    var y = 0,
+        i = arguments.length;
+
+    while (i--) {
+      y += arguments[i] * arguments[i];
+    }
+
+    return Math.sqrt(y);
+  };
+
+  /**
+   * 3x3 Matrix
+   * @module mat3
+   */
+
+  /**
+   * Creates a new identity mat3
+   *
+   * @returns {mat3} a new 3x3 matrix
+   */
+
+  function create() {
+    var out = new ARRAY_TYPE(9);
+
+    if (ARRAY_TYPE != Float32Array) {
+      out[1] = 0;
+      out[2] = 0;
+      out[3] = 0;
+      out[5] = 0;
+      out[6] = 0;
+      out[7] = 0;
+    }
+
+    out[0] = 1;
+    out[4] = 1;
+    out[8] = 1;
+    return out;
+  }
+
+  /**
+   * 3 Dimensional Vector
+   * @module vec3
+   */
+
+  /**
+   * Creates a new, empty vec3
+   *
+   * @returns {vec3} a new 3D vector
+   */
+
+  function create$1() {
+    var out = new ARRAY_TYPE(3);
+
+    if (ARRAY_TYPE != Float32Array) {
+      out[0] = 0;
+      out[1] = 0;
+      out[2] = 0;
+    }
+
+    return out;
+  }
+  /**
+   * Calculates the length of a vec3
+   *
+   * @param {ReadonlyVec3} a vector to calculate length of
+   * @returns {Number} length of a
+   */
+
+  function length(a) {
+    var x = a[0];
+    var y = a[1];
+    var z = a[2];
+    return Math.hypot(x, y, z);
+  }
+  /**
+   * Creates a new vec3 initialized with the given values
+   *
+   * @param {Number} x X component
+   * @param {Number} y Y component
+   * @param {Number} z Z component
+   * @returns {vec3} a new 3D vector
+   */
+
+  function fromValues(x, y, z) {
+    var out = new ARRAY_TYPE(3);
+    out[0] = x;
+    out[1] = y;
+    out[2] = z;
+    return out;
+  }
+  /**
+   * Normalize a vec3
+   *
+   * @param {vec3} out the receiving vector
+   * @param {ReadonlyVec3} a vector to normalize
+   * @returns {vec3} out
+   */
+
+  function normalize(out, a) {
+    var x = a[0];
+    var y = a[1];
+    var z = a[2];
+    var len = x * x + y * y + z * z;
+
+    if (len > 0) {
+      //TODO: evaluate use of glm_invsqrt here?
+      len = 1 / Math.sqrt(len);
+    }
+
+    out[0] = a[0] * len;
+    out[1] = a[1] * len;
+    out[2] = a[2] * len;
+    return out;
+  }
+  /**
+   * Calculates the dot product of two vec3's
+   *
+   * @param {ReadonlyVec3} a the first operand
+   * @param {ReadonlyVec3} b the second operand
+   * @returns {Number} dot product of a and b
+   */
+
+  function dot(a, b) {
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  }
+  /**
+   * Computes the cross product of two vec3's
+   *
+   * @param {vec3} out the receiving vector
+   * @param {ReadonlyVec3} a the first operand
+   * @param {ReadonlyVec3} b the second operand
+   * @returns {vec3} out
+   */
+
+  function cross(out, a, b) {
+    var ax = a[0],
+        ay = a[1],
+        az = a[2];
+    var bx = b[0],
+        by = b[1],
+        bz = b[2];
+    out[0] = ay * bz - az * by;
+    out[1] = az * bx - ax * bz;
+    out[2] = ax * by - ay * bx;
+    return out;
+  }
+  /**
+   * Alias for {@link vec3.length}
+   * @function
+   */
+
+  var len = length;
+  /**
+   * Perform some operation over an array of vec3s.
+   *
+   * @param {Array} a the array of vectors to iterate over
+   * @param {Number} stride Number of elements between the start of each vec3. If 0 assumes tightly packed
+   * @param {Number} offset Number of elements to skip at the beginning of the array
+   * @param {Number} count Number of vec3s to iterate over. If 0 iterates over entire array
+   * @param {Function} fn Function to call for each vector in the array
+   * @param {Object} [arg] additional argument to pass to fn
+   * @returns {Array} a
+   * @function
+   */
+
+  var forEach = function () {
+    var vec = create$1();
+    return function (a, stride, offset, count, fn, arg) {
+      var i, l;
+
+      if (!stride) {
+        stride = 3;
+      }
+
+      if (!offset) {
+        offset = 0;
+      }
+
+      if (count) {
+        l = Math.min(count * stride + offset, a.length);
+      } else {
+        l = a.length;
+      }
+
+      for (i = offset; i < l; i += stride) {
+        vec[0] = a[i];
+        vec[1] = a[i + 1];
+        vec[2] = a[i + 2];
+        fn(vec, vec, arg);
+        a[i] = vec[0];
+        a[i + 1] = vec[1];
+        a[i + 2] = vec[2];
+      }
+
+      return a;
+    };
+  }();
+
+  /**
+   * 4 Dimensional Vector
+   * @module vec4
+   */
+
+  /**
+   * Creates a new, empty vec4
+   *
+   * @returns {vec4} a new 4D vector
+   */
+
+  function create$2() {
+    var out = new ARRAY_TYPE(4);
+
+    if (ARRAY_TYPE != Float32Array) {
+      out[0] = 0;
+      out[1] = 0;
+      out[2] = 0;
+      out[3] = 0;
+    }
+
+    return out;
+  }
+  /**
+   * Normalize a vec4
+   *
+   * @param {vec4} out the receiving vector
+   * @param {ReadonlyVec4} a vector to normalize
+   * @returns {vec4} out
+   */
+
+  function normalize$1(out, a) {
+    var x = a[0];
+    var y = a[1];
+    var z = a[2];
+    var w = a[3];
+    var len = x * x + y * y + z * z + w * w;
+
+    if (len > 0) {
+      len = 1 / Math.sqrt(len);
+    }
+
+    out[0] = x * len;
+    out[1] = y * len;
+    out[2] = z * len;
+    out[3] = w * len;
+    return out;
+  }
+  /**
+   * Perform some operation over an array of vec4s.
+   *
+   * @param {Array} a the array of vectors to iterate over
+   * @param {Number} stride Number of elements between the start of each vec4. If 0 assumes tightly packed
+   * @param {Number} offset Number of elements to skip at the beginning of the array
+   * @param {Number} count Number of vec4s to iterate over. If 0 iterates over entire array
+   * @param {Function} fn Function to call for each vector in the array
+   * @param {Object} [arg] additional argument to pass to fn
+   * @returns {Array} a
+   * @function
+   */
+
+  var forEach$1 = function () {
+    var vec = create$2();
+    return function (a, stride, offset, count, fn, arg) {
+      var i, l;
+
+      if (!stride) {
+        stride = 4;
+      }
+
+      if (!offset) {
+        offset = 0;
+      }
+
+      if (count) {
+        l = Math.min(count * stride + offset, a.length);
+      } else {
+        l = a.length;
+      }
+
+      for (i = offset; i < l; i += stride) {
+        vec[0] = a[i];
+        vec[1] = a[i + 1];
+        vec[2] = a[i + 2];
+        vec[3] = a[i + 3];
+        fn(vec, vec, arg);
+        a[i] = vec[0];
+        a[i + 1] = vec[1];
+        a[i + 2] = vec[2];
+        a[i + 3] = vec[3];
+      }
+
+      return a;
+    };
+  }();
+
+  /**
+   * Quaternion
+   * @module quat
+   */
+
+  /**
+   * Creates a new identity quat
+   *
+   * @returns {quat} a new quaternion
+   */
+
+  function create$3() {
+    var out = new ARRAY_TYPE(4);
+
+    if (ARRAY_TYPE != Float32Array) {
+      out[0] = 0;
+      out[1] = 0;
+      out[2] = 0;
+    }
+
+    out[3] = 1;
+    return out;
+  }
+  /**
+   * Sets a quat from the given angle and rotation axis,
+   * then returns it.
+   *
+   * @param {quat} out the receiving quaternion
+   * @param {ReadonlyVec3} axis the axis around which to rotate
+   * @param {Number} rad the angle in radians
+   * @returns {quat} out
+   **/
+
+  function setAxisAngle(out, axis, rad) {
+    rad = rad * 0.5;
+    var s = Math.sin(rad);
+    out[0] = s * axis[0];
+    out[1] = s * axis[1];
+    out[2] = s * axis[2];
+    out[3] = Math.cos(rad);
+    return out;
+  }
+  /**
+   * Gets the rotation axis and angle for a given
+   *  quaternion. If a quaternion is created with
+   *  setAxisAngle, this method will return the same
+   *  values as providied in the original parameter list
+   *  OR functionally equivalent values.
+   * Example: The quaternion formed by axis [0, 0, 1] and
+   *  angle -90 is the same as the quaternion formed by
+   *  [0, 0, 1] and 270. This method favors the latter.
+   * @param  {vec3} out_axis  Vector receiving the axis of rotation
+   * @param  {ReadonlyQuat} q     Quaternion to be decomposed
+   * @return {Number}     Angle, in radians, of the rotation
+   */
+
+  function getAxisAngle(out_axis, q) {
+    var rad = Math.acos(q[3]) * 2.0;
+    var s = Math.sin(rad / 2.0);
+
+    if (s > EPSILON) {
+      out_axis[0] = q[0] / s;
+      out_axis[1] = q[1] / s;
+      out_axis[2] = q[2] / s;
+    } else {
+      // If s is zero, return any axis (no rotation - axis does not matter)
+      out_axis[0] = 1;
+      out_axis[1] = 0;
+      out_axis[2] = 0;
+    }
+
+    return rad;
+  }
+  /**
+   * Performs a spherical linear interpolation between two quat
+   *
+   * @param {quat} out the receiving quaternion
+   * @param {ReadonlyQuat} a the first operand
+   * @param {ReadonlyQuat} b the second operand
+   * @param {Number} t interpolation amount, in the range [0-1], between the two inputs
+   * @returns {quat} out
+   */
+
+  function slerp(out, a, b, t) {
+    // benchmarks:
+    //    http://jsperf.com/quaternion-slerp-implementations
+    var ax = a[0],
+        ay = a[1],
+        az = a[2],
+        aw = a[3];
+    var bx = b[0],
+        by = b[1],
+        bz = b[2],
+        bw = b[3];
+    var omega, cosom, sinom, scale0, scale1; // calc cosine
+
+    cosom = ax * bx + ay * by + az * bz + aw * bw; // adjust signs (if necessary)
+
+    if (cosom < 0.0) {
+      cosom = -cosom;
+      bx = -bx;
+      by = -by;
+      bz = -bz;
+      bw = -bw;
+    } // calculate coefficients
+
+
+    if (1.0 - cosom > EPSILON) {
+      // standard case (slerp)
+      omega = Math.acos(cosom);
+      sinom = Math.sin(omega);
+      scale0 = Math.sin((1.0 - t) * omega) / sinom;
+      scale1 = Math.sin(t * omega) / sinom;
+    } else {
+      // "from" and "to" quaternions are very close
+      //  ... so we can do a linear interpolation
+      scale0 = 1.0 - t;
+      scale1 = t;
+    } // calculate final values
+
+
+    out[0] = scale0 * ax + scale1 * bx;
+    out[1] = scale0 * ay + scale1 * by;
+    out[2] = scale0 * az + scale1 * bz;
+    out[3] = scale0 * aw + scale1 * bw;
+    return out;
+  }
+  /**
+   * Creates a quaternion from the given 3x3 rotation matrix.
+   *
+   * NOTE: The resultant quaternion is not normalized, so you should be sure
+   * to renormalize the quaternion yourself where necessary.
+   *
+   * @param {quat} out the receiving quaternion
+   * @param {ReadonlyMat3} m rotation matrix
+   * @returns {quat} out
+   * @function
+   */
+
+  function fromMat3(out, m) {
+    // Algorithm in Ken Shoemake's article in 1987 SIGGRAPH course notes
+    // article "Quaternion Calculus and Fast Animation".
+    var fTrace = m[0] + m[4] + m[8];
+    var fRoot;
+
+    if (fTrace > 0.0) {
+      // |w| > 1/2, may as well choose w > 1/2
+      fRoot = Math.sqrt(fTrace + 1.0); // 2w
+
+      out[3] = 0.5 * fRoot;
+      fRoot = 0.5 / fRoot; // 1/(4w)
+
+      out[0] = (m[5] - m[7]) * fRoot;
+      out[1] = (m[6] - m[2]) * fRoot;
+      out[2] = (m[1] - m[3]) * fRoot;
+    } else {
+      // |w| <= 1/2
+      var i = 0;
+      if (m[4] > m[0]) i = 1;
+      if (m[8] > m[i * 3 + i]) i = 2;
+      var j = (i + 1) % 3;
+      var k = (i + 2) % 3;
+      fRoot = Math.sqrt(m[i * 3 + i] - m[j * 3 + j] - m[k * 3 + k] + 1.0);
+      out[i] = 0.5 * fRoot;
+      fRoot = 0.5 / fRoot;
+      out[3] = (m[j * 3 + k] - m[k * 3 + j]) * fRoot;
+      out[j] = (m[j * 3 + i] + m[i * 3 + j]) * fRoot;
+      out[k] = (m[k * 3 + i] + m[i * 3 + k]) * fRoot;
+    }
+
+    return out;
+  }
+  /**
+   * Normalize a quat
+   *
+   * @param {quat} out the receiving quaternion
+   * @param {ReadonlyQuat} a quaternion to normalize
+   * @returns {quat} out
+   * @function
+   */
+
+  var normalize$2 = normalize$1;
+  /**
+   * Sets a quaternion to represent the shortest rotation from one
+   * vector to another.
+   *
+   * Both vectors are assumed to be unit length.
+   *
+   * @param {quat} out the receiving quaternion.
+   * @param {ReadonlyVec3} a the initial vector
+   * @param {ReadonlyVec3} b the destination vector
+   * @returns {quat} out
+   */
+
+  var rotationTo = function () {
+    var tmpvec3 = create$1();
+    var xUnitVec3 = fromValues(1, 0, 0);
+    var yUnitVec3 = fromValues(0, 1, 0);
+    return function (out, a, b) {
+      var dot$1 = dot(a, b);
+
+      if (dot$1 < -0.999999) {
+        cross(tmpvec3, xUnitVec3, a);
+        if (len(tmpvec3) < 0.000001) cross(tmpvec3, yUnitVec3, a);
+        normalize(tmpvec3, tmpvec3);
+        setAxisAngle(out, tmpvec3, Math.PI);
+        return out;
+      } else if (dot$1 > 0.999999) {
+        out[0] = 0;
+        out[1] = 0;
+        out[2] = 0;
+        out[3] = 1;
+        return out;
+      } else {
+        cross(tmpvec3, a, b);
+        out[0] = tmpvec3[0];
+        out[1] = tmpvec3[1];
+        out[2] = tmpvec3[2];
+        out[3] = 1 + dot$1;
+        return normalize$2(out, out);
+      }
+    };
+  }();
+  /**
+   * Performs a spherical linear interpolation with two control points
+   *
+   * @param {quat} out the receiving quaternion
+   * @param {ReadonlyQuat} a the first operand
+   * @param {ReadonlyQuat} b the second operand
+   * @param {ReadonlyQuat} c the third operand
+   * @param {ReadonlyQuat} d the fourth operand
+   * @param {Number} t interpolation amount, in the range [0-1], between the two inputs
+   * @returns {quat} out
+   */
+
+  var sqlerp = function () {
+    var temp1 = create$3();
+    var temp2 = create$3();
+    return function (out, a, b, c, d, t) {
+      slerp(temp1, a, d, t);
+      slerp(temp2, b, c, t);
+      slerp(out, temp1, temp2, 2 * t * (1 - t));
+      return out;
+    };
+  }();
+  /**
+   * Sets the specified quaternion with values corresponding to the given
+   * axes. Each axis is a vec3 and is expected to be unit length and
+   * perpendicular to all other specified axes.
+   *
+   * @param {ReadonlyVec3} view  the vector representing the viewing direction
+   * @param {ReadonlyVec3} right the vector representing the local "right" direction
+   * @param {ReadonlyVec3} up    the vector representing the local "up" direction
+   * @returns {quat} out
+   */
+
+  var setAxes = function () {
+    var matr = create();
+    return function (out, view, right, up) {
+      matr[0] = right[0];
+      matr[3] = right[1];
+      matr[6] = right[2];
+      matr[1] = up[0];
+      matr[4] = up[1];
+      matr[7] = up[2];
+      matr[2] = -view[0];
+      matr[5] = -view[1];
+      matr[8] = -view[2];
+      return normalize$2(out, fromMat3(out, matr));
+    };
+  }();
 
   /**
    * Reusable 3D Multi Series Bubble Chart Component
@@ -2583,7 +3203,13 @@
     var sizeRange = [0.5, 3.0];
     /* Components */
 
-    var bubbles = componentBubbles();
+    var bubbles = componentBubbles().mappings({
+      x: 'x',
+      y: 'y',
+      z: 'z',
+      size: 'size',
+      color: 'color'
+    }).colors(d3.schemeRdYlGn[8]).sizeRange([2, 2]);
     /**
      * Unique Array
      *
@@ -2619,18 +3245,18 @@
       var _dataTransform$summar = dataTransform(data).summary(),
           rowKeys = _dataTransform$summar.rowKeys,
           valueExtent = _dataTransform$summar.valueExtent,
-          coordinatesMax = _dataTransform$summar.coordinatesMax;
+          coordinatesExtent = _dataTransform$summar.coordinatesExtent;
 
-      var maxX = coordinatesMax.x,
-          maxY = coordinatesMax.y,
-          maxZ = coordinatesMax.z;
+      var extentX = coordinatesExtent.x,
+          extentY = coordinatesExtent.y,
+          extentZ = coordinatesExtent.z;
       var _dimensions = dimensions,
           dimensionX = _dimensions.x,
           dimensionY = _dimensions.y,
           dimensionZ = _dimensions.z;
-      xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
-      yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
-      zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
+      xScale = d3.scaleLinear().domain(extentX).range([0, dimensionX]);
+      yScale = d3.scaleLinear().domain(extentY).range([0, dimensionY]);
+      zScale = d3.scaleLinear().domain(extentZ).range([0, dimensionZ]);
       colorDomain = arrayUnique(colorDomain, rowKeys);
       colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
       sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeRange);
@@ -2647,6 +3273,36 @@
     var my = function my(selection) {
       selection.each(function (data) {
         init(data);
+
+        var bubbleData = function bubbleData(d) {
+          return d.map(function (f) {
+            return {
+              key: f.key,
+              values: f.values.map(function (g) {
+                return {
+                  key: g.key,
+                  values: [{
+                    key: "size",
+                    value: g.value
+                  }, {
+                    key: "color",
+                    value: g.value
+                  }, {
+                    key: "x",
+                    value: g.x
+                  }, {
+                    key: "y",
+                    value: g.y
+                  }, {
+                    key: "z",
+                    value: g.z
+                  }]
+                };
+              })
+            };
+          });
+        };
+
         var element = d3.select(this).classed(classed, true);
         bubbles.xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale);
 
@@ -2656,9 +3312,7 @@
           d3.select(this).call(bubbles);
         };
 
-        var bubbleGroup = element.selectAll(".bubbleGroup").data(function (d) {
-          return d;
-        }, function (d) {
+        var bubbleGroup = element.selectAll(".bubbleGroup").data(bubbleData, function (d) {
           return d.key;
         });
         bubbleGroup.enter().append("Group").classed("bubbleGroup", true).merge(bubbleGroup).transition().each(addBubbles);
@@ -3142,6 +3796,327 @@
       if (!arguments.length) return shadowIntensity;
       shadowIntensity = _v;
       return my;
+    };
+
+    return my;
+  }
+
+  /**
+   * Reusable 3D Particle Plot Component
+   *
+   * @module
+   */
+
+  function componentParticles () {
+    /* Default Properties */
+    var dimensions = {
+      x: 40,
+      y: 40,
+      z: 40
+    };
+    var colors = d3.schemeRdYlGn[8];
+    var color;
+    var classed = "d3X3dBubbles";
+    var mappings;
+    /* Scales */
+
+    var xScale;
+    var yScale;
+    var zScale;
+    var colorScale;
+    var sizeScale;
+    var sizeRange = [0.2, 4.0];
+    /**
+     * Array to String
+     *
+     * @private
+     * @param {array} arr
+     * @returns {string}
+     */
+
+    var array2dToString = function array2dToString(arr) {
+      return arr.reduce(function (a, b) {
+        return a.concat(b);
+      }, []).reduce(function (a, b) {
+        return a.concat(b);
+      }, []).join(" ");
+    };
+    /**
+     * Initialise Data and Scales
+     *
+     * @private
+     * @param {Array} data - Chart data.
+     */
+
+
+    var init = function init(data) {
+      var newData = {};
+      ['x', 'y', 'z', 'size', 'color'].forEach(function (dimension) {
+        var set = {
+          key: dimension,
+          values: []
+        };
+        data.values.forEach(function (d) {
+          var key = mappings[dimension];
+          var value = d.values.find(function (v) {
+            return v.key === key;
+          }).value;
+          set.values.push({
+            key: key,
+            value: value
+          });
+        });
+        newData[dimension] = dataTransform(set).summary();
+      });
+      var extentX = newData.x.valueExtent;
+      var extentY = newData.y.valueExtent;
+      var extentZ = newData.z.valueExtent;
+      var extentSize = newData.size.valueExtent;
+      var extentColor = newData.color.valueExtent;
+
+      if (typeof xScale === "undefined") {
+        xScale = d3.scaleLinear().domain(extentX).range([0, dimensions.x]);
+      }
+
+      if (typeof yScale === "undefined") {
+        yScale = d3.scaleLinear().domain(extentY).range([0, dimensions.y]);
+      }
+
+      if (typeof zScale === "undefined") {
+        zScale = d3.scaleLinear().domain(extentZ).range([0, dimensions.z]);
+      }
+
+      if (typeof sizeScale === "undefined") {
+        sizeScale = d3.scaleLinear().domain(extentSize).range(sizeRange);
+      }
+
+      if (color) {
+        colorScale = d3.scaleQuantize().domain(extentColor).range([color, color]);
+      } else if (typeof colorScale === "undefined") {
+        colorScale = d3.scaleQuantize().domain(extentColor).range(colors);
+      }
+    };
+    /**
+     * Constructor
+     *
+     * @constructor
+     * @alias bubbles
+     * @param {d3.selection} selection - The chart holder D3 selection.
+     */
+
+
+    var my = function my(selection) {
+      selection.each(function (data) {
+        init(data);
+        var element = d3.select(this).classed(classed, true).attr("id", function (d) {
+          return d.key;
+        });
+
+        var particleData = function particleData(data) {
+          var pointSizes = function pointSizes(Y) {
+            return Y.values.map(function (d) {
+              var sizeVal = d.values.find(function (v) {
+                return v.key === mappings.size;
+              }).value;
+              return [sizeScale(sizeVal), sizeScale(sizeVal), sizeScale(sizeVal)];
+            });
+          };
+
+          var pointCoords = function pointCoords(Y) {
+            return Y.values.map(function (d) {
+              var xVal = d.values.find(function (v) {
+                return v.key === mappings.x;
+              }).value;
+              var yVal = d.values.find(function (v) {
+                return v.key === mappings.y;
+              }).value;
+              var zVal = d.values.find(function (v) {
+                return v.key === mappings.z;
+              }).value;
+              return [xScale(xVal), yScale(yVal), zScale(zVal)];
+            });
+          };
+
+          var pointColors = function pointColors(Y) {
+            return Y.values.map(function (d) {
+              var colorVal = d.values.find(function (v) {
+                return v.key === mappings.color;
+              }).value;
+              var color = d3.color(colorScale(colorVal));
+              return colorParse(color);
+            });
+          };
+
+          data.size = array2dToString(pointSizes(data));
+          data.point = array2dToString(pointCoords(data));
+          data.color = array2dToString(pointColors(data));
+          return [data];
+        };
+
+        var particles = element.selectAll(".particle").data(function (d) {
+          return particleData(d);
+        }, function (d) {
+          return d.key;
+        });
+        var particlesEnter = particles.enter().append("Shape").classed("particle", true);
+        var appearance = particlesEnter.append("Appearance");
+        appearance.append("PointProperties").attr("colorMode", "POINT_COLOR").attr("pointSizeMinValue", 1).attr("pointSizeMaxValue", 100).attr("pointSizeScaleFactor", 10);
+        var pointset = particlesEnter.append("PointSet");
+        pointset.append("Coordinate").attr("point", function (d) {
+          return d.point;
+        });
+        pointset.append("Color").attr("color", function (d) {
+          return d.color;
+        });
+        var particleTransition = particlesEnter.merge(particles).transition();
+        particleTransition.select("PointSet").select("Coordinate").attr("point", function (d) {
+          return d.point;
+        });
+        particleTransition.select("PointSet").select("Color").attr("color", function (d) {
+          return d.color;
+        });
+      });
+    };
+    /**
+     * Dimensions Getter / Setter
+     *
+     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+     * @returns {*}
+     */
+
+
+    my.dimensions = function (_v) {
+      if (!arguments.length) return dimensions;
+      dimensions = _v;
+      return this;
+    };
+    /**
+     * X Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+
+
+    my.xScale = function (_v) {
+      if (!arguments.length) return xScale;
+      xScale = _v;
+      return my;
+    };
+    /**
+     * Y Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+
+
+    my.yScale = function (_v) {
+      if (!arguments.length) return yScale;
+      yScale = _v;
+      return my;
+    };
+    /**
+     * Z Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+
+
+    my.zScale = function (_v) {
+      if (!arguments.length) return zScale;
+      zScale = _v;
+      return my;
+    };
+    /**
+     * Size Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 size scale.
+     * @returns {*}
+     */
+
+
+    my.sizeScale = function (_v) {
+      if (!arguments.length) return sizeScale;
+      sizeScale = _v;
+      return my;
+    };
+    /**
+     * Size Range Getter / Setter
+     *
+     * @param {number[]} _v - Size min and max (e.g. [1, 9]).
+     * @returns {*}
+     */
+
+
+    my.sizeRange = function (_v) {
+      if (!arguments.length) return sizeRange;
+      sizeRange = _v;
+      return my;
+    };
+    /**
+     * Color Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 color scale.
+     * @returns {*}
+     */
+
+
+    my.colorScale = function (_v) {
+      if (!arguments.length) return colorScale;
+      colorScale = _v;
+      return my;
+    };
+    /**
+     * Color Getter / Setter
+     *
+     * @param {string} _v - Color (e.g. "red" or "#ff0000").
+     * @returns {*}
+     */
+
+
+    my.color = function (_v) {
+      if (!arguments.length) return color;
+      color = _v;
+      return my;
+    };
+    /**
+     * Colors Getter / Setter
+     *
+     * @param {Array} _v - Array of colours used by color scale.
+     * @returns {*}
+     */
+
+
+    my.colors = function (_v) {
+      if (!arguments.length) return colors;
+      colors = _v;
+      return my;
+    };
+    /**
+     * Mappings Getter / Setter
+     *
+     * @param {Object}
+     * @returns {*}
+     */
+
+
+    my.mappings = function (_v) {
+      if (!arguments.length) return mappings;
+      mappings = _v;
+      return my;
+    };
+    /**
+     * Dispatch On Getter
+     *
+     * @returns {*}
+     */
+
+
+    my.on = function () {
+      var value = dispatch.on.apply(dispatch, arguments);
+      return value === dispatch ? my : value;
     };
 
     return my;
@@ -3836,580 +4811,6 @@
   }
 
   /**
-   * Common utilities
-   * @module glMatrix
-   */
-  // Configuration Constants
-  var EPSILON = 0.000001;
-  var ARRAY_TYPE = typeof Float32Array !== 'undefined' ? Float32Array : Array;
-  if (!Math.hypot) Math.hypot = function () {
-    var y = 0,
-        i = arguments.length;
-
-    while (i--) {
-      y += arguments[i] * arguments[i];
-    }
-
-    return Math.sqrt(y);
-  };
-
-  /**
-   * 3x3 Matrix
-   * @module mat3
-   */
-
-  /**
-   * Creates a new identity mat3
-   *
-   * @returns {mat3} a new 3x3 matrix
-   */
-
-  function create() {
-    var out = new ARRAY_TYPE(9);
-
-    if (ARRAY_TYPE != Float32Array) {
-      out[1] = 0;
-      out[2] = 0;
-      out[3] = 0;
-      out[5] = 0;
-      out[6] = 0;
-      out[7] = 0;
-    }
-
-    out[0] = 1;
-    out[4] = 1;
-    out[8] = 1;
-    return out;
-  }
-
-  /**
-   * 3 Dimensional Vector
-   * @module vec3
-   */
-
-  /**
-   * Creates a new, empty vec3
-   *
-   * @returns {vec3} a new 3D vector
-   */
-
-  function create$1() {
-    var out = new ARRAY_TYPE(3);
-
-    if (ARRAY_TYPE != Float32Array) {
-      out[0] = 0;
-      out[1] = 0;
-      out[2] = 0;
-    }
-
-    return out;
-  }
-  /**
-   * Calculates the length of a vec3
-   *
-   * @param {ReadonlyVec3} a vector to calculate length of
-   * @returns {Number} length of a
-   */
-
-  function length(a) {
-    var x = a[0];
-    var y = a[1];
-    var z = a[2];
-    return Math.hypot(x, y, z);
-  }
-  /**
-   * Creates a new vec3 initialized with the given values
-   *
-   * @param {Number} x X component
-   * @param {Number} y Y component
-   * @param {Number} z Z component
-   * @returns {vec3} a new 3D vector
-   */
-
-  function fromValues(x, y, z) {
-    var out = new ARRAY_TYPE(3);
-    out[0] = x;
-    out[1] = y;
-    out[2] = z;
-    return out;
-  }
-  /**
-   * Normalize a vec3
-   *
-   * @param {vec3} out the receiving vector
-   * @param {ReadonlyVec3} a vector to normalize
-   * @returns {vec3} out
-   */
-
-  function normalize(out, a) {
-    var x = a[0];
-    var y = a[1];
-    var z = a[2];
-    var len = x * x + y * y + z * z;
-
-    if (len > 0) {
-      //TODO: evaluate use of glm_invsqrt here?
-      len = 1 / Math.sqrt(len);
-    }
-
-    out[0] = a[0] * len;
-    out[1] = a[1] * len;
-    out[2] = a[2] * len;
-    return out;
-  }
-  /**
-   * Calculates the dot product of two vec3's
-   *
-   * @param {ReadonlyVec3} a the first operand
-   * @param {ReadonlyVec3} b the second operand
-   * @returns {Number} dot product of a and b
-   */
-
-  function dot(a, b) {
-    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-  }
-  /**
-   * Computes the cross product of two vec3's
-   *
-   * @param {vec3} out the receiving vector
-   * @param {ReadonlyVec3} a the first operand
-   * @param {ReadonlyVec3} b the second operand
-   * @returns {vec3} out
-   */
-
-  function cross(out, a, b) {
-    var ax = a[0],
-        ay = a[1],
-        az = a[2];
-    var bx = b[0],
-        by = b[1],
-        bz = b[2];
-    out[0] = ay * bz - az * by;
-    out[1] = az * bx - ax * bz;
-    out[2] = ax * by - ay * bx;
-    return out;
-  }
-  /**
-   * Alias for {@link vec3.length}
-   * @function
-   */
-
-  var len = length;
-  /**
-   * Perform some operation over an array of vec3s.
-   *
-   * @param {Array} a the array of vectors to iterate over
-   * @param {Number} stride Number of elements between the start of each vec3. If 0 assumes tightly packed
-   * @param {Number} offset Number of elements to skip at the beginning of the array
-   * @param {Number} count Number of vec3s to iterate over. If 0 iterates over entire array
-   * @param {Function} fn Function to call for each vector in the array
-   * @param {Object} [arg] additional argument to pass to fn
-   * @returns {Array} a
-   * @function
-   */
-
-  var forEach = function () {
-    var vec = create$1();
-    return function (a, stride, offset, count, fn, arg) {
-      var i, l;
-
-      if (!stride) {
-        stride = 3;
-      }
-
-      if (!offset) {
-        offset = 0;
-      }
-
-      if (count) {
-        l = Math.min(count * stride + offset, a.length);
-      } else {
-        l = a.length;
-      }
-
-      for (i = offset; i < l; i += stride) {
-        vec[0] = a[i];
-        vec[1] = a[i + 1];
-        vec[2] = a[i + 2];
-        fn(vec, vec, arg);
-        a[i] = vec[0];
-        a[i + 1] = vec[1];
-        a[i + 2] = vec[2];
-      }
-
-      return a;
-    };
-  }();
-
-  /**
-   * 4 Dimensional Vector
-   * @module vec4
-   */
-
-  /**
-   * Creates a new, empty vec4
-   *
-   * @returns {vec4} a new 4D vector
-   */
-
-  function create$2() {
-    var out = new ARRAY_TYPE(4);
-
-    if (ARRAY_TYPE != Float32Array) {
-      out[0] = 0;
-      out[1] = 0;
-      out[2] = 0;
-      out[3] = 0;
-    }
-
-    return out;
-  }
-  /**
-   * Normalize a vec4
-   *
-   * @param {vec4} out the receiving vector
-   * @param {ReadonlyVec4} a vector to normalize
-   * @returns {vec4} out
-   */
-
-  function normalize$1(out, a) {
-    var x = a[0];
-    var y = a[1];
-    var z = a[2];
-    var w = a[3];
-    var len = x * x + y * y + z * z + w * w;
-
-    if (len > 0) {
-      len = 1 / Math.sqrt(len);
-    }
-
-    out[0] = x * len;
-    out[1] = y * len;
-    out[2] = z * len;
-    out[3] = w * len;
-    return out;
-  }
-  /**
-   * Perform some operation over an array of vec4s.
-   *
-   * @param {Array} a the array of vectors to iterate over
-   * @param {Number} stride Number of elements between the start of each vec4. If 0 assumes tightly packed
-   * @param {Number} offset Number of elements to skip at the beginning of the array
-   * @param {Number} count Number of vec4s to iterate over. If 0 iterates over entire array
-   * @param {Function} fn Function to call for each vector in the array
-   * @param {Object} [arg] additional argument to pass to fn
-   * @returns {Array} a
-   * @function
-   */
-
-  var forEach$1 = function () {
-    var vec = create$2();
-    return function (a, stride, offset, count, fn, arg) {
-      var i, l;
-
-      if (!stride) {
-        stride = 4;
-      }
-
-      if (!offset) {
-        offset = 0;
-      }
-
-      if (count) {
-        l = Math.min(count * stride + offset, a.length);
-      } else {
-        l = a.length;
-      }
-
-      for (i = offset; i < l; i += stride) {
-        vec[0] = a[i];
-        vec[1] = a[i + 1];
-        vec[2] = a[i + 2];
-        vec[3] = a[i + 3];
-        fn(vec, vec, arg);
-        a[i] = vec[0];
-        a[i + 1] = vec[1];
-        a[i + 2] = vec[2];
-        a[i + 3] = vec[3];
-      }
-
-      return a;
-    };
-  }();
-
-  /**
-   * Quaternion
-   * @module quat
-   */
-
-  /**
-   * Creates a new identity quat
-   *
-   * @returns {quat} a new quaternion
-   */
-
-  function create$3() {
-    var out = new ARRAY_TYPE(4);
-
-    if (ARRAY_TYPE != Float32Array) {
-      out[0] = 0;
-      out[1] = 0;
-      out[2] = 0;
-    }
-
-    out[3] = 1;
-    return out;
-  }
-  /**
-   * Sets a quat from the given angle and rotation axis,
-   * then returns it.
-   *
-   * @param {quat} out the receiving quaternion
-   * @param {ReadonlyVec3} axis the axis around which to rotate
-   * @param {Number} rad the angle in radians
-   * @returns {quat} out
-   **/
-
-  function setAxisAngle(out, axis, rad) {
-    rad = rad * 0.5;
-    var s = Math.sin(rad);
-    out[0] = s * axis[0];
-    out[1] = s * axis[1];
-    out[2] = s * axis[2];
-    out[3] = Math.cos(rad);
-    return out;
-  }
-  /**
-   * Gets the rotation axis and angle for a given
-   *  quaternion. If a quaternion is created with
-   *  setAxisAngle, this method will return the same
-   *  values as providied in the original parameter list
-   *  OR functionally equivalent values.
-   * Example: The quaternion formed by axis [0, 0, 1] and
-   *  angle -90 is the same as the quaternion formed by
-   *  [0, 0, 1] and 270. This method favors the latter.
-   * @param  {vec3} out_axis  Vector receiving the axis of rotation
-   * @param  {ReadonlyQuat} q     Quaternion to be decomposed
-   * @return {Number}     Angle, in radians, of the rotation
-   */
-
-  function getAxisAngle(out_axis, q) {
-    var rad = Math.acos(q[3]) * 2.0;
-    var s = Math.sin(rad / 2.0);
-
-    if (s > EPSILON) {
-      out_axis[0] = q[0] / s;
-      out_axis[1] = q[1] / s;
-      out_axis[2] = q[2] / s;
-    } else {
-      // If s is zero, return any axis (no rotation - axis does not matter)
-      out_axis[0] = 1;
-      out_axis[1] = 0;
-      out_axis[2] = 0;
-    }
-
-    return rad;
-  }
-  /**
-   * Performs a spherical linear interpolation between two quat
-   *
-   * @param {quat} out the receiving quaternion
-   * @param {ReadonlyQuat} a the first operand
-   * @param {ReadonlyQuat} b the second operand
-   * @param {Number} t interpolation amount, in the range [0-1], between the two inputs
-   * @returns {quat} out
-   */
-
-  function slerp(out, a, b, t) {
-    // benchmarks:
-    //    http://jsperf.com/quaternion-slerp-implementations
-    var ax = a[0],
-        ay = a[1],
-        az = a[2],
-        aw = a[3];
-    var bx = b[0],
-        by = b[1],
-        bz = b[2],
-        bw = b[3];
-    var omega, cosom, sinom, scale0, scale1; // calc cosine
-
-    cosom = ax * bx + ay * by + az * bz + aw * bw; // adjust signs (if necessary)
-
-    if (cosom < 0.0) {
-      cosom = -cosom;
-      bx = -bx;
-      by = -by;
-      bz = -bz;
-      bw = -bw;
-    } // calculate coefficients
-
-
-    if (1.0 - cosom > EPSILON) {
-      // standard case (slerp)
-      omega = Math.acos(cosom);
-      sinom = Math.sin(omega);
-      scale0 = Math.sin((1.0 - t) * omega) / sinom;
-      scale1 = Math.sin(t * omega) / sinom;
-    } else {
-      // "from" and "to" quaternions are very close
-      //  ... so we can do a linear interpolation
-      scale0 = 1.0 - t;
-      scale1 = t;
-    } // calculate final values
-
-
-    out[0] = scale0 * ax + scale1 * bx;
-    out[1] = scale0 * ay + scale1 * by;
-    out[2] = scale0 * az + scale1 * bz;
-    out[3] = scale0 * aw + scale1 * bw;
-    return out;
-  }
-  /**
-   * Creates a quaternion from the given 3x3 rotation matrix.
-   *
-   * NOTE: The resultant quaternion is not normalized, so you should be sure
-   * to renormalize the quaternion yourself where necessary.
-   *
-   * @param {quat} out the receiving quaternion
-   * @param {ReadonlyMat3} m rotation matrix
-   * @returns {quat} out
-   * @function
-   */
-
-  function fromMat3(out, m) {
-    // Algorithm in Ken Shoemake's article in 1987 SIGGRAPH course notes
-    // article "Quaternion Calculus and Fast Animation".
-    var fTrace = m[0] + m[4] + m[8];
-    var fRoot;
-
-    if (fTrace > 0.0) {
-      // |w| > 1/2, may as well choose w > 1/2
-      fRoot = Math.sqrt(fTrace + 1.0); // 2w
-
-      out[3] = 0.5 * fRoot;
-      fRoot = 0.5 / fRoot; // 1/(4w)
-
-      out[0] = (m[5] - m[7]) * fRoot;
-      out[1] = (m[6] - m[2]) * fRoot;
-      out[2] = (m[1] - m[3]) * fRoot;
-    } else {
-      // |w| <= 1/2
-      var i = 0;
-      if (m[4] > m[0]) i = 1;
-      if (m[8] > m[i * 3 + i]) i = 2;
-      var j = (i + 1) % 3;
-      var k = (i + 2) % 3;
-      fRoot = Math.sqrt(m[i * 3 + i] - m[j * 3 + j] - m[k * 3 + k] + 1.0);
-      out[i] = 0.5 * fRoot;
-      fRoot = 0.5 / fRoot;
-      out[3] = (m[j * 3 + k] - m[k * 3 + j]) * fRoot;
-      out[j] = (m[j * 3 + i] + m[i * 3 + j]) * fRoot;
-      out[k] = (m[k * 3 + i] + m[i * 3 + k]) * fRoot;
-    }
-
-    return out;
-  }
-  /**
-   * Normalize a quat
-   *
-   * @param {quat} out the receiving quaternion
-   * @param {ReadonlyQuat} a quaternion to normalize
-   * @returns {quat} out
-   * @function
-   */
-
-  var normalize$2 = normalize$1;
-  /**
-   * Sets a quaternion to represent the shortest rotation from one
-   * vector to another.
-   *
-   * Both vectors are assumed to be unit length.
-   *
-   * @param {quat} out the receiving quaternion.
-   * @param {ReadonlyVec3} a the initial vector
-   * @param {ReadonlyVec3} b the destination vector
-   * @returns {quat} out
-   */
-
-  var rotationTo = function () {
-    var tmpvec3 = create$1();
-    var xUnitVec3 = fromValues(1, 0, 0);
-    var yUnitVec3 = fromValues(0, 1, 0);
-    return function (out, a, b) {
-      var dot$1 = dot(a, b);
-
-      if (dot$1 < -0.999999) {
-        cross(tmpvec3, xUnitVec3, a);
-        if (len(tmpvec3) < 0.000001) cross(tmpvec3, yUnitVec3, a);
-        normalize(tmpvec3, tmpvec3);
-        setAxisAngle(out, tmpvec3, Math.PI);
-        return out;
-      } else if (dot$1 > 0.999999) {
-        out[0] = 0;
-        out[1] = 0;
-        out[2] = 0;
-        out[3] = 1;
-        return out;
-      } else {
-        cross(tmpvec3, a, b);
-        out[0] = tmpvec3[0];
-        out[1] = tmpvec3[1];
-        out[2] = tmpvec3[2];
-        out[3] = 1 + dot$1;
-        return normalize$2(out, out);
-      }
-    };
-  }();
-  /**
-   * Performs a spherical linear interpolation with two control points
-   *
-   * @param {quat} out the receiving quaternion
-   * @param {ReadonlyQuat} a the first operand
-   * @param {ReadonlyQuat} b the second operand
-   * @param {ReadonlyQuat} c the third operand
-   * @param {ReadonlyQuat} d the fourth operand
-   * @param {Number} t interpolation amount, in the range [0-1], between the two inputs
-   * @returns {quat} out
-   */
-
-  var sqlerp = function () {
-    var temp1 = create$3();
-    var temp2 = create$3();
-    return function (out, a, b, c, d, t) {
-      slerp(temp1, a, d, t);
-      slerp(temp2, b, c, t);
-      slerp(out, temp1, temp2, 2 * t * (1 - t));
-      return out;
-    };
-  }();
-  /**
-   * Sets the specified quaternion with values corresponding to the given
-   * axes. Each axis is a vec3 and is expected to be unit length and
-   * perpendicular to all other specified axes.
-   *
-   * @param {ReadonlyVec3} view  the vector representing the viewing direction
-   * @param {ReadonlyVec3} right the vector representing the local "right" direction
-   * @param {ReadonlyVec3} up    the vector representing the local "up" direction
-   * @returns {quat} out
-   */
-
-  var setAxes = function () {
-    var matr = create();
-    return function (out, view, right, up) {
-      matr[0] = right[0];
-      matr[3] = right[1];
-      matr[6] = right[2];
-      matr[1] = up[0];
-      matr[4] = up[1];
-      matr[7] = up[2];
-      matr[2] = -view[0];
-      matr[5] = -view[1];
-      matr[8] = -view[2];
-      return normalize$2(out, fromMat3(out, matr));
-    };
-  }();
-
-  /**
    * Reusable 3D Vector Fields Component
    *
    * @module
@@ -5010,6 +5411,7 @@
     crosshair: componentCrosshair,
     label: componentLabel,
     light: componentLight,
+    particles: componentParticles,
     ribbon: componentRibbon,
     ribbonMultiSeries: componentRibbonMultiSeries,
     surface: componentSurface,
@@ -5791,19 +6193,19 @@
     var init = function init(data) {
       var _dataTransform$summar = dataTransform(data).summary(),
           valueExtent = _dataTransform$summar.valueExtent,
-          coordinatesMax = _dataTransform$summar.coordinatesMax,
+          coordinatesExtent = _dataTransform$summar.coordinatesExtent,
           rowKeys = _dataTransform$summar.rowKeys;
 
-      var maxX = coordinatesMax.x,
-          maxY = coordinatesMax.y,
-          maxZ = coordinatesMax.z;
+      var extentX = coordinatesExtent.x,
+          extentY = coordinatesExtent.y,
+          extentZ = coordinatesExtent.z;
       var _dimensions = dimensions,
           dimensionX = _dimensions.x,
           dimensionY = _dimensions.y,
           dimensionZ = _dimensions.z;
-      xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
-      yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
-      zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
+      xScale = d3.scaleLinear().domain(extentX).range([0, dimensionX]);
+      yScale = d3.scaleLinear().domain(extentY).range([0, dimensionY]);
+      zScale = d3.scaleLinear().domain(extentZ).range([0, dimensionZ]);
       colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
       sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeRange);
     };
@@ -6196,6 +6598,342 @@
   }
 
   /**
+   * Reusable 3D Particle Plot Chart
+   *
+   * @module
+   *
+   * @example
+   * let chartHolder = d3.select("#chartholder");
+   *
+   * let myData = [...];
+   *
+   * let myChart = d3.x3d.chart.particlePlot();
+   *
+   * chartHolder.datum(myData).call(myChart);
+   *
+   * @see https://datavizproject.com/data-type/3d-scatterplot/
+   */
+
+  function chartParticlePlot () {
+    var x3d;
+    var scene;
+    /* Default Properties */
+
+    var width = 500;
+    var height = 500;
+    var dimensions = {
+      x: 40,
+      y: 40,
+      z: 40
+    };
+    var colors = ["orange"];
+    var color;
+    var classed = "d3X3dParticlePlot";
+    var mappings;
+    var debug = false;
+    /* Scales */
+
+    var xScale;
+    var yScale;
+    var zScale;
+    var colorScale;
+    var sizeScale;
+    var sizeRange = [0.2, 4.0];
+    /* Components */
+
+    var viewpoint = component.viewpoint();
+    var axis = component.axisThreePlane();
+    var particles = component.particles();
+    /**
+     * Initialise Data and Scales
+     *
+     * @private
+     * @param {Array} data - Chart data.
+     */
+
+    var init = function init(data) {
+      var newData = {};
+      ['x', 'y', 'z', 'size', 'color'].forEach(function (dimension) {
+        var set = {
+          key: dimension,
+          values: []
+        };
+        data.values.forEach(function (d) {
+          var key = mappings[dimension];
+          var value = d.values.find(function (v) {
+            return v.key === key;
+          }).value;
+          set.values.push({
+            key: key,
+            value: value
+          });
+        });
+        newData[dimension] = dataTransform(set).summary();
+      });
+      var extentX = newData.x.valueExtent;
+      var extentY = newData.y.valueExtent;
+      var extentZ = newData.z.valueExtent;
+      var extentSize = newData.size.valueExtent;
+      var extentColor = newData.color.valueExtent;
+      xScale = d3.scaleLinear().domain(extentX).range([0, dimensions.x]);
+      yScale = d3.scaleLinear().domain(extentY).range([0, dimensions.y]);
+      zScale = d3.scaleLinear().domain(extentZ).range([0, dimensions.z]);
+      sizeScale = d3.scaleLinear().domain(extentSize).range(sizeRange);
+
+      if (color) {
+        colorScale = d3.scaleQuantize().domain(extentColor).range([color, color]);
+      } else {
+        colorScale = d3.scaleQuantize().domain(extentColor).range(colors);
+      }
+    };
+    /**
+     * Constructor
+     *
+     * @constructor
+     * @alias scatterPlot
+     * @param {d3.selection} selection - The chart holder D3 selection.
+     */
+
+
+    var my = function my(selection) {
+      // Create x3d element (if it does not exist already)
+      if (!x3d) {
+        x3d = selection.append("X3D");
+        x3d.attr("profile", "Full");
+        scene = x3d.append("Scene");
+      }
+
+      x3d.attr("width", width + "px").attr("useGeoCache", false).attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false");
+      scene.append("Background").attr("groundColor", "1 1 1").attr("skyColor", "1 1 1"); // Update the chart dimensions and add layer groups
+
+      var layers = ["axis", "particles", "crosshair"];
+      scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
+        return d;
+      });
+      selection.each(function (data) {
+        init(data); // Add Viewpoint
+
+        viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
+        scene.call(viewpoint); // Add Axis
+
+        axis.xScale(xScale).yScale(yScale).zScale(zScale);
+        scene.select(".axis").call(axis); // Add Particles
+
+        particles.xScale(xScale).mappings(mappings).yScale(yScale).zScale(zScale).sizeScale(sizeScale).colorScale(colorScale);
+        scene.select(".particles").datum(data).call(particles);
+      });
+    };
+    /**
+     * Width Getter / Setter
+     *
+     * @param {number} _v - X3D canvas width in px.
+     * @returns {*}
+     */
+
+
+    my.width = function (_v) {
+      if (!arguments.length) return width;
+      width = _v;
+      return this;
+    };
+    /**
+     * Height Getter / Setter
+     *
+     * @param {number} _v - X3D canvas height in px.
+     * @returns {*}
+     */
+
+
+    my.height = function (_v) {
+      if (!arguments.length) return height;
+      height = _v;
+      return this;
+    };
+    /**
+     * Dimensions Getter / Setter
+     *
+     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+     * @returns {*}
+     */
+
+
+    my.dimensions = function (_v) {
+      if (!arguments.length) return dimensions;
+      dimensions = _v;
+      return this;
+    };
+    /**
+     * X Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+
+
+    my.xScale = function (_v) {
+      if (!arguments.length) return xScale;
+      xScale = _v;
+      return my;
+    };
+    /**
+     * Y Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+
+
+    my.yScale = function (_v) {
+      if (!arguments.length) return yScale;
+      yScale = _v;
+      return my;
+    };
+    /**
+     * Z Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+
+
+    my.zScale = function (_v) {
+      if (!arguments.length) return zScale;
+      zScale = _v;
+      return my;
+    };
+    /**
+     * Size Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 color scale.
+     * @returns {*}
+     */
+
+
+    my.sizeScale = function (_v) {
+      if (!arguments.length) return sizeScale;
+      sizeScale = _v;
+      return my;
+    };
+    /**
+     * Size Range Getter / Setter
+     *
+     * @param {number[]} _v - Size min and max (e.g. [1, 9]).
+     * @returns {*}
+     */
+
+
+    my.sizeRange = function (_v) {
+      if (!arguments.length) return sizeRange;
+      sizeRange = _v;
+      return my;
+    };
+    /**
+     * Color Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 color scale.
+     * @returns {*}
+     */
+
+
+    my.colorScale = function (_v) {
+      if (!arguments.length) return colorScale;
+      colorScale = _v;
+      return my;
+    };
+    /**
+     * Color Getter / Setter
+     *
+     * @param {string} _v - Color (e.g. "red" or "#ff0000").
+     * @returns {*}
+     */
+
+
+    my.color = function (_v) {
+      if (!arguments.length) return color;
+      color = _v;
+      return my;
+    };
+    /**
+     * Colors Getter / Setter
+     *
+     * @param {Array} _v - Array of colours used by color scale.
+     * @returns {*}
+     */
+
+
+    my.colors = function (_v) {
+      if (!arguments.length) return colors;
+      colors = _v;
+      return my;
+    };
+    /**
+     * Size Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 color scale.
+     * @returns {*}
+     */
+
+
+    my.sizeScale = function (_v) {
+      if (!arguments.length) return sizeScale;
+      sizeScale = _v;
+      return my;
+    };
+    /**
+     * Size Range Getter / Setter
+     *
+     * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
+     * @returns {*}
+     */
+
+
+    my.sizeRange = function (_v) {
+      if (!arguments.length) return sizeRange;
+      sizeRange = _v;
+      return my;
+    };
+    /**
+     * Mappings Getter / Setter
+     *
+     * @param {Object} _v - Color, Size, Mappings.
+     * @returns {*}
+     */
+
+
+    my.mappings = function (_v) {
+      if (!arguments.length) return mappings;
+      mappings = _v;
+      return my;
+    };
+    /**
+     * Debug Getter / Setter
+     *
+     * @param {boolean} _v - Show debug log and stats. True/False.
+     * @returns {*}
+     */
+
+
+    my.debug = function (_v) {
+      if (!arguments.length) return debug;
+      debug = _v;
+      return my;
+    };
+    /**
+     * Dispatch On Getter
+     *
+     * @returns {*}
+     */
+
+
+    my.on = function () {
+      var value = dispatch.on.apply(dispatch, arguments);
+      return value === dispatch ? my : value;
+    };
+
+    return my;
+  }
+
+  /**
    * Reusable 3D Multi Series Ribbon Chart
    *
    * @module
@@ -6475,6 +7213,7 @@
     var colors = ["orange"];
     var color;
     var classed = "d3X3dScatterPlot";
+    var mappings;
     var debug = false;
     /* Scales */
 
@@ -6499,26 +7238,38 @@
      */
 
     var init = function init(data) {
-      var _dataTransform$summar = dataTransform(data).summary(),
-          valueExtent = _dataTransform$summar.valueExtent,
-          coordinatesMax = _dataTransform$summar.coordinatesMax;
-
-      var maxX = coordinatesMax.x,
-          maxY = coordinatesMax.y,
-          maxZ = coordinatesMax.z;
-      var _dimensions = dimensions,
-          dimensionX = _dimensions.x,
-          dimensionY = _dimensions.y,
-          dimensionZ = _dimensions.z;
-      xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
-      yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
-      zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
-      sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeRange);
+      var newData = {};
+      ['x', 'y', 'z', 'size', 'color'].forEach(function (dimension) {
+        var set = {
+          key: dimension,
+          values: []
+        };
+        data.values.forEach(function (d) {
+          var key = mappings[dimension];
+          var value = d.values.find(function (v) {
+            return v.key === key;
+          }).value;
+          set.values.push({
+            key: key,
+            value: value
+          });
+        });
+        newData[dimension] = dataTransform(set).summary();
+      });
+      var extentX = newData.x.valueExtent;
+      var extentY = newData.y.valueExtent;
+      var extentZ = newData.z.valueExtent;
+      var extentSize = newData.size.valueExtent;
+      var extentColor = newData.color.valueExtent;
+      xScale = d3.scaleLinear().domain(extentX).range([0, dimensions.x]);
+      yScale = d3.scaleLinear().domain(extentY).range([0, dimensions.y]);
+      zScale = d3.scaleLinear().domain(extentZ).range([0, dimensions.z]);
+      sizeScale = d3.scaleLinear().domain(extentSize).range(sizeRange);
 
       if (color) {
-        colorScale = d3.scaleQuantize().domain(valueExtent).range([color, color]);
+        colorScale = d3.scaleQuantize().domain(extentColor).range([color, color]);
       } else {
-        colorScale = d3.scaleQuantize().domain(valueExtent).range(colors);
+        colorScale = d3.scaleQuantize().domain(extentColor).range(colors);
       }
     };
     /**
@@ -6560,7 +7311,7 @@
 
         label.xScale(xScale).yScale(yScale).zScale(zScale).offset(0.5); // Add Bubbles
 
-        bubbles.xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).colorScale(colorScale).on("d3X3dClick", function (e) {
+        bubbles.xScale(xScale).mappings(mappings).yScale(yScale).zScale(zScale).sizeScale(sizeScale).colorScale(colorScale).on("d3X3dClick", function (e) {
           var d = d3.select(e.target).datum();
           scene.select(".crosshair").datum(d).classed("crosshair", true).each(function () {
             d3.select(this).call(crosshair);
@@ -6743,6 +7494,19 @@
     my.sizeRange = function (_v) {
       if (!arguments.length) return sizeRange;
       sizeRange = _v;
+      return my;
+    };
+    /**
+     * Mappings Getter / Setter
+     *
+     * @param {Object} _v - Color, Size, Mappings.
+     * @returns {*}
+     */
+
+
+    my.mappings = function (_v) {
+      if (!arguments.length) return mappings;
+      mappings = _v;
       return my;
     };
     /**
@@ -7592,6 +8356,7 @@
     barChartVertical: chartBarChartVertical,
     bubbleChart: chartBubbleChart,
     crosshairPlot: chartCrosshairPlot,
+    particlePlot: chartParticlePlot,
     ribbonChartMultiSeries: chartRibbonChartMultiSeries,
     scatterPlot: chartScatterPlot,
     surfacePlot: chartSurfacePlot,
@@ -7684,6 +8449,41 @@
           x: randomNum(),
           y: randomNum(),
           z: randomNum()
+        };
+      })
+    };
+    return data;
+  }
+  /**
+   * Random Dataset - Single Series Scatter Plot (with size and color values)
+   *
+   * @param {number} points - Number of data points.
+   * @returns {Array}
+   */
+
+  function dataset6() {
+    var points = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 10;
+    var data = {
+      key: "Bubbles",
+      values: d3.range(points).map(function (d, i) {
+        return {
+          key: "Point" + i,
+          values: [{
+            key: "size",
+            value: randomNum()
+          }, {
+            key: "color",
+            value: randomNum()
+          }, {
+            key: "x",
+            value: randomNum()
+          }, {
+            key: "y",
+            value: randomNum()
+          }, {
+            key: "z",
+            value: randomNum()
+          }]
         };
       })
     };
@@ -7830,6 +8630,7 @@
     dataset1: dataset1,
     dataset2: dataset2,
     dataset3: dataset3,
+    dataset6: dataset6,
     dataset4: dataset4,
     dataset5: dataset5
   });
