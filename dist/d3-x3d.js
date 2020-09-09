@@ -3953,22 +3953,35 @@
           return [data];
         };
 
+        var shape = function shape(el) {
+          var shape = el.append("Shape");
+          /*
+          // FIXME: x3dom cannot have empty IFS nodes, we must to use .html() rather than .append() & .attr().
+            const appearance = shape.append("Appearance");
+          		appearance.append("PointProperties")
+            	.attr("colorMode", "POINT_COLOR")
+            	.attr("pointSizeMinValue", 1)
+            	.attr("pointSizeMaxValue", 100)
+            	.attr("pointSizeScaleFactor", 3);
+            	const pointset = shape.append("PointSet");
+          		pointset.append("Coordinate")
+          			.attr("point", (d) => d.point);
+          		pointset.append("Color")
+           		.attr("color", (d) => d.color);
+          */
+
+          shape.html(function (d) {
+            return "\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<PointProperties colorMode=\"POINT_COLOR\" pointSizeMinValue=\"1\" pointSizeMaxValue=\"100\" pointSizeScaleFactor=\"3\"></PointProperties>\n\t\t\t\t\t</Appearance>\n\t\t\t\t\t<PointSet>\n\t\t\t\t\t\t<Coordinate point=\"".concat(d.point, "\"></Coordinate>\n\t\t\t\t\t\t<Color color=\"").concat(d.color, "\"></Color>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t  ");
+          });
+        };
+
         var particles = element.selectAll(".particle").data(function (d) {
           return particleData(d);
         }, function (d) {
           return d.key;
         });
-        var particlesEnter = particles.enter().append("Shape").classed("particle", true);
-        var appearance = particlesEnter.append("Appearance");
-        appearance.append("PointProperties").attr("colorMode", "POINT_COLOR").attr("pointSizeMinValue", 1).attr("pointSizeMaxValue", 100).attr("pointSizeScaleFactor", 5);
-        var pointset = particlesEnter.append("PointSet");
-        pointset.append("Coordinate").attr("point", function (d) {
-          return d.point;
-        });
-        pointset.append("Color").attr("color", function (d) {
-          return d.color;
-        });
-        var particleTransition = particlesEnter.merge(particles).transition();
+        particles.enter().append("Group").classed("particle", true).call(shape).merge(particles);
+        var particleTransition = particles.transition().select("Shape");
         particleTransition.select("PointSet").select("Coordinate").attr("point", function (d) {
           return d.point;
         });

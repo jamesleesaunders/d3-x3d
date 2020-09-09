@@ -149,34 +149,46 @@ export default function() {
 				return [data];
 			};
 
+			const shape = (el) => {
+					const shape = el.append("Shape");
+
+					/*
+					// FIXME: x3dom cannot have empty IFS nodes, we must to use .html() rather than .append() & .attr().
+			    const appearance = shape.append("Appearance");
+	    		appearance.append("PointProperties")
+			    	.attr("colorMode", "POINT_COLOR")
+			    	.attr("pointSizeMinValue", 1)
+			    	.attr("pointSizeMaxValue", 100)
+			    	.attr("pointSizeScaleFactor", 3);
+
+		    	const pointset = shape.append("PointSet");
+	    		pointset.append("Coordinate")
+    				.attr("point", (d) => d.point);
+	    		pointset.append("Color")
+		    		.attr("color", (d) => d.color);
+					*/
+
+					shape.html((d) => `
+					<Appearance>
+						<PointProperties colorMode="POINT_COLOR" pointSizeMinValue="1" pointSizeMaxValue="100" pointSizeScaleFactor="3"></PointProperties>
+					</Appearance>
+					<PointSet>
+						<Coordinate point="${d.point}"></Coordinate>
+						<Color color="${d.color}"></Color>
+					</IndexedFaceset>
+				  `);
+			};
+
 			const particles = element.selectAll(".particle")
 				.data((d) => particleData(d), (d) => d.key);
 
-			const particlesEnter = particles.enter()
-				.append("Shape")
-				.classed("particle", true);
+			particles.enter()
+				.append("Group")
+				.classed("particle", true)
+				.call(shape)
+				.merge(particles);
 
-			const appearance = particlesEnter
-				.append("Appearance");
-
-			appearance.append("PointProperties")
-				.attr("colorMode", "POINT_COLOR")
-				.attr("pointSizeMinValue", 1)
-				.attr("pointSizeMaxValue", 100)
-				.attr("pointSizeScaleFactor", 5);
-
-			const pointset = particlesEnter
-				.append("PointSet");
-
-			pointset.append("Coordinate")
-				.attr("point", (d) => d.point);
-
-			pointset.append("Color")
-				.attr("color", (d) => d.color);
-
-			const particleTransition = particlesEnter
-				.merge(particles)
-				.transition();
+			const particleTransition = particles.transition().select("Shape");
 
 			particleTransition.select("PointSet")
 				.select("Coordinate")
