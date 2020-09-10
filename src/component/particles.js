@@ -159,7 +159,7 @@ export default function() {
 			    	.attr("colorMode", "POINT_COLOR")
 			    	.attr("pointSizeMinValue", 1)
 			    	.attr("pointSizeMaxValue", 100)
-			    	.attr("pointSizeScaleFactor", 3);
+			    	.attr("pointSizeScaleFactor", 7);
 
 		    	const pointset = shape.append("PointSet");
 	    		pointset.append("Coordinate")
@@ -170,7 +170,7 @@ export default function() {
 
 					shape.html((d) => `
 					<Appearance>
-						<PointProperties colorMode="POINT_COLOR" pointSizeMinValue="1" pointSizeMaxValue="100" pointSizeScaleFactor="3"></PointProperties>
+						<PointProperties colorMode="POINT_COLOR" pointSizeMinValue="1" pointSizeMaxValue="100" pointSizeScaleFactor="7"></PointProperties>
 					</Appearance>
 					<PointSet>
 						<Coordinate point="${d.point}"></Coordinate>

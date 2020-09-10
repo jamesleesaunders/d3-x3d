@@ -3962,7 +3962,7 @@
             	.attr("colorMode", "POINT_COLOR")
             	.attr("pointSizeMinValue", 1)
             	.attr("pointSizeMaxValue", 100)
-            	.attr("pointSizeScaleFactor", 3);
+            	.attr("pointSizeScaleFactor", 7);
             	const pointset = shape.append("PointSet");
           		pointset.append("Coordinate")
           			.attr("point", (d) => d.point);
@@ -3971,7 +3971,7 @@
           */
 
           shape.html(function (d) {
-            return "\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<PointProperties colorMode=\"POINT_COLOR\" pointSizeMinValue=\"1\" pointSizeMaxValue=\"100\" pointSizeScaleFactor=\"3\"></PointProperties>\n\t\t\t\t\t</Appearance>\n\t\t\t\t\t<PointSet>\n\t\t\t\t\t\t<Coordinate point=\"".concat(d.point, "\"></Coordinate>\n\t\t\t\t\t\t<Color color=\"").concat(d.color, "\"></Color>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t  ");
+            return "\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<PointProperties colorMode=\"POINT_COLOR\" pointSizeMinValue=\"1\" pointSizeMaxValue=\"100\" pointSizeScaleFactor=\"7\"></PointProperties>\n\t\t\t\t\t</Appearance>\n\t\t\t\t\t<PointSet>\n\t\t\t\t\t\t<Coordinate point=\"".concat(d.point, "\"></Coordinate>\n\t\t\t\t\t\t<Color color=\"").concat(d.color, "\"></Color>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t  ");
           });
         };
 
@@ -4703,22 +4703,27 @@
           return [data];
         };
 
+        var shape = function shape(el) {
+          var shape = el.append("Shape").classed("surface", true);
+          shape.append("IndexedFaceset").attr("coordIndex", function (d) {
+            return d.coordIndex;
+          }).attr("solid", false);
+          shape.append("Coordinate").attr("point", function (d) {
+            return d.point;
+          });
+          shape.append("Color").attr("color", function (d) {
+            return d.color;
+          });
+          return shape;
+        };
+
         var surface = element.selectAll(".surface").data(function (d) {
           return surfaceData(d);
         }, function (d) {
           return d.key;
         });
-        var surfaceSelect = surface.enter().append("Shape").classed("surface", true).append("IndexedFaceset").attr("coordIndex", function (d) {
-          return d.coordIndex;
-        }).attr("solid", false);
-        surfaceSelect.append("Coordinate").attr("point", function (d) {
-          return d.point;
-        });
-        surfaceSelect.append("Color").attr("color", function (d) {
-          return d.color;
-        });
-        surfaceSelect.merge(surface);
-        var surfaceTransition = surface.transition().select("IndexedFaceset").attr("coordIndex", function (d) {
+        var surfaceEnter = surface.enter().call(shape).merge(surface);
+        var surfaceTransition = surfaceEnter.transition().select("IndexedFaceset").attr("coordIndex", function (d) {
           return d.coordIndex;
         });
         surfaceTransition.select("coordinate").attr("point", function (d) {

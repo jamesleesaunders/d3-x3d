@@ -123,26 +123,32 @@ export default function() {
 				return [data];
 			};
 
+	  	const shape = (el) => {
+	  			const shape = el.append("Shape")
+							.classed("surface", true);
+
+	  			shape.append("IndexedFaceset")
+							.attr("coordIndex", (d) => d.coordIndex)
+							.attr("solid", false);
+
+					shape.append("Coordinate")
+							.attr("point", (d) => d.point);
+
+					shape.append("Color")
+							.attr("color", (d) => d.color);
+
+		  		return shape;
+		  };
+
 			const surface = element.selectAll(".surface")
 				.data((d) => surfaceData(d), (d) => d.key);
 
-			const surfaceSelect = surface
+			const surfaceEnter = surface
 				.enter()
-				.append("Shape")
-				.classed("surface", true)
-				.append("IndexedFaceset")
-				.attr("coordIndex", (d) => d.coordIndex)
-				.attr("solid", false);
+				.call(shape)
+				.merge(surface);
 
-			surfaceSelect.append("Coordinate")
-				.attr("point", (d) => d.point);
-
-			surfaceSelect.append("Color")
-				.attr("color", (d) => d.color);
-
-			surfaceSelect.merge(surface);
-
-			const surfaceTransition = surface.transition()
+			const surfaceTransition = surfaceEnter.transition()
 				.select("IndexedFaceset")
 				.attr("coordIndex", (d) => d.coordIndex);
 
