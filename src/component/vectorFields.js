@@ -192,7 +192,7 @@ export default function() {
 				.attr("diffuseColor", (d) => colorParse(colorScale(d.value)));
 
 			arrowShaft
-				.append("cone")
+				.append("Cone")
 				.attr("height", 1)
 				.attr("bottomRadius", 0.4);
 

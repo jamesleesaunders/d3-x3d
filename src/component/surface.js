@@ -127,14 +127,14 @@ export default function() {
 	  			const shape = el.append("Shape")
 							.classed("surface", true);
 
-	  			shape.append("IndexedFaceset")
+	  			const ifs = shape.append("IndexedFaceset")
 							.attr("coordIndex", (d) => d.coordIndex)
 							.attr("solid", false);
 
-					shape.append("Coordinate")
+					ifs.append("Coordinate")
 							.attr("point", (d) => d.point);
 
-					shape.append("Color")
+					ifs.append("Color")
 							.attr("color", (d) => d.color);
 
 		  		return shape;
@@ -143,20 +143,19 @@ export default function() {
 			const surface = element.selectAll(".surface")
 				.data((d) => surfaceData(d), (d) => d.key);
 
-			const surfaceEnter = surface
-				.enter()
+			surface.enter()
 				.call(shape)
 				.merge(surface);
 
-			const surfaceTransition = surfaceEnter.transition()
-				.select("IndexedFaceset")
-				.attr("coordIndex", (d) => d.coordIndex);
+			const surfaceTransition = surface.transition()
+					.select("IndexedFaceset")
+					.attr("coordIndex", (d) => d.coordIndex);
 
 			surfaceTransition.select("coordinate")
-				.attr("point", (d) => d.point);
+					.attr("point", (d) => d.point);
 
 			surfaceTransition.select("color")
-				.attr("color", (d) => d.color);
+					.attr("color", (d) => d.color);
 
 			surface.exit()
 				.remove();

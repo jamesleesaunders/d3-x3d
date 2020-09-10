@@ -2430,8 +2430,9 @@
         }, function (d) {
           return d.key;
         });
-        var bubblesEnter = bubbles.enter().append("Transform").attr("class", "bubble").call(shape).merge(bubbles).transition();
-        bubblesEnter.attr("translation", function (d) {
+        var bubblesEnter = bubbles.enter().append("Transform").attr("class", "bubble").call(shape).merge(bubbles);
+        var bubblesTransition = bubblesEnter.transition();
+        bubblesTransition.attr("translation", function (d) {
           var xVal = d.values.find(function (v) {
             return v.key === mappings.x;
           }).value;
@@ -2443,13 +2444,13 @@
           }).value;
           return xScale(xVal) + " " + yScale(yVal) + " " + zScale(zVal);
         });
-        bubblesEnter.select("Shape").select("Sphere").attr("radius", function (d) {
+        bubblesTransition.select("Shape").select("Sphere").attr("radius", function (d) {
           var sizeVal = d.values.find(function (v) {
             return v.key === mappings.size;
           }).value;
           return sizeScale(sizeVal);
         });
-        bubblesEnter.select("Shape").select("Appearance").select("Material").attr("diffuseColor", function (d) {
+        bubblesTransition.select("Shape").select("Appearance").select("Material").attr("diffuseColor", function (d) {
           var colorVal = d.values.find(function (v) {
             return v.key === mappings.color;
           }).value;
@@ -4705,13 +4706,13 @@
 
         var shape = function shape(el) {
           var shape = el.append("Shape").classed("surface", true);
-          shape.append("IndexedFaceset").attr("coordIndex", function (d) {
+          var ifs = shape.append("IndexedFaceset").attr("coordIndex", function (d) {
             return d.coordIndex;
           }).attr("solid", false);
-          shape.append("Coordinate").attr("point", function (d) {
+          ifs.append("Coordinate").attr("point", function (d) {
             return d.point;
           });
-          shape.append("Color").attr("color", function (d) {
+          ifs.append("Color").attr("color", function (d) {
             return d.color;
           });
           return shape;
@@ -4722,8 +4723,8 @@
         }, function (d) {
           return d.key;
         });
-        var surfaceEnter = surface.enter().call(shape).merge(surface);
-        var surfaceTransition = surfaceEnter.transition().select("IndexedFaceset").attr("coordIndex", function (d) {
+        surface.enter().call(shape).merge(surface);
+        var surfaceTransition = surface.transition().select("IndexedFaceset").attr("coordIndex", function (d) {
           return d.coordIndex;
         });
         surfaceTransition.select("coordinate").attr("point", function (d) {
@@ -5013,7 +5014,7 @@
         arrowShaft.append("Appearance").append("Material").attr("diffuseColor", function (d) {
           return colorParse(colorScale(d.value));
         });
-        arrowShaft.append("cone").attr("height", 1).attr("bottomRadius", 0.4);
+        arrowShaft.append("Cone").attr("height", 1).attr("bottomRadius", 0.4);
         arrowsEnter.merge(arrows);
         arrows.transition().attr("translation", function (d) {
           return d.translation;

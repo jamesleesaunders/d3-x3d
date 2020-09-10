@@ -131,25 +131,24 @@ export default function() {
 				.append("Transform")
 				.attr("class", "bubble")
 				.call(shape)
-				.merge(bubbles)
-				.transition();
+				.merge(bubbles);
 
-			bubblesEnter
-				.attr("translation", (d) => {
+			const bubblesTransition = bubblesEnter.transition();
+			bubblesTransition.attr("translation", (d) => {
 					let xVal = d.values.find((v) => v.key === mappings.x).value;
 					let yVal = d.values.find((v) => v.key === mappings.y).value;
 					let zVal = d.values.find((v) => v.key === mappings.z).value;
 					return xScale(xVal) + " " + yScale(yVal) + " " + zScale(zVal);
 				});
 
-			bubblesEnter.select("Shape")
+			bubblesTransition.select("Shape")
 				.select("Sphere")
 				.attr("radius", (d) => {
 					let sizeVal = d.values.find((v) => v.key === mappings.size).value;
 					return sizeScale(sizeVal);
 				});
 
-			bubblesEnter.select("Shape")
+			bubblesTransition.select("Shape")
 				.select("Appearance")
 				.select("Material")
 				.attr("diffuseColor", (d) => {
