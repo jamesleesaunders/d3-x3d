@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>component/areaMultiSeries - Documentation</title>
+    <title>chart/particlePlot - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">component/areaMultiSeries</h1>
+    <h1 class="page-title">chart/particlePlot</h1>
     
 
     
@@ -51,7 +51,7 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Reusable 3D Multi Series Area Chart Component</p></div>
+            <div class="description"><p>Reusable 3D Particle Plot Chart</p></div>
         
 
         
@@ -93,12 +93,19 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_areaMultiSeries.js.html">component/areaMultiSeries.js</a>, <a href="component_areaMultiSeries.js.html#line6">line 6</a>
+        <a href="chart_particlePlot.js.html">chart/particlePlot.js</a>, <a href="chart_particlePlot.js.html#line6">line 6</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://datavizproject.com/data-type/3d-scatterplot/">https://datavizproject.com/data-type/3d-scatterplot/</a></li>
+        </ul>
+    </dd>
     
 
     
@@ -126,6 +133,19 @@
 
 
 
+<div class="section-examples">
+<h5>Example</h5>
+
+    <pre class="prettyprint"><code>let chartHolder = d3.select("#chartholder");
+
+let myData = [...];
+
+let myChart = d3.x3d.chart.particlePlot();
+
+chartHolder.datum(myData).call(myChart);</code></pre>
+
+</div>
+
 </div>
         
     
@@ -152,14 +172,14 @@
 
     
 
-    <h4 class="name" id="~arrayUnique"><span class="type-signature">(inner) </span>arrayUnique<span class="signature">(array1, array2)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    <h4 class="name" id="~createBase"><span class="type-signature">(inner) </span>createBase<span class="signature">(selection, layers)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Unique Array</p>
+    <p>Create X3D base and scene</p>
 </div>
 
 
@@ -195,7 +215,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="component_areaMultiSeries.js.html">component/areaMultiSeries.js</a>, <a href="component_areaMultiSeries.js.html#line36">line 36</a>
+        <a href="chart_particlePlot.js.html">chart/particlePlot.js</a>, <a href="chart_particlePlot.js.html#line113">line 113</a>
     </li></ul></dd>
     
 
@@ -239,15 +259,10 @@
 
         <tr>
             
-                <td class="name"><code>array1</code></td>
+                <td class="name"><code>selection</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type"><code>array</code></span>
-
-
             
             </td>
 
@@ -265,15 +280,10 @@
 
         <tr>
             
-                <td class="name"><code>array2</code></td>
+                <td class="name"><code>layers</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type"><code>array</code></span>
-
-
             
             </td>
 
@@ -303,27 +313,6 @@
 
 
 
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-<dl class="param-type">
-    <dt>
-        Type:
-    </dt>
-    <dd>
-        
-<span class="param-type"><code>array</code></span>
-
-
-    </dd>
-</dl>
-
-
-    
-</div>
 
 
 
