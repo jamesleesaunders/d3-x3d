@@ -2,7 +2,6 @@ import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import componentBubbles from "./bubbles";
 import { dispatch } from "../events";
-import * as glMatrix from "gl-matrix";
 
 /**
  * Reusable 3D Multi Series Bubble Chart Component

@@ -134,10 +134,22 @@ test.describe("Test Summary Multi Dimension", function() {
 	let expected = {
 		dataType: 2,
 		rowKeys: ["UK", "France", "Spain", "Germany", "Italy", "Portugal"],
-		rowTotals: { UK: 24.93, France: 24.259999999999998, Spain: 31.021, Germany: 20.906, Italy: 25.001, Portugal: 21.819999999999997 },
+		rowTotals: {
+			UK: 24.93,
+			France: 24.259999999999998,
+			Spain: 31.021,
+			Germany: 20.906,
+			Italy: 25.001,
+			Portugal: 21.819999999999997
+		},
 		rowTotalsMax: 31.021,
 		columnKeys: ["Apples", "Oranges", "Pears", "Bananas"],
-		columnTotals: { Apples: 43.980999999999995, Oranges: 28.207, Pears: 33.43, Bananas: 42.32000000000001 },
+		columnTotals: {
+			Apples: 43.980999999999995,
+			Oranges: 28.207,
+			Pears: 33.43,
+			Bananas: 42.32000000000001
+		},
 		columnTotalsMax: 43.980999999999995,
 		valueMin: 0,
 		valueMax: 18.3,

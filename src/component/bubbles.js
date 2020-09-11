@@ -135,11 +135,11 @@ export default function() {
 
 			const bubblesTransition = bubblesEnter.transition();
 			bubblesTransition.attr("translation", (d) => {
-					let xVal = d.values.find((v) => v.key === mappings.x).value;
-					let yVal = d.values.find((v) => v.key === mappings.y).value;
-					let zVal = d.values.find((v) => v.key === mappings.z).value;
-					return xScale(xVal) + " " + yScale(yVal) + " " + zScale(zVal);
-				});
+				let xVal = d.values.find((v) => v.key === mappings.x).value;
+				let yVal = d.values.find((v) => v.key === mappings.y).value;
+				let zVal = d.values.find((v) => v.key === mappings.z).value;
+				return xScale(xVal) + " " + yScale(yVal) + " " + zScale(zVal);
+			});
 
 			bubblesTransition.select("Shape")
 				.select("Sphere")
@@ -272,7 +272,7 @@ export default function() {
 	/**
 	 * Mappings Getter / Setter
 	 *
-	 * @param {Object}
+	 * @param {Object} _v - Map properties to size, colour etc.
 	 * @returns {*}
 	 */
 	my.mappings = function(_v) {

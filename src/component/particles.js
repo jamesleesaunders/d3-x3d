@@ -150,25 +150,25 @@ export default function() {
 			};
 
 			const shape = (el) => {
-					const shape = el.append("Shape");
+				const shape = el.append("Shape");
 
-					/*
-					// FIXME: x3dom cannot have empty IFS nodes, we must to use .html() rather than .append() & .attr().
-			    const appearance = shape.append("Appearance");
-	    		appearance.append("PointProperties")
-			    	.attr("colorMode", "POINT_COLOR")
-			    	.attr("pointSizeMinValue", 1)
-			    	.attr("pointSizeMaxValue", 100)
-			    	.attr("pointSizeScaleFactor", 5);
+				/*
+				// FIXME: x3dom cannot have empty IFS nodes, we must to use .html() rather than .append() & .attr().
+				const appearance = shape.append("Appearance");
+				appearance.append("PointProperties")
+					.attr("colorMode", "POINT_COLOR")
+					.attr("pointSizeMinValue", 1)
+					.attr("pointSizeMaxValue", 100)
+					.attr("pointSizeScaleFactor", 5);
 
-		    	const pointset = shape.append("PointSet");
-	    		pointset.append("Coordinate")
-    				.attr("point", (d) => d.point);
-	    		pointset.append("Color")
-		    		.attr("color", (d) => d.color);
-					*/
+				const pointset = shape.append("PointSet");
+				pointset.append("Coordinate")
+					.attr("point", (d) => d.point);
+				pointset.append("Color")
+					.attr("color", (d) => d.color);
+				*/
 
-					shape.html((d) => `
+				shape.html((d) => `
 					<Appearance>
 						<PointProperties colorMode="POINT_COLOR" pointSizeMinValue="1" pointSizeMaxValue="100" pointSizeScaleFactor="5"></PointProperties>
 					</Appearance>
@@ -311,7 +311,7 @@ export default function() {
 	/**
 	 * Mappings Getter / Setter
 	 *
-	 * @param {Object}
+	 * @param {Object} _v - Map properties to size, colour etc.
 	 * @returns {*}
 	 */
 	my.mappings = function(_v) {

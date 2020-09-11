@@ -123,22 +123,22 @@ export default function() {
 				return [data];
 			};
 
-	  	const shape = (el) => {
-	  			const shape = el.append("Shape")
-							.classed("surface", true);
+			const shape = (el) => {
+				const shape = el.append("Shape")
+					.classed("surface", true);
 
-	  			const ifs = shape.append("IndexedFaceset")
-							.attr("coordIndex", (d) => d.coordIndex)
-							.attr("solid", false);
+				const ifs = shape.append("IndexedFaceset")
+					.attr("coordIndex", (d) => d.coordIndex)
+					.attr("solid", false);
 
-					ifs.append("Coordinate")
-							.attr("point", (d) => d.point);
+				ifs.append("Coordinate")
+					.attr("point", (d) => d.point);
 
-					ifs.append("Color")
-							.attr("color", (d) => d.color);
+				ifs.append("Color")
+					.attr("color", (d) => d.color);
 
-		  		return shape;
-		  };
+				return shape;
+			};
 
 			const surface = element.selectAll(".surface")
 				.data((d) => surfaceData(d), (d) => d.key);
@@ -148,14 +148,14 @@ export default function() {
 				.merge(surface);
 
 			const surfaceTransition = surface.transition()
-					.select("IndexedFaceset")
-					.attr("coordIndex", (d) => d.coordIndex);
+				.select("IndexedFaceset")
+				.attr("coordIndex", (d) => d.coordIndex);
 
 			surfaceTransition.select("coordinate")
-					.attr("point", (d) => d.point);
+				.attr("point", (d) => d.point);
 
 			surfaceTransition.select("color")
-					.attr("color", (d) => d.color);
+				.attr("color", (d) => d.color);
 
 			surface.exit()
 				.remove();
