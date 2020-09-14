@@ -94,16 +94,16 @@ export function dataset3(points = 10) {
  */
 export function convert(data) {
 	return {
-		key: "Particles",
+		key: data.key,
 		values: data.values.map(function(d) {
 			return {
 				key: d.key,
 				values: [
+					{ key: "size", value: d.value },
+					{ key: "color", value: d.value },
 					{ key: "x", value: d.x },
 					{ key: "y", value: d.y },
-					{ key: "z", value: d.z },
-					{ key: "size", value: randomNum() },
-					{ key: "color", value: randomNum() }
+					{ key: "z", value: d.z }
 				]
 			};
 		})

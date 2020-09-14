@@ -25,8 +25,7 @@
   // Declare the chart component
   var bubbleComponent = d3.x3d.component.particles()
     .mappings({ x: 'x', y: 'y', z: 'z', size: 'size', color: 'color' })
-    .colors(d3.schemeRdYlGn[8])
-    .sizeRange([2, 2]);
+    .colors(d3.schemeRdYlGn[8]);
 
   // Create scene
   var scene = d3.select("#chartholder")
