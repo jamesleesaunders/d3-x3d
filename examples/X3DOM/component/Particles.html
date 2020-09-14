@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>d3-x3d : 3D Bubbles Component Example</title>
+  <title>d3-x3d : 3D Particles Component Example</title>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
   <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css"/>
@@ -20,10 +20,10 @@
   var viewpoint = d3.x3d.component.viewpoint();
 
   // Generate some data
-  var data = d3.x3d.randomData.dataset6();
+  var data = d3.x3d.randomData.dataset6(2000);
 
   // Declare the chart component
-  var bubbleComponent = d3.x3d.component.bubbles()
+  var bubbleComponent = d3.x3d.component.particles()
     .mappings({ x: 'x', y: 'y', z: 'z', size: 'size', color: 'color' })
     .colors(d3.schemeRdYlGn[8])
     .sizeRange([2, 2]);

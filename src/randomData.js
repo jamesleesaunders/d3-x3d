@@ -105,11 +105,11 @@ export function dataset6(points = 10) {
 			return {
 				key: "Point" + i,
 				values: [
-					{ key: "size", value: randomNum() },
-					{ key: "color", value: randomNum() },
 					{ key: "x", value: randomNum() },
 					{ key: "y", value: randomNum() },
-					{ key: "z", value: randomNum() }
+					{ key: "z", value: randomNum() },
+					{ key: "size", value: randomNum() },
+					{ key: "color", value: randomNum() }
 				]
 			};
 		})
