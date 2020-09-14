@@ -29,7 +29,7 @@ export function randomNum() {
  * @returns {Array}
  */
 export function dataset1() {
-	let data = {
+	return {
 		key: "Fruit",
 		values: fruit.map(function(d) {
 			return {
@@ -41,8 +41,6 @@ export function dataset1() {
 			};
 		})
 	};
-
-	return data;
 }
 
 /**
@@ -51,7 +49,7 @@ export function dataset1() {
  * @returns {Array}
  */
 export function dataset2() {
-	let data = countries.map(function(d) {
+	return countries.map(function(d) {
 		return {
 			key: d,
 			values: fruit.map(function(d) {
@@ -65,8 +63,6 @@ export function dataset2() {
 			})
 		}
 	});
-
-	return data;
 }
 
 /**
@@ -76,7 +72,7 @@ export function dataset2() {
  * @returns {Array}
  */
 export function dataset3(points = 10) {
-	let data = {
+	return {
 		key: "Bubbles",
 		values: d3.range(points).map(function(d, i) {
 			return {
@@ -88,8 +84,30 @@ export function dataset3(points = 10) {
 			};
 		})
 	};
+}
 
-	return data;
+/**
+ * Convert Bubble/Particle Dataset Format
+ *
+ * @param {Array} data
+ * @returns {Array}
+ */
+export function convert(data) {
+	return {
+		key: "Particles",
+		values: data.values.map(function(d) {
+			return {
+				key: d.key,
+				values: [
+					{ key: "x", value: d.x },
+					{ key: "y", value: d.y },
+					{ key: "z", value: d.z },
+					{ key: "size", value: randomNum() },
+					{ key: "color", value: randomNum() }
+				]
+			};
+		})
+	};
 }
 
 /**
@@ -99,23 +117,7 @@ export function dataset3(points = 10) {
  * @returns {Array}
  */
 export function dataset6(points = 10) {
-	let data = {
-		key: "Bubbles",
-		values: d3.range(points).map(function(d, i) {
-			return {
-				key: "Point" + i,
-				values: [
-					{ key: "x", value: randomNum() },
-					{ key: "y", value: randomNum() },
-					{ key: "z", value: randomNum() },
-					{ key: "size", value: randomNum() },
-					{ key: "color", value: randomNum() }
-				]
-			};
-		})
-	};
-
-	return data;
+	return convert(dataset3(points));
 }
 
 /**
@@ -124,7 +126,7 @@ export function dataset6(points = 10) {
  * @returns {Array}
  */
 export function dataset4() {
-	let data = [
+	return [
 		{
 			key: "a",
 			values: [
@@ -172,8 +174,6 @@ export function dataset4() {
 			]
 		}
 	];
-
-	return data;
 }
 
 /**
@@ -193,8 +193,7 @@ export function dataset5() {
 	let nx = xRange.length;
 	let nz = zRange.length;
 
-	let data = d3.range(nx).map(function(i) {
-
+	return d3.range(nx).map(function(i) {
 		let values = d3.range(nz).map(
 			function(j) {
 				return {
@@ -208,6 +207,4 @@ export function dataset5() {
 			values: values
 		};
 	});
-
-	return data;
 }
