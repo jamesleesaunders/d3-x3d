@@ -12,7 +12,7 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3, global.d3, global.d3, global.d3)));
 }(this, (function (d3, d3Shape, d3Array, d3Interpolate) { 'use strict';
 
-  var version = "2.0.6";
+  var version = "2.0.7";
   var license = "GPL-2.0";
 
   function _extends() {
