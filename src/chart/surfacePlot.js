@@ -41,6 +41,7 @@ export default function() {
 	const viewpoint = component.viewpoint();
 	const axis = component.axisThreePlane();
 	const surface = component.surface();
+	const createBase = component.createBase();
 
 	/**
 	 * Initialise Data and Scales
@@ -70,43 +71,6 @@ export default function() {
 			.range(colors)
 			.interpolate(d3.interpolateLab);
 	};
-
-	/**
-	 * Create X3D base and scene
-	 *
-	 * @param selection
-	 * @param layers
-	 */
-	function createBase(selection, layers) {
-		// Create x3d element (if it does not exist already)
-		if (!x3d) {
-			x3d = selection.append("X3D");
-			scene = x3d.append("Scene");
-
-			x3d.attr("width", width + "px")
-				.attr("height", height + "px")
-				.attr("showLog", debug ? "true" : "false")
-				.attr("showStat", debug ? "true" : "false")
-				.attr("useGeoCache", false);
-
-			// Disable gamma correction
-			scene.append("Environment")
-				.attr("gammaCorrectionDefault", "none");
-
-			// Add a white background
-			scene.append("Background")
-				.attr("groundColor", "1 1 1")
-				.attr("skyColor", "1 1 1");
-		}
-
-		// Add layer groups
-		scene.classed(classed, true)
-			.selectAll("Group")
-			.data(layers)
-			.enter()
-			.append("Group")
-			.attr("class", (d) => d);
-	}
 
 	/**
 	 * Constructor
