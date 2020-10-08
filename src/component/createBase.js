@@ -1,4 +1,3 @@
-import * as d3 from "d3";
 
 /**
  * Reusable X3D Base and Scene Component
