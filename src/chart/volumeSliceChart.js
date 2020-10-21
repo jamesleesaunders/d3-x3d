@@ -20,9 +20,6 @@ import component from "../component";
  */
 export default function() {
 
-	let x3d;
-	let scene;
-
 	/* Default Properties */
 	let width = 500;
 	let height = 500;
@@ -47,43 +44,7 @@ export default function() {
 	const viewpoint = component.viewpoint();
 	const axis = component.crosshair();
 	const volumeSlice = component.volumeSlice();
-
-	/**
-	 * Create X3D base and scene
-	 *
-	 * @param selection
-	 * @param layers
-	 */
-	function createBase(selection, layers) {
-		// Create x3d element (if it does not exist already)
-		if (!x3d) {
-			x3d = selection.append("X3D");
-			scene = x3d.append("Scene");
-
-			x3d.attr("width", width + "px")
-				.attr("height", height + "px")
-				.attr("showLog", debug ? "true" : "false")
-				.attr("showStat", debug ? "true" : "false")
-				.attr("useGeoCache", false);
-
-			// Disable gamma correction
-			scene.append("Environment")
-				.attr("gammaCorrectionDefault", "none");
-
-			// Add a white background
-			scene.append("Background")
-				.attr("groundColor", "1 1 1")
-				.attr("skyColor", "1 1 1");
-		}
-
-		// Add layer groups
-		scene.classed(classed, true)
-			.selectAll("Group")
-			.data(layers)
-			.enter()
-			.append("Group")
-			.attr("class", (d) => d);
-	}
+	const createBase = component.createBase();
 
 	/**
 	 * Constructor
@@ -94,7 +55,7 @@ export default function() {
 	 */
 	const my = function(selection) {
 		const layers = ["axis", "volume"];
-		createBase(selection, layers);
+		const scene = createBase(selection, layers, classed, width, height, debug);
 
 		selection.each((data) => {
 
