@@ -53,7 +53,7 @@
     "jsdoc": "^3.6.4",
     "jsdom": "^15.2.1",
     "minami": "^1.2.3",
-    "mocha": "8.1.0",
+    "mocha": "8.2.0",
     "rollup": "^2.26.11",
     "snyk": "latest",
     "tap-spec": "^5.0.0",
