@@ -30,9 +30,6 @@ import * as glMatrix from "gl-matrix";
  */
 export default function() {
 
-	let x3d;
-	let scene;
-
 	/* Default Properties */
 	let width = 500;
 	let height = 500;
@@ -135,7 +132,7 @@ export default function() {
 	 */
 	const my = function(selection) {
 		const layers = ["axis", "vectorFields"];
-		createBase(selection, layers);
+		const scene = createBase(selection, layers, classed, width, height, debug);
 
 		selection.each((data) => {
 			init(data);

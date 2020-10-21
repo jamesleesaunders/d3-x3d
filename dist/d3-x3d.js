@@ -2866,6 +2866,32 @@
   }
 
   /**
+   * Reusable X3D Base and Scene Component
+   *
+   * @module
+   */
+  function componentCreateBase () {
+    var createBase = function createBase(selection, layers, classed, width, height, debug) {
+      // Create x3d element (if it does not exist already)
+      var x3d = selection.selectAll("X3D").data([0]);
+      var x3dEnter = x3d.enter().append("X3D").attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false").attr("useGeoCache", false);
+      var scene = x3dEnter.append("Scene"); // Disable gamma correction
+
+      scene.append("Environment").attr("gammaCorrectionDefault", "none"); // Add a white background
+
+      scene.append("Background").attr("groundColor", "1 1 1").attr("skyColor", "1 1 1"); // Add layer groups
+
+      scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
+        return d;
+      });
+      x3dEnter.merge(x3d);
+      return selection.select("Scene");
+    };
+
+    return createBase;
+  }
+
+  /**
    * Reusable 3D Crosshair Component
    *
    * @module
@@ -5428,6 +5454,7 @@
     bubbles: componentBubbles,
     bubblesMultiSeries: componentBubblesMultiSeries,
     crosshair: componentCrosshair,
+    createBase: componentCreateBase,
     label: componentLabel,
     light: componentLight,
     particles: componentParticles,
@@ -5457,10 +5484,7 @@
    */
 
   function chartAreaChartMultiSeries () {
-    var x3d;
-    var scene;
     /* Default Properties */
-
     var width = 500;
     var height = 500;
     var dimensions = {
@@ -5484,6 +5508,7 @@
     var axis = component.axisThreePlane().labelPosition("distal");
     var areas = component.areaMultiSeries();
     var light = component.light();
+    var createBase = component.createBase();
     /**
      * Initialise Data and Scales
      *
@@ -5508,31 +5533,6 @@
       colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
     };
     /**
-     * Create X3D base and scene
-     *
-     * @param selection
-     * @param layers
-     */
-
-
-    function createBase(selection, layers) {
-      // Create x3d element (if it does not exist already)
-      if (!x3d) {
-        x3d = selection.append("X3D");
-        scene = x3d.append("Scene");
-        x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false").attr("useGeoCache", false); // Disable gamma correction
-
-        scene.append("Environment").attr("gammaCorrectionDefault", "none"); // Add a white background
-
-        scene.append("Background").attr("groundColor", "1 1 1").attr("skyColor", "1 1 1");
-      } // Add layer groups
-
-
-      scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
-        return d;
-      });
-    }
-    /**
      * Constructor
      *
      * @constructor
@@ -5543,7 +5543,7 @@
 
     var my = function my(selection) {
       var layers = ["axis", "areas"];
-      createBase(selection, layers);
+      var scene = createBase(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         init(data); // Add Viewpoint
 
@@ -5716,10 +5716,7 @@
    */
 
   function chartBarChartMultiSeries () {
-    var x3d;
-    var scene;
     /* Default Properties */
-
     var width = 500;
     var height = 500;
     var dimensions = {
@@ -5743,6 +5740,7 @@
     var axis = component.axisThreePlane();
     var bars = component.barsMultiSeries();
     var light = component.light();
+    var createBase = component.createBase();
     /**
      * Initialise Data and Scales
      *
@@ -5767,31 +5765,6 @@
       colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
     };
     /**
-     * Create X3D base and scene
-     *
-     * @param selection
-     * @param layers
-     */
-
-
-    function createBase(selection, layers) {
-      // Create x3d element (if it does not exist already)
-      if (!x3d) {
-        x3d = selection.append("X3D");
-        scene = x3d.append("Scene");
-        x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false").attr("useGeoCache", false); // Disable gamma correction
-
-        scene.append("Environment").attr("gammaCorrectionDefault", "none"); // Add a white background
-
-        scene.append("Background").attr("groundColor", "1 1 1").attr("skyColor", "1 1 1");
-      } // Add layer groups
-
-
-      scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
-        return d;
-      });
-    }
-    /**
      * Constructor
      *
      * @constructor
@@ -5802,7 +5775,7 @@
 
     var my = function my(selection) {
       var layers = ["axis", "bars"];
-      createBase(selection, layers);
+      var scene = createBase(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         init(data); // Add Viewpoint
 
@@ -5970,10 +5943,7 @@
    */
 
   function chartBarChartVertical () {
-    var x3d;
-    var scene;
     /* Default Properties */
-
     var width = 500;
     var height = 500;
     var dimensions = {
@@ -5996,6 +5966,7 @@
     var yAxis = component.axis();
     var bars = component.bars();
     var light = component.light();
+    var createBase = component.createBase();
     /**
      * Initialise Data and Scales
      *
@@ -6017,31 +5988,6 @@
       colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
     };
     /**
-     * Create X3D base and scene
-     *
-     * @param selection
-     * @param layers
-     */
-
-
-    function createBase(selection, layers) {
-      // Create x3d element (if it does not exist already)
-      if (!x3d) {
-        x3d = selection.append("X3D");
-        scene = x3d.append("Scene");
-        x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false").attr("useGeoCache", false); // Disable gamma correction
-
-        scene.append("Environment").attr("gammaCorrectionDefault", "none"); // Add a white background
-
-        scene.append("Background").attr("groundColor", "1 1 1").attr("skyColor", "1 1 1");
-      } // Add layer groups
-
-
-      scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
-        return d;
-      });
-    }
-    /**
      * Constructor
      *
      * @constructor
@@ -6052,7 +5998,7 @@
 
     var my = function my(selection) {
       var layers = ["xAxis", "yAxis", "bars"];
-      createBase(selection, layers);
+      var scene = createBase(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         init(data); // Add Viewpoint
 
@@ -6196,10 +6142,7 @@
    */
 
   function chartBubbleChart () {
-    var x3d;
-    var scene;
     /* Default Properties */
-
     var width = 500;
     var height = 500;
     var dimensions = {
@@ -6224,6 +6167,7 @@
     var axis = component.axisThreePlane();
     var bubbles = component.bubblesMultiSeries();
     var light = component.light();
+    var createBase = component.createBase();
     /**
      * Initialise Data and Scales
      *
@@ -6251,31 +6195,6 @@
       sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeRange);
     };
     /**
-     * Create X3D base and scene
-     *
-     * @param selection
-     * @param layers
-     */
-
-
-    function createBase(selection, layers) {
-      // Create x3d element (if it does not exist already)
-      if (!x3d) {
-        x3d = selection.append("X3D");
-        scene = x3d.append("Scene");
-        x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false").attr("useGeoCache", false); // Disable gamma correction
-
-        scene.append("Environment").attr("gammaCorrectionDefault", "none"); // Add a white background
-
-        scene.append("Background").attr("groundColor", "1 1 1").attr("skyColor", "1 1 1");
-      } // Add layer groups
-
-
-      scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
-        return d;
-      });
-    }
-    /**
      * Constructor
      *
      * @constructor
@@ -6286,7 +6205,7 @@
 
     var my = function my(selection) {
       var layers = ["axis", "bubbles"];
-      createBase(selection, layers);
+      var scene = createBase(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         init(data); // Add Viewpoint
 
@@ -6465,10 +6384,7 @@
    */
 
   function chartCrosshairPlot () {
-    var x3d;
-    var scene;
     /* Default Properties */
-
     var width = 500;
     var height = 500;
     var dimensions = {
@@ -6488,6 +6404,7 @@
     var viewpoint = component.viewpoint();
     var axis = component.axisThreePlane();
     var crosshair = component.crosshair();
+    var createBase = component.createBase();
     /**
      * Initialise Data and Scales
      *
@@ -6511,31 +6428,6 @@
       zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
     };
     /**
-     * Create X3D base and scene
-     *
-     * @param selection
-     * @param layers
-     */
-
-
-    function createBase(selection, layers) {
-      // Create x3d element (if it does not exist already)
-      if (!x3d) {
-        x3d = selection.append("X3D");
-        scene = x3d.append("Scene");
-        x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false").attr("useGeoCache", false); // Disable gamma correction
-
-        scene.append("Environment").attr("gammaCorrectionDefault", "none"); // Add a white background
-
-        scene.append("Background").attr("groundColor", "1 1 1").attr("skyColor", "1 1 1");
-      } // Add layer groups
-
-
-      scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
-        return d;
-      });
-    }
-    /**
      * Constructor
      *
      * @constructor
@@ -6546,7 +6438,7 @@
 
     var my = function my(selection) {
       var layers = ["axis", "crosshairs"];
-      createBase(selection, layers);
+      var scene = createBase(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         init(data); // Add Viewpoint
 
@@ -6678,10 +6570,7 @@
    */
 
   function chartParticlePlot () {
-    var x3d;
-    var scene;
     /* Default Properties */
-
     var width = 500;
     var height = 500;
     var dimensions = {
@@ -6707,6 +6596,7 @@
     var viewpoint = component.viewpoint();
     var axis = component.axisThreePlane();
     var particles = component.particles();
+    var createBase = component.createBase();
     /**
      * Initialise Data and Scales
      *
@@ -6750,31 +6640,6 @@
       }
     };
     /**
-     * Create X3D base and scene
-     *
-     * @param selection
-     * @param layers
-     */
-
-
-    function createBase(selection, layers) {
-      // Create x3d element (if it does not exist already)
-      if (!x3d) {
-        x3d = selection.append("X3D");
-        scene = x3d.append("Scene");
-        x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false").attr("useGeoCache", false); // Disable gamma correction
-
-        scene.append("Environment").attr("gammaCorrectionDefault", "none"); // Add a white background
-
-        scene.append("Background").attr("groundColor", "1 1 1").attr("skyColor", "1 1 1");
-      } // Add layer groups
-
-
-      scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
-        return d;
-      });
-    }
-    /**
      * Constructor
      *
      * @constructor
@@ -6785,7 +6650,7 @@
 
     var my = function my(selection) {
       var layers = ["axis", "particles", "crosshair"];
-      createBase(selection, layers);
+      var scene = createBase(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         init(data); // Add Viewpoint
 
@@ -7027,10 +6892,7 @@
    */
 
   function chartRibbonChartMultiSeries () {
-    var x3d;
-    var scene;
     /* Default Properties */
-
     var width = 500;
     var height = 500;
     var dimensions = {
@@ -7054,6 +6916,7 @@
     var axis = component.axisThreePlane();
     var ribbons = component.ribbonMultiSeries();
     var light = component.light();
+    var createBase = component.createBase();
     /**
      * Initialise Data and Scales
      *
@@ -7078,31 +6941,6 @@
       colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
     };
     /**
-     * Create X3D base and scene
-     *
-     * @param selection
-     * @param layers
-     */
-
-
-    function createBase(selection, layers) {
-      // Create x3d element (if it does not exist already)
-      if (!x3d) {
-        x3d = selection.append("X3D");
-        scene = x3d.append("Scene");
-        x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false").attr("useGeoCache", false); // Disable gamma correction
-
-        scene.append("Environment").attr("gammaCorrectionDefault", "none"); // Add a white background
-
-        scene.append("Background").attr("groundColor", "1 1 1").attr("skyColor", "1 1 1");
-      } // Add layer groups
-
-
-      scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
-        return d;
-      });
-    }
-    /**
      * Constructor
      *
      * @constructor
@@ -7113,7 +6951,7 @@
 
     var my = function my(selection) {
       var layers = ["axis", "ribbons"];
-      createBase(selection, layers);
+      var scene = createBase(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         init(data); // Add Viewpoint
 
@@ -7286,10 +7124,7 @@
    */
 
   function chartScatterPlot () {
-    var x3d;
-    var scene;
     /* Default Properties */
-
     var width = 500;
     var height = 500;
     var dimensions = {
@@ -7317,6 +7152,7 @@
     var crosshair = component.crosshair();
     var label = component.label();
     var bubbles = component.bubbles();
+    var createBase = component.createBase();
     /**
      * Initialise Data and Scales
      *
@@ -7360,31 +7196,6 @@
       }
     };
     /**
-     * Create X3D base and scene
-     *
-     * @param selection
-     * @param layers
-     */
-
-
-    function createBase(selection, layers) {
-      // Create x3d element (if it does not exist already)
-      if (!x3d) {
-        x3d = selection.append("X3D");
-        scene = x3d.append("Scene");
-        x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false").attr("useGeoCache", false); // Disable gamma correction
-
-        scene.append("Environment").attr("gammaCorrectionDefault", "none"); // Add a white background
-
-        scene.append("Background").attr("groundColor", "1 1 1").attr("skyColor", "1 1 1");
-      } // Add layer groups
-
-
-      scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
-        return d;
-      });
-    }
-    /**
      * Constructor
      *
      * @constructor
@@ -7395,7 +7206,7 @@
 
     var my = function my(selection) {
       var layers = ["axis", "bubbles", "crosshair", "label"];
-      createBase(selection, layers);
+      var scene = createBase(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         init(data); // Add Viewpoint
 
@@ -7653,10 +7464,7 @@
    */
 
   function chartSurfacePlot () {
-    var x3d;
-    var scene;
     /* Default Properties */
-
     var width = 500;
     var height = 500;
     var dimensions = {
@@ -7678,6 +7486,7 @@
     var viewpoint = component.viewpoint();
     var axis = component.axisThreePlane();
     var surface = component.surface();
+    var createBase = component.createBase();
     /**
      * Initialise Data and Scales
      *
@@ -7702,31 +7511,6 @@
       colorScale = d3.scaleLinear().domain(valueExtent).range(colors).interpolate(d3.interpolateLab);
     };
     /**
-     * Create X3D base and scene
-     *
-     * @param selection
-     * @param layers
-     */
-
-
-    function createBase(selection, layers) {
-      // Create x3d element (if it does not exist already)
-      if (!x3d) {
-        x3d = selection.append("X3D");
-        scene = x3d.append("Scene");
-        x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false").attr("useGeoCache", false); // Disable gamma correction
-
-        scene.append("Environment").attr("gammaCorrectionDefault", "none"); // Add a white background
-
-        scene.append("Background").attr("groundColor", "1 1 1").attr("skyColor", "1 1 1");
-      } // Add layer groups
-
-
-      scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
-        return d;
-      });
-    }
-    /**
      * Constructor
      *
      * @constructor
@@ -7737,7 +7521,7 @@
 
     var my = function my(selection) {
       var layers = ["axis", "surface"];
-      createBase(selection, layers);
+      var scene = createBase(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         init(data); // Add Viewpoint
 
@@ -7899,10 +7683,7 @@
    */
 
   function chartVectorField () {
-    var x3d;
-    var scene;
     /* Default Properties */
-
     var width = 500;
     var height = 500;
     var dimensions = {
@@ -7931,6 +7712,7 @@
     var viewpoint = component.viewpoint();
     var axis = component.crosshair();
     var vectorFields = component.vectorFields();
+    var createBase = component.createBase();
     /**
      * Vector Field Function
      *
@@ -8003,31 +7785,6 @@
       };
     };
     /**
-     * Create X3D base and scene
-     *
-     * @param selection
-     * @param layers
-     */
-
-
-    function createBase(selection, layers) {
-      // Create x3d element (if it does not exist already)
-      if (!x3d) {
-        x3d = selection.append("X3D");
-        scene = x3d.append("Scene");
-        x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false").attr("useGeoCache", false); // Disable gamma correction
-
-        scene.append("Environment").attr("gammaCorrectionDefault", "none"); // Add a white background
-
-        scene.append("Background").attr("groundColor", "1 1 1").attr("skyColor", "1 1 1");
-      } // Add layer groups
-
-
-      scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
-        return d;
-      });
-    }
-    /**
      * Constructor
      *
      * @constructor
@@ -8038,7 +7795,7 @@
 
     var my = function my(selection) {
       var layers = ["axis", "vectorFields"];
-      createBase(selection, layers);
+      var scene = createBase(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         init(data); // Add Viewpoint
 
@@ -8231,10 +7988,7 @@
    */
 
   function chartVolumeSlice () {
-    var x3d;
-    var scene;
     /* Default Properties */
-
     var width = 500;
     var height = 500;
     var dimensions = {
@@ -8266,30 +8020,7 @@
     var viewpoint = component.viewpoint();
     var axis = component.crosshair();
     var volumeSlice = component.volumeSlice();
-    /**
-     * Create X3D base and scene
-     *
-     * @param selection
-     * @param layers
-     */
-
-    function createBase(selection, layers) {
-      // Create x3d element (if it does not exist already)
-      if (!x3d) {
-        x3d = selection.append("X3D");
-        scene = x3d.append("Scene");
-        x3d.attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false").attr("useGeoCache", false); // Disable gamma correction
-
-        scene.append("Environment").attr("gammaCorrectionDefault", "none"); // Add a white background
-
-        scene.append("Background").attr("groundColor", "1 1 1").attr("skyColor", "1 1 1");
-      } // Add layer groups
-
-
-      scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
-        return d;
-      });
-    }
+    var createBase = component.createBase();
     /**
      * Constructor
      *
@@ -8298,10 +8029,9 @@
      * @param {d3.selection} selection - The chart holder D3 selection.
      */
 
-
     var my = function my(selection) {
       var layers = ["axis", "volume"];
-      createBase(selection, layers);
+      var scene = createBase(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         // Add Viewpoint
         viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
