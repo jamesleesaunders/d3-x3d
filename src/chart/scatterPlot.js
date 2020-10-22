@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import component from "../component";
 import { dispatch } from "../events";
+import { createScene } from "../base";
 
 /**
  * Reusable 3D Scatter Plot Chart
@@ -45,7 +46,6 @@ export default function() {
 	const crosshair = component.crosshair();
 	const label = component.label();
 	const bubbles = component.bubbles();
-	const createScene = component.createScene();
 
 	/**
 	 * Initialise Data and Scales

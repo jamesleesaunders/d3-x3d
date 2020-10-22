@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import component from "../component";
+import { createScene } from "../base";
 
 /**
  * Reusable 3D Multi Series Ribbon Chart
@@ -40,7 +41,6 @@ export default function() {
 	const axis = component.axisThreePlane();
 	const ribbons = component.ribbonMultiSeries();
 	const light = component.light();
-	const createScene = component.createScene();
 
 	/**
 	 * Initialise Data and Scales

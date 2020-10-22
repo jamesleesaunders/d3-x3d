@@ -2866,41 +2866,6 @@
   }
 
   /**
-   * Reusable X3D Base and Scene Component
-   *
-   * @module
-   */
-  function componentCreateScene () {
-    var createX3d = function createX3d(selection, width, height, debug) {
-      // Create X3D element (if it does not exist already)
-      var x3d = selection.selectAll("X3D").data([0]).enter().append("X3D").attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false").attr("useGeoCache", false);
-      return x3d;
-    };
-
-    var createScene2 = function createScene2(x3d, layers, classed) {
-      // Create Scene
-      var scene = x3d.append("Scene"); // Disable gamma correction
-
-      scene.append("Environment").attr("gammaCorrectionDefault", "none"); // Add a white background
-
-      scene.append("Background").attr("groundColor", "1 1 1").attr("skyColor", "1 1 1"); // Add layer groups
-
-      scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
-        return d;
-      });
-      return x3d.select("Scene");
-    };
-
-    var createScene = function createScene(selection, layers, classed, width, height, debug) {
-      var x3d = createX3d(selection, width, height, debug);
-      var scene = createScene2(x3d, layers, classed);
-      return scene;
-    };
-
-    return createScene;
-  }
-
-  /**
    * Reusable 3D Crosshair Component
    *
    * @module
@@ -5420,7 +5385,6 @@
     bubbles: componentBubbles,
     bubblesMultiSeries: componentBubblesMultiSeries,
     crosshair: componentCrosshair,
-    createScene: componentCreateScene,
     label: componentLabel,
     light: componentLight,
     particles: componentParticles,
@@ -5431,6 +5395,48 @@
     viewpoint: componentViewpoint,
     volumeSlice: componentVolumeSlice
   };
+
+  /**
+   * Reusable X3D Base and Scene Component
+   *
+   * @module
+   */
+
+  function createX3d(selection, width, height, debug) {
+    // Create X3D element (if it does not exist already)
+    var x3d = selection.selectAll("X3D").data([0]).enter().append("X3D").attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false").attr("useGeoCache", false);
+    return x3d;
+  }
+  /**
+   * Reusable X3D Base and Scene Component
+   *
+   * @module
+   */
+
+  function createScene2(x3d, layers, classed) {
+    // Create Scene
+    var scene = x3d.append("Scene"); // Disable gamma correction
+
+    scene.append("Environment").attr("gammaCorrectionDefault", "none"); // Add a white background
+
+    scene.append("Background").attr("groundColor", "1 1 1").attr("skyColor", "1 1 1"); // Add layer groups
+
+    scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
+      return d;
+    });
+    return x3d.select("Scene");
+  }
+  /**
+   * Reusable X3D Base and Scene Component
+   *
+   * @module
+   */
+
+  function createScene(selection, layers, classed, width, height, debug) {
+    var x3d = createX3d(selection, width, height, debug);
+    var scene = createScene2(x3d, layers, classed);
+    return selection.select("Scene");
+  }
 
   /**
    * Reusable 3D Multi Series Area Chart
@@ -5474,7 +5480,6 @@
     var axis = component.axisThreePlane().labelPosition("distal");
     var areas = component.areaMultiSeries();
     var light = component.light();
-    var createScene = component.createScene();
     /**
      * Initialise Data and Scales
      *
@@ -5706,7 +5711,6 @@
     var axis = component.axisThreePlane();
     var bars = component.barsMultiSeries();
     var light = component.light();
-    var createScene = component.createScene();
     /**
      * Initialise Data and Scales
      *
@@ -5932,7 +5936,6 @@
     var yAxis = component.axis();
     var bars = component.bars();
     var light = component.light();
-    var createScene = component.createScene();
     /**
      * Initialise Data and Scales
      *
@@ -6133,7 +6136,6 @@
     var axis = component.axisThreePlane();
     var bubbles = component.bubblesMultiSeries();
     var light = component.light();
-    var createScene = component.createScene();
     /**
      * Initialise Data and Scales
      *
@@ -6370,7 +6372,6 @@
     var viewpoint = component.viewpoint();
     var axis = component.axisThreePlane();
     var crosshair = component.crosshair();
-    var createScene = component.createScene();
     /**
      * Initialise Data and Scales
      *
@@ -6560,7 +6561,6 @@
     var viewpoint = component.viewpoint();
     var axis = component.axisThreePlane();
     var particles = component.particles();
-    var createScene = component.createScene();
     /**
      * Initialise Data and Scales
      *
@@ -6826,7 +6826,6 @@
     var axis = component.axisThreePlane();
     var ribbons = component.ribbonMultiSeries();
     var light = component.light();
-    var createScene = component.createScene();
     /**
      * Initialise Data and Scales
      *
@@ -7062,7 +7061,6 @@
     var crosshair = component.crosshair();
     var label = component.label();
     var bubbles = component.bubbles();
-    var createScene = component.createScene();
     /**
      * Initialise Data and Scales
      *
@@ -7396,7 +7394,6 @@
     var viewpoint = component.viewpoint();
     var axis = component.axisThreePlane();
     var surface = component.surface();
-    var createScene = component.createScene();
     /**
      * Initialise Data and Scales
      *
@@ -7622,7 +7619,6 @@
     var viewpoint = component.viewpoint();
     var axis = component.crosshair();
     var vectorFields = component.vectorFields();
-    var createScene = component.createScene();
     /**
      * Vector Field Function
      *
@@ -7930,7 +7926,6 @@
     var viewpoint = component.viewpoint();
     var axis = component.crosshair();
     var volumeSlice = component.volumeSlice();
-    var createScene = component.createScene();
     /**
      * Constructor
      *

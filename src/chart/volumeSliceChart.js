@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import component from "../component";
+import { createScene } from "../base";
 
 /**
  * Reusable 3D Vertical Volume Slice Chart
@@ -44,7 +45,6 @@ export default function() {
 	const viewpoint = component.viewpoint();
 	const axis = component.crosshair();
 	const volumeSlice = component.volumeSlice();
-	const createScene = component.createScene();
 
 	/**
 	 * Constructor

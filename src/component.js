@@ -6,7 +6,6 @@ import componentBars from "./component/bars";
 import componentBarsMultiSeries from "./component/barsMultiSeries";
 import componentBubbles from "./component/bubbles";
 import componentBubblesMultiSeries from "./component/bubblesMultiSeries";
-import componentCreateScene from "./base";
 import componentCrosshair from "./component/crosshair";
 import componentLabel from "./component/label";
 import componentLight from "./component/light";
@@ -28,7 +27,6 @@ export default {
 	bubbles: componentBubbles,
 	bubblesMultiSeries: componentBubblesMultiSeries,
 	crosshair: componentCrosshair,
-	createScene: componentCreateScene,
 	label: componentLabel,
 	light: componentLight,
 	particles: componentParticles,

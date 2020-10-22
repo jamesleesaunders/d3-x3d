@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import component from "../component";
 import { dispatch } from "../events";
+import { createScene } from "../base";
 
 /**
  * Reusable 3D Particle Plot Chart
@@ -41,7 +42,6 @@ export default function() {
 	const viewpoint = component.viewpoint();
 	const axis = component.axisThreePlane();
 	const particles = component.particles();
-	const createScene = component.createScene();
 
 	/**
 	 * Initialise Data and Scales
