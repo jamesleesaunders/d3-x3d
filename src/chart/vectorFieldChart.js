@@ -51,7 +51,7 @@ export default function() {
 	const viewpoint = component.viewpoint();
 	const axis = component.crosshair();
 	const vectorFields = component.vectorFields();
-	const createBase = component.createBase();
+	const createScene = component.createScene();
 
 	/**
 	 * Vector Field Function
@@ -132,7 +132,7 @@ export default function() {
 	 */
 	const my = function(selection) {
 		const layers = ["axis", "vectorFields"];
-		const scene = createBase(selection, layers, classed, width, height, debug);
+		const scene = createScene(selection, layers, classed, width, height, debug);
 
 		selection.each((data) => {
 			init(data);

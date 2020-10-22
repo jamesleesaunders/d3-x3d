@@ -41,7 +41,7 @@ export default function() {
 	const axis = component.axisThreePlane();
 	const bubbles = component.bubblesMultiSeries();
 	const light = component.light();
-	const createBase = component.createBase();
+	const createScene = component.createScene();
 
 	/**
 	 * Initialise Data and Scales
@@ -84,7 +84,7 @@ export default function() {
 	 */
 	const my = function(selection) {
 		const layers = ["axis", "bubbles"];
-		const scene = createBase(selection, layers, classed, width, height, debug);
+		const scene = createScene(selection, layers, classed, width, height, debug);
 
 		selection.each((data) => {
 			init(data);

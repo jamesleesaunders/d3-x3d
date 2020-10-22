@@ -5,13 +5,11 @@
  */
 export default function() {
 
-	const createBase = (selection, layers, classed, width, height, debug) => {
-
-		// Create x3d element (if it does not exist already)
+	const createX3d = (selection, width, height, debug) => {
+		// Create X3D element (if it does not exist already)
 		let x3d = selection.selectAll("X3D")
-			.data([0]);
-
-		let x3dEnter = x3d.enter()
+			.data([0])
+			.enter()
 			.append("X3D")
 			.attr("width", width + "px")
 			.attr("height", height + "px")
@@ -19,7 +17,13 @@ export default function() {
 			.attr("showStat", debug ? "true" : "false")
 			.attr("useGeoCache", false);
 
-		let scene = x3dEnter.append("Scene");
+		return x3d;
+	};
+
+
+	const createScene2 = (x3d, layers, classed) => {
+		// Create Scene
+		let scene = x3d.append("Scene");
 
 		// Disable gamma correction
 		scene.append("Environment")
@@ -38,11 +42,16 @@ export default function() {
 			.append("Group")
 			.attr("class", (d) => d);
 
-		x3dEnter.merge(x3d);
-
-		return selection.select("Scene");
+		return x3d.select("Scene");
 	};
 
-	return createBase;
+	const createScene = (selection, layers, classed, width, height, debug) => {
+		let x3d = createX3d(selection, width, height, debug);
+		let scene = createScene2(x3d, layers, classed);
+
+		return scene;
+	};
+
+	return createScene;
 }
 

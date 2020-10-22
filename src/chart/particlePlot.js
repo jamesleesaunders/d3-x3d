@@ -41,7 +41,7 @@ export default function() {
 	const viewpoint = component.viewpoint();
 	const axis = component.axisThreePlane();
 	const particles = component.particles();
-	const createBase = component.createBase();
+	const createScene = component.createScene();
 
 	/**
 	 * Initialise Data and Scales
@@ -104,7 +104,7 @@ export default function() {
 	 */
 	const my = function(selection) {
 		const layers = ["axis", "particles", "crosshair"];
-		const scene = createBase(selection, layers, classed, width, height, debug);
+		const scene = createScene(selection, layers, classed, width, height, debug);
 
 		selection.each((data) => {
 			init(data);

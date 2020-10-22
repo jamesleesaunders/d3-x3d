@@ -40,7 +40,7 @@ export default function() {
 	const axis = component.axisThreePlane();
 	const ribbons = component.ribbonMultiSeries();
 	const light = component.light();
-	const createBase = component.createBase();
+	const createScene = component.createScene();
 
 	/**
 	 * Initialise Data and Scales
@@ -81,7 +81,7 @@ export default function() {
 	 */
 	const my = function(selection) {
 		const layers = ["axis", "ribbons"];
-		const scene = createBase(selection, layers, classed, width, height, debug);
+		const scene = createScene(selection, layers, classed, width, height, debug);
 
 		selection.each((data) => {
 			init(data);
