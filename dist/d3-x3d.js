@@ -5415,7 +5415,7 @@
 
   function createScene2(x3d, layers, classed) {
     // Create Scene
-    var scene = x3d.append("Scene"); // Disable gamma correction
+    var scene = x3d.selectAll("Scene").data([0]).enter().append("Scene"); // Disable gamma correction
 
     scene.append("Environment").attr("gammaCorrectionDefault", "none"); // Add a white background
 
@@ -5424,7 +5424,7 @@
     scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
       return d;
     });
-    return x3d.select("Scene");
+    return scene;
   }
   /**
    * Reusable X3D Base and Scene Component
@@ -5434,8 +5434,14 @@
 
   function createScene(selection, layers, classed, width, height, debug) {
     var x3d = createX3d(selection, width, height, debug);
+    var x3d2 = selection.select("X3D");
+    console.log(x3d);
+    console.log(x3d2);
     var scene = createScene2(x3d, layers, classed);
-    return selection.select("Scene");
+    var scene2 = selection.select("Scene");
+    console.log(scene);
+    console.log(scene2);
+    return scene2;
   }
 
   /**

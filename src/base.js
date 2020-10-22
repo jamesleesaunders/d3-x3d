@@ -27,7 +27,10 @@ export function createX3d(selection, width, height, debug) {
  */
 export function createScene2(x3d, layers, classed) {
 	// Create Scene
-	let scene = x3d.append("Scene");
+	let scene = x3d.selectAll("Scene")
+		.data([0])
+		.enter()
+		.append("Scene");
 
 	// Disable gamma correction
 	scene.append("Environment")
@@ -46,7 +49,7 @@ export function createScene2(x3d, layers, classed) {
 		.append("Group")
 		.attr("class", (d) => d);
 
-	return x3d.select("Scene");
+	return scene;
 }
 
 /**
@@ -56,7 +59,16 @@ export function createScene2(x3d, layers, classed) {
  */
 export function createScene(selection, layers, classed, width, height, debug) {
 	let x3d = createX3d(selection, width, height, debug);
-	let scene = createScene2(x3d, layers, classed);
+	let x3d2 = selection.select("X3D");
 
-	return selection.select("Scene");
+	console.log(x3d);
+	console.log(x3d2);
+
+	let scene = createScene2(x3d, layers, classed);
+	let scene2 = selection.select("Scene");
+
+	console.log(scene);
+	console.log(scene2);
+
+	return scene2;
 }
