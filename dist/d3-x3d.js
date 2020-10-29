@@ -12,7 +12,7 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3, global.d3, global.d3, global.d3)));
 }(this, (function (d3, d3Shape, d3Array, d3Interpolate) { 'use strict';
 
-  var version = "2.0.6";
+  var version = "2.0.7";
   var license = "GPL-2.0";
 
   function _extends() {
@@ -2866,32 +2866,6 @@
   }
 
   /**
-   * Reusable X3D Base and Scene Component
-   *
-   * @module
-   */
-  function componentCreateBase () {
-    var createBase = function createBase(selection, layers, classed, width, height, debug) {
-      // Create x3d element (if it does not exist already)
-      var x3d = selection.selectAll("X3D").data([0]);
-      var x3dEnter = x3d.enter().append("X3D").attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false").attr("useGeoCache", false);
-      var scene = x3dEnter.append("Scene"); // Disable gamma correction
-
-      scene.append("Environment").attr("gammaCorrectionDefault", "none"); // Add a white background
-
-      scene.append("Background").attr("groundColor", "1 1 1").attr("skyColor", "1 1 1"); // Add layer groups
-
-      scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
-        return d;
-      });
-      x3dEnter.merge(x3d);
-      return selection.select("Scene");
-    };
-
-    return createBase;
-  }
-
-  /**
    * Reusable 3D Crosshair Component
    *
    * @module
@@ -3277,8 +3251,6 @@
     var yScale;
     var zScale;
     var colorScale;
-    var sizeScale;
-    var sizeRange = [0.2, 4.0];
     /**
      * Array to String
      *
@@ -3304,7 +3276,7 @@
 
     var init = function init(data) {
       var newData = {};
-      ['x', 'y', 'z', 'size', 'color'].forEach(function (dimension) {
+      ['x', 'y', 'z', 'color'].forEach(function (dimension) {
         var set = {
           key: dimension,
           values: []
@@ -3324,7 +3296,6 @@
       var extentX = newData.x.valueExtent;
       var extentY = newData.y.valueExtent;
       var extentZ = newData.z.valueExtent;
-      var extentSize = newData.size.valueExtent;
       var extentColor = newData.color.valueExtent;
 
       if (typeof xScale === "undefined") {
@@ -3337,10 +3308,6 @@
 
       if (typeof zScale === "undefined") {
         zScale = d3.scaleLinear().domain(extentZ).range([0, dimensions.z]);
-      }
-
-      if (typeof sizeScale === "undefined") {
-        sizeScale = d3.scaleLinear().domain(extentSize).range(sizeRange);
       }
 
       if (color) {
@@ -3366,15 +3333,6 @@
         });
 
         var particleData = function particleData(data) {
-          var pointSizes = function pointSizes(Y) {
-            return Y.values.map(function (d) {
-              var sizeVal = d.values.find(function (v) {
-                return v.key === mappings.size;
-              }).value;
-              return [sizeScale(sizeVal), sizeScale(sizeVal), sizeScale(sizeVal)];
-            });
-          };
-
           var pointCoords = function pointCoords(Y) {
             return Y.values.map(function (d) {
               var xVal = d.values.find(function (v) {
@@ -3400,7 +3358,6 @@
             });
           };
 
-          data.size = array2dToString(pointSizes(data));
           data.point = array2dToString(pointCoords(data));
           data.color = array2dToString(pointColors(data));
           return [data];
@@ -3496,32 +3453,6 @@
       return my;
     };
     /**
-     * Size Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 size scale.
-     * @returns {*}
-     */
-
-
-    my.sizeScale = function (_v) {
-      if (!arguments.length) return sizeScale;
-      sizeScale = _v;
-      return my;
-    };
-    /**
-     * Size Range Getter / Setter
-     *
-     * @param {number[]} _v - Size min and max (e.g. [1, 9]).
-     * @returns {*}
-     */
-
-
-    my.sizeRange = function (_v) {
-      if (!arguments.length) return sizeRange;
-      sizeRange = _v;
-      return my;
-    };
-    /**
      * Color Scale Getter / Setter
      *
      * @param {d3.scale} _v - D3 color scale.
@@ -3563,7 +3494,7 @@
     /**
      * Mappings Getter / Setter
      *
-     * @param {Object} _v - Map properties to size, colour etc.
+     * @param {Object} _v - Map properties to colour etc.
      * @returns {*}
      */
 
@@ -5454,7 +5385,6 @@
     bubbles: componentBubbles,
     bubblesMultiSeries: componentBubblesMultiSeries,
     crosshair: componentCrosshair,
-    createBase: componentCreateBase,
     label: componentLabel,
     light: componentLight,
     particles: componentParticles,
@@ -5465,6 +5395,54 @@
     viewpoint: componentViewpoint,
     volumeSlice: componentVolumeSlice
   };
+
+  /**
+   * Reusable X3D Base and Scene Component
+   *
+   * @module
+   */
+
+  function createX3d(selection, width, height, debug) {
+    // Create X3D element (if it does not exist already)
+    var x3d = selection.selectAll("X3D").data([0]).enter().append("X3D").attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false").attr("useGeoCache", false);
+    return x3d;
+  }
+  /**
+   * Reusable X3D Base and Scene Component
+   *
+   * @module
+   */
+
+  function createScene2(x3d, layers, classed) {
+    // Create Scene
+    var scene = x3d.selectAll("Scene").data([0]).enter().append("Scene"); // Disable gamma correction
+
+    scene.append("Environment").attr("gammaCorrectionDefault", "none"); // Add a white background
+
+    scene.append("Background").attr("groundColor", "1 1 1").attr("skyColor", "1 1 1"); // Add layer groups
+
+    scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
+      return d;
+    });
+    return scene;
+  }
+  /**
+   * Reusable X3D Base and Scene Component
+   *
+   * @module
+   */
+
+  function createScene(selection, layers, classed, width, height, debug) {
+    var x3d = createX3d(selection, width, height, debug);
+    var x3d2 = selection.select("X3D");
+    console.log(x3d);
+    console.log(x3d2);
+    var scene = createScene2(x3d, layers, classed);
+    var scene2 = selection.select("Scene");
+    console.log(scene);
+    console.log(scene2);
+    return scene2;
+  }
 
   /**
    * Reusable 3D Multi Series Area Chart
@@ -5508,7 +5486,6 @@
     var axis = component.axisThreePlane().labelPosition("distal");
     var areas = component.areaMultiSeries();
     var light = component.light();
-    var createBase = component.createBase();
     /**
      * Initialise Data and Scales
      *
@@ -5543,7 +5520,7 @@
 
     var my = function my(selection) {
       var layers = ["axis", "areas"];
-      var scene = createBase(selection, layers, classed, width, height, debug);
+      var scene = createScene(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         init(data); // Add Viewpoint
 
@@ -5740,7 +5717,6 @@
     var axis = component.axisThreePlane();
     var bars = component.barsMultiSeries();
     var light = component.light();
-    var createBase = component.createBase();
     /**
      * Initialise Data and Scales
      *
@@ -5775,7 +5751,7 @@
 
     var my = function my(selection) {
       var layers = ["axis", "bars"];
-      var scene = createBase(selection, layers, classed, width, height, debug);
+      var scene = createScene(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         init(data); // Add Viewpoint
 
@@ -5966,7 +5942,6 @@
     var yAxis = component.axis();
     var bars = component.bars();
     var light = component.light();
-    var createBase = component.createBase();
     /**
      * Initialise Data and Scales
      *
@@ -5998,7 +5973,7 @@
 
     var my = function my(selection) {
       var layers = ["xAxis", "yAxis", "bars"];
-      var scene = createBase(selection, layers, classed, width, height, debug);
+      var scene = createScene(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         init(data); // Add Viewpoint
 
@@ -6167,7 +6142,6 @@
     var axis = component.axisThreePlane();
     var bubbles = component.bubblesMultiSeries();
     var light = component.light();
-    var createBase = component.createBase();
     /**
      * Initialise Data and Scales
      *
@@ -6205,7 +6179,7 @@
 
     var my = function my(selection) {
       var layers = ["axis", "bubbles"];
-      var scene = createBase(selection, layers, classed, width, height, debug);
+      var scene = createScene(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         init(data); // Add Viewpoint
 
@@ -6404,7 +6378,6 @@
     var viewpoint = component.viewpoint();
     var axis = component.axisThreePlane();
     var crosshair = component.crosshair();
-    var createBase = component.createBase();
     /**
      * Initialise Data and Scales
      *
@@ -6438,7 +6411,7 @@
 
     var my = function my(selection) {
       var layers = ["axis", "crosshairs"];
-      var scene = createBase(selection, layers, classed, width, height, debug);
+      var scene = createScene(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         init(data); // Add Viewpoint
 
@@ -6589,14 +6562,11 @@
     var yScale;
     var zScale;
     var colorScale;
-    var sizeScale;
-    var sizeRange = [0.2, 4.0];
     /* Components */
 
     var viewpoint = component.viewpoint();
     var axis = component.axisThreePlane();
     var particles = component.particles();
-    var createBase = component.createBase();
     /**
      * Initialise Data and Scales
      *
@@ -6606,7 +6576,7 @@
 
     var init = function init(data) {
       var newData = {};
-      ['x', 'y', 'z', 'size', 'color'].forEach(function (dimension) {
+      ['x', 'y', 'z', 'color'].forEach(function (dimension) {
         var set = {
           key: dimension,
           values: []
@@ -6626,12 +6596,10 @@
       var extentX = newData.x.valueExtent;
       var extentY = newData.y.valueExtent;
       var extentZ = newData.z.valueExtent;
-      var extentSize = newData.size.valueExtent;
       var extentColor = newData.color.valueExtent;
       xScale = d3.scaleLinear().domain(extentX).range([0, dimensions.x]);
       yScale = d3.scaleLinear().domain(extentY).range([0, dimensions.y]);
       zScale = d3.scaleLinear().domain(extentZ).range([0, dimensions.z]);
-      sizeScale = d3.scaleLinear().domain(extentSize).range(sizeRange);
 
       if (color) {
         colorScale = d3.scaleQuantize().domain(extentColor).range([color, color]);
@@ -6650,7 +6618,7 @@
 
     var my = function my(selection) {
       var layers = ["axis", "particles", "crosshair"];
-      var scene = createBase(selection, layers, classed, width, height, debug);
+      var scene = createScene(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         init(data); // Add Viewpoint
 
@@ -6660,7 +6628,7 @@
         axis.xScale(xScale).yScale(yScale).zScale(zScale);
         scene.select(".axis").call(axis); // Add Particles
 
-        particles.xScale(xScale).mappings(mappings).yScale(yScale).zScale(zScale).sizeScale(sizeScale).colorScale(colorScale);
+        particles.xScale(xScale).mappings(mappings).yScale(yScale).zScale(zScale).colorScale(colorScale);
         scene.select(".particles").datum(data).call(particles);
       });
     };
@@ -6743,32 +6711,6 @@
       return my;
     };
     /**
-     * Size Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-
-
-    my.sizeScale = function (_v) {
-      if (!arguments.length) return sizeScale;
-      sizeScale = _v;
-      return my;
-    };
-    /**
-     * Size Range Getter / Setter
-     *
-     * @param {number[]} _v - Size min and max (e.g. [1, 9]).
-     * @returns {*}
-     */
-
-
-    my.sizeRange = function (_v) {
-      if (!arguments.length) return sizeRange;
-      sizeRange = _v;
-      return my;
-    };
-    /**
      * Color Scale Getter / Setter
      *
      * @param {d3.scale} _v - D3 color scale.
@@ -6808,35 +6750,9 @@
       return my;
     };
     /**
-     * Size Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-
-
-    my.sizeScale = function (_v) {
-      if (!arguments.length) return sizeScale;
-      sizeScale = _v;
-      return my;
-    };
-    /**
-     * Size Range Getter / Setter
-     *
-     * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
-     * @returns {*}
-     */
-
-
-    my.sizeRange = function (_v) {
-      if (!arguments.length) return sizeRange;
-      sizeRange = _v;
-      return my;
-    };
-    /**
      * Mappings Getter / Setter
      *
-     * @param {Object} _v - Map properties to size, colour etc.
+     * @param {Object} _v - Map properties to colour etc.
      * @returns {*}
      */
 
@@ -6916,7 +6832,6 @@
     var axis = component.axisThreePlane();
     var ribbons = component.ribbonMultiSeries();
     var light = component.light();
-    var createBase = component.createBase();
     /**
      * Initialise Data and Scales
      *
@@ -6951,7 +6866,7 @@
 
     var my = function my(selection) {
       var layers = ["axis", "ribbons"];
-      var scene = createBase(selection, layers, classed, width, height, debug);
+      var scene = createScene(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         init(data); // Add Viewpoint
 
@@ -7152,7 +7067,6 @@
     var crosshair = component.crosshair();
     var label = component.label();
     var bubbles = component.bubbles();
-    var createBase = component.createBase();
     /**
      * Initialise Data and Scales
      *
@@ -7206,7 +7120,7 @@
 
     var my = function my(selection) {
       var layers = ["axis", "bubbles", "crosshair", "label"];
-      var scene = createBase(selection, layers, classed, width, height, debug);
+      var scene = createScene(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         init(data); // Add Viewpoint
 
@@ -7486,7 +7400,6 @@
     var viewpoint = component.viewpoint();
     var axis = component.axisThreePlane();
     var surface = component.surface();
-    var createBase = component.createBase();
     /**
      * Initialise Data and Scales
      *
@@ -7521,7 +7434,7 @@
 
     var my = function my(selection) {
       var layers = ["axis", "surface"];
-      var scene = createBase(selection, layers, classed, width, height, debug);
+      var scene = createScene(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         init(data); // Add Viewpoint
 
@@ -7712,7 +7625,6 @@
     var viewpoint = component.viewpoint();
     var axis = component.crosshair();
     var vectorFields = component.vectorFields();
-    var createBase = component.createBase();
     /**
      * Vector Field Function
      *
@@ -7795,7 +7707,7 @@
 
     var my = function my(selection) {
       var layers = ["axis", "vectorFields"];
-      var scene = createBase(selection, layers, classed, width, height, debug);
+      var scene = createScene(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         init(data); // Add Viewpoint
 
@@ -8020,7 +7932,6 @@
     var viewpoint = component.viewpoint();
     var axis = component.crosshair();
     var volumeSlice = component.volumeSlice();
-    var createBase = component.createBase();
     /**
      * Constructor
      *
@@ -8031,7 +7942,7 @@
 
     var my = function my(selection) {
       var layers = ["axis", "volume"];
-      var scene = createBase(selection, layers, classed, width, height, debug);
+      var scene = createScene(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         // Add Viewpoint
         viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
@@ -8255,7 +8166,7 @@
    */
 
   function dataset1() {
-    var data = {
+    return {
       key: "Fruit",
       values: fruit.map(function (d) {
         return {
@@ -8267,7 +8178,6 @@
         };
       })
     };
-    return data;
   }
   /**
    * Random Dataset - Multi Series
@@ -8276,7 +8186,7 @@
    */
 
   function dataset2() {
-    var data = countries.map(function (d) {
+    return countries.map(function (d) {
       return {
         key: d,
         values: fruit.map(function (d) {
@@ -8290,7 +8200,6 @@
         })
       };
     });
-    return data;
   }
   /**
    * Random Dataset - Single Series Scatter Plot
@@ -8301,7 +8210,7 @@
 
   function dataset3() {
     var points = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 10;
-    var data = {
+    return {
       key: "Bubbles",
       values: d3.range(points).map(function (d, i) {
         return {
@@ -8313,7 +8222,39 @@
         };
       })
     };
-    return data;
+  }
+  /**
+   * Convert Bubble/Particle Dataset Format
+   *
+   * @param {Array} data
+   * @returns {Array}
+   */
+
+  function convert(data) {
+    return {
+      key: data.key,
+      values: data.values.map(function (d) {
+        return {
+          key: d.key,
+          values: [{
+            key: "size",
+            value: d.value
+          }, {
+            key: "color",
+            value: d.value
+          }, {
+            key: "x",
+            value: d.x
+          }, {
+            key: "y",
+            value: d.y
+          }, {
+            key: "z",
+            value: d.z
+          }]
+        };
+      })
+    };
   }
   /**
    * Random Dataset - Single Series Scatter Plot (with size and color values)
@@ -8324,31 +8265,7 @@
 
   function dataset6() {
     var points = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 10;
-    var data = {
-      key: "Bubbles",
-      values: d3.range(points).map(function (d, i) {
-        return {
-          key: "Point" + i,
-          values: [{
-            key: "size",
-            value: randomNum()
-          }, {
-            key: "color",
-            value: randomNum()
-          }, {
-            key: "x",
-            value: randomNum()
-          }, {
-            key: "y",
-            value: randomNum()
-          }, {
-            key: "z",
-            value: randomNum()
-          }]
-        };
-      })
-    };
-    return data;
+    return convert(dataset3(points));
   }
   /**
    * Random Dataset - Surface Plot 1
@@ -8357,7 +8274,7 @@
    */
 
   function dataset4() {
-    var data = [{
+    return [{
       key: "a",
       values: [{
         key: "1",
@@ -8448,7 +8365,6 @@
         value: 1
       }]
     }];
-    return data;
   }
   /**
    * Random Dataset - Surface Plot 2
@@ -8468,7 +8384,7 @@
     var zRange = d3.range(0, 1.05, 0.1);
     var nx = xRange.length;
     var nz = zRange.length;
-    var data = d3.range(nx).map(function (i) {
+    return d3.range(nx).map(function (i) {
       var values = d3.range(nz).map(function (j) {
         return {
           key: j,
@@ -8480,7 +8396,6 @@
         values: values
       };
     });
-    return data;
   }
 
   var randomData = /*#__PURE__*/Object.freeze({
@@ -8491,6 +8406,7 @@
     dataset1: dataset1,
     dataset2: dataset2,
     dataset3: dataset3,
+    convert: convert,
     dataset6: dataset6,
     dataset4: dataset4,
     dataset5: dataset5
@@ -8500,7 +8416,7 @@
    * d3-x3d
    *
    * @author James Saunders [james@saunders-family.net]
-   * @copyright Copyright (C) 2019 James Saunders
+   * @copyright Copyright (C) 2020 James Saunders
    * @license GPLv2
    */
   var author = "James Saunders";

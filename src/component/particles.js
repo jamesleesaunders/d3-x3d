@@ -22,8 +22,6 @@ export default function() {
 	let yScale;
 	let zScale;
 	let colorScale;
-	let sizeScale;
-	let sizeRange = [0.2, 4.0];
 
 	/**
 	 * Array to String
@@ -46,7 +44,7 @@ export default function() {
 	 */
 	const init = function(data) {
 		let newData = {};
-		['x', 'y', 'z', 'size', 'color'].forEach((dimension) => {
+		['x', 'y', 'z', 'color'].forEach((dimension) => {
 			let set = {
 				key: dimension,
 				values: []
@@ -64,7 +62,6 @@ export default function() {
 		let extentX = newData.x.valueExtent;
 		let extentY = newData.y.valueExtent;
 		let extentZ = newData.z.valueExtent;
-		let extentSize = newData.size.valueExtent;
 		let extentColor = newData.color.valueExtent;
 
 		if (typeof xScale === "undefined") {
@@ -83,12 +80,6 @@ export default function() {
 			zScale = d3.scaleLinear()
 				.domain(extentZ)
 				.range([0, dimensions.z]);
-		}
-
-		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear()
-				.domain(extentSize)
-				.range(sizeRange);
 		}
 
 		if (color) {
@@ -118,13 +109,6 @@ export default function() {
 				.attr("id", (d) => d.key);
 
 			const particleData = function(data) {
-				const pointSizes = function(Y) {
-					return Y.values.map(function(d) {
-						let sizeVal = d.values.find((v) => v.key === mappings.size).value;
-						return [sizeScale(sizeVal), sizeScale(sizeVal), sizeScale(sizeVal)];
-					})
-				};
-
 				const pointCoords = function(Y) {
 					return Y.values.map(function(d) {
 						let xVal = d.values.find((v) => v.key === mappings.x).value;
@@ -142,7 +126,6 @@ export default function() {
 					})
 				};
 
-				data.size = array2dToString(pointSizes(data));
 				data.point = array2dToString(pointCoords(data));
 				data.color = array2dToString(pointColors(data));
 
@@ -249,30 +232,6 @@ export default function() {
 	};
 
 	/**
-	 * Size Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 size scale.
-	 * @returns {*}
-	 */
-	my.sizeScale = function(_v) {
-		if (!arguments.length) return sizeScale;
-		sizeScale = _v;
-		return my;
-	};
-
-	/**
-	 * Size Range Getter / Setter
-	 *
-	 * @param {number[]} _v - Size min and max (e.g. [1, 9]).
-	 * @returns {*}
-	 */
-	my.sizeRange = function(_v) {
-		if (!arguments.length) return sizeRange;
-		sizeRange = _v;
-		return my;
-	};
-
-	/**
 	 * Color Scale Getter / Setter
 	 *
 	 * @param {d3.scale} _v - D3 color scale.
@@ -311,7 +270,7 @@ export default function() {
 	/**
 	 * Mappings Getter / Setter
 	 *
-	 * @param {Object} _v - Map properties to size, colour etc.
+	 * @param {Object} _v - Map properties to colour etc.
 	 * @returns {*}
 	 */
 	my.mappings = function(_v) {

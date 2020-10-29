@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import component from "../component";
 import * as glMatrix from "gl-matrix";
+import { createScene } from "../base";
 
 /**
  * Reusable 3D Vector Field Chart
@@ -51,7 +52,6 @@ export default function() {
 	const viewpoint = component.viewpoint();
 	const axis = component.crosshair();
 	const vectorFields = component.vectorFields();
-	const createBase = component.createBase();
 
 	/**
 	 * Vector Field Function
@@ -132,7 +132,7 @@ export default function() {
 	 */
 	const my = function(selection) {
 		const layers = ["axis", "vectorFields"];
-		const scene = createBase(selection, layers, classed, width, height, debug);
+		const scene = createScene(selection, layers, classed, width, height, debug);
 
 		selection.each((data) => {
 			init(data);

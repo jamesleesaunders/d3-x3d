@@ -21,8 +21,7 @@
     // Declare the chart component
     var myChart = d3.x3d.chart.particlePlot()
       .mappings({x: "ridge", y: "nub", z: "crack", size: "density", color: "weight"})
-      .colors(d3.schemeRdYlGn[8])
-      .sizeRange([2.0, 16.0]);
+      .colors(d3.schemeRdYlGn[8]);
 
     // Generate chart
     chartHolder.datum(data).call(myChart);

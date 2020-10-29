@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import component from "../component";
+import { createScene } from "../base";
 
 /**
  * Reusable 3D Vertical Bar Chart
@@ -39,7 +40,6 @@ export default function() {
 	const yAxis = component.axis();
 	const bars = component.bars();
 	const light = component.light();
-	const createBase = component.createBase();
 
 	/**
 	 * Initialise Data and Scales
@@ -76,7 +76,7 @@ export default function() {
 	 */
 	const my = function(selection) {
 		const layers = ["xAxis", "yAxis", "bars"];
-		const scene = createBase(selection, layers, classed, width, height, debug);
+		const scene = createScene(selection, layers, classed, width, height, debug);
 
 		selection.each((data) => {
 			init(data);

@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import component from "../component";
+import { createScene } from "../base";
 
 /**
  * Reusable 3D Multi Series Bar Chart
@@ -40,7 +41,6 @@ export default function() {
 	const axis = component.axisThreePlane();
 	const bars = component.barsMultiSeries();
 	const light = component.light();
-	const createBase = component.createBase();
 
 	/**
 	 * Initialise Data and Scales
@@ -82,7 +82,7 @@ export default function() {
 	 */
 	const my = function(selection) {
 		const layers = ["axis", "bars"];
-		const scene = createBase(selection, layers, classed, width, height, debug);
+		const scene = createScene(selection, layers, classed, width, height, debug);
 
 		selection.each((data) => {
 			init(data);

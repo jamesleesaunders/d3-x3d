@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import dataTransform from "../dataTransform";
 import component from "../component";
 import { dispatch } from "../events";
+import { createScene } from "../base";
 
 /**
  * Reusable 3D Particle Plot Chart
@@ -36,14 +37,11 @@ export default function() {
 	let yScale;
 	let zScale;
 	let colorScale;
-	let sizeScale;
-	let sizeRange = [0.2, 4.0];
 
 	/* Components */
 	const viewpoint = component.viewpoint();
 	const axis = component.axisThreePlane();
 	const particles = component.particles();
-	const createBase = component.createBase();
 
 	/**
 	 * Initialise Data and Scales
@@ -54,7 +52,7 @@ export default function() {
 	const init = function(data) {
 
 		let newData = {};
-		['x', 'y', 'z', 'size', 'color'].forEach((dimension) => {
+		['x', 'y', 'z', 'color'].forEach((dimension) => {
 			let set = {
 				key: dimension,
 				values: []
@@ -72,7 +70,6 @@ export default function() {
 		let extentX = newData.x.valueExtent;
 		let extentY = newData.y.valueExtent;
 		let extentZ = newData.z.valueExtent;
-		let extentSize = newData.size.valueExtent;
 		let extentColor = newData.color.valueExtent;
 
 		xScale = d3.scaleLinear()
@@ -86,10 +83,6 @@ export default function() {
 		zScale = d3.scaleLinear()
 			.domain(extentZ)
 			.range([0, dimensions.z]);
-
-		sizeScale = d3.scaleLinear()
-			.domain(extentSize)
-			.range(sizeRange);
 
 		if (color) {
 			colorScale = d3.scaleQuantize()
@@ -111,7 +104,7 @@ export default function() {
 	 */
 	const my = function(selection) {
 		const layers = ["axis", "particles", "crosshair"];
-		const scene = createBase(selection, layers, classed, width, height, debug);
+		const scene = createScene(selection, layers, classed, width, height, debug);
 
 		selection.each((data) => {
 			init(data);
@@ -134,7 +127,6 @@ export default function() {
 				.mappings(mappings)
 				.yScale(yScale)
 				.zScale(zScale)
-				.sizeScale(sizeScale)
 				.colorScale(colorScale);
 
 			scene.select(".particles")
@@ -216,30 +208,6 @@ export default function() {
 	};
 
 	/**
-	 * Size Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 color scale.
-	 * @returns {*}
-	 */
-	my.sizeScale = function(_v) {
-		if (!arguments.length) return sizeScale;
-		sizeScale = _v;
-		return my;
-	};
-
-	/**
-	 * Size Range Getter / Setter
-	 *
-	 * @param {number[]} _v - Size min and max (e.g. [1, 9]).
-	 * @returns {*}
-	 */
-	my.sizeRange = function(_v) {
-		if (!arguments.length) return sizeRange;
-		sizeRange = _v;
-		return my;
-	};
-
-	/**
 	 * Color Scale Getter / Setter
 	 *
 	 * @param {d3.scale} _v - D3 color scale.
@@ -276,33 +244,9 @@ export default function() {
 	};
 
 	/**
-	 * Size Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 color scale.
-	 * @returns {*}
-	 */
-	my.sizeScale = function(_v) {
-		if (!arguments.length) return sizeScale;
-		sizeScale = _v;
-		return my;
-	};
-
-	/**
-	 * Size Range Getter / Setter
-	 *
-	 * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
-	 * @returns {*}
-	 */
-	my.sizeRange = function(_v) {
-		if (!arguments.length) return sizeRange;
-		sizeRange = _v;
-		return my;
-	};
-
-	/**
 	 * Mappings Getter / Setter
 	 *
-	 * @param {Object} _v - Map properties to size, colour etc.
+	 * @param {Object} _v - Map properties to colour etc.
 	 * @returns {*}
 	 */
 	my.mappings = function(_v) {
