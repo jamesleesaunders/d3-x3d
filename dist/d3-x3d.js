@@ -2,7 +2,7 @@
  * d3-x3d
  *
  * @author James Saunders [james@saunders-family.net]
- * @copyright Copyright (C) 2020 James Saunders
+ * @copyright Copyright (C) 2021 James Saunders
  * @license GPLv2
  */
 
