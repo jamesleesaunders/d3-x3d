@@ -12,6 +12,28 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3, global.d3, global.d3, global.d3)));
 }(this, (function (d3, d3Shape, d3Array, d3Interpolate) { 'use strict';
 
+  function _interopNamespace(e) {
+    if (e && e.__esModule) return e;
+    var n = Object.create(null);
+    if (e) {
+      Object.keys(e).forEach(function (k) {
+        if (k !== 'default') {
+          var d = Object.getOwnPropertyDescriptor(e, k);
+          Object.defineProperty(n, k, d.get ? d : {
+            enumerable: true,
+            get: function () {
+              return e[k];
+            }
+          });
+        }
+      });
+    }
+    n['default'] = e;
+    return Object.freeze(n);
+  }
+
+  var d3__namespace = /*#__PURE__*/_interopNamespace(d3);
+
   var version = "2.0.7";
   var license = "GPL-2.0";
 
@@ -42,7 +64,7 @@
   }
 
   function _iterableToArray(iter) {
-    if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+    if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
   }
 
   function _unsupportedIterableToArray(o, minLen) {
@@ -250,7 +272,7 @@
 
 
     var singleRowKey = function singleRowKey(data) {
-      return d3.values(data)[0];
+      return d3__namespace.values(data)[0];
     };
     /**
      * Row Total (Single Series)
@@ -260,7 +282,7 @@
 
 
     var singleRowTotal = function singleRowTotal(data) {
-      return d3.sum(data.values, function (d) {
+      return d3__namespace.sum(data.values, function (d) {
         return d.value;
       });
     };
@@ -282,7 +304,7 @@
 
 
     var singleColumnKeys = function singleColumnKeys(data) {
-      return d3.values(data.values).map(function (d) {
+      return d3__namespace.values(data.values).map(function (d) {
         return d.key;
       });
     };
@@ -294,7 +316,7 @@
 
 
     var singleValueMin = function singleValueMin(data) {
-      return d3.min(data.values, function (d) {
+      return d3__namespace.min(data.values, function (d) {
         return +d.value;
       });
     };
@@ -306,7 +328,7 @@
 
 
     var singleValueMax = function singleValueMax(data) {
-      return d3.max(data.values, function (d) {
+      return d3__namespace.max(data.values, function (d) {
         return +d.value;
       });
     };
@@ -318,7 +340,7 @@
 
 
     var singleValueExtent = function singleValueExtent(data) {
-      return d3.extent(data.values, function (d) {
+      return d3__namespace.extent(data.values, function (d) {
         return +d.value;
       });
     };
@@ -331,7 +353,7 @@
 
     var singleCoordinatesMin = function singleCoordinatesMin(data) {
       return coordinates.reduce(function (maximums, coord) {
-        maximums[coord] = d3.min(data.values, function (d) {
+        maximums[coord] = d3__namespace.min(data.values, function (d) {
           return +d[coord];
         });
         return maximums;
@@ -346,7 +368,7 @@
 
     var singleCoordinatesMax = function singleCoordinatesMax(data) {
       return coordinates.reduce(function (maximums, coord) {
-        maximums[coord] = d3.max(data.values, function (d) {
+        maximums[coord] = d3__namespace.max(data.values, function (d) {
           return +d[coord];
         });
         return maximums;
@@ -361,7 +383,7 @@
 
     var singleCoordinatesExtent = function singleCoordinatesExtent(data) {
       return coordinates.reduce(function (extents, coord) {
-        extents[coord] = d3.extent(data.values, function (d) {
+        extents[coord] = d3__namespace.extent(data.values, function (d) {
           return +d[coord];
         });
         return extents;
@@ -392,7 +414,7 @@
 
     var singleMaxDecimalPlace = function singleMaxDecimalPlace(data) {
       return data.values.reduce(function (places, d) {
-        places = d3.max([places, decimalPlaces(d.value)]); // toFixed must be between 0 and 20
+        places = d3__namespace.max([places, decimalPlaces(d.value)]); // toFixed must be between 0 and 20
 
         return places > 20 ? 20 : places;
       }, 0);
@@ -456,7 +478,7 @@
 
 
     var multiRowTotalsMax = function multiRowTotalsMax(data) {
-      return d3.max(d3.values(multiRowTotals(data)));
+      return d3__namespace.max(d3__namespace.values(multiRowTotals(data)));
     };
     /**
      * Row Value Keys (Multi Series)
@@ -510,7 +532,7 @@
 
 
     var multiColumnTotalsMax = function multiColumnTotalsMax(data) {
-      return d3.max(d3.values(multiColumnTotals(data)));
+      return d3__namespace.max(d3__namespace.values(multiColumnTotals(data)));
     };
     /**
      * Value Min (Multi Series)
@@ -520,7 +542,7 @@
 
 
     var multiValueMin = function multiValueMin(data) {
-      return d3.min(data.map(function (row) {
+      return d3__namespace.min(data.map(function (row) {
         return singleValueMin(row);
       }));
     };
@@ -532,7 +554,7 @@
 
 
     var multiValueMax = function multiValueMax(data) {
-      return d3.max(data.map(function (row) {
+      return d3__namespace.max(data.map(function (row) {
         return singleValueMax(row);
       }));
     };
@@ -558,7 +580,7 @@
         return singleCoordinatesMin(row);
       }).reduce(function (minimums, row) {
         coordinates.forEach(function (coord) {
-          minimums[coord] = coord in minimums ? d3.min([minimums[coord], +row[coord]]) : row[coord];
+          minimums[coord] = coord in minimums ? d3__namespace.min([minimums[coord], +row[coord]]) : row[coord];
         });
         return minimums;
       }, {});
@@ -575,7 +597,7 @@
         return singleCoordinatesMax(row);
       }).reduce(function (maximums, row) {
         coordinates.forEach(function (coord) {
-          maximums[coord] = coord in maximums ? d3.max([maximums[coord], +row[coord]]) : row[coord];
+          maximums[coord] = coord in maximums ? d3__namespace.max([maximums[coord], +row[coord]]) : row[coord];
         });
         return maximums;
       }, {});
@@ -617,7 +639,7 @@
 
 
     var multiMaxDecimalPlace = function multiMaxDecimalPlace(data) {
-      return d3.max(d3.map(data).values().reduce(function (places, row, i) {
+      return d3__namespace.max(d3__namespace.map(data).values().reduce(function (places, row, i) {
         places[i] = singleMaxDecimalPlace(row);
         return places;
       }, []));
@@ -712,7 +734,7 @@
       var values = data.values.map(function (d) {
         return d.value;
       });
-      var sampler = d3.range(0, 1, 1 / samples);
+      var sampler = d3__namespace.range(0, 1, 1 / samples);
 
       var keyPolator = function keyPolator(t) {
         return Number((t * samples).toFixed(0)) + 1;
@@ -901,7 +923,6 @@
     var red = 0;
     var green = 0;
     var blue = 0;
-    var alpha = 0; // Already matches X3D RGB
 
     var x3dMatch = /^(0+\.?\d*|1\.?0*)\s+(0+\.?\d*|1\.?0*)\s+(0+\.?\d*|1\.?0*)$/.exec(color);
 
@@ -934,22 +955,20 @@
         red = parseInt("0x" + hex.substr(0, 2), 16) / 255.0;
         green = parseInt("0x" + hex.substr(2, 2), 16) / 255.0;
         blue = parseInt("0x" + hex.substr(4, 2), 16) / 255.0;
-        alpha = parseInt("0x" + hex.substr(6, 2), 16) / 255.0;
+        parseInt("0x" + hex.substr(6, 2), 16) / 255.0;
       } else if (len === 6) {
         red = parseInt("0x" + hex.substr(0, 2), 16) / 255.0;
         green = parseInt("0x" + hex.substr(2, 2), 16) / 255.0;
         blue = parseInt("0x" + hex.substr(4, 2), 16) / 255.0;
-        alpha = 1.0;
       } else if (len === 4) {
         red = parseInt("0x" + hex.substr(0, 1), 16) / 15.0;
         green = parseInt("0x" + hex.substr(1, 1), 16) / 15.0;
         blue = parseInt("0x" + hex.substr(2, 1), 16) / 15.0;
-        alpha = parseInt("0x" + hex.substr(3, 1), 16) / 15.0;
+        parseInt("0x" + hex.substr(3, 1), 16) / 15.0;
       } else if (len === 3) {
         red = parseInt("0x" + hex.substr(0, 1), 16) / 15.0;
         green = parseInt("0x" + hex.substr(1, 1), 16) / 15.0;
         blue = parseInt("0x" + hex.substr(2, 1), 16) / 15.0;
-        alpha = 1.0;
       }
     }
 
@@ -980,7 +999,7 @@
     var color = "blue";
     var transparency = 0.1;
     var classed = "d3X3dArea";
-    var smoothed = d3.curveMonotoneX;
+    var smoothed = d3__namespace.curveMonotoneX;
     /* Scales */
 
     var xScale;
@@ -1003,11 +1022,11 @@
           dimensionY = _dimensions.y;
 
       if (typeof xScale === "undefined") {
-        xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
+        xScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionX]);
       }
 
       if (typeof yScale === "undefined") {
-        yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+        yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]);
       }
     };
     /**
@@ -1022,7 +1041,7 @@
     var my = function my(selection) {
       selection.each(function (data) {
         init(data);
-        var element = d3.select(this).classed(classed, true).attr("id", function (d) {
+        var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
         });
 
@@ -1031,10 +1050,10 @@
 
           if (smoothed) {
             data = dataTransform(data).smooth(smoothed);
-            var keys = d3.extent(data.values.map(function (d) {
+            var keys = d3__namespace.extent(data.values.map(function (d) {
               return d.key;
             }));
-            xScale = d3.scaleLinear().domain(keys).range([0, dimensionX]);
+            xScale = d3__namespace.scaleLinear().domain(keys).range([0, dimensionX]);
           }
 
           var values = data.values; // Convert values into IFS coordinates
@@ -1189,7 +1208,7 @@
     };
     var colors = ["orange", "red", "yellow", "steelblue", "green"];
     var classed = "d3X3dAreaMultiSeries";
-    var smoothed = d3.curveMonotoneX;
+    var smoothed = d3__namespace.curveMonotoneX;
     /* Scales */
 
     var xScale;
@@ -1241,11 +1260,11 @@
           dimensionX = _dimensions.x,
           dimensionY = _dimensions.y,
           dimensionZ = _dimensions.z;
-      xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
-      yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
-      zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
+      xScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionX]);
+      yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+      zScale = d3__namespace.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
       colorDomain = arrayUnique(colorDomain, rowKeys);
-      colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
+      colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(colors);
     };
     /**
      * Constructor
@@ -1259,7 +1278,7 @@
     var my = function my(selection) {
       selection.each(function (data) {
         init(data);
-        var element = d3.select(this).classed(classed, true);
+        var element = d3__namespace.select(this).classed(classed, true);
         area.xScale(xScale).yScale(yScale).dimensions({
           x: dimensions.x,
           y: dimensions.y,
@@ -1269,7 +1288,7 @@
         var addArea = function addArea(d) {
           var color = colorScale(d.key);
           area.color(color);
-          d3.select(this).call(area);
+          d3__namespace.select(this).call(area);
         };
 
         var areaGroup = element.selectAll(".areaGroup").data(function (d) {
@@ -1457,7 +1476,7 @@
 
     var my = function my(selection) {
       selection.each(function () {
-        var element = d3.select(this).classed(classed, true);
+        var element = d3__namespace.select(this).classed(classed, true);
         var range = scale.range();
         var range0 = range[0];
         var range1 = range[range.length - 1];
@@ -1531,7 +1550,7 @@
           }).select("Transform").attr("translation", tickDirectionVector.map(function (d, i) {
             return labelInset * d * tickPadding + (labelInset + 1) / 2 * tickSize * tickDirectionVector[i];
           })).on("start", function () {
-            d3.select(this).select("Billboard").select("Shape").select("Text").attr("string", function (d) {
+            d3__namespace.select(this).select("Billboard").select("Shape").select("Text").attr("string", function (d) {
               return "\"".concat(tickFormat(d), "\"");
             });
           });
@@ -1726,7 +1745,7 @@
 
     var my = function my(selection) {
       selection.each(function () {
-        var element = d3.select(this).classed(classed, true);
+        var element = d3__namespace.select(this).classed(classed, true);
         var layers = ["xzAxis", "yzAxis", "yxAxis", "zxAxis"];
         element.selectAll("group").data(layers).enter().append("Group").attr("class", function (d) {
           return d;
@@ -1838,7 +1857,7 @@
    * @type {d3.dispatch}
    */
 
-  var dispatch = d3.dispatch("d3X3dClick", "d3X3dMouseOver", "d3X3dMouseOut");
+  var dispatch = d3__namespace.dispatch("d3X3dClick", "d3X3dMouseOver", "d3X3dMouseOut");
   /**
    * Attach Event Listeners to Shape
    *
@@ -1872,7 +1891,7 @@
 
   function forwardEvent(event) {
     var type = event.type;
-    var target = d3.select(event.target);
+    var target = d3__namespace.select(event.target);
     target.on(type)(event);
   }
   /**
@@ -1948,7 +1967,7 @@
    */
 
   function getX3domHolder(event) {
-    var target = d3.select(event.target);
+    var target = d3__namespace.select(event.target);
     var x3d = target.select(function () {
       var el = this;
 
@@ -2011,15 +2030,15 @@
           dimensionY = _dimensions.y;
 
       if (typeof xScale === "undefined") {
-        xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.3);
+        xScale = d3__namespace.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.3);
       }
 
       if (typeof yScale === "undefined") {
-        yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+        yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]);
       }
 
       if (typeof colorScale === "undefined") {
-        colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+        colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
       }
     };
     /**
@@ -2034,7 +2053,7 @@
     var my = function my(selection) {
       selection.each(function (data) {
         init(data);
-        var element = d3.select(this).classed(classed, true).attr("id", function (d) {
+        var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
         });
 
@@ -2189,10 +2208,10 @@
           dimensionX = _dimensions.x,
           dimensionY = _dimensions.y,
           dimensionZ = _dimensions.z;
-      xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
-      yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-      zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.7);
-      colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+      xScale = d3__namespace.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
+      yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+      zScale = d3__namespace.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.7);
+      colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
     };
     /**
      * Constructor
@@ -2206,7 +2225,7 @@
     var my = function my(selection) {
       selection.each(function (data) {
         init(data);
-        var element = d3.select(this).classed(classed, true);
+        var element = d3__namespace.select(this).classed(classed, true);
         bars.xScale(xScale).yScale(yScale).dimensions({
           x: dimensions.x,
           y: dimensions.y,
@@ -2214,7 +2233,7 @@
         }).colors(colors);
 
         var addBars = function addBars() {
-          d3.select(this).call(bars);
+          d3__namespace.select(this).call(bars);
         };
 
         var barGroup = element.selectAll(".barGroup").data(function (d) {
@@ -2326,7 +2345,7 @@
       y: 40,
       z: 40
     };
-    var colors = d3.schemeRdYlGn[8];
+    var colors = d3__namespace.schemeRdYlGn[8];
     var color;
     var classed = "d3X3dBubbles";
     var mappings;
@@ -2371,25 +2390,25 @@
       var extentColor = newData.color.valueExtent;
 
       if (typeof xScale === "undefined") {
-        xScale = d3.scaleLinear().domain(extentX).range([0, dimensions.x]);
+        xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensions.x]);
       }
 
       if (typeof yScale === "undefined") {
-        yScale = d3.scaleLinear().domain(extentY).range([0, dimensions.y]);
+        yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensions.y]);
       }
 
       if (typeof zScale === "undefined") {
-        zScale = d3.scaleLinear().domain(extentZ).range([0, dimensions.z]);
+        zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensions.z]);
       }
 
       if (typeof sizeScale === "undefined") {
-        sizeScale = d3.scaleLinear().domain(extentSize).range(sizeRange);
+        sizeScale = d3__namespace.scaleLinear().domain(extentSize).range(sizeRange);
       }
 
       if (color) {
-        colorScale = d3.scaleQuantize().domain(extentColor).range([color, color]);
+        colorScale = d3__namespace.scaleQuantize().domain(extentColor).range([color, color]);
       } else if (typeof colorScale === "undefined") {
-        colorScale = d3.scaleQuantize().domain(extentColor).range(colors);
+        colorScale = d3__namespace.scaleQuantize().domain(extentColor).range(colors);
       }
     };
     /**
@@ -2404,7 +2423,7 @@
     var my = function my(selection) {
       selection.each(function (data) {
         init(data);
-        var element = d3.select(this).classed(classed, true).attr("id", function (d) {
+        var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
         });
 
@@ -2636,7 +2655,7 @@
       z: 'z',
       size: 'size',
       color: 'color'
-    }).colors(d3.schemeRdYlGn[8]).sizeRange([2, 2]);
+    }).colors(d3__namespace.schemeRdYlGn[8]).sizeRange([2, 2]);
     /**
      * Unique Array
      *
@@ -2681,12 +2700,12 @@
           dimensionX = _dimensions.x,
           dimensionY = _dimensions.y,
           dimensionZ = _dimensions.z;
-      xScale = d3.scaleLinear().domain(extentX).range([0, dimensionX]);
-      yScale = d3.scaleLinear().domain(extentY).range([0, dimensionY]);
-      zScale = d3.scaleLinear().domain(extentZ).range([0, dimensionZ]);
+      xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensionX]);
+      yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensionY]);
+      zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensionZ]);
       colorDomain = arrayUnique(colorDomain, rowKeys);
-      colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
-      sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeRange);
+      colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(colors);
+      sizeScale = d3__namespace.scaleLinear().domain(valueExtent).range(sizeRange);
     };
     /**
      * Constructor
@@ -2730,13 +2749,13 @@
           });
         };
 
-        var element = d3.select(this).classed(classed, true);
+        var element = d3__namespace.select(this).classed(classed, true);
         bubbles.xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale);
 
         var addBubbles = function addBubbles(d) {
           var color = colorScale(d.key);
           bubbles.color(color);
-          d3.select(this).call(bubbles);
+          d3__namespace.select(this).call(bubbles);
         };
 
         var bubbleGroup = element.selectAll(".bubbleGroup").data(bubbleData, function (d) {
@@ -2896,7 +2915,7 @@
 
     var my = function my(selection) {
       selection.each(function (data) {
-        var element = d3.select(this).classed(classed, true).attr("id", function (d) {
+        var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
         });
         var xOff = dimensions["x"] / 2;
@@ -2925,7 +2944,7 @@
           return rotationVectors[axisDir].join(" ");
         }
 
-        var colorScale = d3.scaleOrdinal().domain(Object.keys(dimensions)).range(colors); // Origin Ball
+        var colorScale = d3__namespace.scaleOrdinal().domain(Object.keys(dimensions)).range(colors); // Origin Ball
 
         var ballSelect = element.selectAll(".ball").data([data]);
         var ball = ballSelect.enter().append("Transform").attr("translation", function (d) {
@@ -2934,7 +2953,7 @@
         ball.append("Appearance").append("Material").attr("diffuseColor", colorParse("blue"));
         ball.append("Sphere").attr("radius", 0.3);
         ball.merge(ballSelect);
-        ballSelect.transition().ease(d3.easeQuadOut).attr("translation", function (d) {
+        ballSelect.transition().ease(d3__namespace.easeQuadOut).attr("translation", function (d) {
           return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
         }); // Crosshair Lines
 
@@ -2951,7 +2970,7 @@
           return colorParse(colorScale(d));
         });
         line.merge(lineSelect);
-        lineSelect.transition().ease(d3.easeQuadOut).attr("translation", function (d) {
+        lineSelect.transition().ease(d3__namespace.easeQuadOut).attr("translation", function (d) {
           return getPositionVector(d);
         });
       });
@@ -3056,7 +3075,7 @@
 
     var my = function my(selection) {
       selection.each(function (data) {
-        var element = d3.select(this).classed(classed, true).attr("id", function (d) {
+        var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
         });
 
@@ -3073,7 +3092,7 @@
           return d.key;
         }).append("FontStyle").attr("size", 1).attr("family", "SANS").attr("style", "BOLD").attr("justify", "START");
         label.merge(labelSelect);
-        labelSelect.transition().ease(d3.easeQuadOut).attr("translation", function (d) {
+        labelSelect.transition().ease(d3__namespace.easeQuadOut).attr("translation", function (d) {
           return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
         });
       });
@@ -3181,7 +3200,7 @@
 
     var my = function my(selection) {
       selection.each(function () {
-        var light = d3.select(this).selectAll("DirectionalLight").data([null]);
+        var light = d3__namespace.select(this).selectAll("DirectionalLight").data([null]);
         light.enter().append("DirectionalLight").attr("on", true).attr("direction", direction).attr("intensity", intensity).attr("shadowIntensity", shadowIntensity).merge(light);
       });
     };
@@ -3241,7 +3260,7 @@
       y: 40,
       z: 40
     };
-    var colors = d3.schemeRdYlGn[8];
+    var colors = d3__namespace.schemeRdYlGn[8];
     var color;
     var classed = "d3X3dBubbles";
     var mappings;
@@ -3299,21 +3318,21 @@
       var extentColor = newData.color.valueExtent;
 
       if (typeof xScale === "undefined") {
-        xScale = d3.scaleLinear().domain(extentX).range([0, dimensions.x]);
+        xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensions.x]);
       }
 
       if (typeof yScale === "undefined") {
-        yScale = d3.scaleLinear().domain(extentY).range([0, dimensions.y]);
+        yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensions.y]);
       }
 
       if (typeof zScale === "undefined") {
-        zScale = d3.scaleLinear().domain(extentZ).range([0, dimensions.z]);
+        zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensions.z]);
       }
 
       if (color) {
-        colorScale = d3.scaleQuantize().domain(extentColor).range([color, color]);
+        colorScale = d3__namespace.scaleQuantize().domain(extentColor).range([color, color]);
       } else if (typeof colorScale === "undefined") {
-        colorScale = d3.scaleQuantize().domain(extentColor).range(colors);
+        colorScale = d3__namespace.scaleQuantize().domain(extentColor).range(colors);
       }
     };
     /**
@@ -3328,7 +3347,7 @@
     var my = function my(selection) {
       selection.each(function (data) {
         init(data);
-        var element = d3.select(this).classed(classed, true).attr("id", function (d) {
+        var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
         });
 
@@ -3353,7 +3372,7 @@
               var colorVal = d.values.find(function (v) {
                 return v.key === mappings.color;
               }).value;
-              var color = d3.color(colorScale(colorVal));
+              var color = d3__namespace.color(colorScale(colorVal));
               return colorParse(color);
             });
           };
@@ -3535,7 +3554,7 @@
     var color = "red";
     var transparency = 0.1;
     var classed = "d3X3dRibbon";
-    var smoothed = d3.curveBasis;
+    var smoothed = d3__namespace.curveBasis;
     /* Scales */
 
     var xScale;
@@ -3559,11 +3578,11 @@
           dimensionY = _dimensions.y;
 
       if (typeof xScale === "undefined") {
-        xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
+        xScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionX]);
       }
 
       if (typeof yScale === "undefined") {
-        yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+        yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]);
       }
     };
     /**
@@ -3578,7 +3597,7 @@
     var my = function my(selection) {
       selection.each(function (data) {
         init(data);
-        var element = d3.select(this).classed(classed, true).attr("id", function (d) {
+        var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
         });
 
@@ -3587,10 +3606,10 @@
 
           if (smoothed) {
             data = dataTransform(data).smooth(smoothed);
-            var keys = d3.extent(data.values.map(function (d) {
+            var keys = d3__namespace.extent(data.values.map(function (d) {
               return d.key;
             }));
-            xScale = d3.scaleLinear().domain(keys).range([0, dimensionX]);
+            xScale = d3__namespace.scaleLinear().domain(keys).range([0, dimensionX]);
           }
 
           var values = data.values; // Convert values into IFS coordinates
@@ -3758,7 +3777,7 @@
     };
     var colors = ["orange", "red", "yellow", "steelblue", "green"];
     var classed = "d3X3dRibbonMultiSeries";
-    var smoothed = d3.curveBasis;
+    var smoothed = d3__namespace.curveBasis;
     /* Scales */
 
     var xScale;
@@ -3810,11 +3829,11 @@
           dimensionX = _dimensions.x,
           dimensionY = _dimensions.y,
           dimensionZ = _dimensions.z;
-      xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
-      yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
-      zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
+      xScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionX]);
+      yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+      zScale = d3__namespace.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
       colorDomain = arrayUnique(colorDomain, rowKeys);
-      colorScale = d3.scaleOrdinal().domain(colorDomain).range(colors);
+      colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(colors);
     };
     /**
      * Constructor
@@ -3828,7 +3847,7 @@
     var my = function my(selection) {
       selection.each(function (data) {
         init(data);
-        var element = d3.select(this).classed(classed, true);
+        var element = d3__namespace.select(this).classed(classed, true);
         ribbon.xScale(xScale).yScale(yScale).dimensions({
           x: dimensions.x,
           y: dimensions.y,
@@ -3838,7 +3857,7 @@
         var addRibbon = function addRibbon(d) {
           var color = colorScale(d.key);
           ribbon.color(color);
-          d3.select(this).call(ribbon);
+          d3__namespace.select(this).call(ribbon);
         };
 
         var ribbonGroup = element.selectAll(".ribbonGroup").data(function (d) {
@@ -4023,19 +4042,19 @@
           dimensionZ = _dimensions.z;
 
       if (typeof xScale === "undefined") {
-        xScale = d3.scalePoint().domain(rowKeys).range([0, dimensionX]);
+        xScale = d3__namespace.scalePoint().domain(rowKeys).range([0, dimensionX]);
       }
 
       if (typeof yScale === "undefined") {
-        yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+        yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]);
       }
 
       if (typeof zScale === "undefined") {
-        zScale = d3.scalePoint().domain(columnKeys).range([0, dimensionZ]);
+        zScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionZ]);
       }
 
       if (typeof colorScale === "undefined") {
-        colorScale = d3.scaleLinear().domain(valueExtent).range(colors).interpolate(d3.interpolateLab);
+        colorScale = d3__namespace.scaleLinear().domain(valueExtent).range(colors).interpolate(d3__namespace.interpolateLab);
       }
     };
     /**
@@ -4050,7 +4069,7 @@
     var my = function my(selection) {
       selection.each(function (data) {
         init(data);
-        var element = d3.select(this).classed(classed, true);
+        var element = d3__namespace.select(this).classed(classed, true);
 
         var surfaceData = function surfaceData(data) {
           var coordPoints = function coordPoints(Y) {
@@ -4075,7 +4094,7 @@
           var colorFaceSet = function colorFaceSet(Y) {
             return Y.map(function (X) {
               return X.values.map(function (d) {
-                var color = d3.color(colorScale(d.value));
+                var color = d3__namespace.color(colorScale(d.value));
                 return colorParse(color);
               });
             });
@@ -4241,7 +4260,7 @@
    * @returns {mat3} a new 3x3 matrix
    */
 
-  function create() {
+  function create$3() {
     var out = new ARRAY_TYPE(9);
 
     if (ARRAY_TYPE != Float32Array) {
@@ -4270,7 +4289,7 @@
    * @returns {vec3} a new 3D vector
    */
 
-  function create$1() {
+  function create$2() {
     var out = new ARRAY_TYPE(3);
 
     if (ARRAY_TYPE != Float32Array) {
@@ -4318,7 +4337,7 @@
    * @returns {vec3} out
    */
 
-  function normalize(out, a) {
+  function normalize$2(out, a) {
     var x = a[0];
     var y = a[1];
     var z = a[2];
@@ -4385,8 +4404,8 @@
    * @function
    */
 
-  var forEach = function () {
-    var vec = create$1();
+  (function () {
+    var vec = create$2();
     return function (a, stride, offset, count, fn, arg) {
       var i, l;
 
@@ -4416,7 +4435,7 @@
 
       return a;
     };
-  }();
+  })();
 
   /**
    * 4 Dimensional Vector
@@ -4429,7 +4448,7 @@
    * @returns {vec4} a new 4D vector
    */
 
-  function create$2() {
+  function create$1() {
     var out = new ARRAY_TYPE(4);
 
     if (ARRAY_TYPE != Float32Array) {
@@ -4479,8 +4498,8 @@
    * @function
    */
 
-  var forEach$1 = function () {
-    var vec = create$2();
+  (function () {
+    var vec = create$1();
     return function (a, stride, offset, count, fn, arg) {
       var i, l;
 
@@ -4512,7 +4531,7 @@
 
       return a;
     };
-  }();
+  })();
 
   /**
    * Quaternion
@@ -4525,7 +4544,7 @@
    * @returns {quat} a new quaternion
    */
 
-  function create$3() {
+  function create() {
     var out = new ARRAY_TYPE(4);
 
     if (ARRAY_TYPE != Float32Array) {
@@ -4695,7 +4714,7 @@
    * @function
    */
 
-  var normalize$2 = normalize$1;
+  var normalize = normalize$1;
   /**
    * Sets a quaternion to represent the shortest rotation from one
    * vector to another.
@@ -4709,7 +4728,7 @@
    */
 
   var rotationTo = function () {
-    var tmpvec3 = create$1();
+    var tmpvec3 = create$2();
     var xUnitVec3 = fromValues(1, 0, 0);
     var yUnitVec3 = fromValues(0, 1, 0);
     return function (out, a, b) {
@@ -4718,7 +4737,7 @@
       if (dot$1 < -0.999999) {
         cross(tmpvec3, xUnitVec3, a);
         if (len(tmpvec3) < 0.000001) cross(tmpvec3, yUnitVec3, a);
-        normalize(tmpvec3, tmpvec3);
+        normalize$2(tmpvec3, tmpvec3);
         setAxisAngle(out, tmpvec3, Math.PI);
         return out;
       } else if (dot$1 > 0.999999) {
@@ -4733,7 +4752,7 @@
         out[1] = tmpvec3[1];
         out[2] = tmpvec3[2];
         out[3] = 1 + dot$1;
-        return normalize$2(out, out);
+        return normalize(out, out);
       }
     };
   }();
@@ -4749,16 +4768,16 @@
    * @returns {quat} out
    */
 
-  var sqlerp = function () {
-    var temp1 = create$3();
-    var temp2 = create$3();
+  (function () {
+    var temp1 = create();
+    var temp2 = create();
     return function (out, a, b, c, d, t) {
       slerp(temp1, a, d, t);
       slerp(temp2, b, c, t);
       slerp(out, temp1, temp2, 2 * t * (1 - t));
       return out;
     };
-  }();
+  })();
   /**
    * Sets the specified quaternion with values corresponding to the given
    * axes. Each axis is a vec3 and is expected to be unit length and
@@ -4770,8 +4789,8 @@
    * @returns {quat} out
    */
 
-  var setAxes = function () {
-    var matr = create();
+  (function () {
+    var matr = create$3();
     return function (out, view, right, up) {
       matr[0] = right[0];
       matr[3] = right[1];
@@ -4782,9 +4801,9 @@
       matr[2] = -view[0];
       matr[5] = -view[1];
       matr[8] = -view[2];
-      return normalize$2(out, fromMat3(out, matr));
+      return normalize(out, fromMat3(out, matr));
     };
-  }();
+  })();
 
   /**
    * Reusable 3D Vector Fields Component
@@ -4799,7 +4818,7 @@
       y: 40,
       z: 40
     };
-    var colors = d3.schemeRdYlGn[8];
+    var colors = d3__namespace.schemeRdYlGn[8];
     var classed = "d3X3dVectorFields";
     /* Scales */
 
@@ -4849,7 +4868,7 @@
           dimensionX = _dimensions.x,
           dimensionY = _dimensions.y,
           dimensionZ = _dimensions.z;
-      var extent = d3.extent(data.values.map(function (f) {
+      var extent = d3__namespace.extent(data.values.map(function (f) {
         var vx, vy, vz;
 
         if ("vx" in f) {
@@ -4869,23 +4888,23 @@
       }));
 
       if (typeof xScale === "undefined") {
-        xScale = d3.scaleLinear().domain([minX, maxX]).range([0, dimensionX]);
+        xScale = d3__namespace.scaleLinear().domain([minX, maxX]).range([0, dimensionX]);
       }
 
       if (typeof yScale === "undefined") {
-        yScale = d3.scaleLinear().domain([minY, maxY]).range([0, dimensionY]);
+        yScale = d3__namespace.scaleLinear().domain([minY, maxY]).range([0, dimensionY]);
       }
 
       if (typeof zScale === "undefined") {
-        zScale = d3.scaleLinear().domain([minZ, maxZ]).range([0, dimensionZ]);
+        zScale = d3__namespace.scaleLinear().domain([minZ, maxZ]).range([0, dimensionZ]);
       }
 
       if (typeof sizeScale === "undefined") {
-        sizeScale = d3.scaleLinear().domain(extent).range(sizeRange);
+        sizeScale = d3__namespace.scaleLinear().domain(extent).range(sizeRange);
       }
 
       if (typeof colorScale === "undefined") {
-        colorScale = d3.scaleQuantize().domain(extent).range(colors);
+        colorScale = d3__namespace.scaleQuantize().domain(extent).range(colors);
       }
     };
     /**
@@ -4900,7 +4919,7 @@
     var my = function my(selection) {
       selection.each(function (data) {
         init(data);
-        var element = d3.select(this).classed(classed, true).attr("id", function (d) {
+        var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
         });
 
@@ -4924,11 +4943,11 @@
             var vecEnd = fromValues(vx, vy, vz);
             var vecLen = length(vecEnd); // rotationTo required unit vectors
 
-            var vecNormal = create$1();
-            normalize(vecNormal, vecEnd);
-            var quat = create$3();
+            var vecNormal = create$2();
+            normalize$2(vecNormal, vecEnd);
+            var quat = create();
             rotationTo(quat, vecStart, vecNormal);
-            var vecRotate = create$1();
+            var vecRotate = create$2();
             var angleRotate = getAxisAngle(vecRotate, quat);
 
             if (!vecLen) {
@@ -5133,7 +5152,7 @@
 
     var my = function my(selection) {
       selection.each(function () {
-        var viewpoint = d3.select(this).selectAll("viewpoint").data([null]);
+        var viewpoint = d3__namespace.select(this).selectAll("viewpoint").data([null]);
         viewpoint.enter().append("Viewpoint").attr("centerOfRotation", centerOfRotation.join(" ")).attr("position", viewPosition.join(" ")).attr("orientation", viewOrientation.join(" ")).attr("fieldOfView", fieldOfView).attr("set_bind", "true").merge(viewpoint);
       });
     };
@@ -5265,7 +5284,7 @@
 
     var my = function my(selection) {
       selection.each(function (data) {
-        var element = d3.select(this).classed(classed, true).attr("id", function (d) {
+        var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
         });
         var _dimensions = dimensions,
@@ -5473,7 +5492,7 @@
     var colors = ["green", "red", "yellow", "steelblue", "orange"];
     var classed = "d3X3dAreaChartMultiSeries";
     var debug = false;
-    var smoothed = d3.curveMonotoneX;
+    var smoothed = d3__namespace.curveMonotoneX;
     /* Scales */
 
     var xScale;
@@ -5504,10 +5523,10 @@
           dimensionX = _dimensions.x,
           dimensionY = _dimensions.y,
           dimensionZ = _dimensions.z;
-      xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
-      yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-      zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
-      colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+      xScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionX]);
+      yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+      zScale = d3__namespace.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
+      colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
     };
     /**
      * Constructor
@@ -5735,10 +5754,10 @@
           dimensionX = _dimensions.x,
           dimensionY = _dimensions.y,
           dimensionZ = _dimensions.z;
-      xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
-      yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-      zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.7);
-      colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+      xScale = d3__namespace.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
+      yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+      zScale = d3__namespace.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.7);
+      colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
     };
     /**
      * Constructor
@@ -5958,9 +5977,9 @@
       var _dimensions = dimensions,
           dimensionX = _dimensions.x,
           dimensionY = _dimensions.y;
-      xScale = d3.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
-      yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-      colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+      xScale = d3__namespace.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
+      yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+      colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
     };
     /**
      * Constructor
@@ -6162,11 +6181,11 @@
           dimensionX = _dimensions.x,
           dimensionY = _dimensions.y,
           dimensionZ = _dimensions.z;
-      xScale = d3.scaleLinear().domain(extentX).range([0, dimensionX]);
-      yScale = d3.scaleLinear().domain(extentY).range([0, dimensionY]);
-      zScale = d3.scaleLinear().domain(extentZ).range([0, dimensionZ]);
-      colorScale = d3.scaleOrdinal().domain(rowKeys).range(colors);
-      sizeScale = d3.scaleLinear().domain(valueExtent).range(sizeRange);
+      xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensionX]);
+      yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensionY]);
+      zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensionZ]);
+      colorScale = d3__namespace.scaleOrdinal().domain(rowKeys).range(colors);
+      sizeScale = d3__namespace.scaleLinear().domain(valueExtent).range(sizeRange);
     };
     /**
      * Constructor
@@ -6396,9 +6415,9 @@
           dimensionX = _dimensions.x,
           dimensionY = _dimensions.y,
           dimensionZ = _dimensions.z;
-      xScale = d3.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
-      yScale = d3.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
-      zScale = d3.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
+      xScale = d3__namespace.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
+      yScale = d3__namespace.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
+      zScale = d3__namespace.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
     };
     /**
      * Constructor
@@ -6426,7 +6445,7 @@
           return d.values;
         });
         crosshairs.enter().append("group").classed("crosshair", true).merge(crosshairs).transition().each(function () {
-          d3.select(this).call(crosshair);
+          d3__namespace.select(this).call(crosshair);
         });
       });
     };
@@ -6597,14 +6616,14 @@
       var extentY = newData.y.valueExtent;
       var extentZ = newData.z.valueExtent;
       var extentColor = newData.color.valueExtent;
-      xScale = d3.scaleLinear().domain(extentX).range([0, dimensions.x]);
-      yScale = d3.scaleLinear().domain(extentY).range([0, dimensions.y]);
-      zScale = d3.scaleLinear().domain(extentZ).range([0, dimensions.z]);
+      xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensions.x]);
+      yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensions.y]);
+      zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensions.z]);
 
       if (color) {
-        colorScale = d3.scaleQuantize().domain(extentColor).range([color, color]);
+        colorScale = d3__namespace.scaleQuantize().domain(extentColor).range([color, color]);
       } else {
-        colorScale = d3.scaleQuantize().domain(extentColor).range(colors);
+        colorScale = d3__namespace.scaleQuantize().domain(extentColor).range(colors);
       }
     };
     /**
@@ -6819,7 +6838,7 @@
     var colors = ["green", "red", "yellow", "steelblue", "orange"];
     var classed = "d3X3dRibbonChartMultiSeries";
     var debug = false;
-    var smoothed = d3.curveBasis;
+    var smoothed = d3__namespace.curveBasis;
     /* Scales */
 
     var xScale;
@@ -6850,10 +6869,10 @@
           dimensionX = _dimensions.x,
           dimensionY = _dimensions.y,
           dimensionZ = _dimensions.z;
-      xScale = d3.scalePoint().domain(columnKeys).range([0, dimensionX]);
-      yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-      zScale = d3.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
-      colorScale = d3.scaleOrdinal().domain(columnKeys).range(colors);
+      xScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionX]);
+      yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+      zScale = d3__namespace.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
+      colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
     };
     /**
      * Constructor
@@ -7098,15 +7117,15 @@
       var extentZ = newData.z.valueExtent;
       var extentSize = newData.size.valueExtent;
       var extentColor = newData.color.valueExtent;
-      xScale = d3.scaleLinear().domain(extentX).range([0, dimensions.x]);
-      yScale = d3.scaleLinear().domain(extentY).range([0, dimensions.y]);
-      zScale = d3.scaleLinear().domain(extentZ).range([0, dimensions.z]);
-      sizeScale = d3.scaleLinear().domain(extentSize).range(sizeRange);
+      xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensions.x]);
+      yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensions.y]);
+      zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensions.z]);
+      sizeScale = d3__namespace.scaleLinear().domain(extentSize).range(sizeRange);
 
       if (color) {
-        colorScale = d3.scaleQuantize().domain(extentColor).range([color, color]);
+        colorScale = d3__namespace.scaleQuantize().domain(extentColor).range([color, color]);
       } else {
-        colorScale = d3.scaleQuantize().domain(extentColor).range(colors);
+        colorScale = d3__namespace.scaleQuantize().domain(extentColor).range(colors);
       }
     };
     /**
@@ -7135,14 +7154,14 @@
         label.xScale(xScale).yScale(yScale).zScale(zScale).offset(0.5); // Add Bubbles
 
         bubbles.xScale(xScale).mappings(mappings).yScale(yScale).zScale(zScale).sizeScale(sizeScale).colorScale(colorScale).on("d3X3dClick", function (e) {
-          var d = d3.select(e.target).datum();
+          var d = d3__namespace.select(e.target).datum();
           scene.select(".crosshair").datum(d).classed("crosshair", true).each(function () {
-            d3.select(this).call(crosshair);
+            d3__namespace.select(this).call(crosshair);
           });
         }).on("d3X3dMouseOver", function (e) {
-          var d = d3.select(e.target).datum();
+          var d = d3__namespace.select(e.target).datum();
           scene.select(".label").datum(d).each(function () {
-            d3.select(this).call(label);
+            d3__namespace.select(this).call(label);
           });
         }).on("d3X3dMouseOut", function (e) {
           scene.select(".label").selectAll("*").remove();
@@ -7418,10 +7437,10 @@
           dimensionX = _dimensions.x,
           dimensionY = _dimensions.y,
           dimensionZ = _dimensions.z;
-      xScale = d3.scalePoint().domain(rowKeys).range([0, dimensionX]);
-      yScale = d3.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-      zScale = d3.scalePoint().domain(columnKeys).range([0, dimensionZ]);
-      colorScale = d3.scaleLinear().domain(valueExtent).range(colors).interpolate(d3.interpolateLab);
+      xScale = d3__namespace.scalePoint().domain(rowKeys).range([0, dimensionX]);
+      yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+      zScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionZ]);
+      colorScale = d3__namespace.scaleLinear().domain(valueExtent).range(colors).interpolate(d3__namespace.interpolateLab);
     };
     /**
      * Constructor
@@ -7604,7 +7623,7 @@
       y: 40,
       z: 40
     };
-    var colors = d3.schemeRdYlGn[8];
+    var colors = d3__namespace.schemeRdYlGn[8];
     var classed = "d3X3dVectorFieldChart";
     var debug = false;
     /* Scales */
@@ -7665,7 +7684,7 @@
           dimensionX = _dimensions.x,
           dimensionY = _dimensions.y,
           dimensionZ = _dimensions.z;
-      var extent = d3.extent(data.values.map(function (f) {
+      var extent = d3__namespace.extent(data.values.map(function (f) {
         var vx, vy, vz;
 
         if ("vx" in f) {
@@ -7683,11 +7702,11 @@
         var vector = fromValues(vx, vy, vz);
         return length(vector);
       }));
-      xScale = d3.scaleLinear().domain([minX, maxX]).range([0, dimensionX]);
-      yScale = d3.scaleLinear().domain([minY, maxY]).range([0, dimensionY]);
-      zScale = d3.scaleLinear().domain([minZ, maxZ]).range([0, dimensionZ]);
-      sizeScale = d3.scaleLinear().domain(extent).range(sizeRange);
-      colorScale = d3.scaleQuantize().domain(extent).range(colors); // TODO: Have a think about whether this is appropriate?
+      xScale = d3__namespace.scaleLinear().domain([minX, maxX]).range([0, dimensionX]);
+      yScale = d3__namespace.scaleLinear().domain([minY, maxY]).range([0, dimensionY]);
+      zScale = d3__namespace.scaleLinear().domain([minZ, maxZ]).range([0, dimensionZ]);
+      sizeScale = d3__namespace.scaleLinear().domain(extent).range(sizeRange);
+      colorScale = d3__namespace.scaleQuantize().domain(extent).range(colors); // TODO: Have a think about whether this is appropriate?
       // Or, do we always want the origin to be 0,0,0 ?
 
       origin = {
@@ -8212,7 +8231,7 @@
     var points = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 10;
     return {
       key: "Bubbles",
-      values: d3.range(points).map(function (d, i) {
+      values: d3__namespace.range(points).map(function (d, i) {
         return {
           key: "Point" + i,
           value: randomNum(),
@@ -8380,12 +8399,12 @@
       return ((vx - cx) * (vx - cx) + (vz - cy) * (vx - cx)) * Math.random();
     };
 
-    var xRange = d3.range(0, 1.05, 0.1);
-    var zRange = d3.range(0, 1.05, 0.1);
+    var xRange = d3__namespace.range(0, 1.05, 0.1);
+    var zRange = d3__namespace.range(0, 1.05, 0.1);
     var nx = xRange.length;
     var nz = zRange.length;
-    return d3.range(nx).map(function (i) {
-      var values = d3.range(nz).map(function (j) {
+    return d3__namespace.range(nx).map(function (i) {
+      var values = d3__namespace.range(nz).map(function (j) {
         return {
           key: j,
           value: f(xRange[i], zRange[j])
@@ -8416,7 +8435,7 @@
    * d3-x3d
    *
    * @author James Saunders [james@saunders-family.net]
-   * @copyright Copyright (C) 2020 James Saunders
+   * @copyright Copyright (C) 2021 James Saunders
    * @license GPLv2
    */
   var author = "James Saunders";
