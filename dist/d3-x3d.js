@@ -6630,7 +6630,7 @@
      * Constructor
      *
      * @constructor
-     * @alias scatterPlot
+     * @alias particlePlot
      * @param {d3.selection} selection - The chart holder D3 selection.
      */
 
