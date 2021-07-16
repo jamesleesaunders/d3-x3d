@@ -503,7 +503,7 @@
         row.values.forEach(function (d, i) {
           tmp[i] = d.key;
         });
-        keys = union(tmp, keys);
+        keys = union(keys, tmp);
         return keys;
       }, []);
     };
@@ -2208,10 +2208,22 @@
           dimensionX = _dimensions.x,
           dimensionY = _dimensions.y,
           dimensionZ = _dimensions.z;
-      xScale = d3__namespace.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
-      yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-      zScale = d3__namespace.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.7);
-      colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
+
+      if (typeof xScale === "undefined") {
+        xScale = d3__namespace.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
+      }
+
+      if (typeof yScale === "undefined") {
+        yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+      }
+
+      if (typeof zScale === "undefined") {
+        zScale = d3__namespace.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.7);
+      }
+
+      if (typeof colorScale === "undefined") {
+        colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
+      }
     };
     /**
      * Constructor
@@ -5449,17 +5461,18 @@
    * Reusable X3D Base and Scene Component
    *
    * @module
+   * @todo Remove the global x3d variable and console.log lines
    */
 
   function createScene(selection, layers, classed, width, height, debug) {
     var x3d = createX3d(selection, width, height, debug);
-    var x3d2 = selection.select("X3D");
-    console.log(x3d);
-    console.log(x3d2);
-    var scene = createScene2(x3d, layers, classed);
-    var scene2 = selection.select("Scene");
-    console.log(scene);
-    console.log(scene2);
+    selection.select("X3D"); // console.log(x3d);
+    // console.log(x3d2);
+
+    createScene2(x3d, layers, classed);
+    var scene2 = selection.select("Scene"); // console.log(scene);
+    // console.log(scene2);
+
     return scene2;
   }
 
@@ -5754,7 +5767,7 @@
           dimensionX = _dimensions.x,
           dimensionY = _dimensions.y,
           dimensionZ = _dimensions.z;
-      xScale = d3__namespace.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
+      xScale = d3__namespace.scaleBand().domain(columnKeys).range([0, dimensionX]).padding(0.5);
       yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
       zScale = d3__namespace.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.7);
       colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);

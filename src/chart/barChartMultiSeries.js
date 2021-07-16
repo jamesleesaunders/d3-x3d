@@ -55,7 +55,7 @@ export default function() {
 
 		xScale = d3.scaleBand()
 			.domain(columnKeys)
-			.rangeRound([0, dimensionX])
+			.range([0, dimensionX])
 			.padding(0.5);
 
 		yScale = d3.scaleLinear()
