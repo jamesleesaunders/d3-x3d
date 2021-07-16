@@ -56,19 +56,20 @@ export function createScene2(x3d, layers, classed) {
  * Reusable X3D Base and Scene Component
  *
  * @module
+ * @todo Remove the global x3d variable and console.log lines
  */
 export function createScene(selection, layers, classed, width, height, debug) {
 	let x3d = createX3d(selection, width, height, debug);
 	let x3d2 = selection.select("X3D");
 
-	console.log(x3d);
-	console.log(x3d2);
+	// console.log(x3d);
+	// console.log(x3d2);
 
 	let scene = createScene2(x3d, layers, classed);
 	let scene2 = selection.select("Scene");
 
-	console.log(scene);
-	console.log(scene2);
+	// console.log(scene);
+	// console.log(scene2);
 
 	return scene2;
 }
