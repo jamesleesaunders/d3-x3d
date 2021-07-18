@@ -56,7 +56,8 @@ export default function() {
 		xScale = d3.scaleBand()
 			.domain(columnKeys)
 			.range([0, dimensionX])
-			.padding(0.5);
+			.padding(0.5)
+			.align(0.75);
 
 		yScale = d3.scaleLinear()
 			.domain(valueExtent)
@@ -66,7 +67,8 @@ export default function() {
 		zScale = d3.scaleBand()
 			.domain(rowKeys)
 			.range([0, dimensionZ])
-			.padding(0.7);
+			.padding(0.5)
+			.align(0.75);
 
 		colorScale = d3.scaleOrdinal()
 			.domain(columnKeys)

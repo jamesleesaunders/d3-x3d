@@ -1260,11 +1260,23 @@
           dimensionX = _dimensions.x,
           dimensionY = _dimensions.y,
           dimensionZ = _dimensions.z;
-      xScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionX]);
-      yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]);
-      zScale = d3__namespace.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
-      colorDomain = arrayUnique(colorDomain, rowKeys);
-      colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(colors);
+
+      if (typeof xScale === "undefined") {
+        xScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionX]);
+      }
+
+      if (typeof yScale === "undefined") {
+        yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+      }
+
+      if (typeof zScale === "undefined") {
+        zScale = d3__namespace.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
+      }
+
+      if (typeof colorScale === "undefined") {
+        colorDomain = arrayUnique(colorDomain, rowKeys);
+        colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(colors);
+      }
     };
     /**
      * Constructor
@@ -2712,12 +2724,27 @@
           dimensionX = _dimensions.x,
           dimensionY = _dimensions.y,
           dimensionZ = _dimensions.z;
-      xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensionX]);
-      yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensionY]);
-      zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensionZ]);
-      colorDomain = arrayUnique(colorDomain, rowKeys);
-      colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(colors);
-      sizeScale = d3__namespace.scaleLinear().domain(valueExtent).range(sizeRange);
+
+      if (typeof xScale === "undefined") {
+        xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensionX]);
+      }
+
+      if (typeof yScale === "undefined") {
+        yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensionY]);
+      }
+
+      if (typeof zScale === "undefined") {
+        zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensionZ]);
+      }
+
+      if (typeof colorScale === "undefined") {
+        colorDomain = arrayUnique(colorDomain, rowKeys);
+        colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(colors);
+      }
+
+      if (typeof sizeScale === "undefined") {
+        sizeScale = d3__namespace.scaleLinear().domain(valueExtent).range(sizeRange);
+      }
     };
     /**
      * Constructor
@@ -5767,9 +5794,9 @@
           dimensionX = _dimensions.x,
           dimensionY = _dimensions.y,
           dimensionZ = _dimensions.z;
-      xScale = d3__namespace.scaleBand().domain(columnKeys).range([0, dimensionX]).padding(0.5);
+      xScale = d3__namespace.scaleBand().domain(columnKeys).range([0, dimensionX]).padding(0.5).align(0.75);
       yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-      zScale = d3__namespace.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.7);
+      zScale = d3__namespace.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.5).align(0.75);
       colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
     };
     /**
