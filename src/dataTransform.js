@@ -277,7 +277,7 @@ export default function dataTransform(data) {
 			row.values.forEach((d, i) => {
 				tmp[i] = d.key;
 			});
-			keys = union(tmp, keys);
+			keys = union(keys, tmp);
 
 			return keys;
 		}, []);
