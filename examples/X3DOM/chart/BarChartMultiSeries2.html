@@ -15,50 +15,6 @@
 <script>
   // https://codepen.io/pranavk26/pen/vYmxZWm
 
-  function groupBy(array, f) {
-    var groups = {};
-    array.forEach(function(o) {
-      var group = JSON.stringify(f(o));
-      groups[group] = groups[group] || [];
-      groups[group].push(o);
-    });
-    return Object.keys(groups).map(function(group) {
-      return groups[group];
-    })
-  }
-
-  function sortByRow(array) {
-    return array.sort(function(a, b) {
-      var x = a.row;
-      var y = b.row;
-      return ((x < y) ? -1 : ((x > y ? 1 : 0)));
-    });
-  }
-
-  function sortByColumn(array) {
-    return array.sort(function(a, b) {
-      var x = a.column;
-      var y = b.column;
-      return ((x < y) ? -1 : ((x > y ? 1 : 0)));
-    });
-  }
-
-  function arrToJSON(array) {
-    var result = [];
-    sortByRow(array);
-    var columns = groupBy(array, function(item) {
-      return [item.row];
-    });
-    for (var a = 0; a < columns.length; a++) {
-      sortByColumn(columns[a]);
-      result.push({ key: columns[a][0]['row'].toString(), values: [] });
-      for (var b = 0; b < columns[a].length; b++) {
-        result[a]['values'].push({ key: columns[a][b]['column'].toString(), value: columns[a][b]['val'] });
-      }
-    }
-    return result;
-  }
-
   var data = [
     { row: 1, column: 1, val: 2 },
     { row: 1, column: 2, val: 4 },
@@ -108,7 +64,21 @@
   ];
   console.log(data);
 
-  var formatData = arrToJSON(data);
+  var formatData = d3.nest()
+    .key(function(d) { return d.row; })
+    .entries(data)
+    .map((d) => {
+      return {
+        key: d.key, values: d3.nest()
+          .key((d) => {
+            return d.column;
+          })
+          .entries(d.values)
+          .map((d) => {
+            return { key: d.key, value: d.values[0].val };
+          })
+      };
+    });
   console.log(formatData);
 
   var chartholder = d3.select("#chartholder");
