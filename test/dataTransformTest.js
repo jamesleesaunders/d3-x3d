@@ -179,117 +179,59 @@ test.describe("Test Rotate", function() {
 });
 
 
-
-
-
-
-
-
-
-
 /* Custom Test for Reddit user pranavk26 */
 
-function groupBy(array, f) {
-	var groups = {};
-	array.forEach(function(o) {
-		var group = JSON.stringify(f(o));
-		groups[group] = groups[group] || [];
-		groups[group].push(o);
-	});
-	return Object.keys(groups).map(function(group) {
-		return groups[group];
-	})
-}
-
-function sortByRow(array) {
-	return array.sort(function(a, b) {
-		var x = a.row;
-		var y = b.row;
-		return ((x < y) ? -1 : ((x > y ? 1 : 0)));
-	});
-}
-
-function sortByColumn(array) {
-	return array.sort(function(a, b) {
-		var x = a.column;
-		var y = b.column;
-		return ((x < y) ? -1 : ((x > y ? 1 : 0)));
-	});
-}
-
-function arrToJSON(array) {
-	var result = [];
-	sortByRow(array);
-	var columns = groupBy(array, function(item) {
-		return [item.row];
-	});
-	for (var a = 0; a < columns.length; a++) {
-		sortByColumn(columns[a]);
-		result.push({ key: columns[a][0]['row'].toString(), values: [] });
-		for (var b = 0; b < columns[a].length; b++) {
-			result[a]['values'].push({ key: columns[a][b]['column'].toString(), value: columns[a][b]['val'] });
-		}
-	}
-	return result;
-}
-
-var data = [
+let data = [
 	{ row: 1, column: 1, val: 2 },
-	{ row: 1, column: 2, val: 4 },
+	{ row: 3, column: 1, val: 4 },
 	{ row: 1, column: 3, val: 7 },
 	{ row: 1, column: 4, val: 2 },
 	{ row: 1, column: 5, val: 4 },
-	{ row: 1, column: 6, val: 7 },
-	{ row: 1, column: 7, val: 2 },
-	{ row: 1, column: 8, val: 4 },
-	{ row: 1, column: 9, val: 7 },
-	{ row: 1, column: 10, val: 2 },
-	{ row: 1, column: 11, val: 4 },
-	{ row: 1, column: 12, val: 7 },
-	{ row: 1, column: 13, val: 2 },
-	{ row: 1, column: 14, val: 4 },
-	{ row: 1, column: 15, val: 7 },
-	{ row: 1, column: 16, val: 2 },
-	{ row: 1, column: 17, val: 4 },
-	{ row: 1, column: 18, val: 7 },
-	{ row: 1, column: 19, val: 2 },
-	{ row: 1, column: 20, val: 4 },
-	{ row: 1, column: 21, val: 7 },
-	{ row: 1, column: 22, val: 2 },
-	{ row: 1, column: 23, val: 4 },
-	{ row: 1, column: 24, val: 7 },
-	{ row: 2, column: 1, val: 2 },
-	{ row: 2, column: 2, val: 4 },
-	{ row: 2, column: 3, val: 7 },
-	{ row: 2, column: 4, val: 2 },
-	{ row: 2, column: 5, val: 4 },
-	{ row: 2, column: 6, val: 7 },
-	{ row: 2, column: 7, val: 2 },
-	{ row: 2, column: 8, val: 4 },
-	{ row: 2, column: 9, val: 7 },
-	{ row: 2, column: 10, val: 2 },
-	{ row: 2, column: 11, val: 4 },
-	{ row: 2, column: 12, val: 7 },
-	{ row: 2, column: 13, val: 2 },
-	{ row: 2, column: 14, val: 4 },
-	{ row: 2, column: 15, val: 7 },
-	{ row: 2, column: 16, val: 2 },
-	{ row: 2, column: 17, val: 4 },
-	{ row: 2, column: 18, val: 7 },
-	{ row: 2, column: 19, val: 2 },
-	{ row: 2, column: 20, val: 4 },
-	{ row: 2, column: 21, val: 7 },
-	{ row: 2, column: 22, val: 2 },
-	{ row: 2, column: 23, val: 4 },
-	{ row: 2, column: 24, val: 7 },
-	{ row: 2, column: 25, val: 2 },
+	{ row: 3, column: 2, val: 7 },
+	// { row: 2, column: 1, val: 7 },
+	// { row: 2, column: 2, val: 2 },
+	{ row: 2, column: 3, val: 4 },
+	{ row: 2, column: 4, val: 7 },
+	{ row: 2, column: 5, val: 2 },
+	{ row: 3, column: 3, val: 2 },
+	// { row: 3, column: 4, val: 4 },
+	{ row: 1, column: 2, val: 4 },
+	{ row: 3, column: 5, val: 7 }
 ];
 
-let formatData = arrToJSON(data);
+let formatData = d3.nest()
+	.key(function(d) { return d.row; })
+	.entries(data.sort((a, b) => {
+		return +a.row - +b.row;
+	}))
+	.map((d) => {
+		return {
+			key: d.key, values: d3.nest()
+				.key((d) => {
+					return d.column;
+				})
+				.entries(d.values.sort((a, b) => {
+					return +a.column - +b.column;
+				}))
+				.map((d) => {
+					return { key: d.key, value: d.values[0].val };
+				})
+		};
+	});
+
+test.describe("Test rowKeys remain in order", function() {
+	let actual = d3X3d.dataTransform(formatData).summary().rowKeys;
+	let expected = ["1", "2", "3"];
+
+	test.it("should be equivalent", function(done) {
+		chai.expect(actual).to.be.deep.equal(expected);
+		done();
+	});
+});
 
 test.describe("Test columnKeys remain in order", function() {
 	let actual = d3X3d.dataTransform(formatData).summary().columnKeys;
-	let expected = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25"];
+	let expected = ["1", "2", "3", "4", "5"];
 
 	test.it("should be equivalent", function(done) {
 		chai.expect(actual).to.be.deep.equal(expected);

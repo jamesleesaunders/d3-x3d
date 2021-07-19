@@ -29,12 +29,19 @@ export default function dataTransform(data) {
 	 *
 	 * @private
 	 * @param {Array} array1 - First Array.
-	 * @param {Array} array2 - First Array.
+	 * @param {Array} array2 - Second Array.
 	 * @returns {Array}
 	 */
 	const union = function(array1, array2) {
 		const ret = [];
-		const arr = array1.concat(array2);
+		let arr;
+
+		if (array1.length > array2.length) {
+			arr = array2.concat(array1);
+		} else {
+			arr = array1.concat(array2);
+		}
+
 		let len = arr.length;
 		const assoc = {};
 
@@ -277,6 +284,7 @@ export default function dataTransform(data) {
 			row.values.forEach((d, i) => {
 				tmp[i] = d.key;
 			});
+
 			keys = union(keys, tmp);
 
 			return keys;

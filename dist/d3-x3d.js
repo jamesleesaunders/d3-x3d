@@ -34,7 +34,7 @@
 
   var d3__namespace = /*#__PURE__*/_interopNamespace(d3);
 
-  var version = "2.0.8";
+  var version = "2.0.9";
   var license = "GPL-2.0";
 
   function _extends() {
@@ -220,14 +220,21 @@
      *
      * @private
      * @param {Array} array1 - First Array.
-     * @param {Array} array2 - First Array.
+     * @param {Array} array2 - Second Array.
      * @returns {Array}
      */
 
 
     var union = function union(array1, array2) {
       var ret = [];
-      var arr = array1.concat(array2);
+      var arr;
+
+      if (array1.length > array2.length) {
+        arr = array2.concat(array1);
+      } else {
+        arr = array1.concat(array2);
+      }
+
       var len = arr.length;
       var assoc = {};
 
@@ -5796,7 +5803,7 @@
           dimensionZ = _dimensions.z;
       xScale = d3__namespace.scaleBand().domain(columnKeys).range([0, dimensionX]).padding(0.5).align(0.75);
       yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-      zScale = d3__namespace.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.5).align(0.75);
+      zScale = d3__namespace.scaleBand().domain(rowKeys.reverse()).range([0, dimensionZ]).padding(0.5).align(0.75);
       colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
     };
     /**

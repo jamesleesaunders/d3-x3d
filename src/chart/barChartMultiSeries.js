@@ -65,7 +65,7 @@ export default function() {
 			.nice();
 
 		zScale = d3.scaleBand()
-			.domain(rowKeys)
+			.domain(rowKeys.reverse())
 			.range([0, dimensionZ])
 			.padding(0.5)
 			.align(0.75);
