@@ -3,6 +3,7 @@ import chartBarChartMultiSeries from "./chart/barChartMultiSeries";
 import chartBarChartVertical from "./chart/barChartVertical";
 import chartBubbleChart from "./chart/bubbleChart";
 import chartCrosshairPlot from "./chart/crosshairPlot";
+import chartHeatMap from "./chart/heatMap";
 import chartParticlePlot from "./chart/particlePlot";
 import chartRibbonChartMultiSeries from "./chart/ribbonChartMultiSeries";
 import chartScatterPlot from "./chart/scatterPlot";
@@ -16,6 +17,7 @@ export default {
 	barChartVertical: chartBarChartVertical,
 	bubbleChart: chartBubbleChart,
 	crosshairPlot: chartCrosshairPlot,
+	heatMap: chartHeatMap,
 	particlePlot: chartParticlePlot,
 	ribbonChartMultiSeries: chartRibbonChartMultiSeries,
 	scatterPlot: chartScatterPlot,

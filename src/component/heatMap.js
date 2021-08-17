@@ -1,24 +1,27 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform";
-import { attachEventListners, dispatch } from "../events";
-import { colorParse } from "../colorHelper";
+import componentBars from "./bars";
 
 /**
- * Reusable 3D Bar Chart Component
+ * Reusable 3D Heat Map Component
  *
  * @module
  */
 export default function() {
 
 	/* Default Properties */
-	let dimensions = { x: 40, y: 40, z: 2 };
-	let colors = ["orange", "red", "yellow", "steelblue", "green"];
-	let classed = "d3X3dBars";
+	let dimensions = { x: 40, y: 40, z: 40 };
+	let colors = ["#1e253f", "#e33b30"];
+	let classed = "d3X3dHeatMap";
 
 	/* Scales */
 	let xScale;
 	let yScale;
+	let zScale;
 	let colorScale;
+
+	/* Components */
+	const bars = componentBars();
 
 	/**
 	 * Initialise Data and Scales
@@ -27,26 +30,38 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	const init = function(data) {
-		const { columnKeys, valueMax } = dataTransform(data).summary();
+		const { rowKeys, columnKeys, valueMax } = dataTransform(data).summary();
 		const valueExtent = [0, valueMax];
-		const { x: dimensionX, y: dimensionY } = dimensions;
+		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
 		if (typeof xScale === "undefined") {
 			xScale = d3.scaleBand()
 				.domain(columnKeys)
-				.rangeRound([0, dimensionX])
-				.padding(0.3);
+				.range([0, dimensionX])
+				.paddingOuter(0.5)
+				.paddingInner(0.1)
+				.align(1);
 		}
 
 		if (typeof yScale === "undefined") {
 			yScale = d3.scaleLinear()
 				.domain(valueExtent)
-				.range([0, dimensionY]);
+				.range([0, dimensionY])
+				.nice();
+		}
+
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleBand()
+				.domain(rowKeys.reverse())
+				.range([0, dimensionZ])
+				.paddingOuter(0.5)
+				.paddingInner(0.1)
+				.align(1);
 		}
 
 		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal()
-				.domain(columnKeys)
+			colorScale = d3.scaleLinear()
+				.domain(valueExtent)
 				.range(colors);
 		}
 	};
@@ -55,7 +70,7 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
-	 * @alias bars
+	 * @alias heatMap
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
@@ -63,55 +78,38 @@ export default function() {
 			init(data);
 
 			const element = d3.select(this)
-				.classed(classed, true)
-				.attr("id", (d) => d.key);
+				.classed(classed, true);
 
-			const shape = (el) => {
-				const shape = el.append("Shape");
+			bars.xScale(xScale)
+				.yScale(yScale)
+				.dimensions({
+					x: dimensions.x,
+					y: dimensions.y,
+					z: zScale.bandwidth()
+				})
+				.colorScale(colorScale);
 
-				attachEventListners(shape);
-
-				shape.append("Box")
-					.attr("size", "1.0 1.0 1.0");
-
-				shape.append("Appearance")
-					.append("Material")
-					.attr("diffuseColor", (d) => {
-						// If colour scale is linear then use value for scale.
-						let j = colorScale(d.key);
-						if (typeof colorScale.interpolate === "function") {
-							j = colorScale(d.value);
-						}
-						return colorParse(j)
-					})
-					.attr("ambientIntensity", 0.1);
-
-				return shape;
+			const addBars = function() {
+				d3.select(this).call(bars);
 			};
 
-			const bars = element.selectAll(".bar")
-				.data((d) => d.values, (d) => d.key);
+			const barGroup = element.selectAll(".barGroup")
+				.data((d) => d, (d) => d.key);
 
-			bars.enter()
+			barGroup.enter()
 				.append("Transform")
-				.classed("bar", true)
-				.call(shape)
-				.merge(bars)
+				.classed("barGroup", true)
+				.merge(barGroup)
 				.transition()
-				.attr("scale", (d) => {
-					let x = xScale.bandwidth();
-					let y = yScale(d.value);
-					let z = dimensions.z;
+				.attr("translation", (d) => {
+					const x = 0;
+					const y = 0;
+					const z = zScale(d.key);
 					return x + " " + y + " " + z;
 				})
-				.attr("translation", (d) => {
-					let x = xScale(d.key);
-					let y = yScale(d.value) / 2;
-					let z = 0.0;
-					return x + " " + y + " " + z;
-				});
+				.each(addBars);
 
-			bars.exit()
+			barGroup.exit()
 				.remove();
 		});
 	};
@@ -153,9 +151,21 @@ export default function() {
 	};
 
 	/**
-	 * Color Scale Getter / Setter
+	 * Z Scale Getter / Setter
 	 *
 	 * @param {d3.scale} _v - D3 scale.
+	 * @returns {*}
+	 */
+	my.zScale = function(_v) {
+		if (!arguments.length) return zScale;
+		zScale = _v;
+		return my;
+	};
+
+	/**
+	 * Color Scale Getter / Setter
+	 *
+	 * @param {d3.scale} _v - D3 color scale.
 	 * @returns {*}
 	 */
 	my.colorScale = function(_v) {
@@ -174,16 +184,6 @@ export default function() {
 		if (!arguments.length) return colors;
 		colors = _v;
 		return my;
-	};
-
-	/**
-	 * Dispatch On Getter
-	 *
-	 * @returns {*}
-	 */
-	my.on = function() {
-		let value = dispatch.on.apply(dispatch, arguments);
-		return value === dispatch ? my : value;
 	};
 
 	return my;

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>d3-x3d : 3D Multi Series Bar Chart Example</title>
+  <title>d3-x3d : 3D Heat Map Example</title>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
   <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css"/>
@@ -115,7 +115,6 @@
     { row: 1, column: 12, val: 7 },
     { row: 1, column: 13, val: 2 }
   ];
-  console.log(data);
 
   let formatData = d3.nest()
     .key(function(d) { return d.row; })
@@ -137,12 +136,10 @@
       };
     });
 
-  console.log(formatData);
-
   var chartholder = d3.select("#chartholder");
 
   // Declare the chart component
-  var myChart = d3.x3d.chart.barChartMultiSeries();
+  var myChart = d3.x3d.chart.heatMap();
 
   // Attach chart and data to the chartholder
   chartholder

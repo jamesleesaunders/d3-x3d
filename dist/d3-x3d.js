@@ -2081,7 +2081,14 @@
           attachEventListners(shape);
           shape.append("Box").attr("size", "1.0 1.0 1.0");
           shape.append("Appearance").append("Material").attr("diffuseColor", function (d) {
-            return colorParse(colorScale(d.key));
+            // If colour scale is linear then use value for scale.
+            var j = colorScale(d.key);
+
+            if (typeof colorScale.interpolate === "function") {
+              j = colorScale(d.value);
+            }
+
+            return colorParse(j);
           }).attr("ambientIntensity", 0.1);
           return shape;
         };
@@ -3071,6 +3078,184 @@
     my.zScale = function (_v) {
       if (!arguments.length) return zScale;
       zScale = _v;
+      return my;
+    };
+    /**
+     * Colors Getter / Setter
+     *
+     * @param {Array} _v - Array of colours used by color scale.
+     * @returns {*}
+     */
+
+
+    my.colors = function (_v) {
+      if (!arguments.length) return colors;
+      colors = _v;
+      return my;
+    };
+
+    return my;
+  }
+
+  /**
+   * Reusable 3D Heat Map Component
+   *
+   * @module
+   */
+
+  function componentHeatMap () {
+    /* Default Properties */
+    var dimensions = {
+      x: 40,
+      y: 40,
+      z: 40
+    };
+    var colors = ["#1e253f", "#e33b30"];
+    var classed = "d3X3dHeatMap";
+    /* Scales */
+
+    var xScale;
+    var yScale;
+    var zScale;
+    var colorScale;
+    /* Components */
+
+    var bars = componentBars();
+    /**
+     * Initialise Data and Scales
+     *
+     * @private
+     * @param {Array} data - Chart data.
+     */
+
+    var init = function init(data) {
+      var _dataTransform$summar = dataTransform(data).summary(),
+          rowKeys = _dataTransform$summar.rowKeys,
+          columnKeys = _dataTransform$summar.columnKeys,
+          valueMax = _dataTransform$summar.valueMax;
+
+      var valueExtent = [0, valueMax];
+      var _dimensions = dimensions,
+          dimensionX = _dimensions.x,
+          dimensionY = _dimensions.y,
+          dimensionZ = _dimensions.z;
+
+      if (typeof xScale === "undefined") {
+        xScale = d3__namespace.scaleBand().domain(columnKeys).range([0, dimensionX]).paddingOuter(0.5).paddingInner(0.1).align(1);
+      }
+
+      if (typeof yScale === "undefined") {
+        yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+      }
+
+      if (typeof zScale === "undefined") {
+        zScale = d3__namespace.scaleBand().domain(rowKeys.reverse()).range([0, dimensionZ]).paddingOuter(0.5).paddingInner(0.1).align(1);
+      }
+
+      if (typeof colorScale === "undefined") {
+        colorScale = d3__namespace.scaleLinear().domain(valueExtent).range(colors);
+      }
+    };
+    /**
+     * Constructor
+     *
+     * @constructor
+     * @alias heatMap
+     * @param {d3.selection} selection - The chart holder D3 selection.
+     */
+
+
+    var my = function my(selection) {
+      selection.each(function (data) {
+        init(data);
+        var element = d3__namespace.select(this).classed(classed, true);
+        bars.xScale(xScale).yScale(yScale).dimensions({
+          x: dimensions.x,
+          y: dimensions.y,
+          z: zScale.bandwidth()
+        }).colorScale(colorScale);
+
+        var addBars = function addBars() {
+          d3__namespace.select(this).call(bars);
+        };
+
+        var barGroup = element.selectAll(".barGroup").data(function (d) {
+          return d;
+        }, function (d) {
+          return d.key;
+        });
+        barGroup.enter().append("Transform").classed("barGroup", true).merge(barGroup).transition().attr("translation", function (d) {
+          var x = 0;
+          var y = 0;
+          var z = zScale(d.key);
+          return x + " " + y + " " + z;
+        }).each(addBars);
+        barGroup.exit().remove();
+      });
+    };
+    /**
+     * Dimensions Getter / Setter
+     *
+     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+     * @returns {*}
+     */
+
+
+    my.dimensions = function (_v) {
+      if (!arguments.length) return dimensions;
+      dimensions = _v;
+      return this;
+    };
+    /**
+     * X Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+
+
+    my.xScale = function (_v) {
+      if (!arguments.length) return xScale;
+      xScale = _v;
+      return my;
+    };
+    /**
+     * Y Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+
+
+    my.yScale = function (_v) {
+      if (!arguments.length) return yScale;
+      yScale = _v;
+      return my;
+    };
+    /**
+     * Z Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+
+
+    my.zScale = function (_v) {
+      if (!arguments.length) return zScale;
+      zScale = _v;
+      return my;
+    };
+    /**
+     * Color Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 color scale.
+     * @returns {*}
+     */
+
+
+    my.colorScale = function (_v) {
+      if (!arguments.length) return colorScale;
+      colorScale = _v;
       return my;
     };
     /**
@@ -5450,6 +5635,7 @@
     bubbles: componentBubbles,
     bubblesMultiSeries: componentBubblesMultiSeries,
     crosshair: componentCrosshair,
+    heatMap: componentHeatMap,
     label: componentLabel,
     light: componentLight,
     particles: componentParticles,
@@ -6572,6 +6758,232 @@
     my.zScale = function (_v) {
       if (!arguments.length) return zScale;
       zScale = _v;
+      return my;
+    };
+    /**
+     * Debug Getter / Setter
+     *
+     * @param {boolean} _v - Show debug log and stats. True/False.
+     * @returns {*}
+     */
+
+
+    my.debug = function (_v) {
+      if (!arguments.length) return debug;
+      debug = _v;
+      return my;
+    };
+
+    return my;
+  }
+
+  /**
+   * Reusable 3D Heat Map
+   *
+   * @module
+   *
+   * @example
+   * let chartHolder = d3.select("#chartholder");
+   *
+   * let myData = [...];
+   *
+   * let myChart = d3.x3d.chart.heatMap();
+   *
+   * chartHolder.datum(myData).call(myChart);
+   *
+   * @see https://datavizproject.com/data-type/heat-map/
+   */
+
+  function chartHeatMap () {
+    /* Default Properties */
+    var width = 500;
+    var height = 500;
+    var dimensions = {
+      x: 40,
+      y: 40,
+      z: 40
+    };
+    var colors = ["#1e253f", "#e33b30"];
+    var classed = "d3X3dHeatMap";
+    var labelPosition = "proximal";
+    var debug = false;
+    /* Scales */
+
+    var xScale;
+    var yScale;
+    var zScale;
+    var colorScale;
+    /* Components */
+
+    var viewpoint = component.viewpoint();
+    var axis = component.axisThreePlane();
+    var bars = component.heatMap();
+    var light = component.light();
+    /**
+     * Initialise Data and Scales
+     *
+     * @private
+     * @param {Array} data - Chart data.
+     */
+
+    var init = function init(data) {
+      var _dataTransform$summar = dataTransform(data).summary(),
+          rowKeys = _dataTransform$summar.rowKeys,
+          columnKeys = _dataTransform$summar.columnKeys,
+          valueMax = _dataTransform$summar.valueMax;
+
+      var valueExtent = [0, valueMax];
+      var _dimensions = dimensions,
+          dimensionX = _dimensions.x,
+          dimensionY = _dimensions.y,
+          dimensionZ = _dimensions.z;
+      xScale = d3__namespace.scaleBand().domain(columnKeys).range([0, dimensionX]).paddingOuter(0.5).paddingInner(0.1).align(1);
+      yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+      zScale = d3__namespace.scaleBand().domain(rowKeys.reverse()).range([0, dimensionZ]).paddingOuter(0.5).paddingInner(0.1).align(1);
+      colorScale = d3__namespace.scaleLinear().domain(valueExtent).range(colors);
+    };
+    /**
+     * Constructor
+     *
+     * @constructor
+     * @alias barChartMultiSeries
+     * @param {d3.selection} selection - The chart holder D3 selection.
+     */
+
+
+    var my = function my(selection) {
+      var layers = ["axis", "bars"];
+      var scene = createScene(selection, layers, classed, width, height, debug);
+      selection.each(function (data) {
+        init(data); // Add Viewpoint
+
+        viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
+        scene.call(viewpoint); // Add Axis
+
+        axis.xScale(xScale).yScale(yScale).zScale(zScale).labelPosition(labelPosition);
+        scene.select(".axis").call(axis); // Add Bars
+
+        bars.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
+        scene.select(".bars").datum(data).call(bars); // Add Light
+
+        scene.call(light);
+      });
+    };
+    /**
+     * Width Getter / Setter
+     *
+     * @param {number} _v - X3D canvas width in px.
+     * @returns {*}
+     */
+
+
+    my.width = function (_v) {
+      if (!arguments.length) return width;
+      width = _v;
+      return this;
+    };
+    /**
+     * Height Getter / Setter
+     *
+     * @param {number} _v - X3D canvas height in px.
+     * @returns {*}
+     */
+
+
+    my.height = function (_v) {
+      if (!arguments.length) return height;
+      height = _v;
+      return this;
+    };
+    /**
+     * Dimensions Getter / Setter
+     *
+     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+     * @returns {*}
+     */
+
+
+    my.dimensions = function (_v) {
+      if (!arguments.length) return dimensions;
+      dimensions = _v;
+      return this;
+    };
+    /**
+     * X Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+
+
+    my.xScale = function (_v) {
+      if (!arguments.length) return xScale;
+      xScale = _v;
+      return my;
+    };
+    /**
+     * Y Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+
+
+    my.yScale = function (_v) {
+      if (!arguments.length) return yScale;
+      yScale = _v;
+      return my;
+    };
+    /**
+     * Z Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+
+
+    my.zScale = function (_v) {
+      if (!arguments.length) return zScale;
+      zScale = _v;
+      return my;
+    };
+    /**
+     * Color Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 color scale.
+     * @returns {*}
+     */
+
+
+    my.colorScale = function (_v) {
+      if (!arguments.length) return colorScale;
+      colorScale = _v;
+      return my;
+    };
+    /**
+     * Colors Getter / Setter
+     *
+     * @param {Array} _v - Array of colours used by color scale.
+     * @returns {*}
+     */
+
+
+    my.colors = function (_v) {
+      if (!arguments.length) return colors;
+      colors = _v;
+      return my;
+    };
+    /**
+     * Label Position Getter / Setter
+     *
+     * @param {string} _v - Position ("proximal" or "distal")
+     * @returns {*}
+     */
+
+
+    my.labelPosition = function (_v) {
+      if (!arguments.length) return labelPosition;
+      labelPosition = _v;
       return my;
     };
     /**
@@ -8194,6 +8606,7 @@
     barChartVertical: chartBarChartVertical,
     bubbleChart: chartBubbleChart,
     crosshairPlot: chartCrosshairPlot,
+    heatMap: chartHeatMap,
     particlePlot: chartParticlePlot,
     ribbonChartMultiSeries: chartRibbonChartMultiSeries,
     scatterPlot: chartScatterPlot,
