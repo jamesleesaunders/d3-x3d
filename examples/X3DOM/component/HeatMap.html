@@ -144,16 +144,16 @@
   var height = 500;
 
   // Color scale
-  //let colors = ["#1e253f", "#e33b30"];
-  //let valueExtent = [0, 10];
-  //colorScale = d3.scaleLinear()
-  //  .domain(valueExtent)
-  //  .range(colors);
+  let colors = ["blue", "red"];
+  let valueExtent = [0, 10];
+  colorScale = d3.scaleLinear()
+    .domain(valueExtent)
+    .range(colors);
 
   // Create components
   var viewpoint = d3.x3d.component.viewpoint();
-  var heatMap = d3.x3d.component.heatMap();
-    //.colorScale(colorScale);
+  var heatMap = d3.x3d.component.heatMap()
+    .colorScale(colorScale);
 
   // Create scene
   var scene = d3.select("#chartholder")

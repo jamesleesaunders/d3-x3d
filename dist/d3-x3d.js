@@ -2236,7 +2236,7 @@
           dimensionZ = _dimensions.z;
 
       if (typeof xScale === "undefined") {
-        xScale = d3__namespace.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
+        xScale = d3__namespace.scaleBand().domain(columnKeys).range([0, dimensionX]).padding(0.5);
       }
 
       if (typeof yScale === "undefined") {
@@ -4229,7 +4229,7 @@
       y: 40,
       z: 40
     };
-    var colors = ["orange", "maroon"];
+    var colors = ["blue", "red"];
     var classed = "d3X3dSurface";
     /* Scales */
 
@@ -6210,7 +6210,7 @@
       var _dimensions = dimensions,
           dimensionX = _dimensions.x,
           dimensionY = _dimensions.y;
-      xScale = d3__namespace.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.5);
+      xScale = d3__namespace.scaleBand().domain(columnKeys).range([0, dimensionX]).padding(0.5).align(0.75);
       yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
       colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
     };
@@ -6800,12 +6800,12 @@
     var height = 500;
     var dimensions = {
       x: 40,
-      y: 40,
+      y: 20,
       z: 40
     };
     var colors = ["#1e253f", "#e33b30"];
     var classed = "d3X3dHeatMap";
-    var labelPosition = "proximal";
+    var labelPosition = "distal";
     var debug = false;
     /* Scales */
 

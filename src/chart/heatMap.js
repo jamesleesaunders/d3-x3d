@@ -24,10 +24,10 @@ export default function() {
 	/* Default Properties */
 	let width = 500;
 	let height = 500;
-	let dimensions = { x: 40, y: 40, z: 40 };
+	let dimensions = { x: 40, y: 20, z: 40 };
 	let colors = ["#1e253f", "#e33b30"];
 	let classed = "d3X3dHeatMap";
-	let labelPosition = "proximal";
+	let labelPosition = "distal";
 	let debug = false;
 
 	/* Scales */

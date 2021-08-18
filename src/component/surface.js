@@ -12,7 +12,7 @@ export default function() {
 
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = ["orange", "maroon"];
+	let colors = ["blue", "red"];
 	let classed = "d3X3dSurface";
 
 	/* Scales */

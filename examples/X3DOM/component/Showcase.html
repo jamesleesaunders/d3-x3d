@@ -31,8 +31,9 @@
     /**
      * Bubbles Component
      */
-    var bubblesData = d3.x3d.randomData.dataset3();
-    var bubblesComponent = d3.x3d.component.bubbles();
+    var bubblesData = d3.x3d.randomData.dataset6(10);
+    var bubblesComponent = d3.x3d.component.bubbles()
+      .mappings({ x: 'x', y: 'y', z: 'z', size: 'size', color: 'color' });
 
     // Create scene
     var scene1 = d3.select("#chartholder1")
