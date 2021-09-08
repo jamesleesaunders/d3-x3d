@@ -11,41 +11,41 @@
 </head>
 
 <body>
-<X3DCanvas id="chartholder" style="width: 500px; height: 500px;"></X3DCanvas>
+  <X3DCanvas id="chartholder" style="width: 500px; height: 500px;"></X3DCanvas>
 
-<script>
-  // Chart dimensions
-  var width = 500;
-  var height = 500;
+  <script>
+    // Chart dimensions
+    var width = 500;
+    var height = 500;
 
-  var viewpoint = d3.x3d.component.viewpoint();
+    var viewpoint = d3.x3d.component.viewpoint();
 
-  // Generate some data
-  var data = d3.x3d.randomData.dataset6();
+    // Generate some data
+    var data = d3.x3d.randomData.dataset6();
 
-  // Declare the chart component
-  var bubbleComponent = d3.x3d.component.bubbles()
-    .mappings({ x: 'x', y: 'y', z: 'z', size: 'size', color: 'color' })
-    .colors(d3.schemeRdYlGn[8])
-    .sizeRange([1, 4]);
+    // Declare the chart component
+    var bubbleComponent = d3.x3d.component.bubbles()
+      .mappings({ x: 'x', y: 'y', z: 'z', size: 'size', color: 'color' })
+      .colors(d3.schemeRdYlGn[8])
+      .sizeRange([1, 4]);
 
-  // Create scene
-  var scene = d3.select("#chartholder")
-    .append("X3D")
-    .attr("width", width + "px")
-    .attr("height", height + "px")
-    .append("Scene");
+    // Create scene
+    var scene = d3.select("#chartholder")
+      .append("X3D")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("Scene");
 
-  // Add chart component
-  scene.call(viewpoint)
-    .append("Group")
-    .attr("class", "chart")
-    .datum(data)
-    .call(bubbleComponent);
+    // Add chart component
+    scene.call(viewpoint)
+      .append("Group")
+      .attr("class", "chart")
+      .datum(data)
+      .call(bubbleComponent);
 
-</script>
+  </script>
 
-<div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data Visualization Library.</div>
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data Visualization Library.</div>
 </body>
 
 </html>

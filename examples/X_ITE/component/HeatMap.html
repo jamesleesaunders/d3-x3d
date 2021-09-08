@@ -2,15 +2,16 @@
 <html>
 
 <head>
-  <title>d3-x3d : 3D Heat Map Example</title>
+  <title>d3-x3d : 3D Multi Series Bubbles Component Example</title>
   <script src="https://d3js.org/d3.v5.min.js"></script>
-  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
-  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css"/>
+  <script src="https://code.create3000.de/x_ite/latest/dist/x_ite.min.js"></script>
+  <script src="https://raw.githack.com/andreasplesch/x_ite_dom/master/latest/x_ite_dom.js"></script>
+  <link rel="stylesheet" href="https://code.create3000.de/x_ite/latest/dist/x_ite.css" />
   <script src="../../../dist/d3-x3d.js"></script>
 </head>
 
 <body>
-  <div id="chartholder"></div>
+  <X3DCanvas id="chartholder" style="width: 500px; height: 500px;"></X3DCanvas>
 
   <script>
     // https://codepen.io/pranavk26/pen/vYmxZWm
@@ -35,15 +36,15 @@
       { row: 2, column: 13, val: 3 },
       { row: 2, column: 14, val: 3 },
       { row: 2, column: 15, val: 2 },
-      // { row: 3, column: 1, val: 8 },
-      // { row: 3, column: 2, val: 3 },
-      // { row: 3, column: 3, val: 8 },
+      { row: 3, column: 1, val: 8 },
+      { row: 3, column: 2, val: 3 },
+      { row: 3, column: 3, val: 8 },
       { row: 3, column: 4, val: 1 },
       { row: 3, column: 5, val: 8 },
       { row: 2, column: 5, val: 5 },
       { row: 1, column: 4, val: 2 },
       { row: 1, column: 5, val: 4 },
-      // { row: 1, column: 6, val: 7 },
+      { row: 1, column: 6, val: 7 },
       { row: 1, column: 7, val: 2 },
       { row: 1, column: 8, val: 4 },
       { row: 1, column: 11, val: 4 },
@@ -51,7 +52,7 @@
       { row: 1, column: 13, val: 2 },
       { row: 1, column: 14, val: 4 },
       { row: 1, column: 9, val: 7 },
-      // { row: 1, column: 10, val: 2 },
+      { row: 1, column: 10, val: 2 },
       { row: 1, column: 11, val: 4 },
       { row: 1, column: 12, val: 7 },
       { row: 1, column: 13, val: 2 },
@@ -59,10 +60,10 @@
       { row: 1, column: 15, val: 7 },
       { row: 2, column: 1, val: 6 },
       { row: 2, column: 2, val: 5 },
-      // { row: 2, column: 3, val: 3 },
-      // { row: 2, column: 4, val: 2 },
-      // { row: 2, column: 6, val: 7 },
-      // { row: 2, column: 7, val: 1 },
+      { row: 2, column: 3, val: 3 },
+      { row: 2, column: 4, val: 2 },
+      { row: 2, column: 6, val: 7 },
+      { row: 2, column: 7, val: 1 },
       { row: 2, column: 8, val: 1 },
       { row: 3, column: 6, val: 7 },
       { row: 3, column: 7, val: 4 },
@@ -83,9 +84,9 @@
       { row: 4, column: 15, val: 7 },
       { row: 5, column: 1, val: 6 },
       { row: 5, column: 2, val: 5 },
-      // { row: 5, column: 3, val: 3 },
-      // { row: 5, column: 4, val: 2 },
-      // { row: 5, column: 5, val: 5 },
+      { row: 5, column: 3, val: 3 },
+      { row: 5, column: 4, val: 2 },
+      { row: 5, column: 5, val: 5 },
       { row: 5, column: 6, val: 7 },
       { row: 5, column: 7, val: 1 },
       { row: 5, column: 8, val: 1 },
@@ -103,18 +104,19 @@
       { row: 6, column: 5, val: 8 },
       { row: 6, column: 6, val: 7 },
       { row: 6, column: 7, val: 4 },
-      // { row: 6, column: 8, val: 3 },
+      { row: 6, column: 8, val: 3 },
       { row: 6, column: 9, val: 2 },
       { row: 1, column: 14, val: 4 },
       { row: 6, column: 15, val: 2 },
       { row: 6, column: 10, val: 7 },
       { row: 6, column: 11, val: 5 },
-      // { row: 6, column: 12, val: 5 },
+      { row: 6, column: 12, val: 5 },
       { row: 6, column: 13, val: 9 },
       { row: 1, column: 11, val: 4 },
       { row: 1, column: 12, val: 7 },
       { row: 1, column: 13, val: 2 }
     ];
+    console.log(data);
 
     let formatData = d3.nest()
       .key(function(d) { return d.row; })
@@ -136,15 +138,39 @@
         };
       });
 
-    var chartholder = d3.select("#chartholder");
+    console.log(formatData);
 
-    // Declare the chart component
-    var myChart = d3.x3d.chart.heatMap();
+    // Chart dimensions
+    var width = 500;
+    var height = 500;
 
-    // Attach chart and data to the chartholder
-    chartholder
-      .datum(formatData)
-      .call(myChart);
+    // Color scale
+    let colors = ["blue", "red"];
+    let valueExtent = [0, 10];
+    colorScale = d3.scaleLinear()
+      .domain(valueExtent)
+      .range(colors);
+
+    // Create components
+    var viewpoint = d3.x3d.component.viewpoint();
+    var heatMap = d3.x3d.component.heatMap()
+      .colorScale(colorScale);
+
+    // Create scene
+    var scene = d3.select("#chartholder")
+      .append("X3D")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("Scene");
+
+    scene
+      .call(viewpoint);
+
+    var chart = scene.append("Group")
+      .attr("class", "chart");
+
+    chart.datum(formatData)
+      .call(heatMap);
 
   </script>
 

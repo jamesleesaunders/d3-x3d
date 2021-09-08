@@ -6846,7 +6846,7 @@
      * Constructor
      *
      * @constructor
-     * @alias barChartMultiSeries
+     * @alias heatMap
      * @param {d3.selection} selection - The chart holder D3 selection.
      */
 
