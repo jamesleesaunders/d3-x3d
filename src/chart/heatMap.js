@@ -4,7 +4,7 @@ import component from "../component";
 import { createScene } from "../base";
 
 /**
- * Reusable 3D Vertical Bar Chart
+ * Reusable 3D Heat Map
  *
  * @module
  *
@@ -13,32 +13,33 @@ import { createScene } from "../base";
  *
  * let myData = [...];
  *
- * let myChart = d3.x3d.chart.barChartVertical();
+ * let myChart = d3.x3d.chart.heatMap();
  *
  * chartHolder.datum(myData).call(myChart);
  *
- * @see https://datavizproject.com/data-type/3d-bar-chart/
+ * @see https://datavizproject.com/data-type/heat-map/
  */
 export default function() {
 
 	/* Default Properties */
 	let width = 500;
 	let height = 500;
-	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = ["green", "red", "yellow", "steelblue", "orange"];
-	let classed = "d3X3dBarChartVertical";
+	let dimensions = { x: 40, y: 20, z: 40 };
+	let colors = ["#1e253f", "#e33b30"];
+	let classed = "d3X3dHeatMap";
+	let labelPosition = "distal";
 	let debug = false;
 
 	/* Scales */
 	let xScale;
 	let yScale;
+	let zScale;
 	let colorScale;
 
 	/* Components */
 	const viewpoint = component.viewpoint();
-	const xAxis = component.axis();
-	const yAxis = component.axis();
-	const bars = component.bars();
+	const axis = component.axisThreePlane();
+	const bars = component.heatMap();
 	const light = component.light();
 
 	/**
@@ -48,23 +49,31 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	const init = function(data) {
-		const { columnKeys, valueMax } = dataTransform(data).summary();
+		const { rowKeys, columnKeys, valueMax } = dataTransform(data).summary();
 		const valueExtent = [0, valueMax];
-		const { x: dimensionX, y: dimensionY } = dimensions;
+		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
 		xScale = d3.scaleBand()
 			.domain(columnKeys)
 			.range([0, dimensionX])
-			.padding(0.5)
-			.align(0.75);
+			.paddingOuter(0.5)
+			.paddingInner(0.1)
+			.align(1);
 
 		yScale = d3.scaleLinear()
 			.domain(valueExtent)
 			.range([0, dimensionY])
 			.nice();
 
-		colorScale = d3.scaleOrdinal()
-			.domain(columnKeys)
+		zScale = d3.scaleBand()
+			.domain(rowKeys.reverse())
+			.range([0, dimensionZ])
+			.paddingOuter(0.5)
+			.paddingInner(0.1)
+			.align(1);
+
+		colorScale = d3.scaleLinear()
+			.domain(valueExtent)
 			.range(colors);
 	};
 
@@ -72,41 +81,34 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
-	 * @alias barChartVertical
+	 * @alias heatMap
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
-		const layers = ["xAxis", "yAxis", "bars"];
+		const layers = ["axis", "bars"];
 		const scene = createScene(selection, layers, classed, width, height, debug);
 
 		selection.each((data) => {
 			init(data);
 
 			// Add Viewpoint
-			viewpoint.quickView("left");
+			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
 
 			scene.call(viewpoint);
 
 			// Add Axis
-			xAxis.scale(xScale)
-				.direction("x")
-				.tickDirection("y")
-				.tickSize(0);
+			axis.xScale(xScale)
+				.yScale(yScale)
+				.zScale(zScale)
+				.labelPosition(labelPosition);
 
-			yAxis.scale(yScale)
-				.direction("y")
-				.tickDirection("x")
-				.tickSize(yScale.range()[1] - yScale.range()[0]);
-
-			scene.select(".xAxis")
-				.call(xAxis);
-
-			scene.select(".yAxis")
-				.call(yAxis);
+			scene.select(".axis")
+				.call(axis);
 
 			// Add Bars
 			bars.xScale(xScale)
 				.yScale(yScale)
+				.zScale(zScale)
 				.colors(colors);
 
 			scene.select(".bars")
@@ -179,6 +181,18 @@ export default function() {
 	};
 
 	/**
+	 * Z Scale Getter / Setter
+	 *
+	 * @param {d3.scale} _v - D3 scale.
+	 * @returns {*}
+	 */
+	my.zScale = function(_v) {
+		if (!arguments.length) return zScale;
+		zScale = _v;
+		return my;
+	};
+
+	/**
 	 * Color Scale Getter / Setter
 	 *
 	 * @param {d3.scale} _v - D3 color scale.
@@ -199,6 +213,18 @@ export default function() {
 	my.colors = function(_v) {
 		if (!arguments.length) return colors;
 		colors = _v;
+		return my;
+	};
+
+	/**
+	 * Label Position Getter / Setter
+	 *
+	 * @param {string} _v - Position ("proximal" or "distal")
+	 * @returns {*}
+	 */
+	my.labelPosition = function(_v) {
+		if (!arguments.length) return labelPosition;
+		labelPosition = _v;
 		return my;
 	};
 

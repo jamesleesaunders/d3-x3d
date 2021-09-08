@@ -32,9 +32,9 @@ test("Test Surface Area Component, component.surface()", function(t) {
 	t.equal(surfaceArea.colorScale(), 2, "Changed colorScale is set");
 
 	// Test colors getter / setter function
-	t.deepEqual(surfaceArea.colors(), ["orange", "maroon"], "Default colors");
-	surfaceArea.colors(["blue", "red"]);
-	t.deepEqual(surfaceArea.colors(), ["blue", "red"], "Changed colors");
+	t.deepEqual(surfaceArea.colors(), ["blue", "red"], "Default colors");
+	surfaceArea.colors(["orange", "maroon"]);
+	t.deepEqual(surfaceArea.colors(), ["orange", "maroon"], "Changed colors");
 
 	t.end();
 });
