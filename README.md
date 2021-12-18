@@ -64,8 +64,8 @@ If using X_ITE:
 <head>
    <script src="https://d3js.org/d3.v5.min.js"></script>
    <script type="text/javascript" src="https://create3000.github.io/code/x_ite/latest/dist/x_ite.min.js"></script>
-	 <link rel="stylesheet" type="text/css" href="https://create3000.github.io/code/x_ite/latest/dist/x_ite.css"/>
    <script src="https://raw.githack.com/andreasplesch/x_ite_dom/master/latest/x_ite_dom.js"></script>
+   <link rel="stylesheet" type="text/css" href="https://create3000.github.io/code/x_ite/latest/dist/x_ite.css"/>
    <script src="https://raw.githack.com/jamesleesaunders/d3-x3d/master/dist/d3-x3d.js"></script>
 </head>
 ```
