@@ -25,7 +25,7 @@ The aspiration for the X3D specification is for it to become the de facto HTML5 
 The aim is that one day X3D will be integrated as standard into all browsers, without the need for additional plugins. For the time being, there are two JavaScript based players for X3D:
 
 * [X3DOM](https://www.x3dom.org/)
-* [X_ITE](http://create3000.de/x_ite/)
+* [X_ITE](https://create3000.github.io/x_ite/)
 
 Both these players are compatible with modern browsers supporting HTML5 and enable X3D scenes to be embedded in any HTML page. d3-x3d has been tested to work with both X3DOM and X_ITE (there are a couple of more advanced features and charts which currently only work with X3DOM).
 
