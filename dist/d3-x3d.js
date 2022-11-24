@@ -7,10 +7,10 @@
  */
 
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('d3'), require('d3-shape'), require('d3-array'), require('d3-interpolate')) :
-  typeof define === 'function' && define.amd ? define(['d3', 'd3-shape', 'd3-array', 'd3-interpolate'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3, global.d3, global.d3, global.d3)));
-}(this, (function (d3, d3Shape, d3Array, d3Interpolate) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('d3'), require('d3-shape'), require('d3-array')) :
+  typeof define === 'function' && define.amd ? define(['d3', 'd3-shape', 'd3-array'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3, global.d3, global.d3)));
+}(this, (function (d3, d3Shape, d3Array) { 'use strict';
 
   function _interopNamespace(e) {
     if (e && e.__esModule) return e;
@@ -88,30 +88,10 @@
     throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
   }
 
-  /**
-   * Curve Polator
-   *
-   * @param points
-   * @param curveFunction
-   * @param epsilon
-   * @param samples
-   * @returns {Function}
-   */
-
-  function curvePolator(points, curveFunction, epsilon, samples) {
-    // eslint-disable-line max-params
-    var path = d3Shape.line().curve(curveFunction)(points);
+  function curvePolator(points, curve, epsilon, samples) {
+    var path = d3Shape.line().curve(curve)(points);
     return svgPathInterpolator(path, epsilon, samples);
   }
-  /**
-   * SVG Path Interpolator
-   *
-   * @param path
-   * @param epsilon
-   * @param samples
-   * @returns {Function}
-   */
-
 
   function svgPathInterpolator(path, epsilon, samples) {
     // Create detached SVG path
@@ -129,10 +109,10 @@
     reverse = reverse ? -1 : 1; // Return function
 
     return function (x) {
-      // Check for 0 and null/undefined
-      var targetX = x === 0 ? 0 : x || minPoint.x; // Clamp
+      var targetX = x === 0 ? 0 : x || minPoint.x; // Check for 0 and null/undefined
 
-      if (targetX < range[0].x) return range[0];
+      if (targetX < range[0].x) return range[0]; // Clamp
+
       if (targetX > range[1].x) return range[1];
 
       function estimateLength(l, mn, mx) {
@@ -163,34 +143,18 @@
       return svgpath.getPointAtLength(estimatedLength).y;
     };
   }
-  /**
-   * Interpolate From Curve
-   *
-   * @param values
-   * @param curveFunction
-   * @param epsilon
-   * @param samples
-   * @returns {Function}
-   */
 
-
-  function fromCurve (values, curveFunction) {
+  function fromCurve (values, curve) {
     var epsilon = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.00001;
     var samples = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 100;
-    // eslint-disable-line max-params
     var length = values.length;
     var xrange = d3Array.range(length).map(function (d, i) {
       return i * (1 / (length - 1));
     });
     var points = values.map(function (v, i) {
       return [xrange[i], v];
-    }); // If curveFunction is curveBasis then reach straight for D3's native 'interpolateBasis' function (it's faster!)
-
-    if (curveFunction === d3Shape.curveBasis) {
-      return d3Interpolate.interpolateBasis(values);
-    } else {
-      return curvePolator(points, curveFunction, epsilon, samples);
-    }
+    });
+    return curvePolator(points, curve, epsilon, samples);
   }
 
   /**
@@ -5666,9 +5630,12 @@
 
   function createScene2(x3d, layers, classed) {
     // Create Scene
-    var scene = x3d.selectAll("Scene").data([0]).enter().append("Scene"); // Disable gamma correction
+    var scene = x3d.selectAll("Scene").data([0]).enter().append("Scene"); // Disable gamma correction (only works on x3dom)
 
-    scene.append("Environment").attr("gammaCorrectionDefault", "none"); // Add a white background
+    if (typeof x3dom !== "undefined") {
+      scene.append("Environment").attr("gammaCorrectionDefault", "none");
+    } // Add a white background
+
 
     scene.append("Background").attr("groundColor", "1 1 1").attr("skyColor", "1 1 1"); // Add layer groups
 

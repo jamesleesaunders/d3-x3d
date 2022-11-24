@@ -32,9 +32,11 @@ export function createScene2(x3d, layers, classed) {
 		.enter()
 		.append("Scene");
 
-	// Disable gamma correction
-	scene.append("Environment")
-		.attr("gammaCorrectionDefault", "none");
+	// Disable gamma correction (only works on x3dom)
+	if (typeof x3dom !== "undefined") {
+		scene.append("Environment")
+			.attr("gammaCorrectionDefault", "none");
+	}
 
 	// Add a white background
 	scene.append("Background")
