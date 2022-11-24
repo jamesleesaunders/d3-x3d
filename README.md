@@ -69,7 +69,7 @@ If using X_ITE:
 </head>
 ```
 
-Add the following chartholder `<div>` (or `<X3DCanvas>`) and `<script>` tags to your page `<body>`:
+Add the following chartholder `<div>` (or `<x3d-canvas>`) and `<script>` tags to your page `<body>`:
 
 If using X3DOM:
 ```html
@@ -82,7 +82,7 @@ If using X3DOM:
 If using X_ITE:
 ```html
 <body>
-   <X3DCanvas id="chartholder"></X3DCanvas>
+   <x3d-canvas id="chartholder"></x3d-canvas>
    <script></script>
 </body>
 ```
