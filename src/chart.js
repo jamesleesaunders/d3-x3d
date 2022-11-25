@@ -1,3 +1,4 @@
+/*
 import chartAreaChartMultiSeries from "./chart/areaChartMultiSeries";
 import chartBarChartMultiSeries from "./chart/barChartMultiSeries";
 import chartBarChartVertical from "./chart/barChartVertical";
@@ -25,3 +26,6 @@ export default {
 	vectorFieldChart: chartVectorField,
 	volumeSliceChart: chartVolumeSlice
 };
+*/
+
+export default {}

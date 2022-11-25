@@ -9,14 +9,17 @@
 const author = "James Saunders";
 const year = new Date().getFullYear();
 const copyright = `Copyright (C) ${year} ${author}`;
-import { version, license } from "./package.json";
+// import { version, license } from "./package.json" assert { type: "json" };
 
-import chart from "./src/chart";
-import component from "./src/component";
-import dataTransform from "./src/dataTransform";
-import * as randomData from "./src/randomData";
-import * as events from "./src/events";
-import * as colorHelper from "./src/colorHelper"
+let version = "2.0.11";
+let license = "GPL-2.0"
+
+import chart from "./src/chart.js";
+import component from "./src/component.js";
+//import dataTransform from "./src/dataTransform.js";
+import * as randomData from "./src/randomData.js";
+//import * as events from "./src/events.js";
+import * as colorHelper from "./src/colorHelper.js"
 
 export default {
 	version: version,
@@ -25,8 +28,8 @@ export default {
 	license: license,
 	chart: chart,
 	component: component,
-	dataTransform: dataTransform,
+	//dataTransform: dataTransform,
 	randomData: randomData,
-	events: events,
+	//events: events,
 	colorHelper: colorHelper
 };

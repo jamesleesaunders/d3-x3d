@@ -1,6 +1,7 @@
 {
   "name": "d3-x3d",
   "version": "2.0.11",
+	"type": "module",
   "description": "3D Data Driven Charting Library with D3 and X3D",
   "license": "GPL-2.0",
   "keywords": [

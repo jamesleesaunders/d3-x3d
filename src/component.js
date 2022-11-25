@@ -1,3 +1,4 @@
+/*
 import componentArea from "./component/area";
 import componentAreaMultiSeries from "./component/areaMultiSeries";
 import componentAxis from "./component/axis";
@@ -39,3 +40,6 @@ export default {
 	viewpoint: componentViewpoint,
 	volumeSlice: componentVolumeSlice
 };
+*/
+
+export default {}

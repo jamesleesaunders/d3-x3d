@@ -31,7 +31,7 @@ export default {
 			plugins: [
 				"@babel/transform-object-assign"
 			],
-			babelHelpers: 'bundled',
+			babelHelpers: 'bundled'
 		}),
 		json({
 			exclude: ["node_modules/**"]
