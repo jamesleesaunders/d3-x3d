@@ -63,7 +63,7 @@ If using X_ITE:
 ```html
 <head>
    <script src="https://d3js.org/d3.v5.min.js"></script>
-   <script src="https://create3000.github.io/code/x_ite/alpha/x_ite.js"></script>
+   <script src="https://create3000.github.io/code/x_ite/latest/x_ite.js"></script>
    <script src="https://raw.githack.com/jamesleesaunders/d3-x3d/master/dist/d3-x3d.js"></script>
 </head>
 ```

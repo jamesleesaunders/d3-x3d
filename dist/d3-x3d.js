@@ -34,7 +34,7 @@
 
   var d3__namespace = /*#__PURE__*/_interopNamespace(d3);
 
-  var version = "2.0.10";
+  var version = "2.0.11";
   var license = "GPL-2.0";
 
   function _extends() {
