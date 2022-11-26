@@ -16,9 +16,9 @@ let license = "GPL-2.0"
 
 import chart from "./src/chart.js";
 import component from "./src/component.js";
-//import dataTransform from "./src/dataTransform.js";
+import dataTransform from "./src/dataTransform.js";
 import * as randomData from "./src/randomData.js";
-//import * as events from "./src/events.js";
+import * as events from "./src/events.js";
 import * as colorHelper from "./src/colorHelper.js"
 
 export default {
@@ -28,8 +28,8 @@ export default {
 	license: license,
 	chart: chart,
 	component: component,
-	//dataTransform: dataTransform,
+	dataTransform: dataTransform,
 	randomData: randomData,
-	//events: events,
+	events: events,
 	colorHelper: colorHelper
 };

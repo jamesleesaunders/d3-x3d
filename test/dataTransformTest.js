@@ -1,8 +1,7 @@
-let test = require("mocha");
-let chai = require("chai");
-let window = require("browser-env")();
-let d3 = require("d3");
-let d3X3d = require("../");
+import test from "mocha";
+import * as chai from "chai";
+import * as d3 from "d3";
+import d3X3d from "../index.js"
 
 let dataset1 = {
 	key: "UK",
@@ -105,6 +104,7 @@ let dataset3 = [{
 		{ key: "Portugal", value: 4.7, x: 9, y: 8, z: 7 }
 	]
 }];
+
 
 test.describe("Test Summary Single Dimension", function() {
 	let actual = d3X3d.dataTransform(dataset1).summary();

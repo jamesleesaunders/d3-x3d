@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import componentAxis from "./axis";
+import componentAxis from "./axis.js";
 
 /**
  * Reusable 3D Multi Plane Axis Component

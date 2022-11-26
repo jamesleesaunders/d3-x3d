@@ -1,6 +1,6 @@
 import * as d3 from "d3";
-import dataTransform from "../dataTransform";
-import { colorParse } from "../colorHelper";
+import dataTransform from "../dataTransform.js";
+import { colorParse } from "../colorHelper.js";
 
 
 /**

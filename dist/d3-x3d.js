@@ -9,8 +9,8 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('d3'), require('d3-shape'), require('d3-array'), require('d3-interpolate')) :
   typeof define === 'function' && define.amd ? define(['d3', 'd3-shape', 'd3-array', 'd3-interpolate'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3, global.d3, global.d3, global.d3)));
-})(this, (function (d3, d3Shape, d3Array, d3Interpolate) { 'use strict';
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3)));
+})(this, (function (d3) { 'use strict';
 
   function _interopNamespace(e) {
     if (e && e.__esModule) return e;
@@ -31,9 +31,6 @@
   }
 
   var d3__namespace = /*#__PURE__*/_interopNamespace(d3);
-
-  var version = "2.0.11";
-  var license = "GPL-2.0";
 
   function _extends() {
     _extends = Object.assign ? Object.assign.bind() : function (target) {
@@ -73,105 +70,6 @@
   }
   function _nonIterableSpread() {
     throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-  }
-
-  /**
-   * Curve Polator
-   *
-   * @param points
-   * @param curveFunction
-   * @param epsilon
-   * @param samples
-   * @returns {Function}
-   */
-  function curvePolator(points, curveFunction, epsilon, samples) {
-    // eslint-disable-line max-params
-    var path = d3Shape.line().curve(curveFunction)(points);
-    return svgPathInterpolator(path, epsilon, samples);
-  }
-
-  /**
-   * SVG Path Interpolator
-   *
-   * @param path
-   * @param epsilon
-   * @param samples
-   * @returns {Function}
-   */
-  function svgPathInterpolator(path, epsilon, samples) {
-    // Create detached SVG path
-    path = path || "M0,0L1,1";
-    var area = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    area.innerHTML = "<path></path>";
-    var svgpath = area.querySelector("path");
-    svgpath.setAttribute("d", path);
-
-    // Calculate lengths and max points
-    var totalLength = svgpath.getTotalLength();
-    var minPoint = svgpath.getPointAtLength(0);
-    var maxPoint = svgpath.getPointAtLength(totalLength);
-    var reverse = maxPoint.x < minPoint.x;
-    var range = reverse ? [maxPoint, minPoint] : [minPoint, maxPoint];
-    reverse = reverse ? -1 : 1;
-
-    // Return function
-    return function (x) {
-      // Check for 0 and null/undefined
-      var targetX = x === 0 ? 0 : x || minPoint.x;
-      // Clamp
-      if (targetX < range[0].x) return range[0];
-      if (targetX > range[1].x) return range[1];
-      function estimateLength(l, mn, mx) {
-        var delta = svgpath.getPointAtLength(l).x - targetX;
-        var nextDelta = 0;
-        var iter = 0;
-        while (Math.abs(delta) > epsilon && iter < samples) {
-          if (iter > samples) return false;
-          iter++;
-          if (reverse * delta < 0) {
-            mn = l;
-            l = (l + mx) / 2;
-          } else {
-            mx = l;
-            l = (mn + l) / 2;
-          }
-          nextDelta = svgpath.getPointAtLength(l).x - targetX;
-          delta = nextDelta;
-        }
-        return l;
-      }
-      var estimatedLength = estimateLength(totalLength / 2, 0, totalLength);
-      return svgpath.getPointAtLength(estimatedLength).y;
-    };
-  }
-
-  /**
-   * Interpolate From Curve
-   *
-   * @param values
-   * @param curveFunction
-   * @param epsilon
-   * @param samples
-   * @returns {Function}
-   */
-  function fromCurve (values, curveFunction) {
-    var epsilon = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.00001;
-    var samples = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 100;
-    // eslint-disable-line max-params
-    var length = values.length;
-    var xrange = d3Array.range(length).map(function (d, i) {
-      return i * (1 / (length - 1));
-    });
-    var points = values.map(function (v, i) {
-      return [xrange[i], v];
-    });
-
-    // If curveFunction is curveBasis then reach straight for D3's native 'interpolateBasis' function (it's faster!)
-    if (curveFunction === d3Shape.curveBasis) {
-      return d3Interpolate.interpolateBasis(values);
-    } else {
-      return curvePolator(points, curveFunction, epsilon, samples);
-    }
   }
 
   /**
@@ -686,7 +584,7 @@
       var keyPolator = function keyPolator(t) {
         return Number((t * samples).toFixed(0)) + 1;
       };
-      var valuePolator = fromCurve(values, curveFunction, epsilon, samples);
+      var valuePolator = undefined(values, curveFunction, epsilon, samples);
       var smoothed = {
         key: data.key,
         values: sampler.map(function (t) {
@@ -8399,6 +8297,10 @@
   var author = "James Saunders";
   var year = new Date().getFullYear();
   var copyright = "Copyright (C) ".concat(year, " ").concat(author);
+  // import { version, license } from "./package.json" assert { type: "json" };
+
+  var version = "2.0.11";
+  var license = "GPL-2.0";
   var index = {
     version: version,
     author: author,

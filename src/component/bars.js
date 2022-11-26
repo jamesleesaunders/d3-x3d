@@ -1,7 +1,7 @@
 import * as d3 from "d3";
-import dataTransform from "../dataTransform";
-import { attachEventListners, dispatch } from "../events";
-import { colorParse } from "../colorHelper";
+import dataTransform from "../dataTransform.js";
+import { attachEventListners, dispatch } from "../events.js";
+import { colorParse } from "../colorHelper.js";
 
 /**
  * Reusable 3D Bar Chart Component

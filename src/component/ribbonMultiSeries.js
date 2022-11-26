@@ -1,7 +1,7 @@
 import * as d3 from "d3";
-import dataTransform from "../dataTransform";
-import componentRibbon from "./ribbon";
-import { dispatch } from "../events";
+import dataTransform from "../dataTransform.js";
+import componentRibbon from "./ribbon.js";
+import { dispatch } from "../events.js";
 
 /**
  * Reusable 3D Multi Series Ribbon Chart Component

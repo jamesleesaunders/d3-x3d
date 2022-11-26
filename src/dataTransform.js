@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import * as d3Interpolate from "d3-interpolate-curve";
+import * as d3Interpolate from "./fromCurve.js"
 
 /**
  * Data Transform

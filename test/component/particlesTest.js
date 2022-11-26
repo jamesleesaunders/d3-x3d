@@ -1,8 +1,5 @@
-let test = require("tape");
-let window = require("browser-env")();
-let d3 = require("d3");
-let d3X3d = require("../../");
-
+import test from "tape";
+import d3X3d from "../../index.js"
 test("Test Particles Component, component.particles()", function(t) {
 	let particles = d3X3d.component.particles();
 	t.equal("test", "test", "Test");
