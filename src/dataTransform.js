@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import * as d3Interpolate from "./fromCurve.js"
+import { default as fromCurve } from "./fromCurve.js"
 
 /**
  * Data Transform
@@ -88,7 +88,7 @@ export default function dataTransform(data) {
 	 * @returns {Array}
 	 */
 	const singleRowKey = function(data) {
-		return d3.values(data)[0];
+		return Object.values(data)[0];
 	};
 
 	/**
@@ -115,7 +115,7 @@ export default function dataTransform(data) {
 	 * @returns {Array}
 	 */
 	const singleColumnKeys = function(data) {
-		return d3.values(data.values).map((d) => d.key);
+		return Object.values(data.values).map((d) => d.key);
 	};
 
 	/**
@@ -261,7 +261,7 @@ export default function dataTransform(data) {
 	 * @returns {number}
 	 */
 	const multiRowTotalsMax = function(data) {
-		return d3.max(d3.values(multiRowTotals(data)));
+		return d3.max(Object.values(multiRowTotals(data)));
 	};
 
 	/**
@@ -314,7 +314,7 @@ export default function dataTransform(data) {
 	 * @returns {number}
 	 */
 	const multiColumnTotalsMax = function(data) {
-		return d3.max(d3.values(multiColumnTotals(data)));
+		return d3.max(Object.values(multiColumnTotals(data)));
 	};
 
 	/**
@@ -407,11 +407,7 @@ export default function dataTransform(data) {
 	 * @returns {number}
 	 */
 	const multiMaxDecimalPlace = function(data) {
-		return d3.max(d3.map(data).values().reduce((places, row, i) => {
-			places[i] = singleMaxDecimalPlace(row);
-
-			return places;
-		}, []));
+		return d3.max(data.map((d) => singleMaxDecimalPlace(d)));
 	};
 
 	/**
@@ -492,16 +488,15 @@ export default function dataTransform(data) {
 	 * @param curveFunction
 	 * @returns {{values: *, key: *}}
 	 */
-	const smooth = function(curveFunction) {
+	const smooth = function(curveFunction, samples = 100) {
 		const epsilon = 0.00001;
-		const samples = 100;
 
 		const values = data.values.map((d) => d.value);
 
 		const sampler = d3.range(0, 1, 1 / samples);
 		const keyPolator = (t) => (Number((t * samples).toFixed(0)) + 1);
 
-		const valuePolator = d3Interpolate.interpolateFromCurve(values, curveFunction, epsilon, samples);
+		const valuePolator = fromCurve(values, curveFunction, epsilon, samples);
 
 		const smoothed = {
 			key: data.key,

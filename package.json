@@ -1,7 +1,7 @@
 {
   "name": "d3-x3d",
-  "version": "2.0.11",
-	"type": "module",
+  "version": "2.1.0",
+  "type": "module",
   "description": "3D Data Driven Charting Library with D3 and X3D",
   "license": "GPL-2.0",
   "keywords": [
@@ -29,7 +29,7 @@
   "module": "index.js",
   "scripts": {
     "pretest": "make",
-    "test": "mocha 'test/*Test.js' && mocha 'test/chart/*Test.js' && tape 'test/component/*Test.js' | tap-spec",
+    "test": "mocha 'test/*Test.js' && mocha 'test/chart/*Test.js'",
     "build:docs": "jsdoc -c config/jsdoc.conf.json",
     "deploy:docs": "npm run build:docs && gh-pages -d docs",
     "snyk-protect": "snyk protect",
@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "@babel/core": "latest",
+    "@babel/plugin-syntax-import-assertions": "^7.20.0",
     "@babel/plugin-transform-object-assign": "latest",
     "@babel/preset-env": "latest",
     "@rollup/plugin-babel": "latest",
@@ -57,6 +58,7 @@
     "mocha": "^10.1.0",
     "rollup": "^2.53.2",
     "snyk": "^1.662.0",
+		"svgdom": "^0.1.10",
     "tap-spec": "^2.2.2",
     "tape": "^4.13.3",
     "toast-jsdoc": "^1.0.2",
