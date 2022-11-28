@@ -251,5 +251,6 @@ var myData = [
 * Victor Glindås - Various contributions to JSDoc and ES6 standardisation.
 * Jefferson Hudson - For contributions to axis labels and transitions.
 * Andreas Plesch - For contributing the Area Chart and Components (and generally being an x3dom hero!).
+* Holger Seelig - For assistance in integration with x_ite.
 * Dahshan & Polys - For permission to use the The Bell Labs Pollen data set on particle plot examples.
 * Also see alternative [d3-3d](https://github.com/Niekes/d3-3d) by @Niekes.

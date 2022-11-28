@@ -28,16 +28,14 @@
   "unpkg": "dist/d3-x3d.min.js",
   "module": "index.js",
   "scripts": {
-    "pretest": "make",
+    "build": "make",
     "test": "mocha 'test/*Test.js' && mocha 'test/chart/*Test.js'",
     "build:docs": "jsdoc -c config/jsdoc.conf.json",
-    "deploy:docs": "npm run build:docs && gh-pages -d docs",
-    "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect"
+    "deploy:docs": "npm run build:docs && gh-pages -d docs"
   },
   "dependencies": {
     "d3": "^7.6.1",
-    "d3-interpolate-curve": "^1.0.3",
+    "d3-interpolate-curve": "^1.0.0",
     "gl-matrix": "^3.3.0"
   },
   "devDependencies": {
@@ -57,13 +55,11 @@
     "minami": "^1.2.3",
     "mocha": "^10.1.0",
     "rollup": "^2.53.2",
-    "snyk": "^1.662.0",
-		"svgdom": "^0.1.10",
-    "tap-spec": "^2.2.2",
+    "svgdom": "^0.1.10",
+    "tap-spec": "^5.0.0",
     "tape": "^4.13.3",
     "toast-jsdoc": "^1.0.2",
     "uglify-es": "^3.3.10",
     "vows": "^0.8.3"
-  },
-  "snyk": true
+  }
 }
