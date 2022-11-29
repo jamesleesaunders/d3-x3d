@@ -111,7 +111,6 @@ let dataset3 = [{
 	]
 }];
 
-
 test.describe("Test Summary Single Dimension", function() {
 	let actual = dataTransform(dataset1).summary();
 	let expected = {
@@ -210,9 +209,8 @@ test.describe("Test Curve", function() {
 
 
 /* Custom Test for Reddit user pranavk26 */
-// TODO: FIXME
-/*
-let data = [
+
+let dataset4 = [
 	{ row: 1, column: 1, val: 2 },
 	{ row: 3, column: 1, val: 4 },
 	{ row: 1, column: 3, val: 7 },
@@ -230,25 +228,32 @@ let data = [
 	{ row: 3, column: 5, val: 7 }
 ];
 
+let formatData = Array.from(d3.rollup(
+	dataset4.sort((a, b) => +a.row - +b.row),
+	(d) => ({
+		key: String(d[0].row),
+		values: Array.from(d3.rollup(
+			d.sort((a, b) => +a.column - +b.column),
+			(d) => ({ key: String(d[0].column), values: d }),
+			(d) => d.column).values())
+	}),
+	(d) => d.row
+).values());
+
+/*
+// was: Before D3 v6:
+
 let formatData = d3.nest()
-	.key(function(d) { return d.row; })
-	.entries(data.sort((a, b) => {
-		return +a.row - +b.row;
-	}))
-	.map((d) => {
-		return {
-			key: d.key, values: d3.nest()
-				.key((d) => {
-					return d.column;
-				})
-				.entries(d.values.sort((a, b) => {
-					return +a.column - +b.column;
-				}))
-				.map((d) => {
-					return { key: d.key, value: d.values[0].val };
-				})
-		};
-	});
+	.key((d) => d.row)
+	.entries(data.sort((a, b) => +a.row - +b.row))
+	.map((d) => ({
+			key: d.key,
+			values: d3.nest()
+				.key((d) => d.column)
+				.entries(d.values.sort((a, b) => +a.column - +b.column))
+				.map((d) => ({ key: d.key, value: d.values[0].val }))
+		}));
+*/
 
 test.describe("Test rowKeys remain in order", function() {
 	let actual = dataTransform(formatData).summary().rowKeys;
@@ -269,4 +274,3 @@ test.describe("Test columnKeys remain in order", function() {
 		done();
 	});
 });
-*/
