@@ -29,7 +29,7 @@
   "module": "index.js",
   "scripts": {
     "build": "make",
-    "test": "mocha 'test/*Test.js' && mocha 'test/chart/*Test.js'",
+    "test": "mocha 'test/*Test.js' && mocha 'test/chart/*Test.js' && tape 'test/component/*Test.js' | tap-spec",
     "build:docs": "jsdoc -c config/jsdoc.conf.json",
     "deploy:docs": "npm run build:docs && gh-pages -d docs"
   },
@@ -57,7 +57,7 @@
     "rollup": "^2.53.2",
     "svgdom": "^0.1.10",
     "tap-spec": "^5.0.0",
-    "tape": "^4.13.3",
+    "tape": "^5.6.1",
     "toast-jsdoc": "^1.0.2",
     "uglify-es": "^3.3.10",
     "vows": "^0.8.3"
