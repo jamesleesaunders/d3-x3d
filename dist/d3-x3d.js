@@ -7,10 +7,10 @@
  */
 
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('d3'), require('d3-shape'), require('d3-array'), require('d3-interpolate')) :
-  typeof define === 'function' && define.amd ? define(['d3', 'd3-shape', 'd3-array', 'd3-interpolate'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3, global.d3, global.d3, global.d3)));
-})(this, (function (d3, d3Shape, d3Array, d3Interpolate) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('d3')) :
+  typeof define === 'function' && define.amd ? define(['d3'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3)));
+})(this, (function (d3) { 'use strict';
 
   function _interopNamespace(e) {
     if (e && e.__esModule) return e;
@@ -83,7 +83,7 @@
    */
   function curvePolator(points, curveFunction, epsilon, samples) {
     // eslint-disable-line max-params
-    var path = d3Shape.line().curve(curveFunction)(points);
+    var path = d3__namespace.shape().curve(curveFunction)(points);
     return svgPathInterpolator(path, epsilon, samples);
   }
 
@@ -156,7 +156,7 @@
     var samples = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 100;
     // eslint-disable-line max-params
     var length = values.length;
-    var xrange = d3Array.range(length).map(function (d, i) {
+    var xrange = d3__namespace.arrayRange(length).map(function (d, i) {
       return i * (1 / (length - 1));
     });
     var points = values.map(function (v, i) {
@@ -164,8 +164,8 @@
     });
 
     // If curveFunction is curveBasis then reach straight for D3's native 'interpolateBasis' function (it's faster!)
-    if (curveFunction === d3Shape.curveBasis) {
-      return d3Interpolate.interpolateBasis(values);
+    if (curveFunction === d3__namespace.curveBasis) {
+      return d3__namespace.interpolateBasis(values);
     } else {
       return curvePolator(points, curveFunction, epsilon, samples);
     }

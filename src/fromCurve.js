@@ -1,6 +1,4 @@
-import { line as shapeLine, curveBasis } from "d3-shape";
-import { range as arrayRange } from "d3-array";
-import { interpolateBasis } from "d3-interpolate";
+import * as d3 from "d3";
 
 /**
  * Curve Polator
@@ -12,7 +10,7 @@ import { interpolateBasis } from "d3-interpolate";
  * @returns {Function}
  */
 function curvePolator(points, curveFunction, epsilon, samples) { // eslint-disable-line max-params
-	const path = shapeLine().curve(curveFunction)(points);
+	const path = d3.shape().curve(curveFunction)(points);
 
 	return svgPathInterpolator(path, epsilon, samples);
 }
@@ -91,12 +89,12 @@ function svgPathInterpolator(path, epsilon, samples) {
  */
 export default function(values, curveFunction, epsilon = 0.00001, samples = 100) { // eslint-disable-line max-params
 	const length = values.length;
-	const xrange = arrayRange(length).map(function(d, i) { return i * (1 / (length - 1)); });
+	const xrange = d3.arrayRange(length).map(function(d, i) { return i * (1 / (length - 1)); });
 	const points = values.map((v, i) => [xrange[i], v]);
 
 	// If curveFunction is curveBasis then reach straight for D3's native 'interpolateBasis' function (it's faster!)
-	if (curveFunction === curveBasis) {
-		return interpolateBasis(values);
+	if (curveFunction === d3.curveBasis) {
+		return d3.interpolateBasis(values);
 	} else {
 		return curvePolator(points, curveFunction, epsilon, samples);
 	}
