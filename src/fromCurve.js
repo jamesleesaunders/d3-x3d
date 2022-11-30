@@ -10,7 +10,7 @@ import * as d3 from "d3";
  * @returns {Function}
  */
 function curvePolator(points, curveFunction, epsilon, samples) { // eslint-disable-line max-params
-	const path = d3.shape().curve(curveFunction)(points);
+	const path = d3.line().curve(curveFunction)(points);
 
 	return svgPathInterpolator(path, epsilon, samples);
 }

@@ -83,7 +83,7 @@
    */
   function curvePolator(points, curveFunction, epsilon, samples) {
     // eslint-disable-line max-params
-    var path = d3__namespace.shape().curve(curveFunction)(points);
+    var path = d3__namespace.line().curve(curveFunction)(points);
     return svgPathInterpolator(path, epsilon, samples);
   }
 
