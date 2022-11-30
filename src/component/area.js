@@ -1,6 +1,6 @@
 import * as d3 from "d3";
-import dataTransform from "../dataTransform";
-import { colorParse } from "../colorHelper";
+import dataTransform from "../dataTransform.js";
+import { colorParse } from "../colorHelper.js";
 
 
 /**
@@ -64,7 +64,7 @@ export default function() {
 				const dimensionX = dimensions.x;
 
 				if (smoothed) {
-					data = dataTransform(data).smooth(smoothed);
+					data = dataTransform(data).smooth(smoothed, 100);
 
 					const keys = d3.extent(data.values.map((d) => d.key));
 					xScale = d3.scaleLinear()

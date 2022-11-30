@@ -1,6 +1,6 @@
 import * as d3 from "d3";
-import component from "../component";
-import { createScene } from "../base";
+import component from "../component.js";
+import { createScene } from "../base.js";
 
 /**
  * Reusable 3D Vertical Volume Slice Chart

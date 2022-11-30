@@ -1,6 +1,6 @@
-let test = require("mocha");
-let chai = require("chai");
-let d3X3d = require("../");
+import test from "mocha";
+import * as chai from "chai";
+import d3X3d from "../index.js"
 
 let colorHelper = d3X3d.colorHelper;
 

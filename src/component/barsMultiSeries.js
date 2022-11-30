@@ -1,6 +1,6 @@
 import * as d3 from "d3";
-import dataTransform from "../dataTransform";
-import componentBars from "./bars";
+import dataTransform from "../dataTransform.js";
+import componentBars from "./bars.js";
 
 /**
  * Reusable 3D Multi Series Bar Chart Component

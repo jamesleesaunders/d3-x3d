@@ -1,8 +1,13 @@
-let test = require("mocha");
-let chai = require("chai");
-let window = require("browser-env")();
-let d3 = require("d3");
-let d3X3d = require("../");
+import test from "mocha";
+import * as chai from "chai";
+import * as d3 from "d3";
+import d3X3d from "../index.js"
+
+import { createSVGWindow } from "svgdom";
+global.document = createSVGWindow().document;
+
+// import dataTransform from "../src/dataTransform.js";
+let dataTransform = d3X3d.dataTransform;
 
 let dataset1 = {
 	key: "UK",
@@ -107,7 +112,7 @@ let dataset3 = [{
 }];
 
 test.describe("Test Summary Single Dimension", function() {
-	let actual = d3X3d.dataTransform(dataset1).summary();
+	let actual = dataTransform(dataset1).summary();
 	let expected = {
 		dataType: 1,
 		rowKey: "UK",
@@ -130,7 +135,7 @@ test.describe("Test Summary Single Dimension", function() {
 });
 
 test.describe("Test Summary Multi Dimension", function() {
-	let actual = d3X3d.dataTransform(dataset2).summary();
+	let actual = dataTransform(dataset2).summary();
 	let expected = {
 		dataType: 2,
 		rowKeys: ["UK", "France", "Spain", "Germany", "Italy", "Portugal"],
@@ -169,11 +174,35 @@ test.describe("Test Summary Multi Dimension", function() {
 
 test.describe("Test Rotate", function() {
 	test.it("should return Dataset 3", function(done) {
-		chai.expect(d3X3d.dataTransform(dataset2).rotate()).to.be.deep.equal(dataset3);
+		chai.expect(dataTransform(dataset2).rotate()).to.be.deep.equal(dataset3);
 		done();
 	});
 	test.it("should return Dataset 2", function(done) {
-		chai.expect(d3X3d.dataTransform(dataset3).rotate()).to.be.deep.equal(dataset2);
+		chai.expect(dataTransform(dataset3).rotate()).to.be.deep.equal(dataset2);
+		done();
+	});
+});
+
+test.describe("Test Curve", function() {
+	const actual = dataTransform(dataset1).smooth(d3.curveMonotoneX, 10);
+	const expected = {
+		key: "UK",
+		values: [
+			{ key: 1, value: 9.103022600729766 },
+			{ key: 2, value: 6.585331152506079 },
+			{ key: 3, value: 4.523604325637852 },
+			{ key: 4, value: 3.402976176148336 },
+			{ key: 5, value: 3.486211890104814 },
+			{ key: 6, value: 4.176290834058782 },
+			{ key: 7, value: 5.0334473544132265 },
+			{ key: 8, value: 5.676600450613645 },
+			{ key: 9, value: 6.168443478731758 },
+			{ key: 10, value: 6.595760436185589 }
+		]
+	};
+
+	test.it("should return smoothed curve", function(done) {
+		chai.expect(actual).to.be.deep.equal(expected);
 		done();
 	});
 });
@@ -181,7 +210,7 @@ test.describe("Test Rotate", function() {
 
 /* Custom Test for Reddit user pranavk26 */
 
-let data = [
+let dataset4 = [
 	{ row: 1, column: 1, val: 2 },
 	{ row: 3, column: 1, val: 4 },
 	{ row: 1, column: 3, val: 7 },
@@ -199,28 +228,35 @@ let data = [
 	{ row: 3, column: 5, val: 7 }
 ];
 
+let formatData = Array.from(d3.rollup(
+	dataset4.sort((a, b) => +a.row - +b.row),
+	(d) => ({
+		key: String(d[0].row),
+		values: Array.from(d3.rollup(
+			d.sort((a, b) => +a.column - +b.column),
+			(d) => ({ key: String(d[0].column), values: d }),
+			(d) => d.column).values())
+	}),
+	(d) => d.row
+).values());
+
+/*
+// was: Before D3 v6:
+
 let formatData = d3.nest()
-	.key(function(d) { return d.row; })
-	.entries(data.sort((a, b) => {
-		return +a.row - +b.row;
-	}))
-	.map((d) => {
-		return {
-			key: d.key, values: d3.nest()
-				.key((d) => {
-					return d.column;
-				})
-				.entries(d.values.sort((a, b) => {
-					return +a.column - +b.column;
-				}))
-				.map((d) => {
-					return { key: d.key, value: d.values[0].val };
-				})
-		};
-	});
+	.key((d) => d.row)
+	.entries(data.sort((a, b) => +a.row - +b.row))
+	.map((d) => ({
+			key: d.key,
+			values: d3.nest()
+				.key((d) => d.column)
+				.entries(d.values.sort((a, b) => +a.column - +b.column))
+				.map((d) => ({ key: d.key, value: d.values[0].val }))
+		}));
+*/
 
 test.describe("Test rowKeys remain in order", function() {
-	let actual = d3X3d.dataTransform(formatData).summary().rowKeys;
+	let actual = dataTransform(formatData).summary().rowKeys;
 	let expected = ["1", "2", "3"];
 
 	test.it("should be equivalent", function(done) {
@@ -230,7 +266,7 @@ test.describe("Test rowKeys remain in order", function() {
 });
 
 test.describe("Test columnKeys remain in order", function() {
-	let actual = d3X3d.dataTransform(formatData).summary().columnKeys;
+	let actual = dataTransform(formatData).summary().columnKeys;
 	let expected = ["1", "2", "3", "4", "5"];
 
 	test.it("should be equivalent", function(done) {

@@ -1,7 +1,7 @@
 import * as d3 from "d3";
-import dataTransform from "../dataTransform";
-import { dispatch } from "../events";
-import { colorParse } from "../colorHelper";
+import dataTransform from "../dataTransform.js";
+import { dispatch } from "../events.js";
+import { colorParse } from "../colorHelper.js";
 
 /**
  * Reusable 3D Ribbon Chart Component
@@ -90,7 +90,7 @@ export default function() {
 				const dimensionX = dimensions.x;
 
 				if (smoothed) {
-					data = dataTransform(data).smooth(smoothed);
+					data = dataTransform(data).smooth(smoothed, 100);
 
 					const keys = d3.extent(data.values.map((d) => d.key));
 					xScale = d3.scaleLinear()

@@ -1,7 +1,7 @@
 import * as d3 from "d3";
-import dataTransform from "../dataTransform";
-import { dispatch } from "../events";
-import { colorParse } from "../colorHelper";
+import dataTransform from "../dataTransform.js";
+import { dispatch } from "../events.js";
+import { colorParse } from "../colorHelper.js";
 import * as glMatrix from "gl-matrix";
 
 /**

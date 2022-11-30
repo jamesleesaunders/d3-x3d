@@ -2,7 +2,7 @@
  * d3-x3d
  *
  * @author James Saunders [james@saunders-family.net]
- * @copyright Copyright (C) 2021 James Saunders
+ * @copyright Copyright (C) 2022 James Saunders
  * @license GPLv2
  */
 
@@ -31,9 +31,6 @@
   }
 
   var d3__namespace = /*#__PURE__*/_interopNamespace(d3);
-
-  var version = "2.0.11";
-  var license = "GPL-2.0";
 
   function _extends() {
     _extends = Object.assign ? Object.assign.bind() : function (target) {
@@ -251,7 +248,7 @@
      * @returns {Array}
      */
     var singleRowKey = function singleRowKey(data) {
-      return d3__namespace.values(data)[0];
+      return Object.values(data)[0];
     };
 
     /**
@@ -280,7 +277,7 @@
      * @returns {Array}
      */
     var singleColumnKeys = function singleColumnKeys(data) {
-      return d3__namespace.values(data.values).map(function (d) {
+      return Object.values(data.values).map(function (d) {
         return d.key;
       });
     };
@@ -443,7 +440,7 @@
      * @returns {number}
      */
     var multiRowTotalsMax = function multiRowTotalsMax(data) {
-      return d3__namespace.max(d3__namespace.values(multiRowTotals(data)));
+      return d3__namespace.max(Object.values(multiRowTotals(data)));
     };
 
     /**
@@ -493,7 +490,7 @@
      * @returns {number}
      */
     var multiColumnTotalsMax = function multiColumnTotalsMax(data) {
-      return d3__namespace.max(d3__namespace.values(multiColumnTotals(data)));
+      return d3__namespace.max(Object.values(multiColumnTotals(data)));
     };
 
     /**
@@ -592,10 +589,9 @@
      * @returns {number}
      */
     var multiMaxDecimalPlace = function multiMaxDecimalPlace(data) {
-      return d3__namespace.max(d3__namespace.map(data).values().reduce(function (places, row, i) {
-        places[i] = singleMaxDecimalPlace(row);
-        return places;
-      }, []));
+      return d3__namespace.max(data.map(function (d) {
+        return singleMaxDecimalPlace(d);
+      }));
     };
 
     /**
@@ -677,8 +673,8 @@
      * @returns {{values: *, key: *}}
      */
     var smooth = function smooth(curveFunction) {
+      var samples = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 100;
       var epsilon = 0.00001;
-      var samples = 100;
       var values = data.values.map(function (d) {
         return d.value;
       });
@@ -982,7 +978,7 @@
         var areaData = function areaData(data) {
           var dimensionX = dimensions.x;
           if (smoothed) {
-            data = dataTransform(data).smooth(smoothed);
+            data = dataTransform(data).smooth(smoothed, 100);
             var keys = d3__namespace.extent(data.values.map(function (d) {
               return d.key;
             }));
@@ -3557,7 +3553,7 @@
         var ribbonData = function ribbonData(data) {
           var dimensionX = dimensions.x;
           if (smoothed) {
-            data = dataTransform(data).smooth(smoothed);
+            data = dataTransform(data).smooth(smoothed, 100);
             var keys = d3__namespace.extent(data.values.map(function (d) {
               return d.key;
             }));
@@ -8399,6 +8395,12 @@
   var author = "James Saunders";
   var year = new Date().getFullYear();
   var copyright = "Copyright (C) ".concat(year, " ").concat(author);
+
+  //import {default as packageJson} from "./package.json" assert { type: "json" };
+  //let version = packageJson.version;
+  //let license = packageJson.license;
+  var version = "2.1.0";
+  var license = "GPL-2.0";
   var index = {
     version: version,
     author: author,

@@ -6,7 +6,7 @@ let banner = `/**
  * d3-x3d
  *
  * @author James Saunders [james@saunders-family.net]
- * @copyright Copyright (C) 2021 James Saunders
+ * @copyright Copyright (C) 2022 James Saunders
  * @license GPLv2
  */
 `;
@@ -29,9 +29,10 @@ export default {
 			babelrc: false,
 			presets: [["@babel/env", { modules: false }]],
 			plugins: [
-				"@babel/transform-object-assign"
+				"@babel/transform-object-assign",
+				"@babel/plugin-syntax-import-assertions"
 			],
-			babelHelpers: 'bundled',
+			babelHelpers: 'bundled'
 		}),
 		json({
 			exclude: ["node_modules/**"]

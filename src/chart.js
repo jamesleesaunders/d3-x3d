@@ -1,15 +1,15 @@
-import chartAreaChartMultiSeries from "./chart/areaChartMultiSeries";
-import chartBarChartMultiSeries from "./chart/barChartMultiSeries";
-import chartBarChartVertical from "./chart/barChartVertical";
-import chartBubbleChart from "./chart/bubbleChart";
-import chartCrosshairPlot from "./chart/crosshairPlot";
-import chartHeatMap from "./chart/heatMap";
-import chartParticlePlot from "./chart/particlePlot";
-import chartRibbonChartMultiSeries from "./chart/ribbonChartMultiSeries";
-import chartScatterPlot from "./chart/scatterPlot";
-import chartSurfacePlot from "./chart/surfacePlot";
-import chartVectorField from "./chart/vectorFieldChart";
-import chartVolumeSlice from "./chart/volumeSliceChart";
+import chartAreaChartMultiSeries from "./chart/areaChartMultiSeries.js";
+import chartBarChartMultiSeries from "./chart/barChartMultiSeries.js";
+import chartBarChartVertical from "./chart/barChartVertical.js";
+import chartBubbleChart from "./chart/bubbleChart.js";
+import chartCrosshairPlot from "./chart/crosshairPlot.js";
+import chartHeatMap from "./chart/heatMap.js";
+import chartParticlePlot from "./chart/particlePlot.js";
+import chartRibbonChartMultiSeries from "./chart/ribbonChartMultiSeries.js";
+import chartScatterPlot from "./chart/scatterPlot.js";
+import chartSurfacePlot from "./chart/surfacePlot.js";
+import chartVectorField from "./chart/vectorFieldChart.js";
+import chartVolumeSlice from "./chart/volumeSliceChart.js";
 
 export default {
 	areaChartMultiSeries: chartAreaChartMultiSeries,

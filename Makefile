@@ -16,7 +16,7 @@ js:
 min:
 	@echo Minifying...
 	@rm -f dist/d3-x3d.min.js
-	@./node_modules/uglify-es/bin/uglifyjs dist/d3-x3d.js > dist/d3-x3d.min.js
+	@./node_modules/uglify-js/bin/uglifyjs dist/d3-x3d.js > dist/d3-x3d.min.js
 
 zip: $(COMPRESS_FILES)
 	@echo Zipping...

@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { colorParse } from "../colorHelper";
+import { colorParse } from "../colorHelper.js";
 
 /**
  * Reusable 3D Crosshair Component

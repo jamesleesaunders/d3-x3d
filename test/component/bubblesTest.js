@@ -1,7 +1,5 @@
-let test = require("tape");
-let window = require("browser-env")();
-let d3 = require("d3");
-let d3X3d = require("../../");
+import test from "tape";
+import d3X3d from "../../index.js"
 
 test("Test Bubbles Component, component.bubbles()", function(t) {
 	let bubbles = d3X3d.component.bubbles();

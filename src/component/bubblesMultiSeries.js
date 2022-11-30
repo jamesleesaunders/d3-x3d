@@ -1,7 +1,7 @@
 import * as d3 from "d3";
-import dataTransform from "../dataTransform";
-import componentBubbles from "./bubbles";
-import { dispatch } from "../events";
+import dataTransform from "../dataTransform.js";
+import componentBubbles from "./bubbles.js";
+import { dispatch } from "../events.js";
 
 /**
  * Reusable 3D Multi Series Bubble Chart Component

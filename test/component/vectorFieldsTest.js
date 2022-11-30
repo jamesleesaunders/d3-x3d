@@ -1,7 +1,6 @@
-let test = require("tape");
-let window = require("browser-env")();
-let d3 = require("d3");
-let d3X3d = require("../../");
+import test from "tape";
+import * as d3 from "d3";
+import d3X3d from "../../index.js"
 
 test("Test Vector Fields Component, component.vectorFields()", function(t) {
 	let vectorFields = d3X3d.component.vectorFields();

@@ -1,8 +1,6 @@
-let test = require("mocha");
-let chai = require("chai");
-let window = require("browser-env")();
-let d3 = require("d3");
-let d3X3d = require("../../");
+import test from "mocha";
+import * as chai from "chai";
+import d3X3d from "../../index.js"
 
 test.describe("Test Vector Field Chart, chart.vectorFieldChart()", function() {
 	let vectorFieldChart = d3X3d.chart.vectorFieldChart();

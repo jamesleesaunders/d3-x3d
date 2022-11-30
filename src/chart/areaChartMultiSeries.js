@@ -1,7 +1,7 @@
 import * as d3 from "d3";
-import dataTransform from "../dataTransform";
-import component from "../component";
-import { createScene } from "../base";
+import dataTransform from "../dataTransform.js";
+import component from "../component.js";
+import { createScene } from "../base.js";
 
 /**
  * Reusable 3D Multi Series Area Chart

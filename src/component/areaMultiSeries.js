@@ -1,6 +1,6 @@
 import * as d3 from "d3";
-import dataTransform from "../dataTransform";
-import componentArea from "./area";
+import dataTransform from "../dataTransform.js";
+import componentArea from "./area.js";
 
 
 /**
