@@ -52,7 +52,7 @@ Include the following JavaScript and CSS files in the `<head>` section of your p
 If using X3DOM:
 ```html
 <head>
-   <script src="https://d3js.org/d3.v5.min.js"></script>
+   <script src="https://d3js.org/d3.v7.min.js"></script>
    <script src="https://x3dom.org/release/x3dom.js"></script>
    <link rel="stylesheet" href="https://x3dom.org/release/x3dom.css" />
    <script src="https://raw.githack.com/jamesleesaunders/d3-x3d/master/dist/d3-x3d.js"></script>
@@ -62,7 +62,7 @@ If using X3DOM:
 If using X_ITE:
 ```html
 <head>
-   <script src="https://d3js.org/d3.v5.min.js"></script>
+   <script src="https://d3js.org/d3.v7.min.js"></script>
    <script src="https://create3000.github.io/code/x_ite/latest/x_ite.js"></script>
    <script src="https://raw.githack.com/jamesleesaunders/d3-x3d/master/dist/d3-x3d.js"></script>
 </head>
