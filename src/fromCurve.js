@@ -89,7 +89,7 @@ function svgPathInterpolator(path, epsilon, samples) {
  */
 export default function(values, curveFunction, epsilon = 0.00001, samples = 100) { // eslint-disable-line max-params
 	const length = values.length;
-	const xrange = d3.arrayRange(length).map(function(d, i) { return i * (1 / (length - 1)); });
+	const xrange = d3.range(length).map(function(d, i) { return i * (1 / (length - 1)); });
 	const points = values.map((v, i) => [xrange[i], v]);
 
 	// If curveFunction is curveBasis then reach straight for D3's native 'interpolateBasis' function (it's faster!)

@@ -156,7 +156,7 @@
     var samples = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 100;
     // eslint-disable-line max-params
     var length = values.length;
-    var xrange = d3__namespace.arrayRange(length).map(function (d, i) {
+    var xrange = d3__namespace.range(length).map(function (d, i) {
       return i * (1 / (length - 1));
     });
     var points = values.map(function (v, i) {
