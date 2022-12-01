@@ -5275,7 +5275,8 @@
    */
   function createX3d(selection, width, height, debug) {
     // Create X3D element (if it does not exist already)
-    var x3d = selection.selectAll("X3D").data([0]).enter().append("X3D").attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false").attr("useGeoCache", false);
+    // See: https://www.web3d.org/x3d/profiles
+    var x3d = selection.selectAll("X3D").data([0]).enter().append("X3D").attr("profile", "Interactive").attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false").attr("useGeoCache", false);
     return x3d;
   }
 
