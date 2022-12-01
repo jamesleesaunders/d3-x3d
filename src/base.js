@@ -7,10 +7,12 @@ import * as d3 from "d3";
  */
 export function createX3d(selection, width, height, debug) {
 	// Create X3D element (if it does not exist already)
+	// See: https://www.web3d.org/x3d/profiles
 	let x3d = selection.selectAll("X3D")
 		.data([0])
 		.enter()
 		.append("X3D")
+		.attr("profile", "Interactive")
 		.attr("width", width + "px")
 		.attr("height", height + "px")
 		.attr("showLog", debug ? "true" : "false")
