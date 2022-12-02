@@ -12,8 +12,7 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3)));
 })(this, (function (d3) { 'use strict';
 
-  function _interopNamespace(e) {
-    if (e && e.__esModule) return e;
+  function _interopNamespaceDefault(e) {
     var n = Object.create(null);
     if (e) {
       Object.keys(e).forEach(function (k) {
@@ -26,11 +25,11 @@
         }
       });
     }
-    n["default"] = e;
+    n.default = e;
     return Object.freeze(n);
   }
 
-  var d3__namespace = /*#__PURE__*/_interopNamespace(d3);
+  var d3__namespace = /*#__PURE__*/_interopNamespaceDefault(d3);
 
   function _extends() {
     _extends = Object.assign ? Object.assign.bind() : function (target) {
@@ -1439,34 +1438,30 @@
         ticks.exit().remove();
 
         // Tick Labels
-        if (tickFormat !== "") {
-          var labels = element.selectAll(".tickLabel").data(tickValues, function (d) {
-            return d;
-          });
-          labels.enter().append("Transform").attr("class", "tickLabel").attr("translation", function (t) {
-            return axisDirectionVector.map(function (a) {
-              return scale(t) * a;
-            }).join(" ");
-          }).append("Transform").attr("translation", tickDirectionVector.map(function (d, i) {
-            return labelInset * d * tickPadding + (labelInset + 1) / 2 * tickSize * tickDirectionVector[i];
-          })).append("Billboard").attr("axisOfRotation", "0 0 0").append("Shape").call(makeSolid, "black").append("Text").attr("string", function (d) {
+        var labels = element.selectAll(".tickLabel").data(tickValues, function (d) {
+          return d;
+        });
+        labels.enter().append("Transform").attr("class", "tickLabel").attr("translation", function (t) {
+          return axisDirectionVector.map(function (a) {
+            return scale(t) * a;
+          }).join(" ");
+        }).append("Transform").attr("translation", tickDirectionVector.map(function (d, i) {
+          return labelInset * d * tickPadding + (labelInset + 1) / 2 * tickSize * tickDirectionVector[i];
+        })).append("Billboard").attr("axisOfRotation", "0 0 0").append("Shape").call(makeSolid, "black").append("Text").attr("string", function (d) {
+          return "\"".concat(tickFormat(d), "\"");
+        }).append("FontStyle").attr("size", 1.3).attr("family", "\"SANS\"").attr("style", "BOLD").attr("justify", "\"MIDDLE\" \"MIDDLE\"").merge(labels);
+        labels.transition().attr("translation", function (t) {
+          return axisDirectionVector.map(function (a) {
+            return scale(t) * a;
+          }).join(" ");
+        }).select("Transform").attr("translation", tickDirectionVector.map(function (d, i) {
+          return labelInset * d * tickPadding + (labelInset + 1) / 2 * tickSize * tickDirectionVector[i];
+        })).on("start", function () {
+          d3__namespace.select(this).select("Billboard").select("Shape").select("Text").attr("string", function (d) {
             return "\"".concat(tickFormat(d), "\"");
-          }).append("FontStyle").attr("size", 1.3).attr("family", "\"SANS\"").attr("style", "BOLD").attr("justify", "\"MIDDLE\" \"MIDDLE\"").merge(labels);
-          labels.transition().attr("translation", function (t) {
-            return axisDirectionVector.map(function (a) {
-              return scale(t) * a;
-            }).join(" ");
-          }).select("Transform").attr("translation", tickDirectionVector.map(function (d, i) {
-            return labelInset * d * tickPadding + (labelInset + 1) / 2 * tickSize * tickDirectionVector[i];
-          })).on("start", function () {
-            d3__namespace.select(this).select("Billboard").select("Shape").select("Text").attr("string", function (d) {
-              return "\"".concat(tickFormat(d), "\"");
-            });
           });
-          labels.exit().remove();
-        } else {
-          element.selectAll(".tickLabel").remove();
-        }
+        });
+        labels.exit().remove();
       });
     };
 
@@ -1653,11 +1648,13 @@
 
         // We only want 2 sets of labels on the y axis if they are in distal position.
         if (labelPosition === "proximal") {
-          yxAxis.tickFormat("");
-        } else {
+          // Make the tickFormat return nothing (i.e hide text).
           yxAxis.tickFormat(function (d) {
-            return d;
+            return "";
           });
+        } else {
+          // Make the yxAxis tickFormat match the yzAxis.
+          yxAxis.tickFormat(yzAxis.tickFormat());
         }
         element.select(".xzAxis").call(xzAxis);
         element.select(".yzAxis").call(yzAxis);
@@ -5269,11 +5266,11 @@
   };
 
   /**
-   * Reusable X3D Base and Scene Component
+   * Construct base X3D element
    *
    * @module
    */
-  function createX3d(selection, width, height, debug) {
+  function buildX3d(selection, width, height, debug) {
     // Create X3D element (if it does not exist already)
     // See: https://www.web3d.org/x3d/profiles
     var x3d = selection.selectAll("X3D").data([0]).enter().append("X3D").attr("profile", "Interactive").attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false").attr("useGeoCache", false);
@@ -5281,11 +5278,11 @@
   }
 
   /**
-   * Reusable X3D Base and Scene Component
+   * Construct base Scene elements
    *
    * @module
    */
-  function createScene2(x3d, layers, classed) {
+  function buildScene(x3d, layers, classed) {
     // Create Scene
     var scene = x3d.selectAll("Scene").data([0]).enter().append("Scene");
 
@@ -5301,29 +5298,22 @@
     scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
       return d;
     });
-    return scene;
+    return x3d.select("Scene");
   }
 
   /**
    * Reusable X3D Base and Scene Component
    *
    * @module
-   * @todo Remove the global x3d variable and console.log lines
    */
   function createScene(selection, layers, classed, width, height, debug) {
-    var x3d = createX3d(selection, width, height, debug);
-    selection.select("X3D");
-
-    // console.log(x3d);
-    // console.log(x3d2);
-
-    createScene2(x3d, layers, classed);
-    var scene2 = selection.select("Scene");
-
-    // console.log(scene);
-    // console.log(scene2);
-
-    return scene2;
+    var x3d = buildX3d(selection, width, height, debug);
+    var scene = buildScene(x3d, layers, classed);
+    // For some reason we need to re-select the scene after building it to allow for charts to refresh.
+    // Example: /examples/X3DOM/chart/BarChartMultiSeries.html adding additional series to chart does not
+    // refresh without the line below.
+    scene = selection.select("Scene");
+    return scene;
   }
 
   /**

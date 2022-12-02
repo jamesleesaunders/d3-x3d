@@ -29,5 +29,9 @@ test("Test Three Plane Axis Component, component.axisThreePlane()", function(t) 
 	axisThreePlane.colors(["yellow", "blue", "green"]);
 	t.deepEqual(axisThreePlane.colors(), ["yellow", "blue", "green"], "Changed colors");
 
+	// Test label position getter / setter function
+	axisThreePlane.labelPosition("distal");
+	t.deepEqual(axisThreePlane.labelPosition(), "distal", "Label Position changed to distal");
+
 	t.end();
 });

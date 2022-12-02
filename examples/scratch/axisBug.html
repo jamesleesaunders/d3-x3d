@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3d : 3D Bar Chart Example</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css"/>
+  <script src="../../../dist/d3-x3d.js"></script>
+  <style>
+    h1 {
+      color: white;
+      background-color: gray;
+      height: 40px;
+    }
+
+    p {
+      color: red;
+    }
+
+    body {
+      background-image: url("https://cfx-wp-images.imgix.net/2020/06/Car-Logos-Collage.jpg?auto=compress%2Cformat&ixlib=php-3.3.0&s=4929eccc0597006c119aedf1c43f8ad2");
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-position: right;
+      background-size: 47% 50%
+    }
+  </style>
+</head>
+
+<body>
+<h1>USA Vehicle Sales by Quarter 2021 Major Automotive Brands</h1>
+<div id="chartholder" width="100%"></div>
+
+<script>
+  const csvUrl = '../assets/2021Top6CarSalesUSA.csv'
+
+  const main = async () => {
+    const {
+      csv,
+      select,
+      scaleLinear,
+      extent,
+      axisLeft,
+      axisBottom,
+    } = d3;
+
+    const parseRow = (d) => {
+      obj = {
+        key: d.Manufacturer, values: [
+          { key: "Q1", value: parseInt(d.Q1) },
+          { key: "Q2", value: parseInt(d.Q2) },
+          { key: "Q3", value: parseInt(d.Q3) },
+          { key: "Q4", value: parseInt(d.Q4) }
+        ]
+      }
+
+      return obj;
+    };
+
+    var chartHolder = d3.select("#chartholder");
+    chartHolder.attr("style", "height: 620px").attr("style", "width: 820px");
+
+    // Declare the chart component
+    var myChart = d3.x3d.chart.barChartMultiSeries();
+
+    // Generate some data
+    var myData = d3.x3d.randomData.dataset2();
+    // Attach chart and data to the chartholder
+    chartHolder.datum(myData).call(myChart);
+
+    const data = await csv(csvUrl, parseRow);
+    chartHolder.datum(data).call(myChart);
+  };
+
+  main();
+</script>
+
+<a href="https://vizhub.com/ravitejabonam/85939dcd0abe407889046e04c53c2034?edit=files&file=index.html">Source</a>
+
+</body>
+</html>

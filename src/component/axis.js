@@ -145,47 +145,43 @@ export default function() {
 				.remove();
 
 			// Tick Labels
-			if (tickFormat !== "") {
-				const labels = element.selectAll(".tickLabel")
-					.data(tickValues, (d) => d);
+			const labels = element.selectAll(".tickLabel")
+				.data(tickValues, (d) => d);
 
-				labels.enter()
-					.append("Transform")
-					.attr("class", "tickLabel")
-					.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
-					.append("Transform")
-					.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * tickSize * tickDirectionVector[i])))
-					.append("Billboard")
-					.attr("axisOfRotation", "0 0 0")
-					.append("Shape")
-					.call(makeSolid, "black")
-					.append("Text")
-					.attr("string", (d) => `"${tickFormat(d)}"`)
-					.append("FontStyle")
-					.attr("size", 1.3)
-					.attr("family", "\"SANS\"")
-					.attr("style", "BOLD")
-					.attr("justify", "\"MIDDLE\" \"MIDDLE\"")
-					.merge(labels);
+			labels.enter()
+				.append("Transform")
+				.attr("class", "tickLabel")
+				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
+				.append("Transform")
+				.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * tickSize * tickDirectionVector[i])))
+				.append("Billboard")
+				.attr("axisOfRotation", "0 0 0")
+				.append("Shape")
+				.call(makeSolid, "black")
+				.append("Text")
+				.attr("string", (d) => `"${tickFormat(d)}"`)
+				.append("FontStyle")
+				.attr("size", 1.3)
+				.attr("family", "\"SANS\"")
+				.attr("style", "BOLD")
+				.attr("justify", "\"MIDDLE\" \"MIDDLE\"")
+				.merge(labels);
 
-				labels.transition()
-					.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
-					.select("Transform")
-					.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * tickSize * tickDirectionVector[i])))
-					.on("start", function() {
-						d3.select(this)
-							.select("Billboard")
-							.select("Shape")
-							.select("Text")
-							.attr("string", (d) => `"${tickFormat(d)}"`);
-					});
+			labels.transition()
+				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
+				.select("Transform")
+				.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * tickSize * tickDirectionVector[i])))
+				.on("start", function() {
+					d3.select(this)
+						.select("Billboard")
+						.select("Shape")
+						.select("Text")
+						.attr("string", (d) => `"${tickFormat(d)}"`);
+				});
 
-				labels.exit()
-					.remove();
-			} else {
-				element.selectAll(".tickLabel")
-					.remove();
-			}
+			labels.exit()
+				.remove();
+
 		});
 	};
 

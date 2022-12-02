@@ -1,11 +1,11 @@
 import * as d3 from "d3";
 
 /**
- * Reusable X3D Base and Scene Component
+ * Construct base X3D element
  *
  * @module
  */
-export function createX3d(selection, width, height, debug) {
+function buildX3d(selection, width, height, debug) {
 	// Create X3D element (if it does not exist already)
 	// See: https://www.web3d.org/x3d/profiles
 	let x3d = selection.selectAll("X3D")
@@ -23,11 +23,11 @@ export function createX3d(selection, width, height, debug) {
 }
 
 /**
- * Reusable X3D Base and Scene Component
+ * Construct base Scene elements
  *
  * @module
  */
-export function createScene2(x3d, layers, classed) {
+function buildScene(x3d, layers, classed) {
 	// Create Scene
 	let scene = x3d.selectAll("Scene")
 		.data([0])
@@ -53,27 +53,20 @@ export function createScene2(x3d, layers, classed) {
 		.append("Group")
 		.attr("class", (d) => d);
 
-	return scene;
+	return x3d.select("Scene");
 }
 
 /**
  * Reusable X3D Base and Scene Component
  *
  * @module
- * @todo Remove the global x3d variable and console.log lines
  */
 export function createScene(selection, layers, classed, width, height, debug) {
-	let x3d = createX3d(selection, width, height, debug);
-	let x3d2 = selection.select("X3D");
-
-	// console.log(x3d);
-	// console.log(x3d2);
-
-	let scene = createScene2(x3d, layers, classed);
-	let scene2 = selection.select("Scene");
-
-	// console.log(scene);
-	// console.log(scene2);
-
-	return scene2;
+	let x3d = buildX3d(selection, width, height, debug);
+	let scene = buildScene(x3d, layers, classed);
+	// For some reason we need to re-select the scene after building it to allow for charts to refresh.
+	// Example: /examples/X3DOM/chart/BarChartMultiSeries.html adding additional series to chart does not
+	// refresh without the line below.
+	scene = selection.select("Scene");
+	return scene;
 }
