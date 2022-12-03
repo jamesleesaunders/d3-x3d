@@ -13,6 +13,8 @@ import componentLight from "./component/light.js";
 import componentParticles from "./component/particles.js";
 import componentRibbon from "./component/ribbon.js";
 import componentRibbonMultiSeries from "./component/ribbonMultiSeries.js";
+import componentSpots from "./component/spots.js";
+import componentSpotsMultiSeries from "./component/spotsMultiSeries.js";
 import componentSurface from "./component/surface.js";
 import componentVectorFields from "./component/vectorFields.js";
 import componentViewpoint from "./component/viewpoint.js";
@@ -34,6 +36,8 @@ export default {
 	particles: componentParticles,
 	ribbon: componentRibbon,
 	ribbonMultiSeries: componentRibbonMultiSeries,
+	spots: componentSpots,
+	spotsMultiSeries: componentSpotsMultiSeries,
 	surface: componentSurface,
 	vectorFields: componentVectorFields,
 	viewpoint: componentViewpoint,

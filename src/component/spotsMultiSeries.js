@@ -1,10 +1,10 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform.js";
-import componentBubbles from "./bubbles.js";
+import componentSpots from "./spots.js";
 import { dispatch } from "../events.js";
 
 /**
- * Reusable 3D Multi Series Bubble Chart Component
+ * Reusable 3D Multi Series Spot Plot Component
  *
  * @module
  */
@@ -13,7 +13,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["green", "red", "yellow", "steelblue", "orange"];
-	let classed = "d3X3dBubblesMultiSeries";
+	let classed = "d3X3dSpotsMultiSeries";
 
 	/* Scales */
 	let xScale;
@@ -25,7 +25,7 @@ export default function() {
 	let sizeRange = [0.5, 3.0];
 
 	/* Components */
-	const bubbles = componentBubbles()
+	const spots = componentSpots()
 		.mappings({ x: 'x', y: 'y', z: 'z', size: 'size', color: 'color' })
 		.colors(d3.schemeRdYlGn[8])
 		.sizeRange([2, 2]);
@@ -99,14 +99,14 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
-	 * @alias bubblesMultiSeries
+	 * @alias spotsMultiSeries
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
 		selection.each(function(data) {
 			init(data);
 
-			const bubbleData = function(d) {
+			const spotData = function(d) {
 				return d.map((f) => {
 					return {
 						key: f.key,
@@ -129,28 +129,28 @@ export default function() {
 			const element = d3.select(this)
 				.classed(classed, true);
 
-			bubbles.xScale(xScale)
+			spots.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
 				.sizeScale(sizeScale);
 
-			const addBubbles = function(d) {
+			const addSpots = function(d) {
 				const color = colorScale(d.key);
-				bubbles.color(color);
-				d3.select(this).call(bubbles);
+				spots.color(color);
+				d3.select(this).call(spots);
 			};
 
-			const bubbleGroup = element.selectAll(".bubbleGroup")
-				.data(bubbleData, (d) => d.key);
+			const spotGroup = element.selectAll(".spotSeries")
+				.data(spotData, (d) => d.key);
 
-			bubbleGroup.enter()
+			spotGroup.enter()
 				.append("Group")
-				.classed("bubbleGroup", true)
-				.merge(bubbleGroup)
+				.classed("spotSeries", true)
+				.merge(spotGroup)
 				.transition()
-				.each(addBubbles);
+				.each(addSpots);
 
-			bubbleGroup.exit()
+			spotGroup.exit()
 				.remove();
 		});
 	};

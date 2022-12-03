@@ -2523,7 +2523,6 @@
     };
 
     /**
-    	 /**
      * Initialise Data and Scales
      *
      * @private
@@ -3904,6 +3903,557 @@
   }
 
   /**
+   * Reusable 3D Spot Plot Component
+   *
+   * @module
+   */
+  function componentSpots () {
+    /* Default Properties */
+    var dimensions = {
+      x: 40,
+      y: 40,
+      z: 40
+    };
+    var colors = d3__namespace.schemeRdYlGn[8];
+    var color;
+    var classed = "d3X3dSpots";
+    var mappings;
+
+    /* Scales */
+    var xScale;
+    var yScale;
+    var zScale;
+    var colorScale;
+    var sizeScale;
+    var sizeRange = [0.2, 4.0];
+
+    /**
+     * Initialise Data and Scales
+     *
+     * @private
+     * @param {Array} data - Chart data.
+     */
+    var init = function init(data) {
+      var newData = {};
+      ['x', 'y', 'z', 'size', 'color'].forEach(function (dimension) {
+        var set = {
+          key: dimension,
+          values: []
+        };
+        data.values.forEach(function (d) {
+          var key = mappings[dimension];
+          var value = d.values.find(function (v) {
+            return v.key === key;
+          }).value;
+          set.values.push({
+            key: key,
+            value: value
+          });
+        });
+        newData[dimension] = dataTransform(set).summary();
+      });
+      var extentX = newData.x.valueExtent;
+      var extentY = newData.y.valueExtent;
+      var extentZ = newData.z.valueExtent;
+      var extentSize = newData.size.valueExtent;
+      var extentColor = newData.color.valueExtent;
+      if (typeof xScale === "undefined") {
+        xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensions.x]);
+      }
+      if (typeof yScale === "undefined") {
+        yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensions.y]);
+      }
+      if (typeof zScale === "undefined") {
+        zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensions.z]);
+      }
+      if (typeof sizeScale === "undefined") {
+        sizeScale = d3__namespace.scaleLinear().domain(extentSize).range(sizeRange);
+      }
+      if (color) {
+        colorScale = d3__namespace.scaleQuantize().domain(extentColor).range([color, color]);
+      } else if (typeof colorScale === "undefined") {
+        colorScale = d3__namespace.scaleQuantize().domain(extentColor).range(colors);
+      }
+    };
+
+    /**
+     * Constructor
+     *
+     * @constructor
+     * @alias spots
+     * @param {d3.selection} selection - The chart holder D3 selection.
+     */
+    var my = function my(selection) {
+      selection.each(function (data) {
+        var _this = this;
+        init(data);
+        function getPositionVector(d, axis) {
+          var xVal = d.values.find(function (v) {
+            return v.key === mappings.x;
+          }).value;
+          var yVal = d.values.find(function (v) {
+            return v.key === mappings.y;
+          }).value;
+          var zVal = d.values.find(function (v) {
+            return v.key === mappings.z;
+          }).value;
+          var xJim = xScale(xVal);
+          var yJim = yScale(yVal);
+          var zJim = zScale(zVal);
+          switch (axis) {
+            case "x":
+              xJim = 0;
+              break;
+            case "y":
+              yJim = 0;
+              break;
+            case "z":
+              zJim = 0;
+              break;
+          }
+          return xJim + " " + yJim + " " + zJim;
+        }
+        var rotationVectors = {
+          x: [1, 1, 0, Math.PI],
+          y: [0, 0, 0, 0],
+          z: [0, 1, 1, Math.PI]
+        };
+        function getRotationVector(axis) {
+          return rotationVectors[axis].join(" ");
+        }
+        var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
+          return d.key;
+        });
+        var shape = function shape(el) {
+          var shape = el.append("Shape");
+          shape.append("Cylinder").attr("radius", function (d) {
+            var sizeVal = d.values.find(function (v) {
+              return v.key === mappings.size;
+            }).value;
+            return sizeScale(sizeVal);
+          }).attr("height", 0);
+          shape.append("Appearance").append("Material").attr("diffuseColor", function (d) {
+            var colorVal = d.values.find(function (v) {
+              return v.key === mappings.color;
+            }).value;
+            return colorParse(colorScale(colorVal));
+          }).attr("ambientIntensity", 0.1);
+          return shape;
+        };
+        element.selectAll(".spotGroup").data(['x', 'y', 'z']).enter().each(function (axis) {
+          var group = d3__namespace.select(_this).append("group").classed("spotGroup", true);
+          var spots = group.selectAll(".spot").data(function (d) {
+            return d.values;
+          }, function (d) {
+            return d.key;
+          });
+          var spotsEnter = spots.enter().append("Transform").attr("class", "spot").call(shape).merge(spots);
+          var spotsTransition = spotsEnter.transition();
+          spotsTransition.attr("translation", function (d) {
+            return getPositionVector(d, axis);
+          }).attr("rotation", function (d) {
+            return getRotationVector(axis);
+          });
+          spotsTransition.select("Shape").select("Cylinder").attr("radius", function (d) {
+            var sizeVal = d.values.find(function (v) {
+              return v.key === mappings.size;
+            }).value;
+            return sizeScale(sizeVal);
+          });
+          spotsTransition.select("Shape").select("Appearance").select("Material").attr("diffuseColor", function (d) {
+            var colorVal = d.values.find(function (v) {
+              return v.key === mappings.color;
+            }).value;
+            return colorParse(colorScale(colorVal));
+          });
+          spots.exit().remove();
+        });
+      });
+    };
+
+    /**
+     * Dimensions Getter / Setter
+     *
+     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+     * @returns {*}
+     */
+    my.dimensions = function (_v) {
+      if (!arguments.length) return dimensions;
+      dimensions = _v;
+      return this;
+    };
+
+    /**
+     * X Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+    my.xScale = function (_v) {
+      if (!arguments.length) return xScale;
+      xScale = _v;
+      return my;
+    };
+
+    /**
+     * Y Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+    my.yScale = function (_v) {
+      if (!arguments.length) return yScale;
+      yScale = _v;
+      return my;
+    };
+
+    /**
+     * Z Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+    my.zScale = function (_v) {
+      if (!arguments.length) return zScale;
+      zScale = _v;
+      return my;
+    };
+
+    /**
+     * Size Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 size scale.
+     * @returns {*}
+     */
+    my.sizeScale = function (_v) {
+      if (!arguments.length) return sizeScale;
+      sizeScale = _v;
+      return my;
+    };
+
+    /**
+     * Size Range Getter / Setter
+     *
+     * @param {number[]} _v - Size min and max (e.g. [1, 9]).
+     * @returns {*}
+     */
+    my.sizeRange = function (_v) {
+      if (!arguments.length) return sizeRange;
+      sizeRange = _v;
+      return my;
+    };
+
+    /**
+     * Color Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 color scale.
+     * @returns {*}
+     */
+    my.colorScale = function (_v) {
+      if (!arguments.length) return colorScale;
+      colorScale = _v;
+      return my;
+    };
+
+    /**
+     * Color Getter / Setter
+     *
+     * @param {string} _v - Color (e.g. "red" or "#ff0000").
+     * @returns {*}
+     */
+    my.color = function (_v) {
+      if (!arguments.length) return color;
+      color = _v;
+      return my;
+    };
+
+    /**
+     * Colors Getter / Setter
+     *
+     * @param {Array} _v - Array of colours used by color scale.
+     * @returns {*}
+     */
+    my.colors = function (_v) {
+      if (!arguments.length) return colors;
+      colors = _v;
+      return my;
+    };
+
+    /**
+     * Mappings Getter / Setter
+     *
+     * @param {Object} _v - Map properties to size, colour etc.
+     * @returns {*}
+     */
+    my.mappings = function (_v) {
+      if (!arguments.length) return mappings;
+      mappings = _v;
+      return my;
+    };
+
+    /**
+     * Dispatch On Getter
+     *
+     * @returns {*}
+     */
+    my.on = function () {
+      var value = dispatch.on.apply(dispatch, arguments);
+      return value === dispatch ? my : value;
+    };
+    return my;
+  }
+
+  /**
+   * Reusable 3D Multi Series Spot Plot Component
+   *
+   * @module
+   */
+  function componentSpotsMultiSeries () {
+    /* Default Properties */
+    var dimensions = {
+      x: 40,
+      y: 40,
+      z: 40
+    };
+    var colors = ["green", "red", "yellow", "steelblue", "orange"];
+    var classed = "d3X3dSpotsMultiSeries";
+
+    /* Scales */
+    var xScale;
+    var yScale;
+    var zScale;
+    var colorScale;
+    var colorDomain = [];
+    var sizeScale;
+    var sizeRange = [0.5, 3.0];
+
+    /* Components */
+    var spots = componentSpots().mappings({
+      x: 'x',
+      y: 'y',
+      z: 'z',
+      size: 'size',
+      color: 'color'
+    }).colors(d3__namespace.schemeRdYlGn[8]).sizeRange([2, 2]);
+
+    /**
+     * Unique Array
+     *
+     * @param {array} array1
+     * @param {array} array2
+     * @returns {array}
+     */
+    var arrayUnique = function arrayUnique(array1, array2) {
+      var array = array1.concat(array2);
+      var a = array.concat();
+      for (var i = 0; i < a.length; ++i) {
+        for (var j = i + 1; j < a.length; ++j) {
+          if (a[i] === a[j]) {
+            a.splice(j--, 1);
+          }
+        }
+      }
+      return a;
+    };
+
+    /**
+     * Initialise Data and Scales
+     *
+     * @private
+     * @param {Array} data - Chart data.
+     */
+    var init = function init(data) {
+      var _dataTransform$summar = dataTransform(data).summary(),
+        rowKeys = _dataTransform$summar.rowKeys,
+        valueExtent = _dataTransform$summar.valueExtent,
+        coordinatesExtent = _dataTransform$summar.coordinatesExtent;
+      var extentX = coordinatesExtent.x,
+        extentY = coordinatesExtent.y,
+        extentZ = coordinatesExtent.z;
+      var _dimensions = dimensions,
+        dimensionX = _dimensions.x,
+        dimensionY = _dimensions.y,
+        dimensionZ = _dimensions.z;
+      if (typeof xScale === "undefined") {
+        xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensionX]);
+      }
+      if (typeof yScale === "undefined") {
+        yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensionY]);
+      }
+      if (typeof zScale === "undefined") {
+        zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensionZ]);
+      }
+      if (typeof colorScale === "undefined") {
+        colorDomain = arrayUnique(colorDomain, rowKeys);
+        colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(colors);
+      }
+      if (typeof sizeScale === "undefined") {
+        sizeScale = d3__namespace.scaleLinear().domain(valueExtent).range(sizeRange);
+      }
+    };
+
+    /**
+     * Constructor
+     *
+     * @constructor
+     * @alias spotsMultiSeries
+     * @param {d3.selection} selection - The chart holder D3 selection.
+     */
+    var my = function my(selection) {
+      selection.each(function (data) {
+        init(data);
+        var spotData = function spotData(d) {
+          return d.map(function (f) {
+            return {
+              key: f.key,
+              values: f.values.map(function (g) {
+                return {
+                  key: g.key,
+                  values: [{
+                    key: "size",
+                    value: g.value
+                  }, {
+                    key: "color",
+                    value: g.value
+                  }, {
+                    key: "x",
+                    value: g.x
+                  }, {
+                    key: "y",
+                    value: g.y
+                  }, {
+                    key: "z",
+                    value: g.z
+                  }]
+                };
+              })
+            };
+          });
+        };
+        var element = d3__namespace.select(this).classed(classed, true);
+        spots.xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale);
+        var addSpots = function addSpots(d) {
+          var color = colorScale(d.key);
+          spots.color(color);
+          d3__namespace.select(this).call(spots);
+        };
+        var spotGroup = element.selectAll(".spotSeries").data(spotData, function (d) {
+          return d.key;
+        });
+        spotGroup.enter().append("Group").classed("spotSeries", true).merge(spotGroup).transition().each(addSpots);
+        spotGroup.exit().remove();
+      });
+    };
+
+    /**
+     * Dimensions Getter / Setter
+     *
+     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+     * @returns {*}
+     */
+    my.dimensions = function (_v) {
+      if (!arguments.length) return dimensions;
+      dimensions = _v;
+      return this;
+    };
+
+    /**
+     * X Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 Scale.
+     * @returns {*}
+     */
+    my.xScale = function (_v) {
+      if (!arguments.length) return xScale;
+      xScale = _v;
+      return my;
+    };
+
+    /**
+     * Y Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+    my.yScale = function (_v) {
+      if (!arguments.length) return yScale;
+      yScale = _v;
+      return my;
+    };
+
+    /**
+     * Z Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 Scale.
+     * @returns {*}
+     */
+    my.zScale = function (_v) {
+      if (!arguments.length) return zScale;
+      zScale = _v;
+      return my;
+    };
+
+    /**
+     * Color Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 color scale.
+     * @returns {*}
+     */
+    my.colorScale = function (_v) {
+      if (!arguments.length) return colorScale;
+      colorScale = _v;
+      return my;
+    };
+
+    /**
+     * Size Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 size scale.
+     * @returns {*}
+     */
+    my.sizeScale = function (_v) {
+      if (!arguments.length) return sizeScale;
+      sizeScale = _v;
+      return my;
+    };
+
+    /**
+     * Size Range Getter / Setter
+     *
+     * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
+     * @returns {*}
+     */
+    my.sizeRange = function (_v) {
+      if (!arguments.length) return sizeRange;
+      sizeRange = _v;
+      return my;
+    };
+
+    /**
+     * Colors Getter / Setter
+     *
+     * @param {Array} _v - Array of colours used by color scale.
+     * @returns {*}
+     */
+    my.colors = function (_v) {
+      if (!arguments.length) return colors;
+      colors = _v;
+      return my;
+    };
+
+    /**
+     * Dispatch On Getter
+     *
+     * @returns {*}
+     */
+    my.on = function () {
+      var value = dispatch.on.apply(dispatch, arguments);
+      return value === dispatch ? my : value;
+    };
+    return my;
+  }
+
+  /**
    * Reusable 3D Surface Area Component
    *
    * @module
@@ -5259,6 +5809,8 @@
     particles: componentParticles,
     ribbon: componentRibbon,
     ribbonMultiSeries: componentRibbonMultiSeries,
+    spots: componentSpots,
+    spotsMultiSeries: componentSpotsMultiSeries,
     surface: componentSurface,
     vectorFields: componentVectorFields,
     viewpoint: componentViewpoint,
@@ -7364,6 +7916,234 @@
   }
 
   /**
+   * Reusable 3D Spot Plot
+   *
+   * @module
+   *
+   * @example
+   * let chartHolder = d3.select("#chartholder");
+   *
+   * let myData = [...];
+   *
+   * let myChart = d3.x3d.chart.spotPlot();
+   *
+   * chartHolder.datum(myData).call(myChart);
+   *
+   * @see https://datavizproject.com/data-type/bubble-chart/
+   */
+  function chartSpotPlot () {
+    /* Default Properties */
+    var width = 500;
+    var height = 500;
+    var dimensions = {
+      x: 40,
+      y: 40,
+      z: 40
+    };
+    var colors = ["green", "red", "yellow", "steelblue", "orange"];
+    var sizeRange = [0.5, 3.5];
+    var classed = "d3X3dSpotPlot";
+    var debug = false;
+
+    /* Scales */
+    var xScale;
+    var yScale;
+    var zScale;
+    var colorScale;
+    var sizeScale;
+
+    /* Components */
+    var viewpoint = component.viewpoint();
+    var axis = component.axisThreePlane();
+    var spots = component.spotsMultiSeries();
+
+    /**
+     * Initialise Data and Scales
+     *
+     * @private
+     * @param {Array} data - Chart data.
+     */
+    var init = function init(data) {
+      var _dataTransform$summar = dataTransform(data).summary(),
+        valueExtent = _dataTransform$summar.valueExtent,
+        coordinatesExtent = _dataTransform$summar.coordinatesExtent,
+        rowKeys = _dataTransform$summar.rowKeys;
+      var extentX = coordinatesExtent.x,
+        extentY = coordinatesExtent.y,
+        extentZ = coordinatesExtent.z;
+      var _dimensions = dimensions,
+        dimensionX = _dimensions.x,
+        dimensionY = _dimensions.y,
+        dimensionZ = _dimensions.z;
+      xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensionX]);
+      yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensionY]);
+      zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensionZ]);
+      colorScale = d3__namespace.scaleOrdinal().domain(rowKeys).range(colors);
+      sizeScale = d3__namespace.scaleLinear().domain(valueExtent).range(sizeRange);
+    };
+
+    /**
+     * Constructor
+     *
+     * @constructor
+     * @alias spotPlot
+     * @param {d3.selection} selection - The chart holder D3 selection.
+     */
+    var my = function my(selection) {
+      var layers = ["axis", "spots"];
+      var scene = createScene(selection, layers, classed, width, height, debug);
+      selection.each(function (data) {
+        init(data);
+
+        // Add Viewpoint
+        viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
+        scene.call(viewpoint);
+
+        // Add Axis
+        axis.xScale(xScale).yScale(yScale).zScale(zScale);
+        scene.select(".axis").call(axis);
+
+        // Add Spots
+        spots.xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).colorScale(colorScale);
+        scene.select(".spots").datum(data).call(spots);
+      });
+    };
+
+    /**
+     * Width Getter / Setter
+     *
+     * @param {number} _v - X3D canvas width in px.
+     * @returns {*}
+     */
+    my.width = function (_v) {
+      if (!arguments.length) return width;
+      width = _v;
+      return this;
+    };
+
+    /**
+     * Height Getter / Setter
+     *
+     * @param {number} _v - X3D canvas height in px.
+     * @returns {*}
+     */
+    my.height = function (_v) {
+      if (!arguments.length) return height;
+      height = _v;
+      return this;
+    };
+
+    /**
+     * Dimensions Getter / Setter
+     *
+     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+     * @returns {*}
+     */
+    my.dimensions = function (_v) {
+      if (!arguments.length) return dimensions;
+      dimensions = _v;
+      return this;
+    };
+
+    /**
+     * X Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+    my.xScale = function (_v) {
+      if (!arguments.length) return xScale;
+      xScale = _v;
+      return my;
+    };
+
+    /**
+     * Y Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+    my.yScale = function (_v) {
+      if (!arguments.length) return yScale;
+      yScale = _v;
+      return my;
+    };
+
+    /**
+     * Z Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+    my.zScale = function (_v) {
+      if (!arguments.length) return zScale;
+      zScale = _v;
+      return my;
+    };
+
+    /**
+     * Color Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 color scale.
+     * @returns {*}
+     */
+    my.colorScale = function (_v) {
+      if (!arguments.length) return colorScale;
+      colorScale = _v;
+      return my;
+    };
+
+    /**
+     * Colors Getter / Setter
+     *
+     * @param {Array} _v - Array of colours used by color scale.
+     * @returns {*}
+     */
+    my.colors = function (_v) {
+      if (!arguments.length) return colors;
+      colors = _v;
+      return my;
+    };
+
+    /**
+     * Size Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 color scale.
+     * @returns {*}
+     */
+    my.sizeScale = function (_v) {
+      if (!arguments.length) return sizeScale;
+      sizeScale = _v;
+      return my;
+    };
+
+    /**
+     * Size Range Getter / Setter
+     *
+     * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
+     * @returns {*}
+     */
+    my.sizeRange = function (_v) {
+      if (!arguments.length) return sizeRange;
+      sizeRange = _v;
+      return my;
+    };
+
+    /**
+     * Debug Getter / Setter
+     *
+     * @param {boolean} _v - Show debug log and stats. True/False.
+     * @returns {*}
+     */
+    my.debug = function (_v) {
+      if (!arguments.length) return debug;
+      debug = _v;
+      return my;
+    };
+    return my;
+  }
+
+  /**
    * Reusable 3D Surface Plot Chart
    *
    * @module
@@ -8097,6 +8877,7 @@
     particlePlot: chartParticlePlot,
     ribbonChartMultiSeries: chartRibbonChartMultiSeries,
     scatterPlot: chartScatterPlot,
+    spotPlot: chartSpotPlot,
     surfacePlot: chartSurfacePlot,
     vectorFieldChart: chartVectorField,
     volumeSliceChart: chartVolumeSlice

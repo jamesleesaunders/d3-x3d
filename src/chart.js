@@ -7,6 +7,7 @@ import chartHeatMap from "./chart/heatMap.js";
 import chartParticlePlot from "./chart/particlePlot.js";
 import chartRibbonChartMultiSeries from "./chart/ribbonChartMultiSeries.js";
 import chartScatterPlot from "./chart/scatterPlot.js";
+import chartSpotPlot from "./chart/spotPlot.js";
 import chartSurfacePlot from "./chart/surfacePlot.js";
 import chartVectorField from "./chart/vectorFieldChart.js";
 import chartVolumeSlice from "./chart/volumeSliceChart.js";
@@ -21,6 +22,7 @@ export default {
 	particlePlot: chartParticlePlot,
 	ribbonChartMultiSeries: chartRibbonChartMultiSeries,
 	scatterPlot: chartScatterPlot,
+	spotPlot: chartSpotPlot,
 	surfacePlot: chartSurfacePlot,
 	vectorFieldChart: chartVectorField,
 	volumeSliceChart: chartVolumeSlice
