@@ -5298,7 +5298,7 @@
     scene.classed(classed, true).selectAll("Group").data(layers).enter().append("Group").attr("class", function (d) {
       return d;
     });
-    return x3d.select("Scene");
+    return scene;
   }
 
   /**

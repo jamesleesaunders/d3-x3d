@@ -53,7 +53,7 @@ function buildScene(x3d, layers, classed) {
 		.append("Group")
 		.attr("class", (d) => d);
 
-	return x3d.select("Scene");
+	return scene;
 }
 
 /**
