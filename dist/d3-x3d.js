@@ -3926,7 +3926,7 @@
     var zScale;
     var colorScale;
     var sizeScale;
-    var sizeRange = [0.2, 4.0];
+    var sizeRange = [0.5, 3.5];
 
     /**
      * Initialise Data and Scales
@@ -4310,7 +4310,6 @@
      */
     var my = function my(selection) {
       selection.each(function (data) {
-        var _this = this;
         init(data);
         var spotData = function spotData(d) {
           return d.map(function (f) {
@@ -4342,15 +4341,18 @@
         };
         spots.xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale);
         var element = d3__namespace.select(this).classed(classed, true);
-        element.selectAll(".spotGroup").data(['x', 'y', 'z']).enter().each(function (direction) {
-          var spotGroup = d3__namespace.select(_this).append("Group").classed("spotGroup", true).classed(direction, true);
-          var addSpots = function addSpots(d) {
-            var color = colorScale(d.key);
-            spots.color(color);
-            spots.direction(direction);
-            d3__namespace.select(this).call(spots);
-          };
-          var spotSeries = spotGroup.selectAll(".spotSeries").data(spotData, function (d) {
+        var addSpots = function addSpots(d) {
+          var color = colorScale(d.key);
+          spots.color(color);
+          d3__namespace.select(this).call(spots);
+        };
+        var spotGroup = element.selectAll(".spotGroup").data(['x', 'y', 'z']);
+        var spotGroupEnter = spotGroup.enter().append("Group").classed("spotGroup", true).merge(spotGroup);
+        spotGroupEnter.each(function (direction, i, nodes) {
+          spots.direction(direction);
+          var el = d3__namespace.select(nodes[i]);
+          el.classed(direction, true);
+          var spotSeries = el.selectAll(".spotSeries").data(spotData(data), function (d) {
             return d.key;
           });
           spotSeries.enter().append("Group").classed("spotSeries", true).merge(spotSeries).transition().each(addSpots);
