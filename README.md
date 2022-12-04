@@ -40,6 +40,7 @@ Both these players are compatible with modern browsers supporting HTML5 and enab
 | Heat Map               | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/HeatMap.html)                | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/HeatMap.html)                | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-heat-map)           |
 | Particle Plot          | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/ParticlePlot.html)           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/ParticlePlot.html)           | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-particles)          |
 | Scatter Plot           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/ScatterPlot.html)            | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/ScatterPlot.html)            | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-bubbles)            |
+| Spot Plot              | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/SpotPlot.html)               | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/SpotPlot.html)               | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-bubbles)            |
 | Surface Plot           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/SurfacePlot.html)            | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/SurfacePlot.html)            | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-surface-plot)       |
 | Ribbon Chart           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/RibbonChartMultiSeries.html) | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/RibbonChartMultiSeries.html) | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-ribbon-chart)       |
 | Vector Field Chart     | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/VectorFieldChart.html)       | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/VectorFieldChart.html)       | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-vector-field-chart) |
@@ -165,6 +166,8 @@ Component modules do not generate a `<X3D>` tag, these should be attached to an 
 | component.particles()          | Particle Plot                       | [View](https://jamesleesaunders.github.io/d3-x3d/particles.html)          |
 | component.ribbon()             | Ribbon Chart / Line Chart           | [View](https://jamesleesaunders.github.io/d3-x3d/ribbon.html)             |
 | component.ribbonMultiSeries()  | Multi series Ribbon Chart           | [View](https://jamesleesaunders.github.io/d3-x3d/ribbonMultiSeries.html)  |
+| component.spots()              | Spot Plot                           | [View](https://jamesleesaunders.github.io/d3-x3d/spot.html)               |
+| component.spotsMultiSeries()   | Multi series Spot Plot              | [View](https://jamesleesaunders.github.io/d3-x3d/spotMultiSeries.html)    |
 | component.surface()            | Surface Area                        | [View](https://jamesleesaunders.github.io/d3-x3d/surface.html)            |
 | component.vectorFields()       | Vector Field Chart                  | [View](https://jamesleesaunders.github.io/d3-x3d/vectorFields.html)       |
 | component.viewpoint()          | Camera position                     | [View](https://jamesleesaunders.github.io/d3-x3d/viewpoint.html)          |
@@ -186,6 +189,7 @@ Chart modules also generate the `<X3D>` tag, these should be attached to a regul
 | chart.particlePlot()           | Particle Plot & Axis           | [View](https://jamesleesaunders.github.io/d3-x3d/particlePlot.html)           |
 | chart.ribbonChartMultiSeries() | Multi series Ribbon Chart      | [View](https://jamesleesaunders.github.io/d3-x3d/ribbonChartMultiSeries.html) |
 | chart.scatterPlot()            | Scatter Plot & Axis            | [View](https://jamesleesaunders.github.io/d3-x3d/scatterPlot.html)            |
+| chart.spotPlot()               | Spot Plot & Axis               | [View](https://jamesleesaunders.github.io/d3-x3d/spotPlot.html)               |
 | chart.surfacePlot()            | Surface Plot & Axis            | [View](https://jamesleesaunders.github.io/d3-x3d/surfacePlot.html)            |
 | chart.vectorFieldChart()       | Vector Field Chart             | [View](https://jamesleesaunders.github.io/d3-x3d/vectorFieldChart.html)       |
 | chart.volumeSliceChart()       | Volume Slice Chart             | [View](https://jamesleesaunders.github.io/d3-x3d/volumeSliceChart.html)       |
