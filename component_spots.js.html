@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>component/label.js - Documentation</title>
+    <title>component/spots.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">component/label.js</h1>
+    <h1 class="page-title">component/spots.js</h1>
     
 
     
@@ -40,10 +40,12 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import * as d3 from "d3";
+import dataTransform from "../dataTransform.js";
+import { dispatch } from "../events.js";
 import { colorParse } from "../colorHelper.js";
 
 /**
- * Reusable 3D Label Component
+ * Reusable 3D Spot Plot Component
  *
  * @module
  */
@@ -51,61 +53,185 @@ export default function() {
 
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
-	let color = "black";
-	let classed = "d3X3dLabel";
-	let offset = 0;
+	let colors = d3.schemeRdYlGn[8];
+	let color;
+	let classed = "d3X3dSpots";
+	let mappings;
+	let direction = "x";
 
 	/* Scales */
 	let xScale;
 	let yScale;
 	let zScale;
+	let colorScale;
+	let sizeScale;
+	let sizeRange = [0.5, 3.5];
+
+	/**
+	 * Initialise Data and Scales
+	 *
+	 * @private
+	 * @param {Array} data - Chart data.
+	 */
+	const init = function(data) {
+		let newData = {};
+		['x', 'y', 'z', 'size', 'color'].forEach((dimension) => {
+			let set = {
+				key: dimension,
+				values: []
+			};
+
+			data.values.forEach((d) => {
+				let key = mappings[dimension];
+				let value = d.values.find((v) => v.key === key).value;
+				set.values.push({ key: key, value: value });
+			});
+
+			newData[dimension] = dataTransform(set).summary();
+		});
+
+		let extentX = newData.x.valueExtent;
+		let extentY = newData.y.valueExtent;
+		let extentZ = newData.z.valueExtent;
+		let extentSize = newData.size.valueExtent;
+		let extentColor = newData.color.valueExtent;
+
+		if (typeof xScale === "undefined") {
+			xScale = d3.scaleLinear()
+				.domain(extentX)
+				.range([0, dimensions.x]);
+		}
+
+		if (typeof yScale === "undefined") {
+			yScale = d3.scaleLinear()
+				.domain(extentY)
+				.range([0, dimensions.y]);
+		}
+
+		if (typeof zScale === "undefined") {
+			zScale = d3.scaleLinear()
+				.domain(extentZ)
+				.range([0, dimensions.z]);
+		}
+
+		if (typeof sizeScale === "undefined") {
+			sizeScale = d3.scaleLinear()
+				.domain(extentSize)
+				.range(sizeRange);
+		}
+
+		if (color) {
+			colorScale = d3.scaleQuantize()
+				.domain(extentColor)
+				.range([color, color]);
+		} else if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleQuantize()
+				.domain(extentColor)
+				.range(colors);
+		}
+	};
 
 	/**
 	 * Constructor
 	 *
 	 * @constructor
-	 * @alias label
+	 * @alias spots
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
 		selection.each(function(data) {
+			init(data);
+
+			function getPositionVector(d) {
+				let xVal = d.values.find((v) => v.key === mappings.x).value;
+				let yVal = d.values.find((v) => v.key === mappings.y).value;
+				let zVal = d.values.find((v) => v.key === mappings.z).value;
+
+				let xJim = xScale(xVal);
+				let yJim = yScale(yVal);
+				let zJim = zScale(zVal);
+
+				switch (direction) {
+					case "x":
+						xJim = 0;
+						break;
+					case "y":
+						yJim = 0;
+						break;
+					case "z":
+						zJim = 0;
+						break;
+				}
+
+				return xJim + " " + yJim + " " + zJim;
+			}
+
+			const rotationVectors = {
+				x: [1, 1, 0, Math.PI],
+				y: [0, 0, 0, 0],
+				z: [0, 1, 1, Math.PI]
+			};
+
+			function getRotationVector() {
+				return rotationVectors[direction].join(" ");
+			}
 
 			const element = d3.select(this)
 				.classed(classed, true)
 				.attr("id", (d) => d.key);
 
-			const makeSolid = (el, color) => {
-				el.append("Appearance")
+			const shape = (el) => {
+				const shape = el.append("Shape");
+
+				shape.append("Cylinder")
+					.attr("radius", (d) => {
+						let sizeVal = d.values.find((v) => v.key === mappings.size).value;
+						return sizeScale(sizeVal);
+					})
+					.attr("height", 0);
+
+				shape.append("Appearance")
 					.append("Material")
-					.attr("diffuseColor", colorParse(color) || "0 0 0");
+					.attr("diffuseColor", (d) => {
+						let colorVal = d.values.find((v) => v.key === mappings.color).value;
+						return colorParse(colorScale(colorVal));
+					})
+					.attr("ambientIntensity", 0.1);
+
+				return shape;
 			};
 
-			const labelSelect = element.selectAll(".label")
-				.data([data]);
+			const spots = element.selectAll(".spot")
+				.data((d) => d.values, (d) => d.key);
 
-			let label = labelSelect.enter()
+			const spotsEnter = spots.enter()
 				.append("Transform")
-				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
-				.classed("label", true)
-				.append("Billboard")
-				.attr("axisOfRotation", "0 0 0")
-				.append("Transform")
-				.attr("translation", (d) => (offset + " " + offset + " " + offset))
-				.append("Shape")
-				.call(makeSolid, color)
-				.append("Text")
-				.attr("string", (d) => d.key)
-				.append("FontStyle")
-				.attr("size", 1)
-				.attr("family", "SANS")
-				.attr("style", "BOLD")
-				.attr("justify", "START");
+				.attr("class", "spot")
+				.call(shape)
+				.merge(spots);
 
-			label.merge(labelSelect);
+			const spotsTransition = spotsEnter.transition();
+			spotsTransition
+				.attr("translation", (d) => getPositionVector(d))
+				.attr("rotation", (d) => getRotationVector());
 
-			labelSelect.transition()
-				.ease(d3.easeQuadOut)
-				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)));
+			spotsTransition.select("Shape")
+				.select("Cylinder")
+				.attr("radius", (d) => {
+					let sizeVal = d.values.find((v) => v.key === mappings.size).value;
+					return sizeScale(sizeVal);
+				});
+
+			spotsTransition.select("Shape")
+				.select("Appearance")
+				.select("Material")
+				.attr("diffuseColor", (d) => {
+					let colorVal = d.values.find((v) => v.key === mappings.color).value;
+					return colorParse(colorScale(colorVal));
+				});
+
+			spots.exit()
+				.remove();
 		});
 	};
 
@@ -119,6 +245,18 @@ export default function() {
 		if (!arguments.length) return dimensions;
 		dimensions = _v;
 		return this;
+	};
+
+	/**
+	 * Direction Getter / Setter
+	 *
+	 * @param {string} _v - Direction of Axis (e.g. "x", "y", "z").
+	 * @returns {*}
+	 */
+	my.direction = function(_v) {
+		if (!arguments.length) return direction;
+		direction = _v;
+		return my;
 	};
 
 	/**
@@ -158,6 +296,42 @@ export default function() {
 	};
 
 	/**
+	 * Size Scale Getter / Setter
+	 *
+	 * @param {d3.scale} _v - D3 size scale.
+	 * @returns {*}
+	 */
+	my.sizeScale = function(_v) {
+		if (!arguments.length) return sizeScale;
+		sizeScale = _v;
+		return my;
+	};
+
+	/**
+	 * Size Range Getter / Setter
+	 *
+	 * @param {number[]} _v - Size min and max (e.g. [1, 9]).
+	 * @returns {*}
+	 */
+	my.sizeRange = function(_v) {
+		if (!arguments.length) return sizeRange;
+		sizeRange = _v;
+		return my;
+	};
+
+	/**
+	 * Color Scale Getter / Setter
+	 *
+	 * @param {d3.scale} _v - D3 color scale.
+	 * @returns {*}
+	 */
+	my.colorScale = function(_v) {
+		if (!arguments.length) return colorScale;
+		colorScale = _v;
+		return my;
+	};
+
+	/**
 	 * Color Getter / Setter
 	 *
 	 * @param {string} _v - Color (e.g. "red" or "#ff0000").
@@ -170,15 +344,37 @@ export default function() {
 	};
 
 	/**
-	 * Offset Getter / Setter
+	 * Colors Getter / Setter
 	 *
-	 * @param {number} _v - Label offset number.
+	 * @param {Array} _v - Array of colours used by color scale.
 	 * @returns {*}
 	 */
-	my.offset = function(_v) {
-		if (!arguments.length) return offset;
-		offset = _v;
+	my.colors = function(_v) {
+		if (!arguments.length) return colors;
+		colors = _v;
 		return my;
+	};
+
+	/**
+	 * Mappings Getter / Setter
+	 *
+	 * @param {Object} _v - Map properties to size, colour etc.
+	 * @returns {*}
+	 */
+	my.mappings = function(_v) {
+		if (!arguments.length) return mappings;
+		mappings = _v;
+		return my;
+	};
+
+	/**
+	 * Dispatch On Getter
+	 *
+	 * @returns {*}
+	 */
+	my.on = function() {
+		let value = dispatch.on.apply(dispatch, arguments);
+		return value === dispatch ? my : value;
 	};
 
 	return my;
@@ -195,7 +391,7 @@ export default function() {
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Sun Dec 04 2022 22:56:00 GMT+0000 (Greenwich Mean Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Sun Dec 04 2022 22:56:01 GMT+0000 (Greenwich Mean Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
