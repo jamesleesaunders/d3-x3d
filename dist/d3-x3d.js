@@ -9187,7 +9187,7 @@
   //import {default as packageJson} from "./package.json" assert { type: "json" };
   //let version = packageJson.version;
   //let license = packageJson.license;
-  var version = "2.1.1";
+  var version = "2.1.2";
   var license = "GPL-2.0";
   var index = {
     version: version,
