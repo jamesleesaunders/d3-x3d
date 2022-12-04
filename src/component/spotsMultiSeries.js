@@ -28,7 +28,8 @@ export default function() {
 	const spots = componentSpots()
 		.mappings({ x: 'x', y: 'y', z: 'z', size: 'size', color: 'color' })
 		.colors(d3.schemeRdYlGn[8])
-		.sizeRange([2, 2]);
+		.sizeRange([2, 2])
+		.direction("x");
 
 	/**
 	 * Unique Array
@@ -126,32 +127,43 @@ export default function() {
 				});
 			};
 
-			const element = d3.select(this)
-				.classed(classed, true);
-
 			spots.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale)
 				.sizeScale(sizeScale);
 
-			const addSpots = function(d) {
-				const color = colorScale(d.key);
-				spots.color(color);
-				d3.select(this).call(spots);
-			};
+			const element = d3.select(this)
+				.classed(classed, true);
 
-			const spotGroup = element.selectAll(".spotSeries")
-				.data(spotData, (d) => d.key);
+			element.selectAll(".spotGroup")
+				.data(['x', 'y', 'z'])
+				.enter()
+				.each((direction) => {
+					let spotGroup = d3.select(this)
+						.append("Group")
+						.classed("spotGroup", true)
+						.classed(direction, true);
 
-			spotGroup.enter()
-				.append("Group")
-				.classed("spotSeries", true)
-				.merge(spotGroup)
-				.transition()
-				.each(addSpots);
+					const addSpots = function(d) {
+						const color = colorScale(d.key);
+						spots.color(color);
+						spots.direction(direction);
+						d3.select(this).call(spots);
+					};
 
-			spotGroup.exit()
-				.remove();
+					const spotSeries = spotGroup.selectAll(".spotSeries")
+						.data(spotData, (d) => d.key);
+
+					spotSeries.enter()
+						.append("Group")
+						.classed("spotSeries", true)
+						.merge(spotSeries)
+						.transition()
+						.each(addSpots);
+
+					spotSeries.exit()
+						.remove();
+				});
 		});
 	};
 

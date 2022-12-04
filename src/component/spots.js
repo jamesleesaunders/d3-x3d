@@ -16,6 +16,7 @@ export default function() {
 	let color;
 	let classed = "d3X3dSpots";
 	let mappings;
+	let direction = "x";
 
 	/* Scales */
 	let xScale;
@@ -100,7 +101,7 @@ export default function() {
 		selection.each(function(data) {
 			init(data);
 
-			function getPositionVector(d, axis) {
+			function getPositionVector(d) {
 				let xVal = d.values.find((v) => v.key === mappings.x).value;
 				let yVal = d.values.find((v) => v.key === mappings.y).value;
 				let zVal = d.values.find((v) => v.key === mappings.z).value;
@@ -109,7 +110,7 @@ export default function() {
 				let yJim = yScale(yVal);
 				let zJim = zScale(zVal);
 
-				switch (axis) {
+				switch (direction) {
 					case "x":
 						xJim = 0;
 						break;
@@ -130,8 +131,8 @@ export default function() {
 				z: [0, 1, 1, Math.PI]
 			};
 
-			function getRotationVector(axis) {
-				return rotationVectors[axis].join(" ");
+			function getRotationVector() {
+				return rotationVectors[direction].join(" ");
 			}
 
 			const element = d3.select(this)
@@ -159,46 +160,37 @@ export default function() {
 				return shape;
 			};
 
-			element.selectAll(".spotGroup")
-				.data(['x', 'y', 'z'])
-				.enter()
-				.each((axis) => {
-					let group = d3.select(this)
-						.append("group")
-						.classed("spotGroup", true);
+			const spots = element.selectAll(".spot")
+				.data((d) => d.values, (d) => d.key);
 
-					const spots = group.selectAll(".spot")
-						.data((d) => d.values, (d) => d.key);
+			const spotsEnter = spots.enter()
+				.append("Transform")
+				.attr("class", "spot")
+				.call(shape)
+				.merge(spots);
 
-					const spotsEnter = spots.enter()
-						.append("Transform")
-						.attr("class", "spot")
-						.call(shape)
-						.merge(spots);
+			const spotsTransition = spotsEnter.transition();
+			spotsTransition
+				.attr("translation", (d) => getPositionVector(d))
+				.attr("rotation", (d) => getRotationVector());
 
-					const spotsTransition = spotsEnter.transition();
-					spotsTransition
-						.attr("translation", (d) => getPositionVector(d, axis))
-						.attr("rotation", (d) => getRotationVector(axis));
-
-					spotsTransition.select("Shape")
-						.select("Cylinder")
-						.attr("radius", (d) => {
-							let sizeVal = d.values.find((v) => v.key === mappings.size).value;
-							return sizeScale(sizeVal);
-						});
-
-					spotsTransition.select("Shape")
-						.select("Appearance")
-						.select("Material")
-						.attr("diffuseColor", (d) => {
-							let colorVal = d.values.find((v) => v.key === mappings.color).value;
-							return colorParse(colorScale(colorVal));
-						});
-
-					spots.exit()
-						.remove();
+			spotsTransition.select("Shape")
+				.select("Cylinder")
+				.attr("radius", (d) => {
+					let sizeVal = d.values.find((v) => v.key === mappings.size).value;
+					return sizeScale(sizeVal);
 				});
+
+			spotsTransition.select("Shape")
+				.select("Appearance")
+				.select("Material")
+				.attr("diffuseColor", (d) => {
+					let colorVal = d.values.find((v) => v.key === mappings.color).value;
+					return colorParse(colorScale(colorVal));
+				});
+
+			spots.exit()
+				.remove();
 		});
 	};
 
@@ -212,6 +204,18 @@ export default function() {
 		if (!arguments.length) return dimensions;
 		dimensions = _v;
 		return this;
+	};
+
+	/**
+	 * Direction Getter / Setter
+	 *
+	 * @param {string} _v - Direction of Axis (e.g. "x", "y", "z").
+	 * @returns {*}
+	 */
+	my.direction = function(_v) {
+		if (!arguments.length) return direction;
+		direction = _v;
+		return my;
 	};
 
 	/**

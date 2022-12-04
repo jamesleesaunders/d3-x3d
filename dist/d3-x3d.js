@@ -3918,6 +3918,7 @@
     var color;
     var classed = "d3X3dSpots";
     var mappings;
+    var direction = "x";
 
     /* Scales */
     var xScale;
@@ -3985,9 +3986,8 @@
      */
     var my = function my(selection) {
       selection.each(function (data) {
-        var _this = this;
         init(data);
-        function getPositionVector(d, axis) {
+        function getPositionVector(d) {
           var xVal = d.values.find(function (v) {
             return v.key === mappings.x;
           }).value;
@@ -4000,7 +4000,7 @@
           var xJim = xScale(xVal);
           var yJim = yScale(yVal);
           var zJim = zScale(zVal);
-          switch (axis) {
+          switch (direction) {
             case "x":
               xJim = 0;
               break;
@@ -4018,8 +4018,8 @@
           y: [0, 0, 0, 0],
           z: [0, 1, 1, Math.PI]
         };
-        function getRotationVector(axis) {
-          return rotationVectors[axis].join(" ");
+        function getRotationVector() {
+          return rotationVectors[direction].join(" ");
         }
         var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
@@ -4040,34 +4040,31 @@
           }).attr("ambientIntensity", 0.1);
           return shape;
         };
-        element.selectAll(".spotGroup").data(['x', 'y', 'z']).enter().each(function (axis) {
-          var group = d3__namespace.select(_this).append("group").classed("spotGroup", true);
-          var spots = group.selectAll(".spot").data(function (d) {
-            return d.values;
-          }, function (d) {
-            return d.key;
-          });
-          var spotsEnter = spots.enter().append("Transform").attr("class", "spot").call(shape).merge(spots);
-          var spotsTransition = spotsEnter.transition();
-          spotsTransition.attr("translation", function (d) {
-            return getPositionVector(d, axis);
-          }).attr("rotation", function (d) {
-            return getRotationVector(axis);
-          });
-          spotsTransition.select("Shape").select("Cylinder").attr("radius", function (d) {
-            var sizeVal = d.values.find(function (v) {
-              return v.key === mappings.size;
-            }).value;
-            return sizeScale(sizeVal);
-          });
-          spotsTransition.select("Shape").select("Appearance").select("Material").attr("diffuseColor", function (d) {
-            var colorVal = d.values.find(function (v) {
-              return v.key === mappings.color;
-            }).value;
-            return colorParse(colorScale(colorVal));
-          });
-          spots.exit().remove();
+        var spots = element.selectAll(".spot").data(function (d) {
+          return d.values;
+        }, function (d) {
+          return d.key;
         });
+        var spotsEnter = spots.enter().append("Transform").attr("class", "spot").call(shape).merge(spots);
+        var spotsTransition = spotsEnter.transition();
+        spotsTransition.attr("translation", function (d) {
+          return getPositionVector(d);
+        }).attr("rotation", function (d) {
+          return getRotationVector();
+        });
+        spotsTransition.select("Shape").select("Cylinder").attr("radius", function (d) {
+          var sizeVal = d.values.find(function (v) {
+            return v.key === mappings.size;
+          }).value;
+          return sizeScale(sizeVal);
+        });
+        spotsTransition.select("Shape").select("Appearance").select("Material").attr("diffuseColor", function (d) {
+          var colorVal = d.values.find(function (v) {
+            return v.key === mappings.color;
+          }).value;
+          return colorParse(colorScale(colorVal));
+        });
+        spots.exit().remove();
       });
     };
 
@@ -4081,6 +4078,18 @@
       if (!arguments.length) return dimensions;
       dimensions = _v;
       return this;
+    };
+
+    /**
+     * Direction Getter / Setter
+     *
+     * @param {string} _v - Direction of Axis (e.g. "x", "y", "z").
+     * @returns {*}
+     */
+    my.direction = function (_v) {
+      if (!arguments.length) return direction;
+      direction = _v;
+      return my;
     };
 
     /**
@@ -4234,7 +4243,7 @@
       z: 'z',
       size: 'size',
       color: 'color'
-    }).colors(d3__namespace.schemeRdYlGn[8]).sizeRange([2, 2]);
+    }).colors(d3__namespace.schemeRdYlGn[8]).sizeRange([2, 2]).direction("x");
 
     /**
      * Unique Array
@@ -4301,6 +4310,7 @@
      */
     var my = function my(selection) {
       selection.each(function (data) {
+        var _this = this;
         init(data);
         var spotData = function spotData(d) {
           return d.map(function (f) {
@@ -4330,18 +4340,22 @@
             };
           });
         };
-        var element = d3__namespace.select(this).classed(classed, true);
         spots.xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale);
-        var addSpots = function addSpots(d) {
-          var color = colorScale(d.key);
-          spots.color(color);
-          d3__namespace.select(this).call(spots);
-        };
-        var spotGroup = element.selectAll(".spotSeries").data(spotData, function (d) {
-          return d.key;
+        var element = d3__namespace.select(this).classed(classed, true);
+        element.selectAll(".spotGroup").data(['x', 'y', 'z']).enter().each(function (direction) {
+          var spotGroup = d3__namespace.select(_this).append("Group").classed("spotGroup", true).classed(direction, true);
+          var addSpots = function addSpots(d) {
+            var color = colorScale(d.key);
+            spots.color(color);
+            spots.direction(direction);
+            d3__namespace.select(this).call(spots);
+          };
+          var spotSeries = spotGroup.selectAll(".spotSeries").data(spotData, function (d) {
+            return d.key;
+          });
+          spotSeries.enter().append("Group").classed("spotSeries", true).merge(spotSeries).transition().each(addSpots);
+          spotSeries.exit().remove();
         });
-        spotGroup.enter().append("Group").classed("spotSeries", true).merge(spotGroup).transition().each(addSpots);
-        spotGroup.exit().remove();
       });
     };
 
