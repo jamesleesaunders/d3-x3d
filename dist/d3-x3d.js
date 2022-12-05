@@ -3918,7 +3918,6 @@
     var color;
     var classed = "d3X3dSpots";
     var mappings;
-    var direction = "x";
 
     /* Scales */
     var xScale;
@@ -3927,6 +3926,7 @@
     var colorScale;
     var sizeScale;
     var sizeRange = [0.5, 3.5];
+    var plane = "x";
 
     /**
      * Initialise Data and Scales
@@ -3988,38 +3988,29 @@
       selection.each(function (data) {
         init(data);
         function getPositionVector(d) {
-          var xVal = d.values.find(function (v) {
+          var xVal = xScale(d.values.find(function (v) {
             return v.key === mappings.x;
-          }).value;
-          var yVal = d.values.find(function (v) {
+          }).value);
+          var yVal = yScale(d.values.find(function (v) {
             return v.key === mappings.y;
-          }).value;
-          var zVal = d.values.find(function (v) {
+          }).value);
+          var zVal = zScale(d.values.find(function (v) {
             return v.key === mappings.z;
-          }).value;
-          var xJim = xScale(xVal);
-          var yJim = yScale(yVal);
-          var zJim = zScale(zVal);
-          switch (direction) {
-            case "x":
-              xJim = 0;
-              break;
-            case "y":
-              yJim = 0;
-              break;
-            case "z":
-              zJim = 0;
-              break;
-          }
-          return xJim + " " + yJim + " " + zJim;
+          }).value);
+          var positionVectors = {
+            x: [0, yVal, zVal],
+            y: [xVal, 0, zVal],
+            z: [xVal, yVal, 0]
+          };
+          return positionVectors[plane].join(" ");
         }
-        var rotationVectors = {
-          x: [1, 1, 0, Math.PI],
-          y: [0, 0, 0, 0],
-          z: [0, 1, 1, Math.PI]
-        };
         function getRotationVector() {
-          return rotationVectors[direction].join(" ");
+          var rotationVectors = {
+            x: [1, 1, 0, Math.PI],
+            y: [0, 0, 0, 0],
+            z: [0, 1, 1, Math.PI]
+          };
+          return rotationVectors[plane].join(" ");
         }
         var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
@@ -4081,14 +4072,14 @@
     };
 
     /**
-     * Direction Getter / Setter
+     * PLane Getter / Setter
      *
-     * @param {string} _v - Direction of Axis (e.g. "x", "y", "z").
+     * @param {string} _v - Plane of Spots (e.g. "x", "y", "z").
      * @returns {*}
      */
-    my.direction = function (_v) {
-      if (!arguments.length) return direction;
-      direction = _v;
+    my.plane = function (_v) {
+      if (!arguments.length) return plane;
+      plane = _v;
       return my;
     };
 
@@ -4243,7 +4234,7 @@
       z: 'z',
       size: 'size',
       color: 'color'
-    }).colors(d3__namespace.schemeRdYlGn[8]).sizeRange([2, 2]).direction("x");
+    }).colors(d3__namespace.schemeRdYlGn[8]).sizeRange([2, 2]);
 
     /**
      * Unique Array
@@ -4348,10 +4339,10 @@
         };
         var spotGroup = element.selectAll(".spotGroup").data(['x', 'y', 'z']);
         var spotGroupEnter = spotGroup.enter().append("Group").classed("spotGroup", true).merge(spotGroup);
-        spotGroupEnter.each(function (direction, i, nodes) {
-          spots.direction(direction);
+        spotGroupEnter.each(function (plane, i, nodes) {
+          spots.plane(plane);
           var el = d3__namespace.select(nodes[i]);
-          el.classed(direction, true);
+          el.classed(plane, true);
           var spotSeries = el.selectAll(".spotSeries").data(spotData(data), function (d) {
             return d.key;
           });

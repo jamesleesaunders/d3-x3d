@@ -28,8 +28,7 @@ export default function() {
 	const spots = componentSpots()
 		.mappings({ x: 'x', y: 'y', z: 'z', size: 'size', color: 'color' })
 		.colors(d3.schemeRdYlGn[8])
-		.sizeRange([2, 2])
-		.direction("x");
+		.sizeRange([2, 2]);
 
 	/**
 	 * Unique Array
@@ -149,11 +148,11 @@ export default function() {
 				.classed("spotGroup", true)
 				.merge(spotGroup);
 
-			spotGroupEnter.each((direction, i, nodes) => {
-				spots.direction(direction);
+			spotGroupEnter.each((plane, i, nodes) => {
+				spots.plane(plane);
 
 				let el = d3.select(nodes[i]);
-				el.classed(direction, true)
+				el.classed(plane, true)
 				const spotSeries = el.selectAll(".spotSeries")
 					.data(spotData(data), (d) => d.key);
 

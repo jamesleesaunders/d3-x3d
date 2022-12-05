@@ -16,7 +16,6 @@ export default function() {
 	let color;
 	let classed = "d3X3dSpots";
 	let mappings;
-	let direction = "x";
 
 	/* Scales */
 	let xScale;
@@ -25,6 +24,7 @@ export default function() {
 	let colorScale;
 	let sizeScale;
 	let sizeRange = [0.5, 3.5];
+	let plane = "x";
 
 	/**
 	 * Initialise Data and Scales
@@ -102,37 +102,27 @@ export default function() {
 			init(data);
 
 			function getPositionVector(d) {
-				let xVal = d.values.find((v) => v.key === mappings.x).value;
-				let yVal = d.values.find((v) => v.key === mappings.y).value;
-				let zVal = d.values.find((v) => v.key === mappings.z).value;
+				let xVal = xScale(d.values.find((v) => v.key === mappings.x).value);
+				let yVal = yScale(d.values.find((v) => v.key === mappings.y).value);
+				let zVal = zScale(d.values.find((v) => v.key === mappings.z).value);
 
-				let xJim = xScale(xVal);
-				let yJim = yScale(yVal);
-				let zJim = zScale(zVal);
+				const positionVectors = {
+					x: [0, yVal, zVal],
+					y: [xVal, 0, zVal],
+					z: [xVal, yVal, 0]
+				};
 
-				switch (direction) {
-					case "x":
-						xJim = 0;
-						break;
-					case "y":
-						yJim = 0;
-						break;
-					case "z":
-						zJim = 0;
-						break;
-				}
-
-				return xJim + " " + yJim + " " + zJim;
+				return positionVectors[plane].join(" ");
 			}
 
-			const rotationVectors = {
-				x: [1, 1, 0, Math.PI],
-				y: [0, 0, 0, 0],
-				z: [0, 1, 1, Math.PI]
-			};
-
 			function getRotationVector() {
-				return rotationVectors[direction].join(" ");
+				const rotationVectors = {
+					x: [1, 1, 0, Math.PI],
+					y: [0, 0, 0, 0],
+					z: [0, 1, 1, Math.PI]
+				};
+
+				return rotationVectors[plane].join(" ");
 			}
 
 			const element = d3.select(this)
@@ -207,14 +197,14 @@ export default function() {
 	};
 
 	/**
-	 * Direction Getter / Setter
+	 * PLane Getter / Setter
 	 *
-	 * @param {string} _v - Direction of Axis (e.g. "x", "y", "z").
+	 * @param {string} _v - Plane of Spots (e.g. "x", "y", "z").
 	 * @returns {*}
 	 */
-	my.direction = function(_v) {
-		if (!arguments.length) return direction;
-		direction = _v;
+	my.plane = function(_v) {
+		if (!arguments.length) return plane;
+		plane = _v;
 		return my;
 	};
 
