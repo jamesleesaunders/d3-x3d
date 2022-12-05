@@ -6,7 +6,7 @@
 [![Build Status](https://travis-ci.org/jamesleesaunders/d3-x3d.svg?branch=master)](https://travis-ci.org/jamesleesaunders/d3-x3d)
 
 <a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/logos/d3-x3d-logo-x3dom.html">
-   <img src="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/logos/d3-x3d-logo.png" align="left" width="150px" hspace="10" vspace="6">
+   <img src="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/logos/d3-x3d-logo.png" align="left" width="150px" hspace="10" vspace="6" />
 </a>
 
 Combining the power of the [D3.js](http://www.d3js.org/) data-driven documents visualisation library and the Extensible 3D [X3D](https://www.web3d.org/x3d/what-x3d) 3D graphics standard, d3-x3d makes it simple to produce beautiful 3D data visualisations with minimal code.
@@ -37,10 +37,10 @@ Both these players are compatible with modern browsers supporting HTML5 and enab
 | Multi Series Bar Chart | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/BarChartMultiSeries.html)    | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/BarChartMultiSeries.html)    | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-bar-charts)         |
 | Vertical Bar Chart     | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/BarChartVertical.html)       | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/BarChartVertical.html)       | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-bar-charts)         |
 | Bubble Chart           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/BubbleChart.html)            | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/BubbleChart.html)            | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-bubbles)            |
-| Heat Map               | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/HeatMap.html)                | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/HeatMap.html)                | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-heat-map)           |
+| Heat Map               | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/HeatMap.html)                | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/HeatMap.html)                | WIP                                                                                     |
 | Particle Plot          | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/ParticlePlot.html)           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/ParticlePlot.html)           | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-particles)          |
-| Scatter Plot           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/ScatterPlot.html)            | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/ScatterPlot.html)            | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-bubbles)            |
-| Spot Plot              | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/SpotPlot.html)               | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/SpotPlot.html)               | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-bubbles)            |
+| Scatter Plot           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/ScatterPlot.html)            | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/ScatterPlot.html)            | WIP                                                                                     |
+| Spot Plot              | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/SpotPlot.html)               | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/SpotPlot.html)               | WIP                                                                                     |
 | Surface Plot           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/SurfacePlot.html)            | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/SurfacePlot.html)            | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-surface-plot)       |
 | Ribbon Chart           | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/RibbonChartMultiSeries.html) | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/RibbonChartMultiSeries.html) | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-ribbon-chart)       |
 | Vector Field Chart     | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/VectorFieldChart.html)       | [View](https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/VectorFieldChart.html)       | [View](https://observablehq.com/@jamesleesaunders/d3-x3d-components-vector-field-chart) |
@@ -255,6 +255,6 @@ var myData = [
 * Victor Glindås - Various contributions to JSDoc and ES6 standardisation.
 * Jefferson Hudson - For contributions to axis labels and transitions.
 * Andreas Plesch - For contributing the Area Chart and Components (and generally being an x3dom hero!).
-* Holger Seelig - For assistance in integration with x_ite.
+* Holger Seelig - For assistance in integration with [X_ITE](https://create3000.github.io/x_ite/).
 * Dahshan & Polys - For permission to use the The Bell Labs Pollen data set on particle plot examples.
 * Also see alternative [d3-3d](https://github.com/Niekes/d3-3d) by @Niekes.
