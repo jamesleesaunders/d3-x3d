@@ -4022,13 +4022,13 @@
               return v.key === mappings.size;
             }).value;
             return sizeScale(sizeVal);
-          }).attr("height", 0);
-          shape.append("Appearance").append("Material").attr("diffuseColor", function (d) {
+          }).attr("height", 0.1);
+          shape.append("Appearance").append("Material").attr("transparency", 0.1).attr("diffuseColor", function (d) {
             var colorVal = d.values.find(function (v) {
               return v.key === mappings.color;
             }).value;
             return colorParse(colorScale(colorVal));
-          }).attr("ambientIntensity", 0.1);
+          });
           return shape;
         };
         var spots = element.selectAll(".spot").data(function (d) {

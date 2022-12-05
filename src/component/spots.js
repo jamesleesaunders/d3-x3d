@@ -137,15 +137,15 @@ export default function() {
 						let sizeVal = d.values.find((v) => v.key === mappings.size).value;
 						return sizeScale(sizeVal);
 					})
-					.attr("height", 0);
+					.attr("height", 0.1);
 
 				shape.append("Appearance")
 					.append("Material")
+					.attr("transparency", 0.1)
 					.attr("diffuseColor", (d) => {
 						let colorVal = d.values.find((v) => v.key === mappings.color).value;
 						return colorParse(colorScale(colorVal));
-					})
-					.attr("ambientIntensity", 0.1);
+					});
 
 				return shape;
 			};
