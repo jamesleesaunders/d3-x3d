@@ -166,8 +166,8 @@ Component modules do not generate a `<X3D>` tag, these should be attached to an 
 | component.particles()          | Particle Plot                       | [View](https://jamesleesaunders.github.io/d3-x3d/particles.html)          |
 | component.ribbon()             | Ribbon Chart / Line Chart           | [View](https://jamesleesaunders.github.io/d3-x3d/ribbon.html)             |
 | component.ribbonMultiSeries()  | Multi series Ribbon Chart           | [View](https://jamesleesaunders.github.io/d3-x3d/ribbonMultiSeries.html)  |
-| component.spots()              | Spot Plot                           | [View](https://jamesleesaunders.github.io/d3-x3d/spot.html)               |
-| component.spotsMultiSeries()   | Multi series Spot Plot              | [View](https://jamesleesaunders.github.io/d3-x3d/spotMultiSeries.html)    |
+| component.spots()              | Spot Plot                           | [View](https://jamesleesaunders.github.io/d3-x3d/spots.html)              |
+| component.spotsMultiSeries()   | Multi series Spot Plot              | [View](https://jamesleesaunders.github.io/d3-x3d/spotsMultiSeries.html)   |
 | component.surface()            | Surface Area                        | [View](https://jamesleesaunders.github.io/d3-x3d/surface.html)            |
 | component.vectorFields()       | Vector Field Chart                  | [View](https://jamesleesaunders.github.io/d3-x3d/vectorFields.html)       |
 | component.viewpoint()          | Camera position                     | [View](https://jamesleesaunders.github.io/d3-x3d/viewpoint.html)          |
