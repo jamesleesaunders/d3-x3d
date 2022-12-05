@@ -117,25 +117,17 @@
     ];
     console.log(data);
 
-    let formatData = d3.nest()
-      .key(function(d) { return d.row; })
-      .entries(data.sort((a, b) => {
-        return +a.row - +b.row;
-      }))
-      .map((d) => {
-        return {
-          key: d.key, values: d3.nest()
-            .key((d) => {
-              return d.column;
-            })
-            .entries(d.values.sort((a, b) => {
-              return +a.column - +b.column;
-            }))
-            .map((d) => {
-              return { key: d.key, value: d.values[0].val };
-            })
-        };
-      });
+    let formatData = Array.from(d3.rollup(
+      data.sort((a, b) => +a.row - +b.row),
+      (d) => ({
+        key: String(d[0].row),
+        values: Array.from(d3.rollup(
+          d.sort((a, b) => +a.column - +b.column),
+          (d) => ({ key: String(d[0].column), value: d[0].val }),
+          (d) => d.column).values())
+      }),
+      (d) => d.row
+    ).values());
 
     console.log(formatData);
 

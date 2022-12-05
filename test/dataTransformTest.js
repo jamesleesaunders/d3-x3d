@@ -234,7 +234,7 @@ let formatData = Array.from(d3.rollup(
 		key: String(d[0].row),
 		values: Array.from(d3.rollup(
 			d.sort((a, b) => +a.column - +b.column),
-			(d) => ({ key: String(d[0].column), values: d }),
+			(d) => ({ key: String(d[0].column), value: d[0].val }),
 			(d) => d.column).values())
 	}),
 	(d) => d.row
