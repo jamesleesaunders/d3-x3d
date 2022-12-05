@@ -166,8 +166,8 @@ Component modules do not generate a `<X3D>` tag, these should be attached to an 
 | component.particles()          | Particle Plot                       | [View](https://jamesleesaunders.github.io/d3-x3d/particles.html)          |
 | component.ribbon()             | Ribbon Chart / Line Chart           | [View](https://jamesleesaunders.github.io/d3-x3d/ribbon.html)             |
 | component.ribbonMultiSeries()  | Multi series Ribbon Chart           | [View](https://jamesleesaunders.github.io/d3-x3d/ribbonMultiSeries.html)  |
-| component.spots()              | Spot Plot                           | [View](https://jamesleesaunders.github.io/d3-x3d/spot.html)               |
-| component.spotsMultiSeries()   | Multi series Spot Plot              | [View](https://jamesleesaunders.github.io/d3-x3d/spotMultiSeries.html)    |
+| component.spots()              | Spot Plot                           | [View](https://jamesleesaunders.github.io/d3-x3d/spots.html)              |
+| component.spotsMultiSeries()   | Multi series Spot Plot              | [View](https://jamesleesaunders.github.io/d3-x3d/spotsMultiSeries.html)   |
 | component.surface()            | Surface Area                        | [View](https://jamesleesaunders.github.io/d3-x3d/surface.html)            |
 | component.vectorFields()       | Vector Field Chart                  | [View](https://jamesleesaunders.github.io/d3-x3d/vectorFields.html)       |
 | component.viewpoint()          | Camera position                     | [View](https://jamesleesaunders.github.io/d3-x3d/viewpoint.html)          |
@@ -255,6 +255,6 @@ var myData = [
 * Victor Glindås - Various contributions to JSDoc and ES6 standardisation.
 * Jefferson Hudson - For contributions to axis labels and transitions.
 * Andreas Plesch - For contributing the Area Chart and Components (and generally being an x3dom hero!).
-* Holger Seelig - For assistance in integration with x_ite.
+* Holger Seelig - For assistance in integration with [X_ITE](https://create3000.github.io/x_ite/).
 * Dahshan & Polys - For permission to use the The Bell Labs Pollen data set on particle plot examples.
 * Also see alternative [d3-3d](https://github.com/Niekes/d3-3d) by @Niekes.
