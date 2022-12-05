@@ -12,7 +12,8 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.d3 = global.d3 || {}, global.d3.x3d = factory(global.d3)));
 })(this, (function (d3) { 'use strict';
 
-  function _interopNamespaceDefault(e) {
+  function _interopNamespace(e) {
+    if (e && e.__esModule) return e;
     var n = Object.create(null);
     if (e) {
       Object.keys(e).forEach(function (k) {
@@ -25,11 +26,11 @@
         }
       });
     }
-    n.default = e;
+    n["default"] = e;
     return Object.freeze(n);
   }
 
-  var d3__namespace = /*#__PURE__*/_interopNamespaceDefault(d3);
+  var d3__namespace = /*#__PURE__*/_interopNamespace(d3);
 
   function _extends() {
     _extends = Object.assign ? Object.assign.bind() : function (target) {
