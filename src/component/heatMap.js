@@ -87,7 +87,8 @@ export default function() {
 					y: dimensions.y,
 					z: zScale.bandwidth()
 				})
-				.colorScale(colorScale);
+				.colorScale(colorScale)
+				.transparency(0.2);
 
 			const addBars = function() {
 				d3.select(this).call(bars);

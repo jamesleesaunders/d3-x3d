@@ -14,6 +14,7 @@ export default function() {
 	let dimensions = { x: 40, y: 40, z: 2 };
 	let colors = ["orange", "red", "yellow", "steelblue", "green"];
 	let classed = "d3X3dBars";
+	let transparency = 0;
 
 	/* Scales */
 	let xScale;
@@ -84,7 +85,8 @@ export default function() {
 						}
 						return colorParse(j)
 					})
-					.attr("ambientIntensity", 0.1);
+					.attr("ambientIntensity", 0.1)
+					.attr("transparency", transparency);
 
 				return shape;
 			};
@@ -173,6 +175,18 @@ export default function() {
 	my.colors = function(_v) {
 		if (!arguments.length) return colors;
 		colors = _v;
+		return my;
+	};
+
+	/**
+	 * Transparency Getter / Setter
+	 *
+	 * @param {Number} _v - Transparency level 0 - 1.
+	 * @returns {*}
+	 */
+	my.transparency = function(_v) {
+		if (!arguments.length) return transparency;
+		transparency = _v;
 		return my;
 	};
 

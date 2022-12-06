@@ -137,7 +137,14 @@ export default function() {
 						let sizeVal = d.values.find((v) => v.key === mappings.size).value;
 						return sizeScale(sizeVal);
 					})
-					.attr("height", 0.1);
+					//.attr("height", 0.1)
+					.attr("texturePriority", (d) => {
+						let sizeVal = d.values.find((v) => v.key === mappings.size).value;
+						let thicknessScale = d3.scaleLinear()
+							.domain(sizeScale.domain())
+							.range([0, 1]);
+						return thicknessScale(sizeVal);
+					});
 
 				shape.append("Appearance")
 					.append("Material")
@@ -197,7 +204,7 @@ export default function() {
 	};
 
 	/**
-	 * PLane Getter / Setter
+	 * Plane Getter / Setter
 	 *
 	 * @param {string} _v - Plane of Spots (e.g. "x", "y", "z").
 	 * @returns {*}
