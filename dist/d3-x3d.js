@@ -1888,6 +1888,7 @@
     };
     var colors = ["orange", "red", "yellow", "steelblue", "green"];
     var classed = "d3X3dBars";
+    var transparency = 0;
 
     /* Scales */
     var xScale;
@@ -1943,7 +1944,7 @@
               j = colorScale(d.value);
             }
             return colorParse(j);
-          }).attr("ambientIntensity", 0.1);
+          }).attr("ambientIntensity", 0.1).attr("transparency", transparency);
           return shape;
         };
         var bars = element.selectAll(".bar").data(function (d) {
@@ -2023,6 +2024,18 @@
     my.colors = function (_v) {
       if (!arguments.length) return colors;
       colors = _v;
+      return my;
+    };
+
+    /**
+     * Transparency Getter / Setter
+     *
+     * @param {Number} _v - Transparency level 0 - 1.
+     * @returns {*}
+     */
+    my.transparency = function (_v) {
+      if (!arguments.length) return transparency;
+      transparency = _v;
       return my;
     };
 
@@ -2940,7 +2953,7 @@
           x: dimensions.x,
           y: dimensions.y,
           z: zScale.bandwidth()
-        }).colorScale(colorScale);
+        }).colorScale(colorScale).transparency(0.2);
         var addBars = function addBars() {
           d3__namespace.select(this).call(bars);
         };
@@ -4073,7 +4086,7 @@
     };
 
     /**
-     * PLane Getter / Setter
+     * Plane Getter / Setter
      *
      * @param {string} _v - Plane of Spots (e.g. "x", "y", "z").
      * @returns {*}

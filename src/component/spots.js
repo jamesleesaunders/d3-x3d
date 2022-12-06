@@ -137,14 +137,7 @@ export default function() {
 						let sizeVal = d.values.find((v) => v.key === mappings.size).value;
 						return sizeScale(sizeVal);
 					})
-					//.attr("height", 0.1)
-					.attr("texturePriority", (d) => {
-						let sizeVal = d.values.find((v) => v.key === mappings.size).value;
-						let thicknessScale = d3.scaleLinear()
-							.domain(sizeScale.domain())
-							.range([0, 1]);
-						return thicknessScale(sizeVal);
-					});
+					.attr("height", 0.1);
 
 				shape.append("Appearance")
 					.append("Material")
