@@ -1,6 +1,6 @@
 {
   "name": "d3-x3d",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "type": "module",
   "description": "3D Data Driven Charting Library with D3 and X3D",
   "license": "GPL-2.0",
@@ -24,17 +24,24 @@
   "bugs": {
     "url": "https://github.com/jamesleesaunders/d3-x3d/issues"
   },
-  "main": "dist/d3-x3d.js",
-  "unpkg": "dist/d3-x3d.min.js",
   "module": "index.js",
+  "main": "index.js",
+  "jsdelivr": "dist/d3-x3d.min.js",
+  "unpkg": "dist/d3-x3d.min.js",
+  "exports": {
+    "umd": "./dist/d3-x3d.min.js",
+    "default": "./index.js"
+  },
   "scripts": {
     "build": "make",
     "test": "mocha 'test/*Test.js' && mocha 'test/chart/*Test.js' && tape 'test/component/*Test.js' | tap-spec",
+    "lint": "eslint -c 'config/.eslintrc.json' src",
     "build:docs": "jsdoc -c config/jsdoc.conf.json",
     "deploy:docs": "npm run build:docs && gh-pages -d docs"
   },
   "dependencies": {
     "d3": "^7.6.1",
+    "d3-interpolate-curve": "^1.0.5",
     "gl-matrix": "^3.3.0"
   },
   "devDependencies": {

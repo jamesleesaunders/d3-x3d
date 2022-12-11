@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { default as fromCurve } from "./fromCurve.js"
+import * as d3Curve from "d3-interpolate-curve";
 
 /**
  * Data Transform
@@ -496,7 +496,7 @@ export default function dataTransform(data) {
 		const sampler = d3.range(0, 1, 1 / samples);
 		const keyPolator = (t) => (Number((t * samples).toFixed(0)) + 1);
 
-		const valuePolator = fromCurve(values, curveFunction, epsilon, samples);
+		const valuePolator = d3Curve.interpolateFromCurve(values, curveFunction, epsilon, samples);
 
 		const smoothed = {
 			key: data.key,
