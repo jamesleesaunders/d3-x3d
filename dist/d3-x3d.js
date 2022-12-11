@@ -75,10 +75,10 @@
   /**
    * Curve Polator
    *
-   * @param points
-   * @param curveFunction
-   * @param epsilon
-   * @param samples
+   * @param {array} points
+   * @param {function} curveFunction
+   * @param {number} epsilon
+   * @param {number} samples
    * @returns {Function}
    */
   function curvePolator(points, curveFunction, epsilon, samples) { // eslint-disable-line max-params
@@ -9182,7 +9182,7 @@
    * d3-x3d
    *
    * @author James Saunders [james@saunders-family.net]
-   * @copyright Copyright (C) 2021 James Saunders
+   * @copyright Copyright (C) 2022 James Saunders
    * @license GPLv2
    */
 
@@ -9190,10 +9190,10 @@
   var year = new Date().getFullYear();
   var copyright = "Copyright (C) ".concat(year, " ").concat(author);
 
-  //import {default as packageJson} from "./package.json" assert { type: "json" };
-  //let version = packageJson.version;
-  //let license = packageJson.license;
-  var version = "2.1.2";
+  // import {default as packageJson} from "./package.json" assert { type: "json" };
+  // let version = packageJson.version;
+  // let license = packageJson.license;
+  var version = "2.1.3";
   var license = "GPL-2.0";
   var index = {
     version: version,

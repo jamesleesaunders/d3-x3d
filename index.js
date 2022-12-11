@@ -2,7 +2,7 @@
  * d3-x3d
  *
  * @author James Saunders [james@saunders-family.net]
- * @copyright Copyright (C) 2021 James Saunders
+ * @copyright Copyright (C) 2022 James Saunders
  * @license GPLv2
  */
 
@@ -13,7 +13,7 @@ const copyright = `Copyright (C) ${year} ${author}`;
 // import {default as packageJson} from "./package.json" assert { type: "json" };
 // let version = packageJson.version;
 // let license = packageJson.license;
-let version = "2.1.2";
+let version = "2.1.3";
 let license = "GPL-2.0";
 
 import chart from "./src/chart.js";
