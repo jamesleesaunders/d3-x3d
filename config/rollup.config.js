@@ -20,12 +20,12 @@ export default {
 		name: "d3.x3d",
 		banner: banner,
 		strict: true,
-		globals: { "d3": "d3" }
+		globals: { "d3": "d3", "d3-array": "d3", "d3-shape": "d3", "d3-interpolate": "d3" }
 	},
-	external: ["d3"],
+	external: ["d3", "d3-array", "d3-shape", "d3-interpolate"],
 	plugins: [
 		babel({
-			include: ["index.js", "src/**"],
+			include: ["index.js", "src/**", "node_modules/d3-interpolate-curve/**"],
 			babelrc: false,
 			presets: [["@babel/env", { modules: false }]],
 			plugins: [
