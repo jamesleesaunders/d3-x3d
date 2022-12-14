@@ -81,12 +81,10 @@ export default function() {
 				.range([0, dimensionZ]);
 		}
 
-		if (typeof colorScale === "undefined") {
-			colorDomain = arrayUnique(colorDomain, rowKeys);
-			colorScale = d3.scaleOrdinal()
-				.domain(colorDomain)
-				.range(colors);
-		}
+		colorDomain = arrayUnique(colorDomain, rowKeys);
+		colorScale = d3.scaleOrdinal()
+			.domain(colorDomain)
+			.range(colors);
 
 		if (typeof sizeScale === "undefined") {
 			sizeScale = d3.scaleLinear()

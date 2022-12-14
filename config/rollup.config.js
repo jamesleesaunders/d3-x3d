@@ -1,5 +1,5 @@
-import json from "@rollup/plugin-json";
 import babel from "@rollup/plugin-babel";
+import json from "@rollup/plugin-json";
 import resolve from '@rollup/plugin-node-resolve';
 
 let banner = `/**
@@ -25,7 +25,7 @@ export default {
 	external: ["d3", "d3-array", "d3-shape", "d3-interpolate"],
 	plugins: [
 		babel({
-			include: ["index.js", "src/**", "node_modules/d3-interpolate-curve/**"],
+			include: ["index.js", "src/**"],
 			babelrc: false,
 			presets: [["@babel/env", { modules: false }]],
 			plugins: [
