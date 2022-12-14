@@ -13,7 +13,7 @@ const copyright = `Copyright (C) ${year} ${author}`;
 // import {default as packageJson} from "./package.json" assert { type: "json" };
 // let version = packageJson.version;
 // let license = packageJson.license;
-let version = "2.1.3";
+let version = "2.1.4";
 let license = "GPL-2.0";
 
 import chart from "./src/chart.js";

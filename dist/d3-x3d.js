@@ -2564,11 +2564,8 @@
       if (typeof zScale === "undefined") {
         zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensionZ]);
       }
-      if (typeof colorScale === "undefined") {
-        console.log(colorScale);
-        colorDomain = arrayUnique(colorDomain, rowKeys);
-        colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(colors);
-      }
+      colorDomain = arrayUnique(colorDomain, rowKeys);
+      colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(colors);
       if (typeof sizeScale === "undefined") {
         sizeScale = d3__namespace.scaleLinear().domain(valueExtent).range(sizeRange);
       }
@@ -4299,10 +4296,8 @@
       if (typeof zScale === "undefined") {
         zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensionZ]);
       }
-      if (typeof colorScale === "undefined") {
-        colorDomain = arrayUnique(colorDomain, rowKeys);
-        colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(colors);
-      }
+      colorDomain = arrayUnique(colorDomain, rowKeys);
+      colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(colors);
       if (typeof sizeScale === "undefined") {
         sizeScale = d3__namespace.scaleLinear().domain(valueExtent).range(sizeRange);
       }
@@ -6582,9 +6577,7 @@
       xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensionX]);
       yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensionY]);
       zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensionZ]);
-      if (typeof colorScale === "undefined") {
-        colorScale = d3__namespace.scaleOrdinal().domain(rowKeys).range(colors);
-      }
+      colorScale = d3__namespace.scaleOrdinal().domain(rowKeys).range(colors);
       sizeScale = d3__namespace.scaleLinear().domain(valueExtent).range(sizeRange);
     };
 
@@ -8003,9 +7996,7 @@
       xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensionX]);
       yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensionY]);
       zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensionZ]);
-      if (typeof colorScale === "undefined") {
-        colorScale = d3__namespace.scaleOrdinal().domain(rowKeys).range(colors);
-      }
+      colorScale = d3__namespace.scaleOrdinal().domain(rowKeys).range(colors);
       sizeScale = d3__namespace.scaleLinear().domain(valueExtent).range(sizeRange);
     };
 
@@ -9198,7 +9189,7 @@
   // import {default as packageJson} from "./package.json" assert { type: "json" };
   // let version = packageJson.version;
   // let license = packageJson.license;
-  var version = "2.1.3";
+  var version = "2.1.4";
   var license = "GPL-2.0";
   var index = {
     version: version,
