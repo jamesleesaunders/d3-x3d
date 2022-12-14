@@ -65,9 +65,11 @@ export default function() {
 			.domain(extentZ)
 			.range([0, dimensionZ]);
 
-		colorScale = d3.scaleOrdinal()
-			.domain(rowKeys)
-			.range(colors);
+		if (typeof colorScale === "undefined") {
+			colorScale = d3.scaleOrdinal()
+				.domain(rowKeys)
+				.range(colors);
+		}
 
 		sizeScale = d3.scaleLinear()
 			.domain(valueExtent)
