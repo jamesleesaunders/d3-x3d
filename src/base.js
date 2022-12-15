@@ -19,6 +19,11 @@ function buildX3d(selection, width, height, debug) {
 		.attr("showStat", debug ? "true" : "false")
 		.attr("useGeoCache", false);
 
+	x3d.append("head")
+		.append("component")
+		.attr("name", "Text")
+		.attr("level", "1");
+
 	return x3d;
 }
 

@@ -5844,6 +5844,7 @@
     // Create X3D element (if it does not exist already)
     // See: https://www.web3d.org/x3d/profiles
     var x3d = selection.selectAll("X3D").data([0]).enter().append("X3D").attr("profile", "Interactive").attr("width", width + "px").attr("height", height + "px").attr("showLog", debug ? "true" : "false").attr("showStat", debug ? "true" : "false").attr("useGeoCache", false);
+    x3d.append("head").append("component").attr("name", "Text").attr("level", "1");
     return x3d;
   }
 
