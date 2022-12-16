@@ -3,6 +3,7 @@ import chartBarChartMultiSeries from "./chart/barChartMultiSeries.js";
 import chartBarChartVertical from "./chart/barChartVertical.js";
 import chartBubbleChart from "./chart/bubbleChart.js";
 import chartCrosshairPlot from "./chart/crosshairPlot.js";
+import chartDonutChart from "./chart/donutChart.js";
 import chartHeatMap from "./chart/heatMap.js";
 import chartParticlePlot from "./chart/particlePlot.js";
 import chartRibbonChartMultiSeries from "./chart/ribbonChartMultiSeries.js";
@@ -17,6 +18,7 @@ export default {
 	barChartMultiSeries: chartBarChartMultiSeries,
 	barChartVertical: chartBarChartVertical,
 	bubbleChart: chartBubbleChart,
+	donutChart: chartDonutChart,
 	crosshairPlot: chartCrosshairPlot,
 	heatMap: chartHeatMap,
 	particlePlot: chartParticlePlot,

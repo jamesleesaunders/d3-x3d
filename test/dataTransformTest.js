@@ -200,7 +200,7 @@ test.describe("Test Stacker", function() {
 			{ key: "Pears", value: 3.2, y0: 3.5, y1: 6.7 }
 		]
 	}
-	test.it("should return Dataset 3", function(done) {
+	test.it("should return stacked values", function(done) {
 		chai.expect(dataTransform(data).stacked()).to.be.deep.equal(expect);
 		done();
 	});

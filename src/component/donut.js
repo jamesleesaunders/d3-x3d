@@ -29,23 +29,17 @@ export default function() {
 	const init = function(data) {
 		const { columnKeys, rowTotal } = dataTransform(data).summary();
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear()
-				.domain([0, rowTotal])
-				.range([0, (Math.PI * 2)]);
-		}
+		xScale = d3.scaleLinear()
+			.domain([0, rowTotal])
+			.range([0, (Math.PI * 2)]);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
-				.domain([0, rowTotal])
-				.range([0, -(Math.PI * 2)]);
-		}
+		yScale = d3.scaleLinear()
+			.domain([0, rowTotal])
+			.range([(Math.PI * 2), 0]);
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal()
-				.domain(columnKeys)
-				.range(colors);
-		}
+		colorScale = d3.scaleOrdinal()
+			.domain(columnKeys)
+			.range(colors);
 	};
 
 	/**
@@ -92,14 +86,19 @@ export default function() {
 			const sectors = element.selectAll(".sector")
 				.data((d) => dataTransform(d).stacked().values);
 
-			sectors.enter()
+			const sectorsEnter = sectors.enter()
 				.append("Transform")
 				.classed("sector", true)
 				.call(shape)
-				.merge(sectors)
-				.transition()
+				.merge(sectors);
+
+			const sectorsTransition = sectorsEnter.transition()
 				.attr("scale", () => [dimensionX, dimensionY, dimensionZ].map((d) => d / 2).join(" "))
 				.attr("rotation", (d) => [0, 0, 1, yScale(d.y0)].join(" "));
+
+			sectorsTransition.select("Shape")
+				.select("Torus")
+				.attr("angle", (d) => xScale(d.value));
 
 			sectors.exit()
 				.remove();
