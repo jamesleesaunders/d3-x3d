@@ -187,6 +187,7 @@ Chart modules also generate the `<X3D>` tag, these should be attached to a regul
 | chart.barChartMultiSeries()    | Multi series Bar Chart & Axis  | [View](https://jamesleesaunders.github.io/d3-x3d/barChartMultiSeries.html)    |
 | chart.barChartVertical()       | Vertical Bar Chart & Axis      | [View](https://jamesleesaunders.github.io/d3-x3d/barChartVertical.html)       |
 | chart.bubbleChart()            | Bubble Chart & Axis            | [View](https://jamesleesaunders.github.io/d3-x3d/bubbleChart.html)            |
+| chart.donutChart()             | Donut Chart                    | [View](https://jamesleesaunders.github.io/d3-x3d/donutChart.html)             |
 | chart.heatMap()                | Heat Map & Axis                | [View](https://jamesleesaunders.github.io/d3-x3d/heatMap.html)                |
 | chart.particlePlot()           | Particle Plot & Axis           | [View](https://jamesleesaunders.github.io/d3-x3d/particlePlot.html)           |
 | chart.ribbonChartMultiSeries() | Multi series Ribbon Chart      | [View](https://jamesleesaunders.github.io/d3-x3d/ribbonChartMultiSeries.html) |
