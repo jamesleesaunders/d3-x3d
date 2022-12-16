@@ -3046,6 +3046,183 @@
   }
 
   /**
+   * Reusable 3D Donut Chart Component
+   *
+   * @module
+   */
+  function componentDonut () {
+    /* Default Properties */
+    var dimensions = {
+      x: 40,
+      y: 40,
+      z: 2
+    };
+    var colors = ["orange", "red", "yellow", "steelblue", "green"];
+    var classed = "d3X3dDonut";
+    var transparency = 0;
+
+    /* Scales */
+    var xScale;
+    var yScale;
+    var colorScale;
+
+    /**
+     * Initialise Data and Scales
+     *
+     * @private
+     * @param {Array} data - Chart data.
+     */
+    var init = function init(data) {
+      var _dataTransform$summar = dataTransform(data).summary(),
+        columnKeys = _dataTransform$summar.columnKeys,
+        valueMax = _dataTransform$summar.valueMax;
+      var valueExtent = [0, valueMax];
+      var _dimensions = dimensions,
+        dimensionX = _dimensions.x,
+        dimensionY = _dimensions.y;
+      if (typeof xScale === "undefined") {
+        xScale = d3__namespace.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.3);
+      }
+      if (typeof yScale === "undefined") {
+        yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+      }
+      if (typeof colorScale === "undefined") {
+        colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
+      }
+    };
+
+    /**
+     * Constructor
+     *
+     * @constructor
+     * @alias donut
+     * @param {d3.selection} selection - The chart holder D3 selection.
+     */
+    var my = function my(selection) {
+      selection.each(function (data) {
+        init(data);
+        var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
+          return d.key;
+        });
+        var shape = function shape(el) {
+          var shape = el.append("Shape");
+          attachEventListners(shape);
+          shape.append("Box").attr("size", "1.0 1.0 1.0");
+          shape.append("Appearance").append("Material").attr("diffuseColor", function (d) {
+            // If colour scale is linear then use value for scale.
+            var j = colorScale(d.key);
+            if (typeof colorScale.interpolate === "function") {
+              j = colorScale(d.value);
+            }
+            return colorParse(j);
+          }).attr("ambientIntensity", 0.1).attr("transparency", transparency);
+          return shape;
+        };
+        var sectors = element.selectAll(".sector").data(function (d) {
+          return d.values;
+        }, function (d) {
+          return d.key;
+        });
+        sectors.enter().append("Transform").classed("sector", true).call(shape).merge(sectors).transition().attr("scale", function (d) {
+          var x = xScale.bandwidth();
+          var y = yScale(d.value);
+          var z = dimensions.z;
+          return x + " " + y + " " + z;
+        }).attr("translation", function (d) {
+          var x = xScale(d.key);
+          var y = yScale(d.value) / 2;
+          var z = 0.0;
+          return x + " " + y + " " + z;
+        });
+        sectors.exit().remove();
+      });
+    };
+
+    /**
+     * Dimensions Getter / Setter
+     *
+     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+     * @returns {*}
+     */
+    my.dimensions = function (_v) {
+      if (!arguments.length) return dimensions;
+      dimensions = _v;
+      return this;
+    };
+
+    /**
+     * X Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+    my.xScale = function (_v) {
+      if (!arguments.length) return xScale;
+      xScale = _v;
+      return my;
+    };
+
+    /**
+     * Y Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+    my.yScale = function (_v) {
+      if (!arguments.length) return yScale;
+      yScale = _v;
+      return my;
+    };
+
+    /**
+     * Color Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+    my.colorScale = function (_v) {
+      if (!arguments.length) return colorScale;
+      colorScale = _v;
+      return my;
+    };
+
+    /**
+     * Colors Getter / Setter
+     *
+     * @param {Array} _v - Array of colours used by color scale.
+     * @returns {*}
+     */
+    my.colors = function (_v) {
+      if (!arguments.length) return colors;
+      colors = _v;
+      return my;
+    };
+
+    /**
+     * Transparency Getter / Setter
+     *
+     * @param {Number} _v - Transparency level 0 - 1.
+     * @returns {*}
+     */
+    my.transparency = function (_v) {
+      if (!arguments.length) return transparency;
+      transparency = _v;
+      return my;
+    };
+
+    /**
+     * Dispatch On Getter
+     *
+     * @returns {*}
+     */
+    my.on = function () {
+      var value = dispatch.on.apply(dispatch, arguments);
+      return value === dispatch ? my : value;
+    };
+    return my;
+  }
+
+  /**
    * Reusable 3D Label Component
    *
    * @module
@@ -5821,6 +5998,7 @@
     bubbles: componentBubbles,
     bubblesMultiSeries: componentBubblesMultiSeries,
     crosshair: componentCrosshair,
+    donut: componentDonut,
     heatMap: componentHeatMap,
     label: componentLabel,
     light: componentLight,

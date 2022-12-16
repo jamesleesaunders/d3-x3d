@@ -8,6 +8,7 @@ import componentBubbles from "./component/bubbles.js";
 import componentBubblesMultiSeries from "./component/bubblesMultiSeries.js";
 import componentCrosshair from "./component/crosshair.js";
 import componentHeatMap from "./component/heatMap.js";
+import componentDonut from "./component/donut.js";
 import componentLabel from "./component/label.js";
 import componentLight from "./component/light.js";
 import componentParticles from "./component/particles.js";
@@ -30,6 +31,7 @@ export default {
 	bubbles: componentBubbles,
 	bubblesMultiSeries: componentBubblesMultiSeries,
 	crosshair: componentCrosshair,
+	donut: componentDonut,
 	heatMap: componentHeatMap,
 	label: componentLabel,
 	light: componentLight,
