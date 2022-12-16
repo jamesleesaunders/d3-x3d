@@ -59,6 +59,8 @@ export default function() {
 		selection.each(function(data) {
 			init(data);
 
+			const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
+
 			// Stack Generator
 			const stacker = function(data) {
 				const series = [];
@@ -77,8 +79,6 @@ export default function() {
 
 				return series;
 			};
-
-			const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
 			const element = d3.select(this)
 				.classed(classed, true)
