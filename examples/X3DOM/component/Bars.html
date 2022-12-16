@@ -20,7 +20,7 @@
   var viewpoint = d3.x3d.component.viewpoint();
 
   // Generate some data
-  var data = d3.x3d.randomData.dataset1();
+  var barsData = d3.x3d.randomData.dataset1();
 
   // Declare the chart component
   var barsComponent = d3.x3d.component.bars();
@@ -36,7 +36,7 @@
   scene.call(viewpoint)
     .append("Group")
     .attr("class", "chart")
-    .datum(data)
+    .datum(barsData)
     .call(barsComponent);
 
 </script>

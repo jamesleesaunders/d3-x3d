@@ -1940,11 +1940,11 @@
           shape.append("Box").attr("size", "1.0 1.0 1.0");
           shape.append("Appearance").append("Material").attr("diffuseColor", function (d) {
             // If colour scale is linear then use value for scale.
-            var j = colorScale(d.key);
+            var color = colorScale(d.key);
             if (typeof colorScale.interpolate === "function") {
-              j = colorScale(d.value);
+              color = colorScale(d.value);
             }
-            return colorParse(j);
+            return colorParse(color);
           }).attr("ambientIntensity", 0.1).attr("transparency", transparency);
           return shape;
         };
@@ -3055,11 +3055,10 @@
     var dimensions = {
       x: 40,
       y: 40,
-      z: 2
+      z: 40
     };
     var colors = ["orange", "red", "yellow", "steelblue", "green"];
     var classed = "d3X3dDonut";
-    var transparency = 0;
 
     /* Scales */
     var xScale;
@@ -3075,16 +3074,12 @@
     var init = function init(data) {
       var _dataTransform$summar = dataTransform(data).summary(),
         columnKeys = _dataTransform$summar.columnKeys,
-        valueMax = _dataTransform$summar.valueMax;
-      var valueExtent = [0, valueMax];
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y;
+        rowTotal = _dataTransform$summar.rowTotal;
       if (typeof xScale === "undefined") {
-        xScale = d3__namespace.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.3);
+        xScale = d3__namespace.scaleLinear().domain([0, rowTotal]).range([0, Math.PI * 2]);
       }
       if (typeof yScale === "undefined") {
-        yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+        yScale = d3__namespace.scaleLinear().domain([0, rowTotal]).range([0, -(Math.PI * 2)]);
       }
       if (typeof colorScale === "undefined") {
         colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
@@ -3101,38 +3096,56 @@
     var my = function my(selection) {
       selection.each(function (data) {
         init(data);
+
+        // Stack Generator
+        var stacker = function stacker(data) {
+          var series = [];
+          var y0 = 0;
+          var y1 = 0;
+          data.forEach(function (d, i) {
+            y1 = y0 + d.value;
+            series[i] = {
+              key: d.key,
+              value: d.value,
+              y0: y0,
+              y1: y1
+            };
+            y0 += d.value;
+          });
+          return series;
+        };
+        var _dimensions = dimensions,
+          dimensionX = _dimensions.x,
+          dimensionY = _dimensions.y,
+          dimensionZ = _dimensions.z;
         var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
         });
         var shape = function shape(el) {
           var shape = el.append("Shape");
           attachEventListners(shape);
-          shape.append("Box").attr("size", "1.0 1.0 1.0");
+          shape.append("Torus").attr("angle", function (d) {
+            return xScale(d.value);
+          }).attr("innerRadius", "0.25").attr("outerRadius", "1");
           shape.append("Appearance").append("Material").attr("diffuseColor", function (d) {
             // If colour scale is linear then use value for scale.
-            var j = colorScale(d.key);
+            var color = colorScale(d.key);
             if (typeof colorScale.interpolate === "function") {
-              j = colorScale(d.value);
+              color = colorScale(d.value);
             }
-            return colorParse(j);
-          }).attr("ambientIntensity", 0.1).attr("transparency", transparency);
+            return colorParse(color);
+          });
           return shape;
         };
         var sectors = element.selectAll(".sector").data(function (d) {
-          return d.values;
-        }, function (d) {
-          return d.key;
+          return stacker(d.values);
         });
-        sectors.enter().append("Transform").classed("sector", true).call(shape).merge(sectors).transition().attr("scale", function (d) {
-          var x = xScale.bandwidth();
-          var y = yScale(d.value);
-          var z = dimensions.z;
-          return x + " " + y + " " + z;
-        }).attr("translation", function (d) {
-          var x = xScale(d.key);
-          var y = yScale(d.value) / 2;
-          var z = 0.0;
-          return x + " " + y + " " + z;
+        sectors.enter().append("Transform").classed("sector", true).call(shape).merge(sectors).transition().attr("scale", function () {
+          return [dimensionX, dimensionY, dimensionZ].map(function (d) {
+            return d / 2;
+          }).join(" ");
+        }).attr("rotation", function (d) {
+          return [0, 0, 1, yScale(d.y0)].join(" ");
         });
         sectors.exit().remove();
       });
@@ -3195,18 +3208,6 @@
     my.colors = function (_v) {
       if (!arguments.length) return colors;
       colors = _v;
-      return my;
-    };
-
-    /**
-     * Transparency Getter / Setter
-     *
-     * @param {Number} _v - Transparency level 0 - 1.
-     * @returns {*}
-     */
-    my.transparency = function (_v) {
-      if (!arguments.length) return transparency;
-      transparency = _v;
       return my;
     };
 

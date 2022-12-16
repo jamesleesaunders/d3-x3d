@@ -79,11 +79,11 @@ export default function() {
 					.append("Material")
 					.attr("diffuseColor", (d) => {
 						// If colour scale is linear then use value for scale.
-						let j = colorScale(d.key);
+						let color = colorScale(d.key);
 						if (typeof colorScale.interpolate === "function") {
-							j = colorScale(d.value);
+							color = colorScale(d.value);
 						}
-						return colorParse(j)
+						return colorParse(color);
 					})
 					.attr("ambientIntensity", 0.1)
 					.attr("transparency", transparency);

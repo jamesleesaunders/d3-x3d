@@ -11,10 +11,9 @@ import { colorParse } from "../colorHelper.js";
 export default function() {
 
 	/* Default Properties */
-	let dimensions = { x: 40, y: 40, z: 2 };
+	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["orange", "red", "yellow", "steelblue", "green"];
 	let classed = "d3X3dDonut";
-	let transparency = 0;
 
 	/* Scales */
 	let xScale;
@@ -28,21 +27,18 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	const init = function(data) {
-		const { columnKeys, valueMax } = dataTransform(data).summary();
-		const valueExtent = [0, valueMax];
-		const { x: dimensionX, y: dimensionY } = dimensions;
+		const { columnKeys, rowTotal } = dataTransform(data).summary();
 
 		if (typeof xScale === "undefined") {
-			xScale = d3.scaleBand()
-				.domain(columnKeys)
-				.rangeRound([0, dimensionX])
-				.padding(0.3);
+			xScale = d3.scaleLinear()
+				.domain([0, rowTotal])
+				.range([0, (Math.PI * 2)]);
 		}
 
 		if (typeof yScale === "undefined") {
 			yScale = d3.scaleLinear()
-				.domain(valueExtent)
-				.range([0, dimensionY]);
+				.domain([0, rowTotal])
+				.range([0, -(Math.PI * 2)]);
 		}
 
 		if (typeof colorScale === "undefined") {
@@ -63,6 +59,27 @@ export default function() {
 		selection.each(function(data) {
 			init(data);
 
+			// Stack Generator
+			const stacker = function(data) {
+				const series = [];
+				let y0 = 0;
+				let y1 = 0;
+				data.forEach((d, i) => {
+					y1 = y0 + d.value;
+					series[i] = {
+						key: d.key,
+						value: d.value,
+						y0: y0,
+						y1: y1
+					};
+					y0 += d.value;
+				});
+
+				return series;
+			};
+
+			const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
+
 			const element = d3.select(this)
 				.classed(classed, true)
 				.attr("id", (d) => d.key);
@@ -72,27 +89,27 @@ export default function() {
 
 				attachEventListners(shape);
 
-				shape.append("Box")
-					.attr("size", "1.0 1.0 1.0");
+				shape.append("Torus")
+					.attr("angle", (d) => xScale(d.value))
+					.attr("innerRadius", "0.25")
+					.attr("outerRadius", "1");
 
 				shape.append("Appearance")
 					.append("Material")
 					.attr("diffuseColor", (d) => {
 						// If colour scale is linear then use value for scale.
-						let j = colorScale(d.key);
+						let color = colorScale(d.key);
 						if (typeof colorScale.interpolate === "function") {
-							j = colorScale(d.value);
+							color = colorScale(d.value);
 						}
-						return colorParse(j)
-					})
-					.attr("ambientIntensity", 0.1)
-					.attr("transparency", transparency);
+						return colorParse(color);
+					});
 
 				return shape;
 			};
 
 			const sectors = element.selectAll(".sector")
-				.data((d) => d.values, (d) => d.key);
+				.data((d) => stacker(d.values));
 
 			sectors.enter()
 				.append("Transform")
@@ -100,18 +117,8 @@ export default function() {
 				.call(shape)
 				.merge(sectors)
 				.transition()
-				.attr("scale", (d) => {
-					let x = xScale.bandwidth();
-					let y = yScale(d.value);
-					let z = dimensions.z;
-					return x + " " + y + " " + z;
-				})
-				.attr("translation", (d) => {
-					let x = xScale(d.key);
-					let y = yScale(d.value) / 2;
-					let z = 0.0;
-					return x + " " + y + " " + z;
-				});
+				.attr("scale", () => [dimensionX, dimensionY, dimensionZ].map((d) => d / 2).join(" "))
+				.attr("rotation", (d) => [0, 0, 1, yScale(d.y0)].join(" "));
 
 			sectors.exit()
 				.remove();
@@ -175,18 +182,6 @@ export default function() {
 	my.colors = function(_v) {
 		if (!arguments.length) return colors;
 		colors = _v;
-		return my;
-	};
-
-	/**
-	 * Transparency Getter / Setter
-	 *
-	 * @param {Number} _v - Transparency level 0 - 1.
-	 * @returns {*}
-	 */
-	my.transparency = function(_v) {
-		if (!arguments.length) return transparency;
-		transparency = _v;
 		return my;
 	};
 
