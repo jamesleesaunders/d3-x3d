@@ -61,25 +61,6 @@ export default function() {
 
 			const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
-			// Stack Generator
-			const stacker = function(data) {
-				const series = [];
-				let y0 = 0;
-				let y1 = 0;
-				data.forEach((d, i) => {
-					y1 = y0 + d.value;
-					series[i] = {
-						key: d.key,
-						value: d.value,
-						y0: y0,
-						y1: y1
-					};
-					y0 += d.value;
-				});
-
-				return series;
-			};
-
 			const element = d3.select(this)
 				.classed(classed, true)
 				.attr("id", (d) => d.key);
@@ -109,7 +90,7 @@ export default function() {
 			};
 
 			const sectors = element.selectAll(".sector")
-				.data((d) => stacker(d.values));
+				.data((d) => dataTransform(d).stacked().values);
 
 			sectors.enter()
 				.append("Transform")

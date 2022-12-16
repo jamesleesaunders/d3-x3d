@@ -452,6 +452,32 @@ export default function dataTransform(data) {
 	};
 
 	/**
+	 * Stack Data (for Stacked Bar Chart, Donut Chart)
+	 *
+	 * @returns {Array}
+	 */
+	const stack = function() {
+		const values = [];
+		let y0 = 0;
+		let y1 = 0;
+		data.values.forEach((d, i) => {
+			y1 = y0 + d.value;
+			values[i] = {
+				key: d.key,
+				value: d.value,
+				y0: y0,
+				y1: y1
+			};
+			y0 += d.value;
+		});
+
+		return {
+			key: data.key,
+			values: values
+		};
+	};
+
+	/**
 	 * Rotate Data
 	 *
 	 * @returns {Array}
@@ -512,6 +538,7 @@ export default function dataTransform(data) {
 	return {
 		summary: summary,
 		rotate: rotate,
+		stacked: stack,
 		smooth: smooth
 	};
 }

@@ -637,6 +637,31 @@
     };
 
     /**
+     * Stack Data (for Stacked Bar Chart, Donut Chart)
+     *
+     * @returns {Array}
+     */
+    var stack = function stack() {
+      var values = [];
+      var y0 = 0;
+      var y1 = 0;
+      data.values.forEach(function (d, i) {
+        y1 = y0 + d.value;
+        values[i] = {
+          key: d.key,
+          value: d.value,
+          y0: y0,
+          y1: y1
+        };
+        y0 += d.value;
+      });
+      return {
+        key: data.key,
+        values: values
+      };
+    };
+
+    /**
      * Rotate Data
      *
      * @returns {Array}
@@ -698,6 +723,7 @@
     return {
       summary: summary,
       rotate: rotate,
+      stacked: stack,
       smooth: smooth
     };
   }
@@ -3096,24 +3122,6 @@
     var my = function my(selection) {
       selection.each(function (data) {
         init(data);
-
-        // Stack Generator
-        var stacker = function stacker(data) {
-          var series = [];
-          var y0 = 0;
-          var y1 = 0;
-          data.forEach(function (d, i) {
-            y1 = y0 + d.value;
-            series[i] = {
-              key: d.key,
-              value: d.value,
-              y0: y0,
-              y1: y1
-            };
-            y0 += d.value;
-          });
-          return series;
-        };
         var _dimensions = dimensions,
           dimensionX = _dimensions.x,
           dimensionY = _dimensions.y,
@@ -3138,7 +3146,7 @@
           return shape;
         };
         var sectors = element.selectAll(".sector").data(function (d) {
-          return stacker(d.values);
+          return dataTransform(d).stacked().values;
         });
         sectors.enter().append("Transform").classed("sector", true).call(shape).merge(sectors).transition().attr("scale", function () {
           return [dimensionX, dimensionY, dimensionZ].map(function (d) {

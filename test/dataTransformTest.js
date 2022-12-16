@@ -183,6 +183,29 @@ test.describe("Test Rotate", function() {
 	});
 });
 
+test.describe("Test Stacker", function() {
+	let data = {
+		key: "UK",
+		values: [
+			{ key: "Apples", value: 1.5 },
+			{ key: "Oranges", value: 2.0 },
+			{ key: "Pears", value: 3.2 }
+		]
+	}
+	let expect = {
+		key: "UK",
+		values: [
+			{ key: "Apples", value: 1.5, y0: 0, y1: 1.5 },
+			{ key: "Oranges", value: 2.0, y0: 1.5, y1: 3.5 },
+			{ key: "Pears", value: 3.2, y0: 3.5, y1: 6.7 }
+		]
+	}
+	test.it("should return Dataset 3", function(done) {
+		chai.expect(dataTransform(data).stacked()).to.be.deep.equal(expect);
+		done();
+	});
+});
+
 test.describe("Test Curve", function() {
 	const actual = dataTransform(dataset1).smooth(d3.curveMonotoneX, 10);
 	const expected = {
@@ -239,21 +262,6 @@ let formatData = Array.from(d3.rollup(
 	}),
 	(d) => d.row
 ).values());
-
-/*
-// was: Before D3 v6:
-
-let formatData = d3.nest()
-	.key((d) => d.row)
-	.entries(data.sort((a, b) => +a.row - +b.row))
-	.map((d) => ({
-			key: d.key,
-			values: d3.nest()
-				.key((d) => d.column)
-				.entries(d.values.sort((a, b) => +a.column - +b.column))
-				.map((d) => ({ key: d.key, value: d.values[0].val }))
-		}));
-*/
 
 test.describe("Test rowKeys remain in order", function() {
 	let actual = dataTransform(formatData).summary().rowKeys;
