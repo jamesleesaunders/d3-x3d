@@ -637,6 +637,31 @@
     };
 
     /**
+     * Stack Data (for Stacked Bar Chart, Donut Chart)
+     *
+     * @returns {Array}
+     */
+    var stack = function stack() {
+      var values = [];
+      var y0 = 0;
+      var y1 = 0;
+      data.values.forEach(function (d, i) {
+        y1 = y0 + d.value;
+        values[i] = {
+          key: d.key,
+          value: d.value,
+          y0: y0,
+          y1: y1
+        };
+        y0 += d.value;
+      });
+      return {
+        key: data.key,
+        values: values
+      };
+    };
+
+    /**
      * Rotate Data
      *
      * @returns {Array}
@@ -698,6 +723,7 @@
     return {
       summary: summary,
       rotate: rotate,
+      stacked: stack,
       smooth: smooth
     };
   }
@@ -1940,11 +1966,11 @@
           shape.append("Box").attr("size", "1.0 1.0 1.0");
           shape.append("Appearance").append("Material").attr("diffuseColor", function (d) {
             // If colour scale is linear then use value for scale.
-            var j = colorScale(d.key);
+            var color = colorScale(d.key);
             if (typeof colorScale.interpolate === "function") {
-              j = colorScale(d.value);
+              color = colorScale(d.value);
             }
-            return colorParse(j);
+            return colorParse(color);
           }).attr("ambientIntensity", 0.1).attr("transparency", transparency);
           return shape;
         };
@@ -3041,6 +3067,164 @@
       if (!arguments.length) return colors;
       colors = _v;
       return my;
+    };
+    return my;
+  }
+
+  /**
+   * Reusable 3D Donut Chart Component
+   *
+   * @module
+   */
+  function componentDonut () {
+    /* Default Properties */
+    var dimensions = {
+      x: 40,
+      y: 40,
+      z: 40
+    };
+    var colors = ["orange", "red", "yellow", "steelblue", "green"];
+    var classed = "d3X3dDonut";
+
+    /* Scales */
+    var xScale;
+    var yScale;
+    var colorScale;
+
+    /**
+     * Initialise Data and Scales
+     *
+     * @private
+     * @param {Array} data - Chart data.
+     */
+    var init = function init(data) {
+      var _dataTransform$summar = dataTransform(data).summary(),
+        columnKeys = _dataTransform$summar.columnKeys,
+        rowTotal = _dataTransform$summar.rowTotal;
+      xScale = d3__namespace.scaleLinear().domain([0, rowTotal]).range([0, Math.PI * 2]);
+      yScale = d3__namespace.scaleLinear().domain([0, rowTotal]).range([Math.PI * 2, 0]);
+      colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
+    };
+
+    /**
+     * Constructor
+     *
+     * @constructor
+     * @alias donut
+     * @param {d3.selection} selection - The chart holder D3 selection.
+     */
+    var my = function my(selection) {
+      selection.each(function (data) {
+        init(data);
+        var _dimensions = dimensions,
+          dimensionX = _dimensions.x,
+          dimensionY = _dimensions.y,
+          dimensionZ = _dimensions.z;
+        var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
+          return d.key;
+        });
+        var shape = function shape(el) {
+          var shape = el.append("Shape");
+          attachEventListners(shape);
+          shape.append("Torus").attr("angle", function (d) {
+            return xScale(d.value);
+          }).attr("innerRadius", "0.25").attr("outerRadius", "1");
+          shape.append("Appearance").append("Material").attr("diffuseColor", function (d) {
+            // If colour scale is linear then use value for scale.
+            var color = colorScale(d.key);
+            if (typeof colorScale.interpolate === "function") {
+              color = colorScale(d.value);
+            }
+            return colorParse(color);
+          });
+          return shape;
+        };
+        var sectors = element.selectAll(".sector").data(function (d) {
+          return dataTransform(d).stacked().values;
+        });
+        var sectorsEnter = sectors.enter().append("Transform").classed("sector", true).call(shape).merge(sectors);
+        var sectorsTransition = sectorsEnter.transition().attr("scale", function () {
+          return [dimensionX, dimensionY, dimensionZ].map(function (d) {
+            return d / 2;
+          }).join(" ");
+        }).attr("rotation", function (d) {
+          return [0, 0, 1, yScale(d.y0)].join(" ");
+        });
+        sectorsTransition.select("Shape").select("Torus").attr("angle", function (d) {
+          return xScale(d.value);
+        });
+        sectors.exit().remove();
+      });
+    };
+
+    /**
+     * Dimensions Getter / Setter
+     *
+     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+     * @returns {*}
+     */
+    my.dimensions = function (_v) {
+      if (!arguments.length) return dimensions;
+      dimensions = _v;
+      return this;
+    };
+
+    /**
+     * X Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+    my.xScale = function (_v) {
+      if (!arguments.length) return xScale;
+      xScale = _v;
+      return my;
+    };
+
+    /**
+     * Y Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+    my.yScale = function (_v) {
+      if (!arguments.length) return yScale;
+      yScale = _v;
+      return my;
+    };
+
+    /**
+     * Color Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+    my.colorScale = function (_v) {
+      if (!arguments.length) return colorScale;
+      colorScale = _v;
+      return my;
+    };
+
+    /**
+     * Colors Getter / Setter
+     *
+     * @param {Array} _v - Array of colours used by color scale.
+     * @returns {*}
+     */
+    my.colors = function (_v) {
+      if (!arguments.length) return colors;
+      colors = _v;
+      return my;
+    };
+
+    /**
+     * Dispatch On Getter
+     *
+     * @returns {*}
+     */
+    my.on = function () {
+      var value = dispatch.on.apply(dispatch, arguments);
+      return value === dispatch ? my : value;
     };
     return my;
   }
@@ -5821,6 +6005,7 @@
     bubbles: componentBubbles,
     bubblesMultiSeries: componentBubblesMultiSeries,
     crosshair: componentCrosshair,
+    donut: componentDonut,
     heatMap: componentHeatMap,
     label: componentLabel,
     light: componentLight,
@@ -6904,6 +7089,126 @@
     my.zScale = function (_v) {
       if (!arguments.length) return zScale;
       zScale = _v;
+      return my;
+    };
+
+    /**
+     * Debug Getter / Setter
+     *
+     * @param {boolean} _v - Show debug log and stats. True/False.
+     * @returns {*}
+     */
+    my.debug = function (_v) {
+      if (!arguments.length) return debug;
+      debug = _v;
+      return my;
+    };
+    return my;
+  }
+
+  /**
+   * Reusable 3D Donut Chart
+   *
+   * @module
+   *
+   * @example
+   * let chartHolder = d3.select("#chartholder");
+   *
+   * let myData = [...];
+   *
+   * let myChart = d3.x3d.chart.donutChart();
+   *
+   * chartHolder.datum(myData).call(myChart);
+   *
+   * @see https://datavizproject.com/data-type/donut-chart/
+   */
+  function chartDonutChart () {
+    /* Default Properties */
+    var width = 500;
+    var height = 500;
+    var dimensions = {
+      x: 40,
+      y: 40,
+      z: 40
+    };
+    var colors = ["green", "red", "yellow", "steelblue", "orange"];
+    var classed = "d3X3dDonutChart";
+    var debug = false;
+
+    /* Components */
+    var viewpoint = component.viewpoint();
+    var donut = component.donut();
+    var light = component.light();
+
+    /**
+     * Constructor
+     *
+     * @constructor
+     * @alias donutChart
+     * @param {d3.selection} selection - The chart holder D3 selection.
+     */
+    var my = function my(selection) {
+      var layers = ["donut"];
+      var scene = createScene(selection, layers, classed, width, height, debug);
+      selection.each(function (data) {
+        // Add Viewpoint
+        viewpoint.quickView("dimetric");
+
+        // Add Donut
+        donut.colors(colors);
+        scene.call(viewpoint);
+        scene.select(".donut").datum(data).call(donut);
+
+        // Add Light
+        scene.call(light);
+      });
+    };
+
+    /**
+     * Width Getter / Setter
+     *
+     * @param {number} _v - X3D canvas width in px.
+     * @returns {*}
+     */
+    my.width = function (_v) {
+      if (!arguments.length) return width;
+      width = _v;
+      return this;
+    };
+
+    /**
+     * Height Getter / Setter
+     *
+     * @param {number} _v - X3D canvas height in px.
+     * @returns {*}
+     */
+    my.height = function (_v) {
+      if (!arguments.length) return height;
+      height = _v;
+      return this;
+    };
+
+    /**
+     * Dimensions Getter / Setter
+     *
+     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+     * @returns {*}
+     */
+    my.dimensions = function (_v) {
+      if (!arguments.length) return dimensions;
+      dimensions = _v;
+      return this;
+    };
+
+    /**
+     * Colors Getter / Setter
+     *
+     * @param {Array} _v - Array of colours used by color scale.
+     * @returns {*}
+     */
+    my.colors = function (_v) {
+      if (!arguments.length) return colors;
+      colors = _v;
       return my;
     };
 
@@ -8891,6 +9196,7 @@
     barChartMultiSeries: chartBarChartMultiSeries,
     barChartVertical: chartBarChartVertical,
     bubbleChart: chartBubbleChart,
+    donutChart: chartDonutChart,
     crosshairPlot: chartCrosshairPlot,
     heatMap: chartHeatMap,
     particlePlot: chartParticlePlot,

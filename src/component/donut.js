@@ -4,17 +4,16 @@ import { attachEventListners, dispatch } from "../events.js";
 import { colorParse } from "../colorHelper.js";
 
 /**
- * Reusable 3D Bar Chart Component
+ * Reusable 3D Donut Chart Component
  *
  * @module
  */
 export default function() {
 
 	/* Default Properties */
-	let dimensions = { x: 40, y: 40, z: 2 };
+	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["orange", "red", "yellow", "steelblue", "green"];
-	let classed = "d3X3dBars";
-	let transparency = 0;
+	let classed = "d3X3dDonut";
 
 	/* Scales */
 	let xScale;
@@ -28,40 +27,33 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	const init = function(data) {
-		const { columnKeys, valueMax } = dataTransform(data).summary();
-		const valueExtent = [0, valueMax];
-		const { x: dimensionX, y: dimensionY } = dimensions;
+		const { columnKeys, rowTotal } = dataTransform(data).summary();
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleBand()
-				.domain(columnKeys)
-				.rangeRound([0, dimensionX])
-				.padding(0.3);
-		}
+		xScale = d3.scaleLinear()
+			.domain([0, rowTotal])
+			.range([0, (Math.PI * 2)]);
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
-				.domain(valueExtent)
-				.range([0, dimensionY]);
-		}
+		yScale = d3.scaleLinear()
+			.domain([0, rowTotal])
+			.range([(Math.PI * 2), 0]);
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal()
-				.domain(columnKeys)
-				.range(colors);
-		}
+		colorScale = d3.scaleOrdinal()
+			.domain(columnKeys)
+			.range(colors);
 	};
 
 	/**
 	 * Constructor
 	 *
 	 * @constructor
-	 * @alias bars
+	 * @alias donut
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
 		selection.each(function(data) {
 			init(data);
+
+			const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
 
 			const element = d3.select(this)
 				.classed(classed, true)
@@ -72,8 +64,10 @@ export default function() {
 
 				attachEventListners(shape);
 
-				shape.append("Box")
-					.attr("size", "1.0 1.0 1.0");
+				shape.append("Torus")
+					.attr("angle", (d) => xScale(d.value))
+					.attr("innerRadius", "0.25")
+					.attr("outerRadius", "1");
 
 				shape.append("Appearance")
 					.append("Material")
@@ -84,36 +78,29 @@ export default function() {
 							color = colorScale(d.value);
 						}
 						return colorParse(color);
-					})
-					.attr("ambientIntensity", 0.1)
-					.attr("transparency", transparency);
+					});
 
 				return shape;
 			};
 
-			const bars = element.selectAll(".bar")
-				.data((d) => d.values, (d) => d.key);
+			const sectors = element.selectAll(".sector")
+				.data((d) => dataTransform(d).stacked().values);
 
-			bars.enter()
+			const sectorsEnter = sectors.enter()
 				.append("Transform")
-				.classed("bar", true)
+				.classed("sector", true)
 				.call(shape)
-				.merge(bars)
-				.transition()
-				.attr("scale", (d) => {
-					let x = xScale.bandwidth();
-					let y = yScale(d.value);
-					let z = dimensions.z;
-					return x + " " + y + " " + z;
-				})
-				.attr("translation", (d) => {
-					let x = xScale(d.key);
-					let y = yScale(d.value) / 2;
-					let z = 0.0;
-					return x + " " + y + " " + z;
-				});
+				.merge(sectors);
 
-			bars.exit()
+			const sectorsTransition = sectorsEnter.transition()
+				.attr("scale", () => [dimensionX, dimensionY, dimensionZ].map((d) => d / 2).join(" "))
+				.attr("rotation", (d) => [0, 0, 1, yScale(d.y0)].join(" "));
+
+			sectorsTransition.select("Shape")
+				.select("Torus")
+				.attr("angle", (d) => xScale(d.value));
+
+			sectors.exit()
 				.remove();
 		});
 	};
@@ -175,18 +162,6 @@ export default function() {
 	my.colors = function(_v) {
 		if (!arguments.length) return colors;
 		colors = _v;
-		return my;
-	};
-
-	/**
-	 * Transparency Getter / Setter
-	 *
-	 * @param {Number} _v - Transparency level 0 - 1.
-	 * @returns {*}
-	 */
-	my.transparency = function(_v) {
-		if (!arguments.length) return transparency;
-		transparency = _v;
 		return my;
 	};
 
