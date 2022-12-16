@@ -19,6 +19,29 @@ export default function() {
 	let xScale;
 	let yScale;
 	let colorScale;
+	let colorDomain = [];
+
+	/**
+	 * Unique Array
+	 *
+	 * @param {array} array1
+	 * @param {array} array2
+	 * @returns {array}
+	 */
+	const arrayUnique = function(array1, array2) {
+		let array = array1.concat(array2);
+
+		let a = array.concat();
+		for (let i = 0; i < a.length; ++i) {
+			for (let j = i + 1; j < a.length; ++j) {
+				if (a[i] === a[j]) {
+					a.splice(j--, 1);
+				}
+			}
+		}
+
+		return a;
+	};
 
 	/**
 	 * Initialise Data and Scales
@@ -37,8 +60,9 @@ export default function() {
 			.domain([0, rowTotal])
 			.range([(Math.PI * 2), 0]);
 
+		colorDomain = arrayUnique(colorDomain, columnKeys);
 		colorScale = d3.scaleOrdinal()
-			.domain(columnKeys)
+			.domain(colorDomain)
 			.range(colors);
 	};
 
@@ -84,7 +108,7 @@ export default function() {
 			};
 
 			const sectors = element.selectAll(".sector")
-				.data((d) => dataTransform(d).stacked().values);
+				.data((d) => dataTransform(d).stacked().values, (d) => d.key);
 
 			const sectorsEnter = sectors.enter()
 				.append("Transform")

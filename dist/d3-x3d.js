@@ -3090,6 +3090,27 @@
     var xScale;
     var yScale;
     var colorScale;
+    var colorDomain = [];
+
+    /**
+     * Unique Array
+     *
+     * @param {array} array1
+     * @param {array} array2
+     * @returns {array}
+     */
+    var arrayUnique = function arrayUnique(array1, array2) {
+      var array = array1.concat(array2);
+      var a = array.concat();
+      for (var i = 0; i < a.length; ++i) {
+        for (var j = i + 1; j < a.length; ++j) {
+          if (a[i] === a[j]) {
+            a.splice(j--, 1);
+          }
+        }
+      }
+      return a;
+    };
 
     /**
      * Initialise Data and Scales
@@ -3103,7 +3124,8 @@
         rowTotal = _dataTransform$summar.rowTotal;
       xScale = d3__namespace.scaleLinear().domain([0, rowTotal]).range([0, Math.PI * 2]);
       yScale = d3__namespace.scaleLinear().domain([0, rowTotal]).range([Math.PI * 2, 0]);
-      colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
+      colorDomain = arrayUnique(colorDomain, columnKeys);
+      colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(colors);
     };
 
     /**
@@ -3126,9 +3148,9 @@
         var shape = function shape(el) {
           var shape = el.append("Shape");
           attachEventListners(shape);
-          shape.append("Torus").attr("angle", function (d) {
-            return xScale(d.value);
-          }).attr("innerRadius", "0.25").attr("outerRadius", "1");
+          shape.append("Torus")
+          //.attr("angle", (d) => xScale(d.value))
+          .attr("innerRadius", "0.25").attr("outerRadius", "1");
           shape.append("Appearance").append("Material").attr("diffuseColor", function (d) {
             // If colour scale is linear then use value for scale.
             var color = colorScale(d.key);
@@ -3141,6 +3163,8 @@
         };
         var sectors = element.selectAll(".sector").data(function (d) {
           return dataTransform(d).stacked().values;
+        }, function (d) {
+          return d.key;
         });
         var sectorsEnter = sectors.enter().append("Transform").classed("sector", true).call(shape).merge(sectors);
         var sectorsTransition = sectorsEnter.transition().attr("scale", function () {
