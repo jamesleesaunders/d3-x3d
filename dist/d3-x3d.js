@@ -75,10 +75,10 @@
   /**
    * Curve Polator
    *
-   * @param {array} points
-   * @param {function} curveFunction
-   * @param {number} epsilon
-   * @param {number} samples
+   * @param points
+   * @param curveFunction
+   * @param epsilon
+   * @param samples
    * @returns {Function}
    */
   function curvePolator(points, curveFunction, epsilon, samples) { // eslint-disable-line max-params
@@ -3148,9 +3148,9 @@
         var shape = function shape(el) {
           var shape = el.append("Shape");
           attachEventListners(shape);
-          shape.append("Torus")
-          //.attr("angle", (d) => xScale(d.value))
-          .attr("innerRadius", "0.25").attr("outerRadius", "1");
+          shape.append("Torus").attr("angle", function (d) {
+            return xScale(d.value);
+          }).attr("innerRadius", "0.25").attr("outerRadius", "1");
           shape.append("Appearance").append("Material").attr("diffuseColor", function (d) {
             // If colour scale is linear then use value for scale.
             var color = colorScale(d.key);
@@ -9518,8 +9518,8 @@
   var copyright = "Copyright (C) ".concat(year, " ").concat(author);
 
   // import {default as packageJson} from "./package.json" assert { type: "json" };
-  // let version = packageJson.version;
-  // let license = packageJson.license;
+  // const version = packageJson.version;
+  // const license = packageJson.license;
   var version = "2.1.4";
   var license = "GPL-2.0";
   var index = {

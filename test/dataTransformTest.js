@@ -185,19 +185,19 @@ test.describe("Test Rotate", function() {
 
 test.describe("Test Stacker", function() {
 	let data = {
-		key: "UK",
+		key: "Cheeses",
 		values: [
-			{ key: "Apples", value: 1.5 },
-			{ key: "Oranges", value: 2.0 },
-			{ key: "Pears", value: 3.2 }
+			{ key: "Cheddar", value: 1.5 },
+			{ key: "Edam", value: 2.0 },
+			{ key: "Wensleydale", value: 3.2 }
 		]
 	}
 	let expect = {
-		key: "UK",
+		key: "Cheeses",
 		values: [
-			{ key: "Apples", value: 1.5, y0: 0, y1: 1.5 },
-			{ key: "Oranges", value: 2.0, y0: 1.5, y1: 3.5 },
-			{ key: "Pears", value: 3.2, y0: 3.5, y1: 6.7 }
+			{ key: "Cheddar", value: 1.5, y0: 0, y1: 1.5 },
+			{ key: "Edam", value: 2.0, y0: 1.5, y1: 3.5 },
+			{ key: "Wensleydale", value: 3.2, y0: 3.5, y1: 6.7 }
 		]
 	}
 	test.it("should return stacked values", function(done) {

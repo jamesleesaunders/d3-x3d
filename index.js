@@ -11,10 +11,10 @@ const year = new Date().getFullYear();
 const copyright = `Copyright (C) ${year} ${author}`;
 
 // import {default as packageJson} from "./package.json" assert { type: "json" };
-// let version = packageJson.version;
-// let license = packageJson.license;
-let version = "2.1.4";
-let license = "GPL-2.0";
+// const version = packageJson.version;
+// const license = packageJson.license;
+const version = "2.1.4";
+const license = "GPL-2.0";
 
 import chart from "./src/chart.js";
 import component from "./src/component.js";
