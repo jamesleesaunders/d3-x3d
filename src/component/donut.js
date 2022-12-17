@@ -91,7 +91,8 @@ export default function() {
 				shape.append("Torus")
 					.attr("angle", (d) => xScale(d.value))
 					.attr("innerRadius", "0.25")
-					.attr("outerRadius", "1");
+					.attr("outerRadius", "1")
+					.attr("subdivision", "48,48");
 
 				shape.append("Appearance")
 					.append("Material")

@@ -3150,7 +3150,7 @@
           attachEventListners(shape);
           shape.append("Torus").attr("angle", function (d) {
             return xScale(d.value);
-          }).attr("innerRadius", "0.25").attr("outerRadius", "1");
+          }).attr("innerRadius", "0.25").attr("outerRadius", "1").attr("subdivision", "48,48");
           shape.append("Appearance").append("Material").attr("diffuseColor", function (d) {
             // If colour scale is linear then use value for scale.
             var color = colorScale(d.key);
