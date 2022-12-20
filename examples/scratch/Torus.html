@@ -3,17 +3,10 @@
 <head>
   <meta charset="utf-8"/>
   <script src="https://create3000.github.io/code/x_ite/latest/x_ite.min.js"></script>
-  <style>
-    x3d-canvas {
-      width: 768px;
-      height: 432px;
-    }
-  </style>
 </head>
 <body>
-<x3d-canvas>
-  <X3D profile='Full' version='3.3' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance'
-       xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.3.xsd'>
+<x3d-canvas style="width: 500px; height: 500px;">
+  <X3D profile='Full' version='3.3' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.3.xsd'>
     <Scene>
       <ProtoDeclare name='Torus'>
         <ProtoInterface>
@@ -21,32 +14,77 @@
           <field accessType='inputOutput' type='SFFloat' name='majorRadius' value='1'></field>
           <field accessType='inputOutput' type='SFInt32' name='minorDimension' value='10'></field>
           <field accessType='inputOutput' type='SFInt32' name='majorDimension' value='10'></field>
-          <field accessType='initializeOnly' type='SFBool' name='solid' value='true'></field>
+          <field accessType='initializeOnly' type='SFBool' name='solid' value='false'></field>
         </ProtoInterface>
         <ProtoBody>
-          <Extrusion DEF='Geometry' xmlns="http://www.w3.org/1999/xhtml" beginCap="false" creaseAngle="1.57"
-                     crossSection="1.0 0.0 0.92 -0.38 0.71 -0.71 0.38 -0.92 0.0 -1.0 -0.38 -0.92 -0.71 -0.71 -0.92 -0.38 -1.0 -0.0 -0.92 0.38 -0.71 0.71 -0.38 0.92 0.0 1.0 0.38 0.92 0.71 0.71 0.92 0.38 1.0 0.0"
-                     endCap="false"
-                     spine="2.0 0.0 0.0 1.85 0.0 0.77 1.41 0.0 1.41 0.77 0.0 1.85 0.0 0.0 2.0 -0.77 0.0 1.85 -1.41 0.0 1.41 -1.85 0.0 0.77 -2.0 0.0 0.0 -1.85 0.0 -0.77 -1.41 0.0 -1.41 -0.77 0.0 -1.85 0.0 0.0 -2.0 0.77 0.0 -1.85 1.41 0.0 -1.41 1.85 0.0 -0.77 2.0 0.0 0.0"
-                     ccw="true" useGeoCache="true" lit="true" convex="true" orientation="0,0,0,0" scale="1,1">
+          <Extrusion DEF='Geometry' beginCap='false' endCap='false' creaseAngle='3.14159'>
             <IS>
               <connect nodeField='solid' protoField='solid'></connect>
             </IS>
           </Extrusion>
+          <Script>
+            <field accessType='inputOutput' type='SFFloat' name='minorRadius'></field>
+            <field accessType='inputOutput' type='SFFloat' name='majorRadius'></field>
+            <field accessType='inputOutput' type='SFInt32' name='minorDimension'></field>
+            <field accessType='inputOutput' type='SFInt32' name='majorDimension'></field>
+            <field accessType='initializeOnly' type='SFNode' name='geometry'>
+              <Extrusion USE='Geometry'></Extrusion>
+            </field>
+            <IS>
+              <connect nodeField='minorRadius' protoField='minorRadius'></connect>
+              <connect nodeField='majorRadius' protoField='majorRadius'></connect>
+              <connect nodeField='minorDimension' protoField='minorDimension'></connect>
+              <connect nodeField='majorDimension' protoField='majorDimension'></connect>
+            </IS>
+
+            <![CDATA[ecmascript:
+              function initialize() {
+                eventsProcessed();
+              }
+
+              function eventsProcessed() {
+                var spine = new MFVec3f();
+                var crossSection = new MFVec2f();
+                var i = 0;
+
+                // CrossSection
+                for (i = 0; i < minorDimension; ++i) {
+                  var x = Math.sin(2 * Math.PI * i / minorDimension);
+                  var y = Math.cos(2 * Math.PI * i / minorDimension);
+                  crossSection[i] = new SFVec2f(x, y).multiply(minorRadius);
+                }
+                crossSection[i] = crossSection[0];
+
+                // Spine
+                for (i = 0; i < majorDimension; ++i) {
+                  var x = Math.sin(2 * Math.PI * i / majorDimension);
+                  var z = Math.cos(2 * Math.PI * i / majorDimension);
+                  spine[i] = new SFVec3f(x, 0, z).multiply(majorRadius);
+                }
+                spine[i] = spine[0];
+
+                geometry.set_crossSection = crossSection;
+                geometry.set_spine = spine;
+              }
+            ]]>
+          </Script>
+          <field accessType='initializeOnly' type='SFNode' name='geometry'>
+            <Extrusion USE='Geometry'></Extrusion>
+          </field>
         </ProtoBody>
       </ProtoDeclare>
 
-      <Transform translation='-1.0 0.0 0.0'>
-        <Shape>
-          <Appearance>
-            <Material diffuseColor='0.0 1.0 0.0'/>
-          </Appearance>
-          <ProtoInstance name='Torus' containerField='geometry'>
-            <fieldValue name='minorRadius' value='2'/>
-            <fieldValue name='majorRadius' value='3'/>
-          </ProtoInstance>
-        </Shape>
-      </Transform>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.0 1.0 1.0'/>
+        </Appearance>
+        <ProtoInstance name='Torus' containerField='geometry'>
+          <fieldValue name='minorRadius' value='0.5'></fieldValue>
+          <fieldValue name='majorRadius' value='2'></fieldValue>
+          <fieldValue name='minorDimension' value='48'></fieldValue>
+          <fieldValue name='majorDimension' value='24'></fieldValue>
+        </ProtoInstance>
+      </Shape>
 
     </Scene>
   </X3D>
