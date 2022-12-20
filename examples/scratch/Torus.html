@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <script src="https://create3000.github.io/code/x_ite/latest/x_ite.min.js"></script>
+  <style>
+    x3d-canvas {
+      width: 768px;
+      height: 432px;
+    }
+  </style>
+</head>
+<body>
+<x3d-canvas>
+  <X3D profile='Full' version='3.3' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance'
+       xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.3.xsd'>
+    <Scene>
+      <ProtoDeclare name='Torus'>
+        <ProtoInterface>
+          <field accessType='inputOutput' type='SFFloat' name='minorRadius' value='1'></field>
+          <field accessType='inputOutput' type='SFFloat' name='majorRadius' value='1'></field>
+          <field accessType='inputOutput' type='SFInt32' name='minorDimension' value='10'></field>
+          <field accessType='inputOutput' type='SFInt32' name='majorDimension' value='10'></field>
+          <field accessType='initializeOnly' type='SFBool' name='solid' value='true'></field>
+        </ProtoInterface>
+        <ProtoBody>
+          <Extrusion DEF='Geometry' xmlns="http://www.w3.org/1999/xhtml" beginCap="false" creaseAngle="1.57"
+                     crossSection="1.0 0.0 0.92 -0.38 0.71 -0.71 0.38 -0.92 0.0 -1.0 -0.38 -0.92 -0.71 -0.71 -0.92 -0.38 -1.0 -0.0 -0.92 0.38 -0.71 0.71 -0.38 0.92 0.0 1.0 0.38 0.92 0.71 0.71 0.92 0.38 1.0 0.0"
+                     endCap="false"
+                     spine="2.0 0.0 0.0 1.85 0.0 0.77 1.41 0.0 1.41 0.77 0.0 1.85 0.0 0.0 2.0 -0.77 0.0 1.85 -1.41 0.0 1.41 -1.85 0.0 0.77 -2.0 0.0 0.0 -1.85 0.0 -0.77 -1.41 0.0 -1.41 -0.77 0.0 -1.85 0.0 0.0 -2.0 0.77 0.0 -1.85 1.41 0.0 -1.41 1.85 0.0 -0.77 2.0 0.0 0.0"
+                     ccw="true" useGeoCache="true" lit="true" convex="true" orientation="0,0,0,0" scale="1,1">
+            <IS>
+              <connect nodeField='solid' protoField='solid'></connect>
+            </IS>
+          </Extrusion>
+        </ProtoBody>
+      </ProtoDeclare>
+
+      <Transform translation='-1.0 0.0 0.0'>
+        <Shape>
+          <Appearance>
+            <Material diffuseColor='0.0 1.0 0.0'/>
+          </Appearance>
+          <ProtoInstance name='Torus' containerField='geometry'>
+            <fieldValue name='minorRadius' value='2'/>
+            <fieldValue name='majorRadius' value='3'/>
+          </ProtoInstance>
+        </Shape>
+      </Transform>
+
+    </Scene>
+  </X3D>
+</x3d-canvas>
+</body>
+</html>

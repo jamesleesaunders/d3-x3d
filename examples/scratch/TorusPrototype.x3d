@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.3//EN" "http://www.web3d.org/specifications/x3d-3.3.dtd">
+<X3D profile='Full' version='3.3' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.3.xsd'>
+  <head>
+    <meta name='comment' content='World of Titania'/>
+    <meta name='created' content='Sun, 20 Sep 2015 06:48:35 GMT'/>
+    <meta name='creator' content='Holger Seelig'/>
+    <meta name='generator' content='Titania V1.1.0, http://titania.create3000.de'/>
+    <meta name='modified' content='Sun, 20 Sep 2015 06:48:35 GMT'/>
+  </head>
+  <Scene>
+    <ProtoDeclare name='Torus'>
+      <ProtoInterface>
+        <field accessType='inputOutput' type='SFFloat' name='minorRadius' value='1'/>
+        <field accessType='inputOutput' type='SFFloat' name='majorRadius' value='1'/>
+        <field accessType='inputOutput' type='SFInt32' name='minorDimension' value='10'/>
+        <field accessType='inputOutput' type='SFInt32' name='majorDimension' value='10'/>
+        <field accessType='initializeOnly' type='SFBool' name='solid' value='true'/>
+      </ProtoInterface>
+      <ProtoBody>
+        <Extrusion DEF='Geometry'
+            beginCap='false'
+            endCap='false'
+            creaseAngle='3.14159'>
+          <IS>
+            <connect nodeField='solid' protoField='solid'/>
+          </IS>
+        </Extrusion>
+        <Script
+            directOutput='true'>
+          <field accessType='inputOutput' type='SFFloat' name='minorRadius'/>
+          <field accessType='inputOutput' type='SFFloat' name='majorRadius'/>
+          <field accessType='inputOutput' type='SFInt32' name='minorDimension'/>
+          <field accessType='inputOutput' type='SFInt32' name='majorDimension'/>
+          <field accessType='initializeOnly' type='SFNode' name='geometry'>
+            <Extrusion USE='Geometry'/>
+          </field>
+          <IS>
+            <connect nodeField='minorRadius' protoField='minorRadius'/>
+            <connect nodeField='majorRadius' protoField='majorRadius'/>
+            <connect nodeField='minorDimension' protoField='minorDimension'/>
+            <connect nodeField='majorDimension' protoField='majorDimension'/>
+          </IS>
+<![CDATA[ecmascript:
+
+function initialize ()
+{
+	eventsProcessed ();
+}
+
+function eventsProcessed ()
+{
+	var spine        = new MFVec3f ();
+	var crossSection = new MFVec2f ();
+
+	var i = 0;
+
+	// CrossSection
+
+	for (i = 0; i < minorDimension; ++ i)
+	{
+		var x = Math .sin (2 * Math .PI * i / minorDimension);
+		var y = Math .cos (2 * Math .PI * i / minorDimension);
+
+		crossSection [i] = new SFVec2f (x, y) .multiply (minorRadius);
+	}
+
+	crossSection [i] = crossSection [0];
+
+	// Spine
+
+	for (i = 0; i < majorDimension; ++ i)
+	{
+		var x = Math .sin (2 * Math .PI * i / majorDimension);
+		var z = Math .cos (2 * Math .PI * i / majorDimension);
+
+		spine [i] = new SFVec3f (x, 0, z) .multiply (majorRadius);
+	}
+
+	spine [i] = spine [0];
+
+	geometry .set_crossSection = crossSection;
+	geometry .set_spine        = spine;
+}
+]]>
+        </Script>
+      </ProtoBody>
+    </ProtoDeclare>
+  </Scene>
+</X3D>
