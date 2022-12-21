@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<x3d-canvas style="width: 500px; height: 500px;">
+<x3d-canvas style="width: 500px; height: 500px;" debug="true">
   <X3D width="500px" height="500px" profile='Full' version='3.3' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.3.xsd'>
     <Scene>
       <ProtoDeclare name='Torus'>
@@ -26,7 +26,7 @@
               <connect nodeField='endCap' protoField='caps'></connect>
             </IS>
           </Extrusion>
-          <Script>
+          <Script type='model/x3d+xml'>
             <field accessType='inputOutput' type='SFFloat' name='angle'></field>
             <field accessType='inputOutput' type='SFFloat' name='innerRadius'></field>
             <field accessType='inputOutput' type='SFFloat' name='outerRadius'></field>
@@ -41,6 +41,7 @@
               <connect nodeField='subdivision' protoField='subdivision'></connect>
             </IS>
             <![CDATA[ecmascript:
+
               function initialize() {
                 eventsProcessed();
               }
@@ -62,14 +63,23 @@
                 let a = Math.min(angle, 2 * Math.PI);
                 let majorSubdivision = Math.ceil(subdivision[1] * (a / (2 * Math.PI)));
                 for (let i = 0; i <= majorSubdivision; ++i) {
-                  let x = Math.sin(a * i / majorSubdivision);
-                  let z = Math.cos(a * i / majorSubdivision);
-                  spine[i] = new SFVec3f(x, 0, z).multiply(outerRadius);
+                  let x = Math.cos(-a * i / majorSubdivision);
+                  let z = Math.sin(-a * i / majorSubdivision);
+                  spine[i] = new SFVec3f(x, z, 0).multiply(outerRadius);
                 }
 
                 // If it is a full circle wrap back to start
                 if (a === 2 * Math.PI) {
                   spine[majorSubdivision] = spine[0];
+                }
+                else {
+                  // Add two points before last and after first, to get closer to circle.
+                  let x2 = Math.cos(-a * 0.9999);
+                  let z2 = Math.sin(-a * 0.9999);
+                  spine.splice(majorSubdivision, 0, new SFVec3f(x2, z2, 0).multiply(outerRadius))
+                  let x1 = Math.cos(-a * 0.0001);
+                  let z1 = Math.sin(-a * 0.0001);
+                  spine.splice(1, 0, new SFVec3f(x1, z1, 0).multiply(outerRadius))
                 }
 
                 geometry.set_crossSection = crossSection;
@@ -83,7 +93,7 @@
       <Background skyColor="0.0 0.0 0.0"></Background>
       <Viewpoint description="Default" zNear="0.0001" zFar="100"></Viewpoint>
 
-      <Transform rotation='0 1 0 -6.283185307179586'>
+      <Transform rotation='0 0 1 6.283185307179586'>
         <Shape>
           <Appearance>
             <Material diffuseColor='0.0000 0.5020 0.0000'></Material>
@@ -98,7 +108,7 @@
         </Shape>
       </Transform>
 
-      <Transform rotation='0 1 0 -5.291103416572283'>
+      <Transform rotation='0 0 1 5.291103416572283'>
         <Shape>
           <Appearance>
             <Material diffuseColor='1.0000 0.0000 0.0000'></Material>
@@ -113,7 +123,7 @@
         </Shape>
       </Transform>
 
-      <Transform rotation='0 1 0 -1.984163781214606'>
+      <Transform rotation='0 0 1 1.984163781214606'>
         <Shape>
           <Appearance>
             <Material diffuseColor='1.0000 1.0000 0.0000'></Material>
