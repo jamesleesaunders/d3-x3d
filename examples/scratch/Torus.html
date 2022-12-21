@@ -7,7 +7,7 @@
 <body>
 
 <x3d-canvas style="width: 500px; height: 500px;">
-  <X3D profile='Full' version='3.3' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.3.xsd'>
+  <X3D width="500px" height="500px" profile='Full' version='3.3' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.3.xsd'>
     <Scene>
       <ProtoDeclare name='Torus'>
         <ProtoInterface>
@@ -49,25 +49,22 @@
                 let spine = new MFVec3f();
                 let crossSection = new MFVec2f();
 
-                let minorRadius = (outerRadius - innerRadius)  / 2;
-                let majorRadius = outerRadius;
-
                 // Cross-section
                 let minorSubdivision = subdivision[0];
                 for (let i = 0; i < minorSubdivision; ++i) {
                   let x = Math.sin(2 * Math.PI * i / minorSubdivision);
                   let y = Math.cos(2 * Math.PI * i / minorSubdivision);
-                  crossSection[i] = new SFVec2f(x, y).multiply(minorRadius);
+                  crossSection[i] = new SFVec2f(x, y).multiply(innerRadius);
                 }
                 crossSection[minorSubdivision] = crossSection[0];
 
                 // Spine
                 let a = Math.min(angle, 2 * Math.PI);
-                let majorSubdivision = Math.floor(subdivision[1] * (a / (2 * Math.PI)));
+                let majorSubdivision = Math.ceil(subdivision[1] * (a / (2 * Math.PI)))+1;
                 for (let i = 0; i < majorSubdivision; ++i) {
                   let x = Math.sin(a * i / majorSubdivision);
                   let z = Math.cos(a * i / majorSubdivision);
-                  spine[i] = new SFVec3f(x, 0, z).multiply(majorRadius);
+                  spine[i] = new SFVec3f(x, 0, z).multiply(outerRadius);
                 }
 
                 // If it is a full circle wrap back to start
@@ -83,18 +80,22 @@
         </ProtoBody>
       </ProtoDeclare>
 
-      <Shape>
-        <Appearance>
-          <Material diffuseColor='0.0 1.0 1.0'></Material>
-        </Appearance>
-        <ProtoInstance name='Torus' containerField='geometry'>
-          <fieldValue name='angle' value='3.14159265359'></fieldValue>
-          <fieldValue name='innerRadius' value='0.5'></fieldValue>
-          <fieldValue name='outerRadius' value='1'></fieldValue>
-          <fieldValue name='subdivision' value='48,48'></fieldValue>
-          <fieldValue name='solid' value='true'></fieldValue>
-        </ProtoInstance>
-      </Shape>
+      <Background skyColor="0.0 0.0 0.0"></Background>
+      <Viewpoint description="Default" zNear="0.0001" zFar="100"></Viewpoint>
+      <Transform rotation='0.0 0.0 0.0 0.0'>
+        <Shape>
+          <Appearance>
+            <Material diffuseColor='0.0 1.0 1.0'></Material>
+          </Appearance>
+          <ProtoInstance name='Torus' containerField='geometry'>
+            <fieldValue name='angle' value='3.14159265359'></fieldValue>
+            <fieldValue name='innerRadius' value='1'></fieldValue>
+            <fieldValue name='outerRadius' value='2'></fieldValue>
+            <fieldValue name='subdivision' value='48,48'></fieldValue>
+            <fieldValue name='solid' value='true'></fieldValue>
+          </ProtoInstance>
+        </Shape>
+      </Transform>
 
     </Scene>
   </X3D>

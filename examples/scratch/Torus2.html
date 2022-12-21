@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css"/>
+</head>
+<body>
+
+<div style="width: 500px; height: 500px;">
+  <X3D width="500px" height="500px" profile='Full' version='3.3' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.3.xsd'>
+    <Scene>
+      <Background skyColor="0.0 0.0 0.0"></Background>
+      <Viewpoint description="Default" zNear="0.0001" zFar="100"></Viewpoint>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.0 1.0 1.0'></Material>
+        </Appearance>
+        <Torus angle='3.14159265359' innerRadius="1" outerRadius="2" subdivision="48,48" solid="true"></Torus>
+      </Shape>
+
+    </Scene>
+  </X3D>
+</div>
+
+</body>
+</html>
