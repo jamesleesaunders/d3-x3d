@@ -60,8 +60,8 @@
 
                 // Spine
                 let a = Math.min(angle, 2 * Math.PI);
-                let majorSubdivision = Math.ceil(subdivision[1] * (a / (2 * Math.PI)))+1;
-                for (let i = 0; i < majorSubdivision; ++i) {
+                let majorSubdivision = Math.ceil(subdivision[1] * (a / (2 * Math.PI)));
+                for (let i = 0; i <= majorSubdivision; ++i) {
                   let x = Math.sin(a * i / majorSubdivision);
                   let z = Math.cos(a * i / majorSubdivision);
                   spine[i] = new SFVec3f(x, 0, z).multiply(outerRadius);
@@ -82,20 +82,52 @@
 
       <Background skyColor="0.0 0.0 0.0"></Background>
       <Viewpoint description="Default" zNear="0.0001" zFar="100"></Viewpoint>
-      <Transform rotation='0.0 0.0 0.0 0.0'>
+
+      <Transform rotation='0 1 0 -6.283185307179586'>
         <Shape>
           <Appearance>
-            <Material diffuseColor='0.0 1.0 1.0'></Material>
+            <Material diffuseColor='0.0000 0.5020 0.0000'></Material>
           </Appearance>
           <ProtoInstance name='Torus' containerField='geometry'>
-            <fieldValue name='angle' value='3.14159265359'></fieldValue>
-            <fieldValue name='innerRadius' value='1'></fieldValue>
-            <fieldValue name='outerRadius' value='2'></fieldValue>
+            <fieldValue name='angle' value='0.992081890607303'></fieldValue>
+            <fieldValue name='innerRadius' value='0.25'></fieldValue>
+            <fieldValue name='outerRadius' value='1'></fieldValue>
             <fieldValue name='subdivision' value='48,48'></fieldValue>
             <fieldValue name='solid' value='true'></fieldValue>
           </ProtoInstance>
         </Shape>
       </Transform>
+
+      <Transform rotation='0 1 0 -5.291103416572283'>
+        <Shape>
+          <Appearance>
+            <Material diffuseColor='1.0000 0.0000 0.0000'></Material>
+          </Appearance>
+          <ProtoInstance name='Torus' containerField='geometry'>
+            <fieldValue name='angle' value='3.306939635357677'></fieldValue>
+            <fieldValue name='innerRadius' value='0.25'></fieldValue>
+            <fieldValue name='outerRadius' value='1'></fieldValue>
+            <fieldValue name='subdivision' value='48,48'></fieldValue>
+            <fieldValue name='solid' value='true'></fieldValue>
+          </ProtoInstance>
+        </Shape>
+      </Transform>
+
+      <Transform rotation='0 1 0 -1.984163781214606'>
+        <Shape>
+          <Appearance>
+            <Material diffuseColor='1.0000 1.0000 0.0000'></Material>
+          </Appearance>
+          <ProtoInstance name='Torus' containerField='geometry'>
+            <fieldValue name='angle' value='1.984163781214606'></fieldValue>
+            <fieldValue name='innerRadius' value='0.25'></fieldValue>
+            <fieldValue name='outerRadius' value='1'></fieldValue>
+            <fieldValue name='subdivision' value='48,48'></fieldValue>
+            <fieldValue name='solid' value='true'></fieldValue>
+          </ProtoInstance>
+        </Shape>
+      </Transform>
+
 
     </Scene>
   </X3D>

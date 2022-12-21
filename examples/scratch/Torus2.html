@@ -10,15 +10,36 @@
 <div style="width: 500px; height: 500px;">
   <X3D width="500px" height="500px" profile='Full' version='3.3' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.3.xsd'>
     <Scene>
+
       <Background skyColor="0.0 0.0 0.0"></Background>
       <Viewpoint description="Default" zNear="0.0001" zFar="100"></Viewpoint>
-      <Shape>
-        <Appearance>
-          <Material diffuseColor='0.0 1.0 1.0'></Material>
-        </Appearance>
-        <Torus angle='3.14159265359' innerRadius="1" outerRadius="2" subdivision="48,48" solid="true"></Torus>
-      </Shape>
 
+      <Transform rotation='0 0 1 6.283185307179586'>
+        <Shape>
+          <Appearance>
+            <Material diffuseColor='0.0000 0.5020 0.0000'></Material>
+          </Appearance>
+          <Torus angle='0.992081890607303' innerRadius="0.25" outerRadius="1" subdivision="48,48" solid="true"></Torus>
+        </Shape>
+      </Transform>
+
+      <Transform rotation='0 0 1 5.291103416572283'>
+        <Shape>
+          <Appearance>
+            <Material diffuseColor='1.0000 0.0000 0.0000'></Material>
+          </Appearance>
+          <Torus angle='3.306939635357677' innerRadius="0.25" outerRadius="1" subdivision="48,48" solid="true"></Torus>
+        </Shape>
+      </Transform>
+
+      <Transform rotation='0 0 1 1.984163781214606'>
+        <Shape>
+          <Appearance>
+            <Material diffuseColor='1.0000 1.0000 0.0000'></Material>
+          </Appearance>
+          <Torus angle='1.984163781214606' innerRadius="0.25" outerRadius="1" subdivision="48,48" solid="true"></Torus>
+        </Shape>
+      </Transform>
     </Scene>
   </X3D>
 </div>
