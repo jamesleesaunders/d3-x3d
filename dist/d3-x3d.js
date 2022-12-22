@@ -6065,13 +6065,12 @@
   function buildScene(x3d, layers, classed) {
     // Create Scene
     var scene = x3d.selectAll("Scene").data([0]).enter().append("Scene");
-
-    // Disable gamma correction (only works on x3dom)
     if (typeof x3dom !== "undefined") {
+      // Gamma correction only works on X3DOM.
       scene.append("Environment").attr("gammaCorrectionDefault", "none");
     } else {
-      var html = "<ExternProtoDeclare name='Torus' url='\"https://raw.githubusercontent.com/jamesleesaunders/d3-x3d/TorusProto/examples/scratch/TorusPrototype.x3d\"'>\n        <field accessType='inputOutput' type='SFFloat' name='angle' value='6.28318530718'></field>\n        <field accessType='inputOutput' type='SFFloat' name='innerRadius' value='0.5'></field>\n        <field accessType='inputOutput' type='SFFloat' name='outerRadius' value='1.0'></field>\n        <field accessType='inputOutput' type='SFVec2f' name='subdivision' value='24,24'></field>\n        <field accessType='initializeOnly' type='SFBool' name='caps' value='true'></field>\n        <field accessType='initializeOnly' type='SFBool' name='solid' value='true'></field>\n      </ExternProtoDeclare>";
-      scene.html(html);
+      // X_ITE does not support the Torus shape - load prototype Torus.
+      scene.html("<ExternProtoDeclare name='Torus' url='\"https://raw.githubusercontent.com/jamesleesaunders/d3-x3d/TorusProto/dist/TorusPrototype.x3d\"'>\n        <field accessType='inputOutput' type='SFFloat' name='angle' value='6.28318530718'></field>\n        <field accessType='inputOutput' type='SFFloat' name='innerRadius' value='0.5'></field>\n        <field accessType='inputOutput' type='SFFloat' name='outerRadius' value='1.0'></field>\n        <field accessType='inputOutput' type='SFVec2f' name='subdivision' value='24,24'></field>\n        <field accessType='initializeOnly' type='SFBool' name='caps' value='true'></field>\n        <field accessType='initializeOnly' type='SFBool' name='solid' value='true'></field>\n      </ExternProtoDeclare>");
     }
 
     // Add a white background

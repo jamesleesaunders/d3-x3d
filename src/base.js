@@ -40,12 +40,12 @@ function buildScene(x3d, layers, classed) {
 		.append("Scene");
 
 	if (typeof x3dom !== "undefined") {
-		// Gamma correction only works on x3dom.
+		// Gamma correction only works on X3DOM.
 		scene.append("Environment")
 			.attr("gammaCorrectionDefault", "none");
 	} else {
-		// Load Torus prototype in X_ITE.
-		scene.html(`<ExternProtoDeclare name='Torus' url='"https://raw.githubusercontent.com/jamesleesaunders/d3-x3d/TorusProto/examples/scratch/TorusPrototype.x3d"'>
+		// X_ITE does not support the Torus shape - load prototype Torus.
+		scene.html(`<ExternProtoDeclare name='Torus' url='"https://raw.githubusercontent.com/jamesleesaunders/d3-x3d/TorusProto/dist/TorusPrototype.x3d"'>
         <field accessType='inputOutput' type='SFFloat' name='angle' value='6.28318530718'></field>
         <field accessType='inputOutput' type='SFFloat' name='innerRadius' value='0.5'></field>
         <field accessType='inputOutput' type='SFFloat' name='outerRadius' value='1.0'></field>
