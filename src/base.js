@@ -45,7 +45,7 @@ function buildScene(x3d, layers, classed) {
 			.attr("gammaCorrectionDefault", "none");
 	} else {
 		// X_ITE does not support the Torus shape - load prototype Torus.
-		scene.html(`<ExternProtoDeclare name='Torus' url='"https://raw.githubusercontent.com/jamesleesaunders/d3-x3d/TorusProto/dist/TorusPrototype.x3d"'>
+		scene.html(`<ExternProtoDeclare name='Torus' url='"https://raw.githubusercontent.com/jamesleesaunders/d3-x3d/master/dist/TorusPrototype.x3d"'>
         <field accessType='inputOutput' type='SFFloat' name='angle' value='6.28318530718'></field>
         <field accessType='inputOutput' type='SFFloat' name='innerRadius' value='0.5'></field>
         <field accessType='inputOutput' type='SFFloat' name='outerRadius' value='1.0'></field>
