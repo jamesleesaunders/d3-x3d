@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import dataTransform from "../dataTransform.js";
 import { attachEventListners, dispatch } from "../events.js";
 import { colorParse } from "../colorHelper.js";
+import * as glMatrix from "gl-matrix";
 
 /**
  * Reusable 3D Donut Chart Component
@@ -83,12 +84,89 @@ export default function() {
 				.classed(classed, true)
 				.attr("id", (d) => d.key);
 
+			function eventsProcessed(innerRadius, outerRadius, angle) {
+				// let spine = new MFVec3f();
+				// let crossSection = new MFVec2f();
+				let spine = [];
+				let crossSection = [];
+
+				// Cross-section
+				let subdivision = [48, 48];
+				let minorSubdivision = subdivision[0];
+				for (let i = 0; i < minorSubdivision; ++i) {
+					let x = Math.sin(2 * Math.PI * i / minorSubdivision);
+					let y = Math.cos(2 * Math.PI * i / minorSubdivision);
+					// crossSection[i] = new SFVec2f(x, y).multiply(innerRadius);
+					crossSection[i] = glMatrix.vec2.fromValues(x, y);
+				}
+				crossSection[minorSubdivision] = crossSection[0];
+
+				// Spine
+				let a = Math.min(angle, 2 * Math.PI);
+				let majorSubdivision = Math.ceil(subdivision[1] * (a / (2 * Math.PI)));
+				for (let i = 0; i <= majorSubdivision; ++i) {
+					let x = Math.cos(-a * i / majorSubdivision);
+					let z = Math.sin(-a * i / majorSubdivision);
+					// pine[i] = new SFVec3f(x, z, 0).multiply(outerRadius);
+					spine[i] = glMatrix.vec3.fromValues(x, z, 0);
+				}
+
+				// If it is a full circle wrap back to start
+				if (a === 2 * Math.PI) {
+					spine[majorSubdivision] = spine[0];
+				} else {
+					// Add two points before last and after first, to get closer to circle.
+					let x2 = Math.cos(-a * 0.9999);
+					let z2 = Math.sin(-a * 0.9999);
+					// spine.splice(majorSubdivision, 0, new SFVec3f(x2, z2, 0).multiply(outerRadius));
+					spine.splice(majorSubdivision, 0, glMatrix.vec3.fromValues(x2, z2, 0));
+					let x1 = Math.cos(-a * 0.0001);
+					let z1 = Math.sin(-a * 0.0001);
+					// spine.splice(1, 0, new SFVec3f(x1, z1, 0).multiply(outerRadius));
+					spine.splice(1, 0, glMatrix.vec3.fromValues(x1, z1, 0));
+				}
+
+				return {
+					crossSection: crossSection,
+					spine: spine
+				}
+			}
+
+			const shape2 = (el) => {
+				let jim = eventsProcessed(1, 1, 2);
+				console.log(jim);
+
+				const shape = el.append("Shape");
+
+				attachEventListners(shape);
+
+				shape.append("Extrusion")
+					.attr("beginCap", "true")
+					.attr("endCap", "true")
+					.attr("solid", "true")
+					.attr("creaseAngle", "1");
+
+				shape.append("Appearance")
+					.append("Material")
+					.attr("diffuseColor", (d) => {
+						// If colour scale is linear then use value for scale.
+						let color = colorScale(d.key);
+						if (typeof colorScale.interpolate === "function") {
+							color = colorScale(d.value);
+						}
+						return colorParse(color);
+					});
+
+				return shape;
+			};
+
 			const shape = (el) => {
 				const shape = el.append("Shape");
 
 				attachEventListners(shape);
 
 				shape.append("Torus")
+					.attr("containerField", "geometry")
 					.attr("angle", (d) => xScale(d.value))
 					.attr("innerRadius", "0.25")
 					.attr("outerRadius", "1")
