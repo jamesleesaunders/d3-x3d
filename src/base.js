@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import { torus } from "./prototypes/prototypes.js"
 
 /**
  * Construct base X3D element
@@ -45,14 +46,45 @@ function buildScene(x3d, layers, classed) {
 			.attr("gammaCorrectionDefault", "none");
 	} else {
 		// X_ITE does not support the Torus shape - load prototype Torus.
-		scene.html(`<ExternProtoDeclare name='Torus' url='"https://raw.githubusercontent.com/jamesleesaunders/d3-x3d/master/dist/TorusPrototype.x3d"'>
-        <field accessType='inputOutput' type='SFFloat' name='angle' value='6.28318530718'></field>
-        <field accessType='inputOutput' type='SFFloat' name='innerRadius' value='0.5'></field>
-        <field accessType='inputOutput' type='SFFloat' name='outerRadius' value='1.0'></field>
-        <field accessType='inputOutput' type='SFVec2f' name='subdivision' value='24,24'></field>
-        <field accessType='initializeOnly' type='SFBool' name='caps' value='true'></field>
-        <field accessType='initializeOnly' type='SFBool' name='solid' value='true'></field>
-      </ExternProtoDeclare>`);
+		let proto = scene.append("ExternProtoDeclare")
+			.attr("name", "Torus")
+			.attr("url", `"${torus}"`);
+
+		proto.append("field")
+			.attr("accessType", "inputOutput")
+			.attr("type", "SFFloat")
+			.attr("name", "angle")
+			.attr("value", "6.28318530718");
+
+		proto.append("field")
+			.attr("accessType", "inputOutput")
+			.attr("type", "SFFloat")
+			.attr("name", "innerRadius")
+			.attr("value", "0.5");
+
+		proto.append("field")
+			.attr("accessType", "inputOutput")
+			.attr("type", "SFFloat")
+			.attr("name", "outerRadius")
+			.attr("value", "1.0");
+
+		proto.append("field")
+			.attr("accessType", "inputOutput")
+			.attr("type", "SFVec2f")
+			.attr("name", "subdivision")
+			.attr("value", "24,24");
+
+		proto.append("field")
+			.attr("accessType", "initializeOnly")
+			.attr("type", "SFBool")
+			.attr("name", "caps")
+			.attr("value", "true");
+
+		proto.append("field")
+			.attr("accessType", "initializeOnly")
+			.attr("type", "SFBool")
+			.attr("name", "solid")
+			.attr("value", "true");
 	}
 
 	// Add a white background
