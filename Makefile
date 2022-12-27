@@ -5,13 +5,17 @@ COMPRESS_FILES := dist/d3-x3d.js \
                   README.md \
                   LICENSE.md
 
-all: js css min zip docs
-.PHONY: js css min zip docs
+all: x3d js css min zip docs
+.PHONY: x3d js css min zip docs
+
+x3d:
+	@echo Compiling X3D Prototype Files...
+	@rm -f ./src/prototypes/prototypes.json
+	@node ./src/prototypes/compileProtos.js
 
 js:
 	@echo Compiling JS Files...
 	@rm -f dist/d3-x3d.js
-	@node ./src/prototypes/compileProtos.js
 	@./node_modules/rollup/dist/bin/rollup -c config/rollup.config.js
 
 min:
