@@ -24,19 +24,8 @@ export default {
 	},
 	external: ["d3", "d3-array", "d3-shape", "d3-interpolate"],
 	plugins: [
-		babel({
-			include: ["index.js", "src/**"],
-			babelrc: false,
-			presets: [["@babel/env", { modules: false }]],
-			plugins: [
-				"@babel/transform-object-assign",
-				"@babel/plugin-syntax-import-assertions"
-			],
-			babelHelpers: 'bundled'
-		}),
-		json({
-			exclude: ["node_modules/**"]
-		}),
+		babel({ babelHelpers: 'bundled' }),
+		json({ compact: true, exclude: ["node_modules/**"] }),
 		resolve({})
 	]
 };

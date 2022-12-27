@@ -11,8 +11,12 @@
 		"template": "node_modules/minami"
 	},
 	"plugins": [
-		"plugins/markdown"
+		"plugins/markdown",
+		"node_modules/jsdoc-babel"
 	],
+	"babel": {
+		"presets": ["@babel/env"]
+	},
 	"templates": {
 		"cleverLinks": true,
 		"monospaceLinks": true

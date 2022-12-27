@@ -1,5 +1,7 @@
 import * as d3 from "d3";
-import { torus } from "./prototypes/prototypes.js"
+import { default as prototypes } from "./prototypes/prototypes.json" assert { type: 'json' };
+
+let { torus } = prototypes;
 
 /**
  * Construct base X3D element

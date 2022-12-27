@@ -1,0 +1,7 @@
+{
+	"presets": [["@babel/env", { "modules": false }]],
+	"plugins": [
+		"@babel/plugin-syntax-import-assertions",
+		"@babel/transform-object-assign"
+	]
+}
