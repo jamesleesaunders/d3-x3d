@@ -5,13 +5,8 @@ COMPRESS_FILES := dist/d3-x3d.js \
                   README.md \
                   LICENSE.md
 
-all: x3d js css min zip docs
-.PHONY: x3d js css min zip docs
-
-x3d:
-	@echo Compiling X3D Prototype Files...
-	@rm -f ./src/prototypes/prototypes.json
-	@node ./src/prototypes/compileProtos.js
+all: js css min zip docs
+.PHONY: js css min zip docs
 
 js:
 	@echo Compiling JS Files...
@@ -32,3 +27,8 @@ docs:
 	@echo Generating Docs...
 	@rm -rf docs
 	@node ./node_modules/jsdoc/jsdoc.js -c config/jsdoc.conf.json
+
+x3d:
+	@echo Compiling X3D Prototypes...
+	@rm -f ./src/prototypes/prototypes.json
+	@node ./src/prototypes/compilePrototypes.js

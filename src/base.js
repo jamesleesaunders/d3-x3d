@@ -31,6 +31,55 @@ function buildX3d(selection, width, height, debug) {
 }
 
 /**
+ * Append External X3D Prototypes
+ *
+ * @module
+ */
+function buildProtos(scene) {
+	let proto = scene.append("ExternProtoDeclare")
+		.attr("name", "Torus")
+		.attr("url", `"${torus}"`);
+
+	proto.append("field")
+		.attr("accessType", "inputOutput")
+		.attr("type", "SFFloat")
+		.attr("name", "angle")
+		.attr("value", "6.28318530718");
+
+	proto.append("field")
+		.attr("accessType", "inputOutput")
+		.attr("type", "SFFloat")
+		.attr("name", "innerRadius")
+		.attr("value", "0.5");
+
+	proto.append("field")
+		.attr("accessType", "inputOutput")
+		.attr("type", "SFFloat")
+		.attr("name", "outerRadius")
+		.attr("value", "1.0");
+
+	proto.append("field")
+		.attr("accessType", "inputOutput")
+		.attr("type", "SFVec2f")
+		.attr("name", "subdivision")
+		.attr("value", "24,24");
+
+	proto.append("field")
+		.attr("accessType", "initializeOnly")
+		.attr("type", "SFBool")
+		.attr("name", "caps")
+		.attr("value", "true");
+
+	proto.append("field")
+		.attr("accessType", "initializeOnly")
+		.attr("type", "SFBool")
+		.attr("name", "solid")
+		.attr("value", "true");
+
+	return proto;
+}
+
+/**
  * Construct base Scene elements
  *
  * @module
@@ -48,45 +97,7 @@ function buildScene(x3d, layers, classed) {
 			.attr("gammaCorrectionDefault", "none");
 	} else {
 		// X_ITE does not support the Torus shape - load prototype Torus.
-		let proto = scene.append("ExternProtoDeclare")
-			.attr("name", "Torus")
-			.attr("url", `"${torus}"`);
-
-		proto.append("field")
-			.attr("accessType", "inputOutput")
-			.attr("type", "SFFloat")
-			.attr("name", "angle")
-			.attr("value", "6.28318530718");
-
-		proto.append("field")
-			.attr("accessType", "inputOutput")
-			.attr("type", "SFFloat")
-			.attr("name", "innerRadius")
-			.attr("value", "0.5");
-
-		proto.append("field")
-			.attr("accessType", "inputOutput")
-			.attr("type", "SFFloat")
-			.attr("name", "outerRadius")
-			.attr("value", "1.0");
-
-		proto.append("field")
-			.attr("accessType", "inputOutput")
-			.attr("type", "SFVec2f")
-			.attr("name", "subdivision")
-			.attr("value", "24,24");
-
-		proto.append("field")
-			.attr("accessType", "initializeOnly")
-			.attr("type", "SFBool")
-			.attr("name", "caps")
-			.attr("value", "true");
-
-		proto.append("field")
-			.attr("accessType", "initializeOnly")
-			.attr("type", "SFBool")
-			.attr("name", "solid")
-			.attr("value", "true");
+		scene.call(buildProtos);
 	}
 
 	// Add a white background
