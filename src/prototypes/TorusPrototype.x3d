@@ -3,9 +3,9 @@
 <X3D profile='Full' version='3.3' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance'
 		 xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.3.xsd'>
 	<head>
-		<meta name='comment' content='Torus Prototype' />
-		<meta name='creator' content='James Saunders' />
-		<meta name='created' content='Sat, 24 Dec 2022 21:05:00 GMT' />
+		<meta name='comment' content='Torus Prototype'/>
+		<meta name='creator' content='James Saunders'/>
+		<meta name='created' content='Sat, 24 Dec 2022 21:05:00 GMT'/>
 	</head>
 	<Scene>
 		<ProtoDeclare name='Torus'>

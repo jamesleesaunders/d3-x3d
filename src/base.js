@@ -44,19 +44,19 @@ function buildProtos(scene) {
 		.attr("accessType", "inputOutput")
 		.attr("type", "SFFloat")
 		.attr("name", "angle")
-		.attr("value", "6.28318530718");
+		.attr("value", 6.28318530718);
 
 	proto.append("field")
 		.attr("accessType", "inputOutput")
 		.attr("type", "SFFloat")
 		.attr("name", "innerRadius")
-		.attr("value", "0.5");
+		.attr("value", 0.5);
 
 	proto.append("field")
 		.attr("accessType", "inputOutput")
 		.attr("type", "SFFloat")
 		.attr("name", "outerRadius")
-		.attr("value", "1.0");
+		.attr("value", 1.0);
 
 	proto.append("field")
 		.attr("accessType", "inputOutput")
@@ -68,13 +68,13 @@ function buildProtos(scene) {
 		.attr("accessType", "initializeOnly")
 		.attr("type", "SFBool")
 		.attr("name", "caps")
-		.attr("value", "true");
+		.attr("value", true);
 
 	proto.append("field")
 		.attr("accessType", "initializeOnly")
 		.attr("type", "SFBool")
 		.attr("name", "solid")
-		.attr("value", "true");
+		.attr("value", true);
 
 	return proto;
 }
