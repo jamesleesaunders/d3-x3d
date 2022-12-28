@@ -12,18 +12,21 @@
 <body>
 <div id="chartholder"></div>
 
+<table>
+  <tr><td>Orange</td><td><input type="range" min="1" max="100" value="50" class="slider" id="orange"></td></tr>
+  <tr><td>Red</td><td><input type="range" min="1" max="100" value="50" class="slider" id="red"></td></tr>
+  <tr><td>Yellow</td><td><input type="range" min="1" max="100" value="50" class="slider" id="yellow"></td></tr>
+</table>
+
 <script>
   // Chart dimensions
   var width = 500;
   var height = 500;
-
-  var viewpoint = d3.x3d.component.viewpoint();
-
-  // Generate some data
-  var data = d3.x3d.randomData.dataset1();
+  var datamap = {};
 
   // Declare the chart component
   var donutComponent = d3.x3d.component.donut();
+  var viewpoint = d3.x3d.component.viewpoint();
 
   // Create scene
   var scene = d3.select("#chartholder")
@@ -35,9 +38,33 @@
   // Add chart component
   scene.call(viewpoint)
     .append("Group")
-    .attr("class", "chart")
-    .datum(data)
-    .call(donutComponent);
+    .attr("class", "chart");
+
+  var refreshChart = function(e) {
+    if(e) {
+      datamap[e.id] = parseInt(e.value);
+    }
+
+    let data = {
+      key: "Donuts",
+      values: [
+        {key: "orange", value: datamap["orange"] || 50},
+        {key: "red", value: datamap["red"] || 50},
+        {key: "yelow", value: datamap["yellow"] || 50}
+      ]
+    };
+
+    scene.datum(data)
+      .call(donutComponent);
+  };
+
+  refreshChart();
+
+  var checks = d3.selectAll("input[type=range]");
+  checks.each(function() {
+    var check = d3.select(this);
+    check.attr("onchange", "refreshChart(this)");
+  });
 
 </script>
 

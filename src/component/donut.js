@@ -93,6 +93,7 @@ export default function() {
 					.attr("angle", (d) => xScale(d.value))
 					.attr("innerRadius", 0.25)
 					.attr("outerRadius", 1)
+					.attr("useGeoCache", false)
 					.attr("subdivision", "48,48");
 
 				shape.append("Appearance")

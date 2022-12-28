@@ -3146,7 +3146,7 @@
           attachEventListners(shape);
           shape.append("Torus").attr("containerField", "geometry").attr("angle", function (d) {
             return xScale(d.value);
-          }).attr("innerRadius", 0.25).attr("outerRadius", 1).attr("subdivision", "48,48");
+          }).attr("innerRadius", 0.25).attr("outerRadius", 1).attr("useGeoCache", false).attr("subdivision", "48,48");
           shape.append("Appearance").append("Material").attr("diffuseColor", function (d) {
             // If colour scale is linear then use value for scale.
             var color = colorScale(d.key);
@@ -6033,7 +6033,7 @@
    */
   function buildProtos(scene) {
     var proto = scene.append("ExternProtoDeclare").attr("name", "Torus").attr("url", "\"".concat(torus, "\""));
-    proto.append("field").attr("accessType", "inputOutput").attr("type", "SFFloat").attr("name", "angle").attr("value", 6.28318530718);
+    proto.append("field").attr("accessType", "inputOutput").attr("type", "SFFloat").attr("name", "angle").attr("value", Math.PI * 2);
     proto.append("field").attr("accessType", "inputOutput").attr("type", "SFFloat").attr("name", "innerRadius").attr("value", 0.5);
     proto.append("field").attr("accessType", "inputOutput").attr("type", "SFFloat").attr("name", "outerRadius").attr("value", 1.0);
     proto.append("field").attr("accessType", "inputOutput").attr("type", "SFVec2f").attr("name", "subdivision").attr("value", "24,24");

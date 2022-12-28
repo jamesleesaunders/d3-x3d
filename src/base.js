@@ -44,7 +44,7 @@ function buildProtos(scene) {
 		.attr("accessType", "inputOutput")
 		.attr("type", "SFFloat")
 		.attr("name", "angle")
-		.attr("value", 6.28318530718);
+		.attr("value", (Math.PI * 2));
 
 	proto.append("field")
 		.attr("accessType", "inputOutput")
