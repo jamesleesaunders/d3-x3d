@@ -1,6 +1,12 @@
 dist/*.zip
 test/
+examples/
+config/
 .DS_Store
 .idea
 .vscode
 .github
+.dockerignore
+Dockerfile
+.babelrc
+.editorconfig
