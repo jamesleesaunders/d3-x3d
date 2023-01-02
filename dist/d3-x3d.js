@@ -2,7 +2,7 @@
  * d3-x3d
  *
  * @author James Saunders [james@saunders-family.net]
- * @copyright Copyright (C) 2022 James Saunders
+ * @copyright Copyright (C) 2023 James Saunders
  * @license GPLv2
  */
 
@@ -1914,9 +1914,9 @@
     var transparency = 0;
 
     /* Scales */
-    var xScale;
-    var yScale;
-    var colorScale;
+    var xScale = d3__namespace.scaleBand();
+    var yScale = d3__namespace.scaleLinear();
+    var colorScale = d3__namespace.scaleOrdinal();
 
     /**
      * Initialise Data and Scales
@@ -1932,14 +1932,14 @@
       var _dimensions = dimensions,
         dimensionX = _dimensions.x,
         dimensionY = _dimensions.y;
-      if (typeof xScale === "undefined") {
-        xScale = d3__namespace.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.3);
+      if (!Object.isFrozen(xScale)) {
+        xScale.domain(columnKeys).rangeRound([0, dimensionX]).padding(0.3);
       }
-      if (typeof yScale === "undefined") {
-        yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+      if (!Object.isFrozen(yScale)) {
+        yScale.domain(valueExtent).range([0, dimensionY]);
       }
-      if (typeof colorScale === "undefined") {
-        colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
+      if (!Object.isFrozen(colorScale)) {
+        colorScale.domain(columnKeys).range(colors);
       }
     };
 
@@ -2011,6 +2011,7 @@
     my.xScale = function (_v) {
       if (!arguments.length) return xScale;
       xScale = _v;
+      Object.freeze(xScale);
       return my;
     };
 
@@ -2023,6 +2024,7 @@
     my.yScale = function (_v) {
       if (!arguments.length) return yScale;
       yScale = _v;
+      Object.freeze(yScale);
       return my;
     };
 
@@ -2035,6 +2037,7 @@
     my.colorScale = function (_v) {
       if (!arguments.length) return colorScale;
       colorScale = _v;
+      Object.freeze(colorScale);
       return my;
     };
 
@@ -3163,7 +3166,7 @@
           return d.key;
         });
         var sectorsEnter = sectors.enter().append("Transform").classed("sector", true).call(shape).merge(sectors);
-        var sectorsTransition = sectorsEnter.transition().attr("scale", function () {
+        var sectorsTransition = sectorsEnter.transition().duration(300).ease(d3__namespace.easeBounce).attr("scale", function () {
           return [dimensionX, dimensionY, dimensionZ].map(function (d) {
             return d / 2;
           }).join(" ");
@@ -9496,7 +9499,7 @@
    * d3-x3d
    *
    * @author James Saunders [james@saunders-family.net]
-   * @copyright Copyright (C) 2022 James Saunders
+   * @copyright Copyright (C) 2023 James Saunders
    * @license GPLv2
    */
 

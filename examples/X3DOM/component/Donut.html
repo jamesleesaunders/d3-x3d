@@ -63,7 +63,7 @@
   var checks = d3.selectAll("input[type=range]");
   checks.each(function() {
     var check = d3.select(this);
-    check.attr("onchange", "refreshChart(this)");
+    check.attr("oninput", "refreshChart(this)");
   });
 
 </script>

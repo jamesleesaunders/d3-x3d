@@ -120,6 +120,8 @@ export default function() {
 				.merge(sectors);
 
 			const sectorsTransition = sectorsEnter.transition()
+				.duration(300)
+				.ease(d3.easeBounce)
 				.attr("scale", () => [dimensionX, dimensionY, dimensionZ].map((d) => d / 2).join(" "))
 				.attr("rotation", (d) => [0, 0, 1, yScale(d.y0)].join(" "));
 
