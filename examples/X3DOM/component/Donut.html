@@ -4,8 +4,8 @@
 <head>
   <title>d3-x3d : 3D Donut Component Example</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
-  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css"/>
+  <script src="https://x3dom.org/release/x3dom-full.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/release/x3dom.css"/>
   <script src="../../../dist/d3-x3d.js"></script>
 </head>
 
@@ -13,9 +13,9 @@
 <div id="chartholder"></div>
 
 <table>
-  <tr><td>Orange</td><td><input type="range" min="1" max="100" value="50" class="slider" id="orange"></td></tr>
-  <tr><td>Red</td><td><input type="range" min="1" max="100" value="50" class="slider" id="red"></td></tr>
-  <tr><td>Yellow</td><td><input type="range" min="1" max="100" value="50" class="slider" id="yellow"></td></tr>
+  <tr><td>Ring</td><td><input type="range" min="1" max="100" value="50" class="slider" id="ring"></td></tr>
+  <tr><td>Glazed</td><td><input type="range" min="1" max="100" value="50" class="slider" id="glazed"></td></tr>
+  <tr><td>Jam</td><td><input type="range" min="1" max="100" value="50" class="slider" id="jam"></td></tr>
 </table>
 
 <script>
@@ -48,9 +48,9 @@
     let data = {
       key: "Donuts",
       values: [
-        {key: "orange", value: datamap["orange"] || 50},
-        {key: "red", value: datamap["red"] || 50},
-        {key: "yelow", value: datamap["yellow"] || 50}
+        {key: "ring", value: datamap["ring"] || 50},
+        {key: "glazed", value: datamap["glazed"] || 50},
+        {key: "jam", value: datamap["jam"] || 50}
       ]
     };
 

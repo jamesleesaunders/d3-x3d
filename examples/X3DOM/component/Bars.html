@@ -4,26 +4,29 @@
 <head>
   <title>d3-x3d : 3D Bars Component Example</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script src="https://x3dom.org/download/dev/x3dom-full.js"></script>
-  <link rel="stylesheet" href="https://x3dom.org/download/dev/x3dom.css"/>
+  <script src="https://x3dom.org/release/x3dom-full.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/release/x3dom.css"/>
   <script src="../../../dist/d3-x3d.js"></script>
 </head>
 
 <body>
 <div id="chartholder"></div>
 
+<table>
+  <tr><td>Ring</td><td><input type="range" min="1" max="100" value="50" class="slider" id="ring"></td></tr>
+  <tr><td>Glazed</td><td><input type="range" min="1" max="100" value="50" class="slider" id="glazed"></td></tr>
+  <tr><td>Jam</td><td><input type="range" min="1" max="100" value="50" class="slider" id="jam"></td></tr>
+</table>
+
 <script>
   // Chart dimensions
   var width = 500;
   var height = 500;
-
-  var viewpoint = d3.x3d.component.viewpoint();
-
-  // Generate some data
-  var barsData = d3.x3d.randomData.dataset1();
+  var datamap = {};
 
   // Declare the chart component
-  var barsComponent = d3.x3d.component.bars();
+  var donutComponent = d3.x3d.component.bars();
+  var viewpoint = d3.x3d.component.viewpoint();
 
   // Create scene
   var scene = d3.select("#chartholder")
@@ -35,9 +38,33 @@
   // Add chart component
   scene.call(viewpoint)
     .append("Group")
-    .attr("class", "chart")
-    .datum(barsData)
-    .call(barsComponent);
+    .attr("class", "chart");
+
+  var refreshChart = function(e) {
+    if(e) {
+      datamap[e.id] = parseInt(e.value);
+    }
+
+    let data = {
+      key: "Donuts",
+      values: [
+        {key: "ring", value: datamap["ring"] || 50},
+        {key: "glazed", value: datamap["glazed"] || 50},
+        {key: "jam", value: datamap["jam"] || 50}
+      ]
+    };
+
+    scene.datum(data)
+      .call(donutComponent);
+  };
+
+  refreshChart();
+
+  var checks = d3.selectAll("input[type=range]");
+  checks.each(function() {
+    var check = d3.select(this);
+    check.attr("oninput", "refreshChart(this)");
+  });
 
 </script>
 
