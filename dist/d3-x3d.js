@@ -31,7 +31,7 @@
 
   var d3__namespace = /*#__PURE__*/_interopNamespaceDefault(d3);
 
-  var name="d3-x3d";var version$1="2.1.5";var type="module";var description="3D Data Driven Charting Library with D3 and X3D";var license$1="GPL-2.0";var keywords=["d3","d3-module","visualization","chart","graph","data","x3d","3D","dataviz"];var homepage="https://jamesleesaunders.github.io/d3-x3d/";var author$1="James Saunders (james@saunders-family.net)";var repository={type:"git",url:"https://github.com/jamesleesaunders/d3-x3d.git"};var bugs={url:"https://github.com/jamesleesaunders/d3-x3d/issues"};var module="index.js";var main="index.js";var jsdelivr="dist/d3-x3d.min.js";var unpkg="dist/d3-x3d.min.js";var exports$1={umd:"./dist/d3-x3d.min.js","default":"./index.js"};var scripts={build:"make",test:"mocha 'test/*Test.js' && mocha 'test/chart/*Test.js' && tape 'test/component/*Test.js' | tap-spec",lint:"eslint -c 'config/.eslintrc.json' src","build:docs":"jsdoc -c config/jsdoc.conf.json","deploy:docs":"npm run build:docs && gh-pages -d docs",prototypes:"node src/prototypes/compilePrototypes.js"};var dependencies={d3:"^7.7.0","d3-interpolate-curve":"^1.0.5","gl-matrix":"^3.3.0"};var devDependencies={"@babel/core":"latest","@babel/plugin-syntax-import-assertions":"^7.20.0","@babel/plugin-transform-object-assign":"latest","@babel/preset-env":"latest","@rollup/plugin-babel":"latest","@rollup/plugin-json":"latest","@rollup/plugin-node-resolve":"latest","browser-env":"^2.0.21",chai:"^4.3.4",eslint:"^8.30.0","gh-pages":"^3.2.3",jsdoc:"^3.6.7","jsdoc-babel":"^0.5.0",jsdom:"^16.5.0",minami:"^1.2.3",mocha:"^10.1.0",rollup:"^3.8.1",svgdom:"^0.1.10","tap-spec":"^5.0.0",tape:"^5.6.1","toast-jsdoc":"^1.0.2","uglify-js":"^3.17.4",vows:"^0.8.3"};var packageJson = {name:name,version:version$1,type:type,description:description,license:license$1,keywords:keywords,homepage:homepage,author:author$1,repository:repository,bugs:bugs,module:module,main:main,jsdelivr:jsdelivr,unpkg:unpkg,exports:exports$1,scripts:scripts,dependencies:dependencies,devDependencies:devDependencies};
+  var name="d3-x3d";var version$1="2.1.5";var type="module";var description="3D Data Driven Charting Library with D3 and X3D";var license$1="GPL-2.0";var keywords=["d3","d3-module","visualization","chart","graph","data","x3d","3D","dataviz"];var homepage="https://jamesleesaunders.github.io/d3-x3d/";var author$1="James Saunders (james@saunders-family.net)";var repository={type:"git",url:"https://github.com/jamesleesaunders/d3-x3d.git"};var bugs={url:"https://github.com/jamesleesaunders/d3-x3d/issues"};var module="index.js";var main="index.js";var jsdelivr="dist/d3-x3d.min.js";var unpkg="dist/d3-x3d.min.js";var exports$1={umd:"./dist/d3-x3d.min.js","default":"./index.js"};var scripts={build:"make",test:"mocha 'test/*Test.js' && mocha 'test/chart/*Test.js' && tape 'test/component/*Test.js' | tap-spec",lint:"eslint -c 'config/.eslintrc.json' src","build:docs":"jsdoc -c config/jsdoc.conf.json","deploy:docs":"npm run build:docs && gh-pages -d docs",prototypes:"node src/prototypes/compilePrototypes.js"};var dependencies={d3:"^7.7.0","d3-interpolate-curve":"^1.0.5","gl-matrix":"^3.3.0"};var devDependencies={"@babel/core":"latest","@babel/plugin-syntax-import-assertions":"^7.20.0","@babel/plugin-transform-object-assign":"latest","@babel/preset-env":"latest","@rollup/plugin-babel":"latest","@rollup/plugin-json":"latest","@rollup/plugin-node-resolve":"latest",chai:"^4.3.4",eslint:"^8.30.0","gh-pages":"^3.2.3",jsdoc:"^3.6.7","jsdoc-babel":"^0.5.0",minami:"^1.2.3",mocha:"^10.1.0",rollup:"^3.8.1",svgdom:"^0.1.10","tap-spec":"^5.0.0",tape:"^5.6.1","toast-jsdoc":"^1.0.2","uglify-js":"^3.17.4",vows:"^0.8.3"};var packageJson = {name:name,version:version$1,type:type,description:description,license:license$1,keywords:keywords,homepage:homepage,author:author$1,repository:repository,bugs:bugs,module:module,main:main,jsdelivr:jsdelivr,unpkg:unpkg,exports:exports$1,scripts:scripts,dependencies:dependencies,devDependencies:devDependencies};
 
   function _extends() {
     _extends = Object.assign ? Object.assign.bind() : function (target) {
@@ -1914,9 +1914,9 @@
     var transparency = 0;
 
     /* Scales */
-    var xScale = d3__namespace.scaleBand();
-    var yScale = d3__namespace.scaleLinear();
-    var colorScale = d3__namespace.scaleOrdinal();
+    var xScale;
+    var yScale;
+    var colorScale;
 
     /**
      * Initialise Data and Scales
@@ -1932,14 +1932,14 @@
       var _dimensions = dimensions,
         dimensionX = _dimensions.x,
         dimensionY = _dimensions.y;
-      if (!Object.isFrozen(xScale)) {
-        xScale.domain(columnKeys).rangeRound([0, dimensionX]).padding(0.3);
+      if (typeof xScale === "undefined") {
+        xScale = d3__namespace.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.3);
       }
-      if (!Object.isFrozen(yScale)) {
-        yScale.domain(valueExtent).range([0, dimensionY]);
+      if (typeof yScale === "undefined") {
+        yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]);
       }
-      if (!Object.isFrozen(colorScale)) {
-        colorScale.domain(columnKeys).range(colors);
+      if (typeof colorScale === "undefined") {
+        colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
       }
     };
 
@@ -2011,7 +2011,6 @@
     my.xScale = function (_v) {
       if (!arguments.length) return xScale;
       xScale = _v;
-      Object.freeze(xScale);
       return my;
     };
 
@@ -2024,7 +2023,6 @@
     my.yScale = function (_v) {
       if (!arguments.length) return yScale;
       yScale = _v;
-      Object.freeze(yScale);
       return my;
     };
 
@@ -2037,7 +2035,6 @@
     my.colorScale = function (_v) {
       if (!arguments.length) return colorScale;
       colorScale = _v;
-      Object.freeze(colorScale);
       return my;
     };
 
