@@ -38,7 +38,7 @@
     "lint": "eslint -c 'config/.eslintrc.json' src",
     "build:docs": "jsdoc -c config/jsdoc.conf.json",
     "deploy:docs": "npm run build:docs && gh-pages -d docs",
-		"prototypes": "node src/prototypes/compilePrototypes.js"
+    "prototypes": "node src/prototypes/compilePrototypes.js"
   },
   "dependencies": {
     "d3": "^7.7.0",
