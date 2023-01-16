@@ -33,6 +33,10 @@ export default function() {
 				.classed(classed, true)
 				.attr("id", (d) => d.key);
 
+			dimensions["x"] = xScale ? Math.max(...xScale.range()) : dimensions["x"];
+			dimensions["y"] = yScale ? Math.max(...yScale.range()) : dimensions["y"];
+			dimensions["z"] = zScale ? Math.max(...zScale.range()) : dimensions["z"];
+
 			const xOff = dimensions["x"] / 2;
 			const yOff = dimensions["y"] / 2;
 			const zOff = dimensions["z"] / 2;

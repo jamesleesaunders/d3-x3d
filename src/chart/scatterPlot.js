@@ -144,13 +144,18 @@ export default function() {
 
 			// Add Bubbles
 			bubbles.xScale(xScale)
-				.mappings(mappings)
 				.yScale(yScale)
 				.zScale(zScale)
 				.sizeScale(sizeScale)
 				.colorScale(colorScale)
+				.mappings(mappings)
 				.on("d3X3dClick", function(e) {
-					const d = d3.select(e.target).datum();
+					const datum = d3.select(e.target).datum();
+					let xVal = datum.values.find((v) => v.key === "x").value;
+					let yVal = datum.values.find((v) => v.key === "y").value;
+					let zVal = datum.values.find((v) => v.key === "z").value;
+					const d = { x: xVal, y: yVal, z: zVal };
+
 					scene.select(".crosshair")
 						.datum(d)
 						.classed("crosshair", true)
@@ -159,7 +164,12 @@ export default function() {
 						});
 				})
 				.on("d3X3dMouseOver", function(e) {
-					const d = d3.select(e.target).datum();
+					const datum = d3.select(e.target).datum();
+					let xVal = datum.values.find((v) => v.key === "x").value;
+					let yVal = datum.values.find((v) => v.key === "y").value;
+					let zVal = datum.values.find((v) => v.key === "z").value;
+					const d = { x: xVal, y: yVal, z: zVal, key: datum.key };
+
 					scene.select(".label")
 						.datum(d)
 						.each(function() {

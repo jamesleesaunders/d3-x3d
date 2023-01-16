@@ -65,8 +65,7 @@ export default function() {
 			scene.call(viewpoint);
 
 			// Add Axis
-			axis.dimensions(dimensions)
-				.xScale(xScale)
+			axis.xScale(xScale)
 				.yScale(yScale)
 				.zScale(zScale);
 

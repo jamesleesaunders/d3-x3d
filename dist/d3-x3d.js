@@ -2325,6 +2325,7 @@
         });
         var shape = function shape(el) {
           var shape = el.append("Shape");
+          attachEventListners(shape);
           shape.append("Sphere").attr("radius", function (d) {
             var sizeVal = d.values.find(function (v) {
               return v.key === mappings.size;
@@ -2787,6 +2788,9 @@
         var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
         });
+        dimensions["x"] = xScale ? Math.max.apply(Math, _toConsumableArray(xScale.range())) : dimensions["x"];
+        dimensions["y"] = yScale ? Math.max.apply(Math, _toConsumableArray(yScale.range())) : dimensions["y"];
+        dimensions["z"] = zScale ? Math.max.apply(Math, _toConsumableArray(zScale.range())) : dimensions["z"];
         var xOff = dimensions["x"] / 2;
         var yOff = dimensions["y"] / 2;
         var zOff = dimensions["z"] / 2;
@@ -7542,7 +7546,7 @@
      * @param {d3.selection} selection - The chart holder D3 selection.
      */
     var my = function my(selection) {
-      var layers = ["axis", "particles", "crosshair"];
+      var layers = ["axis", "particles"];
       var scene = createScene(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         init(data);
@@ -8041,13 +8045,42 @@
         label.xScale(xScale).yScale(yScale).zScale(zScale).offset(0.5);
 
         // Add Bubbles
-        bubbles.xScale(xScale).mappings(mappings).yScale(yScale).zScale(zScale).sizeScale(sizeScale).colorScale(colorScale).on("d3X3dClick", function (e) {
-          var d = d3__namespace.select(e.target).datum();
+        bubbles.xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).colorScale(colorScale).mappings(mappings).on("d3X3dClick", function (e) {
+          var datum = d3__namespace.select(e.target).datum();
+          var xVal = datum.values.find(function (v) {
+            return v.key === "x";
+          }).value;
+          var yVal = datum.values.find(function (v) {
+            return v.key === "y";
+          }).value;
+          var zVal = datum.values.find(function (v) {
+            return v.key === "z";
+          }).value;
+          var d = {
+            x: xVal,
+            y: yVal,
+            z: zVal
+          };
           scene.select(".crosshair").datum(d).classed("crosshair", true).each(function () {
             d3__namespace.select(this).call(crosshair);
           });
         }).on("d3X3dMouseOver", function (e) {
-          var d = d3__namespace.select(e.target).datum();
+          var datum = d3__namespace.select(e.target).datum();
+          var xVal = datum.values.find(function (v) {
+            return v.key === "x";
+          }).value;
+          var yVal = datum.values.find(function (v) {
+            return v.key === "y";
+          }).value;
+          var zVal = datum.values.find(function (v) {
+            return v.key === "z";
+          }).value;
+          var d = {
+            x: xVal,
+            y: yVal,
+            z: zVal,
+            key: datum.key
+          };
           scene.select(".label").datum(d).each(function () {
             d3__namespace.select(this).call(label);
           });
@@ -8818,7 +8851,7 @@
         scene.call(viewpoint);
 
         // Add Axis
-        axis.xScale(xScale).yScale(yScale).zScale(zScale).dimensions(dimensions);
+        axis.xScale(xScale).yScale(yScale).zScale(zScale);
         scene.select(".axis").datum(origin).call(axis);
 
         // Add Vector Fields
@@ -9040,7 +9073,7 @@
         scene.call(viewpoint);
 
         // Add Axis
-        axis.dimensions(dimensions).xScale(xScale).yScale(yScale).zScale(zScale);
+        axis.xScale(xScale).yScale(yScale).zScale(zScale);
         scene.select(".axis").datum(origin).call(axis);
 
         // Add Volume Slice
