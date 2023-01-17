@@ -109,6 +109,8 @@ export default function() {
 				.sizeScale(sizeScale)
 				.colorScale(colorScale);
 
+			console.log(data);
+
 			scene.select(".bubbles")
 				.datum(data)
 				.call(bubbles);

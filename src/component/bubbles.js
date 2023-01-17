@@ -41,7 +41,7 @@ export default function() {
 
 			data.values.forEach((d) => {
 				let key = mappings[dimension];
-				let value = d.values.find((v) => v.key === key).value;
+				let value = d[key];
 				set.values.push({ key: key, value: value });
 			});
 
@@ -111,14 +111,14 @@ export default function() {
 
 				shape.append("Sphere")
 					.attr("radius", (d) => {
-						let sizeVal = d.values.find((v) => v.key === mappings.size).value;
+						let sizeVal = d[mappings.size];
 						return sizeScale(sizeVal);
 					});
 
 				shape.append("Appearance")
 					.append("Material")
 					.attr("diffuseColor", (d) => {
-						let colorVal = d.values.find((v) => v.key === mappings.color).value;
+						let colorVal = d[mappings.color];
 						return colorParse(colorScale(colorVal));
 					})
 					.attr("ambientIntensity", 0.1);
@@ -137,16 +137,16 @@ export default function() {
 
 			const bubblesTransition = bubblesEnter.transition();
 			bubblesTransition.attr("translation", (d) => {
-				let xVal = d.values.find((v) => v.key === mappings.x).value;
-				let yVal = d.values.find((v) => v.key === mappings.y).value;
-				let zVal = d.values.find((v) => v.key === mappings.z).value;
+				let xVal = d[mappings.x];
+				let yVal = d[mappings.y];
+				let zVal = d[mappings.z];
 				return xScale(xVal) + " " + yScale(yVal) + " " + zScale(zVal);
 			});
 
 			bubblesTransition.select("Shape")
 				.select("Sphere")
 				.attr("radius", (d) => {
-					let sizeVal = d.values.find((v) => v.key === mappings.size).value;
+					let sizeVal = d[mappings.size];
 					return sizeScale(sizeVal);
 				});
 
@@ -154,7 +154,7 @@ export default function() {
 				.select("Appearance")
 				.select("Material")
 				.attr("diffuseColor", (d) => {
-					let colorVal = d.values.find((v) => v.key === mappings.color).value;
+					let colorVal = d[mappings.color];
 					return colorParse(colorScale(colorVal));
 				});
 

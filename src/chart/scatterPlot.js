@@ -64,7 +64,7 @@ export default function() {
 
 			data.values.forEach((d) => {
 				let key = mappings[dimension];
-				let value = d.values.find((v) => v.key === key).value;
+				let value = d[key];
 				set.values.push({ key: key, value: value });
 			});
 
@@ -150,12 +150,7 @@ export default function() {
 				.colorScale(colorScale)
 				.mappings(mappings)
 				.on("d3X3dClick", function(e) {
-					const datum = d3.select(e.target).datum();
-					let xVal = datum.values.find((v) => v.key === "x").value;
-					let yVal = datum.values.find((v) => v.key === "y").value;
-					let zVal = datum.values.find((v) => v.key === "z").value;
-					const d = { x: xVal, y: yVal, z: zVal };
-
+					const d = d3.select(e.target).datum();
 					scene.select(".crosshair")
 						.datum(d)
 						.each(function() {
@@ -163,12 +158,7 @@ export default function() {
 						});
 				})
 				.on("d3X3dMouseOver", function(e) {
-					const datum = d3.select(e.target).datum();
-					let xVal = datum.values.find((v) => v.key === "x").value;
-					let yVal = datum.values.find((v) => v.key === "y").value;
-					let zVal = datum.values.find((v) => v.key === "z").value;
-					const d = { x: xVal, y: yVal, z: zVal, key: datum.key };
-
+					const d = d3.select(e.target).datum();
 					scene.select(".label")
 						.datum(d)
 						.each(function() {
