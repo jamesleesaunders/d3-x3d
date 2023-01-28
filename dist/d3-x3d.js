@@ -1366,16 +1366,6 @@
     var tickFormat = null;
     var tickSize = 1.5;
     var tickPadding = 2.0;
-    var axisDirectionVectors = {
-      x: [1, 0, 0],
-      y: [0, 1, 0],
-      z: [0, 0, 1]
-    };
-    var axisRotationVectors = {
-      x: [1, 1, 0, Math.PI],
-      y: [0, 0, 0, 0],
-      z: [0, 1, 1, Math.PI]
-    };
 
     /**
      * Get Axis Direction Vector
@@ -1385,6 +1375,11 @@
      * @returns {number[]}
      */
     var getAxisDirectionVector = function getAxisDirectionVector(axisDir) {
+      var axisDirectionVectors = {
+        x: [1, 0, 0],
+        y: [0, 1, 0],
+        z: [0, 0, 1]
+      };
       return axisDirectionVectors[axisDir];
     };
 
@@ -1396,6 +1391,11 @@
      * @returns {number[]}
      */
     var getAxisRotationVector = function getAxisRotationVector(axisDir) {
+      var axisRotationVectors = {
+        x: [1, 1, 0, Math.PI],
+        y: [0, 0, 0, 0],
+        z: [0, 1, 1, Math.PI]
+      };
       return axisRotationVectors[axisDir];
     };
 
@@ -1427,13 +1427,13 @@
           return d;
         };
         tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
+        var makeSolid = function makeSolid(el, color) {
+          el.append("Appearance").append("Material").attr("diffuseColor", colorParse(color) || "0 0 0").attr("transparency", "0");
+        };
         var shape = function shape(el, radius, height, color) {
           var shape = el.append("Shape");
           shape.append("Cylinder").attr("radius", radius).attr("height", height);
-          shape.append("Appearance").append("Material").attr("diffuseColor", colorParse(color));
-        };
-        var makeSolid = function makeSolid(el, color) {
-          el.append("Appearance").append("Material").attr("diffuseColor", colorParse(color) || "0 0 0");
+          shape.call(makeSolid, colorParse(color));
         };
 
         // Main Lines
@@ -1453,7 +1453,7 @@
           }).join(" ");
         }).append("Transform").attr("translation", tickDirectionVector.map(function (d) {
           return d * tickSize / 2;
-        }).join(" ")).attr("rotation", tickRotationVector.join(" ")).call(shape, 0.05, tickSize, "#e3e3e3").merge(ticks);
+        }).join(" ")).attr("rotation", tickRotationVector.join(" ")).call(shape, 0.05, tickSize, "#f3f3f3").merge(ticks);
         ticks.transition().attr("translation", function (t) {
           return axisDirectionVector.map(function (a) {
             return scale(t) * a;
@@ -1665,10 +1665,10 @@
         element.selectAll("group").data(layers).enter().append("Group").attr("class", function (d) {
           return d;
         });
-        xzAxis.scale(xScale).direction("x").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("blue").labelPosition(labelPosition);
-        yzAxis.scale(yScale).direction("y").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("red").labelPosition(labelPosition);
-        yxAxis.scale(yScale).direction("y").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color("red").labelPosition(labelPosition);
-        zxAxis.scale(zScale).direction("z").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color("black").labelPosition(labelPosition);
+        xzAxis.scale(xScale).direction("x").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color(colors[0]).labelPosition(labelPosition);
+        yzAxis.scale(yScale).direction("y").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color(colors[1]).labelPosition(labelPosition);
+        yxAxis.scale(yScale).direction("y").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color(colors[1]).labelPosition(labelPosition);
+        zxAxis.scale(zScale).direction("z").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color(colors[2]).labelPosition(labelPosition);
 
         // We only want 2 sets of labels on the y axis if they are in distal position.
         if (labelPosition === "proximal") {
@@ -2788,51 +2788,47 @@
         var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
         });
-        dimensions["x"] = xScale ? Math.max.apply(Math, _toConsumableArray(xScale.range())) : dimensions["x"];
-        dimensions["y"] = yScale ? Math.max.apply(Math, _toConsumableArray(yScale.range())) : dimensions["y"];
-        dimensions["z"] = zScale ? Math.max.apply(Math, _toConsumableArray(zScale.range())) : dimensions["z"];
-        var xOff = dimensions["x"] / 2;
-        var yOff = dimensions["y"] / 2;
-        var zOff = dimensions["z"] / 2;
+        dimensions.x = xScale ? Math.max.apply(Math, _toConsumableArray(xScale.range())) : dimensions.x;
+        dimensions.y = yScale ? Math.max.apply(Math, _toConsumableArray(yScale.range())) : dimensions.y;
+        dimensions.z = zScale ? Math.max.apply(Math, _toConsumableArray(zScale.range())) : dimensions.z;
+        var xOff = dimensions.x / 2;
+        var yOff = dimensions.y / 2;
+        var zOff = dimensions.z / 2;
         var xVal = xScale(data.x);
         var yVal = yScale(data.y);
         var zVal = zScale(data.z);
-        var positionVectors = {
-          x: [xOff, yVal, zVal],
-          y: [xVal, yOff, zVal],
-          z: [xVal, yVal, zOff]
-        };
         function getPositionVector(axisDir) {
-          return positionVectors[axisDir].join(" ");
+          var positionVectors = {
+            x: [xOff, yVal, zVal],
+            y: [xVal, yOff, zVal],
+            z: [xVal, yVal, zOff]
+          };
+          return positionVectors[axisDir];
         }
-        var rotationVectors = {
-          x: [1, 1, 0, Math.PI],
-          y: [0, 0, 0, 0],
-          z: [0, 1, 1, Math.PI]
-        };
         function getRotationVector(axisDir) {
-          return rotationVectors[axisDir].join(" ");
+          var rotationVectors = {
+            x: [1, 1, 0, Math.PI],
+            y: [0, 0, 0, 0],
+            z: [0, 1, 1, Math.PI]
+          };
+          return rotationVectors[axisDir];
         }
         var colorScale = d3__namespace.scaleOrdinal().domain(Object.keys(dimensions)).range(colors);
 
         // Origin Ball
         var ballSelect = element.selectAll(".ball").data([data]);
-        var ball = ballSelect.enter().append("Transform").attr("translation", function (d) {
-          return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-        }).classed("ball", true).append("Shape");
+        var ball = ballSelect.enter().append("Transform").attr("translation", "".concat(xVal, " ").concat(yVal, " ").concat(zVal)).classed("ball", true).append("Shape");
         ball.append("Appearance").append("Material").attr("diffuseColor", colorParse("blue"));
         ball.append("Sphere").attr("radius", 0.3);
         ball.merge(ballSelect);
-        ballSelect.transition().ease(d3__namespace.easeQuadOut).attr("translation", function (d) {
-          return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-        });
+        ballSelect.transition().ease(d3__namespace.easeQuadOut).attr("translation", "".concat(xVal, " ").concat(yVal, " ").concat(zVal));
 
         // Crosshair Lines
         var lineSelect = element.selectAll(".line").data(Object.keys(dimensions));
         var line = lineSelect.enter().append("Transform").classed("line", true).attr("translation", function (d) {
-          return getPositionVector(d);
+          return getPositionVector(d).join(" ");
         }).attr("rotation", function (d) {
-          return getRotationVector(d);
+          return getRotationVector(d).join(" ");
         }).append("Shape");
         line.append("cylinder").attr("radius", radius).attr("height", function (d) {
           return dimensions[d];
@@ -2842,7 +2838,7 @@
         });
         line.merge(lineSelect);
         lineSelect.transition().ease(d3__namespace.easeQuadOut).attr("translation", function (d) {
-          return getPositionVector(d);
+          return getPositionVector(d).join(" ");
         });
       });
     };
@@ -4208,7 +4204,7 @@
     var my = function my(selection) {
       selection.each(function (data) {
         init(data);
-        function getPositionVector(d) {
+        function getPositionVector(axisDir, d) {
           var xVal = xScale(d.values.find(function (v) {
             return v.key === mappings.x;
           }).value);
@@ -4223,15 +4219,15 @@
             y: [xVal, 0, zVal],
             z: [xVal, yVal, 0]
           };
-          return positionVectors[plane].join(" ");
+          return positionVectors[axisDir];
         }
-        function getRotationVector() {
+        function getRotationVector(axisDir) {
           var rotationVectors = {
             x: [1, 1, 0, Math.PI],
             y: [0, 0, 0, 0],
             z: [0, 1, 1, Math.PI]
           };
-          return rotationVectors[plane].join(" ");
+          return rotationVectors[axisDir];
         }
         var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
@@ -4260,9 +4256,9 @@
         var spotsEnter = spots.enter().append("Transform").attr("class", "spot").call(shape).merge(spots);
         var spotsTransition = spotsEnter.transition();
         spotsTransition.attr("translation", function (d) {
-          return getPositionVector(d);
+          return getPositionVector(plane, d).join();
         }).attr("rotation", function (d) {
-          return getRotationVector();
+          return getRotationVector(plane).join();
         });
         spotsTransition.select("Shape").select("Cylinder").attr("radius", function (d) {
           var sizeVal = d.values.find(function (v) {
@@ -8061,7 +8057,7 @@
             y: yVal,
             z: zVal
           };
-          scene.select(".crosshair").datum(d).classed("crosshair", true).each(function () {
+          scene.select(".crosshair").datum(d).each(function () {
             d3__namespace.select(this).call(crosshair);
           });
         }).on("d3X3dMouseOver", function (e) {

@@ -49,28 +49,28 @@ export default function() {
 				.direction("x")
 				.tickDirection("z")
 				.tickSize(zScale.range()[1] - zScale.range()[0])
-				.color("blue")
+				.color(colors[0])
 				.labelPosition(labelPosition);
 
 			yzAxis.scale(yScale)
 				.direction("y")
 				.tickDirection("z")
 				.tickSize(zScale.range()[1] - zScale.range()[0])
-				.color("red")
+				.color(colors[1])
 				.labelPosition(labelPosition);
 
 			yxAxis.scale(yScale)
 				.direction("y")
 				.tickDirection("x")
 				.tickSize(xScale.range()[1] - xScale.range()[0])
-				.color("red")
+				.color(colors[1])
 				.labelPosition(labelPosition);
 
 			zxAxis.scale(zScale)
 				.direction("z")
 				.tickDirection("x")
 				.tickSize(xScale.range()[1] - xScale.range()[0])
-				.color("black")
+				.color(colors[2])
 				.labelPosition(labelPosition);
 
 			// We only want 2 sets of labels on the y axis if they are in distal position.

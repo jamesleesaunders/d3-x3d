@@ -158,7 +158,6 @@ export default function() {
 
 					scene.select(".crosshair")
 						.datum(d)
-						.classed("crosshair", true)
 						.each(function() {
 							d3.select(this).call(crosshair);
 						});
