@@ -101,7 +101,7 @@ export default function() {
 		selection.each(function(data) {
 			init(data);
 
-			function getPositionVector(d) {
+			function getPositionVector(axisDir, d) {
 				let xVal = xScale(d.values.find((v) => v.key === mappings.x).value);
 				let yVal = yScale(d.values.find((v) => v.key === mappings.y).value);
 				let zVal = zScale(d.values.find((v) => v.key === mappings.z).value);
@@ -112,17 +112,17 @@ export default function() {
 					z: [xVal, yVal, 0]
 				};
 
-				return positionVectors[plane].join(" ");
+				return positionVectors[axisDir];
 			}
 
-			function getRotationVector() {
+			function getRotationVector(axisDir) {
 				const rotationVectors = {
 					x: [1, 1, 0, Math.PI],
 					y: [0, 0, 0, 0],
 					z: [0, 1, 1, Math.PI]
 				};
 
-				return rotationVectors[plane].join(" ");
+				return rotationVectors[axisDir];
 			}
 
 			const element = d3.select(this)
@@ -161,8 +161,8 @@ export default function() {
 
 			const spotsTransition = spotsEnter.transition();
 			spotsTransition
-				.attr("translation", (d) => getPositionVector(d))
-				.attr("rotation", (d) => getRotationVector());
+				.attr("translation", (d) => getPositionVector(plane, d).join())
+				.attr("rotation", (d) => getRotationVector(plane).join());
 
 			spotsTransition.select("Shape")
 				.select("Cylinder")

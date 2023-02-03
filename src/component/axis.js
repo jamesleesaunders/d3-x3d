@@ -25,18 +25,6 @@ export default function() {
 	let tickSize = 1.5;
 	let tickPadding = 2.0;
 
-	const axisDirectionVectors = {
-		x: [1, 0, 0],
-		y: [0, 1, 0],
-		z: [0, 0, 1]
-	};
-
-	const axisRotationVectors = {
-		x: [1, 1, 0, Math.PI],
-		y: [0, 0, 0, 0],
-		z: [0, 1, 1, Math.PI]
-	};
-
 	/**
 	 * Get Axis Direction Vector
 	 *
@@ -45,6 +33,12 @@ export default function() {
 	 * @returns {number[]}
 	 */
 	const getAxisDirectionVector = function(axisDir) {
+		const axisDirectionVectors = {
+			x: [1, 0, 0],
+			y: [0, 1, 0],
+			z: [0, 0, 1]
+		};
+
 		return axisDirectionVectors[axisDir];
 	};
 
@@ -56,6 +50,12 @@ export default function() {
 	 * @returns {number[]}
 	 */
 	const getAxisRotationVector = function(axisDir) {
+		const axisRotationVectors = {
+			x: [1, 1, 0, Math.PI],
+			y: [0, 0, 0, 0],
+			z: [0, 1, 1, Math.PI]
+		};
+
 		return axisRotationVectors[axisDir];
 	};
 
@@ -91,6 +91,13 @@ export default function() {
 			const tickFormatDefault = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : (d) => d;
 			tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
 
+			const makeSolid = (el, color) => {
+				el.append("Appearance")
+					.append("Material")
+					.attr("diffuseColor", colorParse(color) || "0 0 0")
+					.attr("transparency", "0");
+			};
+
 			const shape = (el, radius, height, color) => {
 				const shape = el.append("Shape");
 
@@ -98,15 +105,7 @@ export default function() {
 					.attr("radius", radius)
 					.attr("height", height);
 
-				shape.append("Appearance")
-					.append("Material")
-					.attr("diffuseColor", colorParse(color));
-			};
-
-			const makeSolid = (el, color) => {
-				el.append("Appearance")
-					.append("Material")
-					.attr("diffuseColor", colorParse(color) || "0 0 0");
+				shape.call(makeSolid, colorParse(color));
 			};
 
 			// Main Lines
@@ -135,7 +134,7 @@ export default function() {
 				.append("Transform")
 				.attr("translation", tickDirectionVector.map((d) => (d * tickSize / 2)).join(" "))
 				.attr("rotation", tickRotationVector.join(" "))
-				.call(shape, 0.05, tickSize, "#e3e3e3")
+				.call(shape, 0.05, tickSize, "#f3f3f3")
 				.merge(ticks);
 
 			ticks.transition()

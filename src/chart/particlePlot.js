@@ -103,7 +103,7 @@ export default function() {
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
-		const layers = ["axis", "particles", "crosshair"];
+		const layers = ["axis", "particles"];
 		const scene = createScene(selection, layers, classed, width, height, debug);
 
 		selection.each((data) => {

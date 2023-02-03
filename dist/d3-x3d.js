@@ -31,7 +31,7 @@
 
   var d3__namespace = /*#__PURE__*/_interopNamespaceDefault(d3);
 
-  var name="d3-x3d";var version$1="2.1.5";var type="module";var description="3D Data Driven Charting Library with D3 and X3D";var license$1="GPL-2.0";var keywords=["d3","d3-module","visualization","chart","graph","data","x3d","3D","dataviz"];var homepage="https://jamesleesaunders.github.io/d3-x3d/";var author$1="James Saunders (james@saunders-family.net)";var repository={type:"git",url:"https://github.com/jamesleesaunders/d3-x3d.git"};var bugs={url:"https://github.com/jamesleesaunders/d3-x3d/issues"};var module="index.js";var main="index.js";var jsdelivr="dist/d3-x3d.min.js";var unpkg="dist/d3-x3d.min.js";var exports$1={umd:"./dist/d3-x3d.min.js","default":"./index.js"};var scripts={build:"make",test:"mocha 'test/*Test.js' && mocha 'test/chart/*Test.js' && tape 'test/component/*Test.js' | tap-spec",lint:"eslint -c 'config/.eslintrc.json' src","build:docs":"jsdoc -c config/jsdoc.conf.json","deploy:docs":"npm run build:docs && gh-pages -d docs",prototypes:"node src/prototypes/compilePrototypes.js"};var dependencies={d3:"^7.7.0","d3-interpolate-curve":"^1.0.5","gl-matrix":"^3.3.0"};var devDependencies={"@babel/core":"latest","@babel/plugin-syntax-import-assertions":"^7.20.0","@babel/plugin-transform-object-assign":"latest","@babel/preset-env":"latest","@rollup/plugin-babel":"latest","@rollup/plugin-json":"latest","@rollup/plugin-node-resolve":"latest",chai:"^4.3.4",eslint:"^8.30.0","gh-pages":"^3.2.3",jsdoc:"^3.6.7","jsdoc-babel":"^0.5.0",minami:"^1.2.3",mocha:"^10.1.0",rollup:"^3.8.1",svgdom:"^0.1.10","tap-spec":"^5.0.0",tape:"^5.6.1","toast-jsdoc":"^1.0.2","uglify-js":"^3.17.4",vows:"^0.8.3"};var packageJson = {name:name,version:version$1,type:type,description:description,license:license$1,keywords:keywords,homepage:homepage,author:author$1,repository:repository,bugs:bugs,module:module,main:main,jsdelivr:jsdelivr,unpkg:unpkg,exports:exports$1,scripts:scripts,dependencies:dependencies,devDependencies:devDependencies};
+  var name="d3-x3d";var version$1="2.1.5";var type="module";var description="3D Data Driven Charting Library with D3 and X3D";var license$1="GPL-2.0";var keywords=["d3","d3-module","visualization","chart","graph","data","x3d","3D","dataviz"];var homepage="https://jamesleesaunders.github.io/d3-x3d/";var author$1="James Saunders (james@saunders-family.net)";var repository={type:"git",url:"https://github.com/jamesleesaunders/d3-x3d.git"};var bugs={url:"https://github.com/jamesleesaunders/d3-x3d/issues"};var module="index.js";var main="index.js";var jsdelivr="dist/d3-x3d.min.js";var unpkg="dist/d3-x3d.min.js";var exports$1={umd:"./dist/d3-x3d.min.js","default":"./index.js"};var scripts={build:"make",test:"mocha 'test/*Test.js' && mocha 'test/chart/*Test.js' && tape 'test/component/*Test.js' | tap-spec",lint:"eslint -c 'config/.eslintrc.json' src","build:docs":"jsdoc -c config/jsdoc.conf.json","deploy:docs":"npm run build:docs && gh-pages -d docs",prototypes:"node src/prototypes/compilePrototypes.js"};var dependencies={d3:"^7.7.0","d3-interpolate-curve":"^1.0.5","gl-matrix":"^3.3.0"};var devDependencies={"@babel/core":"7.20.12","@babel/plugin-syntax-import-assertions":"^7.20.0","@babel/plugin-transform-object-assign":"latest","@babel/preset-env":"latest","@rollup/plugin-babel":"latest","@rollup/plugin-json":"latest","@rollup/plugin-node-resolve":"latest",chai:"^4.3.4",eslint:"^8.31.0","gh-pages":"^3.2.3",jsdoc:"^3.6.7","jsdoc-babel":"^0.5.0",minami:"^1.2.3",mocha:"^10.1.0",rollup:"^3.9.1",svgdom:"^0.1.10","tap-spec":"^5.0.0",tape:"^5.6.1","toast-jsdoc":"^1.0.2","uglify-js":"^3.17.4",vows:"^0.8.3"};var packageJson = {name:name,version:version$1,type:type,description:description,license:license$1,keywords:keywords,homepage:homepage,author:author$1,repository:repository,bugs:bugs,module:module,main:main,jsdelivr:jsdelivr,unpkg:unpkg,exports:exports$1,scripts:scripts,dependencies:dependencies,devDependencies:devDependencies};
 
   function _extends() {
     _extends = Object.assign ? Object.assign.bind() : function (target) {
@@ -1366,16 +1366,6 @@
     var tickFormat = null;
     var tickSize = 1.5;
     var tickPadding = 2.0;
-    var axisDirectionVectors = {
-      x: [1, 0, 0],
-      y: [0, 1, 0],
-      z: [0, 0, 1]
-    };
-    var axisRotationVectors = {
-      x: [1, 1, 0, Math.PI],
-      y: [0, 0, 0, 0],
-      z: [0, 1, 1, Math.PI]
-    };
 
     /**
      * Get Axis Direction Vector
@@ -1385,6 +1375,11 @@
      * @returns {number[]}
      */
     var getAxisDirectionVector = function getAxisDirectionVector(axisDir) {
+      var axisDirectionVectors = {
+        x: [1, 0, 0],
+        y: [0, 1, 0],
+        z: [0, 0, 1]
+      };
       return axisDirectionVectors[axisDir];
     };
 
@@ -1396,6 +1391,11 @@
      * @returns {number[]}
      */
     var getAxisRotationVector = function getAxisRotationVector(axisDir) {
+      var axisRotationVectors = {
+        x: [1, 1, 0, Math.PI],
+        y: [0, 0, 0, 0],
+        z: [0, 1, 1, Math.PI]
+      };
       return axisRotationVectors[axisDir];
     };
 
@@ -1427,13 +1427,13 @@
           return d;
         };
         tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
+        var makeSolid = function makeSolid(el, color) {
+          el.append("Appearance").append("Material").attr("diffuseColor", colorParse(color) || "0 0 0").attr("transparency", "0");
+        };
         var shape = function shape(el, radius, height, color) {
           var shape = el.append("Shape");
           shape.append("Cylinder").attr("radius", radius).attr("height", height);
-          shape.append("Appearance").append("Material").attr("diffuseColor", colorParse(color));
-        };
-        var makeSolid = function makeSolid(el, color) {
-          el.append("Appearance").append("Material").attr("diffuseColor", colorParse(color) || "0 0 0");
+          shape.call(makeSolid, colorParse(color));
         };
 
         // Main Lines
@@ -1453,7 +1453,7 @@
           }).join(" ");
         }).append("Transform").attr("translation", tickDirectionVector.map(function (d) {
           return d * tickSize / 2;
-        }).join(" ")).attr("rotation", tickRotationVector.join(" ")).call(shape, 0.05, tickSize, "#e3e3e3").merge(ticks);
+        }).join(" ")).attr("rotation", tickRotationVector.join(" ")).call(shape, 0.05, tickSize, "#f3f3f3").merge(ticks);
         ticks.transition().attr("translation", function (t) {
           return axisDirectionVector.map(function (a) {
             return scale(t) * a;
@@ -1665,10 +1665,10 @@
         element.selectAll("group").data(layers).enter().append("Group").attr("class", function (d) {
           return d;
         });
-        xzAxis.scale(xScale).direction("x").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("blue").labelPosition(labelPosition);
-        yzAxis.scale(yScale).direction("y").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color("red").labelPosition(labelPosition);
-        yxAxis.scale(yScale).direction("y").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color("red").labelPosition(labelPosition);
-        zxAxis.scale(zScale).direction("z").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color("black").labelPosition(labelPosition);
+        xzAxis.scale(xScale).direction("x").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color(colors[0]).labelPosition(labelPosition);
+        yzAxis.scale(yScale).direction("y").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color(colors[1]).labelPosition(labelPosition);
+        yxAxis.scale(yScale).direction("y").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color(colors[1]).labelPosition(labelPosition);
+        zxAxis.scale(zScale).direction("z").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color(colors[2]).labelPosition(labelPosition);
 
         // We only want 2 sets of labels on the y axis if they are in distal position.
         if (labelPosition === "proximal") {
@@ -1889,8 +1889,8 @@
 
   var events = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    dispatch: dispatch,
     attachEventListners: attachEventListners,
+    dispatch: dispatch,
     forwardEvent: forwardEvent,
     getEventCoordinates: getEventCoordinates,
     getEventPagePoint: getEventPagePoint,
@@ -2325,6 +2325,7 @@
         });
         var shape = function shape(el) {
           var shape = el.append("Shape");
+          attachEventListners(shape);
           shape.append("Sphere").attr("radius", function (d) {
             var sizeVal = d.values.find(function (v) {
               return v.key === mappings.size;
@@ -2787,48 +2788,47 @@
         var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
         });
-        var xOff = dimensions["x"] / 2;
-        var yOff = dimensions["y"] / 2;
-        var zOff = dimensions["z"] / 2;
+        dimensions.x = xScale ? Math.max.apply(Math, _toConsumableArray(xScale.range())) : dimensions.x;
+        dimensions.y = yScale ? Math.max.apply(Math, _toConsumableArray(yScale.range())) : dimensions.y;
+        dimensions.z = zScale ? Math.max.apply(Math, _toConsumableArray(zScale.range())) : dimensions.z;
+        var xOff = dimensions.x / 2;
+        var yOff = dimensions.y / 2;
+        var zOff = dimensions.z / 2;
         var xVal = xScale(data.x);
         var yVal = yScale(data.y);
         var zVal = zScale(data.z);
-        var positionVectors = {
-          x: [xOff, yVal, zVal],
-          y: [xVal, yOff, zVal],
-          z: [xVal, yVal, zOff]
-        };
         function getPositionVector(axisDir) {
-          return positionVectors[axisDir].join(" ");
+          var positionVectors = {
+            x: [xOff, yVal, zVal],
+            y: [xVal, yOff, zVal],
+            z: [xVal, yVal, zOff]
+          };
+          return positionVectors[axisDir];
         }
-        var rotationVectors = {
-          x: [1, 1, 0, Math.PI],
-          y: [0, 0, 0, 0],
-          z: [0, 1, 1, Math.PI]
-        };
         function getRotationVector(axisDir) {
-          return rotationVectors[axisDir].join(" ");
+          var rotationVectors = {
+            x: [1, 1, 0, Math.PI],
+            y: [0, 0, 0, 0],
+            z: [0, 1, 1, Math.PI]
+          };
+          return rotationVectors[axisDir];
         }
         var colorScale = d3__namespace.scaleOrdinal().domain(Object.keys(dimensions)).range(colors);
 
         // Origin Ball
         var ballSelect = element.selectAll(".ball").data([data]);
-        var ball = ballSelect.enter().append("Transform").attr("translation", function (d) {
-          return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-        }).classed("ball", true).append("Shape");
+        var ball = ballSelect.enter().append("Transform").attr("translation", "".concat(xVal, " ").concat(yVal, " ").concat(zVal)).classed("ball", true).append("Shape");
         ball.append("Appearance").append("Material").attr("diffuseColor", colorParse("blue"));
         ball.append("Sphere").attr("radius", 0.3);
         ball.merge(ballSelect);
-        ballSelect.transition().ease(d3__namespace.easeQuadOut).attr("translation", function (d) {
-          return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-        });
+        ballSelect.transition().ease(d3__namespace.easeQuadOut).attr("translation", "".concat(xVal, " ").concat(yVal, " ").concat(zVal));
 
         // Crosshair Lines
         var lineSelect = element.selectAll(".line").data(Object.keys(dimensions));
         var line = lineSelect.enter().append("Transform").classed("line", true).attr("translation", function (d) {
-          return getPositionVector(d);
+          return getPositionVector(d).join(" ");
         }).attr("rotation", function (d) {
-          return getRotationVector(d);
+          return getRotationVector(d).join(" ");
         }).append("Shape");
         line.append("cylinder").attr("radius", radius).attr("height", function (d) {
           return dimensions[d];
@@ -2838,7 +2838,7 @@
         });
         line.merge(lineSelect);
         lineSelect.transition().ease(d3__namespace.easeQuadOut).attr("translation", function (d) {
-          return getPositionVector(d);
+          return getPositionVector(d).join(" ");
         });
       });
     };
@@ -4204,7 +4204,7 @@
     var my = function my(selection) {
       selection.each(function (data) {
         init(data);
-        function getPositionVector(d) {
+        function getPositionVector(axisDir, d) {
           var xVal = xScale(d.values.find(function (v) {
             return v.key === mappings.x;
           }).value);
@@ -4219,15 +4219,15 @@
             y: [xVal, 0, zVal],
             z: [xVal, yVal, 0]
           };
-          return positionVectors[plane].join(" ");
+          return positionVectors[axisDir];
         }
-        function getRotationVector() {
+        function getRotationVector(axisDir) {
           var rotationVectors = {
             x: [1, 1, 0, Math.PI],
             y: [0, 0, 0, 0],
             z: [0, 1, 1, Math.PI]
           };
-          return rotationVectors[plane].join(" ");
+          return rotationVectors[axisDir];
         }
         var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
@@ -4256,9 +4256,9 @@
         var spotsEnter = spots.enter().append("Transform").attr("class", "spot").call(shape).merge(spots);
         var spotsTransition = spotsEnter.transition();
         spotsTransition.attr("translation", function (d) {
-          return getPositionVector(d);
+          return getPositionVector(plane, d).join();
         }).attr("rotation", function (d) {
-          return getRotationVector();
+          return getRotationVector(plane).join();
         });
         spotsTransition.select("Shape").select("Cylinder").attr("radius", function (d) {
           var sizeVal = d.values.find(function (v) {
@@ -7542,7 +7542,7 @@
      * @param {d3.selection} selection - The chart holder D3 selection.
      */
     var my = function my(selection) {
-      var layers = ["axis", "particles", "crosshair"];
+      var layers = ["axis", "particles"];
       var scene = createScene(selection, layers, classed, width, height, debug);
       selection.each(function (data) {
         init(data);
@@ -8041,13 +8041,42 @@
         label.xScale(xScale).yScale(yScale).zScale(zScale).offset(0.5);
 
         // Add Bubbles
-        bubbles.xScale(xScale).mappings(mappings).yScale(yScale).zScale(zScale).sizeScale(sizeScale).colorScale(colorScale).on("d3X3dClick", function (e) {
-          var d = d3__namespace.select(e.target).datum();
-          scene.select(".crosshair").datum(d).classed("crosshair", true).each(function () {
+        bubbles.xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).colorScale(colorScale).mappings(mappings).on("d3X3dClick", function (e) {
+          var datum = d3__namespace.select(e.target).datum();
+          var xVal = datum.values.find(function (v) {
+            return v.key === "x";
+          }).value;
+          var yVal = datum.values.find(function (v) {
+            return v.key === "y";
+          }).value;
+          var zVal = datum.values.find(function (v) {
+            return v.key === "z";
+          }).value;
+          var d = {
+            x: xVal,
+            y: yVal,
+            z: zVal
+          };
+          scene.select(".crosshair").datum(d).each(function () {
             d3__namespace.select(this).call(crosshair);
           });
         }).on("d3X3dMouseOver", function (e) {
-          var d = d3__namespace.select(e.target).datum();
+          var datum = d3__namespace.select(e.target).datum();
+          var xVal = datum.values.find(function (v) {
+            return v.key === "x";
+          }).value;
+          var yVal = datum.values.find(function (v) {
+            return v.key === "y";
+          }).value;
+          var zVal = datum.values.find(function (v) {
+            return v.key === "z";
+          }).value;
+          var d = {
+            x: xVal,
+            y: yVal,
+            z: zVal,
+            key: datum.key
+          };
           scene.select(".label").datum(d).each(function () {
             d3__namespace.select(this).call(label);
           });
@@ -8818,7 +8847,7 @@
         scene.call(viewpoint);
 
         // Add Axis
-        axis.xScale(xScale).yScale(yScale).zScale(zScale).dimensions(dimensions);
+        axis.xScale(xScale).yScale(yScale).zScale(zScale);
         scene.select(".axis").datum(origin).call(axis);
 
         // Add Vector Fields
@@ -9040,7 +9069,7 @@
         scene.call(viewpoint);
 
         // Add Axis
-        axis.dimensions(dimensions).xScale(xScale).yScale(yScale).zScale(zScale);
+        axis.xScale(xScale).yScale(yScale).zScale(zScale);
         scene.select(".axis").datum(origin).call(axis);
 
         // Add Volume Slice
@@ -9480,16 +9509,16 @@
 
   var randomData = /*#__PURE__*/Object.freeze({
     __proto__: null,
+    convert: convert,
     countries: countries,
-    fruit: fruit,
-    randomNum: randomNum,
     dataset1: dataset1,
     dataset2: dataset2,
     dataset3: dataset3,
-    convert: convert,
-    dataset6: dataset6,
     dataset4: dataset4,
-    dataset5: dataset5
+    dataset5: dataset5,
+    dataset6: dataset6,
+    fruit: fruit,
+    randomNum: randomNum
   });
 
   /**

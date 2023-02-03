@@ -33,31 +33,35 @@ export default function() {
 				.classed(classed, true)
 				.attr("id", (d) => d.key);
 
-			const xOff = dimensions["x"] / 2;
-			const yOff = dimensions["y"] / 2;
-			const zOff = dimensions["z"] / 2;
+			dimensions.x = xScale ? Math.max(...xScale.range()) : dimensions.x;
+			dimensions.y = yScale ? Math.max(...yScale.range()) : dimensions.y;
+			dimensions.z = zScale ? Math.max(...zScale.range()) : dimensions.z;
+
+			const xOff = dimensions.x / 2;
+			const yOff = dimensions.y / 2;
+			const zOff = dimensions.z / 2;
 			const xVal = xScale(data.x);
 			const yVal = yScale(data.y);
 			const zVal = zScale(data.z);
 
-			const positionVectors = {
-				x: [xOff, yVal, zVal],
-				y: [xVal, yOff, zVal],
-				z: [xVal, yVal, zOff]
-			};
-
 			function getPositionVector(axisDir) {
-				return positionVectors[axisDir].join(" ");
+				const positionVectors = {
+					x: [xOff, yVal, zVal],
+					y: [xVal, yOff, zVal],
+					z: [xVal, yVal, zOff]
+				};
+
+				return positionVectors[axisDir];
 			}
 
-			const rotationVectors = {
-				x: [1, 1, 0, Math.PI],
-				y: [0, 0, 0, 0],
-				z: [0, 1, 1, Math.PI]
-			};
-
 			function getRotationVector(axisDir) {
-				return rotationVectors[axisDir].join(" ");
+				const rotationVectors = {
+					x: [1, 1, 0, Math.PI],
+					y: [0, 0, 0, 0],
+					z: [0, 1, 1, Math.PI]
+				};
+
+				return rotationVectors[axisDir];
 			}
 
 			const colorScale = d3.scaleOrdinal()
@@ -70,7 +74,7 @@ export default function() {
 
 			let ball = ballSelect.enter()
 				.append("Transform")
-				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)))
+				.attr("translation", `${xVal} ${yVal} ${zVal}`)
 				.classed("ball", true)
 				.append("Shape");
 
@@ -85,7 +89,7 @@ export default function() {
 
 			ballSelect.transition()
 				.ease(d3.easeQuadOut)
-				.attr("translation", (d) => (xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z)));
+				.attr("translation", `${xVal} ${yVal} ${zVal}`);
 
 			// Crosshair Lines
 			const lineSelect = element.selectAll(".line")
@@ -94,8 +98,8 @@ export default function() {
 			const line = lineSelect.enter()
 				.append("Transform")
 				.classed("line", true)
-				.attr("translation", (d) => getPositionVector(d))
-				.attr("rotation", (d) => getRotationVector(d))
+				.attr("translation", (d) => getPositionVector(d).join(" "))
+				.attr("rotation", (d) => getRotationVector(d).join(" "))
 				.append("Shape");
 
 			line.append("cylinder")
@@ -110,7 +114,7 @@ export default function() {
 
 			lineSelect.transition()
 				.ease(d3.easeQuadOut)
-				.attr("translation", (d) => getPositionVector(d));
+				.attr("translation", (d) => getPositionVector(d).join(" "));
 		});
 	};
 

@@ -145,8 +145,7 @@ export default function() {
 			// Add Axis
 			axis.xScale(xScale)
 				.yScale(yScale)
-				.zScale(zScale)
-				.dimensions(dimensions);
+				.zScale(zScale);
 
 			scene.select(".axis")
 				.datum(origin)
