@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>d3-x3d : 3D Intersecting Planes Component Example</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://x3dom.org/release/x3dom-full.js"></script>
+  <link rel="stylesheet" href="https://x3dom.org/release/x3dom.css" />
+  <script src="../../../dist/d3-x3d.js"></script>
+</head>
+
+<body>
+  <div id="chartholder"></div>
+
+  <script>
+    // Chart dimensions
+    let width = 500;
+    let height = 500;
+
+    let xScale = d3.scaleLinear().domain([0, 10]).range([0, 80]);
+    let yScale = d3.scaleLinear().domain([0, 10]).range([0, 80]);
+    let zScale = d3.scaleLinear().domain([0, 10]).range([0, 80]);
+
+    let viewpointComponent = d3.x3d.component.viewpoint();
+
+    let axisThreePlaneComponent = d3.x3d.component.axisThreePlane()
+      .xScale(xScale)
+      .yScale(yScale)
+      .zScale(zScale);
+
+    let intersectPlanesComponent = d3.x3d.component.intersectPlanes()
+      .xScale(xScale)
+      .yScale(yScale)
+      .zScale(zScale)
+      // .dimensions({ x: 80, y: 80, z: 80 });
+
+    // Create scene
+    let chartHolder = d3.select("#chartholder")
+      .append("X3D")
+      .attr("width", width + "px")
+      .attr("height", height + "px")
+      .append("Scene");
+
+    let ranNum = () => d3.x3d.randomData.randomNum();
+
+    // Add to page
+    chartHolder.call(viewpointComponent);
+
+    chartHolder.append("Group")
+      .call(axisThreePlaneComponent);
+
+    let planesGroup = chartHolder.append("Group");
+
+    function update() {
+      let data = { x: ranNum(), y: ranNum(), z: ranNum() };
+      planesGroup.datum(data)
+        .call(intersectPlanesComponent);
+    }
+
+    update();
+    setInterval(update, 1000);
+
+  </script>
+
+  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data Visualization Library.</div>
+</body>
+
+</html>
