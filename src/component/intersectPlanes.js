@@ -22,7 +22,7 @@ export default function() {
 	 * Constructor
 	 *
 	 * @constructor
-	 * @alias crosshair
+	 * @alias intersectPlanes
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {

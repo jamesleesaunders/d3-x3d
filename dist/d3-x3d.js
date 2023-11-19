@@ -3273,7 +3273,7 @@
      * Constructor
      *
      * @constructor
-     * @alias crosshair
+     * @alias intersectPlanes
      * @param {d3.selection} selection - The chart holder D3 selection.
      */
     var my = function my(selection) {
