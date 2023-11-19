@@ -1,83 +1,83 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <title>d3-x3d : 3D Spot Plot Chart Example</title>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script src="https://create3000.github.io/code/x_ite/latest/x_ite.js"></script>
-  <script src="../../../dist/d3-x3d.js"></script>
-</head>
+  <head>
+    <title>d3-x3d : 3D Spot Plot Chart Example</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://create3000.github.io/code/x_ite/latest/x_ite.js"></script>
+    <script src="../../../dist/d3-x3d.js"></script>
+  </head>
 
-<body>
-<x3d-canvas id="chartholder" style="width: 500px; height: 500px;"></x3d-canvas>
+  <body>
+    <x3d-canvas id="chartholder" style="width: 500px; height: 500px;"></x3d-canvas>
 
-<table>
-  <tr>
-    <td><input type="checkbox" name="country" id="uk" checked value="UK"/></td>
-    <td>UK</td>
-  </tr>
-  <tr>
-    <td><input type="checkbox" name="country" id="france" checked value="France"/></td>
-    <td>France</td>
-  </tr>
-  <tr>
-    <td><input type="checkbox" name="country" id="spain" value="Spain"/></td>
-    <td>Spain</td>
-  </tr>
-  <tr>
-    <td><input type="checkbox" name="country" id="germany" checked value="Germany"/></td>
-    <td>Germany</td>
-  </tr>
-  <tr>
-    <td><input type="checkbox" name="country" id="italy" value="Italy"/></td>
-    <td>Italy</td>
-  </tr>
-</table>
+    <table>
+      <tr>
+        <td>UK:</td>
+        <td><input type="checkbox" name="country" id="uk" checked value="UK"/></td>
+      </tr>
+      <tr>
+        <td>France:</td>
+        <td><input type="checkbox" name="country" id="france" checked value="France"/></td>
+      </tr>
+      <tr>
+        <td>Spain:</td>
+        <td><input type="checkbox" name="country" id="spain" value="Spain"/></td>
+      </tr>
+      <tr>
+        <td>Germany:</td>
+        <td><input type="checkbox" name="country" id="germany" checked value="Germany"/></td>
+      </tr>
+      <tr>
+        <td>Italy:</td>
+        <td><input type="checkbox" name="country" id="italy" value="Italy"/></td>
+      </tr>
+    </table>
 
-<script>
-  // Select chartholder
-  var chartHolder = d3.select("#chartholder");
+    <script>
+      // Select chartholder
+      var chartHolder = d3.select("#chartholder");
 
-  // Generate some data
-  var data = d3.x3d.randomData.dataset2();
+      // Generate some data
+      var data = d3.x3d.randomData.dataset2();
 
-  // Declare the chart component
-  var myChart = d3.x3d.chart.spotPlot();
+      // Declare the chart component
+      var myChart = d3.x3d.chart.spotPlot();
 
-  var checks = d3.selectAll("input[type=checkbox]");
+      var checks = d3.selectAll("input[type=checkbox]");
 
-  var refreshChart = function() {
-    var filterArray = [];
+      var refreshChart = function() {
+        var filterArray = [];
 
-    checks.each(function() {
-      var check = d3.select(this);
-      var checked = check.property("checked");
-      if (checked) {
-        filterArray.push(check.attr("value"));
+        checks.each(function() {
+          var check = d3.select(this);
+          var checked = check.property("checked");
+          if (checked) {
+            filterArray.push(check.attr("value"));
+          }
+        });
+
+        var filteredData = data.filter(function(series) { return filterArray.includes(series.key) });
+
+        chartHolder.datum(filteredData).call(myChart);
+      };
+
+      for (var i = 0; i < checks.length; i++) {
+        checks[i].onchange = refreshChart;
       }
-    });
 
-    var filteredData = data.filter(function(series) { return filterArray.includes(series.key) });
+      checks.each(function() {
+        var check = d3.select(this);
+        check.attr("onchange", "refreshChart()");
+      });
 
-    chartHolder.datum(filteredData).call(myChart);
-  };
+      refreshChart();
+    </script>
 
-  for (var i = 0; i < checks.length; i++) {
-    checks[i].onchange = refreshChart;
-  }
-
-  checks.each(function() {
-    var check = d3.select(this);
-    check.attr("onchange", "refreshChart()");
-  });
-
-  refreshChart();
-
-</script>
-
-<div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data
-  Visualization Library.
-</div>
-</body>
+    <br/>
+    <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data
+      Visualization Library.
+    </div>
+  </body>
 
 </html>

@@ -1,80 +1,82 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <title>d3-x3d : 3D Vertical Bar Chart Example</title>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script src="https://create3000.github.io/code/x_ite/latest/x_ite.js"></script>
-  <script src="../../../dist/d3-x3d.js"></script>
-</head>
+  <head>
+    <title>d3-x3d : 3D Vertical Bar Chart Example</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://create3000.github.io/code/x_ite/latest/x_ite.js"></script>
+    <script src="../../../dist/d3-x3d.js"></script>
+  </head>
 
-<body>
-  <x3d-canvas id="chartholder" style="width: 500px; height: 500px;"></x3d-canvas>
+  <body>
+    <x3d-canvas id="chartholder" style="width: 500px; height: 500px;"></x3d-canvas>
 
-  <table>
-    <tr>
-      <td><input type="checkbox" name="fruit" id="apples" checked value="Apples" /></td>
-      <td>Apples</td>
-    </tr>
-    <tr>
-      <td><input type="checkbox" name="fruit" id="oranges" checked value="Oranges" /></td>
-      <td>Oranges</td>
-    </tr>
-    <tr>
-      <td><input type="checkbox" name="fruit" id="pears" value="Pears" /></td>
-      <td>Pears</td>
-    </tr>
-    <tr>
-      <td><input type="checkbox" name="fruit" id="bananas" checked value="Bananas" /></td>
-      <td>Bananas</td>
-    </tr>
-  </table>
+    <table>
+      <tr>
+        <td>Apples:</td>
+        <td><input type="checkbox" name="fruit" id="apples" checked value="Apples"/></td>
+      </tr>
+      <tr>
+        <td>Oranges:</td>
+        <td><input type="checkbox" name="fruit" id="oranges" checked value="Oranges"/></td>
+      </tr>
+      <tr>
+        <td>Pears:</td>
+        <td><input type="checkbox" name="fruit" id="pears" value="Pears"/></td>
+      </tr>
+      <tr>
+        <td>Bananas:</td>
+        <td><input type="checkbox" name="fruit" id="bananas" checked value="Bananas"/></td>
+      </tr>
+    </table>
 
-  <script>
-    // Select chartholder
-    var chartHolder = d3.select("#chartholder");
+    <script>
+      // Select chartholder
+      var chartHolder = d3.select("#chartholder");
 
-    // Generate some data
-    var data = d3.x3d.randomData.dataset1();
+      // Generate some data
+      var data = d3.x3d.randomData.dataset1();
 
-    // Declare the chart component
-    var myChart = d3.x3d.chart.barChartVertical();
+      // Declare the chart component
+      var myChart = d3.x3d.chart.barChartVertical();
 
-    var checks = d3.selectAll("input[type=checkbox]");
+      var checks = d3.selectAll("input[type=checkbox]");
 
-    var refreshChart = function() {
-      var filterArray = [];
+      var refreshChart = function() {
+        var filterArray = [];
+
+        checks.each(function() {
+          var check = d3.select(this);
+          var checked = check.property("checked");
+          if (checked) {
+            filterArray.push(check.attr("value"));
+          }
+        });
+
+        var filteredData = {
+          key: data.key,
+          values: data.values.filter(function(series) { return filterArray.includes(series.key); })
+        };
+
+        chartHolder.datum(filteredData).call(myChart);
+      };
+
+      for (var i = 0; i < checks.length; i++) {
+        checks[i].onchange = refreshChart;
+      }
 
       checks.each(function() {
         var check = d3.select(this);
-        var checked = check.property("checked");
-        if (checked) {
-          filterArray.push(check.attr("value"));
-        }
+        check.attr("onchange", "refreshChart()");
       });
 
-      var filteredData = {
-        key: data.key,
-        values: data.values.filter(function(series) { return filterArray.includes(series.key); })
-      };
+      refreshChart();
+    </script>
 
-      chartHolder.datum(filteredData).call(myChart);
-    };
-
-    for (var i = 0; i < checks.length; i++) {
-      checks[i].onchange = refreshChart;
-    }
-
-    checks.each(function() {
-      var check = d3.select(this);
-      check.attr("onchange", "refreshChart()");
-    });
-
-    refreshChart();
-
-  </script>
-
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data Visualization Library.</div>
-</body>
+    <br/>
+    <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data
+      Visualization Library.
+    </div>
+  </body>
 
 </html>

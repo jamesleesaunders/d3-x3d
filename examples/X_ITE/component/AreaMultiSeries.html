@@ -1,46 +1,48 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <title>d3-x3d : 3D Multi Series Area Component Example</title>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script src="https://create3000.github.io/code/x_ite/latest/x_ite.js"></script>
-  <script src="../../../dist/d3-x3d.js"></script>
-</head>
+  <head>
+    <title>d3-x3d : 3D Multi Series Area Component Example</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://create3000.github.io/code/x_ite/latest/x_ite.js"></script>
+    <script src="../../../dist/d3-x3d.js"></script>
+  </head>
 
-<body>
-  <x3d-canvas id="chartholder" style="width: 500px; height: 500px;"></x3d-canvas>
+  <body>
+    <x3d-canvas id="chartholder" style="width: 500px; height: 500px;"></x3d-canvas>
 
-  <script>
-    // Chart dimensions
-    var width = 500;
-    var height = 500;
+    <script>
+      // Chart dimensions
+      var width = 500;
+      var height = 500;
 
-    var viewpoint = d3.x3d.component.viewpoint();
+      var viewpoint = d3.x3d.component.viewpoint();
 
-    // Generate some data
-    var areaMultiSeriesData = d3.x3d.randomData.dataset5();
+      // Generate some data
+      var areaMultiSeriesData = d3.x3d.randomData.dataset5();
 
-    // Declare the chart component
-    var areaMultiSeriesComponent = d3.x3d.component.areaMultiSeries();
+      // Declare the chart component
+      var areaMultiSeriesComponent = d3.x3d.component.areaMultiSeries();
 
-    // Create scene
-    var scene = d3.select("#chartholder")
-      .append("X3D")
-      .attr("width", width + "px")
-      .attr("height", height + "px")
-      .append("Scene");
+      // Create scene
+      var scene = d3.select("#chartholder")
+        .append("X3D")
+        .attr("width", width + "px")
+        .attr("height", height + "px")
+        .append("Scene");
 
-    // Add chart component
-    scene.call(viewpoint)
-      .append("Group")
-      .attr("class", "chart")
-      .datum(areaMultiSeriesData)
-      .call(areaMultiSeriesComponent);
+      // Add chart component
+      scene.call(viewpoint)
+        .append("Group")
+        .attr("class", "chart")
+        .datum(areaMultiSeriesData)
+        .call(areaMultiSeriesComponent);
+    </script>
 
-  </script>
-
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data Visualization Library.</div>
-</body>
+    <br/>
+    <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data
+      Visualization Library.
+    </div>
+  </body>
 
 </html>

@@ -118,7 +118,7 @@ export default function() {
 			function getRotationVector(axisDir) {
 				const rotationVectors = {
 					x: [1, 1, 0, Math.PI],
-					y: [0, 0, 0, 0],
+					y: [1, 0, 1, Math.PI],
 					z: [0, 1, 1, Math.PI]
 				};
 

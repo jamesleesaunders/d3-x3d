@@ -2808,7 +2808,7 @@
         function getRotationVector(axisDir) {
           var rotationVectors = {
             x: [1, 1, 0, Math.PI],
-            y: [0, 0, 0, 0],
+            y: [1, 0, 1, Math.PI],
             z: [0, 1, 1, Math.PI]
           };
           return rotationVectors[axisDir];
@@ -2888,168 +2888,6 @@
     my.zScale = function (_v) {
       if (!arguments.length) return zScale;
       zScale = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
-    return my;
-  }
-
-  /**
-   * Reusable 3D Heat Map Component
-   *
-   * @module
-   */
-  function componentHeatMap () {
-    /* Default Properties */
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
-    };
-    var colors = ["#1e253f", "#e33b30"];
-    var classed = "d3X3dHeatMap";
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-    var colorScale;
-
-    /* Components */
-    var bars = componentBars();
-
-    /**
-     * Initialise Data and Scales
-     *
-     * @private
-     * @param {Array} data - Chart data.
-     */
-    var init = function init(data) {
-      var _dataTransform$summar = dataTransform(data).summary(),
-        rowKeys = _dataTransform$summar.rowKeys,
-        columnKeys = _dataTransform$summar.columnKeys,
-        valueMax = _dataTransform$summar.valueMax;
-      var valueExtent = [0, valueMax];
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y,
-        dimensionZ = _dimensions.z;
-      if (typeof xScale === "undefined") {
-        xScale = d3__namespace.scaleBand().domain(columnKeys).range([0, dimensionX]).paddingOuter(0.5).paddingInner(0.1).align(1);
-      }
-      if (typeof yScale === "undefined") {
-        yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-      }
-      if (typeof zScale === "undefined") {
-        zScale = d3__namespace.scaleBand().domain(rowKeys.reverse()).range([0, dimensionZ]).paddingOuter(0.5).paddingInner(0.1).align(1);
-      }
-      if (typeof colorScale === "undefined") {
-        colorScale = d3__namespace.scaleLinear().domain(valueExtent).range(colors);
-      }
-    };
-
-    /**
-     * Constructor
-     *
-     * @constructor
-     * @alias heatMap
-     * @param {d3.selection} selection - The chart holder D3 selection.
-     */
-    var my = function my(selection) {
-      selection.each(function (data) {
-        init(data);
-        var element = d3__namespace.select(this).classed(classed, true);
-        bars.xScale(xScale).yScale(yScale).dimensions({
-          x: dimensions.x,
-          y: dimensions.y,
-          z: zScale.bandwidth()
-        }).colorScale(colorScale).transparency(0.2);
-        var addBars = function addBars() {
-          d3__namespace.select(this).call(bars);
-        };
-        var barGroup = element.selectAll(".barGroup").data(function (d) {
-          return d;
-        }, function (d) {
-          return d.key;
-        });
-        barGroup.enter().append("Transform").classed("barGroup", true).merge(barGroup).transition().attr("translation", function (d) {
-          var x = 0;
-          var y = 0;
-          var z = zScale(d.key);
-          return x + " " + y + " " + z;
-        }).each(addBars);
-        barGroup.exit().remove();
-      });
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
       return my;
     };
 
@@ -3245,6 +3083,309 @@
     my.on = function () {
       var value = dispatch.on.apply(dispatch, arguments);
       return value === dispatch ? my : value;
+    };
+    return my;
+  }
+
+  /**
+   * Reusable 3D Heat Map Component
+   *
+   * @module
+   */
+  function componentHeatMap () {
+    /* Default Properties */
+    var dimensions = {
+      x: 40,
+      y: 40,
+      z: 40
+    };
+    var colors = ["#1e253f", "#e33b30"];
+    var classed = "d3X3dHeatMap";
+
+    /* Scales */
+    var xScale;
+    var yScale;
+    var zScale;
+    var colorScale;
+
+    /* Components */
+    var bars = componentBars();
+
+    /**
+     * Initialise Data and Scales
+     *
+     * @private
+     * @param {Array} data - Chart data.
+     */
+    var init = function init(data) {
+      var _dataTransform$summar = dataTransform(data).summary(),
+        rowKeys = _dataTransform$summar.rowKeys,
+        columnKeys = _dataTransform$summar.columnKeys,
+        valueMax = _dataTransform$summar.valueMax;
+      var valueExtent = [0, valueMax];
+      var _dimensions = dimensions,
+        dimensionX = _dimensions.x,
+        dimensionY = _dimensions.y,
+        dimensionZ = _dimensions.z;
+      if (typeof xScale === "undefined") {
+        xScale = d3__namespace.scaleBand().domain(columnKeys).range([0, dimensionX]).paddingOuter(0.5).paddingInner(0.1).align(1);
+      }
+      if (typeof yScale === "undefined") {
+        yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+      }
+      if (typeof zScale === "undefined") {
+        zScale = d3__namespace.scaleBand().domain(rowKeys.reverse()).range([0, dimensionZ]).paddingOuter(0.5).paddingInner(0.1).align(1);
+      }
+      if (typeof colorScale === "undefined") {
+        colorScale = d3__namespace.scaleLinear().domain(valueExtent).range(colors);
+      }
+    };
+
+    /**
+     * Constructor
+     *
+     * @constructor
+     * @alias heatMap
+     * @param {d3.selection} selection - The chart holder D3 selection.
+     */
+    var my = function my(selection) {
+      selection.each(function (data) {
+        init(data);
+        var element = d3__namespace.select(this).classed(classed, true);
+        bars.xScale(xScale).yScale(yScale).dimensions({
+          x: dimensions.x,
+          y: dimensions.y,
+          z: zScale.bandwidth()
+        }).colorScale(colorScale).transparency(0.2);
+        var addBars = function addBars() {
+          d3__namespace.select(this).call(bars);
+        };
+        var barGroup = element.selectAll(".barGroup").data(function (d) {
+          return d;
+        }, function (d) {
+          return d.key;
+        });
+        barGroup.enter().append("Transform").classed("barGroup", true).merge(barGroup).transition().attr("translation", function (d) {
+          var x = 0;
+          var y = 0;
+          var z = zScale(d.key);
+          return x + " " + y + " " + z;
+        }).each(addBars);
+        barGroup.exit().remove();
+      });
+    };
+
+    /**
+     * Dimensions Getter / Setter
+     *
+     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+     * @returns {*}
+     */
+    my.dimensions = function (_v) {
+      if (!arguments.length) return dimensions;
+      dimensions = _v;
+      return this;
+    };
+
+    /**
+     * X Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+    my.xScale = function (_v) {
+      if (!arguments.length) return xScale;
+      xScale = _v;
+      return my;
+    };
+
+    /**
+     * Y Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+    my.yScale = function (_v) {
+      if (!arguments.length) return yScale;
+      yScale = _v;
+      return my;
+    };
+
+    /**
+     * Z Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+    my.zScale = function (_v) {
+      if (!arguments.length) return zScale;
+      zScale = _v;
+      return my;
+    };
+
+    /**
+     * Color Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 color scale.
+     * @returns {*}
+     */
+    my.colorScale = function (_v) {
+      if (!arguments.length) return colorScale;
+      colorScale = _v;
+      return my;
+    };
+
+    /**
+     * Colors Getter / Setter
+     *
+     * @param {Array} _v - Array of colours used by color scale.
+     * @returns {*}
+     */
+    my.colors = function (_v) {
+      if (!arguments.length) return colors;
+      colors = _v;
+      return my;
+    };
+    return my;
+  }
+
+  /**
+   * Reusable 3D Intersecting Planes Component
+   *
+   * @module
+   */
+  function componentIntersectPlanes () {
+    /* Default Properties */
+    var dimensions = {
+      x: 40,
+      y: 40,
+      z: 40
+    };
+    var colors = ["blue", "red", "green"];
+    var classed = "d3X3dIntersectPlanes";
+
+    /* Scales */
+    var xScale;
+    var yScale;
+    var zScale;
+
+    /**
+     * Constructor
+     *
+     * @constructor
+     * @alias crosshair
+     * @param {d3.selection} selection - The chart holder D3 selection.
+     */
+    var my = function my(selection) {
+      selection.each(function (data) {
+        var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
+          return d.key;
+        });
+        dimensions.x = xScale ? Math.max.apply(Math, _toConsumableArray(xScale.range())) : dimensions.x;
+        dimensions.y = yScale ? Math.max.apply(Math, _toConsumableArray(yScale.range())) : dimensions.y;
+        dimensions.z = zScale ? Math.max.apply(Math, _toConsumableArray(zScale.range())) : dimensions.z;
+        var xOff = dimensions.x / 2;
+        var yOff = dimensions.y / 2;
+        var zOff = dimensions.z / 2;
+        var xVal = xScale(data.x);
+        var yVal = yScale(data.y);
+        var zVal = zScale(data.z);
+        function getPositionVector(axisDir) {
+          var positionVectors = {
+            x: [xOff, yOff, zVal],
+            y: [xVal, yOff, zOff],
+            z: [xOff, yVal, zOff]
+          };
+          return positionVectors[axisDir];
+        }
+        function getRotationVector(axisDir) {
+          var rotationVectors = {
+            x: [1, 1, 0, Math.PI],
+            y: [1, 0, 1, Math.PI],
+            z: [0, 1, 1, Math.PI]
+          };
+          return rotationVectors[axisDir];
+        }
+        var colorScale = d3__namespace.scaleOrdinal().domain(Object.keys(dimensions)).range(colors);
+
+        // Planes
+        var planeSelect = element.selectAll(".plane").data(Object.keys(dimensions));
+        var plane = planeSelect.enter().append("Transform").classed("plane", true).attr("translation", function (d) {
+          return getPositionVector(d).join(" ");
+        }).attr("rotation", function (d) {
+          return getRotationVector(d).join(" ");
+        }).append("Shape");
+        plane.append("plane").attr("size", function (d) {
+          return "".concat(dimensions.x, ",").concat(dimensions.y);
+        }).attr("solid", false);
+        plane.append("Appearance").append("Material").attr("transparency", 0.7).attr("diffuseColor", function (d) {
+          return colorParse(colorScale(d));
+        });
+        plane.merge(planeSelect);
+        planeSelect.transition().ease(d3__namespace.easeQuadOut).attr("translation", function (d) {
+          return getPositionVector(d).join(" ");
+        });
+      });
+    };
+
+    /**
+     * Dimensions Getter / Setter
+     *
+     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
+     * @returns {*}
+     */
+    my.dimensions = function (_v) {
+      if (!arguments.length) return dimensions;
+      dimensions = _v;
+      return this;
+    };
+
+    /**
+     * X Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+    my.xScale = function (_v) {
+      if (!arguments.length) return xScale;
+      xScale = _v;
+      return my;
+    };
+
+    /**
+     * Y Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+    my.yScale = function (_v) {
+      if (!arguments.length) return yScale;
+      yScale = _v;
+      return my;
+    };
+
+    /**
+     * Z Scale Getter / Setter
+     *
+     * @param {d3.scale} _v - D3 scale.
+     * @returns {*}
+     */
+    my.zScale = function (_v) {
+      if (!arguments.length) return zScale;
+      zScale = _v;
+      return my;
+    };
+
+    /**
+     * Colors Getter / Setter
+     *
+     * @param {Array} _v - Array of colours used by color scale.
+     * @returns {*}
+     */
+    my.colors = function (_v) {
+      if (!arguments.length) return colors;
+      colors = _v;
+      return my;
     };
     return my;
   }
@@ -4224,7 +4365,7 @@
         function getRotationVector(axisDir) {
           var rotationVectors = {
             x: [1, 1, 0, Math.PI],
-            y: [0, 0, 0, 0],
+            y: [1, 0, 1, Math.PI],
             z: [0, 1, 1, Math.PI]
           };
           return rotationVectors[axisDir];
@@ -5996,6 +6137,7 @@
     crosshair: componentCrosshair,
     donut: componentDonut,
     heatMap: componentHeatMap,
+    intersectPlanes: componentIntersectPlanes,
     label: componentLabel,
     light: componentLight,
     particles: componentParticles,

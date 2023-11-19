@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { colorParse } from "../colorHelper.js";
 
 /**
- * Reusable 3D Crosshair Component
+ * Reusable 3D Intersecting Planes Component
  *
  * @module
  */
@@ -11,8 +11,7 @@ export default function() {
 	/* Default Properties */
 	let dimensions = { x: 40, y: 40, z: 40 };
 	let colors = ["blue", "red", "green"];
-	let classed = "d3X3dCrosshair";
-	let radius = 0.1;
+	let classed = "d3X3dIntersectPlanes";
 
 	/* Scales */
 	let xScale;
@@ -46,9 +45,9 @@ export default function() {
 
 			function getPositionVector(axisDir) {
 				const positionVectors = {
-					x: [xOff, yVal, zVal],
-					y: [xVal, yOff, zVal],
-					z: [xVal, yVal, zOff]
+					x: [xOff, yOff, zVal],
+					y: [xVal, yOff, zOff],
+					z: [xOff, yVal, zOff]
 				};
 
 				return positionVectors[axisDir];
@@ -68,51 +67,29 @@ export default function() {
 				.domain(Object.keys(dimensions))
 				.range(colors);
 
-			// Origin Ball
-			const ballSelect = element.selectAll(".ball")
-				.data([data]);
-
-			let ball = ballSelect.enter()
-				.append("Transform")
-				.attr("translation", `${xVal} ${yVal} ${zVal}`)
-				.classed("ball", true)
-				.append("Shape");
-
-			ball.append("Appearance")
-				.append("Material")
-				.attr("diffuseColor", colorParse("blue"));
-
-			ball.append("Sphere")
-				.attr("radius", 0.3);
-
-			ball.merge(ballSelect);
-
-			ballSelect.transition()
-				.ease(d3.easeQuadOut)
-				.attr("translation", `${xVal} ${yVal} ${zVal}`);
-
-			// Crosshair Lines
-			const lineSelect = element.selectAll(".line")
+			// Planes
+			const planeSelect = element.selectAll(".plane")
 				.data(Object.keys(dimensions));
 
-			const line = lineSelect.enter()
+			const plane = planeSelect.enter()
 				.append("Transform")
-				.classed("line", true)
+				.classed("plane", true)
 				.attr("translation", (d) => getPositionVector(d).join(" "))
 				.attr("rotation", (d) => getRotationVector(d).join(" "))
 				.append("Shape");
 
-			line.append("cylinder")
-				.attr("radius", radius)
-				.attr("height", (d) => dimensions[d]);
+			plane.append("plane")
+				.attr("size", (d) => `${dimensions.x},${dimensions.y}`)
+				.attr("solid", false);
 
-			line.append("Appearance")
+			plane.append("Appearance")
 				.append("Material")
+				.attr("transparency", 0.7)
 				.attr("diffuseColor", (d) => colorParse(colorScale(d)));
 
-			line.merge(lineSelect);
+			plane.merge(planeSelect);
 
-			lineSelect.transition()
+			planeSelect.transition()
 				.ease(d3.easeQuadOut)
 				.attr("translation", (d) => getPositionVector(d).join(" "));
 		});

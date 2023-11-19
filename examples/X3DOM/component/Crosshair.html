@@ -1,68 +1,70 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <title>d3-x3d : 3D Crosshair Component Example</title>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script src="https://x3dom.org/release/x3dom-full.js"></script>
-  <link rel="stylesheet" href="https://x3dom.org/release/x3dom.css" />
-  <script src="../../../dist/d3-x3d.js"></script>
-</head>
+  <head>
+    <title>d3-x3d : 3D Crosshair Component Example</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://x3dom.org/release/x3dom-full.js"></script>
+    <link rel="stylesheet" href="https://x3dom.org/release/x3dom.css"/>
+    <script src="../../../dist/d3-x3d.js"></script>
+  </head>
 
-<body>
-  <div id="chartholder"></div>
+  <body>
+    <div id="chartholder"></div>
 
-  <script>
-    // Chart dimensions
-    var width = 500;
-    var height = 500;
+    <script>
+      // Chart dimensions
+      var width = 500;
+      var height = 500;
 
-    var xScale = d3.scaleLinear().domain([0, 10]).range([0, 80]);
-    var yScale = d3.scaleLinear().domain([0, 10]).range([0, 80]);
-    var zScale = d3.scaleLinear().domain([0, 10]).range([0, 80]);
+      var xScale = d3.scaleLinear().domain([0, 10]).range([0, 80]);
+      var yScale = d3.scaleLinear().domain([0, 10]).range([0, 80]);
+      var zScale = d3.scaleLinear().domain([0, 10]).range([0, 80]);
 
-    var viewpointComponent = d3.x3d.component.viewpoint();
+      var viewpointComponent = d3.x3d.component.viewpoint();
 
-    var axisThreePlaneComponent = d3.x3d.component.axisThreePlane()
-      .xScale(xScale)
-      .yScale(yScale)
-      .zScale(zScale);
+      var axisThreePlaneComponent = d3.x3d.component.axisThreePlane()
+        .xScale(xScale)
+        .yScale(yScale)
+        .zScale(zScale);
 
-    var crosshairComponent = d3.x3d.component.crosshair()
-      .xScale(xScale)
-      .yScale(yScale)
-      .zScale(zScale)
+      var crosshairComponent = d3.x3d.component.crosshair()
+        .xScale(xScale)
+        .yScale(yScale)
+        .zScale(zScale)
       // .dimensions({ x: 80, y: 80, z: 80 });
 
-    // Create scene
-    var chartHolder = d3.select("#chartholder")
-      .append("X3D")
-      .attr("width", width + "px")
-      .attr("height", height + "px")
-      .append("Scene");
+      // Create scene
+      var chartHolder = d3.select("#chartholder")
+        .append("X3D")
+        .attr("width", width + "px")
+        .attr("height", height + "px")
+        .append("Scene");
 
-    var ranNum = function() { return d3.x3d.randomData.randomNum(); };
+      var ranNum = function() { return d3.x3d.randomData.randomNum(); };
 
-    // Add to page
-    chartHolder.call(viewpointComponent);
+      // Add to page
+      chartHolder.call(viewpointComponent);
 
-    chartHolder.append("Group")
-      .call(axisThreePlaneComponent);
+      chartHolder.append("Group")
+        .call(axisThreePlaneComponent);
 
-    var crosshairGroup = chartHolder.append("Group");
+      var crosshairGroup = chartHolder.append("Group");
 
-    function update() {
-      var data = { x: ranNum(), y: ranNum(), z: ranNum() };
-      crosshairGroup.datum(data)
-        .call(crosshairComponent);
-    }
+      function update() {
+        var data = { x: ranNum(), y: ranNum(), z: ranNum() };
+        crosshairGroup.datum(data)
+          .call(crosshairComponent);
+      }
 
-    update();
-    setInterval(update, 1000);
+      update();
+      setInterval(update, 1000);
+    </script>
 
-  </script>
-
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data Visualization Library.</div>
-</body>
+    <br/>
+    <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data
+      Visualization Library.
+    </div>
+  </body>
 
 </html>

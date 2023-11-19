@@ -165,6 +165,7 @@ Component modules do not generate a `<X3D>` tag, these should be attached to an 
 | component.crosshair()          | Crosshair                           | [View](https://jamesleesaunders.github.io/d3-x3d/crosshair.html)          |
 | component.donut()              | Donut Chart                         | [View](https://jamesleesaunders.github.io/d3-x3d/donut.html)              |
 | component.heatMap()            | Heat Map                            | [View](https://jamesleesaunders.github.io/d3-x3d/heatMap.html)            |
+| component.intersectPlanes()    | Intersecting Planes                 | [View](https://jamesleesaunders.github.io/d3-x3d/intersectPlanes.html)    |
 | component.particles()          | Particle Plot                       | [View](https://jamesleesaunders.github.io/d3-x3d/particles.html)          |
 | component.ribbon()             | Ribbon Chart / Line Chart           | [View](https://jamesleesaunders.github.io/d3-x3d/ribbon.html)             |
 | component.ribbonMultiSeries()  | Multi series Ribbon Chart           | [View](https://jamesleesaunders.github.io/d3-x3d/ribbonMultiSeries.html)  |

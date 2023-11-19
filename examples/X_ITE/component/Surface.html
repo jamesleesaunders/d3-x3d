@@ -1,53 +1,55 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <title>d3-x3d : 3D Surface Area Component Example</title>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script src="https://create3000.github.io/code/x_ite/latest/x_ite.js"></script>
-  <script src="../../../dist/d3-x3d.js"></script>
-</head>
+  <head>
+    <title>d3-x3d : 3D Surface Area Component Example</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://create3000.github.io/code/x_ite/latest/x_ite.js"></script>
+    <script src="../../../dist/d3-x3d.js"></script>
+  </head>
 
-<body>
-  <x3d-canvas id="chartholder" style="width: 500px; height: 500px;"></x3d-canvas>
+  <body>
+    <x3d-canvas id="chartholder" style="width: 500px; height: 500px;"></x3d-canvas>
 
-  <input type="button" id="refresh" value="Refresh" />
+    <input type="button" id="refresh" value="Refresh"/>
 
-  <script>
-    // Chart dimensions
-    var width = 500;
-    var height = 500;
+    <script>
+      // Chart dimensions
+      var width = 500;
+      var height = 500;
 
-    // Declare the chart component
-    var viewpoint = d3.x3d.component.viewpoint();
-    var component = d3.x3d.component.surface();
+      // Declare the chart component
+      var viewpoint = d3.x3d.component.viewpoint();
+      var component = d3.x3d.component.surface();
 
-    // Create scene
-    var scene = d3.select("#chartholder")
-      .append("X3D")
-      .attr("width", width + "px")
-      .attr("height", height + "px")
-      .append("Scene");
+      // Create scene
+      var scene = d3.select("#chartholder")
+        .append("X3D")
+        .attr("width", width + "px")
+        .attr("height", height + "px")
+        .append("Scene");
 
-    scene.call(viewpoint);
+      scene.call(viewpoint);
 
-    var chart = scene.append("Group")
-      .attr("class", "chart");
+      var chart = scene.append("Group")
+        .attr("class", "chart");
 
-    var refreshChart = function() {
-      // Generate some data
-      var data = d3.x3d.randomData.dataset5();
+      var refreshChart = function() {
+        // Generate some data
+        var data = d3.x3d.randomData.dataset5();
 
-      chart.datum(data).call(component);
-    };
+        chart.datum(data).call(component);
+      };
 
-    d3.select("#refresh").attr("onclick", "refreshChart()");
+      d3.select("#refresh").attr("onclick", "refreshChart()");
 
-    refreshChart();
+      refreshChart();
+    </script>
 
-  </script>
-
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data Visualization Library.</div>
-</body>
+    <br/>
+    <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data
+      Visualization Library.
+    </div>
+  </body>
 
 </html>
