@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>d3-x3d : 3D Multi Series Bubbles Component Example</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://create3000.github.io/code/x_ite/latest/x_ite.js"></script>
+    <script src="../../../dist/d3-x3d.js"></script>
+  </head>
+
+  <body>
+    <x3d-canvas id="chartholder" style="width: 500px; height: 500px;"></x3d-canvas>
+
+    <table>
+      <tr>
+        <td>X:</td>
+        <td><input type="range" min="0" max="10" value="5" class="slider" id="x"></td>
+      </tr>
+      <tr>
+        <td>Y:</td>
+        <td><input type="range" min="0" max="10" value="5" class="slider" id="y"></td>
+      </tr>
+      <tr>
+        <td>Z:</td>
+        <td><input type="range" min="0" max="10" value="5" class="slider" id="z"></td>
+      </tr>
+    </table>
+
+    <script>
+      // Chart dimensions
+      let width = 500;
+      let height = 500;
+
+      let xScale = d3.scaleLinear().domain([0, 10]).range([0, 80]);
+      let yScale = d3.scaleLinear().domain([0, 10]).range([0, 80]);
+      let zScale = d3.scaleLinear().domain([0, 10]).range([0, 80]);
+
+      let viewpointComponent = d3.x3d.component.viewpoint();
+
+      let axisThreePlaneComponent = d3.x3d.component.axisThreePlane()
+        .xScale(xScale)
+        .yScale(yScale)
+        .zScale(zScale);
+
+      let intersectPlanesComponent = d3.x3d.component.intersectPlanes()
+        .xScale(xScale)
+        .yScale(yScale)
+        .zScale(zScale);
+
+      // Create scene
+      let chartHolder = d3.select("#chartholder")
+        .append("X3D")
+        .attr("width", width + "px")
+        .attr("height", height + "px")
+        .append("Scene");
+
+      let ranNum = () => d3.x3d.randomData.randomNum();
+      let data = { x: 5, y: 5, z: 5 };
+
+      // Add to page
+      chartHolder.call(viewpointComponent);
+
+      chartHolder.append("Group")
+        .call(axisThreePlaneComponent);
+
+      let planesGroup = chartHolder.append("Group");
+      planesGroup.datum(data)
+        .call(intersectPlanesComponent);
+
+      let refreshChart = function(e) {
+        data[e.id] = e.value;
+        planesGroup.datum(data)
+          .call(intersectPlanesComponent);
+      };
+
+      var checks = d3.selectAll("input[type=range]");
+      checks.each(function() {
+        var check = d3.select(this);
+        check.attr("oninput", "refreshChart(this)");
+      });
+    </script>
+
+    <br/>
+    <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data
+      Visualization Library.
+    </div>
+  </body>
+
+</html>
