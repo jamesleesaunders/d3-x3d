@@ -1,65 +1,71 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <title>d3-x3d : 3D Particle Plot Chart Example</title>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script src="https://create3000.github.io/code/x_ite/latest/x_ite.js"></script>
-  <script src="../../../dist/d3-x3d.js"></script>
-</head>
+  <head>
+    <title>d3-x3d : 3D Particle Plot Chart Example</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://create3000.github.io/code/x_ite/latest/x_ite.js"></script>
+    <script src="../../../dist/d3-x3d.js"></script>
+  </head>
 
-<body>
-  <x3d-canvas id="chartholder" style="width: 500px; height: 500px;"></x3d-canvas>
+  <body>
+    <x3d-canvas id="chartholder" style="width: 500px; height: 500px;"></x3d-canvas>
 
-  <script>
-    function loadChart(data) {
-      // Select chartholder
-      var chartHolder = d3.select("#chartholder");
+    <script>
+      function loadChart(data) {
+        // Select chartholder
+        var chartHolder = d3.select("#chartholder");
 
-      // Declare the chart component
-      var myChart = d3.x3d.chart.particlePlot()
-        .mappings({x: "ridge", y: "nub", z: "crack", size: "density", color: "weight"})
-        .colors(d3.schemeRdYlGn[8]);
+        // Declare the chart component
+        var myChart = d3.x3d.chart.particlePlot()
+          .mappings({ x: "ridge", y: "nub", z: "crack", size: "density", color: "weight" })
+          .colors(d3.schemeRdYlGn[8]);
 
-      // Generate chart
-      chartHolder.datum(data).call(myChart);
-    }
+        // Generate chart
+        chartHolder.datum(data).call(myChart);
+      }
 
-    // Generate Chart fro Pollen CSV Data
-    // Source: http://metagrid2.sv.vt.edu/~npolys/InfoVis2019/pollen.csv
-    d3.csv("../../assets/pollen.csv")
-      .then((data) => {
-        var points = data.map((d) => {
-          return {
-            key: 'Point' + d.OBSERVATION_NUMBER,
-            values: [
-              { key: "weight", value: +d.WEIGHT },
-              { key: "density", value: +d.DENSITY },
-              { key: "ridge", value: +d.RIDGE },
-              { key: "nub", value: +d.NUB },
-              { key: "crack", value: +d.CRACK },
-            ]
+      // Generate Chart fro Pollen CSV Data
+      // Source: http://metagrid2.sv.vt.edu/~npolys/InfoVis2019/pollen.csv
+      d3.csv("../../assets/pollen.csv")
+        .then((data) => {
+          var points = data.map((d) => {
+            return {
+              key: 'Point' + d.OBSERVATION_NUMBER,
+              values: [
+                { key: "weight", value: +d.WEIGHT },
+                { key: "density", value: +d.DENSITY },
+                { key: "ridge", value: +d.RIDGE },
+                { key: "nub", value: +d.NUB },
+                { key: "crack", value: +d.CRACK },
+              ]
+            };
+          });
+
+          var pollenData = {
+            key: 'Pollen',
+            values: points
           };
+
+          loadChart(pollenData);
+        })
+        .finally(() => {
+          console.log("done");
         });
+    </script>
 
-        var pollenData = {
-          key: 'Pollen',
-          values: points
-        };
+    <br/>
+    <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data
+      Visualization Library.
+    </div>
 
-        loadChart(pollenData);
-      })
-      .finally(() => {
-        console.log("done");
-      });
-
-  </script>
-
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data Visualization Library.</div>
-
-  <p>The Bell Labs Pollen data set: In the 1980s, the ASA (American Statistical Association) held a data competition challenged contestants to find as many features as possible in a 5 dimensional data set of 4000 cases. Among other important (known) features in the data set, in a scatterplot of three of the dimensions, the word ’EUREKA’ was clearly apparent. Participants had a deadline, but were not timed; the number of insights or features identified by the contestants was used to judge the winner(s). (Handbook of Data Vis pg179)</p>
-  <p>Dahshan & Polys 2021</p>
-  <p>Available at: <a href="https://www.openml.org/d/529">https://www.openml.org/d/529</a></p>
-</body>
+    <p>The Bell Labs Pollen data set: In the 1980s, the ASA (American Statistical Association) held a data competition
+      challenged contestants to find as many features as possible in a 5 dimensional data set of 4000 cases. Among other
+      important (known) features in the data set, in a scatterplot of three of the dimensions, the word ’EUREKA’ was
+      clearly apparent. Participants had a deadline, but were not timed; the number of insights or features identified
+      by the contestants was used to judge the winner(s). (Handbook of Data Vis pg179)</p>
+    <p>Dahshan & Polys 2021</p>
+    <p>Available at: <a href="https://www.openml.org/d/529">https://www.openml.org/d/529</a></p>
+  </body>
 
 </html>

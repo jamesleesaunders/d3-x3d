@@ -1,68 +1,90 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <title>d3-x3d : 3D Intersecting Planes Component Example</title>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script src="https://x3dom.org/release/x3dom-full.js"></script>
-  <link rel="stylesheet" href="https://x3dom.org/release/x3dom.css" />
-  <script src="../../../dist/d3-x3d.js"></script>
-</head>
+  <head>
+    <title>d3-x3d : 3D Intersecting Planes Component Example</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://x3dom.org/release/x3dom-full.js"></script>
+    <link rel="stylesheet" href="https://x3dom.org/release/x3dom.css"/>
+    <script src="../../../dist/d3-x3d.js"></script>
+  </head>
 
-<body>
-  <div id="chartholder"></div>
+  <body>
+    <div id="chartholder"></div>
 
-  <script>
-    // Chart dimensions
-    let width = 500;
-    let height = 500;
+    <table>
+      <tr>
+        <td>X:</td>
+        <td><input type="range" min="0" max="10" value="5" class="slider" id="x"></td>
+      </tr>
+      <tr>
+        <td>Y:</td>
+        <td><input type="range" min="0" max="10" value="5" class="slider" id="y"></td>
+      </tr>
+      <tr>
+        <td>Z:</td>
+        <td><input type="range" min="0" max="10" value="5" class="slider" id="z"></td>
+      </tr>
+    </table>
 
-    let xScale = d3.scaleLinear().domain([0, 10]).range([0, 80]);
-    let yScale = d3.scaleLinear().domain([0, 10]).range([0, 80]);
-    let zScale = d3.scaleLinear().domain([0, 10]).range([0, 80]);
+    <script>
+      // Chart dimensions
+      let width = 500;
+      let height = 500;
 
-    let viewpointComponent = d3.x3d.component.viewpoint();
+      let xScale = d3.scaleLinear().domain([0, 10]).range([0, 80]);
+      let yScale = d3.scaleLinear().domain([0, 10]).range([0, 80]);
+      let zScale = d3.scaleLinear().domain([0, 10]).range([0, 80]);
 
-    let axisThreePlaneComponent = d3.x3d.component.axisThreePlane()
-      .xScale(xScale)
-      .yScale(yScale)
-      .zScale(zScale);
+      let viewpointComponent = d3.x3d.component.viewpoint();
 
-    let intersectPlanesComponent = d3.x3d.component.intersectPlanes()
-      .xScale(xScale)
-      .yScale(yScale)
-      .zScale(zScale)
-      // .dimensions({ x: 80, y: 80, z: 80 });
+      let axisThreePlaneComponent = d3.x3d.component.axisThreePlane()
+        .xScale(xScale)
+        .yScale(yScale)
+        .zScale(zScale);
 
-    // Create scene
-    let chartHolder = d3.select("#chartholder")
-      .append("X3D")
-      .attr("width", width + "px")
-      .attr("height", height + "px")
-      .append("Scene");
+      let intersectPlanesComponent = d3.x3d.component.intersectPlanes()
+        .xScale(xScale)
+        .yScale(yScale)
+        .zScale(zScale);
 
-    let ranNum = () => d3.x3d.randomData.randomNum();
+      // Create scene
+      let chartHolder = d3.select("#chartholder")
+        .append("X3D")
+        .attr("width", width + "px")
+        .attr("height", height + "px")
+        .append("Scene");
 
-    // Add to page
-    chartHolder.call(viewpointComponent);
+      let ranNum = () => d3.x3d.randomData.randomNum();
+      let data = { x: 5, y: 5, z: 5 };
 
-    chartHolder.append("Group")
-      .call(axisThreePlaneComponent);
+      // Add to page
+      chartHolder.call(viewpointComponent);
 
-    let planesGroup = chartHolder.append("Group");
+      chartHolder.append("Group")
+        .call(axisThreePlaneComponent);
 
-    function update() {
-      let data = { x: ranNum(), y: ranNum(), z: ranNum() };
+      let planesGroup = chartHolder.append("Group");
       planesGroup.datum(data)
         .call(intersectPlanesComponent);
-    }
 
-    update();
-    setInterval(update, 1000);
+      let refreshChart = function(e) {
+        data[e.id] = e.value;
+        planesGroup.datum(data)
+          .call(intersectPlanesComponent);
+      };
 
-  </script>
+      var checks = d3.selectAll("input[type=range]");
+      checks.each(function() {
+        var check = d3.select(this);
+        check.attr("oninput", "refreshChart(this)");
+      });
+    </script>
 
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data Visualization Library.</div>
-</body>
+    <br/>
+    <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data
+      Visualization Library.
+    </div>
+  </body>
 
 </html>

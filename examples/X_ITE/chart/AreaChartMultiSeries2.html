@@ -1,65 +1,65 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <title>d3-x3d : 3D Multi Series Area Chart Example</title>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script src="https://create3000.github.io/code/x_ite/latest/x_ite.js"></script>
-  <script src="../../../dist/d3-x3d.js"></script>
-</head>
+  <head>
+    <title>d3-x3d : 3D Multi Series Area Chart Example</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://create3000.github.io/code/x_ite/latest/x_ite.js"></script>
+    <script src="../../../dist/d3-x3d.js"></script>
+  </head>
 
-<body>
-  <x3d-canvas id="chartholder" style="width: 500px; height: 500px;"></x3d-canvas>
+  <body>
+    <x3d-canvas id="chartholder" style="width: 500px; height: 500px;"></x3d-canvas>
 
-  <script>
-    // Select chartholder
-    var chartHolder = d3.select("#chartholder");
+    <script>
+      // Select chartholder
+      var chartHolder = d3.select("#chartholder");
 
-    // Generate some data
-    var cx = 1.1;
-    var cy = 0.9;
-    var f = function(vx, vz) {
-      return ((vx - cx) * (vx - cx) + (vz - cy) ) * (1 + Math.random());
-    };
+      // Generate some data
+      var cx = 1.1;
+      var cy = 0.9;
+      var f = function(vx, vz) {
+        return ((vx - cx) * (vx - cx) + (vz - cy)) * (1 + Math.random());
+      };
 
-    var xRange = d3.range(0, 1, 0.1);
-    var zRange = d3.range(0, 1, 0.1);
-    var nx = xRange.length;
-    var nz = zRange.length;
+      var xRange = d3.range(0, 1, 0.1);
+      var zRange = d3.range(0, 1, 0.1);
+      var nx = xRange.length;
+      var nz = zRange.length;
 
-    var data = d3.range(nx).map(function(i) {
-      var values = d3.range(nz).map(function(j) {
+      var data = d3.range(nx).map(function(i) {
+        var values = d3.range(nz).map(function(j) {
+          return {
+            key: j,
+            value: f(xRange[i], zRange[j])
+          };
+        });
+
         return {
-          key: j,
-          value: f(xRange[i], zRange[j])
+          key: i,
+          values: values
         };
       });
 
-      return {
-        key: i,
-        values: values
-      };
-    });
+      var summary = d3.x3d.dataTransform(data).summary();
+      var columnKeys = summary.columnKeys;
+      var valueMax = summary.valueMax;
+      var valueExtent = [0, valueMax];
 
-    var summary = d3.x3d.dataTransform(data).summary();
-    var columnKeys = summary.columnKeys;
-    var valueMax = summary.valueMax;
-    var valueExtent = [0, valueMax];
+      var yScale = d3.scaleLinear()
+        .range([0, 20])
+        .domain(valueExtent);
 
-    var yScale = d3.scaleLinear()
-      .range([0, 20])
-      .domain(valueExtent);
+      // Declare the chart component
+      var myChart = d3.x3d.chart.areaChartMultiSeries().yScale(yScale);
 
-    // Declare the chart component
-    var myChart = d3.x3d.chart.areaChartMultiSeries().yScale(yScale);
+      chartHolder.datum(data).call(myChart);
+    </script>
 
-    chartHolder.datum(data).call(myChart);
-
-  </script>
-
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D
-    Data Visualization Library.
-  </div>
-</body>
+    <br/>
+    <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D
+      Data Visualization Library.
+    </div>
+  </body>
 
 </html>

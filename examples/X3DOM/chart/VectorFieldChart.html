@@ -1,64 +1,66 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <title>d3-x3d : 3D Vector Field Chart Example</title>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script src="https://x3dom.org/release/x3dom-full.js"></script>
-  <link rel="stylesheet" href="https://x3dom.org/release/x3dom.css" />
-  <script src="../../../dist/d3-x3d.js"></script>
-</head>
+  <head>
+    <title>d3-x3d : 3D Vector Field Chart Example</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://x3dom.org/release/x3dom-full.js"></script>
+    <link rel="stylesheet" href="https://x3dom.org/release/x3dom.css"/>
+    <script src="../../../dist/d3-x3d.js"></script>
+  </head>
 
-<body>
-  <div id="chartholder"></div>
+  <body>
+    <div id="chartholder"></div>
 
-  <script>
-    // Select chartholder
-    var chartHolder = d3.select("#chartholder");
+    <script>
+      // Select chartholder
+      var chartHolder = d3.select("#chartholder");
 
-    // Generate some data
-    var xRange = d3.range(-4, 5, 1);
-    var yRange = d3.range(-4, 5, 1);
-    var zRange = d3.range(-4, 5, 1);
+      // Generate some data
+      var xRange = d3.range(-4, 5, 1);
+      var yRange = d3.range(-4, 5, 1);
+      var zRange = d3.range(-4, 5, 1);
 
-    var values = [];
-    xRange.forEach(function(x) {
-      yRange.forEach(function(y) {
-        zRange.forEach(function(z) {
-          values.push({
-            key: "Field",
-            value: Math.floor(Math.random() * 10) + 1,
-            x: x,
-            y: y,
-            z: z
+      var values = [];
+      xRange.forEach(function(x) {
+        yRange.forEach(function(y) {
+          zRange.forEach(function(z) {
+            values.push({
+              key: "Field",
+              value: Math.floor(Math.random() * 10) + 1,
+              x: x,
+              y: y,
+              z: z
+            });
           });
         });
       });
-    });
 
-    var myData = {
-      key: "VectorFields",
-      values: values
-    };
-
-    var vectorFunction = function(x, y, z, value) {
-      return {
-        vx: -y / (Math.pow(x, 2) + Math.pow(y, 2)),
-        vy: x / (Math.pow(x, 2) + Math.pow(y, 2)),
-        vz: 0
+      var myData = {
+        key: "VectorFields",
+        values: values
       };
-    };
 
-    // Declare the chart component
-    var myChart = d3.x3d.chart.vectorFieldChart()
-      .vectorFunction(vectorFunction);
+      var vectorFunction = function(x, y, z, value) {
+        return {
+          vx: -y / (Math.pow(x, 2) + Math.pow(y, 2)),
+          vy: x / (Math.pow(x, 2) + Math.pow(y, 2)),
+          vz: 0
+        };
+      };
 
-    // Attach chart and data to the chartholder
-    chartHolder.datum(myData).call(myChart);
+      // Declare the chart component
+      var myChart = d3.x3d.chart.vectorFieldChart()
+        .vectorFunction(vectorFunction);
 
-  </script>
+      // Attach chart and data to the chartholder
+      chartHolder.datum(myData).call(myChart);
+    </script>
 
-  <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data Visualization Library.</div>
-</body>
+    <br/>
+    <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data
+      Visualization Library.
+    </div>
+  </body>
 
 </html>
