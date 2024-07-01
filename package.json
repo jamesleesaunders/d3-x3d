@@ -46,10 +46,10 @@
     "gl-matrix": "^3.3.0"
   },
   "devDependencies": {
-    "@babel/core": "7.20.12",
+    "@babel/core": "7.24.7",
     "@babel/plugin-syntax-import-assertions": "^7.20.0",
-    "@babel/plugin-transform-object-assign": "latest",
-    "@babel/preset-env": "latest",
+    "@babel/plugin-transform-object-assign": "7.24.7",
+    "@babel/preset-env": "7.24.7",
     "@rollup/plugin-babel": "latest",
     "@rollup/plugin-json": "latest",
     "@rollup/plugin-node-resolve": "latest",
