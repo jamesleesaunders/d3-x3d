@@ -4,6 +4,7 @@
 
 [![npm version](https://badge.fury.io/js/d3-x3d.svg)](https://badge.fury.io/js/d3-x3d)
 [![Build Status](https://travis-ci.org/jamesleesaunders/d3-x3d.svg?branch=master)](https://travis-ci.org/jamesleesaunders/d3-x3d)
+[![Known Vulnerabilities](https://snyk.io/test/github/{username}/{repo}/badge.svg)](https://snyk.io/test/github/{username}/{repo})
 
 <a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/logos/d3-x3d-logo-x3dom.html">
    <img src="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/logos/d3-x3d-logo.png" align="left" width="150px" hspace="10" vspace="6" />
