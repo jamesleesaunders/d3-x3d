@@ -52,7 +52,7 @@
     "@babel/preset-env": "7.23.3",
     "@rollup/plugin-babel": "latest",
     "@rollup/plugin-json": "latest",
-    "@rollup/plugin-node-resolve": "latest",
+    "@rollup/plugin-node-resolve": "15.2.3",
     "chai": "^4.3.10",
     "eslint": "^8.57.0",
     "gh-pages": "^3.2.3",
