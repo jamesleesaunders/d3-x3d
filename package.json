@@ -48,7 +48,7 @@
   "devDependencies": {
     "@babel/core": "7.25.2",
     "@babel/plugin-syntax-import-assertions": "^7.24.7",
-    "@babel/plugin-transform-object-assign": "latest",
+    "@babel/plugin-transform-object-assign": "7.25.9",
     "@babel/preset-env": "7.23.3",
     "@rollup/plugin-babel": "latest",
     "@rollup/plugin-json": "latest",
