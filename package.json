@@ -51,7 +51,7 @@
     "@babel/plugin-transform-object-assign": "latest",
     "@babel/preset-env": "7.23.3",
     "@rollup/plugin-babel": "latest",
-    "@rollup/plugin-json": "latest",
+    "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "15.2.3",
     "chai": "^4.3.10",
     "eslint": "^8.57.0",
