@@ -49,7 +49,7 @@
     "@babel/core": "7.25.2",
     "@babel/plugin-syntax-import-assertions": "^7.26.0",
     "@babel/plugin-transform-object-assign": "latest",
-    "@babel/preset-env": "7.23.3",
+    "@babel/preset-env": "7.26.7",
     "@rollup/plugin-babel": "latest",
     "@rollup/plugin-json": "latest",
     "@rollup/plugin-node-resolve": "15.2.3",
