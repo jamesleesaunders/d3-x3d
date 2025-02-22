@@ -31,46 +31,40 @@
 
   var d3__namespace = /*#__PURE__*/_interopNamespaceDefault(d3);
 
-  var name="d3-x3d";var version$1="2.1.5";var type="module";var description="3D Data Driven Charting Library with D3 and X3D";var license$1="GPL-2.0";var keywords=["d3","d3-module","visualization","chart","graph","data","x3d","3D","dataviz"];var homepage="https://jamesleesaunders.github.io/d3-x3d/";var author$1="James Saunders (james@saunders-family.net)";var repository={type:"git",url:"https://github.com/jamesleesaunders/d3-x3d.git"};var bugs={url:"https://github.com/jamesleesaunders/d3-x3d/issues"};var module="index.js";var main="index.js";var jsdelivr="dist/d3-x3d.min.js";var unpkg="dist/d3-x3d.min.js";var exports$1={umd:"./dist/d3-x3d.min.js","default":"./index.js"};var scripts={build:"make",test:"mocha 'test/*Test.js' && mocha 'test/chart/*Test.js' && tape 'test/component/*Test.js' | tap-spec",lint:"eslint -c 'config/.eslintrc.json' src","build:docs":"jsdoc -c config/jsdoc.conf.json","deploy:docs":"npm run build:docs && gh-pages -d docs",prototypes:"node src/prototypes/compilePrototypes.js"};var dependencies={d3:"^7.7.0","d3-interpolate-curve":"^1.0.5","gl-matrix":"^3.3.0"};var devDependencies={"@babel/core":"7.20.12","@babel/plugin-syntax-import-assertions":"^7.20.0","@babel/plugin-transform-object-assign":"latest","@babel/preset-env":"latest","@rollup/plugin-babel":"latest","@rollup/plugin-json":"latest","@rollup/plugin-node-resolve":"latest",chai:"^4.3.4",eslint:"^8.31.0","gh-pages":"^3.2.3",jsdoc:"^3.6.7","jsdoc-babel":"^0.5.0",minami:"^1.2.3",mocha:"^10.1.0",rollup:"^3.9.1",svgdom:"^0.1.10","tap-spec":"^5.0.0",tape:"^5.6.1","toast-jsdoc":"^1.0.2","uglify-js":"^3.17.4",vows:"^0.8.3"};var packageJson = {name:name,version:version$1,type:type,description:description,license:license$1,keywords:keywords,homepage:homepage,author:author$1,repository:repository,bugs:bugs,module:module,main:main,jsdelivr:jsdelivr,unpkg:unpkg,exports:exports$1,scripts:scripts,dependencies:dependencies,devDependencies:devDependencies};
+  var version$1="2.1.5";var license$1="GPL-2.0";var packageJson = {version:version$1,license:license$1};
 
+  function _arrayLikeToArray(r, a) {
+    (null == a || a > r.length) && (a = r.length);
+    for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+    return n;
+  }
+  function _arrayWithoutHoles(r) {
+    if (Array.isArray(r)) return _arrayLikeToArray(r);
+  }
   function _extends() {
-    _extends = Object.assign ? Object.assign.bind() : function (target) {
-      for (var i = 1; i < arguments.length; i++) {
-        var source = arguments[i];
-        for (var key in source) {
-          if (Object.prototype.hasOwnProperty.call(source, key)) {
-            target[key] = source[key];
-          }
-        }
+    return _extends = Object.assign ? Object.assign.bind() : function (n) {
+      for (var e = 1; e < arguments.length; e++) {
+        var t = arguments[e];
+        for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);
       }
-      return target;
-    };
-    return _extends.apply(this, arguments);
+      return n;
+    }, _extends.apply(null, arguments);
   }
-  function _toConsumableArray(arr) {
-    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
-  }
-  function _arrayWithoutHoles(arr) {
-    if (Array.isArray(arr)) return _arrayLikeToArray(arr);
-  }
-  function _iterableToArray(iter) {
-    if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
-  }
-  function _unsupportedIterableToArray(o, minLen) {
-    if (!o) return;
-    if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-    var n = Object.prototype.toString.call(o).slice(8, -1);
-    if (n === "Object" && o.constructor) n = o.constructor.name;
-    if (n === "Map" || n === "Set") return Array.from(o);
-    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-  }
-  function _arrayLikeToArray(arr, len) {
-    if (len == null || len > arr.length) len = arr.length;
-    for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
-    return arr2;
+  function _iterableToArray(r) {
+    if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r);
   }
   function _nonIterableSpread() {
     throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  }
+  function _toConsumableArray(r) {
+    return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread();
+  }
+  function _unsupportedIterableToArray(r, a) {
+    if (r) {
+      if ("string" == typeof r) return _arrayLikeToArray(r, a);
+      var t = {}.toString.call(r).slice(8, -1);
+      return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0;
+    }
   }
 
   /**
