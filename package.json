@@ -62,7 +62,7 @@
     "mocha": "^11.1.0",
     "rollup": "^4.34.8",
     "svgdom": "^0.1.20",
-    "tap-spec": "^2.2.2",
+    "tap-spec": "^4.1.0",
     "tape": "^5.9.0",
     "toast-jsdoc": "^1.0.2",
     "uglify-js": "^3.19.3",
