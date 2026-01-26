@@ -15,15 +15,15 @@
     <table>
       <tr>
         <td>X:</td>
-        <td><input type="range" min="0" max="10" value="5" class="slider" id="x"></td>
+        <td><input type="range" min="0" max="100" value="50" class="slider" id="x"></td>
       </tr>
       <tr>
         <td>Y:</td>
-        <td><input type="range" min="0" max="10" value="5" class="slider" id="y"></td>
+        <td><input type="range" min="0" max="100" value="50" class="slider" id="y"></td>
       </tr>
       <tr>
         <td>Z:</td>
-        <td><input type="range" min="0" max="10" value="5" class="slider" id="z"></td>
+        <td><input type="range" min="0" max="100" value="50" class="slider" id="z"></td>
       </tr>
     </table>
 
@@ -32,9 +32,9 @@
       let width = 500;
       let height = 500;
 
-      let xScale = d3.scaleLinear().domain([0, 10]).range([0, 80]);
-      let yScale = d3.scaleLinear().domain([0, 10]).range([0, 80]);
-      let zScale = d3.scaleLinear().domain([0, 10]).range([0, 80]);
+      let xScale = d3.scaleLinear().domain([0, 100]).range([0, 80]);
+      let yScale = d3.scaleLinear().domain([0, 100]).range([0, 80]);
+      let zScale = d3.scaleLinear().domain([0, 100]).range([0, 80]);
 
       let viewpointComponent = d3.x3d.component.viewpoint();
 
@@ -56,7 +56,7 @@
         .append("Scene");
 
       let ranNum = () => d3.x3d.randomData.randomNum();
-      let data = { x: 5, y: 5, z: 5 };
+      let data = { x: 50, y: 50, z: 50 };
 
       // Add to page
       chartHolder.call(viewpointComponent);
