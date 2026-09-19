@@ -1036,7 +1036,7 @@
           	.attr("coordIndex", (d) => d.coordIndex)
           	.append("Coordinate")
           	.attr("point", (d) => d.point);
-          	shape.append("Appearance")
+          		shape.append("Appearance")
           	.append("Material")
           	.attr("diffuseColor", colorParse(color))
           	.attr("transparency", transparency);
@@ -3707,7 +3707,7 @@
           	.attr("pointSizeMinValue", 1)
           	.attr("pointSizeMaxValue", 100)
           	.attr("pointSizeScaleFactor", 5);
-          	const pointset = shape.append("PointSet");
+          		const pointset = shape.append("PointSet");
           pointset.append("Coordinate")
           	.attr("point", (d) => d.point);
           pointset.append("Color")
@@ -3944,7 +3944,7 @@
           	.attr("coordIndex", (d) => d.coordIndex)
           	.append("Coordinate")
           	.attr("point", (d) => d.point);
-          	shape.append("Appearance")
+          		shape.append("Appearance")
           	.append("Material")
           	.attr("diffuseColor", colorParse(color))
           	.attr("transparency", transparency);

@@ -13,15 +13,22 @@ let banner = `/**
 
 export default {
 	input: "index.js",
-	output: {
-		file: "dist/d3-x3d.js",
-		format: "umd",
-		extend: true,
-		name: "d3.x3d",
-		banner: banner,
-		strict: true,
-		globals: { "d3": "d3", "d3-array": "d3", "d3-shape": "d3", "d3-interpolate": "d3" }
-	},
+	output: [
+		{
+			file: "dist/d3-x3d.js",
+			format: "umd",
+			extend: true,
+			name: "d3.x3d",
+			banner: banner,
+			strict: true,
+			globals: { "d3": "d3", "d3-array": "d3", "d3-shape": "d3", "d3-interpolate": "d3" }
+		},
+		{
+			file: "dist/d3-x3d.esm.js",
+			format: "es",
+			banner: banner
+		}
+	],
 	external: ["d3", "d3-array", "d3-shape", "d3-interpolate"],
 	plugins: [
 		babel({ babelHelpers: 'bundled' }),

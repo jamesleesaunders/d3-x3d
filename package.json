@@ -24,13 +24,13 @@
   "bugs": {
     "url": "https://github.com/jamesleesaunders/d3-x3d/issues"
   },
-  "module": "index.js",
-  "main": "index.js",
+  "module": "dist/d3-x3d.esm.js",
+  "main": "dist/d3-x3d.esm.js",
   "jsdelivr": "dist/d3-x3d.min.js",
   "unpkg": "dist/d3-x3d.min.js",
   "exports": {
     "umd": "./dist/d3-x3d.min.js",
-    "default": "./index.js"
+    "default": "./dist/d3-x3d.esm.js"
   },
   "scripts": {
     "build": "make",
