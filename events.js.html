@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: events.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: events.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as d3 from "d3";
+
+/**
+ * Custom Dispatch Events
+ *
+ * @type {d3.dispatch}
+ */
+export const dispatch = d3.dispatch("d3X3dClick", "d3X3dMouseOver", "d3X3dMouseOut");
+
+/**
+ * Attach Event Listeners to Shape
+ *
+ * Detect X3DOM events and convert them into D3 dispatch events.
+ *
+ * @param el
+ */
+export function attachEventListners(el) {
+	el.attr("onclick", "d3.x3d.events.forwardEvent(event);")
+		.on("click", function(e) { dispatch.call("d3X3dClick", this, e); });
+
+	el.attr("onmouseover", "d3.x3d.events.forwardEvent(event);")
+		.on("mouseover", function(e) { dispatch.call("d3X3dMouseOver", this, e); });
+
+	el.attr("onmouseout", "d3.x3d.events.forwardEvent(event);")
+		.on("mouseout", function(e) { dispatch.call("d3X3dMouseOut", this, e); });
+}
+
+/**
+ * Forward X3DOM Event to D3
+ *
+ * In X3DOM, it is the canvas which captures onclick events, therefore defining a D3 event handler
+ * on an single X3DOM element does not work. A workaround is to define an onclick handler which then
+ * forwards the call to the D3 "click" event handler with the event.
+ * Note: X3DOM and D3 event members slightly differ, so d3.mouse() function does not work.
+ *
+ * @param {event} event
+ * @see https://bl.ocks.org/hlvoorhees/5376764
+ */
+export function forwardEvent(event) {
+	let type = event.type;
+	let target = d3.select(event.target);
+	target.on(type)(event);
+}
+
+/**
+ * Show Alert With Event Coordinate
+ *
+ * @param {event} event
+ * @returns {{canvas: {x: (*|number), y: (*|number)}, world: {x: *, y: *, z: *}, page: {x: number, y: number}}}
+ */
+export function getEventCoordinates(event) {
+	let pagePoint = getEventPagePoint(event);
+
+	return {
+		world: { x: event.hitPnt[0], y: event.hitPnt[1], z: event.hitPnt[2] },
+		canvas: { x: event.layerX, y: event.layerY },
+		page: { x: pagePoint.x, y: pagePoint.y }
+	}
+}
+
+/**
+ * Inverse of coordinate transform defined by function mousePosition(evt) in x3dom.js
+ *
+ * @param {event} event
+ * @returns {{x: number, y: number}}
+ */
+export function getEventPagePoint(event) {
+	let pageX = -1;
+	let pageY = -1;
+
+	let convertPoint = window.webkitConvertPointFromPageToNode;
+
+	if ("getBoundingClientRect" in document.documentElement) {
+		let holder = getX3domHolder(event);
+		let computedStyle = document.defaultView.getComputedStyle(holder, null);
+		let paddingLeft = parseFloat(computedStyle.getPropertyValue("padding-left"));
+		let borderLeftWidth = parseFloat(computedStyle.getPropertyValue("border-left-width"));
+		let paddingTop = parseFloat(computedStyle.getPropertyValue("padding-top"));
+		let borderTopWidth = parseFloat(computedStyle.getPropertyValue("border-top-width"));
+		let box = holder.getBoundingClientRect();
+		let scrolLeft = window.pageXOffset || document.body.scrollLeft;
+		let scrollTop = window.pageYOffset || document.body.scrollTop;
+		pageX = Math.round(event.layerX + (box.left + paddingLeft + borderLeftWidth + scrolLeft));
+		pageY = Math.round(event.layerY + (box.top + paddingTop + borderTopWidth + scrollTop));
+	} else if (convertPoint) {
+		let pagePoint = convertPoint(event.target, new WebKitPoint(0, 0));
+		pageX = Math.round(pagePoint.x);
+		pageY = Math.round(pagePoint.y);
+	} else {
+		x3dom.debug.logError("Unable to find getBoundingClientRect or webkitConvertPointFromPageToNode");
+	}
+
+	return { x: pageX, y: pageY };
+}
+
+/**
+ * Return the x3d Parent Holder
+ *
+ * Find clicked element, walk up DOM until we find the parent x3d.
+ * Then return the x3d's parent.
+ *
+ * @param event
+ * @returns {*}
+ */
+export function getX3domHolder(event) {
+	let node = event.target;
+
+	while (node.nodeName.toLowerCase() !== "x3d") {
+		node = node.parentElement;
+	}
+
+	return node.parentNode;
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-accessors.html">accessors</a></li><li><a href="module-arrayUnique.html">arrayUnique</a></li><li><a href="module-base.html">base</a></li><li><a href="module-chart_areaChartMultiSeries.html">chart/areaChartMultiSeries</a></li><li><a href="module-chart_barChartMultiSeries.html">chart/barChartMultiSeries</a></li><li><a href="module-chart_barChartVertical.html">chart/barChartVertical</a></li><li><a href="module-chart_bubbleChart.html">chart/bubbleChart</a></li><li><a href="module-chart_crosshairPlot.html">chart/crosshairPlot</a></li><li><a href="module-chart_donutChart.html">chart/donutChart</a></li><li><a href="module-chart_heatMap.html">chart/heatMap</a></li><li><a href="module-chart_particlePlot.html">chart/particlePlot</a></li><li><a href="module-chart_ribbonChartMultiSeries.html">chart/ribbonChartMultiSeries</a></li><li><a href="module-chart_scatterPlot.html">chart/scatterPlot</a></li><li><a href="module-chart_spotPlot.html">chart/spotPlot</a></li><li><a href="module-chart_surfacePlot.html">chart/surfacePlot</a></li><li><a href="module-chart_vectorFieldChart.html">chart/vectorFieldChart</a></li><li><a href="module-chart_volumeSliceChart.html">chart/volumeSliceChart</a></li><li><a href="module-component_area.html">component/area</a></li><li><a href="module-component_areaMultiSeries.html">component/areaMultiSeries</a></li><li><a href="module-component_axis.html">component/axis</a></li><li><a href="module-component_axisThreePlane.html">component/axisThreePlane</a></li><li><a href="module-component_bars.html">component/bars</a></li><li><a href="module-component_barsMultiSeries.html">component/barsMultiSeries</a></li><li><a href="module-component_bubbles.html">component/bubbles</a></li><li><a href="module-component_bubblesMultiSeries.html">component/bubblesMultiSeries</a></li><li><a href="module-component_crosshair.html">component/crosshair</a></li><li><a href="module-component_donut.html">component/donut</a></li><li><a href="module-component_heatMap.html">component/heatMap</a></li><li><a href="module-component_intersectPlanes.html">component/intersectPlanes</a></li><li><a href="module-component_label.html">component/label</a></li><li><a href="module-component_light.html">component/light</a></li><li><a href="module-component_particles.html">component/particles</a></li><li><a href="module-component_ribbon.html">component/ribbon</a></li><li><a href="module-component_ribbonMultiSeries.html">component/ribbonMultiSeries</a></li><li><a href="module-component_spots.html">component/spots</a></li><li><a href="module-component_spotsMultiSeries.html">component/spotsMultiSeries</a></li><li><a href="module-component_surface.html">component/surface</a></li><li><a href="module-component_vectorFields.html">component/vectorFields</a></li><li><a href="module-component_viewpoint.html">component/viewpoint</a></li><li><a href="module-component_volumeSlice.html">component/volumeSlice</a></li><li><a href="module-dataTransform.html">dataTransform</a></li><li><a href="module-extentsFromMappings.html">extentsFromMappings</a></li></ul><h3>Classes</h3><ul><li><a href="area.html">area</a></li><li><a href="areaMultiSeries.html">areaMultiSeries</a></li><li><a href="axis.html">axis</a></li><li><a href="axisThreePlane.html">axisThreePlane</a></li><li><a href="barChartVertical.html">barChartVertical</a></li><li><a href="bars.html">bars</a></li><li><a href="barsMultiSeries.html">barsMultiSeries</a></li><li><a href="bubbles.html">bubbles</a></li><li><a href="bubblesMultiSeries.html">bubblesMultiSeries</a></li><li><a href="crosshair.html">crosshair</a></li><li><a href="donut.html">donut</a></li><li><a href="donutChart.html">donutChart</a></li><li><a href="heatMap.html">heatMap</a></li><li><a href="intersectPlanes.html">intersectPlanes</a></li><li><a href="label.html">label</a></li><li><a href="light.html">light</a></li><li><a href="particles.html">particles</a></li><li><a href="ribbon.html">ribbon</a></li><li><a href="ribbonMultiSeries.html">ribbonMultiSeries</a></li><li><a href="scatterPlot.html">scatterPlot</a></li><li><a href="spots.html">spots</a></li><li><a href="spotsMultiSeries.html">spotsMultiSeries</a></li><li><a href="surface.html">surface</a></li><li><a href="vectorFieldChart.html">vectorFieldChart</a></li><li><a href="vectorFields.html">vectorFields</a></li><li><a href="viewpoint.html">viewpoint</a></li><li><a href="volumeSlice.html">volumeSlice</a></li><li><a href="volumeSliceChart.html">volumeSliceChart</a></li></ul><h3>Global</h3><ul><li><a href="global.html#assignCoordinateScales">assignCoordinateScales</a></li><li><a href="global.html#assignSeriesScales">assignSeriesScales</a></li><li><a href="global.html#attachEventListners">attachEventListners</a></li><li><a href="global.html#colorNames">colorNames</a></li><li><a href="global.html#colorParse">colorParse</a></li><li><a href="global.html#colourNameToHex">colourNameToHex</a></li><li><a href="global.html#colourNameToX3d">colourNameToX3d</a></li><li><a href="global.html#componentToHex">componentToHex</a></li><li><a href="global.html#convert">convert</a></li><li><a href="global.html#coordinateSeriesData">coordinateSeriesData</a></li><li><a href="global.html#countries">countries</a></li><li><a href="global.html#dataset1">dataset1</a></li><li><a href="global.html#dataset2">dataset2</a></li><li><a href="global.html#dataset3">dataset3</a></li><li><a href="global.html#dataset4">dataset4</a></li><li><a href="global.html#dataset5">dataset5</a></li><li><a href="global.html#dataset6">dataset6</a></li><li><a href="global.html#dispatch">dispatch</a></li><li><a href="global.html#drawIndexedFaceStrip">drawIndexedFaceStrip</a></li><li><a href="global.html#drawSeriesGroups">drawSeriesGroups</a></li><li><a href="global.html#forwardEvent">forwardEvent</a></li><li><a href="global.html#fruit">fruit</a></li><li><a href="global.html#getEventCoordinates">getEventCoordinates</a></li><li><a href="global.html#getEventPagePoint">getEventPagePoint</a></li><li><a href="global.html#getX3domHolder">getX3domHolder</a></li><li><a href="global.html#hexToRgb">hexToRgb</a></li><li><a href="global.html#hexToX3d">hexToX3d</a></li><li><a href="global.html#initColumnPointScales">initColumnPointScales</a></li><li><a href="global.html#initCoordinateScales">initCoordinateScales</a></li><li><a href="global.html#orientSeriesViewpoint">orientSeriesViewpoint</a></li><li><a href="global.html#protoFolder">protoFolder</a></li><li><a href="global.html#randomNum">randomNum</a></li><li><a href="global.html#rgb2Hex">rgb2Hex</a></li><li><a href="global.html#rgbToHex">rgbToHex</a></li><li><a href="global.html#sceneChart">sceneChart</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Wed Nov 04 2026 15:46:56 GMT+0000 (Greenwich Mean Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

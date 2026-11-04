@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Home</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Home</h1>
+
+    
+
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>d3-x3d</h1>
+<h2>3D Data Driven Charting Library with D3 and X3D</h2>
+<p><a href="https://badge.fury.io/js/d3-x3d"><img src="https://badge.fury.io/js/d3-x3d.svg" alt="npm version"></a>
+<a href="https://travis-ci.org/jamesleesaunders/d3-x3d"><img src="https://travis-ci.org/jamesleesaunders/d3-x3d.svg?branch=master" alt="Build Status"></a>
+<a href="https://snyk.io/test/github/%7Busername%7D/%7Brepo%7D"><img src="https://snyk.io/test/github/%7Busername%7D/%7Brepo%7D/badge.svg" alt="Known Vulnerabilities"></a></p>
+<a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/logos/d3-x3d-logo-x3dom.html">
+   <img src="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/logos/d3-x3d-logo.png" align="left" width="150px" hspace="10" vspace="6" />
+</a>
+<p>Combining the power of the <a href="http://www.d3js.org/">D3.js</a> data-driven documents visualisation library and the Extensible 3D <a href="https://www.web3d.org/x3d/what-x3d">X3D</a> 3D graphics standard, d3-x3d makes it simple to produce beautiful 3D data visualisations with minimal code.</p>
+<p>Inspired by Mike Bostock's <a href="http://bost.ocks.org/mike/chart/">reusable charts</a>, d3-x3d is built on a foundation of building blocks, called components, which can be combined to create a variety of different data visualisations.</p>
+<ul>
+<li><a href="#examples">Examples</a></li>
+<li><a href="#getting-started">Getting Started</a></li>
+<li><a href="https://jamesleesaunders.github.io/d3-x3d/">API Reference</a></li>
+<li><a href="#components-and-charts">Components and Charts</a></li>
+<li><a href="#data-structures">Data Structures</a></li>
+<li><a href="https://github.com/jamesleesaunders/d3-x3d">Download from GitHub</a></li>
+<li><a href="https://www.npmjs.com/package/d3-x3d">Download from NPM</a></li>
+</ul>
+<p>The aspiration for the X3D specification is for it to become the de facto HTML5 standard for 3D graphics in the browser, in a similar manner to that of SVG (Scalable Vector Graphics).
+The aim is that one day X3D will be integrated as standard into all browsers, without the need for additional plugins. For the time being, there are two JavaScript based players for X3D:</p>
+<ul>
+<li><a href="https://www.x3dom.org/">X3DOM</a></li>
+<li><a href="https://create3000.github.io/x_ite/">X_ITE</a></li>
+</ul>
+<p>Both these players are compatible with modern browsers supporting HTML5 and enable X3D scenes to be embedded in any HTML page. d3-x3d has been tested to work with both X3DOM and X_ITE (there are a couple of more advanced features and charts which currently only work with X3DOM).</p>
+<h3><a name="examples"></a>Examples</h3>
+<table>
+<thead>
+<tr>
+<th>Example</th>
+<th>X3DOM</th>
+<th>X_ITE</th>
+<th>Observable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Area Chart</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/AreaChartMultiSeries.html">View</a></td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/AreaChartMultiSeries.html">View</a></td>
+<td><a href="https://observablehq.com/@jamesleesaunders/d3-x3d-components-area-chart">View</a></td>
+</tr>
+<tr>
+<td>Multi Series Bar Chart</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/BarChartMultiSeries.html">View</a></td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/BarChartMultiSeries.html">View</a></td>
+<td><a href="https://observablehq.com/@jamesleesaunders/d3-x3d-components-bar-charts">View</a></td>
+</tr>
+<tr>
+<td>Vertical Bar Chart</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/BarChartVertical.html">View</a></td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/BarChartVertical.html">View</a></td>
+<td><a href="https://observablehq.com/@jamesleesaunders/d3-x3d-components-bar-charts">View</a></td>
+</tr>
+<tr>
+<td>Bubble Chart</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/BubbleChart.html">View</a></td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/BubbleChart.html">View</a></td>
+<td><a href="https://observablehq.com/@jamesleesaunders/d3-x3d-components-bubbles">View</a></td>
+</tr>
+<tr>
+<td>Donut Chart</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/DonutChart.html">View</a></td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/DonutChart.html">View</a></td>
+<td><a href="https://observablehq.com/@jamesleesaunders/d3-x3d-components-donut-chart">View</a></td>
+</tr>
+<tr>
+<td>Heat Map</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/HeatMap.html">View</a></td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/HeatMap.html">View</a></td>
+<td>WIP</td>
+</tr>
+<tr>
+<td>Particle Plot</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/ParticlePlot.html">View</a></td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/ParticlePlot.html">View</a></td>
+<td><a href="https://observablehq.com/@jamesleesaunders/d3-x3d-components-particles">View</a></td>
+</tr>
+<tr>
+<td>Scatter Plot</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/ScatterPlot.html">View</a></td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/ScatterPlot.html">View</a></td>
+<td>WIP</td>
+</tr>
+<tr>
+<td>Spot Plot</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/SpotPlot.html">View</a></td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/SpotPlot.html">View</a></td>
+<td>WIP</td>
+</tr>
+<tr>
+<td>Surface Plot</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/SurfacePlot.html">View</a></td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/SurfacePlot.html">View</a></td>
+<td><a href="https://observablehq.com/@jamesleesaunders/d3-x3d-components-surface-plot">View</a></td>
+</tr>
+<tr>
+<td>Ribbon Chart</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/RibbonChartMultiSeries.html">View</a></td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/RibbonChartMultiSeries.html">View</a></td>
+<td><a href="https://observablehq.com/@jamesleesaunders/d3-x3d-components-ribbon-chart">View</a></td>
+</tr>
+<tr>
+<td>Vector Field Chart</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/VectorFieldChart.html">View</a></td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X_ITE/chart/VectorFieldChart.html">View</a></td>
+<td><a href="https://observablehq.com/@jamesleesaunders/d3-x3d-components-vector-field-chart">View</a></td>
+</tr>
+<tr>
+<td>Volume Slice</td>
+<td><a href="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/X3DOM/chart/VolumeSliceChart.html">View</a></td>
+<td>WIP</td>
+<td>WIP</td>
+</tr>
+</tbody>
+</table>
+<h3><a name="getting-started"></a>Getting Started</h3>
+<p>Include the following JavaScript and CSS files in the <code>&lt;head&gt;</code> section of your page:</p>
+<p>If using X3DOM:</p>
+<pre class="prettyprint source lang-html"><code>&lt;head>
+   &lt;script src=&quot;https://d3js.org/d3.v7.min.js&quot;>&lt;/script>
+   &lt;script src=&quot;https://x3dom.org/release/x3dom.js&quot;>&lt;/script>
+   &lt;link rel=&quot;stylesheet&quot; href=&quot;https://x3dom.org/release/x3dom.css&quot; />
+   &lt;script src=&quot;https://raw.githack.com/jamesleesaunders/d3-x3d/master/dist/d3-x3d.js&quot;>&lt;/script>
+&lt;/head>
+</code></pre>
+<p>If using X_ITE:</p>
+<pre class="prettyprint source lang-html"><code>&lt;head>
+   &lt;script src=&quot;https://d3js.org/d3.v7.min.js&quot;>&lt;/script>
+   &lt;script src=&quot;https://cdn.jsdelivr.net/npm/x_ite@latest/dist/x_ite.js&quot;>&lt;/script>
+   &lt;script src=&quot;https://raw.githack.com/jamesleesaunders/d3-x3d/master/dist/d3-x3d.js&quot;>&lt;/script>
+&lt;/head>
+</code></pre>
+<p>Add the following chartholder <code>&lt;div&gt;</code> (or <code>&lt;x3d-canvas&gt;</code>) and <code>&lt;script&gt;</code> tags to your page <code>&lt;body&gt;</code>:</p>
+<p>If using X3DOM:</p>
+<pre class="prettyprint source lang-html"><code>&lt;body>
+   &lt;div id=&quot;chartholder&quot;>&lt;/div>
+   &lt;script>&lt;/script>
+&lt;/body>
+</code></pre>
+<p>If using X_ITE:</p>
+<pre class="prettyprint source lang-html"><code>&lt;body>
+   &lt;x3d-canvas id=&quot;chartholder&quot;>&lt;/x3d-canvas>
+   &lt;script>&lt;/script>
+&lt;/body>
+</code></pre>
+<p>Place the following code between the <code>&lt;script&gt;&lt;/script&gt;</code> tags:</p>
+<pre class="prettyprint source lang-javascript"><code>// Select chartholder
+var chartHolder = d3.select(&quot;#chartholder&quot;);
+
+// Generate some data
+var myData = [
+	{
+		key: &quot;UK&quot;,
+		values: [
+			{ key: &quot;Apples&quot;, value: 9 },
+			{ key: &quot;Oranges&quot;, value: 3 },
+			{ key: &quot;Pears&quot;, value: 5 },
+			{ key: &quot;Bananas&quot;, value: 7 }
+		]
+	},
+	{
+		key: &quot;France&quot;,
+		values: [
+			{ key: &quot;Apples&quot;, value: 5 },
+			{ key: &quot;Oranges&quot;, value: 4 },
+			{ key: &quot;Pears&quot;, value: 6 },
+			{ key: &quot;Bananas&quot;, value: 2 }
+		]
+	}
+];
+
+// Declare the chart component
+var myChart = d3.x3d.chart.barChartMultiSeries();
+
+// Attach chart and data to the chartholder
+chartHolder
+	.datum(myData)
+	.call(myChart);
+</code></pre>
+<p>That's all there is to it! View the page in your browser and you should see a basic 3D bar chart:</p>
+<img src="https://raw.githack.com/jamesleesaunders/d3-x3d/master/examples/assets/BarChartMultiSeries.png" width="400px">
+<h4>Install from NPM</h4>
+<p>If your project is using ES6 modules you can also import d3-x3d, for example <a href="https://www.npmjs.com/package/d3-x3d">from NPM</a>:</p>
+<pre class="prettyprint source lang-bash"><code>npm install --save d3-x3d
+</code></pre>
+<p>Then in your project:</p>
+<pre class="prettyprint source lang-javascript"><code>let d3X3d = require(&quot;d3-x3d&quot;);
+</code></pre>
+<h3><a name="components-and-charts"></a>Components and Charts</h3>
+<p>d3-x3d has two types of reusable module: <code>component</code> and <code>chart</code>. For more information see the <a href="https://jamesleesaunders.github.io/d3-x3d/">API Reference</a>.</p>
+<h4>Components</h4>
+<p>The <code>component</code> modules are lower level building blocks which can be used independently, or combined to build higher level <code>chart</code> modules.
+For example, combining <code>component.bars()</code>, <code>component.axis()</code> and <code>component.viewpoint()</code> modules together we have built the <code>chart.barChartMultiSeries()</code>.
+Component modules do not generate a <code>&lt;X3D&gt;</code> tag, these should be attached to an exiting <code>&lt;X3D&gt;</code> tag.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+<th>Documentation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>component.area()</td>
+<td>Single series Area Chart</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/area.html">View</a></td>
+</tr>
+<tr>
+<td>component.areaMultiSeries()</td>
+<td>Multi series Area Chart</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/areaMultiSeries.html">View</a></td>
+</tr>
+<tr>
+<td>component.axis()</td>
+<td>Single plane x/y Axis</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/axis.html">View</a></td>
+</tr>
+<tr>
+<td>component.axisThreePlane()</td>
+<td>Three plane x/y/z Axis</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/axisThreePlane.html">View</a></td>
+</tr>
+<tr>
+<td>component.bars()</td>
+<td>Single series Bar Chart</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/bars.html">View</a></td>
+</tr>
+<tr>
+<td>component.barsMultiSeries()</td>
+<td>Multi series Bar Chart</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/barsMultiSeries.html">View</a></td>
+</tr>
+<tr>
+<td>component.bubbles()</td>
+<td>Bubble / Scatter Plot</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/bubbles.html">View</a></td>
+</tr>
+<tr>
+<td>component.bubblesMultiSeries()</td>
+<td>Multi series Bubbles / Scatter Plot</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/bubblesMultiSeries.html">View</a></td>
+</tr>
+<tr>
+<td>component.crosshair()</td>
+<td>Crosshair</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/crosshair.html">View</a></td>
+</tr>
+<tr>
+<td>component.donut()</td>
+<td>Donut Chart</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/donut.html">View</a></td>
+</tr>
+<tr>
+<td>component.heatMap()</td>
+<td>Heat Map</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/heatMap.html">View</a></td>
+</tr>
+<tr>
+<td>component.intersectPlanes()</td>
+<td>Intersecting Planes</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/intersectPlanes.html">View</a></td>
+</tr>
+<tr>
+<td>component.particles()</td>
+<td>Particle Plot</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/particles.html">View</a></td>
+</tr>
+<tr>
+<td>component.ribbon()</td>
+<td>Ribbon Chart / Line Chart</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/ribbon.html">View</a></td>
+</tr>
+<tr>
+<td>component.ribbonMultiSeries()</td>
+<td>Multi series Ribbon Chart</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/ribbonMultiSeries.html">View</a></td>
+</tr>
+<tr>
+<td>component.spots()</td>
+<td>Spot Plot</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/spots.html">View</a></td>
+</tr>
+<tr>
+<td>component.spotsMultiSeries()</td>
+<td>Multi series Spot Plot</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/spotsMultiSeries.html">View</a></td>
+</tr>
+<tr>
+<td>component.surface()</td>
+<td>Surface Area</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/surface.html">View</a></td>
+</tr>
+<tr>
+<td>component.vectorFields()</td>
+<td>Vector Field Chart</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/vectorFields.html">View</a></td>
+</tr>
+<tr>
+<td>component.viewpoint()</td>
+<td>Camera position</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/viewpoint.html">View</a></td>
+</tr>
+<tr>
+<td>component.volumeSlice()</td>
+<td>Volume Slice (MRI Scan)</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/volumeSlice.html">View</a></td>
+</tr>
+</tbody>
+</table>
+<h4>Charts</h4>
+<p>The <code>chart</code> modules are higher level, pre-combined components, making it even easier to quickly create charts.
+All the chart modules are typically constructed from viewpoint, axis and one or more of the other components above.
+Chart modules also generate the <code>&lt;X3D&gt;</code> tag, these should be attached to a regular HTML <code>&lt;div&gt;</code> tag.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+<th>Documentation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>chart.areaChartMultiSeries()</td>
+<td>Multi series Area Chart &amp; Axis</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/areaChartMultiSeries.html">View</a></td>
+</tr>
+<tr>
+<td>chart.barChartMultiSeries()</td>
+<td>Multi series Bar Chart &amp; Axis</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/barChartMultiSeries.html">View</a></td>
+</tr>
+<tr>
+<td>chart.barChartVertical()</td>
+<td>Vertical Bar Chart &amp; Axis</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/barChartVertical.html">View</a></td>
+</tr>
+<tr>
+<td>chart.bubbleChart()</td>
+<td>Bubble Chart &amp; Axis</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/bubbleChart.html">View</a></td>
+</tr>
+<tr>
+<td>chart.donutChart()</td>
+<td>Donut Chart</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/donutChart.html">View</a></td>
+</tr>
+<tr>
+<td>chart.heatMap()</td>
+<td>Heat Map &amp; Axis</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/heatMap.html">View</a></td>
+</tr>
+<tr>
+<td>chart.particlePlot()</td>
+<td>Particle Plot &amp; Axis</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/particlePlot.html">View</a></td>
+</tr>
+<tr>
+<td>chart.ribbonChartMultiSeries()</td>
+<td>Multi series Ribbon Chart</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/ribbonChartMultiSeries.html">View</a></td>
+</tr>
+<tr>
+<td>chart.scatterPlot()</td>
+<td>Scatter Plot &amp; Axis</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/scatterPlot.html">View</a></td>
+</tr>
+<tr>
+<td>chart.spotPlot()</td>
+<td>Spot Plot &amp; Axis</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/spotPlot.html">View</a></td>
+</tr>
+<tr>
+<td>chart.surfacePlot()</td>
+<td>Surface Plot &amp; Axis</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/surfacePlot.html">View</a></td>
+</tr>
+<tr>
+<td>chart.vectorFieldChart()</td>
+<td>Vector Field Chart</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/vectorFieldChart.html">View</a></td>
+</tr>
+<tr>
+<td>chart.volumeSliceChart()</td>
+<td>Volume Slice Chart</td>
+<td><a href="https://jamesleesaunders.github.io/d3-x3d/volumeSliceChart.html">View</a></td>
+</tr>
+</tbody>
+</table>
+<h3><a name="data-structures"></a>Data Structures</h3>
+<p>At its most basic description, the format of the d3-x3d data is a series of key / value pairs. Depending on whether the chart is a single series or multi series chart the data structure differ slightly.</p>
+<h4>Single Series Data</h4>
+<p>Used by charts such as a single series bar chart, the data structure is an object with the following structure:</p>
+<ul>
+<li><code>key</code> {string} - The series name</li>
+<li><code>values</code> {array} - An array of objects containing:
+<ul>
+<li><code>key</code> {string} - The value name</li>
+<li><code>value</code> {number} - The value</li>
+<li><code>x</code> {number} - X axis value*</li>
+<li><code>y</code> {number} - Y axis value*</li>
+<li><code>z</code> {number} - Z axis value*</li>
+</ul>
+</li>
+</ul>
+<p><em>*optional, <code>x</code>, <code>y</code> &amp; <code>z</code> values are used for cartesian coordinate type graphs such as the scatter plot.</em></p>
+<pre class="prettyprint source lang-javascript"><code>var myData = {
+	key: &quot;UK&quot;,
+	values: [
+		{ key: &quot;Apples&quot;, value: 9, x: 1, y: 2, z: 5 },
+		/* ... */
+		{ key: &quot;Bananas&quot;, value: 7, x: 6, y: 3, z: 8 }
+	]
+};
+</code></pre>
+<h4>Multi Series Data</h4>
+<p>Used by charts such as the multi series scatter plot or area chart, the multi series data structure is simply an array of the single series data objects above.</p>
+<pre class="prettyprint source lang-javascript"><code>var myData = [
+	{
+		key: &quot;UK&quot;,
+		values: [
+			{ key: &quot;Apples&quot;, value: 2 },
+			/* ... */
+			{ key: &quot;Bananas&quot;, value: 3 }
+		]
+	},
+	/* ... */
+	{
+		key: &quot;France&quot;,
+		values: [
+			{ key: &quot;Apples&quot;, value: 5 },
+			/* ... */
+			{ key: &quot;Bananas&quot;, value: 9 }
+		]
+	}
+];
+</code></pre>
+<h3>Credits</h3>
+<ul>
+<li>Fabian Dubois - For the original <a href="http://bl.ocks.org/fabid/61cbfe14de686cc25c47/">3D Axis</a>, <a href="https://github.com/fabid/d3-x3dom-shape">Surface Area</a> and <a href="http://bl.ocks.org/fabid/acb5dc4961ffa741b52b">Scatter Plot</a>.</li>
+<li>David Sankel - For the original <a href="http://bl.ocks.org/camio/5087116">Bar Chart</a>.</li>
+<li>Victor Glindås - Various contributions to JSDoc and ES6 standardisation.</li>
+<li>Jefferson Hudson - For contributions to axis labels and transitions.</li>
+<li>Andreas Plesch - For contributing the Area Chart and Components (and generally being an x3dom hero!).</li>
+<li>Holger Seelig - For assistance in integration with <a href="https://create3000.github.io/x_ite/">X_ITE</a>.</li>
+<li>Dahshan &amp; Polys - For permission to use the The Bell Labs Pollen data set on particle plot examples.</li>
+<li>Also see alternative <a href="https://github.com/Niekes/d3-3d">d3-3d</a> by @Niekes.</li>
+</ul></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-accessors.html">accessors</a></li><li><a href="module-arrayUnique.html">arrayUnique</a></li><li><a href="module-base.html">base</a></li><li><a href="module-chart_areaChartMultiSeries.html">chart/areaChartMultiSeries</a></li><li><a href="module-chart_barChartMultiSeries.html">chart/barChartMultiSeries</a></li><li><a href="module-chart_barChartVertical.html">chart/barChartVertical</a></li><li><a href="module-chart_bubbleChart.html">chart/bubbleChart</a></li><li><a href="module-chart_crosshairPlot.html">chart/crosshairPlot</a></li><li><a href="module-chart_donutChart.html">chart/donutChart</a></li><li><a href="module-chart_heatMap.html">chart/heatMap</a></li><li><a href="module-chart_particlePlot.html">chart/particlePlot</a></li><li><a href="module-chart_ribbonChartMultiSeries.html">chart/ribbonChartMultiSeries</a></li><li><a href="module-chart_scatterPlot.html">chart/scatterPlot</a></li><li><a href="module-chart_spotPlot.html">chart/spotPlot</a></li><li><a href="module-chart_surfacePlot.html">chart/surfacePlot</a></li><li><a href="module-chart_vectorFieldChart.html">chart/vectorFieldChart</a></li><li><a href="module-chart_volumeSliceChart.html">chart/volumeSliceChart</a></li><li><a href="module-component_area.html">component/area</a></li><li><a href="module-component_areaMultiSeries.html">component/areaMultiSeries</a></li><li><a href="module-component_axis.html">component/axis</a></li><li><a href="module-component_axisThreePlane.html">component/axisThreePlane</a></li><li><a href="module-component_bars.html">component/bars</a></li><li><a href="module-component_barsMultiSeries.html">component/barsMultiSeries</a></li><li><a href="module-component_bubbles.html">component/bubbles</a></li><li><a href="module-component_bubblesMultiSeries.html">component/bubblesMultiSeries</a></li><li><a href="module-component_crosshair.html">component/crosshair</a></li><li><a href="module-component_donut.html">component/donut</a></li><li><a href="module-component_heatMap.html">component/heatMap</a></li><li><a href="module-component_intersectPlanes.html">component/intersectPlanes</a></li><li><a href="module-component_label.html">component/label</a></li><li><a href="module-component_light.html">component/light</a></li><li><a href="module-component_particles.html">component/particles</a></li><li><a href="module-component_ribbon.html">component/ribbon</a></li><li><a href="module-component_ribbonMultiSeries.html">component/ribbonMultiSeries</a></li><li><a href="module-component_spots.html">component/spots</a></li><li><a href="module-component_spotsMultiSeries.html">component/spotsMultiSeries</a></li><li><a href="module-component_surface.html">component/surface</a></li><li><a href="module-component_vectorFields.html">component/vectorFields</a></li><li><a href="module-component_viewpoint.html">component/viewpoint</a></li><li><a href="module-component_volumeSlice.html">component/volumeSlice</a></li><li><a href="module-dataTransform.html">dataTransform</a></li><li><a href="module-extentsFromMappings.html">extentsFromMappings</a></li></ul><h3>Classes</h3><ul><li><a href="area.html">area</a></li><li><a href="areaMultiSeries.html">areaMultiSeries</a></li><li><a href="axis.html">axis</a></li><li><a href="axisThreePlane.html">axisThreePlane</a></li><li><a href="barChartVertical.html">barChartVertical</a></li><li><a href="bars.html">bars</a></li><li><a href="barsMultiSeries.html">barsMultiSeries</a></li><li><a href="bubbles.html">bubbles</a></li><li><a href="bubblesMultiSeries.html">bubblesMultiSeries</a></li><li><a href="crosshair.html">crosshair</a></li><li><a href="donut.html">donut</a></li><li><a href="donutChart.html">donutChart</a></li><li><a href="heatMap.html">heatMap</a></li><li><a href="intersectPlanes.html">intersectPlanes</a></li><li><a href="label.html">label</a></li><li><a href="light.html">light</a></li><li><a href="particles.html">particles</a></li><li><a href="ribbon.html">ribbon</a></li><li><a href="ribbonMultiSeries.html">ribbonMultiSeries</a></li><li><a href="scatterPlot.html">scatterPlot</a></li><li><a href="spots.html">spots</a></li><li><a href="spotsMultiSeries.html">spotsMultiSeries</a></li><li><a href="surface.html">surface</a></li><li><a href="vectorFieldChart.html">vectorFieldChart</a></li><li><a href="vectorFields.html">vectorFields</a></li><li><a href="viewpoint.html">viewpoint</a></li><li><a href="volumeSlice.html">volumeSlice</a></li><li><a href="volumeSliceChart.html">volumeSliceChart</a></li></ul><h3>Global</h3><ul><li><a href="global.html#assignCoordinateScales">assignCoordinateScales</a></li><li><a href="global.html#assignSeriesScales">assignSeriesScales</a></li><li><a href="global.html#attachEventListners">attachEventListners</a></li><li><a href="global.html#colorNames">colorNames</a></li><li><a href="global.html#colorParse">colorParse</a></li><li><a href="global.html#colourNameToHex">colourNameToHex</a></li><li><a href="global.html#colourNameToX3d">colourNameToX3d</a></li><li><a href="global.html#componentToHex">componentToHex</a></li><li><a href="global.html#convert">convert</a></li><li><a href="global.html#coordinateSeriesData">coordinateSeriesData</a></li><li><a href="global.html#countries">countries</a></li><li><a href="global.html#dataset1">dataset1</a></li><li><a href="global.html#dataset2">dataset2</a></li><li><a href="global.html#dataset3">dataset3</a></li><li><a href="global.html#dataset4">dataset4</a></li><li><a href="global.html#dataset5">dataset5</a></li><li><a href="global.html#dataset6">dataset6</a></li><li><a href="global.html#dispatch">dispatch</a></li><li><a href="global.html#drawIndexedFaceStrip">drawIndexedFaceStrip</a></li><li><a href="global.html#drawSeriesGroups">drawSeriesGroups</a></li><li><a href="global.html#forwardEvent">forwardEvent</a></li><li><a href="global.html#fruit">fruit</a></li><li><a href="global.html#getEventCoordinates">getEventCoordinates</a></li><li><a href="global.html#getEventPagePoint">getEventPagePoint</a></li><li><a href="global.html#getX3domHolder">getX3domHolder</a></li><li><a href="global.html#hexToRgb">hexToRgb</a></li><li><a href="global.html#hexToX3d">hexToX3d</a></li><li><a href="global.html#initColumnPointScales">initColumnPointScales</a></li><li><a href="global.html#initCoordinateScales">initCoordinateScales</a></li><li><a href="global.html#orientSeriesViewpoint">orientSeriesViewpoint</a></li><li><a href="global.html#protoFolder">protoFolder</a></li><li><a href="global.html#randomNum">randomNum</a></li><li><a href="global.html#rgb2Hex">rgb2Hex</a></li><li><a href="global.html#rgbToHex">rgbToHex</a></li><li><a href="global.html#sceneChart">sceneChart</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Wed Nov 04 2026 15:46:56 GMT+0000 (Greenwich Mean Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

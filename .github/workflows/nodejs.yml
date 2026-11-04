@@ -1,0 +1,20 @@
+name: Node CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: macOS-latest
+
+    steps:
+    - uses: actions/checkout@master
+    - name: Use Node.js 19.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 19.x
+    - name: npm install, build, and test
+      run: |
+        npm install
+        npm run build --if-present
+        npm test

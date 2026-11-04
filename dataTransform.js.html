@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: dataTransform.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: dataTransform.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as d3 from "d3";
+import * as d3Curve from "d3-interpolate-curve";
+
+/**
+ * Data Transform
+ *
+ * @module
+ * @returns {Object}
+ */
+export default function dataTransform(data) {
+
+	const SINGLE_SERIES = 1;
+	const MULTI_SERIES = 2;
+	const coordinates = ["x", "y", "z"];
+
+	/**
+	 * Data Type (Single or Multi Series)
+	 *
+	 * @param data
+	 */
+	const dataType = function(data) {
+		return data.key !== undefined ? SINGLE_SERIES : MULTI_SERIES;
+	};
+
+	/************* HELPER FUNCTIONS *******************/
+
+	/**
+	 * Union Two Arrays
+	 *
+	 * @private
+	 * @param {Array} array1 - First Array.
+	 * @param {Array} array2 - Second Array.
+	 * @returns {Array}
+	 */
+	const union = function(array1, array2) {
+		const ret = [];
+		let arr;
+
+		if (array1.length > array2.length) {
+			arr = array2.concat(array1);
+		} else {
+			arr = array1.concat(array2);
+		}
+
+		let len = arr.length;
+		const assoc = {};
+
+		while (len--) {
+			const item = arr[len];
+
+			if (!assoc[item]) {
+				ret.unshift(item);
+				assoc[item] = true;
+			}
+		}
+
+		return ret;
+	};
+
+	/**
+	 * How Many Decimal Places?
+	 *
+	 * @private
+	 * @param {number} num - Float Number.
+	 * @returns {number}
+	 */
+	const decimalPlaces = function(num) {
+		const match = ("" + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+		if (!match) {
+			return 0;
+		}
+
+		return Math.max(
+			0,
+			// Number of digits right of decimal point.
+			(match[1] ? match[1].length : 0)
+			// Adjust for scientific notation.
+			-
+			(match[2] ? +match[2] : 0)
+		);
+	};
+
+	/************* SINGLE SERIES FUNCTIONS ************/
+
+	/**
+	 * Row Key (Single Series)
+	 *
+	 * @returns {Array}
+	 */
+	const singleRowKey = function(data) {
+		return Object.values(data)[0];
+	};
+
+	/**
+	 * Row Total (Single Series)
+	 *
+	 * @returns {number}
+	 */
+	const singleRowTotal = function(data) {
+		return d3.sum(data.values, (d) => d.value);
+	};
+
+	/**
+	 * Row Value Keys (Single Series)
+	 *
+	 * @returns {Array}
+	 */
+	const singleRowValueKeys = function(data) {
+		return data.values.length ? Object.keys(data.values[0]) : [];
+	};
+
+	/**
+	 * Column Keys (Single Series)
+	 *
+	 * @returns {Array}
+	 */
+	const singleColumnKeys = function(data) {
+		return Object.values(data.values).map((d) => d.key);
+	};
+
+	/**
+	 * Value Min (Single Series)
+	 *
+	 * @returns {number}
+	 */
+	const singleValueMin = function(data) {
+		return d3.min(data.values, (d) => +d.value);
+	};
+
+	/**
+	 * Value Max (Single Series)
+	 *
+	 * @returns {number}
+	 */
+	const singleValueMax = function(data) {
+		return d3.max(data.values, (d) => +d.value);
+	};
+
+	/**
+	 * Value Extent (Single Series)
+	 *
+	 * @returns {Array}
+	 */
+	const singleValueExtent = function(data) {
+		return d3.extent(data.values, (d) => +d.value);
+	};
+
+	const reduceCoordinates = function(pick) {
+		return coordinates.reduce((result, coord) => {
+			result[coord] = pick(coord);
+			return result;
+		}, {});
+	};
+
+	const foldCoordinateRows = function(rows, compare) {
+		return rows.reduce((result, row) => {
+			coordinates.forEach((coord) => {
+				result[coord] = (coord in result ? compare(result[coord], +row[coord]) : row[coord]);
+			});
+
+			return result;
+		}, {});
+	};
+
+	const thresholdBands = [0.15, 0.40, 0.55, 0.90];
+
+	const thresholdsBetween = function(min, max, decimalPlace) {
+		const distance = max - min;
+
+		return thresholdBands.map((v) => Number((min + (v * distance)).toFixed(decimalPlace)));
+	};
+
+	/**
+	 * Coordinates Min (Single Series)
+	 *
+	 * @returns {Object}
+	 */
+	const singleCoordinatesMin = function(data) {
+		return reduceCoordinates((coord) => d3.min(data.values, (d) => +d[coord]));
+	};
+
+	/**
+	 * Coordinates Max (Single Series)
+	 *
+	 * @returns {Object}
+	 */
+	const singleCoordinatesMax = function(data) {
+		return reduceCoordinates((coord) => d3.max(data.values, (d) => +d[coord]));
+	};
+
+	/**
+	 * Coordinates Extent (Single Series)
+	 *
+	 * @returns {Object}
+	 */
+	const singleCoordinatesExtent = function(data) {
+		return reduceCoordinates((coord) => d3.extent(data.values, (d) => +d[coord]));
+	};
+
+	/**
+	 * Thresholds (Single Series)
+	 *
+	 * @returns {Array}
+	 */
+	const singleThresholds = function(data) {
+		return thresholdsBetween(singleValueMin(data), singleValueMax(data), singleMaxDecimalPlace(data));
+	};
+
+	/**
+	 * Max Decimal Place (Single Series)
+	 *
+	 * @returns {number}
+	 */
+	const singleMaxDecimalPlace = function(data) {
+		return data.values.reduce((places, d) => {
+			places = d3.max([places, decimalPlaces(d.value)]);
+
+			// toFixed must be between 0 and 20
+			return places > 20 ? 20 : places;
+		}, 0);
+	};
+
+	/**
+	 * Single Series Summary
+	 *
+	 * @returns {Object}
+	 */
+	const singleSummary = function(data) {
+		return {
+			dataType: dataType(data),
+			rowKey: singleRowKey(data),
+			rowTotal: singleRowTotal(data),
+			columnKeys: singleColumnKeys(data),
+			valueMin: singleValueMin(data),
+			valueMax: singleValueMax(data),
+			valueExtent: singleValueExtent(data),
+			coordinatesMin: singleCoordinatesMin(data),
+			coordinatesMax: singleCoordinatesMax(data),
+			coordinatesExtent: singleCoordinatesExtent(data),
+			maxDecimalPlace: singleMaxDecimalPlace(data),
+			thresholds: singleThresholds(data),
+			rowValuesKeys: singleRowValueKeys(data)
+		}
+	};
+
+	/************* MULTI SERIES FUNCTIONS *************/
+
+	/**
+	 * Row Keys (Multi Series)
+	 *
+	 * @returns {Array}
+	 */
+	const multiRowKeys = function(data) {
+		return data.map((d) => d.key);
+	};
+
+	/**
+	 * Row Totals (Multi Series)
+	 *
+	 * @returns {Object}
+	 */
+	const multiRowTotals = function(data) {
+		return data.reduce((totals, row) => {
+			totals[row.key] = singleRowTotal(row);
+			return totals;
+		}, {});
+	};
+
+	/**
+	 * Row Totals Max (Multi Series)
+	 *
+	 * @returns {number}
+	 */
+	const multiRowTotalsMax = function(data) {
+		return d3.max(Object.values(multiRowTotals(data)));
+	};
+
+	/**
+	 * Row Value Keys (Multi Series)
+	 *
+	 * @returns {Array}
+	 */
+	const multiRowValueKeys = function(data) {
+		return data.length ? Object.keys(data[0].values[0]) : [];
+	};
+
+	/**
+	 * Column Keys (Multi Series)
+	 *
+	 * @returns {Array}
+	 */
+	const multiColumnKeys = function(data) {
+		return data.reduce((keys, row) => {
+			const tmp = [];
+			row.values.forEach((d, i) => {
+				tmp[i] = d.key;
+			});
+
+			keys = union(keys, tmp);
+
+			return keys;
+		}, []);
+	};
+
+	/**
+	 * Column Totals (Multi Series)
+	 *
+	 * @returns {Object}
+	 */
+	const multiColumnTotals = function(data) {
+		return data.reduce((totals, row) => {
+			row.values.forEach((d) => {
+				const columnName = d.key;
+				totals[columnName] = (typeof totals[columnName] === "undefined" ? 0 : totals[columnName]);
+				totals[columnName] += d.value;
+			});
+
+			return totals;
+		}, {});
+	};
+
+	/**
+	 * Column Totals Max (Multi Series)
+	 *
+	 * @returns {number}
+	 */
+	const multiColumnTotalsMax = function(data) {
+		return d3.max(Object.values(multiColumnTotals(data)));
+	};
+
+	/**
+	 * Value Min (Multi Series)
+	 *
+	 * @returns {number}
+	 */
+	const multiValueMin = function(data) {
+		return d3.min(data.map((row) => singleValueMin(row)));
+	};
+
+	/**
+	 * Value Max (Multi Series)
+	 *
+	 * @returns {number}
+	 */
+	const multiValueMax = function(data) {
+		return d3.max(data.map((row) => singleValueMax(row)));
+	};
+
+	/**
+	 * Value Extent (Multi Series)
+	 *
+	 * @returns {Array}
+	 */
+	const multiValueExtent = function(data) {
+		return [multiValueMin(data), multiValueMax(data)];
+	};
+
+	/**
+	 * Coordinates Min (Multi Series)
+	 *
+	 * @returns {Object}
+	 */
+	const multiCoordinatesMin = function(data) {
+		return foldCoordinateRows(data.map((row) => singleCoordinatesMin(row)), (left, right) => d3.min([left, right]));
+	};
+
+	/**
+	 * Coordinates Max (Multi Series)
+	 *
+	 * @returns {Object}
+	 */
+	const multiCoordinatesMax = function(data) {
+		return foldCoordinateRows(data.map((row) => singleCoordinatesMax(row)), (left, right) => d3.max([left, right]));
+	};
+
+	/**
+	 * Coordinates Extent (Multi Series)
+	 *
+	 * @returns {Object}
+	 */
+	const multiCoordinatesExtent = function(data) {
+		const minimums = multiCoordinatesMin(data);
+		const maximums = multiCoordinatesMax(data);
+
+		return reduceCoordinates((coord) => [minimums[coord], maximums[coord]]);
+	};
+
+	/**
+	 * Thresholds (Multi Series)
+	 *
+	 * @returns {Array}
+	 */
+	const multiThresholds = function(data) {
+		return thresholdsBetween(multiValueMin(data), multiValueMax(data), multiMaxDecimalPlace(data));
+	};
+
+	/**
+	 * Max Decimal Place (Multi Series)
+	 *
+	 * @returns {number}
+	 */
+	const multiMaxDecimalPlace = function(data) {
+		return d3.max(data.map((d) => singleMaxDecimalPlace(d)));
+	};
+
+	/**
+	 * Multi Series Summary
+	 *
+	 * @returns {Object}
+	 */
+	const multiSummary = function(data) {
+		return {
+			dataType: dataType(data),
+			rowKeys: multiRowKeys(data),
+			rowTotals: multiRowTotals(data),
+			rowTotalsMax: multiRowTotalsMax(data),
+			columnKeys: multiColumnKeys(data),
+			columnTotals: multiColumnTotals(data),
+			columnTotalsMax: multiColumnTotalsMax(data),
+			valueMin: multiValueMin(data),
+			valueMax: multiValueMax(data),
+			valueExtent: multiValueExtent(data),
+			coordinatesMin: multiCoordinatesMin(data),
+			coordinatesMax: multiCoordinatesMax(data),
+			coordinatesExtent: multiCoordinatesExtent(data),
+			maxDecimalPlace: multiMaxDecimalPlace(data),
+			thresholds: multiThresholds(data),
+			rowValuesKeys: multiRowValueKeys(data)
+		}
+	};
+
+	/************* MAIN FUNCTIONS **********************/
+
+	/**
+	 * Summary
+	 *
+	 * @returns {Object}
+	 */
+	const summary = function() {
+		if (dataType(data) === SINGLE_SERIES) {
+			return singleSummary(data);
+		} else {
+			return multiSummary(data);
+		}
+	};
+
+	/**
+	 * Stack Data (for Stacked Bar Chart, Donut Chart)
+	 *
+	 * @returns {Array}
+	 */
+	const stack = function() {
+		const values = [];
+		let y0 = 0;
+		let y1 = 0;
+		data.values.forEach((d, i) => {
+			y1 = y0 + d.value;
+			values[i] = {
+				key: d.key,
+				value: d.value,
+				y0: y0,
+				y1: y1
+			};
+			y0 += d.value;
+		});
+
+		return {
+			key: data.key,
+			values: values
+		};
+	};
+
+	/**
+	 * Rotate Data
+	 *
+	 * @returns {Array}
+	 */
+	const rotate = function() {
+		const columnKeys = data.map((d) => d.key);
+		const rowKeys = data[0].values.map((d) => d.key);
+
+		const rotated = rowKeys.map((rowKey, rowIndex) => {
+			const values = columnKeys.map((columnKey, columnIndex) => {
+				// Copy the values from the original object
+				const values = Object.assign({}, data[columnIndex].values[rowIndex]);
+				// Swap the key over
+				values.key = columnKey;
+
+				return values;
+			});
+
+			return {
+				key: rowKey,
+				values: values
+			};
+		});
+
+		return rotated;
+	};
+
+	/**
+	 * Smooth Data
+	 *
+	 * Returns a copy of the input data series which is subsampled into a 100 samples,
+	 * and has the smoothed values based on a provided d3.curve function.
+	 *
+	 * @param curveFunction
+	 * @returns {{values: *, key: *}}
+	 */
+	const smooth = function(curveFunction, samples = 100) {
+		const epsilon = 0.00001;
+
+		const values = data.values.map((d) => d.value);
+
+		const sampler = d3.range(0, 1, 1 / samples);
+		const keyPolator = (t) => (Number((t * samples).toFixed(0)) + 1);
+
+		const valuePolator = d3Curve.interpolateFromCurve(values, curveFunction, epsilon, samples);
+
+		const smoothed = {
+			key: data.key,
+			values: sampler.map((t) => ({
+				key: keyPolator(t),
+				value: valuePolator(t)
+			}))
+		};
+
+		return smoothed;
+	};
+
+	return {
+		summary: summary,
+		rotate: rotate,
+		stacked: stack,
+		smooth: smooth
+	};
+}
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-accessors.html">accessors</a></li><li><a href="module-arrayUnique.html">arrayUnique</a></li><li><a href="module-base.html">base</a></li><li><a href="module-chart_areaChartMultiSeries.html">chart/areaChartMultiSeries</a></li><li><a href="module-chart_barChartMultiSeries.html">chart/barChartMultiSeries</a></li><li><a href="module-chart_barChartVertical.html">chart/barChartVertical</a></li><li><a href="module-chart_bubbleChart.html">chart/bubbleChart</a></li><li><a href="module-chart_crosshairPlot.html">chart/crosshairPlot</a></li><li><a href="module-chart_donutChart.html">chart/donutChart</a></li><li><a href="module-chart_heatMap.html">chart/heatMap</a></li><li><a href="module-chart_particlePlot.html">chart/particlePlot</a></li><li><a href="module-chart_ribbonChartMultiSeries.html">chart/ribbonChartMultiSeries</a></li><li><a href="module-chart_scatterPlot.html">chart/scatterPlot</a></li><li><a href="module-chart_spotPlot.html">chart/spotPlot</a></li><li><a href="module-chart_surfacePlot.html">chart/surfacePlot</a></li><li><a href="module-chart_vectorFieldChart.html">chart/vectorFieldChart</a></li><li><a href="module-chart_volumeSliceChart.html">chart/volumeSliceChart</a></li><li><a href="module-component_area.html">component/area</a></li><li><a href="module-component_areaMultiSeries.html">component/areaMultiSeries</a></li><li><a href="module-component_axis.html">component/axis</a></li><li><a href="module-component_axisThreePlane.html">component/axisThreePlane</a></li><li><a href="module-component_bars.html">component/bars</a></li><li><a href="module-component_barsMultiSeries.html">component/barsMultiSeries</a></li><li><a href="module-component_bubbles.html">component/bubbles</a></li><li><a href="module-component_bubblesMultiSeries.html">component/bubblesMultiSeries</a></li><li><a href="module-component_crosshair.html">component/crosshair</a></li><li><a href="module-component_donut.html">component/donut</a></li><li><a href="module-component_heatMap.html">component/heatMap</a></li><li><a href="module-component_intersectPlanes.html">component/intersectPlanes</a></li><li><a href="module-component_label.html">component/label</a></li><li><a href="module-component_light.html">component/light</a></li><li><a href="module-component_particles.html">component/particles</a></li><li><a href="module-component_ribbon.html">component/ribbon</a></li><li><a href="module-component_ribbonMultiSeries.html">component/ribbonMultiSeries</a></li><li><a href="module-component_spots.html">component/spots</a></li><li><a href="module-component_spotsMultiSeries.html">component/spotsMultiSeries</a></li><li><a href="module-component_surface.html">component/surface</a></li><li><a href="module-component_vectorFields.html">component/vectorFields</a></li><li><a href="module-component_viewpoint.html">component/viewpoint</a></li><li><a href="module-component_volumeSlice.html">component/volumeSlice</a></li><li><a href="module-dataTransform.html">dataTransform</a></li><li><a href="module-extentsFromMappings.html">extentsFromMappings</a></li></ul><h3>Classes</h3><ul><li><a href="area.html">area</a></li><li><a href="areaMultiSeries.html">areaMultiSeries</a></li><li><a href="axis.html">axis</a></li><li><a href="axisThreePlane.html">axisThreePlane</a></li><li><a href="barChartVertical.html">barChartVertical</a></li><li><a href="bars.html">bars</a></li><li><a href="barsMultiSeries.html">barsMultiSeries</a></li><li><a href="bubbles.html">bubbles</a></li><li><a href="bubblesMultiSeries.html">bubblesMultiSeries</a></li><li><a href="crosshair.html">crosshair</a></li><li><a href="donut.html">donut</a></li><li><a href="donutChart.html">donutChart</a></li><li><a href="heatMap.html">heatMap</a></li><li><a href="intersectPlanes.html">intersectPlanes</a></li><li><a href="label.html">label</a></li><li><a href="light.html">light</a></li><li><a href="particles.html">particles</a></li><li><a href="ribbon.html">ribbon</a></li><li><a href="ribbonMultiSeries.html">ribbonMultiSeries</a></li><li><a href="scatterPlot.html">scatterPlot</a></li><li><a href="spots.html">spots</a></li><li><a href="spotsMultiSeries.html">spotsMultiSeries</a></li><li><a href="surface.html">surface</a></li><li><a href="vectorFieldChart.html">vectorFieldChart</a></li><li><a href="vectorFields.html">vectorFields</a></li><li><a href="viewpoint.html">viewpoint</a></li><li><a href="volumeSlice.html">volumeSlice</a></li><li><a href="volumeSliceChart.html">volumeSliceChart</a></li></ul><h3>Global</h3><ul><li><a href="global.html#assignCoordinateScales">assignCoordinateScales</a></li><li><a href="global.html#assignSeriesScales">assignSeriesScales</a></li><li><a href="global.html#attachEventListners">attachEventListners</a></li><li><a href="global.html#colorNames">colorNames</a></li><li><a href="global.html#colorParse">colorParse</a></li><li><a href="global.html#colourNameToHex">colourNameToHex</a></li><li><a href="global.html#colourNameToX3d">colourNameToX3d</a></li><li><a href="global.html#componentToHex">componentToHex</a></li><li><a href="global.html#convert">convert</a></li><li><a href="global.html#coordinateSeriesData">coordinateSeriesData</a></li><li><a href="global.html#countries">countries</a></li><li><a href="global.html#dataset1">dataset1</a></li><li><a href="global.html#dataset2">dataset2</a></li><li><a href="global.html#dataset3">dataset3</a></li><li><a href="global.html#dataset4">dataset4</a></li><li><a href="global.html#dataset5">dataset5</a></li><li><a href="global.html#dataset6">dataset6</a></li><li><a href="global.html#dispatch">dispatch</a></li><li><a href="global.html#drawIndexedFaceStrip">drawIndexedFaceStrip</a></li><li><a href="global.html#drawSeriesGroups">drawSeriesGroups</a></li><li><a href="global.html#forwardEvent">forwardEvent</a></li><li><a href="global.html#fruit">fruit</a></li><li><a href="global.html#getEventCoordinates">getEventCoordinates</a></li><li><a href="global.html#getEventPagePoint">getEventPagePoint</a></li><li><a href="global.html#getX3domHolder">getX3domHolder</a></li><li><a href="global.html#hexToRgb">hexToRgb</a></li><li><a href="global.html#hexToX3d">hexToX3d</a></li><li><a href="global.html#initColumnPointScales">initColumnPointScales</a></li><li><a href="global.html#initCoordinateScales">initCoordinateScales</a></li><li><a href="global.html#orientSeriesViewpoint">orientSeriesViewpoint</a></li><li><a href="global.html#protoFolder">protoFolder</a></li><li><a href="global.html#randomNum">randomNum</a></li><li><a href="global.html#rgb2Hex">rgb2Hex</a></li><li><a href="global.html#rgbToHex">rgbToHex</a></li><li><a href="global.html#sceneChart">sceneChart</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Wed Nov 04 2026 15:46:56 GMT+0000 (Greenwich Mean Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
