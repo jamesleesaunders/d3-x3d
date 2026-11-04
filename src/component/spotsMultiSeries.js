@@ -1,9 +1,9 @@
 import * as d3 from "d3";
-import dataTransform from "../dataTransform.js";
 import componentSpots from "./spots.js";
 import { arrayUnique } from "../arrayUnique.js";
 import { dispatch } from "../events.js";
 import { attachAccessors } from "../accessors.js";
+import { assignCoordinateScales, coordinateSeriesData } from "./seriesGroup.js";
 
 /**
  * Reusable 3D Multi Series Spot Plot Component
@@ -35,51 +35,18 @@ export default function() {
 		.sizeRange([2, 2]);
 
 	/**
-	 * Unique Array
-	 *
-	 * @param {array} array1
-	 * @param {array} array2
-	 * @returns {array}
-	 */
-	/**
 	 * Initialise Data and Scales
 	 *
 	 * @private
 	 * @param {Array} data - Chart data.
 	 */
 	const init = function(data) {
-		const { rowKeys, valueExtent, coordinatesExtent } = dataTransform(data).summary();
-		const { x: extentX, y: extentY, z: extentZ } = coordinatesExtent;
-		const { x: dimensionX, y: dimensionY, z: dimensionZ } = state.dimensions;
-
-		if (typeof state.xScale === "undefined") {
-			state.xScale = d3.scaleLinear()
-				.domain(extentX)
-				.range([0, dimensionX]);
-		}
-
-		if (typeof state.yScale === "undefined") {
-			state.yScale = d3.scaleLinear()
-				.domain(extentY)
-				.range([0, dimensionY]);
-		}
-
-		if (typeof state.zScale === "undefined") {
-			state.zScale = d3.scaleLinear()
-				.domain(extentZ)
-				.range([0, dimensionZ]);
-		}
+		const rowKeys = assignCoordinateScales(state, data);
 
 		colorDomain = arrayUnique(colorDomain, rowKeys);
 		state.colorScale = d3.scaleOrdinal()
 			.domain(colorDomain)
 			.range(state.colors);
-
-		if (typeof state.sizeScale === "undefined") {
-			state.sizeScale = d3.scaleLinear()
-				.domain(valueExtent)
-				.range(state.sizeRange);
-		}
 	};
 
 	/**
@@ -92,26 +59,6 @@ export default function() {
 	const my = function(selection) {
 		selection.each(function(data) {
 			init(data);
-
-			const spotData = function(d) {
-				return d.map((f) => {
-					return {
-						key: f.key,
-						values: f.values.map((g) => {
-							return {
-								key: g.key,
-								values: [
-									{ key: "size", value: g.value },
-									{ key: "color", value: g.value },
-									{ key: "x", value: g.x },
-									{ key: "y", value: g.y },
-									{ key: "z", value: g.z }
-								]
-							}
-						})
-					};
-				});
-			};
 
 			spots.xScale(state.xScale)
 				.yScale(state.yScale)
@@ -141,7 +88,7 @@ export default function() {
 				let el = d3.select(nodes[i]);
 				el.classed(plane, true)
 				const spotSeries = el.selectAll(".spotSeries")
-					.data(spotData(data), (d) => d.key);
+					.data(coordinateSeriesData(data), (d) => d.key);
 
 				spotSeries.enter()
 					.append("Group")
