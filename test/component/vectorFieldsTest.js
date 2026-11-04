@@ -1,54 +1,125 @@
-import test from "tape";
+import test from "mocha";
+import * as chai from "chai";
 import * as d3 from "d3";
 import d3X3d from "../../index.js"
 
-test("Test Vector Fields Component, component.vectorFields()", function(t) {
+test.describe("Test Vector Fields Component, component.vectorFields()", function() {
 	let vectorFields = d3X3d.component.vectorFields();
 
 	// Test dimensions getter / setter function
-	t.deepEqual(vectorFields.dimensions(), { x: 40, y: 40, z: 40 }, "Default dimensions");
-	vectorFields.dimensions({ x: 10, y: 20, z: 30 });
-	t.deepEqual(vectorFields.dimensions(), { x: 10, y: 20, z: 30 }, "Changed dimensions");
+	test.describe("#dimensions()", function() {
+		test.it("Default dimensions", function(done) {
+			chai.expect(vectorFields.dimensions()).to.be.deep.equal({ x: 40, y: 40, z: 40 });
+			done();
+		});
+		test.it("Changed dimensions", function(done) {
+			vectorFields.dimensions({ x: 10, y: 20, z: 30 });
+			chai.expect(vectorFields.dimensions()).to.be.deep.equal({ x: 10, y: 20, z: 30 });
+			done();
+		});
+	});
 
 	// Test xScale getter / setter function
-	t.equal(vectorFields.xScale(), undefined, "Default xScale is undefined");
-	vectorFields.xScale(0.2);
-	t.equal(vectorFields.xScale(), 0.2, "Changed xScale is set");
+	test.describe("#xScale()", function() {
+		test.it("Default xScale is undefined", function(done) {
+			chai.expect(vectorFields.xScale()).to.be.undefined;
+			done();
+		});
+		test.it("Changed xScale is set", function(done) {
+			vectorFields.xScale(0.2);
+			chai.expect(vectorFields.xScale()).to.equal(0.2);
+			done();
+		});
+	});
 
 	// Test yScale getter / setter function
-	t.equal(vectorFields.yScale(), undefined, "Default yScale is undefined");
-	vectorFields.yScale(0.1);
-	t.equal(vectorFields.yScale(), 0.1, "Changed yScale is set");
+	test.describe("#yScale()", function() {
+		test.it("Default yScale is undefined", function(done) {
+			chai.expect(vectorFields.yScale()).to.be.undefined;
+			done();
+		});
+		test.it("Changed yScale is set", function(done) {
+			vectorFields.yScale(0.1);
+			chai.expect(vectorFields.yScale()).to.equal(0.1);
+			done();
+		});
+	});
 
 	// Test zScale getter / setter function
-	t.equal(vectorFields.zScale(), undefined, "Default zScale is undefined");
-	vectorFields.zScale(0.2);
-	t.equal(vectorFields.zScale(), 0.2, "Changed zScale is set");
+	test.describe("#zScale()", function() {
+		test.it("Default zScale is undefined", function(done) {
+			chai.expect(vectorFields.zScale()).to.be.undefined;
+			done();
+		});
+		test.it("Changed zScale is set", function(done) {
+			vectorFields.zScale(0.2);
+			chai.expect(vectorFields.zScale()).to.equal(0.2);
+			done();
+		});
+	});
 
 	// Test sizeScale getter / setter function
-	t.equal(vectorFields.sizeScale(), undefined, "Default sizeScale is undefined");
-	vectorFields.sizeScale(2);
-	t.equal(vectorFields.sizeScale(), 2, "Changed sizeScale is set");
+	test.describe("#sizeScale()", function() {
+		test.it("Default sizeScale is undefined", function(done) {
+			chai.expect(vectorFields.sizeScale()).to.be.undefined;
+			done();
+		});
+		test.it("Changed sizeScale is set", function(done) {
+			vectorFields.sizeScale(2);
+			chai.expect(vectorFields.sizeScale()).to.equal(2);
+			done();
+		});
+	});
 
 	// Test sizeRange getter / setter function
-	t.deepEqual(vectorFields.sizeRange(), [2.0, 5.0], "Default sizeRange");
-	vectorFields.sizeRange([3.5, 7.0]);
-	t.deepEqual(vectorFields.sizeRange(), [3.5, 7.0], "Changed sizeRange");
+	test.describe("#sizeRange()", function() {
+		test.it("Default sizeRange", function(done) {
+			chai.expect(vectorFields.sizeRange()).to.be.deep.equal([2.0, 5.0]);
+			done();
+		});
+		test.it("Changed sizeRange", function(done) {
+			vectorFields.sizeRange([3.5, 7.0]);
+			chai.expect(vectorFields.sizeRange()).to.be.deep.equal([3.5, 7.0]);
+			done();
+		});
+	});
 
 	// Test colorScale getter / setter function
-	t.equal(vectorFields.colorScale(), undefined, "Default colorScale is undefined");
-	vectorFields.colorScale(2);
-	t.equal(vectorFields.colorScale(), 2, "Changed colorScale is set");
+	test.describe("#colorScale()", function() {
+		test.it("Default colorScale is undefined", function(done) {
+			chai.expect(vectorFields.colorScale()).to.be.undefined;
+			done();
+		});
+		test.it("Changed colorScale is set", function(done) {
+			vectorFields.colorScale(2);
+			chai.expect(vectorFields.colorScale()).to.equal(2);
+			done();
+		});
+	});
 
 	// Test colors getter / setter function
-	t.deepEqual(vectorFields.colors(), ["#d73027", "#f46d43", "#fdae61", "#fee08b", "#d9ef8b", "#a6d96a", "#66bd63", "#1a9850"], "Default colors");
-	vectorFields.colors(d3.schemePurples[4]);
-	t.deepEqual(vectorFields.colors(), ["#f2f0f7", "#cbc9e2", "#9e9ac8", "#6a51a3"], "Changed colors");
+	test.describe("#colors()", function() {
+		test.it("Default colors", function(done) {
+			chai.expect(vectorFields.colors()).to.be.deep.equal(["#d73027", "#f46d43", "#fdae61", "#fee08b", "#d9ef8b", "#a6d96a", "#66bd63", "#1a9850"]);
+			done();
+		});
+		test.it("Changed colors", function(done) {
+			vectorFields.colors(d3.schemePurples[4]);
+			chai.expect(vectorFields.colors()).to.be.deep.equal(["#f2f0f7", "#cbc9e2", "#9e9ac8", "#6a51a3"]);
+			done();
+		});
+	});
 
 	// Test vectorFunction getter / setter function
-	t.equal(typeof vectorFields.vectorFunction(), "function", "Default vectorFunction");
-	vectorFields.vectorFunction(() => "Hello World");
-	t.equal(vectorFields.vectorFunction()(), "Hello World", "Changed vectorFunction");
-
-	t.end();
+	test.describe("#vectorFunction()", function() {
+		test.it("Default vectorFunction", function(done) {
+			chai.expect(vectorFields.vectorFunction()).to.be.a("function");
+			done();
+		});
+		test.it("Changed vectorFunction", function(done) {
+			vectorFields.vectorFunction(() => "Hello World");
+			chai.expect(vectorFields.vectorFunction()()).to.equal("Hello World");
+			done();
+		});
+	});
 });

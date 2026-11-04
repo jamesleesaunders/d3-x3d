@@ -7,7 +7,7 @@ The `dist/d3-x3d.js` and `dist/d3-x3d.css` files are built from source files in 
 Do NOT edit the `dist` files directly, but rather edit the `src` files and then run `make` or `npm test` to generate the `dist` files.
 
 ## Unit Testing
-Note, d3-x3d is currently transitioning unit testing framework from the tape to mocha. Currently running with a combination of the two. All new unit tests should be written using mocha. In time all tape tests should be re-written in mocha.
+Unit tests use [Mocha](https://mochajs.org/) and [Chai](https://www.chaijs.com/). Run them with `npm test`. New tests should use Mocha `describe` / `it` blocks and Chai `expect` assertions.
 
 ## Code Styles
 

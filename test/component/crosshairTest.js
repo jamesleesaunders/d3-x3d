@@ -1,33 +1,72 @@
-import test from "tape";
+import test from "mocha";
+import * as chai from "chai";
 import d3X3d from "../../index.js"
 
-test("Test Crosshair Component, component.crosshair()", function(t) {
+test.describe("Test Crosshair Component, component.crosshair()", function() {
 	let crosshair = d3X3d.component.crosshair();
 
 	// Test dimensions getter / setter function
-	t.deepEqual(crosshair.dimensions(), { x: 40, y: 40, z: 40 }, "Default dimensions");
-	crosshair.dimensions({ x: 10, y: 20, z: 30 });
-	t.deepEqual(crosshair.dimensions(), { x: 10, y: 20, z: 30 }, "Changed dimensions");
+	test.describe("#dimensions()", function() {
+		test.it("Default dimensions", function(done) {
+			chai.expect(crosshair.dimensions()).to.be.deep.equal({ x: 40, y: 40, z: 40 });
+			done();
+		});
+		test.it("Changed dimensions", function(done) {
+			crosshair.dimensions({ x: 10, y: 20, z: 30 });
+			chai.expect(crosshair.dimensions()).to.be.deep.equal({ x: 10, y: 20, z: 30 });
+			done();
+		});
+	});
 
 	// Test xScale getter / setter function
-	t.equal(crosshair.xScale(), undefined, "Default xScale is undefined");
-	crosshair.xScale(5);
-	t.equal(crosshair.xScale(), 5, "Changed xScale is set");
+	test.describe("#xScale()", function() {
+		test.it("Default xScale is undefined", function(done) {
+			chai.expect(crosshair.xScale()).to.be.undefined;
+			done();
+		});
+		test.it("Changed xScale is set", function(done) {
+			crosshair.xScale(5);
+			chai.expect(crosshair.xScale()).to.equal(5);
+			done();
+		});
+	});
 
 	// Test yScale getter / setter function
-	t.equal(crosshair.yScale(), undefined, "Default yScale is undefined");
-	crosshair.yScale(5);
-	t.equal(crosshair.yScale(), 5, "Changed yScale is set");
+	test.describe("#yScale()", function() {
+		test.it("Default yScale is undefined", function(done) {
+			chai.expect(crosshair.yScale()).to.be.undefined;
+			done();
+		});
+		test.it("Changed yScale is set", function(done) {
+			crosshair.yScale(5);
+			chai.expect(crosshair.yScale()).to.equal(5);
+			done();
+		});
+	});
 
 	// Test zScale getter / setter function
-	t.equal(crosshair.zScale(), undefined, "Default zScale is undefined");
-	crosshair.zScale(5);
-	t.equal(crosshair.zScale(), 5, "Changed zScale is set");
+	test.describe("#zScale()", function() {
+		test.it("Default zScale is undefined", function(done) {
+			chai.expect(crosshair.zScale()).to.be.undefined;
+			done();
+		});
+		test.it("Changed zScale is set", function(done) {
+			crosshair.zScale(5);
+			chai.expect(crosshair.zScale()).to.equal(5);
+			done();
+		});
+	});
 
 	// Test colors getter / setter function
-	t.deepEqual(crosshair.colors(), ["blue", "red", "green"], "Default colors");
-	crosshair.colors(["orange", "cyan", "magenta"]);
-	t.deepEqual(crosshair.colors(), ["orange", "cyan", "magenta"], "Changed colors");
-
-	t.end();
+	test.describe("#colors()", function() {
+		test.it("Default colors", function(done) {
+			chai.expect(crosshair.colors()).to.be.deep.equal(["blue", "red", "green"]);
+			done();
+		});
+		test.it("Changed colors", function(done) {
+			crosshair.colors(["orange", "cyan", "magenta"]);
+			chai.expect(crosshair.colors()).to.be.deep.equal(["orange", "cyan", "magenta"]);
+			done();
+		});
+	});
 });
