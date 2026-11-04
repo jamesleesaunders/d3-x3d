@@ -1,38 +1,85 @@
-import test from "tape";
+import test from "mocha";
+import * as chai from "chai";
 import d3X3d from "../../index.js"
 
-test("Test Surface Area Component, component.surface()", function(t) {
+test.describe("Test Surface Area Component, component.surface()", function() {
 	let surfaceArea = d3X3d.component.surface();
 
 	// Test dimensions getter / setter function
-	t.deepEqual(surfaceArea.dimensions(), { x: 40, y: 40, z: 40 }, "Default dimensions");
-	surfaceArea.dimensions({ x: 10, y: 20, z: 30 });
-	t.deepEqual(surfaceArea.dimensions(), { x: 10, y: 20, z: 30 }, "Changed dimensions");
+	test.describe("#dimensions()", function() {
+		test.it("Default dimensions", function(done) {
+			chai.expect(surfaceArea.dimensions()).to.be.deep.equal({ x: 40, y: 40, z: 40 });
+			done();
+		});
+		test.it("Changed dimensions", function(done) {
+			surfaceArea.dimensions({ x: 10, y: 20, z: 30 });
+			chai.expect(surfaceArea.dimensions()).to.be.deep.equal({ x: 10, y: 20, z: 30 });
+			done();
+		});
+	});
 
 	// Test xScale getter / setter function
-	t.equal(surfaceArea.xScale(), undefined, "Default xScale is undefined");
-	surfaceArea.xScale(0.2);
-	t.equal(surfaceArea.xScale(), 0.2, "Changed xScale is set");
+	test.describe("#xScale()", function() {
+		test.it("Default xScale is undefined", function(done) {
+			chai.expect(surfaceArea.xScale()).to.be.undefined;
+			done();
+		});
+		test.it("Changed xScale is set", function(done) {
+			surfaceArea.xScale(0.2);
+			chai.expect(surfaceArea.xScale()).to.equal(0.2);
+			done();
+		});
+	});
 
 	// Test yScale getter / setter function
-	t.equal(surfaceArea.yScale(), undefined, "Default yScale is undefined");
-	surfaceArea.yScale(0.1);
-	t.equal(surfaceArea.yScale(), 0.1, "Changed yScale is set");
+	test.describe("#yScale()", function() {
+		test.it("Default yScale is undefined", function(done) {
+			chai.expect(surfaceArea.yScale()).to.be.undefined;
+			done();
+		});
+		test.it("Changed yScale is set", function(done) {
+			surfaceArea.yScale(0.1);
+			chai.expect(surfaceArea.yScale()).to.equal(0.1);
+			done();
+		});
+	});
 
 	// Test zScale getter / setter function
-	t.equal(surfaceArea.zScale(), undefined, "Default zScale is undefined");
-	surfaceArea.zScale(0.2);
-	t.equal(surfaceArea.zScale(), 0.2, "Changed zScale is set");
+	test.describe("#zScale()", function() {
+		test.it("Default zScale is undefined", function(done) {
+			chai.expect(surfaceArea.zScale()).to.be.undefined;
+			done();
+		});
+		test.it("Changed zScale is set", function(done) {
+			surfaceArea.zScale(0.2);
+			chai.expect(surfaceArea.zScale()).to.equal(0.2);
+			done();
+		});
+	});
 
 	// Test colorScale getter / setter function
-	t.equal(surfaceArea.colorScale(), undefined, "Default colorScale is undefined");
-	surfaceArea.colorScale(2);
-	t.equal(surfaceArea.colorScale(), 2, "Changed colorScale is set");
+	test.describe("#colorScale()", function() {
+		test.it("Default colorScale is undefined", function(done) {
+			chai.expect(surfaceArea.colorScale()).to.be.undefined;
+			done();
+		});
+		test.it("Changed colorScale is set", function(done) {
+			surfaceArea.colorScale(2);
+			chai.expect(surfaceArea.colorScale()).to.equal(2);
+			done();
+		});
+	});
 
 	// Test colors getter / setter function
-	t.deepEqual(surfaceArea.colors(), ["blue", "red"], "Default colors");
-	surfaceArea.colors(["orange", "maroon"]);
-	t.deepEqual(surfaceArea.colors(), ["orange", "maroon"], "Changed colors");
-
-	t.end();
+	test.describe("#colors()", function() {
+		test.it("Default colors", function(done) {
+			chai.expect(surfaceArea.colors()).to.be.deep.equal(["blue", "red"]);
+			done();
+		});
+		test.it("Changed colors", function(done) {
+			surfaceArea.colors(["orange", "maroon"]);
+			chai.expect(surfaceArea.colors()).to.be.deep.equal(["orange", "maroon"]);
+			done();
+		});
+	});
 });

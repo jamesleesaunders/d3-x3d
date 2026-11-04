@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import { attachAccessors } from "../accessors.js";
 
 /**
  * Reusable X3D Light Component
@@ -8,9 +9,11 @@ import * as d3 from "d3";
 export default function() {
 
 	/* Default Properties */
-	let direction = "1 0 -1";
-	let intensity = 0.5;
-	let shadowIntensity = 0;
+	const state = {
+		direction: "1 0 -1",
+		intensity: 0.5,
+		shadowIntensity: 0
+	};
 
 	/**
 	 * Constructor
@@ -27,48 +30,21 @@ export default function() {
 			light.enter()
 				.append("DirectionalLight")
 				.attr("on", true)
-				.attr("direction", direction)
-				.attr("intensity", intensity)
-				.attr("shadowIntensity", shadowIntensity)
+				.attr("direction", state.direction)
+				.attr("intensity", state.intensity)
+				.attr("shadowIntensity", state.shadowIntensity)
 				.merge(light);
 		});
 	};
 
 	/**
-	 * Light Direction Getter / Setter
+	 * Getter / setters. No argument returns the value. One argument sets it and returns the component.
 	 *
-	 * @param {string} _v - Direction vector (e.g. "1 0 -1").
-	 * @returns {*}
+	 * @param {string} direction - Direction vector (e.g. "1 0 -1").
+	 * @param {number} intensity - Intensity value.
+	 * @param {number} shadowIntensity - Intensity value.
 	 */
-	my.direction = function(_v) {
-		if (!arguments.length) return direction;
-		direction = _v;
-		return my;
-	};
-
-	/**
-	 * Light Intensity Getter / Setter
-	 *
-	 * @param {number} _v - Intensity value.
-	 * @returns {*}
-	 */
-	my.intensity = function(_v) {
-		if (!arguments.length) return intensity;
-		intensity = _v;
-		return my;
-	};
-
-	/**
-	 * Shadow Intensity Getter / Setter
-	 *
-	 * @param {number} _v - Intensity value.
-	 * @returns {*}
-	 */
-	my.shadowIntensity = function(_v) {
-		if (!arguments.length) return shadowIntensity;
-		shadowIntensity = _v;
-		return my;
-	};
+	attachAccessors(my, state);
 
 	return my;
 }

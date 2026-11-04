@@ -1,38 +1,85 @@
-import test from "tape";
+import test from "mocha";
+import * as chai from "chai";
 import d3X3d from "../../index.js"
 
-test("Test Multi Series Ribbon Component, component.ribbon()", function(t) {
+test.describe("Test Multi Series Ribbon Component, component.ribbon()", function() {
 	let ribbonMultiSeries = d3X3d.component.ribbonMultiSeries();
 
 	// Test dimensions getter / setter function
-	t.deepEqual(ribbonMultiSeries.dimensions(), { x: 40, y: 40, z: 40 }, "Default dimensions");
-	ribbonMultiSeries.dimensions({ x: 80, y: 40, z: 10 });
-	t.deepEqual(ribbonMultiSeries.dimensions(), { x: 80, y: 40, z: 10 }, "Changed dimensions");
+	test.describe("#dimensions()", function() {
+		test.it("Default dimensions", function(done) {
+			chai.expect(ribbonMultiSeries.dimensions()).to.be.deep.equal({ x: 40, y: 40, z: 40 });
+			done();
+		});
+		test.it("Changed dimensions", function(done) {
+			ribbonMultiSeries.dimensions({ x: 80, y: 40, z: 10 });
+			chai.expect(ribbonMultiSeries.dimensions()).to.be.deep.equal({ x: 80, y: 40, z: 10 });
+			done();
+		});
+	});
 
 	// Test xScale getter / setter function
-	t.equal(ribbonMultiSeries.xScale(), undefined, "Default xScale is undefined");
-	ribbonMultiSeries.xScale(0.2);
-	t.equal(ribbonMultiSeries.xScale(), 0.2, "Changed xScale is set");
+	test.describe("#xScale()", function() {
+		test.it("Default xScale is undefined", function(done) {
+			chai.expect(ribbonMultiSeries.xScale()).to.be.undefined;
+			done();
+		});
+		test.it("Changed xScale is set", function(done) {
+			ribbonMultiSeries.xScale(0.2);
+			chai.expect(ribbonMultiSeries.xScale()).to.equal(0.2);
+			done();
+		});
+	});
 
 	// Test yScale getter / setter function
-	t.equal(ribbonMultiSeries.yScale(), undefined, "Default yScale is undefined");
-	ribbonMultiSeries.yScale(0.1);
-	t.equal(ribbonMultiSeries.yScale(), 0.1, "Changed yScale is set");
+	test.describe("#yScale()", function() {
+		test.it("Default yScale is undefined", function(done) {
+			chai.expect(ribbonMultiSeries.yScale()).to.be.undefined;
+			done();
+		});
+		test.it("Changed yScale is set", function(done) {
+			ribbonMultiSeries.yScale(0.1);
+			chai.expect(ribbonMultiSeries.yScale()).to.equal(0.1);
+			done();
+		});
+	});
 
 	// Test zScale getter / setter function
-	t.equal(ribbonMultiSeries.zScale(), undefined, "Default zScale is undefined");
-	ribbonMultiSeries.zScale(0.1);
-	t.equal(ribbonMultiSeries.zScale(), 0.1, "Changed zScale is set");
+	test.describe("#zScale()", function() {
+		test.it("Default zScale is undefined", function(done) {
+			chai.expect(ribbonMultiSeries.zScale()).to.be.undefined;
+			done();
+		});
+		test.it("Changed zScale is set", function(done) {
+			ribbonMultiSeries.zScale(0.1);
+			chai.expect(ribbonMultiSeries.zScale()).to.equal(0.1);
+			done();
+		});
+	});
 
 	// Test colorScale getter / setter function
-	t.equal(ribbonMultiSeries.colorScale(), undefined, "Default colorScale is undefined");
-	ribbonMultiSeries.colorScale(2);
-	t.equal(ribbonMultiSeries.colorScale(), 2, "Changed colorScale is set");
+	test.describe("#colorScale()", function() {
+		test.it("Default colorScale is undefined", function(done) {
+			chai.expect(ribbonMultiSeries.colorScale()).to.be.undefined;
+			done();
+		});
+		test.it("Changed colorScale is set", function(done) {
+			ribbonMultiSeries.colorScale(2);
+			chai.expect(ribbonMultiSeries.colorScale()).to.equal(2);
+			done();
+		});
+	});
 
 	// Test colors getter / setter function
-	t.deepEqual(ribbonMultiSeries.colors(), ["orange", "red", "yellow", "steelblue", "green"], "Default colors");
-	ribbonMultiSeries.colors(["red", "blue", "orange", "cyna", "green"]);
-	t.deepEqual(ribbonMultiSeries.colors(), ["red", "blue", "orange", "cyna", "green"], "Changed colors");
-
-	t.end();
+	test.describe("#colors()", function() {
+		test.it("Default colors", function(done) {
+			chai.expect(ribbonMultiSeries.colors()).to.be.deep.equal(["orange", "red", "yellow", "steelblue", "green"]);
+			done();
+		});
+		test.it("Changed colors", function(done) {
+			ribbonMultiSeries.colors(["red", "blue", "orange", "cyna", "green"]);
+			chai.expect(ribbonMultiSeries.colors()).to.be.deep.equal(["red", "blue", "orange", "cyna", "green"]);
+			done();
+		});
+	});
 });

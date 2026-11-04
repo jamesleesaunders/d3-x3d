@@ -1,6 +1,6 @@
 {
   "name": "d3-x3d",
-  "version": "2.1.5",
+  "version": "2.2.0",
   "type": "module",
   "description": "3D Data Driven Charting Library with D3 and X3D",
   "license": "GPL-2.0",
@@ -34,26 +34,26 @@
   },
   "scripts": {
     "build": "make",
-    "test": "mocha 'test/*Test.js' && mocha 'test/chart/*Test.js' && tape 'test/component/*Test.js' | tap-spec",
-    "lint": "eslint -c 'config/.eslintrc.json' src",
+    "test": "mocha 'test/*Test.js' 'test/chart/*Test.js' 'test/component/*Test.js'",
+    "lint": "eslint -c config/eslint.config.js src",
     "build:docs": "jsdoc -c config/jsdoc.conf.json",
     "deploy:docs": "npm run build:docs && gh-pages -d docs",
     "prototypes": "node src/prototypes/compilePrototypes.js"
   },
   "dependencies": {
-    "d3": "^7.9.0",
+    "d3": "^7.9.2",
     "d3-interpolate-curve": "^1.0.5",
-    "gl-matrix": "^3.3.0"
+    "gl-matrix": "^3.4.4"
   },
   "devDependencies": {
-    "@babel/core": "7.26.9",
-    "@babel/plugin-syntax-import-assertions": "^7.26.0",
+    "@babel/core": "7.29.7",
+    "@babel/plugin-syntax-import-attributes": "^7.29.7",
     "@babel/plugin-transform-object-assign": "^7.25.9",
-    "@babel/preset-env": "7.26.9",
-    "@rollup/plugin-babel": "^6.0.4",
+    "@babel/preset-env": "7.29.7",
+    "@rollup/plugin-babel": "^7.1.0",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.0",
-    "chai": "^5.2.0",
+    "chai": "^6.3.0",
     "eslint": "^9.21.0",
     "gh-pages": "^6.3.0",
     "jsdoc": "^4.0.4",
@@ -61,8 +61,6 @@
     "mocha": "^11.1.0",
     "rollup": "^4.34.8",
     "svgdom": "^0.1.20",
-    "tap-spec": "^2.2.2",
-    "tape": "^5.9.0",
     "toast-jsdoc": "^1.0.2",
     "uglify-js": "^3.19.3",
     "vows": "^0.8.3"

@@ -145,16 +145,38 @@ export default function dataTransform(data) {
 		return d3.extent(data.values, (d) => +d.value);
 	};
 
+	const reduceCoordinates = function(pick) {
+		return coordinates.reduce((result, coord) => {
+			result[coord] = pick(coord);
+			return result;
+		}, {});
+	};
+
+	const foldCoordinateRows = function(rows, compare) {
+		return rows.reduce((result, row) => {
+			coordinates.forEach((coord) => {
+				result[coord] = (coord in result ? compare(result[coord], +row[coord]) : row[coord]);
+			});
+
+			return result;
+		}, {});
+	};
+
+	const thresholdBands = [0.15, 0.40, 0.55, 0.90];
+
+	const thresholdsBetween = function(min, max, decimalPlace) {
+		const distance = max - min;
+
+		return thresholdBands.map((v) => Number((min + (v * distance)).toFixed(decimalPlace)));
+	};
+
 	/**
 	 * Coordinates Min (Single Series)
 	 *
 	 * @returns {Object}
 	 */
 	const singleCoordinatesMin = function(data) {
-		return coordinates.reduce((maximums, coord) => {
-			maximums[coord] = d3.min(data.values, (d) => +d[coord]);
-			return maximums;
-		}, {});
+		return reduceCoordinates((coord) => d3.min(data.values, (d) => +d[coord]));
 	};
 
 	/**
@@ -163,10 +185,7 @@ export default function dataTransform(data) {
 	 * @returns {Object}
 	 */
 	const singleCoordinatesMax = function(data) {
-		return coordinates.reduce((maximums, coord) => {
-			maximums[coord] = d3.max(data.values, (d) => +d[coord]);
-			return maximums;
-		}, {});
+		return reduceCoordinates((coord) => d3.max(data.values, (d) => +d[coord]));
 	};
 
 	/**
@@ -175,10 +194,7 @@ export default function dataTransform(data) {
 	 * @returns {Object}
 	 */
 	const singleCoordinatesExtent = function(data) {
-		return coordinates.reduce((extents, coord) => {
-			extents[coord] = d3.extent(data.values, (d) => +d[coord]);
-			return extents;
-		}, {});
+		return reduceCoordinates((coord) => d3.extent(data.values, (d) => +d[coord]));
 	};
 
 	/**
@@ -187,12 +203,7 @@ export default function dataTransform(data) {
 	 * @returns {Array}
 	 */
 	const singleThresholds = function(data) {
-		const bands = [0.15, 0.40, 0.55, 0.90];
-		const min = singleValueMin(data);
-		const max = singleValueMax(data);
-		const distance = max - min;
-
-		return bands.map((v) => Number((min + (v * distance)).toFixed(singleMaxDecimalPlace(data))));
+		return thresholdsBetween(singleValueMin(data), singleValueMax(data), singleMaxDecimalPlace(data));
 	};
 
 	/**
@@ -350,13 +361,7 @@ export default function dataTransform(data) {
 	 * @returns {Object}
 	 */
 	const multiCoordinatesMin = function(data) {
-		return data.map((row) => singleCoordinatesMin(row)).reduce((minimums, row) => {
-			coordinates.forEach((coord) => {
-				minimums[coord] = (coord in minimums ? d3.min([minimums[coord], +row[coord]]) : row[coord]);
-			});
-
-			return minimums;
-		}, {});
+		return foldCoordinateRows(data.map((row) => singleCoordinatesMin(row)), (left, right) => d3.min([left, right]));
 	};
 
 	/**
@@ -365,13 +370,7 @@ export default function dataTransform(data) {
 	 * @returns {Object}
 	 */
 	const multiCoordinatesMax = function(data) {
-		return data.map((row) => singleCoordinatesMax(row)).reduce((maximums, row) => {
-			coordinates.forEach((coord) => {
-				maximums[coord] = (coord in maximums ? d3.max([maximums[coord], +row[coord]]) : row[coord]);
-			});
-
-			return maximums;
-		}, {});
+		return foldCoordinateRows(data.map((row) => singleCoordinatesMax(row)), (left, right) => d3.max([left, right]));
 	};
 
 	/**
@@ -380,11 +379,10 @@ export default function dataTransform(data) {
 	 * @returns {Object}
 	 */
 	const multiCoordinatesExtent = function(data) {
-		return coordinates.reduce((extents, coord) => {
-			extents[coord] = [multiCoordinatesMin(data)[coord], multiCoordinatesMax(data)[coord]];
+		const minimums = multiCoordinatesMin(data);
+		const maximums = multiCoordinatesMax(data);
 
-			return extents;
-		}, {});
+		return reduceCoordinates((coord) => [minimums[coord], maximums[coord]]);
 	};
 
 	/**
@@ -393,12 +391,7 @@ export default function dataTransform(data) {
 	 * @returns {Array}
 	 */
 	const multiThresholds = function(data) {
-		const bands = [0.15, 0.40, 0.55, 0.90];
-		const min = multiValueMin(data);
-		const max = multiValueMax(data);
-		const distance = max - min;
-
-		return bands.map((v) => Number((min + (v * distance)).toFixed(multiMaxDecimalPlace(data))));
+		return thresholdsBetween(multiValueMin(data), multiValueMax(data), multiMaxDecimalPlace(data));
 	};
 
 	/**

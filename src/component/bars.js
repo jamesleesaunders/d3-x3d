@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import dataTransform from "../dataTransform.js";
 import { attachEventListners, dispatch } from "../events.js";
 import { colorParse } from "../colorHelper.js";
+import { attachAccessors } from "../accessors.js";
 
 /**
  * Reusable 3D Bar Chart Component
@@ -11,15 +12,15 @@ import { colorParse } from "../colorHelper.js";
 export default function() {
 
 	/* Default Properties */
-	let dimensions = { x: 40, y: 40, z: 2 };
-	let colors = ["orange", "red", "yellow", "steelblue", "green"];
+	const state = {
+		dimensions: { x: 40, y: 40, z: 2 },
+		colors: ["orange", "red", "yellow", "steelblue", "green"],
+		transparency: 0,
+		xScale: undefined,
+		yScale: undefined,
+		colorScale: undefined
+	};
 	let classed = "d3X3dBars";
-	let transparency = 0;
-
-	/* Scales */
-	let xScale;
-	let yScale;
-	let colorScale;
 
 	/**
 	 * Initialise Data and Scales
@@ -30,25 +31,25 @@ export default function() {
 	const init = function(data) {
 		const { columnKeys, valueMax } = dataTransform(data).summary();
 		const valueExtent = [0, valueMax];
-		const { x: dimensionX, y: dimensionY } = dimensions;
+		const { x: dimensionX, y: dimensionY } = state.dimensions;
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleBand()
+		if (typeof state.xScale === "undefined") {
+			state.xScale = d3.scaleBand()
 				.domain(columnKeys)
 				.rangeRound([0, dimensionX])
 				.padding(0.3);
 		}
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
+		if (typeof state.yScale === "undefined") {
+			state.yScale = d3.scaleLinear()
 				.domain(valueExtent)
 				.range([0, dimensionY]);
 		}
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleOrdinal()
+		if (typeof state.colorScale === "undefined") {
+			state.colorScale = d3.scaleOrdinal()
 				.domain(columnKeys)
-				.range(colors);
+				.range(state.colors);
 		}
 	};
 
@@ -79,14 +80,14 @@ export default function() {
 					.append("Material")
 					.attr("diffuseColor", (d) => {
 						// If colour scale is linear then use value for scale.
-						let color = colorScale(d.key);
-						if (typeof colorScale.interpolate === "function") {
-							color = colorScale(d.value);
+						let color = state.colorScale(d.key);
+						if (typeof state.colorScale.interpolate === "function") {
+							color = state.colorScale(d.value);
 						}
 						return colorParse(color);
 					})
 					.attr("ambientIntensity", 0.1)
-					.attr("transparency", transparency);
+					.attr("transparency", state.transparency);
 
 				return shape;
 			};
@@ -101,14 +102,14 @@ export default function() {
 				.merge(bars)
 				.transition()
 				.attr("scale", (d) => {
-					let x = xScale.bandwidth();
-					let y = yScale(d.value);
-					let z = dimensions.z;
+					let x = state.xScale.bandwidth();
+					let y = state.yScale(d.value);
+					let z = state.dimensions.z;
 					return x + " " + y + " " + z;
 				})
 				.attr("translation", (d) => {
-					let x = xScale(d.key);
-					let y = yScale(d.value) / 2;
+					let x = state.xScale(d.key);
+					let y = state.yScale(d.value) / 2;
 					let z = 0.0;
 					return x + " " + y + " " + z;
 				});
@@ -116,78 +117,6 @@ export default function() {
 			bars.exit()
 				.remove();
 		});
-	};
-
-	/**
-	 * Dimensions Getter / Setter
-	 *
-	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-	 * @returns {*}
-	 */
-	my.dimensions = function(_v) {
-		if (!arguments.length) return dimensions;
-		dimensions = _v;
-		return this;
-	};
-
-	/**
-	 * X Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.xScale = function(_v) {
-		if (!arguments.length) return xScale;
-		xScale = _v;
-		return my;
-	};
-
-	/**
-	 * Y Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.yScale = function(_v) {
-		if (!arguments.length) return yScale;
-		yScale = _v;
-		return my;
-	};
-
-	/**
-	 * Color Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.colorScale = function(_v) {
-		if (!arguments.length) return colorScale;
-		colorScale = _v;
-		return my;
-	};
-
-	/**
-	 * Colors Getter / Setter
-	 *
-	 * @param {Array} _v - Array of colours used by color scale.
-	 * @returns {*}
-	 */
-	my.colors = function(_v) {
-		if (!arguments.length) return colors;
-		colors = _v;
-		return my;
-	};
-
-	/**
-	 * Transparency Getter / Setter
-	 *
-	 * @param {Number} _v - Transparency level 0 - 1.
-	 * @returns {*}
-	 */
-	my.transparency = function(_v) {
-		if (!arguments.length) return transparency;
-		transparency = _v;
-		return my;
 	};
 
 	/**
@@ -199,6 +128,18 @@ export default function() {
 		let value = dispatch.on.apply(dispatch, arguments);
 		return value === dispatch ? my : value;
 	};
+
+	/**
+	 * Getter / setters. No argument returns the value. One argument sets it and returns the component.
+	 *
+	 * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+	 * @param {d3.scale} xScale - D3 scale.
+	 * @param {d3.scale} yScale - D3 scale.
+	 * @param {d3.scale} colorScale - D3 scale.
+	 * @param {Array} colors - Array of colours used by color scale.
+	 * @param {Number} transparency - Transparency level 0 - 1.
+	 */
+	attachAccessors(my, state);
 
 	return my;
 }

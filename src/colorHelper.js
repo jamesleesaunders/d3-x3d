@@ -22,8 +22,8 @@ const colorNames = {
 		forestgreen: "#228b22",        fuchsia: "#ff00ff",              gainsboro: "#dcdcdc",
 		ghostwhite: "#f8f8ff",         gold: "#ffd700",                 goldenrod: "#daa520",
 		gray: "#808080",               green: "#008000",                greenyellow: "#adff2f",
-		honeydew: "#f0fff0",           hotpink: "#ff69b4",              indianred : "#cd5c5c",
-		indigo : "#4b0082",            ivory: "#fffff0",                khaki: "#f0e68c",
+		honeydew: "#f0fff0",           hotpink: "#ff69b4",              indianred: "#cd5c5c",
+		indigo: "#4b0082",             ivory: "#fffff0",                khaki: "#f0e68c",
 		lavender: "#e6e6fa",           lavenderblush: "#fff0f5",        lawngreen: "#7cfc00",
 		lemonchiffon: "#fffacd",       lightblue: "#add8e6",            lightcoral: "#f08080",
 		lightcyan: "#e0ffff",          lightgoldenrodyellow: "#fafad2", lightgrey: "#d3d3d3",
@@ -110,7 +110,7 @@ function rgb2Hex(rgbStr) {
  * @returns {*}
  */
 function hexToRgb(hex) {
-	const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+	const result = (/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i).exec(hex);
 	return result ? {
 		r: parseInt(result[1], 16),
 		g: parseInt(result[2], 16),
@@ -153,7 +153,7 @@ export function colorParse(color) {
 	let alpha = 0;
 
 	// Already matches X3D RGB
-	const x3dMatch = /^(0+\.?\d*|1\.?0*)\s+(0+\.?\d*|1\.?0*)\s+(0+\.?\d*|1\.?0*)$/.exec(color);
+	const x3dMatch = (/^(0+\.?\d*|1\.?0*)\s+(0+\.?\d*|1\.?0*)\s+(0+\.?\d*|1\.?0*)$/).exec(color);
 	if (x3dMatch !== null) {
 		red = +x3dMatch[1];
 		green = +x3dMatch[2];
@@ -161,7 +161,7 @@ export function colorParse(color) {
 	}
 
 	// Matches CSS rgb() function
-	const rgbMatch = /^rgb\((\d{1,3}),\s{0,1}(\d{1,3}),\s{0,1}(\d{1,3})\)$/.exec(color);
+	const rgbMatch = (/^rgb\((\d{1,3}),\s{0,1}(\d{1,3}),\s{0,1}(\d{1,3})\)$/).exec(color);
 	if (rgbMatch !== null) {
 		red = rgbMatch[1] / 255.0;
 		green = rgbMatch[2] / 255.0;

@@ -1,33 +1,72 @@
-import test from "tape";
+import test from "mocha";
+import * as chai from "chai";
 import d3X3d from "../../index.js"
 
-test("Test Bars Component, component.bars()", function(t) {
+test.describe("Test Bars Component, component.bars()", function() {
 	let bars = d3X3d.component.bars();
 
 	// Test dimensions getter / setter function
-	t.deepEqual(bars.dimensions(), { x: 40, y: 40, z: 2 }, "Default dimensions");
-	bars.dimensions({ x: 20, y: 20, z: 1 });
-	t.deepEqual(bars.dimensions(), { x: 20, y: 20, z: 1 }, "Changed dimensions");
+	test.describe("#dimensions()", function() {
+		test.it("Default dimensions", function(done) {
+			chai.expect(bars.dimensions()).to.be.deep.equal({ x: 40, y: 40, z: 2 });
+			done();
+		});
+		test.it("Changed dimensions", function(done) {
+			bars.dimensions({ x: 20, y: 20, z: 1 });
+			chai.expect(bars.dimensions()).to.be.deep.equal({ x: 20, y: 20, z: 1 });
+			done();
+		});
+	});
 
 	// Test xScale getter / setter function
-	t.equal(bars.xScale(), undefined, "Default xScale is undefined");
-	bars.xScale(0.2);
-	t.equal(bars.xScale(), 0.2, "Changed xScale is set");
+	test.describe("#xScale()", function() {
+		test.it("Default xScale is undefined", function(done) {
+			chai.expect(bars.xScale()).to.be.undefined;
+			done();
+		});
+		test.it("Changed xScale is set", function(done) {
+			bars.xScale(0.2);
+			chai.expect(bars.xScale()).to.equal(0.2);
+			done();
+		});
+	});
 
 	// Test yScale getter / setter function
-	t.equal(bars.yScale(), undefined, "Default yScale is undefined");
-	bars.yScale(0.1);
-	t.equal(bars.yScale(), 0.1, "Changed yScale is set");
+	test.describe("#yScale()", function() {
+		test.it("Default yScale is undefined", function(done) {
+			chai.expect(bars.yScale()).to.be.undefined;
+			done();
+		});
+		test.it("Changed yScale is set", function(done) {
+			bars.yScale(0.1);
+			chai.expect(bars.yScale()).to.equal(0.1);
+			done();
+		});
+	});
 
 	// Test colorScale getter / setter function
-	t.equal(bars.colorScale(), undefined, "Default colorScale is undefined");
-	bars.colorScale(2);
-	t.equal(bars.colorScale(), 2, "Changed colorScale is set");
+	test.describe("#colorScale()", function() {
+		test.it("Default colorScale is undefined", function(done) {
+			chai.expect(bars.colorScale()).to.be.undefined;
+			done();
+		});
+		test.it("Changed colorScale is set", function(done) {
+			bars.colorScale(2);
+			chai.expect(bars.colorScale()).to.equal(2);
+			done();
+		});
+	});
 
 	// Test colors getter / setter function
-	t.deepEqual(bars.colors(), ["orange", "red", "yellow", "steelblue", "green"], "Default colors");
-	bars.colors(["red", "blue", "orange", "cyan", "green"]);
-	t.deepEqual(bars.colors(), ["red", "blue", "orange", "cyan", "green"], "Changed colors");
-
-	t.end();
+	test.describe("#colors()", function() {
+		test.it("Default colors", function(done) {
+			chai.expect(bars.colors()).to.be.deep.equal(["orange", "red", "yellow", "steelblue", "green"]);
+			done();
+		});
+		test.it("Changed colors", function(done) {
+			bars.colors(["red", "blue", "orange", "cyan", "green"]);
+			chai.expect(bars.colors()).to.be.deep.equal(["red", "blue", "orange", "cyan", "green"]);
+			done();
+		});
+	});
 });

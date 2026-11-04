@@ -31,7 +31,7 @@
 
   var d3__namespace = /*#__PURE__*/_interopNamespaceDefault(d3);
 
-  var version$1="2.1.5";var license$1="GPL-2.0";var packageJson = {version:version$1,license:license$1};
+  var version$1="2.2.0";var license$1="GPL-2.0";var packageJson = {version:version$1,license:license$1};
 
   function _arrayLikeToArray(r, a) {
     (null == a || a > r.length) && (a = r.length);
@@ -40,6 +40,14 @@
   }
   function _arrayWithoutHoles(r) {
     if (Array.isArray(r)) return _arrayLikeToArray(r);
+  }
+  function _defineProperty(e, r, t) {
+    return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
+      value: t,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    }) : e[r] = t, e;
   }
   function _extends() {
     return _extends = Object.assign ? Object.assign.bind() : function (n) {
@@ -56,8 +64,43 @@
   function _nonIterableSpread() {
     throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
   }
+  function ownKeys(e, r) {
+    var t = Object.keys(e);
+    if (Object.getOwnPropertySymbols) {
+      var o = Object.getOwnPropertySymbols(e);
+      r && (o = o.filter(function (r) {
+        return Object.getOwnPropertyDescriptor(e, r).enumerable;
+      })), t.push.apply(t, o);
+    }
+    return t;
+  }
+  function _objectSpread2(e) {
+    for (var r = 1; r < arguments.length; r++) {
+      var t = null != arguments[r] ? arguments[r] : {};
+      r % 2 ? ownKeys(Object(t), true).forEach(function (r) {
+        _defineProperty(e, r, t[r]);
+      }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) {
+        Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r));
+      });
+    }
+    return e;
+  }
   function _toConsumableArray(r) {
     return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread();
+  }
+  function _toPrimitive(t, e) {
+    if ("object" != typeof t || !t) return t;
+    var r;
+    if ("undefined" != typeof Symbol && void 0 !== (r = t[Symbol.toPrimitive])) {
+      var i = r.call(t, e);
+      if ("object" != typeof i) return i;
+      throw new TypeError("@@toPrimitive must return a primitive value.");
+    }
+    return ("string" === e ? String : Number)(t);
+  }
+  function _toPropertyKey(t) {
+    var i = _toPrimitive(t, "string");
+    return "symbol" == typeof i ? i : i + "";
   }
   function _unsupportedIterableToArray(r, a) {
     if (r) {
@@ -305,6 +348,27 @@
         return +d.value;
       });
     };
+    var reduceCoordinates = function reduceCoordinates(pick) {
+      return coordinates.reduce(function (result, coord) {
+        result[coord] = pick(coord);
+        return result;
+      }, {});
+    };
+    var foldCoordinateRows = function foldCoordinateRows(rows, compare) {
+      return rows.reduce(function (result, row) {
+        coordinates.forEach(function (coord) {
+          result[coord] = coord in result ? compare(result[coord], +row[coord]) : row[coord];
+        });
+        return result;
+      }, {});
+    };
+    var thresholdBands = [0.15, 0.40, 0.55, 0.90];
+    var thresholdsBetween = function thresholdsBetween(min, max, decimalPlace) {
+      var distance = max - min;
+      return thresholdBands.map(function (v) {
+        return Number((min + v * distance).toFixed(decimalPlace));
+      });
+    };
 
     /**
      * Coordinates Min (Single Series)
@@ -312,12 +376,11 @@
      * @returns {Object}
      */
     var singleCoordinatesMin = function singleCoordinatesMin(data) {
-      return coordinates.reduce(function (maximums, coord) {
-        maximums[coord] = d3__namespace.min(data.values, function (d) {
+      return reduceCoordinates(function (coord) {
+        return d3__namespace.min(data.values, function (d) {
           return +d[coord];
         });
-        return maximums;
-      }, {});
+      });
     };
 
     /**
@@ -326,12 +389,11 @@
      * @returns {Object}
      */
     var singleCoordinatesMax = function singleCoordinatesMax(data) {
-      return coordinates.reduce(function (maximums, coord) {
-        maximums[coord] = d3__namespace.max(data.values, function (d) {
+      return reduceCoordinates(function (coord) {
+        return d3__namespace.max(data.values, function (d) {
           return +d[coord];
         });
-        return maximums;
-      }, {});
+      });
     };
 
     /**
@@ -340,12 +402,11 @@
      * @returns {Object}
      */
     var singleCoordinatesExtent = function singleCoordinatesExtent(data) {
-      return coordinates.reduce(function (extents, coord) {
-        extents[coord] = d3__namespace.extent(data.values, function (d) {
+      return reduceCoordinates(function (coord) {
+        return d3__namespace.extent(data.values, function (d) {
           return +d[coord];
         });
-        return extents;
-      }, {});
+      });
     };
 
     /**
@@ -354,13 +415,7 @@
      * @returns {Array}
      */
     var singleThresholds = function singleThresholds(data) {
-      var bands = [0.15, 0.40, 0.55, 0.90];
-      var min = singleValueMin(data);
-      var max = singleValueMax(data);
-      var distance = max - min;
-      return bands.map(function (v) {
-        return Number((min + v * distance).toFixed(singleMaxDecimalPlace(data)));
-      });
+      return thresholdsBetween(singleValueMin(data), singleValueMax(data), singleMaxDecimalPlace(data));
     };
 
     /**
@@ -521,14 +576,11 @@
      * @returns {Object}
      */
     var multiCoordinatesMin = function multiCoordinatesMin(data) {
-      return data.map(function (row) {
+      return foldCoordinateRows(data.map(function (row) {
         return singleCoordinatesMin(row);
-      }).reduce(function (minimums, row) {
-        coordinates.forEach(function (coord) {
-          minimums[coord] = coord in minimums ? d3__namespace.min([minimums[coord], +row[coord]]) : row[coord];
-        });
-        return minimums;
-      }, {});
+      }), function (left, right) {
+        return d3__namespace.min([left, right]);
+      });
     };
 
     /**
@@ -537,14 +589,11 @@
      * @returns {Object}
      */
     var multiCoordinatesMax = function multiCoordinatesMax(data) {
-      return data.map(function (row) {
+      return foldCoordinateRows(data.map(function (row) {
         return singleCoordinatesMax(row);
-      }).reduce(function (maximums, row) {
-        coordinates.forEach(function (coord) {
-          maximums[coord] = coord in maximums ? d3__namespace.max([maximums[coord], +row[coord]]) : row[coord];
-        });
-        return maximums;
-      }, {});
+      }), function (left, right) {
+        return d3__namespace.max([left, right]);
+      });
     };
 
     /**
@@ -553,10 +602,11 @@
      * @returns {Object}
      */
     var multiCoordinatesExtent = function multiCoordinatesExtent(data) {
-      return coordinates.reduce(function (extents, coord) {
-        extents[coord] = [multiCoordinatesMin(data)[coord], multiCoordinatesMax(data)[coord]];
-        return extents;
-      }, {});
+      var minimums = multiCoordinatesMin(data);
+      var maximums = multiCoordinatesMax(data);
+      return reduceCoordinates(function (coord) {
+        return [minimums[coord], maximums[coord]];
+      });
     };
 
     /**
@@ -565,13 +615,7 @@
      * @returns {Array}
      */
     var multiThresholds = function multiThresholds(data) {
-      var bands = [0.15, 0.40, 0.55, 0.90];
-      var min = multiValueMin(data);
-      var max = multiValueMax(data);
-      var distance = max - min;
-      return bands.map(function (v) {
-        return Number((min + v * distance).toFixed(multiMaxDecimalPlace(data)));
-      });
+      return thresholdsBetween(multiValueMin(data), multiValueMax(data), multiMaxDecimalPlace(data));
     };
 
     /**
@@ -716,6 +760,28 @@
       stacked: stack,
       smooth: smooth
     };
+  }
+
+  /**
+   * D3-style getter / setter methods.
+   *
+   * For each key of `state`, calling `my[key]()` returns the current value.
+   * Calling `my[key](value)` writes that value and returns `my`.
+   *
+   * @module
+   * @param {Function} my - Component or chart function.
+   * @param {Object} state - Per-instance values. Keys become method names.
+   * @returns {Function} The same component or chart function.
+   */
+  function attachAccessors(my, state) {
+    Object.keys(state).forEach(function (key) {
+      my[key] = function (_v) {
+        if (!arguments.length) return state[key];
+        state[key] = _v;
+        return my;
+      };
+    });
+    return my;
   }
 
   // @formatter:off
@@ -937,25 +1003,86 @@
   });
 
   /**
+   * Draw a strip of quads as an IndexedFaceSet.
+   *
+   * X3DOM rejects an empty IndexedFaceSet, so the node is injected with .html().
+   *
+   * @param {d3.selection} element
+   * @param {Object} state - Component scales, color, dimensions, and curve.
+   * @param {{itemClass: string, transparency: number, quad: Function}} options
+   */
+  function drawIndexedFaceStrip(element, state, options) {
+    var itemClass = options.itemClass,
+      transparency = options.transparency,
+      quad = options.quad;
+    var faceData = function faceData(series) {
+      if (state.smoothed) {
+        series = dataTransform(series).smooth(state.smoothed, 100);
+        var keys = d3__namespace.extent(series.values.map(function (d) {
+          return d.key;
+        }));
+        state.xScale = d3__namespace.scaleLinear().domain(keys).range([0, state.dimensions.x]);
+      }
+      var coords = series.values.map(function (pointThis, indexThis, array) {
+        var indexNext = indexThis + 1;
+        if (indexNext >= array.length) {
+          return null;
+        }
+        return quad(pointThis, array[indexNext]);
+      }).filter(function (d) {
+        return d !== null;
+      });
+      series.point = coords.map(function (d) {
+        return d.join(" ");
+      }).join(" ");
+      series.coordIndex = coords.map(function (d, i) {
+        var offset = i * 4;
+        return [offset, offset + 1, offset + 2, offset + 3, -1].join(" ");
+      }).join(" ");
+      return [series];
+    };
+    var shape = function shape(el) {
+      var node = el.append("Shape");
+      node.html(function (d) {
+        return "\n\t\t\t<IndexedFaceset coordIndex=\"".concat(d.coordIndex, "\" solid=\"false\">\n\t\t\t\t<Coordinate point=\"").concat(d.point, "\"></Coordinate>\n\t\t\t</IndexedFaceset>\n\t\t\t<Appearance>\n\t\t\t\t<Material diffuseColor=\"").concat(colorParse(state.color), "\" transparency=\"").concat(transparency, "\"></Material>\n\t\t\t</Appearance>\n\t\t");
+      });
+    };
+    var items = element.selectAll("." + itemClass).data(function (d) {
+      return faceData(d);
+    }, function (d) {
+      return d.key;
+    });
+    items.enter().append("Group").classed(itemClass, true).call(shape).merge(items);
+    var itemTransition = items.transition().select("Shape");
+    itemTransition.select("IndexedFaceset").attr("coordIndex", function (d) {
+      return d.coordIndex;
+    }).select("Coordinate").attr("point", function (d) {
+      return d.point;
+    });
+    itemTransition.select("Appearance").select("Material").attr("diffuseColor", colorParse(state.color));
+    items.exit().remove();
+  }
+
+  /**
    * Reusable 3D Area Chart Component
    *
    * @module
    */
   function componentArea () {
     /* Default Properties */
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 5
+    var state = {
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 5
+      },
+      color: "blue",
+      smoothed: d3__namespace.curveMonotoneX,
+      xScale: undefined,
+      yScale: undefined
     };
-    var color = "blue";
     var transparency = 0.1;
     var classed = "d3X3dArea";
-    var smoothed = d3__namespace.curveMonotoneX;
-
-    /* Scales */
-    var xScale;
-    var yScale;
 
     /**
      * Initialise Data and Scales
@@ -968,14 +1095,14 @@
         columnKeys = _dataTransform$summar.columnKeys,
         valueMax = _dataTransform$summar.valueMax;
       var valueExtent = [0, valueMax];
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y;
-      if (typeof xScale === "undefined") {
-        xScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionX]);
+      var _state$dimensions = state.dimensions,
+        dimensionX = _state$dimensions.x,
+        dimensionY = _state$dimensions.y;
+      if (typeof state.xScale === "undefined") {
+        state.xScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionX]);
       }
-      if (typeof yScale === "undefined") {
-        yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+      if (typeof state.yScale === "undefined") {
+        state.yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]);
       }
     };
 
@@ -992,142 +1119,175 @@
         var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
         });
-        var areaData = function areaData(data) {
-          var dimensionX = dimensions.x;
-          if (smoothed) {
-            data = dataTransform(data).smooth(smoothed, 100);
-            var keys = d3__namespace.extent(data.values.map(function (d) {
-              return d.key;
-            }));
-            xScale = d3__namespace.scaleLinear().domain(keys).range([0, dimensionX]);
-          }
-          var values = data.values;
-
-          // Convert values into IFS coordinates
-          var coords = values.map(function (pointThis, indexThis, array) {
-            var indexNext = indexThis + 1;
-            if (indexNext >= array.length) {
-              return null;
-            }
-            var pointNext = array[indexNext];
-            var x1 = xScale(pointThis.key);
-            var x2 = xScale(pointNext.key);
-            var y1 = yScale(pointThis.value);
-            var y2 = yScale(pointNext.value);
+        drawIndexedFaceStrip(element, state, {
+          itemClass: "area",
+          transparency: transparency,
+          quad: function quad(pointThis, pointNext) {
+            var x1 = state.xScale(pointThis.key);
+            var x2 = state.xScale(pointNext.key);
+            var y1 = state.yScale(pointThis.value);
+            var y2 = state.yScale(pointNext.value);
             return [x1, 0, 0, x1, y1, 0, x2, y2, 0, x2, 0, 0];
-          }).filter(function (d) {
-            return d !== null;
-          });
-          data.point = coords.map(function (d) {
-            return d.join(" ");
-          }).join(" ");
-          data.coordIndex = coords.map(function (d, i) {
-            var offset = i * 4;
-            return [offset, offset + 1, offset + 2, offset + 3, -1].join(" ");
-          }).join(" ");
-          return [data];
-        };
-        var shape = function shape(el) {
-          var shape = el.append("Shape");
-
-          /*
-          // FIXME: x3dom cannot have empty IFS nodes, we must to use .html() rather than .append() & .attr().
-          shape.append("IndexedFaceset")
-          	.attr("coordIndex", (d) => d.coordIndex)
-          	.append("Coordinate")
-          	.attr("point", (d) => d.point);
-          	shape.append("Appearance")
-          	.append("Material")
-          	.attr("diffuseColor", colorParse(color))
-          	.attr("transparency", transparency);
-          */
-
-          shape.html(function (d) {
-            return "\n\t\t\t\t\t<IndexedFaceset coordIndex=\"".concat(d.coordIndex, "\" solid=\"false\">\n\t\t\t\t\t\t<Coordinate point=\"").concat(d.point, "\"></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<Material diffuseColor=\"").concat(colorParse(color), "\" transparency=\"").concat(transparency, "\"></Material>\n\t\t\t\t\t</Appearance>\n\t\t\t\t");
-          });
-        };
-        var area = element.selectAll(".area").data(function (d) {
-          return areaData(d);
-        }, function (d) {
-          return d.key;
+          }
         });
-        area.enter().append("Group").classed("area", true).call(shape).merge(area);
-        var areaTransition = area.transition().select("Shape");
-        areaTransition.select("IndexedFaceset").attr("coordIndex", function (d) {
-          return d.coordIndex;
-        }).select("Coordinate").attr("point", function (d) {
-          return d.point;
-        });
-        areaTransition.select("Appearance").select("Material").attr("diffuseColor", colorParse(color));
-        area.exit().remove();
       });
     };
 
     /**
-     * Dimensions Getter / Setter
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
      *
-     * @param {{x: {number}, y: {number}, z: {number}}} _v - 3D Object dimensions.
-     * @returns {*}
+     * @param {{x: {number}, y: {number}, z: {number}}} dimensions - 3D Object dimensions.
+     * @param {d3.scale} xScale - D3 scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {string} color - Color (e.g. "red" or "#ff0000").
+     * @param {d3.curve} smoothed
      */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Getter / Setter
-     *
-     * @param {string} _v - Color (e.g. "red" or "#ff0000").
-     * @returns {*}
-     */
-    my.color = function (_v) {
-      if (!arguments.length) return color;
-      color = _v;
-      return my;
-    };
-
-    /**
-     * Smooth Interpolation Getter / Setter
-     *
-     * Options:
-     *   d3.curveBasis
-     *   d3.curveLinear
-     *   d3.curveMonotoneX
-     *
-     * @param {d3.curve} _v.
-     * @returns {*}
-     */
-    my.smoothed = function (_v) {
-      if (!arguments.length) return smoothed;
-      smoothed = _v;
-      return my;
-    };
+    attachAccessors(my, state);
     return my;
+  }
+
+  /**
+   * Concatenate two arrays and keep the first occurrence of each value.
+   *
+   * @module
+   * @param {Array} array1
+   * @param {Array} array2
+   * @returns {Array}
+   */
+  function arrayUnique(array1, array2) {
+    var seen = new Set();
+    var unique = [];
+    array1.concat(array2).forEach(function (item) {
+      if (!seen.has(item)) {
+        seen.add(item);
+        unique.push(item);
+      }
+    });
+    return unique;
+  }
+
+  /**
+   * Build x, y, and z scales from a summary when they are missing.
+   * Pass `overwrite: true` to replace scales on every call.
+   *
+   * @param {Object} state
+   * @param {Array} data
+   * @param {{xScale: Function, yScale: Function, zScale: Function, overwrite: boolean}} scales
+   * @returns {Object} dataTransform summary
+   */
+  function assignSeriesScales(state, data, scales) {
+    var summary = dataTransform(data).summary();
+    var dimensions = state.dimensions;
+    ["xScale", "yScale", "zScale"].forEach(function (key) {
+      if (scales.overwrite || typeof state[key] === "undefined") {
+        state[key] = scales[key](summary, dimensions);
+      }
+    });
+    return summary;
+  }
+
+  /**
+   * Build linear x, y, z, and size scales from coordinate extents when missing.
+   *
+   * @param {Object} state
+   * @param {Array} data
+   * @returns {Array} Row keys
+   */
+  function assignCoordinateScales(state, data) {
+    var _dataTransform$summar = dataTransform(data).summary(),
+      rowKeys = _dataTransform$summar.rowKeys,
+      valueExtent = _dataTransform$summar.valueExtent,
+      coordinatesExtent = _dataTransform$summar.coordinatesExtent;
+    var extentX = coordinatesExtent.x,
+      extentY = coordinatesExtent.y,
+      extentZ = coordinatesExtent.z;
+    var _state$dimensions = state.dimensions,
+      dimensionX = _state$dimensions.x,
+      dimensionY = _state$dimensions.y,
+      dimensionZ = _state$dimensions.z;
+    if (typeof state.xScale === "undefined") {
+      state.xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensionX]);
+    }
+    if (typeof state.yScale === "undefined") {
+      state.yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensionY]);
+    }
+    if (typeof state.zScale === "undefined") {
+      state.zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensionZ]);
+    }
+    if (typeof state.sizeScale === "undefined") {
+      state.sizeScale = d3__namespace.scaleLinear().domain(valueExtent).range(state.sizeRange);
+    }
+    return rowKeys;
+  }
+
+  /**
+   * Reshape `{ value, x, y, z }` points into mapped `{ key, value }` pairs.
+   *
+   * @param {Array} data
+   * @returns {Array}
+   */
+  function coordinateSeriesData(data) {
+    return data.map(function (series) {
+      return {
+        key: series.key,
+        values: series.values.map(function (point) {
+          return {
+            key: point.key,
+            values: [{
+              key: "size",
+              value: point.value
+            }, {
+              key: "color",
+              value: point.value
+            }, {
+              key: "x",
+              value: point.x
+            }, {
+              key: "y",
+              value: point.y
+            }, {
+              key: "z",
+              value: point.z
+            }]
+          };
+        })
+      };
+    });
+  }
+
+  /**
+   * Place one translated group per series and draw the inner component into it.
+   *
+   * @param {d3.selection} element
+   * @param {Object} state
+   * @param {{groupClass: string, mark: Function, configure: Function, colorBySeries: boolean}} options
+   */
+  function drawSeriesGroups(element, state, options) {
+    var groupClass = options.groupClass,
+      mark = options.mark,
+      configure = options.configure,
+      colorBySeries = options.colorBySeries;
+    mark.xScale(state.xScale).yScale(state.yScale).dimensions({
+      x: state.dimensions.x,
+      y: state.dimensions.y,
+      z: state.zScale.bandwidth()
+    });
+    if (configure) configure(mark);
+    var groups = element.selectAll("." + groupClass).data(function (d) {
+      return d;
+    }, function (d) {
+      return d.key;
+    });
+    groups.enter().append("Transform").classed(groupClass, true).merge(groups).transition().attr("translation", function (d) {
+      var x = 0;
+      var y = 0;
+      var z = state.zScale(d.key);
+      return x + " " + y + " " + z;
+    }).each(function (d) {
+      if (colorBySeries) mark.color(state.colorScale(d.key));
+      d3__namespace.select(this).call(mark);
+    });
+    groups.exit().remove();
   }
 
   /**
@@ -1137,44 +1297,26 @@
    */
   function componentAreaMultiSeries () {
     /* Default Properties */
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      colors: ["orange", "red", "yellow", "steelblue", "green"],
+      smoothed: d3__namespace.curveMonotoneX,
+      xScale: undefined,
+      yScale: undefined,
+      zScale: undefined,
+      colorScale: undefined
     };
-    var colors = ["orange", "red", "yellow", "steelblue", "green"];
     var classed = "d3X3dAreaMultiSeries";
-    var smoothed = d3__namespace.curveMonotoneX;
 
     /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-    var colorScale;
     var colorDomain = [];
 
     /* Components */
     var area = componentArea();
-
-    /**
-     * Unique Array
-     *
-     * @param {array} array1
-     * @param {array} array2
-     * @returns {array}
-     */
-    var arrayUnique = function arrayUnique(array1, array2) {
-      var array = array1.concat(array2);
-      var a = array.concat();
-      for (var i = 0; i < a.length; ++i) {
-        for (var j = i + 1; j < a.length; ++j) {
-          if (a[i] === a[j]) {
-            a.splice(j--, 1);
-          }
-        }
-      }
-      return a;
-    };
 
     /**
      * Initialise Data and Scales
@@ -1183,27 +1325,20 @@
      * @param {Array} data - Chart data.
      */
     var init = function init(data) {
-      var _dataTransform$summar = dataTransform(data).summary(),
-        rowKeys = _dataTransform$summar.rowKeys,
-        columnKeys = _dataTransform$summar.columnKeys,
-        valueMax = _dataTransform$summar.valueMax;
-      var valueExtent = [0, valueMax];
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y,
-        dimensionZ = _dimensions.z;
-      if (typeof xScale === "undefined") {
-        xScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionX]);
-      }
-      if (typeof yScale === "undefined") {
-        yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]);
-      }
-      if (typeof zScale === "undefined") {
-        zScale = d3__namespace.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
-      }
-      if (typeof colorScale === "undefined") {
-        colorDomain = arrayUnique(colorDomain, rowKeys);
-        colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(colors);
+      var summary = assignSeriesScales(state, data, {
+        xScale: function xScale(seriesSummary, dimensions) {
+          return d3__namespace.scalePoint().domain(seriesSummary.columnKeys).range([0, dimensions.x]);
+        },
+        yScale: function yScale(seriesSummary, dimensions) {
+          return d3__namespace.scaleLinear().domain([0, seriesSummary.valueMax]).range([0, dimensions.y]);
+        },
+        zScale: function zScale(seriesSummary, dimensions) {
+          return d3__namespace.scaleBand().domain(seriesSummary.rowKeys).range([0, dimensions.z]).padding(0.4);
+        }
+      });
+      if (typeof state.colorScale === "undefined") {
+        colorDomain = arrayUnique(colorDomain, summary.rowKeys);
+        state.colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(state.colors);
       }
     };
 
@@ -1218,119 +1353,29 @@
       selection.each(function (data) {
         init(data);
         var element = d3__namespace.select(this).classed(classed, true);
-        area.xScale(xScale).yScale(yScale).dimensions({
-          x: dimensions.x,
-          y: dimensions.y,
-          z: zScale.bandwidth()
-        }).smoothed(smoothed);
-        var addArea = function addArea(d) {
-          var color = colorScale(d.key);
-          area.color(color);
-          d3__namespace.select(this).call(area);
-        };
-        var areaGroup = element.selectAll(".areaGroup").data(function (d) {
-          return d;
-        }, function (d) {
-          return d.key;
+        drawSeriesGroups(element, state, {
+          groupClass: "areaGroup",
+          mark: area,
+          configure: function configure(mark) {
+            return mark.smoothed(state.smoothed);
+          },
+          colorBySeries: true
         });
-        areaGroup.enter().append("Transform").classed("areaGroup", true).merge(areaGroup).transition().attr("translation", function (d) {
-          var x = 0;
-          var y = 0;
-          var z = zScale(d.key);
-          return x + " " + y + " " + z;
-        }).each(addArea);
-        areaGroup.exit().remove();
       });
     };
 
     /**
-     * Dimensions Getter / Setter
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
      *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {d3.scale} xScale - D3 scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {d3.scale} zScale - D3 scale.
+     * @param {d3.scale} colorScale - D3 color scale.
+     * @param {Array} colors - Array of colours used by color scale.
+     * @param {d3.curve} smoothed
      */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
-
-    /**
-     * Smooth Interpolation Getter / Setter
-     *
-     * Options:
-     *   d3.curveBasis
-     *   d3.curveLinear
-     *   d3.curveMonotoneX
-     *
-     * @param {d3.curve} _v.
-     * @returns {*}
-     */
-    my.smoothed = function (_v) {
-      if (!arguments.length) return smoothed;
-      smoothed = _v;
-      return my;
-    };
+    attachAccessors(my, state);
     return my;
   }
 
@@ -1341,25 +1386,25 @@
    */
   function componentAxis () {
     /* Default Properties */
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      color: "black",
+      scale: undefined,
+      direction: undefined,
+      tickDirection: undefined,
+      tickArguments: [],
+      tickValues: null,
+      tickFormat: null,
+      tickSize: 1.5,
+      tickPadding: 2.0
     };
-    var color = "black";
     var classed = "d3X3dAxis";
     var labelPosition = "proximal";
     var labelInset = labelPosition === "distal" ? 1 : -1;
-
-    /* Scale and Axis Options */
-    var scale;
-    var direction;
-    var tickDirection;
-    var tickArguments = [];
-    var tickValues = null;
-    var tickFormat = null;
-    var tickSize = 1.5;
-    var tickPadding = 2.0;
 
     /**
      * Get Axis Direction Vector
@@ -1403,24 +1448,24 @@
     var my = function my(selection) {
       selection.each(function () {
         var element = d3__namespace.select(this).classed(classed, true);
-        var range = scale.range();
+        var range = state.scale.range();
         var range0 = range[0];
         var range1 = range[range.length - 1];
-        var axisDirectionVector = getAxisDirectionVector(direction);
-        var tickDirectionVector = getAxisDirectionVector(tickDirection);
-        var axisRotationVector = getAxisRotationVector(direction);
-        var tickRotationVector = getAxisRotationVector(tickDirection);
+        var axisDirectionVector = getAxisDirectionVector(state.direction);
+        var tickDirectionVector = getAxisDirectionVector(state.tickDirection);
+        var axisRotationVector = getAxisRotationVector(state.direction);
+        var tickRotationVector = getAxisRotationVector(state.tickDirection);
 
         /*
         // FIXME: Currently the tickArguments option does not work.
         const tickValuesDefault = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
         tickValues = tickValues === null ? tickValuesDefault : tickValues;
         */
-        tickValues = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
-        var tickFormatDefault = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : function (d) {
+        state.tickValues = state.scale.ticks ? state.scale.ticks.apply(state.scale, state.tickArguments) : state.scale.domain();
+        var tickFormatDefault = state.scale.tickFormat ? state.scale.tickFormat.apply(state.scale, state.tickArguments) : function (d) {
           return d;
         };
-        tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
+        state.tickFormat = state.tickFormat === null ? tickFormatDefault : state.tickFormat;
         var makeSolid = function makeSolid(el, color) {
           el.append("Appearance").append("Material").attr("diffuseColor", colorParse(color) || "0 0 0").attr("transparency", "0");
         };
@@ -1434,173 +1479,53 @@
         var domain = element.selectAll(".domain").data([null]);
         domain.enter().append("Transform").attr("class", "domain").attr("rotation", axisRotationVector.join(" ")).attr("translation", axisDirectionVector.map(function (d) {
           return d * (range0 + range1) / 2;
-        }).join(" ")).call(shape, 0.1, range1 - range0, color).merge(domain);
+        }).join(" ")).call(shape, 0.1, range1 - range0, state.color).merge(domain);
         domain.exit().remove();
 
         // Tick Lines
-        var ticks = element.selectAll(".tickLine").data(tickValues, function (d) {
+        var ticks = element.selectAll(".tickLine").data(state.tickValues, function (d) {
           return d;
         });
         ticks.enter().append("Transform").attr("class", "tickLine").attr("translation", function (t) {
           return axisDirectionVector.map(function (a) {
-            return scale(t) * a;
+            return state.scale(t) * a;
           }).join(" ");
         }).append("Transform").attr("translation", tickDirectionVector.map(function (d) {
-          return d * tickSize / 2;
-        }).join(" ")).attr("rotation", tickRotationVector.join(" ")).call(shape, 0.05, tickSize, "#f3f3f3").merge(ticks);
+          return d * state.tickSize / 2;
+        }).join(" ")).attr("rotation", tickRotationVector.join(" ")).call(shape, 0.05, state.tickSize, "#f3f3f3").merge(ticks);
         ticks.transition().attr("translation", function (t) {
           return axisDirectionVector.map(function (a) {
-            return scale(t) * a;
+            return state.scale(t) * a;
           }).join(" ");
         });
         ticks.exit().remove();
 
         // Tick Labels
-        var labels = element.selectAll(".tickLabel").data(tickValues, function (d) {
+        var labels = element.selectAll(".tickLabel").data(state.tickValues, function (d) {
           return d;
         });
         labels.enter().append("Transform").attr("class", "tickLabel").attr("translation", function (t) {
           return axisDirectionVector.map(function (a) {
-            return scale(t) * a;
+            return state.scale(t) * a;
           }).join(" ");
         }).append("Transform").attr("translation", tickDirectionVector.map(function (d, i) {
-          return labelInset * d * tickPadding + (labelInset + 1) / 2 * tickSize * tickDirectionVector[i];
+          return labelInset * d * state.tickPadding + (labelInset + 1) / 2 * state.tickSize * tickDirectionVector[i];
         })).append("Billboard").attr("axisOfRotation", "0 0 0").append("Shape").call(makeSolid, "black").append("Text").attr("string", function (d) {
-          return "\"".concat(tickFormat(d), "\"");
+          return "\"".concat(state.tickFormat(d), "\"");
         }).append("FontStyle").attr("size", 1.3).attr("family", "\"SANS\"").attr("style", "BOLD").attr("justify", "\"MIDDLE\" \"MIDDLE\"").merge(labels);
         labels.transition().attr("translation", function (t) {
           return axisDirectionVector.map(function (a) {
-            return scale(t) * a;
+            return state.scale(t) * a;
           }).join(" ");
         }).select("Transform").attr("translation", tickDirectionVector.map(function (d, i) {
-          return labelInset * d * tickPadding + (labelInset + 1) / 2 * tickSize * tickDirectionVector[i];
+          return labelInset * d * state.tickPadding + (labelInset + 1) / 2 * state.tickSize * tickDirectionVector[i];
         })).on("start", function () {
           d3__namespace.select(this).select("Billboard").select("Shape").select("Text").attr("string", function (d) {
-            return "\"".concat(tickFormat(d), "\"");
+            return "\"".concat(state.tickFormat(d), "\"");
           });
         });
         labels.exit().remove();
       });
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return my;
-    };
-
-    /**
-     * Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 Scale.
-     * @returns {*}
-     */
-    my.scale = function (_v) {
-      if (!arguments.length) return scale;
-      scale = _v;
-      return my;
-    };
-
-    /**
-     * Direction Getter / Setter
-     *
-     * @param {string} _v - Direction of Axis (e.g. "x", "y", "z").
-     * @returns {*}
-     */
-    my.direction = function (_v) {
-      if (!arguments.length) return direction;
-      direction = _v;
-      return my;
-    };
-
-    /**
-     * Tick Direction Getter / Setter
-     *
-     * @param {string} _v - Direction of Ticks (e.g. "x", "y", "z").
-     * @returns {*}
-     */
-    my.tickDirection = function (_v) {
-      if (!arguments.length) return tickDirection;
-      tickDirection = _v;
-      return my;
-    };
-
-    /**
-     * Tick Arguments Getter / Setter
-     *
-     * @param {Array} _v - Tick arguments.
-     * @returns {Array<*>}
-     */
-    my.tickArguments = function (_v) {
-      if (!arguments.length) return tickArguments;
-      tickArguments = _v;
-      return my;
-    };
-
-    /**
-     * Tick Values Getter / Setter
-     *
-     * @param {Array} _v - Tick values.
-     * @returns {*}
-     */
-    my.tickValues = function (_v) {
-      if (!arguments.length) return tickValues;
-      tickValues = _v;
-      return my;
-    };
-
-    /**
-     * Tick Format Getter / Setter
-     *
-     * @param {string} _v - Tick format.
-     * @returns {*}
-     */
-    my.tickFormat = function (_v) {
-      if (!arguments.length) return tickFormat;
-      tickFormat = _v;
-      return my;
-    };
-
-    /**
-     * Tick Size Getter / Setter
-     *
-     * @param {number} _v - Tick length.
-     * @returns {*}
-     */
-    my.tickSize = function (_v) {
-      if (!arguments.length) return tickSize;
-      tickSize = _v;
-      return my;
-    };
-
-    /**
-     * Tick Padding Getter / Setter
-     *
-     * @param {number} _v - Tick padding size.
-     * @returns {*}
-     */
-    my.tickPadding = function (_v) {
-      if (!arguments.length) return tickPadding;
-      tickPadding = _v;
-      return my;
-    };
-
-    /**
-     * Color Getter / Setter
-     *
-     * @param {string} _v - Color (e.g. "red" or "#ff0000").
-     * @returns {*}
-     */
-    my.color = function (_v) {
-      if (!arguments.length) return color;
-      color = _v;
-      return my;
     };
 
     /**
@@ -1615,6 +1540,22 @@
       labelInset = labelPosition === "distal" ? 1 : -1;
       return my;
     };
+
+    /**
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
+     *
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {d3.scale} scale - D3 Scale.
+     * @param {string} direction - Direction of Axis (e.g. "x", "y", "z").
+     * @param {string} tickDirection - Direction of Ticks (e.g. "x", "y", "z").
+     * @param {Array} tickArguments - Tick arguments.
+     * @param {Array} tickValues - Tick values.
+     * @param {string} tickFormat - Tick format.
+     * @param {number} tickSize - Tick length.
+     * @param {number} tickPadding - Tick padding size.
+     * @param {string} color - Color (e.g. "red" or "#ff0000").
+     */
+    attachAccessors(my, state);
     return my;
   }
 
@@ -1625,19 +1566,19 @@
    */
   function componentAxisThreePlane () {
     /* Default Properties */
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      colors: ["blue", "red", "green"],
+      labelPosition: "proximal",
+      xScale: undefined,
+      yScale: undefined,
+      zScale: undefined
     };
-    var colors = ["blue", "red", "green"];
     var classed = "d3X3dAxisThreePlane";
-    var labelPosition = "proximal";
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
 
     /* Components */
     var xzAxis = componentAxis();
@@ -1659,15 +1600,15 @@
         element.selectAll("group").data(layers).enter().append("Group").attr("class", function (d) {
           return d;
         });
-        xzAxis.scale(xScale).direction("x").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color(colors[0]).labelPosition(labelPosition);
-        yzAxis.scale(yScale).direction("y").tickDirection("z").tickSize(zScale.range()[1] - zScale.range()[0]).color(colors[1]).labelPosition(labelPosition);
-        yxAxis.scale(yScale).direction("y").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color(colors[1]).labelPosition(labelPosition);
-        zxAxis.scale(zScale).direction("z").tickDirection("x").tickSize(xScale.range()[1] - xScale.range()[0]).color(colors[2]).labelPosition(labelPosition);
+        xzAxis.scale(state.xScale).direction("x").tickDirection("z").tickSize(state.zScale.range()[1] - state.zScale.range()[0]).color(state.colors[0]).labelPosition(state.labelPosition);
+        yzAxis.scale(state.yScale).direction("y").tickDirection("z").tickSize(state.zScale.range()[1] - state.zScale.range()[0]).color(state.colors[1]).labelPosition(state.labelPosition);
+        yxAxis.scale(state.yScale).direction("y").tickDirection("x").tickSize(state.xScale.range()[1] - state.xScale.range()[0]).color(state.colors[1]).labelPosition(state.labelPosition);
+        zxAxis.scale(state.zScale).direction("z").tickDirection("x").tickSize(state.xScale.range()[1] - state.xScale.range()[0]).color(state.colors[2]).labelPosition(state.labelPosition);
 
         // We only want 2 sets of labels on the y axis if they are in distal position.
-        if (labelPosition === "proximal") {
+        if (state.labelPosition === "proximal") {
           // Make the tickFormat return nothing (i.e hide text).
-          yxAxis.tickFormat(function (d) {
+          yxAxis.tickFormat(function () {
             return "";
           });
         } else {
@@ -1682,76 +1623,16 @@
     };
 
     /**
-     * Dimensions Getter / Setter
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
      *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {d3.scale} xScale - D3 scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {d3.scale} zScale - D3 scale.
+     * @param {Array} colors - Array of colours used by color scale.
+     * @param {string} labelPosition - Position ("proximal" or "distal")
      */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
-
-    /**
-     * Label Position Getter / Setter
-     *
-     * @param {string} _v - Position ("proximal" or "distal")
-     * @returns {*}
-     */
-    my.labelPosition = function (_v) {
-      if (!arguments.length) return labelPosition;
-      labelPosition = _v;
-      return my;
-    };
+    attachAccessors(my, state);
     return my;
   }
 
@@ -1868,17 +1749,11 @@
    * @returns {*}
    */
   function getX3domHolder(event) {
-    var target = d3__namespace.select(event.target);
-    var x3d = target.select(function () {
-      var el = this;
-      while (el.nodeName.toLowerCase() !== "x3d") {
-        el = el.parentElement;
-      }
-      return el;
-    });
-    return x3d.select(function () {
-      return this.parentNode;
-    }).node();
+    var node = event.target;
+    while (node.nodeName.toLowerCase() !== "x3d") {
+      node = node.parentElement;
+    }
+    return node.parentNode;
   }
 
   var events = /*#__PURE__*/Object.freeze({
@@ -1898,19 +1773,19 @@
    */
   function componentBars () {
     /* Default Properties */
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 2
+    var state = {
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 2
+      },
+      colors: ["orange", "red", "yellow", "steelblue", "green"],
+      transparency: 0,
+      xScale: undefined,
+      yScale: undefined,
+      colorScale: undefined
     };
-    var colors = ["orange", "red", "yellow", "steelblue", "green"];
     var classed = "d3X3dBars";
-    var transparency = 0;
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var colorScale;
 
     /**
      * Initialise Data and Scales
@@ -1923,17 +1798,17 @@
         columnKeys = _dataTransform$summar.columnKeys,
         valueMax = _dataTransform$summar.valueMax;
       var valueExtent = [0, valueMax];
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y;
-      if (typeof xScale === "undefined") {
-        xScale = d3__namespace.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.3);
+      var _state$dimensions = state.dimensions,
+        dimensionX = _state$dimensions.x,
+        dimensionY = _state$dimensions.y;
+      if (typeof state.xScale === "undefined") {
+        state.xScale = d3__namespace.scaleBand().domain(columnKeys).rangeRound([0, dimensionX]).padding(0.3);
       }
-      if (typeof yScale === "undefined") {
-        yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+      if (typeof state.yScale === "undefined") {
+        state.yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]);
       }
-      if (typeof colorScale === "undefined") {
-        colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
+      if (typeof state.colorScale === "undefined") {
+        state.colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(state.colors);
       }
     };
 
@@ -1956,12 +1831,12 @@
           shape.append("Box").attr("size", "1.0 1.0 1.0");
           shape.append("Appearance").append("Material").attr("diffuseColor", function (d) {
             // If colour scale is linear then use value for scale.
-            var color = colorScale(d.key);
-            if (typeof colorScale.interpolate === "function") {
-              color = colorScale(d.value);
+            var color = state.colorScale(d.key);
+            if (typeof state.colorScale.interpolate === "function") {
+              color = state.colorScale(d.value);
             }
             return colorParse(color);
-          }).attr("ambientIntensity", 0.1).attr("transparency", transparency);
+          }).attr("ambientIntensity", 0.1).attr("transparency", state.transparency);
           return shape;
         };
         var bars = element.selectAll(".bar").data(function (d) {
@@ -1970,90 +1845,18 @@
           return d.key;
         });
         bars.enter().append("Transform").classed("bar", true).call(shape).merge(bars).transition().attr("scale", function (d) {
-          var x = xScale.bandwidth();
-          var y = yScale(d.value);
-          var z = dimensions.z;
+          var x = state.xScale.bandwidth();
+          var y = state.yScale(d.value);
+          var z = state.dimensions.z;
           return x + " " + y + " " + z;
         }).attr("translation", function (d) {
-          var x = xScale(d.key);
-          var y = yScale(d.value) / 2;
+          var x = state.xScale(d.key);
+          var y = state.yScale(d.value) / 2;
           var z = 0.0;
           return x + " " + y + " " + z;
         });
         bars.exit().remove();
       });
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
-
-    /**
-     * Transparency Getter / Setter
-     *
-     * @param {Number} _v - Transparency level 0 - 1.
-     * @returns {*}
-     */
-    my.transparency = function (_v) {
-      if (!arguments.length) return transparency;
-      transparency = _v;
-      return my;
     };
 
     /**
@@ -2065,6 +1868,18 @@
       var value = dispatch.on.apply(dispatch, arguments);
       return value === dispatch ? my : value;
     };
+
+    /**
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
+     *
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {d3.scale} xScale - D3 scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {d3.scale} colorScale - D3 scale.
+     * @param {Array} colors - Array of colours used by color scale.
+     * @param {Number} transparency - Transparency level 0 - 1.
+     */
+    attachAccessors(my, state);
     return my;
   }
 
@@ -2075,19 +1890,19 @@
    */
   function componentBarsMultiSeries () {
     /* Default Properties */
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      colors: ["orange", "red", "yellow", "steelblue", "green"],
+      xScale: undefined,
+      yScale: undefined,
+      zScale: undefined,
+      colorScale: undefined
     };
-    var colors = ["orange", "red", "yellow", "steelblue", "green"];
     var classed = "d3X3dBarsMultiSeries";
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-    var colorScale;
 
     /* Components */
     var bars = componentBars();
@@ -2099,26 +1914,19 @@
      * @param {Array} data - Chart data.
      */
     var init = function init(data) {
-      var _dataTransform$summar = dataTransform(data).summary(),
-        rowKeys = _dataTransform$summar.rowKeys,
-        columnKeys = _dataTransform$summar.columnKeys,
-        valueMax = _dataTransform$summar.valueMax;
-      var valueExtent = [0, valueMax];
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y,
-        dimensionZ = _dimensions.z;
-      if (typeof xScale === "undefined") {
-        xScale = d3__namespace.scaleBand().domain(columnKeys).range([0, dimensionX]).padding(0.5);
-      }
-      if (typeof yScale === "undefined") {
-        yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-      }
-      if (typeof zScale === "undefined") {
-        zScale = d3__namespace.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.7);
-      }
-      if (typeof colorScale === "undefined") {
-        colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
+      var summary = assignSeriesScales(state, data, {
+        xScale: function xScale(seriesSummary, dimensions) {
+          return d3__namespace.scaleBand().domain(seriesSummary.columnKeys).range([0, dimensions.x]).padding(0.5);
+        },
+        yScale: function yScale(seriesSummary, dimensions) {
+          return d3__namespace.scaleLinear().domain([0, seriesSummary.valueMax]).range([0, dimensions.y]).nice();
+        },
+        zScale: function zScale(seriesSummary, dimensions) {
+          return d3__namespace.scaleBand().domain(seriesSummary.rowKeys).range([0, dimensions.z]).padding(0.7);
+        }
+      });
+      if (typeof state.colorScale === "undefined") {
+        state.colorScale = d3__namespace.scaleOrdinal().domain(summary.columnKeys).range(state.colors);
       }
     };
 
@@ -2133,100 +1941,28 @@
       selection.each(function (data) {
         init(data);
         var element = d3__namespace.select(this).classed(classed, true);
-        bars.xScale(xScale).yScale(yScale).dimensions({
-          x: dimensions.x,
-          y: dimensions.y,
-          z: zScale.bandwidth()
-        }).colors(colors);
-        var addBars = function addBars() {
-          d3__namespace.select(this).call(bars);
-        };
-        var barGroup = element.selectAll(".barGroup").data(function (d) {
-          return d;
-        }, function (d) {
-          return d.key;
+        drawSeriesGroups(element, state, {
+          groupClass: "barGroup",
+          mark: bars,
+          configure: function configure(mark) {
+            return mark.colors(state.colors);
+          },
+          colorBySeries: false
         });
-        barGroup.enter().append("Transform").classed("barGroup", true).merge(barGroup).transition().attr("translation", function (d) {
-          var x = 0;
-          var y = 0;
-          var z = zScale(d.key);
-          return x + " " + y + " " + z;
-        }).each(addBars);
-        barGroup.exit().remove();
       });
     };
 
     /**
-     * Dimensions Getter / Setter
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
      *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {d3.scale} xScale - D3 scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {d3.scale} zScale - D3 scale.
+     * @param {d3.scale} colorScale - D3 color scale.
+     * @param {Array} colors - Array of colours used by color scale.
      */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
+    attachAccessors(my, state);
     return my;
   }
 
@@ -2237,23 +1973,23 @@
    */
   function componentBubbles () {
     /* Default Properties */
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      colors: d3__namespace.schemeRdYlGn[8],
+      color: undefined,
+      mappings: undefined,
+      xScale: undefined,
+      yScale: undefined,
+      zScale: undefined,
+      colorScale: undefined,
+      sizeScale: undefined,
+      sizeRange: [0.2, 4.0]
     };
-    var colors = d3__namespace.schemeRdYlGn[8];
-    var color;
     var classed = "d3X3dBubbles";
-    var mappings;
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-    var colorScale;
-    var sizeScale;
-    var sizeRange = [0.2, 4.0];
 
     /**
      * Initialise Data and Scales
@@ -2269,7 +2005,7 @@
           values: []
         };
         data.values.forEach(function (d) {
-          var key = mappings[dimension];
+          var key = state.mappings[dimension];
           var value = d.values.find(function (v) {
             return v.key === key;
           }).value;
@@ -2285,22 +2021,22 @@
       var extentZ = newData.z.valueExtent;
       var extentSize = newData.size.valueExtent;
       var extentColor = newData.color.valueExtent;
-      if (typeof xScale === "undefined") {
-        xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensions.x]);
+      if (typeof state.xScale === "undefined") {
+        state.xScale = d3__namespace.scaleLinear().domain(extentX).range([0, state.dimensions.x]);
       }
-      if (typeof yScale === "undefined") {
-        yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensions.y]);
+      if (typeof state.yScale === "undefined") {
+        state.yScale = d3__namespace.scaleLinear().domain(extentY).range([0, state.dimensions.y]);
       }
-      if (typeof zScale === "undefined") {
-        zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensions.z]);
+      if (typeof state.zScale === "undefined") {
+        state.zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, state.dimensions.z]);
       }
-      if (typeof sizeScale === "undefined") {
-        sizeScale = d3__namespace.scaleLinear().domain(extentSize).range(sizeRange);
+      if (typeof state.sizeScale === "undefined") {
+        state.sizeScale = d3__namespace.scaleLinear().domain(extentSize).range(state.sizeRange);
       }
-      if (color) {
-        colorScale = d3__namespace.scaleQuantize().domain(extentColor).range([color, color]);
-      } else if (typeof colorScale === "undefined") {
-        colorScale = d3__namespace.scaleQuantize().domain(extentColor).range(colors);
+      if (state.color) {
+        state.colorScale = d3__namespace.scaleQuantize().domain(extentColor).range([state.color, state.color]);
+      } else if (typeof state.colorScale === "undefined") {
+        state.colorScale = d3__namespace.scaleQuantize().domain(extentColor).range(state.colors);
       }
     };
 
@@ -2322,15 +2058,15 @@
           attachEventListners(shape);
           shape.append("Sphere").attr("radius", function (d) {
             var sizeVal = d.values.find(function (v) {
-              return v.key === mappings.size;
+              return v.key === state.mappings.size;
             }).value;
-            return sizeScale(sizeVal);
+            return state.sizeScale(sizeVal);
           });
           shape.append("Appearance").append("Material").attr("diffuseColor", function (d) {
             var colorVal = d.values.find(function (v) {
-              return v.key === mappings.color;
+              return v.key === state.mappings.color;
             }).value;
-            return colorParse(colorScale(colorVal));
+            return colorParse(state.colorScale(colorVal));
           }).attr("ambientIntensity", 0.1);
           return shape;
         };
@@ -2343,150 +2079,30 @@
         var bubblesTransition = bubblesEnter.transition();
         bubblesTransition.attr("translation", function (d) {
           var xVal = d.values.find(function (v) {
-            return v.key === mappings.x;
+            return v.key === state.mappings.x;
           }).value;
           var yVal = d.values.find(function (v) {
-            return v.key === mappings.y;
+            return v.key === state.mappings.y;
           }).value;
           var zVal = d.values.find(function (v) {
-            return v.key === mappings.z;
+            return v.key === state.mappings.z;
           }).value;
-          return xScale(xVal) + " " + yScale(yVal) + " " + zScale(zVal);
+          return state.xScale(xVal) + " " + state.yScale(yVal) + " " + state.zScale(zVal);
         });
         bubblesTransition.select("Shape").select("Sphere").attr("radius", function (d) {
           var sizeVal = d.values.find(function (v) {
-            return v.key === mappings.size;
+            return v.key === state.mappings.size;
           }).value;
-          return sizeScale(sizeVal);
+          return state.sizeScale(sizeVal);
         });
         bubblesTransition.select("Shape").select("Appearance").select("Material").attr("diffuseColor", function (d) {
           var colorVal = d.values.find(function (v) {
-            return v.key === mappings.color;
+            return v.key === state.mappings.color;
           }).value;
-          return colorParse(colorScale(colorVal));
+          return colorParse(state.colorScale(colorVal));
         });
         bubbles.exit().remove();
       });
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Size Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 size scale.
-     * @returns {*}
-     */
-    my.sizeScale = function (_v) {
-      if (!arguments.length) return sizeScale;
-      sizeScale = _v;
-      return my;
-    };
-
-    /**
-     * Size Range Getter / Setter
-     *
-     * @param {number[]} _v - Size min and max (e.g. [1, 9]).
-     * @returns {*}
-     */
-    my.sizeRange = function (_v) {
-      if (!arguments.length) return sizeRange;
-      sizeRange = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Getter / Setter
-     *
-     * @param {string} _v - Color (e.g. "red" or "#ff0000").
-     * @returns {*}
-     */
-    my.color = function (_v) {
-      if (!arguments.length) return color;
-      color = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
-
-    /**
-     * Mappings Getter / Setter
-     *
-     * @param {Object} _v - Map properties to size, colour etc.
-     * @returns {*}
-     */
-    my.mappings = function (_v) {
-      if (!arguments.length) return mappings;
-      mappings = _v;
-      return my;
     };
 
     /**
@@ -2498,6 +2114,22 @@
       var value = dispatch.on.apply(dispatch, arguments);
       return value === dispatch ? my : value;
     };
+
+    /**
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
+     *
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {d3.scale} xScale - D3 scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {d3.scale} zScale - D3 scale.
+     * @param {d3.scale} sizeScale - D3 size scale.
+     * @param {number[]} sizeRange - Size min and max (e.g. [1, 9]).
+     * @param {d3.scale} colorScale - D3 color scale.
+     * @param {string} color - Color (e.g. "red" or "#ff0000").
+     * @param {Array} colors - Array of colours used by color scale.
+     * @param {Object} mappings - Map properties to size, colour etc.
+     */
+    attachAccessors(my, state);
     return my;
   }
 
@@ -2508,22 +2140,24 @@
    */
   function componentBubblesMultiSeries () {
     /* Default Properties */
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      colors: ["green", "red", "yellow", "steelblue", "orange"],
+      xScale: undefined,
+      yScale: undefined,
+      zScale: undefined,
+      colorScale: undefined,
+      sizeScale: undefined,
+      sizeRange: [0.5, 3.0]
     };
-    var colors = ["green", "red", "yellow", "steelblue", "orange"];
     var classed = "d3X3dBubblesMultiSeries";
 
     /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-    var colorScale;
     var colorDomain = [];
-    var sizeScale;
-    var sizeRange = [0.5, 3.0];
 
     /* Components */
     var bubbles = componentBubbles().mappings({
@@ -2535,57 +2169,15 @@
     }).colors(d3__namespace.schemeRdYlGn[8]).sizeRange([2, 2]);
 
     /**
-     * Unique Array
-     *
-     * @param {array} array1
-     * @param {array} array2
-     * @returns {array}
-     */
-    var arrayUnique = function arrayUnique(array1, array2) {
-      var array = array1.concat(array2);
-      var a = array.concat();
-      for (var i = 0; i < a.length; ++i) {
-        for (var j = i + 1; j < a.length; ++j) {
-          if (a[i] === a[j]) {
-            a.splice(j--, 1);
-          }
-        }
-      }
-      return a;
-    };
-
-    /**
      * Initialise Data and Scales
      *
      * @private
      * @param {Array} data - Chart data.
      */
     var init = function init(data) {
-      var _dataTransform$summar = dataTransform(data).summary(),
-        rowKeys = _dataTransform$summar.rowKeys,
-        valueExtent = _dataTransform$summar.valueExtent,
-        coordinatesExtent = _dataTransform$summar.coordinatesExtent;
-      var extentX = coordinatesExtent.x,
-        extentY = coordinatesExtent.y,
-        extentZ = coordinatesExtent.z;
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y,
-        dimensionZ = _dimensions.z;
-      if (typeof xScale === "undefined") {
-        xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensionX]);
-      }
-      if (typeof yScale === "undefined") {
-        yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensionY]);
-      }
-      if (typeof zScale === "undefined") {
-        zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensionZ]);
-      }
+      var rowKeys = assignCoordinateScales(state, data);
       colorDomain = arrayUnique(colorDomain, rowKeys);
-      colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(colors);
-      if (typeof sizeScale === "undefined") {
-        sizeScale = d3__namespace.scaleLinear().domain(valueExtent).range(sizeRange);
-      }
+      state.colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(state.colors);
     };
 
     /**
@@ -2598,143 +2190,19 @@
     var my = function my(selection) {
       selection.each(function (data) {
         init(data);
-        var bubbleData = function bubbleData(d) {
-          return d.map(function (f) {
-            return {
-              key: f.key,
-              values: f.values.map(function (g) {
-                return {
-                  key: g.key,
-                  values: [{
-                    key: "size",
-                    value: g.value
-                  }, {
-                    key: "color",
-                    value: g.value
-                  }, {
-                    key: "x",
-                    value: g.x
-                  }, {
-                    key: "y",
-                    value: g.y
-                  }, {
-                    key: "z",
-                    value: g.z
-                  }]
-                };
-              })
-            };
-          });
-        };
         var element = d3__namespace.select(this).classed(classed, true);
-        bubbles.xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale);
+        bubbles.xScale(state.xScale).yScale(state.yScale).zScale(state.zScale).sizeScale(state.sizeScale);
         var addBubbles = function addBubbles(d) {
-          var color = colorScale(d.key);
+          var color = state.colorScale(d.key);
           bubbles.color(color);
           d3__namespace.select(this).call(bubbles);
         };
-        var bubbleGroup = element.selectAll(".bubbleGroup").data(bubbleData, function (d) {
+        var bubbleGroup = element.selectAll(".bubbleGroup").data(coordinateSeriesData, function (d) {
           return d.key;
         });
         bubbleGroup.enter().append("Group").classed("bubbleGroup", true).merge(bubbleGroup).transition().each(addBubbles);
         bubbleGroup.exit().remove();
       });
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 Scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 Scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Size Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 size scale.
-     * @returns {*}
-     */
-    my.sizeScale = function (_v) {
-      if (!arguments.length) return sizeScale;
-      sizeScale = _v;
-      return my;
-    };
-
-    /**
-     * Size Range Getter / Setter
-     *
-     * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
-     * @returns {*}
-     */
-    my.sizeRange = function (_v) {
-      if (!arguments.length) return sizeRange;
-      sizeRange = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
     };
 
     /**
@@ -2746,6 +2214,20 @@
       var value = dispatch.on.apply(dispatch, arguments);
       return value === dispatch ? my : value;
     };
+
+    /**
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
+     *
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {d3.scale} xScale - D3 Scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {d3.scale} zScale - D3 Scale.
+     * @param {d3.scale} colorScale - D3 color scale.
+     * @param {d3.scale} sizeScale - D3 size scale.
+     * @param {number[]} sizeRange - Size min and max (e.g. [0.5, 3.0]).
+     * @param {Array} colors - Array of colours used by color scale.
+     */
+    attachAccessors(my, state);
     return my;
   }
 
@@ -2756,19 +2238,19 @@
    */
   function componentCrosshair () {
     /* Default Properties */
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      colors: ["blue", "red", "green"],
+      xScale: undefined,
+      yScale: undefined,
+      zScale: undefined
     };
-    var colors = ["blue", "red", "green"];
     var classed = "d3X3dCrosshair";
     var radius = 0.1;
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
 
     /**
      * Constructor
@@ -2782,15 +2264,15 @@
         var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
         });
-        dimensions.x = xScale ? Math.max.apply(Math, _toConsumableArray(xScale.range())) : dimensions.x;
-        dimensions.y = yScale ? Math.max.apply(Math, _toConsumableArray(yScale.range())) : dimensions.y;
-        dimensions.z = zScale ? Math.max.apply(Math, _toConsumableArray(zScale.range())) : dimensions.z;
-        var xOff = dimensions.x / 2;
-        var yOff = dimensions.y / 2;
-        var zOff = dimensions.z / 2;
-        var xVal = xScale(data.x);
-        var yVal = yScale(data.y);
-        var zVal = zScale(data.z);
+        state.dimensions.x = state.xScale ? Math.max.apply(Math, _toConsumableArray(state.xScale.range())) : state.dimensions.x;
+        state.dimensions.y = state.yScale ? Math.max.apply(Math, _toConsumableArray(state.yScale.range())) : state.dimensions.y;
+        state.dimensions.z = state.zScale ? Math.max.apply(Math, _toConsumableArray(state.zScale.range())) : state.dimensions.z;
+        var xOff = state.dimensions.x / 2;
+        var yOff = state.dimensions.y / 2;
+        var zOff = state.dimensions.z / 2;
+        var xVal = state.xScale(data.x);
+        var yVal = state.yScale(data.y);
+        var zVal = state.zScale(data.z);
         function getPositionVector(axisDir) {
           var positionVectors = {
             x: [xOff, yVal, zVal],
@@ -2807,7 +2289,7 @@
           };
           return rotationVectors[axisDir];
         }
-        var colorScale = d3__namespace.scaleOrdinal().domain(Object.keys(dimensions)).range(colors);
+        var colorScale = d3__namespace.scaleOrdinal().domain(Object.keys(state.dimensions)).range(state.colors);
 
         // Origin Ball
         var ballSelect = element.selectAll(".ball").data([data]);
@@ -2818,14 +2300,14 @@
         ballSelect.transition().ease(d3__namespace.easeQuadOut).attr("translation", "".concat(xVal, " ").concat(yVal, " ").concat(zVal));
 
         // Crosshair Lines
-        var lineSelect = element.selectAll(".line").data(Object.keys(dimensions));
+        var lineSelect = element.selectAll(".line").data(Object.keys(state.dimensions));
         var line = lineSelect.enter().append("Transform").classed("line", true).attr("translation", function (d) {
           return getPositionVector(d).join(" ");
         }).attr("rotation", function (d) {
           return getRotationVector(d).join(" ");
         }).append("Shape");
         line.append("cylinder").attr("radius", radius).attr("height", function (d) {
-          return dimensions[d];
+          return state.dimensions[d];
         });
         line.append("Appearance").append("Material").attr("diffuseColor", function (d) {
           return colorParse(colorScale(d));
@@ -2838,64 +2320,15 @@
     };
 
     /**
-     * Dimensions Getter / Setter
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
      *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {d3.scale} xScale - D3 scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {d3.scale} zScale - D3 scale.
+     * @param {Array} colors - Array of colours used by color scale.
      */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
+    attachAccessors(my, state);
     return my;
   }
 
@@ -2906,18 +2339,20 @@
    */
   function componentDonut () {
     /* Default Properties */
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      colors: ["orange", "red", "yellow", "steelblue", "green"],
+      xScale: undefined,
+      yScale: undefined,
+      colorScale: undefined
     };
-    var colors = ["orange", "red", "yellow", "steelblue", "green"];
     var classed = "d3X3dDonut";
 
     /* Scales */
-    var xScale;
-    var yScale;
-    var colorScale;
     var colorDomain = [];
 
     /**
@@ -2927,19 +2362,6 @@
      * @param {array} array2
      * @returns {array}
      */
-    var arrayUnique = function arrayUnique(array1, array2) {
-      var array = array1.concat(array2);
-      var a = array.concat();
-      for (var i = 0; i < a.length; ++i) {
-        for (var j = i + 1; j < a.length; ++j) {
-          if (a[i] === a[j]) {
-            a.splice(j--, 1);
-          }
-        }
-      }
-      return a;
-    };
-
     /**
      * Initialise Data and Scales
      *
@@ -2950,10 +2372,10 @@
       var _dataTransform$summar = dataTransform(data).summary(),
         columnKeys = _dataTransform$summar.columnKeys,
         rowTotal = _dataTransform$summar.rowTotal;
-      xScale = d3__namespace.scaleLinear().domain([0, rowTotal]).range([0, Math.PI * 2]);
-      yScale = d3__namespace.scaleLinear().domain([0, rowTotal]).range([Math.PI * 2, 0]);
+      state.xScale = d3__namespace.scaleLinear().domain([0, rowTotal]).range([0, Math.PI * 2]);
+      state.yScale = d3__namespace.scaleLinear().domain([0, rowTotal]).range([Math.PI * 2, 0]);
       colorDomain = arrayUnique(colorDomain, columnKeys);
-      colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(colors);
+      state.colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(state.colors);
     };
 
     /**
@@ -2966,10 +2388,10 @@
     var my = function my(selection) {
       selection.each(function (data) {
         init(data);
-        var _dimensions = dimensions,
-          dimensionX = _dimensions.x,
-          dimensionY = _dimensions.y,
-          dimensionZ = _dimensions.z;
+        var _state$dimensions = state.dimensions,
+          dimensionX = _state$dimensions.x,
+          dimensionY = _state$dimensions.y,
+          dimensionZ = _state$dimensions.z;
         var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
         });
@@ -2977,13 +2399,13 @@
           var shape = el.append("Shape");
           attachEventListners(shape);
           shape.append("Torus").attr("containerField", "geometry").attr("angle", function (d) {
-            return xScale(d.value);
+            return state.xScale(d.value);
           }).attr("innerRadius", 0.25).attr("outerRadius", 1).attr("useGeoCache", false).attr("subdivision", "48,48");
           shape.append("Appearance").append("Material").attr("diffuseColor", function (d) {
             // If colour scale is linear then use value for scale.
-            var color = colorScale(d.key);
-            if (typeof colorScale.interpolate === "function") {
-              color = colorScale(d.value);
+            var color = state.colorScale(d.key);
+            if (typeof state.colorScale.interpolate === "function") {
+              color = state.colorScale(d.value);
             }
             return colorParse(color);
           });
@@ -3000,73 +2422,13 @@
             return d / 2;
           }).join(" ");
         }).attr("rotation", function (d) {
-          return [0, 0, 1, yScale(d.y0)].join(" ");
+          return [0, 0, 1, state.yScale(d.y0)].join(" ");
         });
         sectorsTransition.select("Shape").select("Torus").attr("angle", function (d) {
-          return xScale(d.value);
+          return state.xScale(d.value);
         });
         sectors.exit().remove();
       });
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
     };
 
     /**
@@ -3078,6 +2440,17 @@
       var value = dispatch.on.apply(dispatch, arguments);
       return value === dispatch ? my : value;
     };
+
+    /**
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
+     *
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {d3.scale} xScale - D3 scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {d3.scale} colorScale - D3 scale.
+     * @param {Array} colors - Array of colours used by color scale.
+     */
+    attachAccessors(my, state);
     return my;
   }
 
@@ -3088,19 +2461,19 @@
    */
   function componentHeatMap () {
     /* Default Properties */
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      colors: ["#1e253f", "#e33b30"],
+      xScale: undefined,
+      yScale: undefined,
+      zScale: undefined,
+      colorScale: undefined
     };
-    var colors = ["#1e253f", "#e33b30"];
     var classed = "d3X3dHeatMap";
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-    var colorScale;
 
     /* Components */
     var bars = componentBars();
@@ -3117,21 +2490,21 @@
         columnKeys = _dataTransform$summar.columnKeys,
         valueMax = _dataTransform$summar.valueMax;
       var valueExtent = [0, valueMax];
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y,
-        dimensionZ = _dimensions.z;
-      if (typeof xScale === "undefined") {
-        xScale = d3__namespace.scaleBand().domain(columnKeys).range([0, dimensionX]).paddingOuter(0.5).paddingInner(0.1).align(1);
+      var _state$dimensions = state.dimensions,
+        dimensionX = _state$dimensions.x,
+        dimensionY = _state$dimensions.y,
+        dimensionZ = _state$dimensions.z;
+      if (typeof state.xScale === "undefined") {
+        state.xScale = d3__namespace.scaleBand().domain(columnKeys).range([0, dimensionX]).paddingOuter(0.5).paddingInner(0.1).align(1);
       }
-      if (typeof yScale === "undefined") {
-        yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+      if (typeof state.yScale === "undefined") {
+        state.yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
       }
-      if (typeof zScale === "undefined") {
-        zScale = d3__namespace.scaleBand().domain(rowKeys.reverse()).range([0, dimensionZ]).paddingOuter(0.5).paddingInner(0.1).align(1);
+      if (typeof state.zScale === "undefined") {
+        state.zScale = d3__namespace.scaleBand().domain(rowKeys.reverse()).range([0, dimensionZ]).paddingOuter(0.5).paddingInner(0.1).align(1);
       }
-      if (typeof colorScale === "undefined") {
-        colorScale = d3__namespace.scaleLinear().domain(valueExtent).range(colors);
+      if (typeof state.colorScale === "undefined") {
+        state.colorScale = d3__namespace.scaleLinear().domain(valueExtent).range(state.colors);
       }
     };
 
@@ -3146,11 +2519,11 @@
       selection.each(function (data) {
         init(data);
         var element = d3__namespace.select(this).classed(classed, true);
-        bars.xScale(xScale).yScale(yScale).dimensions({
-          x: dimensions.x,
-          y: dimensions.y,
-          z: zScale.bandwidth()
-        }).colorScale(colorScale).transparency(0.2);
+        bars.xScale(state.xScale).yScale(state.yScale).dimensions({
+          x: state.dimensions.x,
+          y: state.dimensions.y,
+          z: state.zScale.bandwidth()
+        }).colorScale(state.colorScale).transparency(0.2);
         var addBars = function addBars() {
           d3__namespace.select(this).call(bars);
         };
@@ -3162,7 +2535,7 @@
         barGroup.enter().append("Transform").classed("barGroup", true).merge(barGroup).transition().attr("translation", function (d) {
           var x = 0;
           var y = 0;
-          var z = zScale(d.key);
+          var z = state.zScale(d.key);
           return x + " " + y + " " + z;
         }).each(addBars);
         barGroup.exit().remove();
@@ -3170,76 +2543,16 @@
     };
 
     /**
-     * Dimensions Getter / Setter
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
      *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {d3.scale} xScale - D3 scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {d3.scale} zScale - D3 scale.
+     * @param {d3.scale} colorScale - D3 color scale.
+     * @param {Array} colors - Array of colours used by color scale.
      */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
+    attachAccessors(my, state);
     return my;
   }
 
@@ -3250,18 +2563,18 @@
    */
   function componentIntersectPlanes () {
     /* Default Properties */
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      colors: ["blue", "red", "green"],
+      xScale: undefined,
+      yScale: undefined,
+      zScale: undefined
     };
-    var colors = ["blue", "red", "green"];
     var classed = "d3X3dIntersectPlanes";
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
 
     /**
      * Constructor
@@ -3275,15 +2588,15 @@
         var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
         });
-        dimensions.x = xScale ? Math.max.apply(Math, _toConsumableArray(xScale.range())) : dimensions.x;
-        dimensions.y = yScale ? Math.max.apply(Math, _toConsumableArray(yScale.range())) : dimensions.y;
-        dimensions.z = zScale ? Math.max.apply(Math, _toConsumableArray(zScale.range())) : dimensions.z;
-        var xOff = dimensions.x / 2;
-        var yOff = dimensions.y / 2;
-        var zOff = dimensions.z / 2;
-        var xVal = xScale(data.x);
-        var yVal = yScale(data.y);
-        var zVal = zScale(data.z);
+        state.dimensions.x = state.xScale ? Math.max.apply(Math, _toConsumableArray(state.xScale.range())) : state.dimensions.x;
+        state.dimensions.y = state.yScale ? Math.max.apply(Math, _toConsumableArray(state.yScale.range())) : state.dimensions.y;
+        state.dimensions.z = state.zScale ? Math.max.apply(Math, _toConsumableArray(state.zScale.range())) : state.dimensions.z;
+        var xOff = state.dimensions.x / 2;
+        var yOff = state.dimensions.y / 2;
+        var zOff = state.dimensions.z / 2;
+        var xVal = state.xScale(data.x);
+        var yVal = state.yScale(data.y);
+        var zVal = state.zScale(data.z);
         function getPositionVector(axisDir) {
           var positionVectors = {
             x: [xOff, yOff, zVal],
@@ -3300,17 +2613,17 @@
           };
           return rotationVectors[axisDir];
         }
-        var colorScale = d3__namespace.scaleOrdinal().domain(Object.keys(dimensions)).range(colors);
+        var colorScale = d3__namespace.scaleOrdinal().domain(Object.keys(state.dimensions)).range(state.colors);
 
         // Planes
-        var planeSelect = element.selectAll(".plane").data(Object.keys(dimensions));
+        var planeSelect = element.selectAll(".plane").data(Object.keys(state.dimensions));
         var plane = planeSelect.enter().append("Transform").classed("plane", true).attr("translation", function (d) {
           return getPositionVector(d).join(" ");
         }).attr("rotation", function (d) {
           return getRotationVector(d).join(" ");
         }).append("Shape");
-        plane.append("plane").attr("size", function (d) {
-          return "".concat(dimensions.x, ",").concat(dimensions.y);
+        plane.append("plane").attr("size", function () {
+          return "".concat(state.dimensions.x, ",").concat(state.dimensions.y);
         }).attr("solid", false);
         plane.append("Appearance").append("Material").attr("transparency", 0.7).attr("diffuseColor", function (d) {
           return colorParse(colorScale(d));
@@ -3323,64 +2636,15 @@
     };
 
     /**
-     * Dimensions Getter / Setter
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
      *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {d3.scale} xScale - D3 scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {d3.scale} zScale - D3 scale.
+     * @param {Array} colors - Array of colours used by color scale.
      */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
+    attachAccessors(my, state);
     return my;
   }
 
@@ -3391,19 +2655,19 @@
    */
   function componentLabel () {
     /* Default Properties */
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      color: "black",
+      offset: 0,
+      xScale: undefined,
+      yScale: undefined,
+      zScale: undefined
     };
-    var color = "black";
     var classed = "d3X3dLabel";
-    var offset = 0;
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
 
     /**
      * Constructor
@@ -3422,90 +2686,30 @@
         };
         var labelSelect = element.selectAll(".label").data([data]);
         var label = labelSelect.enter().append("Transform").attr("translation", function (d) {
-          return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
-        }).classed("label", true).append("Billboard").attr("axisOfRotation", "0 0 0").append("Transform").attr("translation", function (d) {
-          return offset + " " + offset + " " + offset;
-        }).append("Shape").call(makeSolid, color).append("Text").attr("string", function (d) {
+          return state.xScale(d.x) + " " + state.yScale(d.y) + " " + state.zScale(d.z);
+        }).classed("label", true).append("Billboard").attr("axisOfRotation", "0 0 0").append("Transform").attr("translation", function () {
+          return state.offset + " " + state.offset + " " + state.offset;
+        }).append("Shape").call(makeSolid, state.color).append("Text").attr("string", function (d) {
           return d.key;
         }).append("FontStyle").attr("size", 1).attr("family", "SANS").attr("style", "BOLD").attr("justify", "START");
         label.merge(labelSelect);
         labelSelect.transition().ease(d3__namespace.easeQuadOut).attr("translation", function (d) {
-          return xScale(d.x) + " " + yScale(d.y) + " " + zScale(d.z);
+          return state.xScale(d.x) + " " + state.yScale(d.y) + " " + state.zScale(d.z);
         });
       });
     };
 
     /**
-     * Dimensions Getter / Setter
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
      *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {d3.scale} xScale - D3 scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {d3.scale} zScale - D3 scale.
+     * @param {string} color - Color (e.g. "red" or "#ff0000").
+     * @param {number} offset - Label offset number.
      */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Getter / Setter
-     *
-     * @param {string} _v - Color (e.g. "red" or "#ff0000").
-     * @returns {*}
-     */
-    my.color = function (_v) {
-      if (!arguments.length) return color;
-      color = _v;
-      return my;
-    };
-
-    /**
-     * Offset Getter / Setter
-     *
-     * @param {number} _v - Label offset number.
-     * @returns {*}
-     */
-    my.offset = function (_v) {
-      if (!arguments.length) return offset;
-      offset = _v;
-      return my;
-    };
+    attachAccessors(my, state);
     return my;
   }
 
@@ -3516,9 +2720,11 @@
    */
   function componentLight () {
     /* Default Properties */
-    var direction = "1 0 -1";
-    var intensity = 0.5;
-    var shadowIntensity = 0;
+    var state = {
+      direction: "1 0 -1",
+      intensity: 0.5,
+      shadowIntensity: 0
+    };
 
     /**
      * Constructor
@@ -3530,45 +2736,18 @@
     var my = function my(selection) {
       selection.each(function () {
         var light = d3__namespace.select(this).selectAll("DirectionalLight").data([null]);
-        light.enter().append("DirectionalLight").attr("on", true).attr("direction", direction).attr("intensity", intensity).attr("shadowIntensity", shadowIntensity).merge(light);
+        light.enter().append("DirectionalLight").attr("on", true).attr("direction", state.direction).attr("intensity", state.intensity).attr("shadowIntensity", state.shadowIntensity).merge(light);
       });
     };
 
     /**
-     * Light Direction Getter / Setter
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
      *
-     * @param {string} _v - Direction vector (e.g. "1 0 -1").
-     * @returns {*}
+     * @param {string} direction - Direction vector (e.g. "1 0 -1").
+     * @param {number} intensity - Intensity value.
+     * @param {number} shadowIntensity - Intensity value.
      */
-    my.direction = function (_v) {
-      if (!arguments.length) return direction;
-      direction = _v;
-      return my;
-    };
-
-    /**
-     * Light Intensity Getter / Setter
-     *
-     * @param {number} _v - Intensity value.
-     * @returns {*}
-     */
-    my.intensity = function (_v) {
-      if (!arguments.length) return intensity;
-      intensity = _v;
-      return my;
-    };
-
-    /**
-     * Shadow Intensity Getter / Setter
-     *
-     * @param {number} _v - Intensity value.
-     * @returns {*}
-     */
-    my.shadowIntensity = function (_v) {
-      if (!arguments.length) return shadowIntensity;
-      shadowIntensity = _v;
-      return my;
-    };
+    attachAccessors(my, state);
     return my;
   }
 
@@ -3579,21 +2758,21 @@
    */
   function componentParticles () {
     /* Default Properties */
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      colors: d3__namespace.schemeRdYlGn[8],
+      color: undefined,
+      mappings: undefined,
+      xScale: undefined,
+      yScale: undefined,
+      zScale: undefined,
+      colorScale: undefined
     };
-    var colors = d3__namespace.schemeRdYlGn[8];
-    var color;
     var classed = "d3X3dBubbles";
-    var mappings;
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-    var colorScale;
 
     /**
      * Array to String
@@ -3624,7 +2803,7 @@
           values: []
         };
         data.values.forEach(function (d) {
-          var key = mappings[dimension];
+          var key = state.mappings[dimension];
           var value = d.values.find(function (v) {
             return v.key === key;
           }).value;
@@ -3639,19 +2818,19 @@
       var extentY = newData.y.valueExtent;
       var extentZ = newData.z.valueExtent;
       var extentColor = newData.color.valueExtent;
-      if (typeof xScale === "undefined") {
-        xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensions.x]);
+      if (typeof state.xScale === "undefined") {
+        state.xScale = d3__namespace.scaleLinear().domain(extentX).range([0, state.dimensions.x]);
       }
-      if (typeof yScale === "undefined") {
-        yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensions.y]);
+      if (typeof state.yScale === "undefined") {
+        state.yScale = d3__namespace.scaleLinear().domain(extentY).range([0, state.dimensions.y]);
       }
-      if (typeof zScale === "undefined") {
-        zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensions.z]);
+      if (typeof state.zScale === "undefined") {
+        state.zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, state.dimensions.z]);
       }
-      if (color) {
-        colorScale = d3__namespace.scaleQuantize().domain(extentColor).range([color, color]);
-      } else if (typeof colorScale === "undefined") {
-        colorScale = d3__namespace.scaleQuantize().domain(extentColor).range(colors);
+      if (state.color) {
+        state.colorScale = d3__namespace.scaleQuantize().domain(extentColor).range([state.color, state.color]);
+      } else if (typeof state.colorScale === "undefined") {
+        state.colorScale = d3__namespace.scaleQuantize().domain(extentColor).range(state.colors);
       }
     };
 
@@ -3672,23 +2851,23 @@
           var pointCoords = function pointCoords(Y) {
             return Y.values.map(function (d) {
               var xVal = d.values.find(function (v) {
-                return v.key === mappings.x;
+                return v.key === state.mappings.x;
               }).value;
               var yVal = d.values.find(function (v) {
-                return v.key === mappings.y;
+                return v.key === state.mappings.y;
               }).value;
               var zVal = d.values.find(function (v) {
-                return v.key === mappings.z;
+                return v.key === state.mappings.z;
               }).value;
-              return [xScale(xVal), yScale(yVal), zScale(zVal)];
+              return [state.xScale(xVal), state.yScale(yVal), state.zScale(zVal)];
             });
           };
           var pointColors = function pointColors(Y) {
             return Y.values.map(function (d) {
               var colorVal = d.values.find(function (v) {
-                return v.key === mappings.color;
+                return v.key === state.mappings.color;
               }).value;
-              var color = d3__namespace.color(colorScale(colorVal));
+              var color = d3__namespace.color(state.colorScale(colorVal));
               return colorParse(color);
             });
           };
@@ -3735,102 +2914,6 @@
     };
 
     /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Getter / Setter
-     *
-     * @param {string} _v - Color (e.g. "red" or "#ff0000").
-     * @returns {*}
-     */
-    my.color = function (_v) {
-      if (!arguments.length) return color;
-      color = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
-
-    /**
-     * Mappings Getter / Setter
-     *
-     * @param {Object} _v - Map properties to colour etc.
-     * @returns {*}
-     */
-    my.mappings = function (_v) {
-      if (!arguments.length) return mappings;
-      mappings = _v;
-      return my;
-    };
-
-    /**
      * Dispatch On Getter
      *
      * @returns {*}
@@ -3839,6 +2922,20 @@
       var value = dispatch.on.apply(dispatch, arguments);
       return value === dispatch ? my : value;
     };
+
+    /**
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
+     *
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {d3.scale} xScale - D3 scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {d3.scale} zScale - D3 scale.
+     * @param {d3.scale} colorScale - D3 color scale.
+     * @param {string} color - Color (e.g. "red" or "#ff0000").
+     * @param {Array} colors - Array of colours used by color scale.
+     * @param {Object} mappings - Map properties to colour etc.
+     */
+    attachAccessors(my, state);
     return my;
   }
 
@@ -3849,19 +2946,19 @@
    */
   function componentRibbon () {
     /* Default Properties */
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 5
+    var state = {
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 5
+      },
+      color: "red",
+      smoothed: d3__namespace.curveBasis,
+      xScale: undefined,
+      yScale: undefined
     };
-    var color = "red";
     var transparency = 0.1;
     var classed = "d3X3dRibbon";
-    var smoothed = d3__namespace.curveBasis;
-
-    /* Scales */
-    var xScale;
-    var yScale;
 
     /**
      * Initialise Data and Scales
@@ -3874,14 +2971,14 @@
         columnKeys = _dataTransform$summar.columnKeys,
         valueMax = _dataTransform$summar.valueMax;
       var valueExtent = [0, valueMax];
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y;
-      if (typeof xScale === "undefined") {
-        xScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionX]);
+      var _state$dimensions = state.dimensions,
+        dimensionX = _state$dimensions.x,
+        dimensionY = _state$dimensions.y;
+      if (typeof state.xScale === "undefined") {
+        state.xScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionX]);
       }
-      if (typeof yScale === "undefined") {
-        yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+      if (typeof state.yScale === "undefined") {
+        state.yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]);
       }
     };
 
@@ -3898,142 +2995,20 @@
         var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
         });
-        var ribbonData = function ribbonData(data) {
-          var dimensionX = dimensions.x;
-          if (smoothed) {
-            data = dataTransform(data).smooth(smoothed, 100);
-            var keys = d3__namespace.extent(data.values.map(function (d) {
-              return d.key;
-            }));
-            xScale = d3__namespace.scaleLinear().domain(keys).range([0, dimensionX]);
-          }
-          var values = data.values;
-
-          // Convert values into IFS coordinates
-          var coords = values.map(function (pointThis, indexThis, array) {
-            var indexNext = indexThis + 1;
-            if (indexNext >= array.length) {
-              return null;
-            }
-            var pointNext = array[indexNext];
-            var x1 = xScale(pointThis.key);
-            var x2 = xScale(pointNext.key);
-            var y1 = yScale(pointThis.value);
-            var y2 = yScale(pointNext.value);
-            var z1 = 1 - dimensions.z / 2;
-            var z2 = dimensions.z / 2;
+        drawIndexedFaceStrip(element, state, {
+          itemClass: "ribbon",
+          transparency: transparency,
+          quad: function quad(pointThis, pointNext) {
+            var x1 = state.xScale(pointThis.key);
+            var x2 = state.xScale(pointNext.key);
+            var y1 = state.yScale(pointThis.value);
+            var y2 = state.yScale(pointNext.value);
+            var z1 = 1 - state.dimensions.z / 2;
+            var z2 = state.dimensions.z / 2;
             return [x1, y1, z1, x1, y1, z2, x2, y2, z2, x2, y2, z1];
-          }).filter(function (d) {
-            return d !== null;
-          });
-          data.point = coords.map(function (d) {
-            return d.join(" ");
-          }).join(" ");
-          data.coordIndex = coords.map(function (d, i) {
-            var offset = i * 4;
-            return [offset, offset + 1, offset + 2, offset + 3, -1].join(" ");
-          }).join(" ");
-          return [data];
-        };
-        var shape = function shape(el) {
-          var shape = el.append("Shape");
-
-          /*
-          // FIXME: x3dom cannot have empty IFS nodes, we must to use .html() rather than .append() & .attr().
-          shape.append("IndexedFaceset")
-          	.attr("coordIndex", (d) => d.coordIndex)
-          	.append("Coordinate")
-          	.attr("point", (d) => d.point);
-          	shape.append("Appearance")
-          	.append("Material")
-          	.attr("diffuseColor", colorParse(color))
-          	.attr("transparency", transparency);
-          */
-
-          shape.html(function (d) {
-            return "\n\t\t\t\t\t<IndexedFaceset coordIndex=\"".concat(d.coordIndex, "\"  solid=\"false\">\n\t\t\t\t\t\t<Coordinate point=\"").concat(d.point, "\"></Coordinate>\n\t\t\t\t\t</IndexedFaceset>\n\t\t\t\t\t<Appearance>\n\t\t\t\t\t\t<Material diffuseColor=\"").concat(colorParse(color), "\" transparency=\"").concat(transparency, "\"></Material>\n\t\t\t\t\t</Appearance>\n\t\t\t\t");
-          });
-        };
-        var ribbon = element.selectAll(".ribbon").data(function (d) {
-          return ribbonData(d);
-        }, function (d) {
-          return d.key;
+          }
         });
-        ribbon.enter().append("Group").classed("ribbon", true).call(shape).merge(ribbon);
-        var ribbonTransition = ribbon.transition().select("Shape");
-        ribbonTransition.select("IndexedFaceset").attr("coordIndex", function (d) {
-          return d.coordIndex;
-        }).select("Coordinate").attr("point", function (d) {
-          return d.point;
-        });
-        ribbonTransition.select("Appearance").select("Material").attr("diffuseColor", colorParse(color));
-        ribbon.exit().remove();
       });
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: {number}, y: {number}, z: {number}}} _v - 3D Object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Getter / Setter
-     *
-     * @param {string} _v - Color (e.g. "red" or "#ff0000").
-     * @returns {*}
-     */
-    my.color = function (_v) {
-      if (!arguments.length) return color;
-      color = _v;
-      return my;
-    };
-
-    /**
-     * Smooth Interpolation Getter / Setter
-     *
-     * Options:
-     *   d3.curveBasis
-     *   d3.curveLinear
-     *   d3.curveMonotoneX
-     *
-     * @param {d3.curve} _v.
-     * @returns {*}
-     */
-    my.smoothed = function (_v) {
-      if (!arguments.length) return smoothed;
-      smoothed = _v;
-      return my;
     };
 
     /**
@@ -4045,6 +3020,17 @@
       var value = dispatch.on.apply(dispatch, arguments);
       return value === dispatch ? my : value;
     };
+
+    /**
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
+     *
+     * @param {{x: {number}, y: {number}, z: {number}}} dimensions - 3D Object dimensions.
+     * @param {d3.scale} xScale - D3 scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {string} color - Color (e.g. "red" or "#ff0000").
+     * @param {d3.curve} smoothed
+     */
+    attachAccessors(my, state);
     return my;
   }
 
@@ -4055,44 +3041,26 @@
    */
   function componentRibbonMultiSeries () {
     /* Default Properties */
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      colors: ["orange", "red", "yellow", "steelblue", "green"],
+      smoothed: d3__namespace.curveBasis,
+      xScale: undefined,
+      yScale: undefined,
+      zScale: undefined,
+      colorScale: undefined
     };
-    var colors = ["orange", "red", "yellow", "steelblue", "green"];
     var classed = "d3X3dRibbonMultiSeries";
-    var smoothed = d3__namespace.curveBasis;
 
     /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-    var colorScale;
     var colorDomain = [];
 
     /* Components */
     var ribbon = componentRibbon();
-
-    /**
-     * Unique Array
-     *
-     * @param {array} array1
-     * @param {array} array2
-     * @returns {array}
-     */
-    var arrayUnique = function arrayUnique(array1, array2) {
-      var array = array1.concat(array2);
-      var a = array.concat();
-      for (var i = 0; i < a.length; ++i) {
-        for (var j = i + 1; j < a.length; ++j) {
-          if (a[i] === a[j]) {
-            a.splice(j--, 1);
-          }
-        }
-      }
-      return a;
-    };
 
     /**
      * Initialise Data and Scales
@@ -4101,20 +3069,20 @@
      * @param {Array} data - Chart data.
      */
     var init = function init(data) {
-      var _dataTransform$summar = dataTransform(data).summary(),
-        rowKeys = _dataTransform$summar.rowKeys,
-        columnKeys = _dataTransform$summar.columnKeys,
-        valueMax = _dataTransform$summar.valueMax;
-      var valueExtent = [0, valueMax];
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y,
-        dimensionZ = _dimensions.z;
-      xScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionX]);
-      yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]);
-      zScale = d3__namespace.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
-      colorDomain = arrayUnique(colorDomain, rowKeys);
-      colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(colors);
+      var summary = assignSeriesScales(state, data, {
+        overwrite: true,
+        xScale: function xScale(seriesSummary, dimensions) {
+          return d3__namespace.scalePoint().domain(seriesSummary.columnKeys).range([0, dimensions.x]);
+        },
+        yScale: function yScale(seriesSummary, dimensions) {
+          return d3__namespace.scaleLinear().domain([0, seriesSummary.valueMax]).range([0, dimensions.y]);
+        },
+        zScale: function zScale(seriesSummary, dimensions) {
+          return d3__namespace.scaleBand().domain(seriesSummary.rowKeys).range([0, dimensions.z]).padding(0.4);
+        }
+      });
+      colorDomain = arrayUnique(colorDomain, summary.rowKeys);
+      state.colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(state.colors);
     };
 
     /**
@@ -4128,118 +3096,15 @@
       selection.each(function (data) {
         init(data);
         var element = d3__namespace.select(this).classed(classed, true);
-        ribbon.xScale(xScale).yScale(yScale).dimensions({
-          x: dimensions.x,
-          y: dimensions.y,
-          z: zScale.bandwidth()
-        }).smoothed(smoothed);
-        var addRibbon = function addRibbon(d) {
-          var color = colorScale(d.key);
-          ribbon.color(color);
-          d3__namespace.select(this).call(ribbon);
-        };
-        var ribbonGroup = element.selectAll(".ribbonGroup").data(function (d) {
-          return d;
-        }, function (d) {
-          return d.key;
+        drawSeriesGroups(element, state, {
+          groupClass: "ribbonGroup",
+          mark: ribbon,
+          configure: function configure(mark) {
+            return mark.smoothed(state.smoothed);
+          },
+          colorBySeries: true
         });
-        ribbonGroup.enter().append("Transform").classed("ribbonGroup", true).merge(ribbonGroup).transition().attr("translation", function (d) {
-          var x = 0;
-          var y = 0;
-          var z = zScale(d.key);
-          return x + " " + y + " " + z;
-        }).each(addRibbon);
-        ribbonGroup.exit().remove();
       });
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
-
-    /**
-     * Smooth Interpolation Getter / Setter
-     *
-     * Options:
-     *   d3.curveBasis
-     *   d3.curveLinear
-     *   d3.curveMonotoneX
-     *
-     * @param {d3.curve} _v.
-     * @returns {*}
-     */
-    my.smoothed = function (_v) {
-      if (!arguments.length) return smoothed;
-      smoothed = _v;
-      return my;
     };
 
     /**
@@ -4251,6 +3116,19 @@
       var value = dispatch.on.apply(dispatch, arguments);
       return value === dispatch ? my : value;
     };
+
+    /**
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
+     *
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {d3.scale} xScale - D3 scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {d3.scale} zScale - D3 scale.
+     * @param {d3.scale} colorScale - D3 color scale.
+     * @param {Array} colors - Array of colours used by color scale.
+     * @param {d3.curve} smoothed
+     */
+    attachAccessors(my, state);
     return my;
   }
 
@@ -4261,24 +3139,24 @@
    */
   function componentSpots () {
     /* Default Properties */
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      colors: d3__namespace.schemeRdYlGn[8],
+      color: undefined,
+      mappings: undefined,
+      xScale: undefined,
+      yScale: undefined,
+      zScale: undefined,
+      colorScale: undefined,
+      sizeScale: undefined,
+      sizeRange: [0.5, 3.5],
+      plane: "x"
     };
-    var colors = d3__namespace.schemeRdYlGn[8];
-    var color;
     var classed = "d3X3dSpots";
-    var mappings;
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-    var colorScale;
-    var sizeScale;
-    var sizeRange = [0.5, 3.5];
-    var plane = "x";
 
     /**
      * Initialise Data and Scales
@@ -4294,7 +3172,7 @@
           values: []
         };
         data.values.forEach(function (d) {
-          var key = mappings[dimension];
+          var key = state.mappings[dimension];
           var value = d.values.find(function (v) {
             return v.key === key;
           }).value;
@@ -4310,22 +3188,22 @@
       var extentZ = newData.z.valueExtent;
       var extentSize = newData.size.valueExtent;
       var extentColor = newData.color.valueExtent;
-      if (typeof xScale === "undefined") {
-        xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensions.x]);
+      if (typeof state.xScale === "undefined") {
+        state.xScale = d3__namespace.scaleLinear().domain(extentX).range([0, state.dimensions.x]);
       }
-      if (typeof yScale === "undefined") {
-        yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensions.y]);
+      if (typeof state.yScale === "undefined") {
+        state.yScale = d3__namespace.scaleLinear().domain(extentY).range([0, state.dimensions.y]);
       }
-      if (typeof zScale === "undefined") {
-        zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensions.z]);
+      if (typeof state.zScale === "undefined") {
+        state.zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, state.dimensions.z]);
       }
-      if (typeof sizeScale === "undefined") {
-        sizeScale = d3__namespace.scaleLinear().domain(extentSize).range(sizeRange);
+      if (typeof state.sizeScale === "undefined") {
+        state.sizeScale = d3__namespace.scaleLinear().domain(extentSize).range(state.sizeRange);
       }
-      if (color) {
-        colorScale = d3__namespace.scaleQuantize().domain(extentColor).range([color, color]);
-      } else if (typeof colorScale === "undefined") {
-        colorScale = d3__namespace.scaleQuantize().domain(extentColor).range(colors);
+      if (state.color) {
+        state.colorScale = d3__namespace.scaleQuantize().domain(extentColor).range([state.color, state.color]);
+      } else if (typeof state.colorScale === "undefined") {
+        state.colorScale = d3__namespace.scaleQuantize().domain(extentColor).range(state.colors);
       }
     };
 
@@ -4340,14 +3218,14 @@
       selection.each(function (data) {
         init(data);
         function getPositionVector(axisDir, d) {
-          var xVal = xScale(d.values.find(function (v) {
-            return v.key === mappings.x;
+          var xVal = state.xScale(d.values.find(function (v) {
+            return v.key === state.mappings.x;
           }).value);
-          var yVal = yScale(d.values.find(function (v) {
-            return v.key === mappings.y;
+          var yVal = state.yScale(d.values.find(function (v) {
+            return v.key === state.mappings.y;
           }).value);
-          var zVal = zScale(d.values.find(function (v) {
-            return v.key === mappings.z;
+          var zVal = state.zScale(d.values.find(function (v) {
+            return v.key === state.mappings.z;
           }).value);
           var positionVectors = {
             x: [0, yVal, zVal],
@@ -4371,15 +3249,15 @@
           var shape = el.append("Shape");
           shape.append("Cylinder").attr("radius", function (d) {
             var sizeVal = d.values.find(function (v) {
-              return v.key === mappings.size;
+              return v.key === state.mappings.size;
             }).value;
-            return sizeScale(sizeVal);
+            return state.sizeScale(sizeVal);
           }).attr("height", 0.1);
           shape.append("Appearance").append("Material").attr("transparency", 0.1).attr("diffuseColor", function (d) {
             var colorVal = d.values.find(function (v) {
-              return v.key === mappings.color;
+              return v.key === state.mappings.color;
             }).value;
-            return colorParse(colorScale(colorVal));
+            return colorParse(state.colorScale(colorVal));
           });
           return shape;
         };
@@ -4391,156 +3269,24 @@
         var spotsEnter = spots.enter().append("Transform").attr("class", "spot").call(shape).merge(spots);
         var spotsTransition = spotsEnter.transition();
         spotsTransition.attr("translation", function (d) {
-          return getPositionVector(plane, d).join();
-        }).attr("rotation", function (d) {
-          return getRotationVector(plane).join();
+          return getPositionVector(state.plane, d).join();
+        }).attr("rotation", function () {
+          return getRotationVector(state.plane).join();
         });
         spotsTransition.select("Shape").select("Cylinder").attr("radius", function (d) {
           var sizeVal = d.values.find(function (v) {
-            return v.key === mappings.size;
+            return v.key === state.mappings.size;
           }).value;
-          return sizeScale(sizeVal);
+          return state.sizeScale(sizeVal);
         });
         spotsTransition.select("Shape").select("Appearance").select("Material").attr("diffuseColor", function (d) {
           var colorVal = d.values.find(function (v) {
-            return v.key === mappings.color;
+            return v.key === state.mappings.color;
           }).value;
-          return colorParse(colorScale(colorVal));
+          return colorParse(state.colorScale(colorVal));
         });
         spots.exit().remove();
       });
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * Plane Getter / Setter
-     *
-     * @param {string} _v - Plane of Spots (e.g. "x", "y", "z").
-     * @returns {*}
-     */
-    my.plane = function (_v) {
-      if (!arguments.length) return plane;
-      plane = _v;
-      return my;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Size Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 size scale.
-     * @returns {*}
-     */
-    my.sizeScale = function (_v) {
-      if (!arguments.length) return sizeScale;
-      sizeScale = _v;
-      return my;
-    };
-
-    /**
-     * Size Range Getter / Setter
-     *
-     * @param {number[]} _v - Size min and max (e.g. [1, 9]).
-     * @returns {*}
-     */
-    my.sizeRange = function (_v) {
-      if (!arguments.length) return sizeRange;
-      sizeRange = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Getter / Setter
-     *
-     * @param {string} _v - Color (e.g. "red" or "#ff0000").
-     * @returns {*}
-     */
-    my.color = function (_v) {
-      if (!arguments.length) return color;
-      color = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
-
-    /**
-     * Mappings Getter / Setter
-     *
-     * @param {Object} _v - Map properties to size, colour etc.
-     * @returns {*}
-     */
-    my.mappings = function (_v) {
-      if (!arguments.length) return mappings;
-      mappings = _v;
-      return my;
     };
 
     /**
@@ -4552,6 +3298,23 @@
       var value = dispatch.on.apply(dispatch, arguments);
       return value === dispatch ? my : value;
     };
+
+    /**
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
+     *
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {string} plane - Plane of Spots (e.g. "x", "y", "z").
+     * @param {d3.scale} xScale - D3 scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {d3.scale} zScale - D3 scale.
+     * @param {d3.scale} sizeScale - D3 size scale.
+     * @param {number[]} sizeRange - Size min and max (e.g. [1, 9]).
+     * @param {d3.scale} colorScale - D3 color scale.
+     * @param {string} color - Color (e.g. "red" or "#ff0000").
+     * @param {Array} colors - Array of colours used by color scale.
+     * @param {Object} mappings - Map properties to size, colour etc.
+     */
+    attachAccessors(my, state);
     return my;
   }
 
@@ -4562,22 +3325,24 @@
    */
   function componentSpotsMultiSeries () {
     /* Default Properties */
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      colors: ["green", "red", "yellow", "steelblue", "orange"],
+      xScale: undefined,
+      yScale: undefined,
+      zScale: undefined,
+      colorScale: undefined,
+      sizeScale: undefined,
+      sizeRange: [0.5, 3.0]
     };
-    var colors = ["green", "red", "yellow", "steelblue", "orange"];
     var classed = "d3X3dSpotsMultiSeries";
 
     /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-    var colorScale;
     var colorDomain = [];
-    var sizeScale;
-    var sizeRange = [0.5, 3.0];
 
     /* Components */
     var spots = componentSpots().mappings({
@@ -4589,57 +3354,15 @@
     }).colors(d3__namespace.schemeRdYlGn[8]).sizeRange([2, 2]);
 
     /**
-     * Unique Array
-     *
-     * @param {array} array1
-     * @param {array} array2
-     * @returns {array}
-     */
-    var arrayUnique = function arrayUnique(array1, array2) {
-      var array = array1.concat(array2);
-      var a = array.concat();
-      for (var i = 0; i < a.length; ++i) {
-        for (var j = i + 1; j < a.length; ++j) {
-          if (a[i] === a[j]) {
-            a.splice(j--, 1);
-          }
-        }
-      }
-      return a;
-    };
-
-    /**
      * Initialise Data and Scales
      *
      * @private
      * @param {Array} data - Chart data.
      */
     var init = function init(data) {
-      var _dataTransform$summar = dataTransform(data).summary(),
-        rowKeys = _dataTransform$summar.rowKeys,
-        valueExtent = _dataTransform$summar.valueExtent,
-        coordinatesExtent = _dataTransform$summar.coordinatesExtent;
-      var extentX = coordinatesExtent.x,
-        extentY = coordinatesExtent.y,
-        extentZ = coordinatesExtent.z;
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y,
-        dimensionZ = _dimensions.z;
-      if (typeof xScale === "undefined") {
-        xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensionX]);
-      }
-      if (typeof yScale === "undefined") {
-        yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensionY]);
-      }
-      if (typeof zScale === "undefined") {
-        zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensionZ]);
-      }
+      var rowKeys = assignCoordinateScales(state, data);
       colorDomain = arrayUnique(colorDomain, rowKeys);
-      colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(colors);
-      if (typeof sizeScale === "undefined") {
-        sizeScale = d3__namespace.scaleLinear().domain(valueExtent).range(sizeRange);
-      }
+      state.colorScale = d3__namespace.scaleOrdinal().domain(colorDomain).range(state.colors);
     };
 
     /**
@@ -4652,38 +3375,10 @@
     var my = function my(selection) {
       selection.each(function (data) {
         init(data);
-        var spotData = function spotData(d) {
-          return d.map(function (f) {
-            return {
-              key: f.key,
-              values: f.values.map(function (g) {
-                return {
-                  key: g.key,
-                  values: [{
-                    key: "size",
-                    value: g.value
-                  }, {
-                    key: "color",
-                    value: g.value
-                  }, {
-                    key: "x",
-                    value: g.x
-                  }, {
-                    key: "y",
-                    value: g.y
-                  }, {
-                    key: "z",
-                    value: g.z
-                  }]
-                };
-              })
-            };
-          });
-        };
-        spots.xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale);
+        spots.xScale(state.xScale).yScale(state.yScale).zScale(state.zScale).sizeScale(state.sizeScale);
         var element = d3__namespace.select(this).classed(classed, true);
         var addSpots = function addSpots(d) {
-          var color = colorScale(d.key);
+          var color = state.colorScale(d.key);
           spots.color(color);
           d3__namespace.select(this).call(spots);
         };
@@ -4693,109 +3388,13 @@
           spots.plane(plane);
           var el = d3__namespace.select(nodes[i]);
           el.classed(plane, true);
-          var spotSeries = el.selectAll(".spotSeries").data(spotData(data), function (d) {
+          var spotSeries = el.selectAll(".spotSeries").data(coordinateSeriesData(data), function (d) {
             return d.key;
           });
           spotSeries.enter().append("Group").classed("spotSeries", true).merge(spotSeries).transition().each(addSpots);
           spotSeries.exit().remove();
         });
       });
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 Scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 Scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Size Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 size scale.
-     * @returns {*}
-     */
-    my.sizeScale = function (_v) {
-      if (!arguments.length) return sizeScale;
-      sizeScale = _v;
-      return my;
-    };
-
-    /**
-     * Size Range Getter / Setter
-     *
-     * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
-     * @returns {*}
-     */
-    my.sizeRange = function (_v) {
-      if (!arguments.length) return sizeRange;
-      sizeRange = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
     };
 
     /**
@@ -4807,6 +3406,20 @@
       var value = dispatch.on.apply(dispatch, arguments);
       return value === dispatch ? my : value;
     };
+
+    /**
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
+     *
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {d3.scale} xScale - D3 Scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {d3.scale} zScale - D3 Scale.
+     * @param {d3.scale} colorScale - D3 color scale.
+     * @param {d3.scale} sizeScale - D3 size scale.
+     * @param {number[]} sizeRange - Size min and max (e.g. [0.5, 3.0]).
+     * @param {Array} colors - Array of colours used by color scale.
+     */
+    attachAccessors(my, state);
     return my;
   }
 
@@ -4817,19 +3430,19 @@
    */
   function componentSurface () {
     /* Default Properties */
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      colors: ["blue", "red"],
+      xScale: undefined,
+      yScale: undefined,
+      zScale: undefined,
+      colorScale: undefined
     };
-    var colors = ["blue", "red"];
     var classed = "d3X3dSurface";
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-    var colorScale;
 
     /**
      * Array to String
@@ -4858,21 +3471,21 @@
         columnKeys = _dataTransform$summar.columnKeys,
         valueMax = _dataTransform$summar.valueMax;
       var valueExtent = [0, valueMax];
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y,
-        dimensionZ = _dimensions.z;
-      if (typeof xScale === "undefined") {
-        xScale = d3__namespace.scalePoint().domain(rowKeys).range([0, dimensionX]);
+      var _state$dimensions = state.dimensions,
+        dimensionX = _state$dimensions.x,
+        dimensionY = _state$dimensions.y,
+        dimensionZ = _state$dimensions.z;
+      if (typeof state.xScale === "undefined") {
+        state.xScale = d3__namespace.scalePoint().domain(rowKeys).range([0, dimensionX]);
       }
-      if (typeof yScale === "undefined") {
-        yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]);
+      if (typeof state.yScale === "undefined") {
+        state.yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]);
       }
-      if (typeof zScale === "undefined") {
-        zScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionZ]);
+      if (typeof state.zScale === "undefined") {
+        state.zScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionZ]);
       }
-      if (typeof colorScale === "undefined") {
-        colorScale = d3__namespace.scaleLinear().domain(valueExtent).range(colors).interpolate(d3__namespace.interpolateLab);
+      if (typeof state.colorScale === "undefined") {
+        state.colorScale = d3__namespace.scaleLinear().domain(valueExtent).range(state.colors).interpolate(d3__namespace.interpolateLab);
       }
     };
 
@@ -4891,7 +3504,7 @@
           var coordPoints = function coordPoints(Y) {
             return Y.map(function (X) {
               return X.values.map(function (d) {
-                return [xScale(X.key), yScale(d.value), zScale(d.key)];
+                return [state.xScale(X.key), state.yScale(d.value), state.zScale(d.key)];
               });
             });
           };
@@ -4908,7 +3521,7 @@
           var colorFaceSet = function colorFaceSet(Y) {
             return Y.map(function (X) {
               return X.values.map(function (d) {
-                var color = d3__namespace.color(colorScale(d.value));
+                var color = d3__namespace.color(state.colorScale(d.value));
                 return colorParse(color);
               });
             });
@@ -4951,78 +3564,6 @@
     };
 
     /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
-
-    /**
      * Dispatch On Getter
      *
      * @returns {*}
@@ -5031,6 +3572,18 @@
       var value = dispatch.on.apply(dispatch, arguments);
       return value === dispatch ? my : value;
     };
+
+    /**
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
+     *
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {d3.scale} xScale - D3 scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {d3.scale} zScale - D3 scale.
+     * @param {d3.scale} colorScale - D3 color scale.
+     * @param {Array} colors - Array of colours used by color scale.
+     */
+    attachAccessors(my, state);
     return my;
   }
 
@@ -5038,17 +3591,10 @@
    * Common utilities
    * @module glMatrix
    */
+
   // Configuration Constants
   var EPSILON = 0.000001;
-  var ARRAY_TYPE = typeof Float32Array !== 'undefined' ? Float32Array : Array;
-  if (!Math.hypot) Math.hypot = function () {
-    var y = 0,
-      i = arguments.length;
-    while (i--) {
-      y += arguments[i] * arguments[i];
-    }
-    return Math.sqrt(y);
-  };
+  var ARRAY_TYPE = typeof Float32Array !== "undefined" ? Float32Array : Array;
 
   /**
    * 3x3 Matrix
@@ -5060,7 +3606,6 @@
    *
    * @returns {mat3} a new 3x3 matrix
    */
-
   function create$3() {
     var out = new ARRAY_TYPE(9);
     if (ARRAY_TYPE != Float32Array) {
@@ -5087,7 +3632,6 @@
    *
    * @returns {vec3} a new 3D vector
    */
-
   function create$2() {
     var out = new ARRAY_TYPE(3);
     if (ARRAY_TYPE != Float32Array) {
@@ -5097,19 +3641,20 @@
     }
     return out;
   }
+
   /**
    * Calculates the length of a vec3
    *
    * @param {ReadonlyVec3} a vector to calculate length of
    * @returns {Number} length of a
    */
-
   function length(a) {
     var x = a[0];
     var y = a[1];
     var z = a[2];
-    return Math.hypot(x, y, z);
+    return Math.sqrt(x * x + y * y + z * z);
   }
+
   /**
    * Creates a new vec3 initialized with the given values
    *
@@ -5118,7 +3663,6 @@
    * @param {Number} z Z component
    * @returns {vec3} a new 3D vector
    */
-
   function fromValues(x, y, z) {
     var out = new ARRAY_TYPE(3);
     out[0] = x;
@@ -5126,6 +3670,7 @@
     out[2] = z;
     return out;
   }
+
   /**
    * Normalize a vec3
    *
@@ -5133,7 +3678,6 @@
    * @param {ReadonlyVec3} a vector to normalize
    * @returns {vec3} out
    */
-
   function normalize$2(out, a) {
     var x = a[0];
     var y = a[1];
@@ -5148,6 +3692,7 @@
     out[2] = a[2] * len;
     return out;
   }
+
   /**
    * Calculates the dot product of two vec3's
    *
@@ -5155,10 +3700,10 @@
    * @param {ReadonlyVec3} b the second operand
    * @returns {Number} dot product of a and b
    */
-
   function dot(a, b) {
     return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
   }
+
   /**
    * Computes the cross product of two vec3's
    *
@@ -5167,7 +3712,6 @@
    * @param {ReadonlyVec3} b the second operand
    * @returns {vec3} out
    */
-
   function cross(out, a, b) {
     var ax = a[0],
       ay = a[1],
@@ -5180,12 +3724,13 @@
     out[2] = ax * by - ay * bx;
     return out;
   }
+
   /**
    * Alias for {@link vec3.length}
    * @function
    */
-
   var len = length;
+
   /**
    * Perform some operation over an array of vec3s.
    *
@@ -5198,7 +3743,6 @@
    * @returns {Array} a
    * @function
    */
-
   (function () {
     var vec = create$2();
     return function (a, stride, offset, count, fn, arg) {
@@ -5237,7 +3781,6 @@
    *
    * @returns {vec4} a new 4D vector
    */
-
   function create$1() {
     var out = new ARRAY_TYPE(4);
     if (ARRAY_TYPE != Float32Array) {
@@ -5248,6 +3791,7 @@
     }
     return out;
   }
+
   /**
    * Normalize a vec4
    *
@@ -5255,7 +3799,6 @@
    * @param {ReadonlyVec4} a vector to normalize
    * @returns {vec4} out
    */
-
   function normalize$1(out, a) {
     var x = a[0];
     var y = a[1];
@@ -5271,6 +3814,7 @@
     out[3] = w * len;
     return out;
   }
+
   /**
    * Perform some operation over an array of vec4s.
    *
@@ -5283,7 +3827,6 @@
    * @returns {Array} a
    * @function
    */
-
   (function () {
     var vec = create$1();
     return function (a, stride, offset, count, fn, arg) {
@@ -5315,7 +3858,7 @@
   })();
 
   /**
-   * Quaternion
+   * Quaternion in the format XYZW
    * @module quat
    */
 
@@ -5324,7 +3867,6 @@
    *
    * @returns {quat} a new quaternion
    */
-
   function create() {
     var out = new ARRAY_TYPE(4);
     if (ARRAY_TYPE != Float32Array) {
@@ -5335,6 +3877,7 @@
     out[3] = 1;
     return out;
   }
+
   /**
    * Sets a quat from the given angle and rotation axis,
    * then returns it.
@@ -5344,7 +3887,6 @@
    * @param {Number} rad the angle in radians
    * @returns {quat} out
    **/
-
   function setAxisAngle(out, axis, rad) {
     rad = rad * 0.5;
     var s = Math.sin(rad);
@@ -5354,6 +3896,7 @@
     out[3] = Math.cos(rad);
     return out;
   }
+
   /**
    * Gets the rotation axis and angle for a given
    *  quaternion. If a quaternion is created with
@@ -5367,7 +3910,6 @@
    * @param  {ReadonlyQuat} q     Quaternion to be decomposed
    * @return {Number}     Angle, in radians, of the rotation
    */
-
   function getAxisAngle(out_axis, q) {
     var rad = Math.acos(q[3]) * 2.0;
     var s = Math.sin(rad / 2.0);
@@ -5383,6 +3925,7 @@
     }
     return rad;
   }
+
   /**
    * Performs a spherical linear interpolation between two quat
    *
@@ -5392,7 +3935,6 @@
    * @param {Number} t interpolation amount, in the range [0-1], between the two inputs
    * @returns {quat} out
    */
-
   function slerp(out, a, b, t) {
     // benchmarks:
     //    http://jsperf.com/quaternion-slerp-implementations
@@ -5404,18 +3946,19 @@
       by = b[1],
       bz = b[2],
       bw = b[3];
-    var omega, cosom, sinom, scale0, scale1; // calc cosine
+    var omega, cosom, sinom, scale0, scale1;
 
-    cosom = ax * bx + ay * by + az * bz + aw * bw; // adjust signs (if necessary)
-
+    // calc cosine
+    cosom = ax * bx + ay * by + az * bz + aw * bw;
+    // adjust signs (if necessary)
     if (cosom < 0.0) {
       cosom = -cosom;
       bx = -bx;
       by = -by;
       bz = -bz;
       bw = -bw;
-    } // calculate coefficients
-
+    }
+    // calculate coefficients
     if (1.0 - cosom > EPSILON) {
       // standard case (slerp)
       omega = Math.acos(cosom);
@@ -5427,14 +3970,15 @@
       //  ... so we can do a linear interpolation
       scale0 = 1.0 - t;
       scale1 = t;
-    } // calculate final values
-
+    }
+    // calculate final values
     out[0] = scale0 * ax + scale1 * bx;
     out[1] = scale0 * ay + scale1 * by;
     out[2] = scale0 * az + scale1 * bz;
     out[3] = scale0 * aw + scale1 * bw;
     return out;
   }
+
   /**
    * Creates a quaternion from the given 3x3 rotation matrix.
    *
@@ -5446,7 +3990,6 @@
    * @returns {quat} out
    * @function
    */
-
   function fromMat3(out, m) {
     // Algorithm in Ken Shoemake's article in 1987 SIGGRAPH course notes
     // article "Quaternion Calculus and Fast Animation".
@@ -5455,10 +3998,8 @@
     if (fTrace > 0.0) {
       // |w| > 1/2, may as well choose w > 1/2
       fRoot = Math.sqrt(fTrace + 1.0); // 2w
-
       out[3] = 0.5 * fRoot;
       fRoot = 0.5 / fRoot; // 1/(4w)
-
       out[0] = (m[5] - m[7]) * fRoot;
       out[1] = (m[6] - m[2]) * fRoot;
       out[2] = (m[1] - m[3]) * fRoot;
@@ -5478,6 +4019,7 @@
     }
     return out;
   }
+
   /**
    * Normalize a quat
    *
@@ -5486,8 +4028,8 @@
    * @returns {quat} out
    * @function
    */
-
   var normalize = normalize$1;
+
   /**
    * Sets a quaternion to represent the shortest rotation from one
    * vector to another.
@@ -5499,7 +4041,6 @@
    * @param {ReadonlyVec3} b the destination vector
    * @returns {quat} out
    */
-
   var rotationTo = function () {
     var tmpvec3 = create$2();
     var xUnitVec3 = fromValues(1, 0, 0);
@@ -5528,6 +4069,7 @@
       }
     };
   }();
+
   /**
    * Performs a spherical linear interpolation with two control points
    *
@@ -5539,7 +4081,6 @@
    * @param {Number} t interpolation amount, in the range [0-1], between the two inputs
    * @returns {quat} out
    */
-
   (function () {
     var temp1 = create();
     var temp2 = create();
@@ -5550,6 +4091,7 @@
       return out;
     };
   })();
+
   /**
    * Sets the specified quaternion with values corresponding to the given
    * axes. Each axis is a vec3 and is expected to be unit length and
@@ -5560,7 +4102,6 @@
    * @param {ReadonlyVec3} up    the vector representing the local "up" direction
    * @returns {quat} out
    */
-
   (function () {
     var matr = create$3();
     return function (out, view, right, up) {
@@ -5584,38 +4125,28 @@
    */
   function componentVectorFields () {
     /* Default Properties */
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      colors: d3__namespace.schemeRdYlGn[8],
+      xScale: undefined,
+      yScale: undefined,
+      zScale: undefined,
+      colorScale: undefined,
+      sizeScale: undefined,
+      sizeRange: [2.0, 5.0]
     };
-    var colors = d3__namespace.schemeRdYlGn[8];
-    var classed = "d3X3dVectorFields";
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-    var colorScale;
-    var sizeScale;
-    var sizeRange = [2.0, 5.0];
-
-    /**
-     * Vector Field Function
-     *
-     * @param {number} x
-     * @param {number} y
-     * @param {number} z
-     * @param {number} value
-     * @returns {{vx: number, vy: number, vz: number}}
-     */
-    var vectorFunction = function vectorFunction(x, y, z) {
+    state.vectorFunction = function (x, y, z) {
       return {
         vx: x,
         vy: y,
         vz: z
       };
     };
+    var classed = "d3X3dVectorFields";
 
     /**
      * Initialise Data and Scales
@@ -5633,10 +4164,10 @@
       var maxX = coordinatesMax.x,
         maxY = coordinatesMax.y,
         maxZ = coordinatesMax.z;
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y,
-        dimensionZ = _dimensions.z;
+      var _state$dimensions = state.dimensions,
+        dimensionX = _state$dimensions.x,
+        dimensionY = _state$dimensions.y,
+        dimensionZ = _state$dimensions.z;
       var extent = d3__namespace.extent(data.values.map(function (f) {
         var vx, vy, vz;
         if ("vx" in f) {
@@ -5644,28 +4175,28 @@
           vy = f.vy;
           vz = f.vz;
         } else {
-          var _vectorFunction = vectorFunction(f.x, f.y, f.z, f.value);
-          vx = _vectorFunction.vx;
-          vy = _vectorFunction.vy;
-          vz = _vectorFunction.vz;
+          var _state$vectorFunction = state.vectorFunction(f.x, f.y, f.z, f.value);
+          vx = _state$vectorFunction.vx;
+          vy = _state$vectorFunction.vy;
+          vz = _state$vectorFunction.vz;
         }
         var vector = fromValues(vx, vy, vz);
         return length(vector);
       }));
-      if (typeof xScale === "undefined") {
-        xScale = d3__namespace.scaleLinear().domain([minX, maxX]).range([0, dimensionX]);
+      if (typeof state.xScale === "undefined") {
+        state.xScale = d3__namespace.scaleLinear().domain([minX, maxX]).range([0, dimensionX]);
       }
-      if (typeof yScale === "undefined") {
-        yScale = d3__namespace.scaleLinear().domain([minY, maxY]).range([0, dimensionY]);
+      if (typeof state.yScale === "undefined") {
+        state.yScale = d3__namespace.scaleLinear().domain([minY, maxY]).range([0, dimensionY]);
       }
-      if (typeof zScale === "undefined") {
-        zScale = d3__namespace.scaleLinear().domain([minZ, maxZ]).range([0, dimensionZ]);
+      if (typeof state.zScale === "undefined") {
+        state.zScale = d3__namespace.scaleLinear().domain([minZ, maxZ]).range([0, dimensionZ]);
       }
-      if (typeof sizeScale === "undefined") {
-        sizeScale = d3__namespace.scaleLinear().domain(extent).range(sizeRange);
+      if (typeof state.sizeScale === "undefined") {
+        state.sizeScale = d3__namespace.scaleLinear().domain(extent).range(state.sizeRange);
       }
-      if (typeof colorScale === "undefined") {
-        colorScale = d3__namespace.scaleQuantize().domain(extent).range(colors);
+      if (typeof state.colorScale === "undefined") {
+        state.colorScale = d3__namespace.scaleQuantize().domain(extent).range(state.colors);
       }
     };
 
@@ -5690,10 +4221,10 @@
               vy = f.vy;
               vz = f.vz;
             } else {
-              var _vectorFunction2 = vectorFunction(f.x, f.y, f.z, f.value);
-              vx = _vectorFunction2.vx;
-              vy = _vectorFunction2.vy;
-              vz = _vectorFunction2.vz;
+              var _state$vectorFunction2 = state.vectorFunction(f.x, f.y, f.z, f.value);
+              vx = _state$vectorFunction2.vx;
+              vy = _state$vectorFunction2.vy;
+              vz = _state$vectorFunction2.vz;
             }
             var vecStart = fromValues(0, 1, 0);
             var vecEnd = fromValues(vx, vy, vz);
@@ -5712,7 +4243,7 @@
             }
 
             // Calculate transform-translation attr
-            f.translation = xScale(f.x) + " " + yScale(f.y) + " " + zScale(f.z);
+            f.translation = state.xScale(f.x) + " " + state.yScale(f.y) + " " + state.zScale(f.z);
 
             // Calculate vector length
             f.value = vecLen;
@@ -5730,22 +4261,22 @@
         }).attr("rotation", function (d) {
           return d.rotation;
         }).attr("class", "arrow").append("Transform").attr("translation", function (d) {
-          var offset = sizeScale(d.value) / 2;
+          var offset = state.sizeScale(d.value) / 2;
           return "0 " + offset + " 0";
         }).append("Group");
         var arrowHead = arrowsEnter.append("Shape");
         arrowHead.append("Appearance").append("Material").attr("diffuseColor", function (d) {
-          return colorParse(colorScale(d.value));
+          return colorParse(state.colorScale(d.value));
         });
         arrowHead.append("Cylinder").attr("height", function (d) {
-          return sizeScale(d.value);
+          return state.sizeScale(d.value);
         }).attr("radius", 0.1);
         var arrowShaft = arrowsEnter.append("Transform").attr("translation", function (d) {
-          var offset = sizeScale(d.value) / 2;
+          var offset = state.sizeScale(d.value) / 2;
           return "0 " + offset + " 0";
         }).append("Shape");
         arrowShaft.append("Appearance").append("Material").attr("diffuseColor", function (d) {
-          return colorParse(colorScale(d.value));
+          return colorParse(state.colorScale(d.value));
         });
         arrowShaft.append("Cone").attr("height", 1).attr("bottomRadius", 0.4);
         arrowsEnter.merge(arrows);
@@ -5757,114 +4288,6 @@
     };
 
     /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Size Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.sizeScale = function (_v) {
-      if (!arguments.length) return sizeScale;
-      sizeScale = _v;
-      return my;
-    };
-
-    /**
-     * Size Range Getter / Setter
-     *
-     * @param {number[]} _v - Size min and max (e.g. [1, 9]).
-     * @returns {*}
-     */
-    my.sizeRange = function (_v) {
-      if (!arguments.length) return sizeRange;
-      sizeRange = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
-
-    /**
-     * Vector Function Getter / Setter
-     *
-     * @param {function} _f - Vector Function.
-     * @returns {*}
-     */
-    my.vectorFunction = function (_f) {
-      if (!arguments.length) return vectorFunction;
-      vectorFunction = _f;
-      return my;
-    };
-
-    /**
      * Dispatch On Getter
      *
      * @returns {*}
@@ -5873,6 +4296,21 @@
       var value = dispatch.on.apply(dispatch, arguments);
       return value === dispatch ? my : value;
     };
+
+    /**
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
+     *
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {d3.scale} xScale - D3 scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {d3.scale} zScale - D3 scale.
+     * @param {d3.scale} sizeScale - D3 color scale.
+     * @param {number[]} sizeRange - Size min and max (e.g. [1, 9]).
+     * @param {d3.scale} colorScale - D3 color scale.
+     * @param {Array} colors - Array of colours used by color scale.
+     * @param {function} vectorFunction - Vector Function.
+     */
+    attachAccessors(my, state);
     return my;
   }
 
@@ -5883,10 +4321,12 @@
    */
   function componentViewpoint () {
     /* Default Properties */
-    var centerOfRotation = [0.0, 0.0, 0.0];
-    var viewPosition = [80.0, 15.0, 80.0];
-    var viewOrientation = [0.0, 1.0, 0.0, 0.8];
-    var fieldOfView = 0.8;
+    var state = {
+      centerOfRotation: [0.0, 0.0, 0.0],
+      viewPosition: [80.0, 15.0, 80.0],
+      viewOrientation: [0.0, 1.0, 0.0, 0.8],
+      fieldOfView: 0.8
+    };
 
     /**
      * Constructor
@@ -5898,7 +4338,7 @@
     var my = function my(selection) {
       selection.each(function () {
         var viewpoint = d3__namespace.select(this).selectAll("viewpoint").data([null]);
-        viewpoint.enter().append("Viewpoint").attr("centerOfRotation", centerOfRotation.join(" ")).attr("position", viewPosition.join(" ")).attr("orientation", viewOrientation.join(" ")).attr("fieldOfView", fieldOfView).attr("set_bind", "true").merge(viewpoint);
+        viewpoint.enter().append("Viewpoint").attr("centerOfRotation", state.centerOfRotation.join(" ")).attr("position", state.viewPosition.join(" ")).attr("orientation", state.viewOrientation.join(" ")).attr("fieldOfView", state.fieldOfView).attr("set_bind", "true").merge(viewpoint);
       });
     };
 
@@ -5911,80 +4351,42 @@
     my.quickView = function (view) {
       switch (view) {
         case "left":
-          centerOfRotation = [0.0, 0.0, 0.0];
-          viewPosition = [37.10119, 18.70484, 51.01594];
-          viewOrientation = [0.06724, 0.99767, -0.01148, 0.33908];
-          fieldOfView = 1.0;
+          state.centerOfRotation = [0.0, 0.0, 0.0];
+          state.viewPosition = [37.10119, 18.70484, 51.01594];
+          state.viewOrientation = [0.06724, 0.99767, -0.01148, 0.33908];
+          state.fieldOfView = 1.0;
           break;
         case "side":
-          centerOfRotation = [20.0, 0.0, 0.0];
-          viewPosition = [20.00000, 20.00000, 50.00000];
-          viewOrientation = [0.00000, 0.00000, 0.00000, 0.00000];
-          fieldOfView = 1.0;
+          state.centerOfRotation = [20.0, 0.0, 0.0];
+          state.viewPosition = [20.00000, 20.00000, 50.00000];
+          state.viewOrientation = [0.00000, 0.00000, 0.00000, 0.00000];
+          state.fieldOfView = 1.0;
           break;
         case "top":
-          centerOfRotation = [0.0, 0.0, 0.0];
-          viewPosition = [27.12955, 106.67181, 31.65828];
-          viewOrientation = [-0.86241, 0.37490, 0.34013, 1.60141];
-          fieldOfView = 1.0;
+          state.centerOfRotation = [0.0, 0.0, 0.0];
+          state.viewPosition = [27.12955, 106.67181, 31.65828];
+          state.viewOrientation = [-0.86241, 0.37490, 0.34013, 1.60141];
+          state.fieldOfView = 1.0;
           break;
         case "dimetric":
         default:
-          centerOfRotation = [0.0, 0.0, 0.0];
-          viewPosition = [80.0, 15.0, 80.0];
-          viewOrientation = [0.0, 1.0, 0.0, 0.8];
-          fieldOfView = 0.8;
+          state.centerOfRotation = [0.0, 0.0, 0.0];
+          state.viewPosition = [80.0, 15.0, 80.0];
+          state.viewOrientation = [0.0, 1.0, 0.0, 0.8];
+          state.fieldOfView = 0.8;
       }
       return my;
     };
 
     /**
-     * Centre of Rotation Getter / Setter
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
      *
-     * @param {number[]} _v - Centre of rotation.
-     * @returns {*}
+     * @param {number[]} centerOfRotation - Centre of rotation.
+     * @param {number[]} viewPosition - View position.
+     * @param {number[]} viewOrientation - View orientation.
+     * @param {number} fieldOfView - Field of view.
      */
-    my.centerOfRotation = function (_v) {
-      if (!arguments.length) return centerOfRotation;
-      centerOfRotation = _v;
-      return my;
-    };
-
-    /**
-     * View Position Getter / Setter
-     *
-     * @param {number[]} _v - View position.
-     * @returns {*}
-     */
-    my.viewPosition = function (_v) {
-      if (!arguments.length) return viewPosition;
-      viewPosition = _v;
-      return my;
-    };
-
-    /**
-     * View Orientation Getter / Setter
-     *
-     * @param {number[]} _v - View orientation.
-     * @returns {*}
-     */
-    my.viewOrientation = function (_v) {
-      if (!arguments.length) return viewOrientation;
-      viewOrientation = _v;
-      return my;
-    };
-
-    /**
-     * Field of View Getter / Setter
-     *
-     * @param {number} _v - Field of view.
-     * @returns {*}
-     */
-    my.fieldOfView = function (_v) {
-      if (!arguments.length) return fieldOfView;
-      fieldOfView = _v;
-      return my;
-    };
+    attachAccessors(my, state);
     return my;
   }
 
@@ -5995,19 +4397,21 @@
    */
   function componentVolumeSlice () {
     /* Default Properties */
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      imageUrl: undefined,
+      numberOfSlices: undefined,
+      slicesOverX: undefined,
+      slicesOverY: undefined,
+      volumeStyle: "OpacityMap"
     };
     var classed = "d3X3dVolumeSlice";
 
     /* Other Volume Properties */
-    var imageUrl;
-    var numberOfSlices;
-    var slicesOverX;
-    var slicesOverY;
-    var volumeStyle = "OpacityMap";
 
     /**
      * Constructor
@@ -6017,17 +4421,17 @@
      * @param {d3.selection} selection - The chart holder D3 selection.
      */
     var my = function my(selection) {
-      selection.each(function (data) {
+      selection.each(function () {
         var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
         });
-        var _dimensions = dimensions,
-          dimensionX = _dimensions.x,
-          dimensionY = _dimensions.y,
-          dimensionZ = _dimensions.z;
+        var _state$dimensions = state.dimensions,
+          dimensionX = _state$dimensions.x,
+          dimensionY = _state$dimensions.y,
+          dimensionZ = _state$dimensions.z;
         var volumedata = element.append("Transform").append("VolumeData").attr("dimensions", "".concat(dimensionX, " ").concat(dimensionY, " ").concat(dimensionZ));
-        volumedata.append("ImageTextureAtlas").attr("crossOrigin", "anonymous").attr("containerField", "voxels").attr("url", imageUrl).attr("numberOfSlices", numberOfSlices).attr("slicesOverX", slicesOverX).attr("slicesOverY", slicesOverY);
-        switch (volumeStyle) {
+        volumedata.append("ImageTextureAtlas").attr("crossOrigin", "anonymous").attr("containerField", "voxels").attr("url", state.imageUrl).attr("numberOfSlices", state.numberOfSlices).attr("slicesOverX", state.slicesOverX).attr("slicesOverY", state.slicesOverY);
+        switch (state.volumeStyle) {
           case "MPRVolume":
             volumedata.append("MPRVolumeStyle").attr("forceOpaic", true).selectAll(".plane").data(function (d) {
               return d.values;
@@ -6046,76 +4450,16 @@
     };
 
     /**
-     * Dimensions Getter / Setter
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
      *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {string} imageUrl - Image URL path.
+     * @param {number} numberOfSlices - Total number of slices.
+     * @param {number} slicesOverX - Number of slices over X axis.
+     * @param {number} slicesOverY - Number of slices over Y axis.
+     * @param {string} volumeStyle - Volume render style (either "MPRVolume" or "OpacityMap")
      */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * Image URL Getter / Setter
-     *
-     * @param {string} _v - Image URL path.
-     * @returns {*}
-     */
-    my.imageUrl = function (_v) {
-      if (!arguments.length) return imageUrl;
-      imageUrl = _v;
-      return this;
-    };
-
-    /**
-     * Number of Slices Getter / Setter
-     *
-     * @param {number} _v - Total number of slices.
-     * @returns {*}
-     */
-    my.numberOfSlices = function (_v) {
-      if (!arguments.length) return numberOfSlices;
-      numberOfSlices = _v;
-      return this;
-    };
-
-    /**
-     * X Slices Getter / Setter
-     *
-     * @param {number} _v - Number of slices over X axis.
-     * @returns {*}
-     */
-    my.slicesOverX = function (_v) {
-      if (!arguments.length) return slicesOverX;
-      slicesOverX = _v;
-      return this;
-    };
-
-    /**
-     * Y Slices Getter / Setter
-     *
-     * @param {number} _v - Number of slices over Y axis.
-     * @returns {*}
-     */
-    my.slicesOverY = function (_v) {
-      if (!arguments.length) return slicesOverY;
-      slicesOverY = _v;
-      return this;
-    };
-
-    /**
-     * Volume Style Getter / Setter
-     *
-     * @param {string} _v - Volume render style (either "MPRVolume" or "OpacityMap")
-     * @returns {*}
-     */
-    my.volumeStyle = function (_v) {
-      if (!arguments.length) return volumeStyle;
-      volumeStyle = _v;
-      return this;
-    };
+    attachAccessors(my, state);
     return my;
   }
 
@@ -6220,6 +4564,118 @@
   }
 
   /**
+   * Column point scales shared by the area and ribbon charts.
+   * Scales are replaced on every call.
+   *
+   * @param {Array} data
+   * @param {Object} state
+   */
+  function initColumnPointScales(data, state) {
+    var _dataTransform$summar = dataTransform(data).summary(),
+      rowKeys = _dataTransform$summar.rowKeys,
+      columnKeys = _dataTransform$summar.columnKeys,
+      valueMax = _dataTransform$summar.valueMax;
+    var valueExtent = [0, valueMax];
+    var _state$dimensions = state.dimensions,
+      dimensionX = _state$dimensions.x,
+      dimensionY = _state$dimensions.y,
+      dimensionZ = _state$dimensions.z;
+    state.xScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionX]);
+    state.yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+    state.zScale = d3__namespace.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
+    state.colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(state.colors);
+  }
+
+  /**
+   * Viewpoint orientation shared by the area and ribbon charts.
+   *
+   * @param {Function} viewpoint
+   */
+  function orientSeriesViewpoint(viewpoint) {
+    viewpoint.viewOrientation([-0.61021, 0.77568, 0.16115, 0.65629]).viewPosition([77.63865, 54.69470, 104.38314]);
+  }
+
+  /**
+   * Linear coordinate scales shared by the bubble chart and spot plot.
+   * Scales are replaced on every call.
+   *
+   * @param {Array} data
+   * @param {Object} state
+   */
+  function initCoordinateScales(data, state) {
+    var _dataTransform$summar2 = dataTransform(data).summary(),
+      valueExtent = _dataTransform$summar2.valueExtent,
+      coordinatesExtent = _dataTransform$summar2.coordinatesExtent,
+      rowKeys = _dataTransform$summar2.rowKeys;
+    var extentX = coordinatesExtent.x,
+      extentY = coordinatesExtent.y,
+      extentZ = coordinatesExtent.z;
+    var _state$dimensions2 = state.dimensions,
+      dimensionX = _state$dimensions2.x,
+      dimensionY = _state$dimensions2.y,
+      dimensionZ = _state$dimensions2.z;
+    state.xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensionX]);
+    state.yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensionY]);
+    state.zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensionZ]);
+    state.colorScale = d3__namespace.scaleOrdinal().domain(rowKeys).range(state.colors);
+    state.sizeScale = d3__namespace.scaleLinear().domain(valueExtent).range(state.sizeRange);
+  }
+
+  /**
+   * Build a chart that creates a scene, viewpoint, axis, mark, and optional light.
+   * `init` assigns scales on every call. `draw` covers marks that are not a single layer call.
+   *
+   * @param {Object} spec
+   * @returns {Function}
+   */
+  function sceneChart(spec) {
+    var state = _objectSpread2({}, spec.state);
+    var viewpoint = component.viewpoint();
+    var axis = spec.axis();
+    var mark = spec.mark();
+    var light = spec.light ? component.light() : null;
+    var my = function my(selection) {
+      var scene = createScene(selection, spec.layers, spec.classed, state.width, state.height, state.debug);
+      selection.each(function (data) {
+        spec.init(data, state);
+        viewpoint.centerOfRotation([state.dimensions.x / 2, state.dimensions.y / 2, state.dimensions.z / 2]);
+        if (spec.viewpoint) spec.viewpoint(viewpoint, state);
+        scene.call(viewpoint);
+        axis.xScale(state.xScale).yScale(state.yScale).zScale(state.zScale);
+        if (spec.configureAxis) spec.configureAxis(axis, state);
+        scene.select(".axis").call(axis);
+        mark.xScale(state.xScale).yScale(state.yScale).zScale(state.zScale);
+        if (spec.configureMark) spec.configureMark(mark, state);
+        if (spec.markLayer) {
+          scene.select(spec.markLayer).datum(data).call(mark);
+        }
+        if (spec.draw) {
+          spec.draw({
+            scene: scene,
+            state: state,
+            mark: mark,
+            data: data
+          });
+        }
+        if (light) scene.call(light);
+      });
+    };
+    if (spec.events) {
+      /**
+       * Dispatch On Getter
+       *
+       * @returns {*}
+       */
+      my.on = function () {
+        var value = dispatch.on.apply(dispatch, arguments);
+        return value === dispatch ? my : value;
+      };
+    }
+    attachAccessors(my, state);
+    return my;
+  }
+
+  /**
    * Reusable 3D Multi Series Area Chart
    *
    * @module
@@ -6234,210 +4690,52 @@
    * chartHolder.datum(myData).call(myChart);
    *
    * @see https://datavizproject.com/data-type/nested-area-chart/
+   *
+   * @param {number} width - X3D canvas width in px.
+   * @param {number} height - X3D canvas height in px.
+   * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+   * @param {d3.scale} xScale - D3 scale.
+   * @param {d3.scale} yScale - D3 scale.
+   * @param {d3.scale} zScale - D3 scale.
+   * @param {d3.scale} colorScale - D3 color scale.
+   * @param {Array} colors - Array of colours used by color scale.
+   * @param {d3.curve} smoothed
+   * @param {boolean} debug - Show debug log and stats. True/False.
    */
   function chartAreaChartMultiSeries () {
-    /* Default Properties */
-    var width = 500;
-    var height = 500;
-    var dimensions = {
-      x: 60,
-      y: 40,
-      z: 40
-    };
-    var colors = ["green", "red", "yellow", "steelblue", "orange"];
-    var classed = "d3X3dAreaChartMultiSeries";
-    var debug = false;
-    var smoothed = d3__namespace.curveMonotoneX;
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-    var colorScale;
-
-    /* Components */
-    var viewpoint = component.viewpoint();
-    var axis = component.axisThreePlane().labelPosition("distal");
-    var areas = component.areaMultiSeries();
-    var light = component.light();
-
-    /**
-     * Initialise Data and Scales
-     *
-     * @private
-     * @param {Array} data - Chart data.
-     */
-    var init = function init(data) {
-      var _dataTransform$summar = dataTransform(data).summary(),
-        rowKeys = _dataTransform$summar.rowKeys,
-        columnKeys = _dataTransform$summar.columnKeys,
-        valueMax = _dataTransform$summar.valueMax;
-      var valueExtent = [0, valueMax];
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y,
-        dimensionZ = _dimensions.z;
-      xScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionX]);
-      yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-      zScale = d3__namespace.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
-      colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
-    };
-
-    /**
-     * Constructor
-     *
-     * @constructor
-     * @alias areaChartMultiSeries
-     * @param {d3.selection} selection - The chart holder D3 selection.
-     */
-    var my = function my(selection) {
-      var layers = ["axis", "areas"];
-      var scene = createScene(selection, layers, classed, width, height, debug);
-      selection.each(function (data) {
-        init(data);
-
-        // Add Viewpoint
-        viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]).viewOrientation([-0.61021, 0.77568, 0.16115, 0.65629]).viewPosition([77.63865, 54.69470, 104.38314]);
-        scene.call(viewpoint);
-
-        // Add Axis
-        axis.xScale(xScale).yScale(yScale).zScale(zScale);
-        scene.select(".axis").call(axis);
-
-        // Add Areas
-        areas.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors).smoothed(smoothed).dimensions(dimensions);
-        scene.select(".areas").datum(data).call(areas);
-
-        // Add Light
-        scene.call(light);
-      });
-    };
-
-    /**
-     * Width Getter / Setter
-     *
-     * @param {number} _v - X3D canvas width in px.
-     * @returns {*}
-     */
-    my.width = function (_v) {
-      if (!arguments.length) return width;
-      width = _v;
-      return this;
-    };
-
-    /**
-     * Height Getter / Setter
-     *
-     * @param {number} _v - X3D canvas height in px.
-     * @returns {*}
-     */
-    my.height = function (_v) {
-      if (!arguments.length) return height;
-      height = _v;
-      return this;
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
-
-    /**
-     * Smooth Interpolation Getter / Setter
-     *
-     * Options:
-     *   d3.curveBasis
-     *   d3.curveLinear
-     *   d3.curveMonotoneX
-     *
-     * @param {d3.curve} _v.
-     * @returns {*}
-     */
-    my.smoothed = function (_v) {
-      if (!arguments.length) return smoothed;
-      smoothed = _v;
-      return my;
-    };
-
-    /**
-     * Debug Getter / Setter
-     *
-     * @param {boolean} _v - Show debug log and stats. True/False.
-     * @returns {*}
-     */
-    my.debug = function (_v) {
-      if (!arguments.length) return debug;
-      debug = _v;
-      return my;
-    };
-    return my;
+    return sceneChart({
+      classed: "d3X3dAreaChartMultiSeries",
+      layers: ["axis", "areas"],
+      markLayer: ".areas",
+      light: true,
+      state: {
+        width: 500,
+        height: 500,
+        dimensions: {
+          x: 60,
+          y: 40,
+          z: 40
+        },
+        colors: ["green", "red", "yellow", "steelblue", "orange"],
+        debug: false,
+        smoothed: d3__namespace.curveMonotoneX,
+        xScale: undefined,
+        yScale: undefined,
+        zScale: undefined,
+        colorScale: undefined
+      },
+      axis: function axis() {
+        return component.axisThreePlane().labelPosition("distal");
+      },
+      mark: function mark() {
+        return component.areaMultiSeries();
+      },
+      init: initColumnPointScales,
+      viewpoint: orientSeriesViewpoint,
+      configureMark: function configureMark(mark, chartState) {
+        mark.colors(chartState.colors).smoothed(chartState.smoothed).dimensions(chartState.dimensions);
+      }
+    });
   }
 
   /**
@@ -6455,205 +4753,68 @@
    * chartHolder.datum(myData).call(myChart);
    *
    * @see https://datavizproject.com/data-type/3d-bar-chart/
+   *
+   * @param {number} width - X3D canvas width in px.
+   * @param {number} height - X3D canvas height in px.
+   * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+   * @param {d3.scale} xScale - D3 scale.
+   * @param {d3.scale} yScale - D3 scale.
+   * @param {d3.scale} zScale - D3 scale.
+   * @param {d3.scale} colorScale - D3 color scale.
+   * @param {Array} colors - Array of colours used by color scale.
+   * @param {string} labelPosition - Position ("proximal" or "distal")
+   * @param {boolean} debug - Show debug log and stats. True/False.
    */
   function chartBarChartMultiSeries () {
-    /* Default Properties */
-    var width = 500;
-    var height = 500;
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
-    };
-    var colors = ["green", "red", "yellow", "steelblue", "orange"];
-    var classed = "d3X3dBarChartMultiSeries";
-    var labelPosition = "distal";
-    var debug = false;
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-    var colorScale;
-
-    /* Components */
-    var viewpoint = component.viewpoint();
-    var axis = component.axisThreePlane();
-    var bars = component.barsMultiSeries();
-    var light = component.light();
-
-    /**
-     * Initialise Data and Scales
-     *
-     * @private
-     * @param {Array} data - Chart data.
-     */
-    var init = function init(data) {
-      var _dataTransform$summar = dataTransform(data).summary(),
-        rowKeys = _dataTransform$summar.rowKeys,
-        columnKeys = _dataTransform$summar.columnKeys,
-        valueMax = _dataTransform$summar.valueMax;
-      var valueExtent = [0, valueMax];
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y,
-        dimensionZ = _dimensions.z;
-      xScale = d3__namespace.scaleBand().domain(columnKeys).range([0, dimensionX]).padding(0.5).align(0.75);
-      yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-      zScale = d3__namespace.scaleBand().domain(rowKeys.reverse()).range([0, dimensionZ]).padding(0.5).align(0.75);
-      colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
-    };
-
-    /**
-     * Constructor
-     *
-     * @constructor
-     * @alias barChartMultiSeries
-     * @param {d3.selection} selection - The chart holder D3 selection.
-     */
-    var my = function my(selection) {
-      var layers = ["axis", "bars"];
-      var scene = createScene(selection, layers, classed, width, height, debug);
-      selection.each(function (data) {
-        init(data);
-
-        // Add Viewpoint
-        viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-        scene.call(viewpoint);
-
-        // Add Axis
-        axis.xScale(xScale).yScale(yScale).zScale(zScale).labelPosition(labelPosition);
-        scene.select(".axis").call(axis);
-
-        // Add Bars
-        bars.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
-        scene.select(".bars").datum(data).call(bars);
-
-        // Add Light
-        scene.call(light);
-      });
-    };
-
-    /**
-     * Width Getter / Setter
-     *
-     * @param {number} _v - X3D canvas width in px.
-     * @returns {*}
-     */
-    my.width = function (_v) {
-      if (!arguments.length) return width;
-      width = _v;
-      return this;
-    };
-
-    /**
-     * Height Getter / Setter
-     *
-     * @param {number} _v - X3D canvas height in px.
-     * @returns {*}
-     */
-    my.height = function (_v) {
-      if (!arguments.length) return height;
-      height = _v;
-      return this;
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
-
-    /**
-     * Label Position Getter / Setter
-     *
-     * @param {string} _v - Position ("proximal" or "distal")
-     * @returns {*}
-     */
-    my.labelPosition = function (_v) {
-      if (!arguments.length) return labelPosition;
-      labelPosition = _v;
-      return my;
-    };
-
-    /**
-     * Debug Getter / Setter
-     *
-     * @param {boolean} _v - Show debug log and stats. True/False.
-     * @returns {*}
-     */
-    my.debug = function (_v) {
-      if (!arguments.length) return debug;
-      debug = _v;
-      return my;
-    };
-    return my;
+    return sceneChart({
+      classed: "d3X3dBarChartMultiSeries",
+      layers: ["axis", "bars"],
+      markLayer: ".bars",
+      light: true,
+      state: {
+        width: 500,
+        height: 500,
+        dimensions: {
+          x: 40,
+          y: 40,
+          z: 40
+        },
+        colors: ["green", "red", "yellow", "steelblue", "orange"],
+        labelPosition: "distal",
+        debug: false,
+        xScale: undefined,
+        yScale: undefined,
+        zScale: undefined,
+        colorScale: undefined
+      },
+      axis: function axis() {
+        return component.axisThreePlane();
+      },
+      mark: function mark() {
+        return component.barsMultiSeries();
+      },
+      init: function init(data, chartState) {
+        var _dataTransform$summar = dataTransform(data).summary(),
+          rowKeys = _dataTransform$summar.rowKeys,
+          columnKeys = _dataTransform$summar.columnKeys,
+          valueMax = _dataTransform$summar.valueMax;
+        var valueExtent = [0, valueMax];
+        var _chartState$dimension = chartState.dimensions,
+          dimensionX = _chartState$dimension.x,
+          dimensionY = _chartState$dimension.y,
+          dimensionZ = _chartState$dimension.z;
+        chartState.xScale = d3__namespace.scaleBand().domain(columnKeys).range([0, dimensionX]).padding(0.5).align(0.75);
+        chartState.yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+        chartState.zScale = d3__namespace.scaleBand().domain(rowKeys.reverse()).range([0, dimensionZ]).padding(0.5).align(0.75);
+        chartState.colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(chartState.colors);
+      },
+      configureAxis: function configureAxis(axis, chartState) {
+        axis.labelPosition(chartState.labelPosition);
+      },
+      configureMark: function configureMark(mark, chartState) {
+        mark.colors(chartState.colors);
+      }
+    });
   }
 
   /**
@@ -6674,21 +4835,21 @@
    */
   function chartBarChartVertical () {
     /* Default Properties */
-    var width = 500;
-    var height = 500;
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      width: 500,
+      height: 500,
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      colors: ["green", "red", "yellow", "steelblue", "orange"],
+      debug: false,
+      xScale: undefined,
+      yScale: undefined,
+      colorScale: undefined
     };
-    var colors = ["green", "red", "yellow", "steelblue", "orange"];
     var classed = "d3X3dBarChartVertical";
-    var debug = false;
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var colorScale;
 
     /* Components */
     var viewpoint = component.viewpoint();
@@ -6708,12 +4869,12 @@
         columnKeys = _dataTransform$summar.columnKeys,
         valueMax = _dataTransform$summar.valueMax;
       var valueExtent = [0, valueMax];
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y;
-      xScale = d3__namespace.scaleBand().domain(columnKeys).range([0, dimensionX]).padding(0.5).align(0.75);
-      yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-      colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
+      var _state$dimensions = state.dimensions,
+        dimensionX = _state$dimensions.x,
+        dimensionY = _state$dimensions.y;
+      state.xScale = d3__namespace.scaleBand().domain(columnKeys).range([0, dimensionX]).padding(0.5).align(0.75);
+      state.yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+      state.colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(state.colors);
     };
 
     /**
@@ -6725,7 +4886,7 @@
      */
     var my = function my(selection) {
       var layers = ["xAxis", "yAxis", "bars"];
-      var scene = createScene(selection, layers, classed, width, height, debug);
+      var scene = createScene(selection, layers, classed, state.width, state.height, state.debug);
       selection.each(function (data) {
         init(data);
 
@@ -6734,13 +4895,13 @@
         scene.call(viewpoint);
 
         // Add Axis
-        xAxis.scale(xScale).direction("x").tickDirection("y").tickSize(0);
-        yAxis.scale(yScale).direction("y").tickDirection("x").tickSize(yScale.range()[1] - yScale.range()[0]);
+        xAxis.scale(state.xScale).direction("x").tickDirection("y").tickSize(0);
+        yAxis.scale(state.yScale).direction("y").tickDirection("x").tickSize(state.yScale.range()[1] - state.yScale.range()[0]);
         scene.select(".xAxis").call(xAxis);
         scene.select(".yAxis").call(yAxis);
 
         // Add Bars
-        bars.xScale(xScale).yScale(yScale).colors(colors);
+        bars.xScale(state.xScale).yScale(state.yScale).colors(state.colors);
         scene.select(".bars").datum(data).call(bars);
 
         // Add Light
@@ -6749,100 +4910,18 @@
     };
 
     /**
-     * Width Getter / Setter
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
      *
-     * @param {number} _v - X3D canvas width in px.
-     * @returns {*}
+     * @param {number} width - X3D canvas width in px.
+     * @param {number} height - X3D canvas height in px.
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {d3.scale} xScale - D3 scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {d3.scale} colorScale - D3 color scale.
+     * @param {Array} colors - Array of colours used by color scale.
+     * @param {boolean} debug - Show debug log and stats. True/False.
      */
-    my.width = function (_v) {
-      if (!arguments.length) return width;
-      width = _v;
-      return this;
-    };
-
-    /**
-     * Height Getter / Setter
-     *
-     * @param {number} _v - X3D canvas height in px.
-     * @returns {*}
-     */
-    my.height = function (_v) {
-      if (!arguments.length) return height;
-      height = _v;
-      return this;
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
-
-    /**
-     * Debug Getter / Setter
-     *
-     * @param {boolean} _v - Show debug log and stats. True/False.
-     * @returns {*}
-     */
-    my.debug = function (_v) {
-      if (!arguments.length) return debug;
-      debug = _v;
-      return my;
-    };
+    attachAccessors(my, state);
     return my;
   }
 
@@ -6861,221 +4940,53 @@
    * chartHolder.datum(myData).call(myChart);
    *
    * @see https://datavizproject.com/data-type/bubble-chart/
+   *
+   * @param {number} width - X3D canvas width in px.
+   * @param {number} height - X3D canvas height in px.
+   * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+   * @param {d3.scale} xScale - D3 scale.
+   * @param {d3.scale} yScale - D3 scale.
+   * @param {d3.scale} zScale - D3 scale.
+   * @param {d3.scale} colorScale - D3 color scale.
+   * @param {Array} colors - Array of colours used by color scale.
+   * @param {d3.scale} sizeScale - D3 color scale.
+   * @param {number[]} sizeRange - Size min and max (e.g. [0.5, 3.0]).
+   * @param {boolean} debug - Show debug log and stats. True/False.
    */
   function chartBubbleChart () {
-    /* Default Properties */
-    var width = 500;
-    var height = 500;
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
-    };
-    var colors = ["green", "red", "yellow", "steelblue", "orange"];
-    var sizeRange = [0.5, 3.5];
-    var classed = "d3X3dBubbleChart";
-    var debug = false;
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-    var colorScale;
-    var sizeScale;
-
-    /* Components */
-    var viewpoint = component.viewpoint();
-    var axis = component.axisThreePlane();
-    var bubbles = component.bubblesMultiSeries();
-    var light = component.light();
-
-    /**
-     * Initialise Data and Scales
-     *
-     * @private
-     * @param {Array} data - Chart data.
-     */
-    var init = function init(data) {
-      var _dataTransform$summar = dataTransform(data).summary(),
-        valueExtent = _dataTransform$summar.valueExtent,
-        coordinatesExtent = _dataTransform$summar.coordinatesExtent,
-        rowKeys = _dataTransform$summar.rowKeys;
-      var extentX = coordinatesExtent.x,
-        extentY = coordinatesExtent.y,
-        extentZ = coordinatesExtent.z;
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y,
-        dimensionZ = _dimensions.z;
-      xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensionX]);
-      yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensionY]);
-      zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensionZ]);
-      colorScale = d3__namespace.scaleOrdinal().domain(rowKeys).range(colors);
-      sizeScale = d3__namespace.scaleLinear().domain(valueExtent).range(sizeRange);
-    };
-
-    /**
-     * Constructor
-     *
-     * @constructor
-     * @alias bubbleChart
-     * @param {d3.selection} selection - The chart holder D3 selection.
-     */
-    var my = function my(selection) {
-      var layers = ["axis", "bubbles"];
-      var scene = createScene(selection, layers, classed, width, height, debug);
-      selection.each(function (data) {
-        init(data);
-
-        // Add Viewpoint
-        viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-        scene.call(viewpoint);
-
-        // Add Axis
-        axis.xScale(xScale).yScale(yScale).zScale(zScale);
-        scene.select(".axis").call(axis);
-
-        // Add Bubbles
-        bubbles.xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).colorScale(colorScale);
-        scene.select(".bubbles").datum(data).call(bubbles);
-
-        // Add Light
-        scene.call(light);
-      });
-    };
-
-    /**
-     * Width Getter / Setter
-     *
-     * @param {number} _v - X3D canvas width in px.
-     * @returns {*}
-     */
-    my.width = function (_v) {
-      if (!arguments.length) return width;
-      width = _v;
-      return this;
-    };
-
-    /**
-     * Height Getter / Setter
-     *
-     * @param {number} _v - X3D canvas height in px.
-     * @returns {*}
-     */
-    my.height = function (_v) {
-      if (!arguments.length) return height;
-      height = _v;
-      return this;
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
-
-    /**
-     * Size Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.sizeScale = function (_v) {
-      if (!arguments.length) return sizeScale;
-      sizeScale = _v;
-      return my;
-    };
-
-    /**
-     * Size Range Getter / Setter
-     *
-     * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
-     * @returns {*}
-     */
-    my.sizeRange = function (_v) {
-      if (!arguments.length) return sizeRange;
-      sizeRange = _v;
-      return my;
-    };
-
-    /**
-     * Debug Getter / Setter
-     *
-     * @param {boolean} _v - Show debug log and stats. True/False.
-     * @returns {*}
-     */
-    my.debug = function (_v) {
-      if (!arguments.length) return debug;
-      debug = _v;
-      return my;
-    };
-    return my;
+    return sceneChart({
+      classed: "d3X3dBubbleChart",
+      layers: ["axis", "bubbles"],
+      markLayer: ".bubbles",
+      light: true,
+      state: {
+        width: 500,
+        height: 500,
+        dimensions: {
+          x: 40,
+          y: 40,
+          z: 40
+        },
+        colors: ["green", "red", "yellow", "steelblue", "orange"],
+        sizeRange: [0.5, 3.5],
+        debug: false,
+        xScale: undefined,
+        yScale: undefined,
+        zScale: undefined,
+        colorScale: undefined,
+        sizeScale: undefined
+      },
+      axis: function axis() {
+        return component.axisThreePlane();
+      },
+      mark: function mark() {
+        return component.bubblesMultiSeries();
+      },
+      init: initCoordinateScales,
+      configureMark: function configureMark(mark, chartState) {
+        mark.sizeScale(chartState.sizeScale).colorScale(chartState.colorScale);
+      }
+    });
   }
 
   /**
@@ -7091,166 +5002,67 @@
    * let myChart = d3.x3d.chart.crosshairPlot();
    *
    * chartHolder.datum(myData).call(myChart);
+   *
+   * @param {number} width - X3D canvas width in px.
+   * @param {number} height - X3D canvas height in px.
+   * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+   * @param {d3.scale} xScale - D3 scale.
+   * @param {d3.scale} yScale - D3 scale.
+   * @param {d3.scale} zScale - D3 scale.
+   * @param {boolean} debug - Show debug log and stats. True/False.
    */
   function chartCrosshairPlot () {
-    /* Default Properties */
-    var width = 500;
-    var height = 500;
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
-    };
-    var classed = "d3X3dCrosshairPlot";
-    var debug = false;
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-
-    /* Components */
-    var viewpoint = component.viewpoint();
-    var axis = component.axisThreePlane();
-    var crosshair = component.crosshair();
-
-    /**
-     * Initialise Data and Scales
-     *
-     * @private
-     * @param {Array} data - Chart data.
-     */
-    var init = function init(data) {
-      var _dataTransform$summar = dataTransform(data).summary(),
-        coordinatesMax = _dataTransform$summar.coordinatesMax;
-      var maxX = coordinatesMax.x,
-        maxY = coordinatesMax.y,
-        maxZ = coordinatesMax.z;
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y,
-        dimensionZ = _dimensions.z;
-      xScale = d3__namespace.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
-      yScale = d3__namespace.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
-      zScale = d3__namespace.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
-    };
-
-    /**
-     * Constructor
-     *
-     * @constructor
-     * @alias crosshairPlot
-     * @param {d3.selection} selection - The chart holder D3 selection.
-     */
-    var my = function my(selection) {
-      var layers = ["axis", "crosshairs"];
-      var scene = createScene(selection, layers, classed, width, height, debug);
-      selection.each(function (data) {
-        init(data);
-
-        // Add Viewpoint
-        viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-        scene.call(viewpoint);
-
-        // Add Axis
-        axis.xScale(xScale).yScale(yScale).zScale(zScale).dimensions(dimensions);
-        scene.select(".axis").call(axis);
-
-        // Add Crosshair
-        crosshair.xScale(xScale).yScale(yScale).zScale(zScale);
+    return sceneChart({
+      classed: "d3X3dCrosshairPlot",
+      layers: ["axis", "crosshairs"],
+      state: {
+        width: 500,
+        height: 500,
+        dimensions: {
+          x: 40,
+          y: 40,
+          z: 40
+        },
+        debug: false,
+        xScale: undefined,
+        yScale: undefined,
+        zScale: undefined
+      },
+      axis: function axis() {
+        return component.axisThreePlane();
+      },
+      mark: function mark() {
+        return component.crosshair();
+      },
+      init: function init(data, chartState) {
+        var _dataTransform$summar = dataTransform(data).summary(),
+          coordinatesMax = _dataTransform$summar.coordinatesMax;
+        var maxX = coordinatesMax.x,
+          maxY = coordinatesMax.y,
+          maxZ = coordinatesMax.z;
+        var _chartState$dimension = chartState.dimensions,
+          dimensionX = _chartState$dimension.x,
+          dimensionY = _chartState$dimension.y,
+          dimensionZ = _chartState$dimension.z;
+        chartState.xScale = d3__namespace.scaleLinear().domain([0, maxX]).range([0, dimensionX]);
+        chartState.yScale = d3__namespace.scaleLinear().domain([0, maxY]).range([0, dimensionY]);
+        chartState.zScale = d3__namespace.scaleLinear().domain([0, maxZ]).range([0, dimensionZ]);
+      },
+      configureAxis: function configureAxis(axis, chartState) {
+        axis.dimensions(chartState.dimensions);
+      },
+      draw: function draw(_ref) {
+        var scene = _ref.scene,
+          mark = _ref.mark,
+          data = _ref.data;
         var crosshairs = scene.select(".crosshairs").datum(data).selectAll(".crosshair").data(function (d) {
           return d.values;
         });
         crosshairs.enter().append("group").classed("crosshair", true).merge(crosshairs).transition().each(function () {
-          d3__namespace.select(this).call(crosshair);
+          d3__namespace.select(this).call(mark);
         });
-      });
-    };
-
-    /**
-     * Width Getter / Setter
-     *
-     * @param {number} _v - X3D canvas width in px.
-     * @returns {*}
-     */
-    my.width = function (_v) {
-      if (!arguments.length) return width;
-      width = _v;
-      return this;
-    };
-
-    /**
-     * Height Getter / Setter
-     *
-     * @param {number} _v - X3D canvas height in px.
-     * @returns {*}
-     */
-    my.height = function (_v) {
-      if (!arguments.length) return height;
-      height = _v;
-      return this;
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Debug Getter / Setter
-     *
-     * @param {boolean} _v - Show debug log and stats. True/False.
-     * @returns {*}
-     */
-    my.debug = function (_v) {
-      if (!arguments.length) return debug;
-      debug = _v;
-      return my;
-    };
-    return my;
+      }
+    });
   }
 
   /**
@@ -7271,16 +5083,18 @@
    */
   function chartDonutChart () {
     /* Default Properties */
-    var width = 500;
-    var height = 500;
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      width: 500,
+      height: 500,
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      colors: ["green", "red", "yellow", "steelblue", "orange"],
+      debug: false
     };
-    var colors = ["green", "red", "yellow", "steelblue", "orange"];
     var classed = "d3X3dDonutChart";
-    var debug = false;
 
     /* Components */
     var viewpoint = component.viewpoint();
@@ -7296,13 +5110,13 @@
      */
     var my = function my(selection) {
       var layers = ["donut"];
-      var scene = createScene(selection, layers, classed, width, height, debug);
+      var scene = createScene(selection, layers, classed, state.width, state.height, state.debug);
       selection.each(function (data) {
         // Add Viewpoint
         viewpoint.quickView("dimetric");
 
         // Add Donut
-        donut.colors(colors);
+        donut.colors(state.colors);
         scene.call(viewpoint);
         scene.select(".donut").datum(data).call(donut);
 
@@ -7312,64 +5126,15 @@
     };
 
     /**
-     * Width Getter / Setter
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
      *
-     * @param {number} _v - X3D canvas width in px.
-     * @returns {*}
+     * @param {number} width - X3D canvas width in px.
+     * @param {number} height - X3D canvas height in px.
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {Array} colors - Array of colours used by color scale.
+     * @param {boolean} debug - Show debug log and stats. True/False.
      */
-    my.width = function (_v) {
-      if (!arguments.length) return width;
-      width = _v;
-      return this;
-    };
-
-    /**
-     * Height Getter / Setter
-     *
-     * @param {number} _v - X3D canvas height in px.
-     * @returns {*}
-     */
-    my.height = function (_v) {
-      if (!arguments.length) return height;
-      height = _v;
-      return this;
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
-
-    /**
-     * Debug Getter / Setter
-     *
-     * @param {boolean} _v - Show debug log and stats. True/False.
-     * @returns {*}
-     */
-    my.debug = function (_v) {
-      if (!arguments.length) return debug;
-      debug = _v;
-      return my;
-    };
+    attachAccessors(my, state);
     return my;
   }
 
@@ -7388,205 +5153,99 @@
    * chartHolder.datum(myData).call(myChart);
    *
    * @see https://datavizproject.com/data-type/heat-map/
+   *
+   * @param {number} width - X3D canvas width in px.
+   * @param {number} height - X3D canvas height in px.
+   * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+   * @param {d3.scale} xScale - D3 scale.
+   * @param {d3.scale} yScale - D3 scale.
+   * @param {d3.scale} zScale - D3 scale.
+   * @param {d3.scale} colorScale - D3 color scale.
+   * @param {Array} colors - Array of colours used by color scale.
+   * @param {string} labelPosition - Position ("proximal" or "distal")
+   * @param {boolean} debug - Show debug log and stats. True/False.
    */
   function chartHeatMap () {
-    /* Default Properties */
-    var width = 500;
-    var height = 500;
-    var dimensions = {
-      x: 40,
-      y: 20,
-      z: 40
-    };
-    var colors = ["#1e253f", "#e33b30"];
-    var classed = "d3X3dHeatMap";
-    var labelPosition = "distal";
-    var debug = false;
+    return sceneChart({
+      classed: "d3X3dHeatMap",
+      layers: ["axis", "bars"],
+      markLayer: ".bars",
+      light: true,
+      state: {
+        width: 500,
+        height: 500,
+        dimensions: {
+          x: 40,
+          y: 20,
+          z: 40
+        },
+        colors: ["#1e253f", "#e33b30"],
+        labelPosition: "distal",
+        debug: false,
+        xScale: undefined,
+        yScale: undefined,
+        zScale: undefined,
+        colorScale: undefined
+      },
+      axis: function axis() {
+        return component.axisThreePlane();
+      },
+      mark: function mark() {
+        return component.heatMap();
+      },
+      init: function init(data, chartState) {
+        var _dataTransform$summar = dataTransform(data).summary(),
+          rowKeys = _dataTransform$summar.rowKeys,
+          columnKeys = _dataTransform$summar.columnKeys,
+          valueMax = _dataTransform$summar.valueMax;
+        var valueExtent = [0, valueMax];
+        var _chartState$dimension = chartState.dimensions,
+          dimensionX = _chartState$dimension.x,
+          dimensionY = _chartState$dimension.y,
+          dimensionZ = _chartState$dimension.z;
+        chartState.xScale = d3__namespace.scaleBand().domain(columnKeys).range([0, dimensionX]).paddingOuter(0.5).paddingInner(0.1).align(1);
+        chartState.yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+        chartState.zScale = d3__namespace.scaleBand().domain(rowKeys.reverse()).range([0, dimensionZ]).paddingOuter(0.5).paddingInner(0.1).align(1);
+        chartState.colorScale = d3__namespace.scaleLinear().domain(valueExtent).range(chartState.colors);
+      },
+      configureAxis: function configureAxis(axis, chartState) {
+        axis.labelPosition(chartState.labelPosition);
+      },
+      configureMark: function configureMark(mark, chartState) {
+        mark.colors(chartState.colors);
+      }
+    });
+  }
 
-    /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-    var colorScale;
-
-    /* Components */
-    var viewpoint = component.viewpoint();
-    var axis = component.axisThreePlane();
-    var bars = component.heatMap();
-    var light = component.light();
-
-    /**
-     * Initialise Data and Scales
-     *
-     * @private
-     * @param {Array} data - Chart data.
-     */
-    var init = function init(data) {
-      var _dataTransform$summar = dataTransform(data).summary(),
-        rowKeys = _dataTransform$summar.rowKeys,
-        columnKeys = _dataTransform$summar.columnKeys,
-        valueMax = _dataTransform$summar.valueMax;
-      var valueExtent = [0, valueMax];
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y,
-        dimensionZ = _dimensions.z;
-      xScale = d3__namespace.scaleBand().domain(columnKeys).range([0, dimensionX]).paddingOuter(0.5).paddingInner(0.1).align(1);
-      yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-      zScale = d3__namespace.scaleBand().domain(rowKeys.reverse()).range([0, dimensionZ]).paddingOuter(0.5).paddingInner(0.1).align(1);
-      colorScale = d3__namespace.scaleLinear().domain(valueExtent).range(colors);
-    };
-
-    /**
-     * Constructor
-     *
-     * @constructor
-     * @alias heatMap
-     * @param {d3.selection} selection - The chart holder D3 selection.
-     */
-    var my = function my(selection) {
-      var layers = ["axis", "bars"];
-      var scene = createScene(selection, layers, classed, width, height, debug);
-      selection.each(function (data) {
-        init(data);
-
-        // Add Viewpoint
-        viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-        scene.call(viewpoint);
-
-        // Add Axis
-        axis.xScale(xScale).yScale(yScale).zScale(zScale).labelPosition(labelPosition);
-        scene.select(".axis").call(axis);
-
-        // Add Bars
-        bars.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
-        scene.select(".bars").datum(data).call(bars);
-
-        // Add Light
-        scene.call(light);
+  /**
+   * Summarise one column for each mapped dimension.
+   *
+   * @module
+   * @param {Object} data - Series whose values carry `{ key, value }` pairs.
+   * @param {Object} mappings - Dimension name to value key.
+   * @param {string[]} keys - Dimensions to summarise, such as "x" or "color".
+   * @returns {Object} A dataTransform summary for each key.
+   */
+  function extentsFromMappings(data, mappings, keys) {
+    var summaries = {};
+    keys.forEach(function (dimension) {
+      var set = {
+        key: dimension,
+        values: []
+      };
+      data.values.forEach(function (d) {
+        var key = mappings[dimension];
+        var value = d.values.find(function (v) {
+          return v.key === key;
+        }).value;
+        set.values.push({
+          key: key,
+          value: value
+        });
       });
-    };
-
-    /**
-     * Width Getter / Setter
-     *
-     * @param {number} _v - X3D canvas width in px.
-     * @returns {*}
-     */
-    my.width = function (_v) {
-      if (!arguments.length) return width;
-      width = _v;
-      return this;
-    };
-
-    /**
-     * Height Getter / Setter
-     *
-     * @param {number} _v - X3D canvas height in px.
-     * @returns {*}
-     */
-    my.height = function (_v) {
-      if (!arguments.length) return height;
-      height = _v;
-      return this;
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
-
-    /**
-     * Label Position Getter / Setter
-     *
-     * @param {string} _v - Position ("proximal" or "distal")
-     * @returns {*}
-     */
-    my.labelPosition = function (_v) {
-      if (!arguments.length) return labelPosition;
-      labelPosition = _v;
-      return my;
-    };
-
-    /**
-     * Debug Getter / Setter
-     *
-     * @param {boolean} _v - Show debug log and stats. True/False.
-     * @returns {*}
-     */
-    my.debug = function (_v) {
-      if (!arguments.length) return debug;
-      debug = _v;
-      return my;
-    };
-    return my;
+      summaries[dimension] = dataTransform(set).summary();
+    });
+    return summaries;
   }
 
   /**
@@ -7604,241 +5263,67 @@
    * chartHolder.datum(myData).call(myChart);
    *
    * @see https://datavizproject.com/data-type/3d-scatterplot/
+   *
+   * @param {number} width - X3D canvas width in px.
+   * @param {number} height - X3D canvas height in px.
+   * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+   * @param {d3.scale} xScale - D3 scale.
+   * @param {d3.scale} yScale - D3 scale.
+   * @param {d3.scale} zScale - D3 scale.
+   * @param {d3.scale} colorScale - D3 color scale.
+   * @param {string} color - Color (e.g. "red" or "#ff0000").
+   * @param {Array} colors - Array of colours used by color scale.
+   * @param {Object} mappings - Map properties to colour etc.
+   * @param {boolean} debug - Show debug log and stats. True/False.
    */
   function chartParticlePlot () {
-    /* Default Properties */
-    var width = 500;
-    var height = 500;
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
-    };
-    var colors = ["orange"];
-    var color;
-    var classed = "d3X3dParticlePlot";
-    var mappings;
-    var debug = false;
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-    var colorScale;
-
-    /* Components */
-    var viewpoint = component.viewpoint();
-    var axis = component.axisThreePlane();
-    var particles = component.particles();
-
-    /**
-     * Initialise Data and Scales
-     *
-     * @private
-     * @param {Array} data - Chart data.
-     */
-    var init = function init(data) {
-      var newData = {};
-      ['x', 'y', 'z', 'color'].forEach(function (dimension) {
-        var set = {
-          key: dimension,
-          values: []
-        };
-        data.values.forEach(function (d) {
-          var key = mappings[dimension];
-          var value = d.values.find(function (v) {
-            return v.key === key;
-          }).value;
-          set.values.push({
-            key: key,
-            value: value
-          });
-        });
-        newData[dimension] = dataTransform(set).summary();
-      });
-      var extentX = newData.x.valueExtent;
-      var extentY = newData.y.valueExtent;
-      var extentZ = newData.z.valueExtent;
-      var extentColor = newData.color.valueExtent;
-      xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensions.x]);
-      yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensions.y]);
-      zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensions.z]);
-      if (color) {
-        colorScale = d3__namespace.scaleQuantize().domain(extentColor).range([color, color]);
-      } else {
-        colorScale = d3__namespace.scaleQuantize().domain(extentColor).range(colors);
+    return sceneChart({
+      classed: "d3X3dParticlePlot",
+      layers: ["axis", "particles"],
+      markLayer: ".particles",
+      events: true,
+      state: {
+        width: 500,
+        height: 500,
+        dimensions: {
+          x: 40,
+          y: 40,
+          z: 40
+        },
+        colors: ["orange"],
+        color: undefined,
+        mappings: undefined,
+        debug: false,
+        xScale: undefined,
+        yScale: undefined,
+        zScale: undefined,
+        colorScale: undefined
+      },
+      axis: function axis() {
+        return component.axisThreePlane();
+      },
+      mark: function mark() {
+        return component.particles();
+      },
+      init: function init(data, chartState) {
+        var newData = extentsFromMappings(data, chartState.mappings, ["x", "y", "z", "color"]);
+        var extentX = newData.x.valueExtent;
+        var extentY = newData.y.valueExtent;
+        var extentZ = newData.z.valueExtent;
+        var extentColor = newData.color.valueExtent;
+        chartState.xScale = d3__namespace.scaleLinear().domain(extentX).range([0, chartState.dimensions.x]);
+        chartState.yScale = d3__namespace.scaleLinear().domain(extentY).range([0, chartState.dimensions.y]);
+        chartState.zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, chartState.dimensions.z]);
+        if (chartState.color) {
+          chartState.colorScale = d3__namespace.scaleQuantize().domain(extentColor).range([chartState.color, chartState.color]);
+        } else {
+          chartState.colorScale = d3__namespace.scaleQuantize().domain(extentColor).range(chartState.colors);
+        }
+      },
+      configureMark: function configureMark(mark, chartState) {
+        mark.mappings(chartState.mappings).colorScale(chartState.colorScale);
       }
-    };
-
-    /**
-     * Constructor
-     *
-     * @constructor
-     * @alias particlePlot
-     * @param {d3.selection} selection - The chart holder D3 selection.
-     */
-    var my = function my(selection) {
-      var layers = ["axis", "particles"];
-      var scene = createScene(selection, layers, classed, width, height, debug);
-      selection.each(function (data) {
-        init(data);
-
-        // Add Viewpoint
-        viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-        scene.call(viewpoint);
-
-        // Add Axis
-        axis.xScale(xScale).yScale(yScale).zScale(zScale);
-        scene.select(".axis").call(axis);
-
-        // Add Particles
-        particles.xScale(xScale).mappings(mappings).yScale(yScale).zScale(zScale).colorScale(colorScale);
-        scene.select(".particles").datum(data).call(particles);
-      });
-    };
-
-    /**
-     * Width Getter / Setter
-     *
-     * @param {number} _v - X3D canvas width in px.
-     * @returns {*}
-     */
-    my.width = function (_v) {
-      if (!arguments.length) return width;
-      width = _v;
-      return this;
-    };
-
-    /**
-     * Height Getter / Setter
-     *
-     * @param {number} _v - X3D canvas height in px.
-     * @returns {*}
-     */
-    my.height = function (_v) {
-      if (!arguments.length) return height;
-      height = _v;
-      return this;
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Getter / Setter
-     *
-     * @param {string} _v - Color (e.g. "red" or "#ff0000").
-     * @returns {*}
-     */
-    my.color = function (_v) {
-      if (!arguments.length) return color;
-      color = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
-
-    /**
-     * Mappings Getter / Setter
-     *
-     * @param {Object} _v - Map properties to colour etc.
-     * @returns {*}
-     */
-    my.mappings = function (_v) {
-      if (!arguments.length) return mappings;
-      mappings = _v;
-      return my;
-    };
-
-    /**
-     * Debug Getter / Setter
-     *
-     * @param {boolean} _v - Show debug log and stats. True/False.
-     * @returns {*}
-     */
-    my.debug = function (_v) {
-      if (!arguments.length) return debug;
-      debug = _v;
-      return my;
-    };
-
-    /**
-     * Dispatch On Getter
-     *
-     * @returns {*}
-     */
-    my.on = function () {
-      var value = dispatch.on.apply(dispatch, arguments);
-      return value === dispatch ? my : value;
-    };
-    return my;
+    });
   }
 
   /**
@@ -7856,210 +5341,52 @@
    * chartHolder.datum(myData).call(myChart);
    *
    * @see https://datavizproject.com/data-type/waterfall-plot/
+   *
+   * @param {number} width - X3D canvas width in px.
+   * @param {number} height - X3D canvas height in px.
+   * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+   * @param {d3.scale} xScale - D3 scale.
+   * @param {d3.scale} yScale - D3 scale.
+   * @param {d3.scale} zScale - D3 scale.
+   * @param {d3.scale} colorScale - D3 color scale.
+   * @param {Array} colors - Array of colours used by color scale.
+   * @param {d3.curve} smoothed
+   * @param {boolean} debug - Show debug log and stats. True/False.
    */
   function chartRibbonChartMultiSeries () {
-    /* Default Properties */
-    var width = 500;
-    var height = 500;
-    var dimensions = {
-      x: 60,
-      y: 40,
-      z: 40
-    };
-    var colors = ["green", "red", "yellow", "steelblue", "orange"];
-    var classed = "d3X3dRibbonChartMultiSeries";
-    var debug = false;
-    var smoothed = d3__namespace.curveBasis;
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-    var colorScale;
-
-    /* Components */
-    var viewpoint = component.viewpoint();
-    var axis = component.axisThreePlane();
-    var ribbons = component.ribbonMultiSeries();
-    var light = component.light();
-
-    /**
-     * Initialise Data and Scales
-     *
-     * @private
-     * @param {Array} data - Chart data.
-     */
-    var init = function init(data) {
-      var _dataTransform$summar = dataTransform(data).summary(),
-        rowKeys = _dataTransform$summar.rowKeys,
-        columnKeys = _dataTransform$summar.columnKeys,
-        valueMax = _dataTransform$summar.valueMax;
-      var valueExtent = [0, valueMax];
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y,
-        dimensionZ = _dimensions.z;
-      xScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionX]);
-      yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-      zScale = d3__namespace.scaleBand().domain(rowKeys).range([0, dimensionZ]).padding(0.4);
-      colorScale = d3__namespace.scaleOrdinal().domain(columnKeys).range(colors);
-    };
-
-    /**
-     * Constructor
-     *
-     * @constructor
-     * @alias ribbonChartMultiSeries
-     * @param {d3.selection} selection - The chart holder D3 selection.
-     */
-    var my = function my(selection) {
-      var layers = ["axis", "ribbons"];
-      var scene = createScene(selection, layers, classed, width, height, debug);
-      selection.each(function (data) {
-        init(data);
-
-        // Add Viewpoint
-        viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]).viewOrientation([-0.61021, 0.77568, 0.16115, 0.65629]).viewPosition([77.63865, 54.69470, 104.38314]);
-        scene.call(viewpoint);
-
-        // Add Axis
-        axis.xScale(xScale).yScale(yScale).zScale(zScale);
-        scene.select(".axis").call(axis);
-
-        // Add Ribbons
-        ribbons.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors).smoothed(smoothed).dimensions(dimensions);
-        scene.select(".ribbons").datum(data).call(ribbons);
-
-        // Add Light
-        scene.call(light);
-      });
-    };
-
-    /**
-     * Width Getter / Setter
-     *
-     * @param {number} _v - X3D canvas width in px.
-     * @returns {*}
-     */
-    my.width = function (_v) {
-      if (!arguments.length) return width;
-      width = _v;
-      return this;
-    };
-
-    /**
-     * Height Getter / Setter
-     *
-     * @param {number} _v - X3D canvas height in px.
-     * @returns {*}
-     */
-    my.height = function (_v) {
-      if (!arguments.length) return height;
-      height = _v;
-      return this;
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
-
-    /**
-     * Smooth Interpolation Getter / Setter
-     *
-     * Options:
-     *   d3.curveBasis
-     *   d3.curveLinear
-     *   d3.curveMonotoneX
-     *
-     * @param {d3.curve} _v.
-     * @returns {*}
-     */
-    my.smoothed = function (_v) {
-      if (!arguments.length) return smoothed;
-      smoothed = _v;
-      return my;
-    };
-
-    /**
-     * Debug Getter / Setter
-     *
-     * @param {boolean} _v - Show debug log and stats. True/False.
-     * @returns {*}
-     */
-    my.debug = function (_v) {
-      if (!arguments.length) return debug;
-      debug = _v;
-      return my;
-    };
-    return my;
+    return sceneChart({
+      classed: "d3X3dRibbonChartMultiSeries",
+      layers: ["axis", "ribbons"],
+      markLayer: ".ribbons",
+      light: true,
+      state: {
+        width: 500,
+        height: 500,
+        dimensions: {
+          x: 60,
+          y: 40,
+          z: 40
+        },
+        colors: ["green", "red", "yellow", "steelblue", "orange"],
+        debug: false,
+        smoothed: d3__namespace.curveBasis,
+        xScale: undefined,
+        yScale: undefined,
+        zScale: undefined,
+        colorScale: undefined
+      },
+      axis: function axis() {
+        return component.axisThreePlane();
+      },
+      mark: function mark() {
+        return component.ribbonMultiSeries();
+      },
+      init: initColumnPointScales,
+      viewpoint: orientSeriesViewpoint,
+      configureMark: function configureMark(mark, chartState) {
+        mark.colors(chartState.colors).smoothed(chartState.smoothed).dimensions(chartState.dimensions);
+      }
+    });
   }
 
   /**
@@ -8080,26 +5407,26 @@
    */
   function chartScatterPlot () {
     /* Default Properties */
-    var width = 500;
-    var height = 500;
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      width: 500,
+      height: 500,
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      colors: ["orange"],
+      color: undefined,
+      mappings: undefined,
+      debug: false,
+      xScale: undefined,
+      yScale: undefined,
+      zScale: undefined,
+      colorScale: undefined,
+      sizeScale: undefined,
+      sizeRange: [0.2]
     };
-    var colors = ["orange"];
-    var color;
     var classed = "d3X3dScatterPlot";
-    var mappings;
-    var debug = false;
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-    var colorScale;
-    var sizeScale;
-    var sizeRange = [0.2];
 
     /* Components */
     var viewpoint = component.viewpoint();
@@ -8115,37 +5442,20 @@
      * @param {Array} data - Chart data.
      */
     var init = function init(data) {
-      var newData = {};
-      ['x', 'y', 'z', 'size', 'color'].forEach(function (dimension) {
-        var set = {
-          key: dimension,
-          values: []
-        };
-        data.values.forEach(function (d) {
-          var key = mappings[dimension];
-          var value = d.values.find(function (v) {
-            return v.key === key;
-          }).value;
-          set.values.push({
-            key: key,
-            value: value
-          });
-        });
-        newData[dimension] = dataTransform(set).summary();
-      });
+      var newData = extentsFromMappings(data, state.mappings, ["x", "y", "z", "size", "color"]);
       var extentX = newData.x.valueExtent;
       var extentY = newData.y.valueExtent;
       var extentZ = newData.z.valueExtent;
       var extentSize = newData.size.valueExtent;
       var extentColor = newData.color.valueExtent;
-      xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensions.x]);
-      yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensions.y]);
-      zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensions.z]);
-      sizeScale = d3__namespace.scaleLinear().domain(extentSize).range(sizeRange);
-      if (color) {
-        colorScale = d3__namespace.scaleQuantize().domain(extentColor).range([color, color]);
+      state.xScale = d3__namespace.scaleLinear().domain(extentX).range([0, state.dimensions.x]);
+      state.yScale = d3__namespace.scaleLinear().domain(extentY).range([0, state.dimensions.y]);
+      state.zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, state.dimensions.z]);
+      state.sizeScale = d3__namespace.scaleLinear().domain(extentSize).range(state.sizeRange);
+      if (state.color) {
+        state.colorScale = d3__namespace.scaleQuantize().domain(extentColor).range([state.color, state.color]);
       } else {
-        colorScale = d3__namespace.scaleQuantize().domain(extentColor).range(colors);
+        state.colorScale = d3__namespace.scaleQuantize().domain(extentColor).range(state.colors);
       }
     };
 
@@ -8158,26 +5468,26 @@
      */
     var my = function my(selection) {
       var layers = ["axis", "bubbles", "crosshair", "label"];
-      var scene = createScene(selection, layers, classed, width, height, debug);
+      var scene = createScene(selection, layers, classed, state.width, state.height, state.debug);
       selection.each(function (data) {
         init(data);
 
         // Add Viewpoint
-        viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
+        viewpoint.centerOfRotation([state.dimensions.x / 2, state.dimensions.y / 2, state.dimensions.z / 2]);
         scene.call(viewpoint);
 
         // Add Axis
-        axis.xScale(xScale).yScale(yScale).zScale(zScale);
+        axis.xScale(state.xScale).yScale(state.yScale).zScale(state.zScale);
         scene.select(".axis").call(axis);
 
         // Add Crosshair
-        crosshair.xScale(xScale).yScale(yScale).zScale(zScale);
+        crosshair.xScale(state.xScale).yScale(state.yScale).zScale(state.zScale);
 
         // Add Labels
-        label.xScale(xScale).yScale(yScale).zScale(zScale).offset(0.5);
+        label.xScale(state.xScale).yScale(state.yScale).zScale(state.zScale).offset(0.5);
 
         // Add Bubbles
-        bubbles.xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).colorScale(colorScale).mappings(mappings).on("d3X3dClick", function (e) {
+        bubbles.xScale(state.xScale).yScale(state.yScale).zScale(state.zScale).sizeScale(state.sizeScale).colorScale(state.colorScale).mappings(state.mappings).on("d3X3dClick", function (e) {
           var datum = d3__namespace.select(e.target).datum();
           var xVal = datum.values.find(function (v) {
             return v.key === "x";
@@ -8216,191 +5526,11 @@
           scene.select(".label").datum(d).each(function () {
             d3__namespace.select(this).call(label);
           });
-        }).on("d3X3dMouseOut", function (e) {
+        }).on("d3X3dMouseOut", function () {
           scene.select(".label").selectAll("*").remove();
         });
         scene.select(".bubbles").datum(data).call(bubbles);
       });
-    };
-
-    /**
-     * Width Getter / Setter
-     *
-     * @param {number} _v - X3D canvas width in px.
-     * @returns {*}
-     */
-    my.width = function (_v) {
-      if (!arguments.length) return width;
-      width = _v;
-      return this;
-    };
-
-    /**
-     * Height Getter / Setter
-     *
-     * @param {number} _v - X3D canvas height in px.
-     * @returns {*}
-     */
-    my.height = function (_v) {
-      if (!arguments.length) return height;
-      height = _v;
-      return this;
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Size Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.sizeScale = function (_v) {
-      if (!arguments.length) return sizeScale;
-      sizeScale = _v;
-      return my;
-    };
-
-    /**
-     * Size Range Getter / Setter
-     *
-     * @param {number[]} _v - Size min and max (e.g. [1, 9]).
-     * @returns {*}
-     */
-    my.sizeRange = function (_v) {
-      if (!arguments.length) return sizeRange;
-      sizeRange = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Getter / Setter
-     *
-     * @param {string} _v - Color (e.g. "red" or "#ff0000").
-     * @returns {*}
-     */
-    my.color = function (_v) {
-      if (!arguments.length) return color;
-      color = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
-
-    /**
-     * Size Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.sizeScale = function (_v) {
-      if (!arguments.length) return sizeScale;
-      sizeScale = _v;
-      return my;
-    };
-
-    /**
-     * Size Range Getter / Setter
-     *
-     * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
-     * @returns {*}
-     */
-    my.sizeRange = function (_v) {
-      if (!arguments.length) return sizeRange;
-      sizeRange = _v;
-      return my;
-    };
-
-    /**
-     * Mappings Getter / Setter
-     *
-     * @param {Object} _v - Map properties to size, colour etc.
-     * @returns {*}
-     */
-    my.mappings = function (_v) {
-      if (!arguments.length) return mappings;
-      mappings = _v;
-      return my;
-    };
-
-    /**
-     * Debug Getter / Setter
-     *
-     * @param {boolean} _v - Show debug log and stats. True/False.
-     * @returns {*}
-     */
-    my.debug = function (_v) {
-      if (!arguments.length) return debug;
-      debug = _v;
-      return my;
     };
 
     /**
@@ -8412,6 +5542,25 @@
       var value = dispatch.on.apply(dispatch, arguments);
       return value === dispatch ? my : value;
     };
+
+    /**
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
+     *
+     * @param {number} width - X3D canvas width in px.
+     * @param {number} height - X3D canvas height in px.
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {d3.scale} xScale - D3 scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {d3.scale} zScale - D3 scale.
+     * @param {d3.scale} sizeScale - D3 color scale.
+     * @param {number[]} sizeRange - Size min and max (e.g. [1, 9]).
+     * @param {d3.scale} colorScale - D3 color scale.
+     * @param {string} color - Color (e.g. "red" or "#ff0000").
+     * @param {Array} colors - Array of colours used by color scale.
+     * @param {Object} mappings - Map properties to size, colour etc.
+     * @param {boolean} debug - Show debug log and stats. True/False.
+     */
+    attachAccessors(my, state);
     return my;
   }
 
@@ -8430,217 +5579,52 @@
    * chartHolder.datum(myData).call(myChart);
    *
    * @see https://datavizproject.com/data-type/bubble-chart/
+   *
+   * @param {number} width - X3D canvas width in px.
+   * @param {number} height - X3D canvas height in px.
+   * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+   * @param {d3.scale} xScale - D3 scale.
+   * @param {d3.scale} yScale - D3 scale.
+   * @param {d3.scale} zScale - D3 scale.
+   * @param {d3.scale} colorScale - D3 color scale.
+   * @param {Array} colors - Array of colours used by color scale.
+   * @param {d3.scale} sizeScale - D3 color scale.
+   * @param {number[]} sizeRange - Size min and max (e.g. [0.5, 3.0]).
+   * @param {boolean} debug - Show debug log and stats. True/False.
    */
   function chartSpotPlot () {
-    /* Default Properties */
-    var width = 500;
-    var height = 500;
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
-    };
-    var colors = ["green", "red", "yellow", "steelblue", "orange"];
-    var sizeRange = [0.5, 3.5];
-    var classed = "d3X3dSpotPlot";
-    var debug = false;
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-    var colorScale;
-    var sizeScale;
-
-    /* Components */
-    var viewpoint = component.viewpoint();
-    var axis = component.axisThreePlane();
-    var spots = component.spotsMultiSeries();
-
-    /**
-     * Initialise Data and Scales
-     *
-     * @private
-     * @param {Array} data - Chart data.
-     */
-    var init = function init(data) {
-      var _dataTransform$summar = dataTransform(data).summary(),
-        valueExtent = _dataTransform$summar.valueExtent,
-        coordinatesExtent = _dataTransform$summar.coordinatesExtent,
-        rowKeys = _dataTransform$summar.rowKeys;
-      var extentX = coordinatesExtent.x,
-        extentY = coordinatesExtent.y,
-        extentZ = coordinatesExtent.z;
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y,
-        dimensionZ = _dimensions.z;
-      xScale = d3__namespace.scaleLinear().domain(extentX).range([0, dimensionX]);
-      yScale = d3__namespace.scaleLinear().domain(extentY).range([0, dimensionY]);
-      zScale = d3__namespace.scaleLinear().domain(extentZ).range([0, dimensionZ]);
-      colorScale = d3__namespace.scaleOrdinal().domain(rowKeys).range(colors);
-      sizeScale = d3__namespace.scaleLinear().domain(valueExtent).range(sizeRange);
-    };
-
-    /**
-     * Constructor
-     *
-     * @constructor
-     * @alias spotPlot
-     * @param {d3.selection} selection - The chart holder D3 selection.
-     */
-    var my = function my(selection) {
-      var layers = ["axis", "spots"];
-      var scene = createScene(selection, layers, classed, width, height, debug);
-      selection.each(function (data) {
-        init(data);
-
-        // Add Viewpoint
-        viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-        scene.call(viewpoint);
-
-        // Add Axis
-        axis.xScale(xScale).yScale(yScale).zScale(zScale);
-        scene.select(".axis").call(axis);
-
-        // Add Spots
-        spots.xScale(xScale).yScale(yScale).zScale(zScale).sizeScale(sizeScale).colorScale(colorScale);
-        scene.select(".spots").datum(data).call(spots);
-      });
-    };
-
-    /**
-     * Width Getter / Setter
-     *
-     * @param {number} _v - X3D canvas width in px.
-     * @returns {*}
-     */
-    my.width = function (_v) {
-      if (!arguments.length) return width;
-      width = _v;
-      return this;
-    };
-
-    /**
-     * Height Getter / Setter
-     *
-     * @param {number} _v - X3D canvas height in px.
-     * @returns {*}
-     */
-    my.height = function (_v) {
-      if (!arguments.length) return height;
-      height = _v;
-      return this;
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
-
-    /**
-     * Size Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.sizeScale = function (_v) {
-      if (!arguments.length) return sizeScale;
-      sizeScale = _v;
-      return my;
-    };
-
-    /**
-     * Size Range Getter / Setter
-     *
-     * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
-     * @returns {*}
-     */
-    my.sizeRange = function (_v) {
-      if (!arguments.length) return sizeRange;
-      sizeRange = _v;
-      return my;
-    };
-
-    /**
-     * Debug Getter / Setter
-     *
-     * @param {boolean} _v - Show debug log and stats. True/False.
-     * @returns {*}
-     */
-    my.debug = function (_v) {
-      if (!arguments.length) return debug;
-      debug = _v;
-      return my;
-    };
-    return my;
+    return sceneChart({
+      classed: "d3X3dSpotPlot",
+      layers: ["axis", "spots"],
+      markLayer: ".spots",
+      state: {
+        width: 500,
+        height: 500,
+        dimensions: {
+          x: 40,
+          y: 40,
+          z: 40
+        },
+        colors: ["green", "red", "yellow", "steelblue", "orange"],
+        sizeRange: [0.5, 3.5],
+        debug: false,
+        xScale: undefined,
+        yScale: undefined,
+        zScale: undefined,
+        colorScale: undefined,
+        sizeScale: undefined
+      },
+      axis: function axis() {
+        return component.axisThreePlane();
+      },
+      mark: function mark() {
+        return component.spotsMultiSeries();
+      },
+      init: initCoordinateScales,
+      configureMark: function configureMark(mark, chartState) {
+        mark.sizeScale(chartState.sizeScale).colorScale(chartState.colorScale);
+      }
+    });
   }
 
   /**
@@ -8658,188 +5642,65 @@
    * chartHolder.datum(myData).call(myChart);
    *
    * @see https://datavizproject.com/data-type/three-dimensional-stream-graph/
+   *
+   * @param {number} width - X3D canvas width in px.
+   * @param {number} height - X3D canvas height in px.
+   * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+   * @param {d3.scale} xScale - D3 scale.
+   * @param {d3.scale} yScale - D3 scale.
+   * @param {d3.scale} zScale - D3 scale.
+   * @param {d3.scale} colorScale - D3 color scale.
+   * @param {Array} colors - Array of colours used by color scale.
+   * @param {boolean} debug - Show debug log and stats. True/False.
    */
   function chartSurfacePlot () {
-    /* Default Properties */
-    var width = 500;
-    var height = 500;
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
-    };
-    var colors = ["blue", "red"];
-    var classed = "d3X3dSurfacePlot";
-    var debug = false;
-
-    /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-    var colorScale;
-
-    /* Components */
-    var viewpoint = component.viewpoint();
-    var axis = component.axisThreePlane();
-    var surface = component.surface();
-
-    /**
-     * Initialise Data and Scales
-     *
-     * @private
-     * @param {Array} data - Chart data.
-     */
-    var init = function init(data) {
-      var _dataTransform$summar = dataTransform(data).summary(),
-        rowKeys = _dataTransform$summar.rowKeys,
-        columnKeys = _dataTransform$summar.columnKeys,
-        valueMax = _dataTransform$summar.valueMax;
-      var valueExtent = [0, valueMax];
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y,
-        dimensionZ = _dimensions.z;
-      xScale = d3__namespace.scalePoint().domain(rowKeys).range([0, dimensionX]);
-      yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
-      zScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionZ]);
-      colorScale = d3__namespace.scaleLinear().domain(valueExtent).range(colors).interpolate(d3__namespace.interpolateLab);
-    };
-
-    /**
-     * Constructor
-     *
-     * @constructor
-     * @alias surfacePlot
-     * @param {d3.selection} selection - The chart holder D3 selection.
-     */
-    var my = function my(selection) {
-      var layers = ["axis", "surface"];
-      var scene = createScene(selection, layers, classed, width, height, debug);
-      selection.each(function (data) {
-        init(data);
-
-        // Add Viewpoint
-        viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
-        scene.call(viewpoint);
-
-        // Add Axis
-        axis.xScale(xScale).yScale(yScale).zScale(zScale).labelPosition("distal");
-        scene.select(".axis").call(axis);
-
-        // Add Surface Area
-        surface.xScale(xScale).yScale(yScale).zScale(zScale).colors(colors);
-        scene.select(".surface").datum(data).call(surface);
-      });
-    };
-
-    /**
-     * Width Getter / Setter
-     *
-     * @param {number} _v - X3D canvas width in px.
-     * @returns {*}
-     */
-    my.width = function (_v) {
-      if (!arguments.length) return width;
-      width = _v;
-      return this;
-    };
-
-    /**
-     * Height Getter / Setter
-     *
-     * @param {number} _v - X3D canvas height in px.
-     * @returns {*}
-     */
-    my.height = function (_v) {
-      if (!arguments.length) return height;
-      height = _v;
-      return this;
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
-
-    /**
-     * Debug Getter / Setter
-     *
-     * @param {boolean} _v - Show debug log and stats. True/False.
-     * @returns {*}
-     */
-    my.debug = function (_v) {
-      if (!arguments.length) return debug;
-      debug = _v;
-      return my;
-    };
-    return my;
+    return sceneChart({
+      classed: "d3X3dSurfacePlot",
+      layers: ["axis", "surface"],
+      markLayer: ".surface",
+      state: {
+        width: 500,
+        height: 500,
+        dimensions: {
+          x: 40,
+          y: 40,
+          z: 40
+        },
+        colors: ["blue", "red"],
+        debug: false,
+        xScale: undefined,
+        yScale: undefined,
+        zScale: undefined,
+        colorScale: undefined
+      },
+      axis: function axis() {
+        return component.axisThreePlane();
+      },
+      mark: function mark() {
+        return component.surface();
+      },
+      init: function init(data, chartState) {
+        var _dataTransform$summar = dataTransform(data).summary(),
+          rowKeys = _dataTransform$summar.rowKeys,
+          columnKeys = _dataTransform$summar.columnKeys,
+          valueMax = _dataTransform$summar.valueMax;
+        var valueExtent = [0, valueMax];
+        var _chartState$dimension = chartState.dimensions,
+          dimensionX = _chartState$dimension.x,
+          dimensionY = _chartState$dimension.y,
+          dimensionZ = _chartState$dimension.z;
+        chartState.xScale = d3__namespace.scalePoint().domain(rowKeys).range([0, dimensionX]);
+        chartState.yScale = d3__namespace.scaleLinear().domain(valueExtent).range([0, dimensionY]).nice();
+        chartState.zScale = d3__namespace.scalePoint().domain(columnKeys).range([0, dimensionZ]);
+        chartState.colorScale = d3__namespace.scaleLinear().domain(valueExtent).range(chartState.colors).interpolate(d3__namespace.interpolateLab);
+      },
+      configureAxis: function configureAxis(axis) {
+        axis.labelPosition("distal");
+      },
+      configureMark: function configureMark(mark, chartState) {
+        mark.colors(chartState.colors);
+      }
+    });
   }
 
   /**
@@ -8869,24 +5730,33 @@
    */
   function chartVectorField () {
     /* Default Properties */
-    var width = 500;
-    var height = 500;
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      width: 500,
+      height: 500,
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      colors: d3__namespace.schemeRdYlGn[8],
+      debug: false,
+      xScale: undefined,
+      yScale: undefined,
+      zScale: undefined,
+      colorScale: undefined,
+      sizeScale: undefined,
+      sizeRange: [2.0, 5.0]
     };
-    var colors = d3__namespace.schemeRdYlGn[8];
+    state.vectorFunction = function (x, y, z) {
+      return {
+        vx: x,
+        vy: y,
+        vz: z
+      };
+    };
     var classed = "d3X3dVectorFieldChart";
-    var debug = false;
 
     /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
-    var colorScale;
-    var sizeScale;
-    var sizeRange = [2.0, 5.0];
     var origin = {
       x: 0,
       y: 0,
@@ -8897,23 +5767,6 @@
     var viewpoint = component.viewpoint();
     var axis = component.crosshair();
     var vectorFields = component.vectorFields();
-
-    /**
-     * Vector Field Function
-     *
-     * @param {number} x
-     * @param {number} y
-     * @param {number} z
-     * @param {number} value
-     * @returns {{vx: number, vy: number, vz: number}}
-     */
-    var vectorFunction = function vectorFunction(x, y, z) {
-      return {
-        vx: x,
-        vy: y,
-        vz: z
-      };
-    };
 
     /**
      * Initialise Data and Scales
@@ -8931,10 +5784,10 @@
       var maxX = coordinatesMax.x,
         maxY = coordinatesMax.y,
         maxZ = coordinatesMax.z;
-      var _dimensions = dimensions,
-        dimensionX = _dimensions.x,
-        dimensionY = _dimensions.y,
-        dimensionZ = _dimensions.z;
+      var _state$dimensions = state.dimensions,
+        dimensionX = _state$dimensions.x,
+        dimensionY = _state$dimensions.y,
+        dimensionZ = _state$dimensions.z;
       var extent = d3__namespace.extent(data.values.map(function (f) {
         var vx, vy, vz;
         if ("vx" in f) {
@@ -8942,19 +5795,19 @@
           vy = f.vy;
           vz = f.vz;
         } else {
-          var _vectorFunction = vectorFunction(f.x, f.y, f.z, f.value);
-          vx = _vectorFunction.vx;
-          vy = _vectorFunction.vy;
-          vz = _vectorFunction.vz;
+          var _state$vectorFunction = state.vectorFunction(f.x, f.y, f.z, f.value);
+          vx = _state$vectorFunction.vx;
+          vy = _state$vectorFunction.vy;
+          vz = _state$vectorFunction.vz;
         }
         var vector = fromValues(vx, vy, vz);
         return length(vector);
       }));
-      xScale = d3__namespace.scaleLinear().domain([minX, maxX]).range([0, dimensionX]);
-      yScale = d3__namespace.scaleLinear().domain([minY, maxY]).range([0, dimensionY]);
-      zScale = d3__namespace.scaleLinear().domain([minZ, maxZ]).range([0, dimensionZ]);
-      sizeScale = d3__namespace.scaleLinear().domain(extent).range(sizeRange);
-      colorScale = d3__namespace.scaleQuantize().domain(extent).range(colors);
+      state.xScale = d3__namespace.scaleLinear().domain([minX, maxX]).range([0, dimensionX]);
+      state.yScale = d3__namespace.scaleLinear().domain([minY, maxY]).range([0, dimensionY]);
+      state.zScale = d3__namespace.scaleLinear().domain([minZ, maxZ]).range([0, dimensionZ]);
+      state.sizeScale = d3__namespace.scaleLinear().domain(extent).range(state.sizeRange);
+      state.colorScale = d3__namespace.scaleQuantize().domain(extent).range(state.colors);
 
       // TODO: Have a think about whether this is appropriate?
       // Or, do we always want the origin to be 0,0,0 ?
@@ -8974,167 +5827,41 @@
      */
     var my = function my(selection) {
       var layers = ["axis", "vectorFields"];
-      var scene = createScene(selection, layers, classed, width, height, debug);
+      var scene = createScene(selection, layers, classed, state.width, state.height, state.debug);
       selection.each(function (data) {
         init(data);
 
         // Add Viewpoint
-        viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
+        viewpoint.centerOfRotation([state.dimensions.x / 2, state.dimensions.y / 2, state.dimensions.z / 2]);
         scene.call(viewpoint);
 
         // Add Axis
-        axis.xScale(xScale).yScale(yScale).zScale(zScale);
+        axis.xScale(state.xScale).yScale(state.yScale).zScale(state.zScale);
         scene.select(".axis").datum(origin).call(axis);
 
         // Add Vector Fields
-        vectorFields.xScale(xScale).yScale(yScale).zScale(zScale).colorScale(colorScale).sizeScale(sizeScale).vectorFunction(vectorFunction);
+        vectorFields.xScale(state.xScale).yScale(state.yScale).zScale(state.zScale).colorScale(state.colorScale).sizeScale(state.sizeScale).vectorFunction(state.vectorFunction);
         scene.select(".vectorFields").datum(data).call(vectorFields);
       });
     };
 
     /**
-     * Width Getter / Setter
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
      *
-     * @param {number} _v - X3D canvas width in px.
-     * @returns {*}
+     * @param {number} width - X3D canvas width in px.
+     * @param {number} height - X3D canvas height in px.
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {d3.scale} xScale - D3 scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {d3.scale} zScale - D3 scale.
+     * @param {d3.scale} colorScale - D3 color scale.
+     * @param {Array} colors - Array of colours used by color scale.
+     * @param {d3.scale} sizeScale - D3 color scale.
+     * @param {number[]} sizeRange - Size min and max (e.g. [0.5, 3.0]).
+     * @param {function} vectorFunction - Vector Function.
+     * @param {boolean} debug - Show debug log and stats. True/False.
      */
-    my.width = function (_v) {
-      if (!arguments.length) return width;
-      width = _v;
-      return this;
-    };
-
-    /**
-     * Height Getter / Setter
-     *
-     * @param {number} _v - X3D canvas height in px.
-     * @returns {*}
-     */
-    my.height = function (_v) {
-      if (!arguments.length) return height;
-      height = _v;
-      return this;
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Color Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.colorScale = function (_v) {
-      if (!arguments.length) return colorScale;
-      colorScale = _v;
-      return my;
-    };
-
-    /**
-     * Colors Getter / Setter
-     *
-     * @param {Array} _v - Array of colours used by color scale.
-     * @returns {*}
-     */
-    my.colors = function (_v) {
-      if (!arguments.length) return colors;
-      colors = _v;
-      return my;
-    };
-
-    /**
-     * Size Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 color scale.
-     * @returns {*}
-     */
-    my.sizeScale = function (_v) {
-      if (!arguments.length) return sizeScale;
-      sizeScale = _v;
-      return my;
-    };
-
-    /**
-     * Size Range Getter / Setter
-     *
-     * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
-     * @returns {*}
-     */
-    my.sizeRange = function (_v) {
-      if (!arguments.length) return sizeRange;
-      sizeRange = _v;
-      return my;
-    };
-
-    /**
-     * Vector Function Getter / Setter
-     *
-     * @param {function} _f - Vector Function.
-     * @returns {*}
-     */
-    my.vectorFunction = function (_f) {
-      if (!arguments.length) return vectorFunction;
-      vectorFunction = _f;
-      return my;
-    };
-
-    /**
-     * Debug Getter / Setter
-     *
-     * @param {boolean} _v - Show debug log and stats. True/False.
-     * @returns {*}
-     */
-    my.debug = function (_v) {
-      if (!arguments.length) return debug;
-      debug = _v;
-      return my;
-    };
+    attachAccessors(my, state);
     return my;
   }
 
@@ -9157,20 +5884,27 @@
    */
   function chartVolumeSlice () {
     /* Default Properties */
-    var width = 500;
-    var height = 500;
-    var dimensions = {
-      x: 40,
-      y: 40,
-      z: 40
+    var state = {
+      width: 500,
+      height: 500,
+      dimensions: {
+        x: 40,
+        y: 40,
+        z: 40
+      },
+      debug: false,
+      xScale: undefined,
+      yScale: undefined,
+      zScale: undefined,
+      imageUrl: undefined,
+      numberOfSlices: undefined,
+      slicesOverX: undefined,
+      slicesOverY: undefined,
+      volumeStyle: "OpacityMap"
     };
     var classed = "d3X3dVolumeSliceChart";
-    var debug = false;
 
     /* Scales */
-    var xScale;
-    var yScale;
-    var zScale;
     var origin = {
       x: 0,
       y: 0,
@@ -9178,11 +5912,6 @@
     };
 
     /* Other Volume Properties */
-    var imageUrl;
-    var numberOfSlices;
-    var slicesOverX;
-    var slicesOverY;
-    var volumeStyle = "OpacityMap";
 
     /* Components */
     var viewpoint = component.viewpoint();
@@ -9198,22 +5927,22 @@
      */
     var my = function my(selection) {
       var layers = ["axis", "volume"];
-      var scene = createScene(selection, layers, classed, width, height, debug);
-      selection.each(function (data) {
+      var scene = createScene(selection, layers, classed, state.width, state.height, state.debug);
+      selection.each(function () {
         // Add Viewpoint
-        viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
+        viewpoint.centerOfRotation([state.dimensions.x / 2, state.dimensions.y / 2, state.dimensions.z / 2]);
         scene.call(viewpoint);
 
         // Add Axis
-        axis.xScale(xScale).yScale(yScale).zScale(zScale);
+        axis.xScale(state.xScale).yScale(state.yScale).zScale(state.zScale);
         scene.select(".axis").datum(origin).call(axis);
 
         // Add Volume Slice
-        volumeSlice.dimensions(dimensions).imageUrl(imageUrl).numberOfSlices(numberOfSlices).slicesOverX(slicesOverX).slicesOverY(slicesOverY).volumeStyle(volumeStyle);
+        volumeSlice.dimensions(state.dimensions).imageUrl(state.imageUrl).numberOfSlices(state.numberOfSlices).slicesOverX(state.slicesOverX).slicesOverY(state.slicesOverY).volumeStyle(state.volumeStyle);
         scene.select(".volume").append("transform").attr("translation", function () {
-          var x = dimensions.x / 2;
-          var y = dimensions.y / 2;
-          var z = dimensions.z / 2;
+          var x = state.dimensions.x / 2;
+          var y = state.dimensions.y / 2;
+          var z = state.dimensions.z / 2;
           return x + " " + y + " " + z;
         }).datum(function (d) {
           return d;
@@ -9222,148 +5951,22 @@
     };
 
     /**
-     * Width Getter / Setter
+     * Getter / setters. No argument returns the value. One argument sets it and returns the component.
      *
-     * @param {number} _v - X3D canvas width in px.
-     * @returns {*}
+     * @param {number} width - X3D canvas width in px.
+     * @param {number} height - X3D canvas height in px.
+     * @param {d3.scale} xScale - D3 scale.
+     * @param {d3.scale} yScale - D3 scale.
+     * @param {d3.scale} zScale - D3 scale.
+     * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+     * @param {string} imageUrl - Image URL path.
+     * @param {number} numberOfSlices - Total number of slices.
+     * @param {number} slicesOverX - Number of slices over X axis.
+     * @param {number} slicesOverY - Number of slices over Y axis.
+     * @param {string} volumeStyle - Volume render style (either "MPRVolume" or "OpacityMap")
+     * @param {boolean} debug - Show debug log and stats. True/False.
      */
-    my.width = function (_v) {
-      if (!arguments.length) return width;
-      width = _v;
-      return this;
-    };
-
-    /**
-     * Height Getter / Setter
-     *
-     * @param {number} _v - X3D canvas height in px.
-     * @returns {*}
-     */
-    my.height = function (_v) {
-      if (!arguments.length) return height;
-      height = _v;
-      return this;
-    };
-
-    /**
-     * X Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.xScale = function (_v) {
-      if (!arguments.length) return xScale;
-      xScale = _v;
-      return my;
-    };
-
-    /**
-     * Y Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.yScale = function (_v) {
-      if (!arguments.length) return yScale;
-      yScale = _v;
-      return my;
-    };
-
-    /**
-     * Z Scale Getter / Setter
-     *
-     * @param {d3.scale} _v - D3 scale.
-     * @returns {*}
-     */
-    my.zScale = function (_v) {
-      if (!arguments.length) return zScale;
-      zScale = _v;
-      return my;
-    };
-
-    /**
-     * Dimensions Getter / Setter
-     *
-     * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-     * @returns {*}
-     */
-    my.dimensions = function (_v) {
-      if (!arguments.length) return dimensions;
-      dimensions = _v;
-      return this;
-    };
-
-    /**
-     * Image URL Getter / Setter
-     *
-     * @param {string} _v - Image URL path.
-     * @returns {*}
-     */
-    my.imageUrl = function (_v) {
-      if (!arguments.length) return imageUrl;
-      imageUrl = _v;
-      return this;
-    };
-
-    /**
-     * Number of Slices Getter / Setter
-     *
-     * @param {number} _v - Total number of slices.
-     * @returns {*}
-     */
-    my.numberOfSlices = function (_v) {
-      if (!arguments.length) return numberOfSlices;
-      numberOfSlices = _v;
-      return this;
-    };
-
-    /**
-     * X Slices Getter / Setter
-     *
-     * @param {number} _v - Number of slices over X axis.
-     * @returns {*}
-     */
-    my.slicesOverX = function (_v) {
-      if (!arguments.length) return slicesOverX;
-      slicesOverX = _v;
-      return this;
-    };
-
-    /**
-     * Y Slices Getter / Setter
-     *
-     * @param {number} _v - Number of slices over Y axis.
-     * @returns {*}
-     */
-    my.slicesOverY = function (_v) {
-      if (!arguments.length) return slicesOverY;
-      slicesOverY = _v;
-      return this;
-    };
-
-    /**
-     * Volume Style Getter / Setter
-     *
-     * @param {string} _v - Volume render style (either "MPRVolume" or "OpacityMap")
-     * @returns {*}
-     */
-    my.volumeStyle = function (_v) {
-      if (!arguments.length) return volumeStyle;
-      volumeStyle = _v;
-      return this;
-    };
-
-    /**
-     * Debug Getter / Setter
-     *
-     * @param {boolean} _v - Show debug log and stats. True/False.
-     * @returns {*}
-     */
-    my.debug = function (_v) {
-      if (!arguments.length) return debug;
-      debug = _v;
-      return my;
-    };
+    attachAccessors(my, state);
     return my;
   }
 

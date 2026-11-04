@@ -1,7 +1,9 @@
 import * as d3 from "d3";
-import dataTransform from "../dataTransform.js";
 import componentSpots from "./spots.js";
+import { arrayUnique } from "../arrayUnique.js";
 import { dispatch } from "../events.js";
+import { attachAccessors } from "../accessors.js";
+import { assignCoordinateScales, coordinateSeriesData } from "./seriesGroup.js";
 
 /**
  * Reusable 3D Multi Series Spot Plot Component
@@ -11,18 +13,20 @@ import { dispatch } from "../events.js";
 export default function() {
 
 	/* Default Properties */
-	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = ["green", "red", "yellow", "steelblue", "orange"];
+	const state = {
+		dimensions: { x: 40, y: 40, z: 40 },
+		colors: ["green", "red", "yellow", "steelblue", "orange"],
+		xScale: undefined,
+		yScale: undefined,
+		zScale: undefined,
+		colorScale: undefined,
+		sizeScale: undefined,
+		sizeRange: [0.5, 3.0]
+	};
 	let classed = "d3X3dSpotsMultiSeries";
 
 	/* Scales */
-	let xScale;
-	let yScale;
-	let zScale;
-	let colorScale;
 	let colorDomain = [];
-	let sizeScale;
-	let sizeRange = [0.5, 3.0];
 
 	/* Components */
 	const spots = componentSpots()
@@ -31,66 +35,18 @@ export default function() {
 		.sizeRange([2, 2]);
 
 	/**
-	 * Unique Array
-	 *
-	 * @param {array} array1
-	 * @param {array} array2
-	 * @returns {array}
-	 */
-	const arrayUnique = function(array1, array2) {
-		let array = array1.concat(array2);
-
-		let a = array.concat();
-		for (let i = 0; i < a.length; ++i) {
-			for (let j = i + 1; j < a.length; ++j) {
-				if (a[i] === a[j]) {
-					a.splice(j--, 1);
-				}
-			}
-		}
-
-		return a;
-	};
-
-	/**
 	 * Initialise Data and Scales
 	 *
 	 * @private
 	 * @param {Array} data - Chart data.
 	 */
 	const init = function(data) {
-		const { rowKeys, valueExtent, coordinatesExtent } = dataTransform(data).summary();
-		const { x: extentX, y: extentY, z: extentZ } = coordinatesExtent;
-		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
-
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear()
-				.domain(extentX)
-				.range([0, dimensionX]);
-		}
-
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
-				.domain(extentY)
-				.range([0, dimensionY]);
-		}
-
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear()
-				.domain(extentZ)
-				.range([0, dimensionZ]);
-		}
+		const rowKeys = assignCoordinateScales(state, data);
 
 		colorDomain = arrayUnique(colorDomain, rowKeys);
-		colorScale = d3.scaleOrdinal()
+		state.colorScale = d3.scaleOrdinal()
 			.domain(colorDomain)
-			.range(colors);
-
-		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear()
-				.domain(valueExtent)
-				.range(sizeRange);
-		}
+			.range(state.colors);
 	};
 
 	/**
@@ -104,36 +60,16 @@ export default function() {
 		selection.each(function(data) {
 			init(data);
 
-			const spotData = function(d) {
-				return d.map((f) => {
-					return {
-						key: f.key,
-						values: f.values.map((g) => {
-							return {
-								key: g.key,
-								values: [
-									{ key: "size", value: g.value },
-									{ key: "color", value: g.value },
-									{ key: "x", value: g.x },
-									{ key: "y", value: g.y },
-									{ key: "z", value: g.z }
-								]
-							}
-						})
-					};
-				});
-			};
-
-			spots.xScale(xScale)
-				.yScale(yScale)
-				.zScale(zScale)
-				.sizeScale(sizeScale);
+			spots.xScale(state.xScale)
+				.yScale(state.yScale)
+				.zScale(state.zScale)
+				.sizeScale(state.sizeScale);
 
 			const element = d3.select(this)
 				.classed(classed, true);
 
 			const addSpots = function(d) {
-				const color = colorScale(d.key);
+				const color = state.colorScale(d.key);
 				spots.color(color);
 				d3.select(this).call(spots);
 			};
@@ -152,7 +88,7 @@ export default function() {
 				let el = d3.select(nodes[i]);
 				el.classed(plane, true)
 				const spotSeries = el.selectAll(".spotSeries")
-					.data(spotData(data), (d) => d.key);
+					.data(coordinateSeriesData(data), (d) => d.key);
 
 				spotSeries.enter()
 					.append("Group")
@@ -168,102 +104,6 @@ export default function() {
 	};
 
 	/**
-	 * Dimensions Getter / Setter
-	 *
-	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-	 * @returns {*}
-	 */
-	my.dimensions = function(_v) {
-		if (!arguments.length) return dimensions;
-		dimensions = _v;
-		return this;
-	};
-
-	/**
-	 * X Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 Scale.
-	 * @returns {*}
-	 */
-	my.xScale = function(_v) {
-		if (!arguments.length) return xScale;
-		xScale = _v;
-		return my;
-	};
-
-	/**
-	 * Y Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.yScale = function(_v) {
-		if (!arguments.length) return yScale;
-		yScale = _v;
-		return my;
-	};
-
-	/**
-	 * Z Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 Scale.
-	 * @returns {*}
-	 */
-	my.zScale = function(_v) {
-		if (!arguments.length) return zScale;
-		zScale = _v;
-		return my;
-	};
-
-	/**
-	 * Color Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 color scale.
-	 * @returns {*}
-	 */
-	my.colorScale = function(_v) {
-		if (!arguments.length) return colorScale;
-		colorScale = _v;
-		return my;
-	};
-
-	/**
-	 * Size Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 size scale.
-	 * @returns {*}
-	 */
-	my.sizeScale = function(_v) {
-		if (!arguments.length) return sizeScale;
-		sizeScale = _v;
-		return my;
-	};
-
-	/**
-	 * Size Range Getter / Setter
-	 *
-	 * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
-	 * @returns {*}
-	 */
-	my.sizeRange = function(_v) {
-		if (!arguments.length) return sizeRange;
-		sizeRange = _v;
-		return my;
-	};
-
-	/**
-	 * Colors Getter / Setter
-	 *
-	 * @param {Array} _v - Array of colours used by color scale.
-	 * @returns {*}
-	 */
-	my.colors = function(_v) {
-		if (!arguments.length) return colors;
-		colors = _v;
-		return my;
-	};
-
-	/**
 	 * Dispatch On Getter
 	 *
 	 * @returns {*}
@@ -272,6 +112,20 @@ export default function() {
 		let value = dispatch.on.apply(dispatch, arguments);
 		return value === dispatch ? my : value;
 	};
+
+	/**
+	 * Getter / setters. No argument returns the value. One argument sets it and returns the component.
+	 *
+	 * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+	 * @param {d3.scale} xScale - D3 Scale.
+	 * @param {d3.scale} yScale - D3 scale.
+	 * @param {d3.scale} zScale - D3 Scale.
+	 * @param {d3.scale} colorScale - D3 color scale.
+	 * @param {d3.scale} sizeScale - D3 size scale.
+	 * @param {number[]} sizeRange - Size min and max (e.g. [0.5, 3.0]).
+	 * @param {Array} colors - Array of colours used by color scale.
+	 */
+	attachAccessors(my, state);
 
 	return my;
 }

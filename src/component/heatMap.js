@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform.js";
 import componentBars from "./bars.js";
+import { attachAccessors } from "../accessors.js";
 
 /**
  * Reusable 3D Heat Map Component
@@ -10,15 +11,15 @@ import componentBars from "./bars.js";
 export default function() {
 
 	/* Default Properties */
-	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = ["#1e253f", "#e33b30"];
+	const state = {
+		dimensions: { x: 40, y: 40, z: 40 },
+		colors: ["#1e253f", "#e33b30"],
+		xScale: undefined,
+		yScale: undefined,
+		zScale: undefined,
+		colorScale: undefined
+	};
 	let classed = "d3X3dHeatMap";
-
-	/* Scales */
-	let xScale;
-	let yScale;
-	let zScale;
-	let colorScale;
 
 	/* Components */
 	const bars = componentBars();
@@ -32,10 +33,10 @@ export default function() {
 	const init = function(data) {
 		const { rowKeys, columnKeys, valueMax } = dataTransform(data).summary();
 		const valueExtent = [0, valueMax];
-		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
+		const { x: dimensionX, y: dimensionY, z: dimensionZ } = state.dimensions;
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleBand()
+		if (typeof state.xScale === "undefined") {
+			state.xScale = d3.scaleBand()
 				.domain(columnKeys)
 				.range([0, dimensionX])
 				.paddingOuter(0.5)
@@ -43,15 +44,15 @@ export default function() {
 				.align(1);
 		}
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
+		if (typeof state.yScale === "undefined") {
+			state.yScale = d3.scaleLinear()
 				.domain(valueExtent)
 				.range([0, dimensionY])
 				.nice();
 		}
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleBand()
+		if (typeof state.zScale === "undefined") {
+			state.zScale = d3.scaleBand()
 				.domain(rowKeys.reverse())
 				.range([0, dimensionZ])
 				.paddingOuter(0.5)
@@ -59,10 +60,10 @@ export default function() {
 				.align(1);
 		}
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleLinear()
+		if (typeof state.colorScale === "undefined") {
+			state.colorScale = d3.scaleLinear()
 				.domain(valueExtent)
-				.range(colors);
+				.range(state.colors);
 		}
 	};
 
@@ -80,14 +81,14 @@ export default function() {
 			const element = d3.select(this)
 				.classed(classed, true);
 
-			bars.xScale(xScale)
-				.yScale(yScale)
+			bars.xScale(state.xScale)
+				.yScale(state.yScale)
 				.dimensions({
-					x: dimensions.x,
-					y: dimensions.y,
-					z: zScale.bandwidth()
+					x: state.dimensions.x,
+					y: state.dimensions.y,
+					z: state.zScale.bandwidth()
 				})
-				.colorScale(colorScale)
+				.colorScale(state.colorScale)
 				.transparency(0.2);
 
 			const addBars = function() {
@@ -105,7 +106,7 @@ export default function() {
 				.attr("translation", (d) => {
 					const x = 0;
 					const y = 0;
-					const z = zScale(d.key);
+					const z = state.zScale(d.key);
 					return x + " " + y + " " + z;
 				})
 				.each(addBars);
@@ -116,76 +117,16 @@ export default function() {
 	};
 
 	/**
-	 * Dimensions Getter / Setter
+	 * Getter / setters. No argument returns the value. One argument sets it and returns the component.
 	 *
-	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-	 * @returns {*}
+	 * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+	 * @param {d3.scale} xScale - D3 scale.
+	 * @param {d3.scale} yScale - D3 scale.
+	 * @param {d3.scale} zScale - D3 scale.
+	 * @param {d3.scale} colorScale - D3 color scale.
+	 * @param {Array} colors - Array of colours used by color scale.
 	 */
-	my.dimensions = function(_v) {
-		if (!arguments.length) return dimensions;
-		dimensions = _v;
-		return this;
-	};
-
-	/**
-	 * X Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.xScale = function(_v) {
-		if (!arguments.length) return xScale;
-		xScale = _v;
-		return my;
-	};
-
-	/**
-	 * Y Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.yScale = function(_v) {
-		if (!arguments.length) return yScale;
-		yScale = _v;
-		return my;
-	};
-
-	/**
-	 * Z Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.zScale = function(_v) {
-		if (!arguments.length) return zScale;
-		zScale = _v;
-		return my;
-	};
-
-	/**
-	 * Color Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 color scale.
-	 * @returns {*}
-	 */
-	my.colorScale = function(_v) {
-		if (!arguments.length) return colorScale;
-		colorScale = _v;
-		return my;
-	};
-
-	/**
-	 * Colors Getter / Setter
-	 *
-	 * @param {Array} _v - Array of colours used by color scale.
-	 * @returns {*}
-	 */
-	my.colors = function(_v) {
-		if (!arguments.length) return colors;
-		colors = _v;
-		return my;
-	};
+	attachAccessors(my, state);
 
 	return my;
 }

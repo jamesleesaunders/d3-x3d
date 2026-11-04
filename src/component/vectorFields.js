@@ -3,6 +3,7 @@ import dataTransform from "../dataTransform.js";
 import { dispatch } from "../events.js";
 import { colorParse } from "../colorHelper.js";
 import * as glMatrix from "gl-matrix";
+import { attachAccessors } from "../accessors.js";
 
 /**
  * Reusable 3D Vector Fields Component
@@ -12,34 +13,25 @@ import * as glMatrix from "gl-matrix";
 export default function() {
 
 	/* Default Properties */
-	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = d3.schemeRdYlGn[8];
-	let classed = "d3X3dVectorFields";
+	const state = {
+		dimensions: { x: 40, y: 40, z: 40 },
+		colors: d3.schemeRdYlGn[8],
+		xScale: undefined,
+		yScale: undefined,
+		zScale: undefined,
+		colorScale: undefined,
+		sizeScale: undefined,
+		sizeRange: [2.0, 5.0]
+	};
 
-	/* Scales */
-	let xScale;
-	let yScale;
-	let zScale;
-	let colorScale;
-	let sizeScale;
-	let sizeRange = [2.0, 5.0];
-
-	/**
-	 * Vector Field Function
-	 *
-	 * @param {number} x
-	 * @param {number} y
-	 * @param {number} z
-	 * @param {number} value
-	 * @returns {{vx: number, vy: number, vz: number}}
-	 */
-	let vectorFunction = function(x, y, z, value = null) {
+	state.vectorFunction = function(x, y, z) {
 		return {
 			vx: x,
 			vy: y,
 			vz: z
 		};
 	};
+	let classed = "d3X3dVectorFields";
 
 	/**
 	 * Initialise Data and Scales
@@ -51,48 +43,48 @@ export default function() {
 		const { coordinatesMax, coordinatesMin } = dataTransform(data).summary();
 		const { x: minX, y: minY, z: minZ } = coordinatesMin;
 		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
-		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
+		const { x: dimensionX, y: dimensionY, z: dimensionZ } = state.dimensions;
 
 		const extent = d3.extent(data.values.map((f) => {
 			let vx, vy, vz;
 			if ("vx" in f) {
 				({ vx, vy, vz } = f);
 			} else {
-				({ vx, vy, vz } = vectorFunction(f.x, f.y, f.z, f.value));
+				({ vx, vy, vz } = state.vectorFunction(f.x, f.y, f.z, f.value));
 			}
 
 			let vector = glMatrix.vec3.fromValues(vx, vy, vz);
 			return glMatrix.vec3.length(vector);
 		}));
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear()
+		if (typeof state.xScale === "undefined") {
+			state.xScale = d3.scaleLinear()
 				.domain([minX, maxX])
 				.range([0, dimensionX]);
 		}
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
+		if (typeof state.yScale === "undefined") {
+			state.yScale = d3.scaleLinear()
 				.domain([minY, maxY])
 				.range([0, dimensionY]);
 		}
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear()
+		if (typeof state.zScale === "undefined") {
+			state.zScale = d3.scaleLinear()
 				.domain([minZ, maxZ])
 				.range([0, dimensionZ]);
 		}
 
-		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear()
+		if (typeof state.sizeScale === "undefined") {
+			state.sizeScale = d3.scaleLinear()
 				.domain(extent)
-				.range(sizeRange);
+				.range(state.sizeRange);
 		}
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleQuantize()
+		if (typeof state.colorScale === "undefined") {
+			state.colorScale = d3.scaleQuantize()
 				.domain(extent)
-				.range(colors);
+				.range(state.colors);
 		}
 	};
 
@@ -118,7 +110,7 @@ export default function() {
 					if ("vx" in f) {
 						({ vx, vy, vz } = f);
 					} else {
-						({ vx, vy, vz } = vectorFunction(f.x, f.y, f.z, f.value));
+						({ vx, vy, vz } = state.vectorFunction(f.x, f.y, f.z, f.value));
 					}
 
 					const vecStart = glMatrix.vec3.fromValues(0, 1, 0);
@@ -140,7 +132,7 @@ export default function() {
 					}
 
 					// Calculate transform-translation attr
-					f.translation = xScale(f.x) + " " + yScale(f.y) + " " + zScale(f.z);
+					f.translation = state.xScale(f.x) + " " + state.yScale(f.y) + " " + state.zScale(f.z);
 
 					// Calculate vector length
 					f.value = vecLen;
@@ -164,7 +156,7 @@ export default function() {
 				.attr("class", "arrow")
 				.append("Transform")
 				.attr("translation", (d) => {
-					let offset = sizeScale(d.value) / 2;
+					let offset = state.sizeScale(d.value) / 2;
 					return "0 " + offset + " 0";
 				})
 				.append("Group");
@@ -173,23 +165,23 @@ export default function() {
 
 			arrowHead.append("Appearance")
 				.append("Material")
-				.attr("diffuseColor", (d) => colorParse(colorScale(d.value)));
+				.attr("diffuseColor", (d) => colorParse(state.colorScale(d.value)));
 
 			arrowHead.append("Cylinder")
-				.attr("height", (d) => sizeScale(d.value))
+				.attr("height", (d) => state.sizeScale(d.value))
 				.attr("radius", 0.1);
 
 			const arrowShaft = arrowsEnter
 				.append("Transform")
 				.attr("translation", (d) => {
-					let offset = sizeScale(d.value) / 2;
+					let offset = state.sizeScale(d.value) / 2;
 					return "0 " + offset + " 0";
 				})
 				.append("Shape");
 
 			arrowShaft.append("Appearance")
 				.append("Material")
-				.attr("diffuseColor", (d) => colorParse(colorScale(d.value)));
+				.attr("diffuseColor", (d) => colorParse(state.colorScale(d.value)));
 
 			arrowShaft
 				.append("Cone")
@@ -207,114 +199,6 @@ export default function() {
 	};
 
 	/**
-	 * Dimensions Getter / Setter
-	 *
-	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-	 * @returns {*}
-	 */
-	my.dimensions = function(_v) {
-		if (!arguments.length) return dimensions;
-		dimensions = _v;
-		return this;
-	};
-
-	/**
-	 * X Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.xScale = function(_v) {
-		if (!arguments.length) return xScale;
-		xScale = _v;
-		return my;
-	};
-
-	/**
-	 * Y Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.yScale = function(_v) {
-		if (!arguments.length) return yScale;
-		yScale = _v;
-		return my;
-	};
-
-	/**
-	 * Z Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.zScale = function(_v) {
-		if (!arguments.length) return zScale;
-		zScale = _v;
-		return my;
-	};
-
-	/**
-	 * Size Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 color scale.
-	 * @returns {*}
-	 */
-	my.sizeScale = function(_v) {
-		if (!arguments.length) return sizeScale;
-		sizeScale = _v;
-		return my;
-	};
-
-	/**
-	 * Size Range Getter / Setter
-	 *
-	 * @param {number[]} _v - Size min and max (e.g. [1, 9]).
-	 * @returns {*}
-	 */
-	my.sizeRange = function(_v) {
-		if (!arguments.length) return sizeRange;
-		sizeRange = _v;
-		return my;
-	};
-
-	/**
-	 * Color Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 color scale.
-	 * @returns {*}
-	 */
-	my.colorScale = function(_v) {
-		if (!arguments.length) return colorScale;
-		colorScale = _v;
-		return my;
-	};
-
-	/**
-	 * Colors Getter / Setter
-	 *
-	 * @param {Array} _v - Array of colours used by color scale.
-	 * @returns {*}
-	 */
-	my.colors = function(_v) {
-		if (!arguments.length) return colors;
-		colors = _v;
-		return my;
-	};
-
-	/**
-	 * Vector Function Getter / Setter
-	 *
-	 * @param {function} _f - Vector Function.
-	 * @returns {*}
-	 */
-	my.vectorFunction = function(_f) {
-		if (!arguments.length) return vectorFunction;
-		vectorFunction = _f;
-		return my;
-	};
-
-	/**
 	 * Dispatch On Getter
 	 *
 	 * @returns {*}
@@ -323,6 +207,21 @@ export default function() {
 		let value = dispatch.on.apply(dispatch, arguments);
 		return value === dispatch ? my : value;
 	};
+
+	/**
+	 * Getter / setters. No argument returns the value. One argument sets it and returns the component.
+	 *
+	 * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+	 * @param {d3.scale} xScale - D3 scale.
+	 * @param {d3.scale} yScale - D3 scale.
+	 * @param {d3.scale} zScale - D3 scale.
+	 * @param {d3.scale} sizeScale - D3 color scale.
+	 * @param {number[]} sizeRange - Size min and max (e.g. [1, 9]).
+	 * @param {d3.scale} colorScale - D3 color scale.
+	 * @param {Array} colors - Array of colours used by color scale.
+	 * @param {function} vectorFunction - Vector Function.
+	 */
+	attachAccessors(my, state);
 
 	return my;
 }

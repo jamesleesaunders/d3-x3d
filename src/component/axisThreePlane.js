@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import componentAxis from "./axis.js";
+import { attachAccessors } from "../accessors.js";
 
 /**
  * Reusable 3D Multi Plane Axis Component
@@ -9,15 +10,15 @@ import componentAxis from "./axis.js";
 export default function() {
 
 	/* Default Properties */
-	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = ["blue", "red", "green"];
+	const state = {
+		dimensions: { x: 40, y: 40, z: 40 },
+		colors: ["blue", "red", "green"],
+		labelPosition: "proximal",
+		xScale: undefined,
+		yScale: undefined,
+		zScale: undefined
+	};
 	let classed = "d3X3dAxisThreePlane";
-	let labelPosition = "proximal";
-
-	/* Scales */
-	let xScale;
-	let yScale;
-	let zScale;
 
 	/* Components */
 	const xzAxis = componentAxis();
@@ -45,38 +46,38 @@ export default function() {
 				.append("Group")
 				.attr("class", (d) => d);
 
-			xzAxis.scale(xScale)
+			xzAxis.scale(state.xScale)
 				.direction("x")
 				.tickDirection("z")
-				.tickSize(zScale.range()[1] - zScale.range()[0])
-				.color(colors[0])
-				.labelPosition(labelPosition);
+				.tickSize(state.zScale.range()[1] - state.zScale.range()[0])
+				.color(state.colors[0])
+				.labelPosition(state.labelPosition);
 
-			yzAxis.scale(yScale)
+			yzAxis.scale(state.yScale)
 				.direction("y")
 				.tickDirection("z")
-				.tickSize(zScale.range()[1] - zScale.range()[0])
-				.color(colors[1])
-				.labelPosition(labelPosition);
+				.tickSize(state.zScale.range()[1] - state.zScale.range()[0])
+				.color(state.colors[1])
+				.labelPosition(state.labelPosition);
 
-			yxAxis.scale(yScale)
+			yxAxis.scale(state.yScale)
 				.direction("y")
 				.tickDirection("x")
-				.tickSize(xScale.range()[1] - xScale.range()[0])
-				.color(colors[1])
-				.labelPosition(labelPosition);
+				.tickSize(state.xScale.range()[1] - state.xScale.range()[0])
+				.color(state.colors[1])
+				.labelPosition(state.labelPosition);
 
-			zxAxis.scale(zScale)
+			zxAxis.scale(state.zScale)
 				.direction("z")
 				.tickDirection("x")
-				.tickSize(xScale.range()[1] - xScale.range()[0])
-				.color(colors[2])
-				.labelPosition(labelPosition);
+				.tickSize(state.xScale.range()[1] - state.xScale.range()[0])
+				.color(state.colors[2])
+				.labelPosition(state.labelPosition);
 
 			// We only want 2 sets of labels on the y axis if they are in distal position.
-			if (labelPosition === "proximal") {
+			if (state.labelPosition === "proximal") {
 				// Make the tickFormat return nothing (i.e hide text).
-				yxAxis.tickFormat((d) => "");
+				yxAxis.tickFormat(() => "");
 			} else {
 				// Make the yxAxis tickFormat match the yzAxis.
 				yxAxis.tickFormat(yzAxis.tickFormat());
@@ -97,76 +98,16 @@ export default function() {
 	};
 
 	/**
-	 * Dimensions Getter / Setter
+	 * Getter / setters. No argument returns the value. One argument sets it and returns the component.
 	 *
-	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-	 * @returns {*}
+	 * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+	 * @param {d3.scale} xScale - D3 scale.
+	 * @param {d3.scale} yScale - D3 scale.
+	 * @param {d3.scale} zScale - D3 scale.
+	 * @param {Array} colors - Array of colours used by color scale.
+	 * @param {string} labelPosition - Position ("proximal" or "distal")
 	 */
-	my.dimensions = function(_v) {
-		if (!arguments.length) return dimensions;
-		dimensions = _v;
-		return this;
-	};
-
-	/**
-	 * X Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.xScale = function(_v) {
-		if (!arguments.length) return xScale;
-		xScale = _v;
-		return my;
-	};
-
-	/**
-	 * Y Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.yScale = function(_v) {
-		if (!arguments.length) return yScale;
-		yScale = _v;
-		return my;
-	};
-
-	/**
-	 * Z Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.zScale = function(_v) {
-		if (!arguments.length) return zScale;
-		zScale = _v;
-		return my;
-	};
-
-	/**
-	 * Colors Getter / Setter
-	 *
-	 * @param {Array} _v - Array of colours used by color scale.
-	 * @returns {*}
-	 */
-	my.colors = function(_v) {
-		if (!arguments.length) return colors;
-		colors = _v;
-		return my;
-	};
-
-	/**
-	 * Label Position Getter / Setter
-	 *
-	 * @param {string} _v - Position ("proximal" or "distal")
-	 * @returns {*}
-	 */
-	my.labelPosition = function(_v) {
-		if (!arguments.length) return labelPosition;
-		labelPosition = _v;
-		return my;
-	};
+	attachAccessors(my, state);
 
 	return my;
 }

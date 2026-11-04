@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import dataTransform from "../dataTransform.js";
 import { dispatch } from "../events.js";
 import { colorParse } from "../colorHelper.js";
+import { attachAccessors } from "../accessors.js";
 
 /**
  * Reusable 3D Spot Plot Component
@@ -11,20 +12,20 @@ import { colorParse } from "../colorHelper.js";
 export default function() {
 
 	/* Default Properties */
-	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = d3.schemeRdYlGn[8];
-	let color;
+	const state = {
+		dimensions: { x: 40, y: 40, z: 40 },
+		colors: d3.schemeRdYlGn[8],
+		color: undefined,
+		mappings: undefined,
+		xScale: undefined,
+		yScale: undefined,
+		zScale: undefined,
+		colorScale: undefined,
+		sizeScale: undefined,
+		sizeRange: [0.5, 3.5],
+		plane: "x"
+	};
 	let classed = "d3X3dSpots";
-	let mappings;
-
-	/* Scales */
-	let xScale;
-	let yScale;
-	let zScale;
-	let colorScale;
-	let sizeScale;
-	let sizeRange = [0.5, 3.5];
-	let plane = "x";
 
 	/**
 	 * Initialise Data and Scales
@@ -41,7 +42,7 @@ export default function() {
 			};
 
 			data.values.forEach((d) => {
-				let key = mappings[dimension];
+				let key = state.mappings[dimension];
 				let value = d.values.find((v) => v.key === key).value;
 				set.values.push({ key: key, value: value });
 			});
@@ -55,38 +56,38 @@ export default function() {
 		let extentSize = newData.size.valueExtent;
 		let extentColor = newData.color.valueExtent;
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scaleLinear()
+		if (typeof state.xScale === "undefined") {
+			state.xScale = d3.scaleLinear()
 				.domain(extentX)
-				.range([0, dimensions.x]);
+				.range([0, state.dimensions.x]);
 		}
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
+		if (typeof state.yScale === "undefined") {
+			state.yScale = d3.scaleLinear()
 				.domain(extentY)
-				.range([0, dimensions.y]);
+				.range([0, state.dimensions.y]);
 		}
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scaleLinear()
+		if (typeof state.zScale === "undefined") {
+			state.zScale = d3.scaleLinear()
 				.domain(extentZ)
-				.range([0, dimensions.z]);
+				.range([0, state.dimensions.z]);
 		}
 
-		if (typeof sizeScale === "undefined") {
-			sizeScale = d3.scaleLinear()
+		if (typeof state.sizeScale === "undefined") {
+			state.sizeScale = d3.scaleLinear()
 				.domain(extentSize)
-				.range(sizeRange);
+				.range(state.sizeRange);
 		}
 
-		if (color) {
-			colorScale = d3.scaleQuantize()
+		if (state.color) {
+			state.colorScale = d3.scaleQuantize()
 				.domain(extentColor)
-				.range([color, color]);
-		} else if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleQuantize()
+				.range([state.color, state.color]);
+		} else if (typeof state.colorScale === "undefined") {
+			state.colorScale = d3.scaleQuantize()
 				.domain(extentColor)
-				.range(colors);
+				.range(state.colors);
 		}
 	};
 
@@ -102,9 +103,9 @@ export default function() {
 			init(data);
 
 			function getPositionVector(axisDir, d) {
-				let xVal = xScale(d.values.find((v) => v.key === mappings.x).value);
-				let yVal = yScale(d.values.find((v) => v.key === mappings.y).value);
-				let zVal = zScale(d.values.find((v) => v.key === mappings.z).value);
+				let xVal = state.xScale(d.values.find((v) => v.key === state.mappings.x).value);
+				let yVal = state.yScale(d.values.find((v) => v.key === state.mappings.y).value);
+				let zVal = state.zScale(d.values.find((v) => v.key === state.mappings.z).value);
 
 				const positionVectors = {
 					x: [0, yVal, zVal],
@@ -134,8 +135,8 @@ export default function() {
 
 				shape.append("Cylinder")
 					.attr("radius", (d) => {
-						let sizeVal = d.values.find((v) => v.key === mappings.size).value;
-						return sizeScale(sizeVal);
+						let sizeVal = d.values.find((v) => v.key === state.mappings.size).value;
+						return state.sizeScale(sizeVal);
 					})
 					.attr("height", 0.1);
 
@@ -143,8 +144,8 @@ export default function() {
 					.append("Material")
 					.attr("transparency", 0.1)
 					.attr("diffuseColor", (d) => {
-						let colorVal = d.values.find((v) => v.key === mappings.color).value;
-						return colorParse(colorScale(colorVal));
+						let colorVal = d.values.find((v) => v.key === state.mappings.color).value;
+						return colorParse(state.colorScale(colorVal));
 					});
 
 				return shape;
@@ -161,159 +162,27 @@ export default function() {
 
 			const spotsTransition = spotsEnter.transition();
 			spotsTransition
-				.attr("translation", (d) => getPositionVector(plane, d).join())
-				.attr("rotation", (d) => getRotationVector(plane).join());
+				.attr("translation", (d) => getPositionVector(state.plane, d).join())
+				.attr("rotation", () => getRotationVector(state.plane).join());
 
 			spotsTransition.select("Shape")
 				.select("Cylinder")
 				.attr("radius", (d) => {
-					let sizeVal = d.values.find((v) => v.key === mappings.size).value;
-					return sizeScale(sizeVal);
+					let sizeVal = d.values.find((v) => v.key === state.mappings.size).value;
+					return state.sizeScale(sizeVal);
 				});
 
 			spotsTransition.select("Shape")
 				.select("Appearance")
 				.select("Material")
 				.attr("diffuseColor", (d) => {
-					let colorVal = d.values.find((v) => v.key === mappings.color).value;
-					return colorParse(colorScale(colorVal));
+					let colorVal = d.values.find((v) => v.key === state.mappings.color).value;
+					return colorParse(state.colorScale(colorVal));
 				});
 
 			spots.exit()
 				.remove();
 		});
-	};
-
-	/**
-	 * Dimensions Getter / Setter
-	 *
-	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-	 * @returns {*}
-	 */
-	my.dimensions = function(_v) {
-		if (!arguments.length) return dimensions;
-		dimensions = _v;
-		return this;
-	};
-
-	/**
-	 * Plane Getter / Setter
-	 *
-	 * @param {string} _v - Plane of Spots (e.g. "x", "y", "z").
-	 * @returns {*}
-	 */
-	my.plane = function(_v) {
-		if (!arguments.length) return plane;
-		plane = _v;
-		return my;
-	};
-
-	/**
-	 * X Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.xScale = function(_v) {
-		if (!arguments.length) return xScale;
-		xScale = _v;
-		return my;
-	};
-
-	/**
-	 * Y Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.yScale = function(_v) {
-		if (!arguments.length) return yScale;
-		yScale = _v;
-		return my;
-	};
-
-	/**
-	 * Z Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.zScale = function(_v) {
-		if (!arguments.length) return zScale;
-		zScale = _v;
-		return my;
-	};
-
-	/**
-	 * Size Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 size scale.
-	 * @returns {*}
-	 */
-	my.sizeScale = function(_v) {
-		if (!arguments.length) return sizeScale;
-		sizeScale = _v;
-		return my;
-	};
-
-	/**
-	 * Size Range Getter / Setter
-	 *
-	 * @param {number[]} _v - Size min and max (e.g. [1, 9]).
-	 * @returns {*}
-	 */
-	my.sizeRange = function(_v) {
-		if (!arguments.length) return sizeRange;
-		sizeRange = _v;
-		return my;
-	};
-
-	/**
-	 * Color Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 color scale.
-	 * @returns {*}
-	 */
-	my.colorScale = function(_v) {
-		if (!arguments.length) return colorScale;
-		colorScale = _v;
-		return my;
-	};
-
-	/**
-	 * Color Getter / Setter
-	 *
-	 * @param {string} _v - Color (e.g. "red" or "#ff0000").
-	 * @returns {*}
-	 */
-	my.color = function(_v) {
-		if (!arguments.length) return color;
-		color = _v;
-		return my;
-	};
-
-	/**
-	 * Colors Getter / Setter
-	 *
-	 * @param {Array} _v - Array of colours used by color scale.
-	 * @returns {*}
-	 */
-	my.colors = function(_v) {
-		if (!arguments.length) return colors;
-		colors = _v;
-		return my;
-	};
-
-	/**
-	 * Mappings Getter / Setter
-	 *
-	 * @param {Object} _v - Map properties to size, colour etc.
-	 * @returns {*}
-	 */
-	my.mappings = function(_v) {
-		if (!arguments.length) return mappings;
-		mappings = _v;
-		return my;
 	};
 
 	/**
@@ -325,6 +194,23 @@ export default function() {
 		let value = dispatch.on.apply(dispatch, arguments);
 		return value === dispatch ? my : value;
 	};
+
+	/**
+	 * Getter / setters. No argument returns the value. One argument sets it and returns the component.
+	 *
+	 * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+	 * @param {string} plane - Plane of Spots (e.g. "x", "y", "z").
+	 * @param {d3.scale} xScale - D3 scale.
+	 * @param {d3.scale} yScale - D3 scale.
+	 * @param {d3.scale} zScale - D3 scale.
+	 * @param {d3.scale} sizeScale - D3 size scale.
+	 * @param {number[]} sizeRange - Size min and max (e.g. [1, 9]).
+	 * @param {d3.scale} colorScale - D3 color scale.
+	 * @param {string} color - Color (e.g. "red" or "#ff0000").
+	 * @param {Array} colors - Array of colours used by color scale.
+	 * @param {Object} mappings - Map properties to size, colour etc.
+	 */
+	attachAccessors(my, state);
 
 	return my;
 }

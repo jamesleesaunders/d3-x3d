@@ -1,34 +1,64 @@
-import test from "tape";
+import test from "mocha";
+import * as chai from "chai";
 import d3X3d from "../../index.js"
 
-test("Test Viewpoint Base Component, component.viewpoint()", function(t) {
+test.describe("Test Viewpoint Base Component, component.viewpoint()", function() {
 	let viewPoint = d3X3d.component.viewpoint();
 
 	// Test centerOfRotation getter / setter function
-	t.deepEqual(viewPoint.centerOfRotation(), [0.0, 0.0, 0.0], "Default centerOfRotation");
-	viewPoint.centerOfRotation([1.0, 1.0, 1.0]);
-	t.deepEqual(viewPoint.centerOfRotation(), [1.0, 1.0, 1.0], "Changed centreOfRotation");
+	test.describe("#centerOfRotation()", function() {
+		test.it("Default centerOfRotation", function(done) {
+			chai.expect(viewPoint.centerOfRotation()).to.be.deep.equal([0.0, 0.0, 0.0]);
+			done();
+		});
+		test.it("Changed centreOfRotation", function(done) {
+			viewPoint.centerOfRotation([1.0, 1.0, 1.0]);
+			chai.expect(viewPoint.centerOfRotation()).to.be.deep.equal([1.0, 1.0, 1.0]);
+			done();
+		});
+	});
 
 	// Test viewPosition getter / setter function
-	t.deepEqual(viewPoint.viewPosition(), [80.0, 15.0, 80.0], "Default viewPosition");
-	viewPoint.viewPosition([100.0, 100.0, 100.0]);
-	t.deepEqual(viewPoint.viewPosition(), [100.0, 100.0, 100.0], "Changed viewPosition");
+	test.describe("#viewPosition()", function() {
+		test.it("Default viewPosition", function(done) {
+			chai.expect(viewPoint.viewPosition()).to.be.deep.equal([80.0, 15.0, 80.0]);
+			done();
+		});
+		test.it("Changed viewPosition", function(done) {
+			viewPoint.viewPosition([100.0, 100.0, 100.0]);
+			chai.expect(viewPoint.viewPosition()).to.be.deep.equal([100.0, 100.0, 100.0]);
+			done();
+		});
+	});
 
 	// Test viewOrientation getter / setter function
-	t.deepEqual(viewPoint.viewOrientation(), [0.0, 1.0, 0.0, 0.8], "Default viewOrientation");
-	viewPoint.viewOrientation([1.0, 0.0, 0.0, 0.8]);
-	t.deepEqual(viewPoint.viewOrientation(), [1.0, 0.0, 0.0, 0.8], "Changed viewOrientation");
+	test.describe("#viewOrientation()", function() {
+		test.it("Default viewOrientation", function(done) {
+			chai.expect(viewPoint.viewOrientation()).to.be.deep.equal([0.0, 1.0, 0.0, 0.8]);
+			done();
+		});
+		test.it("Changed viewOrientation", function(done) {
+			viewPoint.viewOrientation([1.0, 0.0, 0.0, 0.8]);
+			chai.expect(viewPoint.viewOrientation()).to.be.deep.equal([1.0, 0.0, 0.0, 0.8]);
+			done();
+		});
+	});
 
 	// Test fieldOfView getter / setter function
-	t.deepEqual(viewPoint.fieldOfView(), 0.8, "Default fieldOfView");
-	viewPoint.fieldOfView(1.0);
-	t.deepEqual(viewPoint.fieldOfView(), 1.0, "Changed fieldOfView");
-
-	t.end();
+	test.describe("#fieldOfView()", function() {
+		test.it("Default fieldOfView", function(done) {
+			chai.expect(viewPoint.fieldOfView()).to.equal(0.8);
+			done();
+		});
+		test.it("Changed fieldOfView", function(done) {
+			viewPoint.fieldOfView(1.0);
+			chai.expect(viewPoint.fieldOfView()).to.equal(1.0);
+			done();
+		});
+	});
 });
 
-test("Test Component Viewpoint Quick View, viewpoint.quickView()", function(t) {
-	let viewPoint = d3X3d.component.viewpoint();
+test.describe("Test Component Viewpoint Quick View, viewpoint.quickView()", function() {
 	let viewPoints = {
 		left: {
 			centerOfRotation: [0.0, 0.0, 0.0],
@@ -55,55 +85,92 @@ test("Test Component Viewpoint Quick View, viewpoint.quickView()", function(t) {
 			fieldOfView: 0.8
 		}
 	};
-	let { left, side, top, dimetric } = viewPoints;
 
-	test("Test default values for left view", function(t) {
-		viewPoint = d3X3d.component.viewpoint();
-		viewPoint.quickView('left');
+	test.describe("Test default values for left view", function() {
+		let viewPoint = d3X3d.component.viewpoint();
+		viewPoint.quickView("left");
 
-		t.deepEqual(viewPoint.centerOfRotation(), left.centerOfRotation);
-		t.deepEqual(viewPoint.viewPosition(), left.viewPosition);
-		t.deepEqual(viewPoint.viewOrientation(), left.viewOrientation);
-		t.deepEqual(viewPoint.fieldOfView(), left.fieldOfView);
-
-		t.end();
+		test.it("centerOfRotation", function(done) {
+			chai.expect(viewPoint.centerOfRotation()).to.be.deep.equal(viewPoints.left.centerOfRotation);
+			done();
+		});
+		test.it("viewPosition", function(done) {
+			chai.expect(viewPoint.viewPosition()).to.be.deep.equal(viewPoints.left.viewPosition);
+			done();
+		});
+		test.it("viewOrientation", function(done) {
+			chai.expect(viewPoint.viewOrientation()).to.be.deep.equal(viewPoints.left.viewOrientation);
+			done();
+		});
+		test.it("fieldOfView", function(done) {
+			chai.expect(viewPoint.fieldOfView()).to.equal(viewPoints.left.fieldOfView);
+			done();
+		});
 	});
 
-	test("Test default values for top view", function(t) {
-		viewPoint = d3X3d.component.viewpoint();
-		viewPoint.quickView('top');
+	test.describe("Test default values for top view", function() {
+		let viewPoint = d3X3d.component.viewpoint();
+		viewPoint.quickView("top");
 
-		t.deepEqual(viewPoint.centerOfRotation(), top.centerOfRotation);
-		t.deepEqual(viewPoint.viewPosition(), top.viewPosition);
-		t.deepEqual(viewPoint.viewOrientation(), top.viewOrientation);
-		t.deepEqual(viewPoint.fieldOfView(), top.fieldOfView);
-
-		t.end();
+		test.it("centerOfRotation", function(done) {
+			chai.expect(viewPoint.centerOfRotation()).to.be.deep.equal(viewPoints.top.centerOfRotation);
+			done();
+		});
+		test.it("viewPosition", function(done) {
+			chai.expect(viewPoint.viewPosition()).to.be.deep.equal(viewPoints.top.viewPosition);
+			done();
+		});
+		test.it("viewOrientation", function(done) {
+			chai.expect(viewPoint.viewOrientation()).to.be.deep.equal(viewPoints.top.viewOrientation);
+			done();
+		});
+		test.it("fieldOfView", function(done) {
+			chai.expect(viewPoint.fieldOfView()).to.equal(viewPoints.top.fieldOfView);
+			done();
+		});
 	});
 
-	test("Test default values for side view", function(t) {
-		viewPoint = d3X3d.component.viewpoint();
-		viewPoint.quickView('side');
+	test.describe("Test default values for side view", function() {
+		let viewPoint = d3X3d.component.viewpoint();
+		viewPoint.quickView("side");
 
-		t.deepEqual(viewPoint.centerOfRotation(), side.centerOfRotation);
-		t.deepEqual(viewPoint.viewPosition(), side.viewPosition);
-		t.deepEqual(viewPoint.viewOrientation(), side.viewOrientation);
-		t.deepEqual(viewPoint.fieldOfView(), side.fieldOfView);
-
-		t.end();
+		test.it("centerOfRotation", function(done) {
+			chai.expect(viewPoint.centerOfRotation()).to.be.deep.equal(viewPoints.side.centerOfRotation);
+			done();
+		});
+		test.it("viewPosition", function(done) {
+			chai.expect(viewPoint.viewPosition()).to.be.deep.equal(viewPoints.side.viewPosition);
+			done();
+		});
+		test.it("viewOrientation", function(done) {
+			chai.expect(viewPoint.viewOrientation()).to.be.deep.equal(viewPoints.side.viewOrientation);
+			done();
+		});
+		test.it("fieldOfView", function(done) {
+			chai.expect(viewPoint.fieldOfView()).to.equal(viewPoints.side.fieldOfView);
+			done();
+		});
 	});
 
-	test("Test default values for dimetric view", function(t) {
-		viewPoint = d3X3d.component.viewpoint();
-		viewPoint.quickView('dimetric');
+	test.describe("Test default values for dimetric view", function() {
+		let viewPoint = d3X3d.component.viewpoint();
+		viewPoint.quickView("dimetric");
 
-		t.deepEqual(viewPoint.centerOfRotation(), dimetric.centerOfRotation);
-		t.deepEqual(viewPoint.viewPosition(), dimetric.viewPosition);
-		t.deepEqual(viewPoint.viewOrientation(), dimetric.viewOrientation);
-		t.deepEqual(viewPoint.fieldOfView(), dimetric.fieldOfView);
-
-		t.end();
+		test.it("centerOfRotation", function(done) {
+			chai.expect(viewPoint.centerOfRotation()).to.be.deep.equal(viewPoints.dimetric.centerOfRotation);
+			done();
+		});
+		test.it("viewPosition", function(done) {
+			chai.expect(viewPoint.viewPosition()).to.be.deep.equal(viewPoints.dimetric.viewPosition);
+			done();
+		});
+		test.it("viewOrientation", function(done) {
+			chai.expect(viewPoint.viewOrientation()).to.be.deep.equal(viewPoints.dimetric.viewOrientation);
+			done();
+		});
+		test.it("fieldOfView", function(done) {
+			chai.expect(viewPoint.fieldOfView()).to.equal(viewPoints.dimetric.fieldOfView);
+			done();
+		});
 	});
-
-	t.end()
 });

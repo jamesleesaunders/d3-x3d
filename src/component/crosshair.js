@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import { colorParse } from "../colorHelper.js";
+import { attachAccessors } from "../accessors.js";
 
 /**
  * Reusable 3D Crosshair Component
@@ -9,15 +10,15 @@ import { colorParse } from "../colorHelper.js";
 export default function() {
 
 	/* Default Properties */
-	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = ["blue", "red", "green"];
+	const state = {
+		dimensions: { x: 40, y: 40, z: 40 },
+		colors: ["blue", "red", "green"],
+		xScale: undefined,
+		yScale: undefined,
+		zScale: undefined
+	};
 	let classed = "d3X3dCrosshair";
 	let radius = 0.1;
-
-	/* Scales */
-	let xScale;
-	let yScale;
-	let zScale;
 
 	/**
 	 * Constructor
@@ -33,16 +34,16 @@ export default function() {
 				.classed(classed, true)
 				.attr("id", (d) => d.key);
 
-			dimensions.x = xScale ? Math.max(...xScale.range()) : dimensions.x;
-			dimensions.y = yScale ? Math.max(...yScale.range()) : dimensions.y;
-			dimensions.z = zScale ? Math.max(...zScale.range()) : dimensions.z;
+			state.dimensions.x = state.xScale ? Math.max(...state.xScale.range()) : state.dimensions.x;
+			state.dimensions.y = state.yScale ? Math.max(...state.yScale.range()) : state.dimensions.y;
+			state.dimensions.z = state.zScale ? Math.max(...state.zScale.range()) : state.dimensions.z;
 
-			const xOff = dimensions.x / 2;
-			const yOff = dimensions.y / 2;
-			const zOff = dimensions.z / 2;
-			const xVal = xScale(data.x);
-			const yVal = yScale(data.y);
-			const zVal = zScale(data.z);
+			const xOff = state.dimensions.x / 2;
+			const yOff = state.dimensions.y / 2;
+			const zOff = state.dimensions.z / 2;
+			const xVal = state.xScale(data.x);
+			const yVal = state.yScale(data.y);
+			const zVal = state.zScale(data.z);
 
 			function getPositionVector(axisDir) {
 				const positionVectors = {
@@ -65,8 +66,8 @@ export default function() {
 			}
 
 			const colorScale = d3.scaleOrdinal()
-				.domain(Object.keys(dimensions))
-				.range(colors);
+				.domain(Object.keys(state.dimensions))
+				.range(state.colors);
 
 			// Origin Ball
 			const ballSelect = element.selectAll(".ball")
@@ -93,7 +94,7 @@ export default function() {
 
 			// Crosshair Lines
 			const lineSelect = element.selectAll(".line")
-				.data(Object.keys(dimensions));
+				.data(Object.keys(state.dimensions));
 
 			const line = lineSelect.enter()
 				.append("Transform")
@@ -104,7 +105,7 @@ export default function() {
 
 			line.append("cylinder")
 				.attr("radius", radius)
-				.attr("height", (d) => dimensions[d]);
+				.attr("height", (d) => state.dimensions[d]);
 
 			line.append("Appearance")
 				.append("Material")
@@ -119,64 +120,15 @@ export default function() {
 	};
 
 	/**
-	 * Dimensions Getter / Setter
+	 * Getter / setters. No argument returns the value. One argument sets it and returns the component.
 	 *
-	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-	 * @returns {*}
+	 * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+	 * @param {d3.scale} xScale - D3 scale.
+	 * @param {d3.scale} yScale - D3 scale.
+	 * @param {d3.scale} zScale - D3 scale.
+	 * @param {Array} colors - Array of colours used by color scale.
 	 */
-	my.dimensions = function(_v) {
-		if (!arguments.length) return dimensions;
-		dimensions = _v;
-		return this;
-	};
-
-	/**
-	 * X Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.xScale = function(_v) {
-		if (!arguments.length) return xScale;
-		xScale = _v;
-		return my;
-	};
-
-	/**
-	 * Y Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.yScale = function(_v) {
-		if (!arguments.length) return yScale;
-		yScale = _v;
-		return my;
-	};
-
-	/**
-	 * Z Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.zScale = function(_v) {
-		if (!arguments.length) return zScale;
-		zScale = _v;
-		return my;
-	};
-
-	/**
-	 * Colors Getter / Setter
-	 *
-	 * @param {Array} _v - Array of colours used by color scale.
-	 * @returns {*}
-	 */
-	my.colors = function(_v) {
-		if (!arguments.length) return colors;
-		colors = _v;
-		return my;
-	};
+	attachAccessors(my, state);
 
 	return my;
 }

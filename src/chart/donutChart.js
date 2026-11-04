@@ -1,7 +1,6 @@
-import * as d3 from "d3";
-import dataTransform from "../dataTransform.js";
 import component from "../component.js";
 import { createScene } from "../base.js";
+import { attachAccessors } from "../accessors.js";
 
 /**
  * Reusable 3D Donut Chart
@@ -22,12 +21,14 @@ import { createScene } from "../base.js";
 export default function() {
 
 	/* Default Properties */
-	let width = 500;
-	let height = 500;
-	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = ["green", "red", "yellow", "steelblue", "orange"];
+	const state = {
+		width: 500,
+		height: 500,
+		dimensions: { x: 40, y: 40, z: 40 },
+		colors: ["green", "red", "yellow", "steelblue", "orange"],
+		debug: false
+	};
 	let classed = "d3X3dDonutChart";
-	let debug = false;
 
 	/* Components */
 	const viewpoint = component.viewpoint();
@@ -43,14 +44,14 @@ export default function() {
 	 */
 	const my = function(selection) {
 		const layers = ["donut"];
-		const scene = createScene(selection, layers, classed, width, height, debug);
+		const scene = createScene(selection, layers, classed, state.width, state.height, state.debug);
 
 		selection.each((data) => {
 			// Add Viewpoint
 			viewpoint.quickView("dimetric");
 
 			// Add Donut
-			donut.colors(colors);
+			donut.colors(state.colors);
 
 			scene.call(viewpoint);
 			scene.select(".donut")
@@ -63,64 +64,15 @@ export default function() {
 	};
 
 	/**
-	 * Width Getter / Setter
+	 * Getter / setters. No argument returns the value. One argument sets it and returns the component.
 	 *
-	 * @param {number} _v - X3D canvas width in px.
-	 * @returns {*}
+	 * @param {number} width - X3D canvas width in px.
+	 * @param {number} height - X3D canvas height in px.
+	 * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+	 * @param {Array} colors - Array of colours used by color scale.
+	 * @param {boolean} debug - Show debug log and stats. True/False.
 	 */
-	my.width = function(_v) {
-		if (!arguments.length) return width;
-		width = _v;
-		return this;
-	};
-
-	/**
-	 * Height Getter / Setter
-	 *
-	 * @param {number} _v - X3D canvas height in px.
-	 * @returns {*}
-	 */
-	my.height = function(_v) {
-		if (!arguments.length) return height;
-		height = _v;
-		return this;
-	};
-
-	/**
-	 * Dimensions Getter / Setter
-	 *
-	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-	 * @returns {*}
-	 */
-	my.dimensions = function(_v) {
-		if (!arguments.length) return dimensions;
-		dimensions = _v;
-		return this;
-	};
-
-	/**
-	 * Colors Getter / Setter
-	 *
-	 * @param {Array} _v - Array of colours used by color scale.
-	 * @returns {*}
-	 */
-	my.colors = function(_v) {
-		if (!arguments.length) return colors;
-		colors = _v;
-		return my;
-	};
-
-	/**
-	 * Debug Getter / Setter
-	 *
-	 * @param {boolean} _v - Show debug log and stats. True/False.
-	 * @returns {*}
-	 */
-	my.debug = function(_v) {
-		if (!arguments.length) return debug;
-		debug = _v;
-		return my;
-	};
+	attachAccessors(my, state);
 
 	return my;
 }

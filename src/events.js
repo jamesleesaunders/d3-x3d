@@ -103,18 +103,11 @@ export function getEventPagePoint(event) {
  * @returns {*}
  */
 export function getX3domHolder(event) {
-	let target = d3.select(event.target);
+	let node = event.target;
 
-	let x3d = target.select(function() {
-		let el = this;
-		while (el.nodeName.toLowerCase() !== "x3d") {
-			el = el.parentElement;
-		}
+	while (node.nodeName.toLowerCase() !== "x3d") {
+		node = node.parentElement;
+	}
 
-		return el;
-	});
-
-	return x3d.select(function() {
-		return this.parentNode;
-	}).node();
+	return node.parentNode;
 }
