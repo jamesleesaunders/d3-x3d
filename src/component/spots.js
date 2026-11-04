@@ -163,7 +163,7 @@ export default function() {
 			const spotsTransition = spotsEnter.transition();
 			spotsTransition
 				.attr("translation", (d) => getPositionVector(state.plane, d).join())
-				.attr("rotation", (d) => getRotationVector(state.plane).join());
+				.attr("rotation", () => getRotationVector(state.plane).join());
 
 			spotsTransition.select("Shape")
 				.select("Cylinder")

@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-import dataTransform from "../dataTransform.js";
 import { attachAccessors } from "../accessors.js";
 
 /**
@@ -30,7 +29,7 @@ export default function() {
 	 * @param {d3.selection} selection - The chart holder D3 selection.
 	 */
 	const my = function(selection) {
-		selection.each(function(data) {
+		selection.each(function() {
 
 			const element = d3.select(this)
 				.classed(classed, true)

@@ -80,7 +80,7 @@ export default function() {
 				.append("Shape");
 
 			plane.append("plane")
-				.attr("size", (d) => `${state.dimensions.x},${state.dimensions.y}`)
+				.attr("size", () => `${state.dimensions.x},${state.dimensions.y}`)
 				.attr("solid", false);
 
 			plane.append("Appearance")

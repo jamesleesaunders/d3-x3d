@@ -6,7 +6,12 @@
   },
   "extends": "eslint:recommended",
   "parserOptions": {
+    "ecmaVersion": "latest",
     "sourceType": "module"
+  },
+  "globals": {
+    "WebKitPoint": "readonly",
+    "x3dom": "readonly"
   },
   "rules": {
     "accessor-pairs": "error",
@@ -101,9 +106,9 @@
     "lines-between-class-members": "error",
     "max-depth": "error",
     "max-len": "off",
-    "max-lines": "error",
+    "max-lines": ["error", { "max": 300, "skipBlankLines": true, "skipComments": true }],
     "max-nested-callbacks": "error",
-    "max-params": "error",
+    "max-params": "off",
     "max-statements": "off",
     "max-statements-per-line": "off",
     "multiline-comment-style": "off",
@@ -155,7 +160,7 @@
     "no-mixed-operators": "off",
     "no-mixed-requires": "error",
     "no-multi-assign": "error",
-    "no-multi-spaces": "error",
+    "no-multi-spaces": "off",
     "no-multi-str": "error",
     "no-multiple-empty-lines": "error",
     "no-native-reassign": "error",

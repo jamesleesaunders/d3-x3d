@@ -161,7 +161,7 @@ export default function() {
 							d3.select(this).call(label);
 						});
 				})
-				.on("d3X3dMouseOut", function(e) {
+				.on("d3X3dMouseOut", function() {
 					scene.select(".label")
 						.selectAll("*")
 						.remove();

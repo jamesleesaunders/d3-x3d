@@ -1,4 +1,3 @@
-import * as d3 from "d3";
 import { default as prototypes } from "./prototypes/prototypes.json" with { type: "json" };
 
 let { torus } = prototypes;

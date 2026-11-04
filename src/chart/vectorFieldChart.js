@@ -47,7 +47,7 @@ export default function() {
 		sizeRange: [2.0, 5.0]
 	};
 
-	state.vectorFunction = function(x, y, z, value = null) {
+	state.vectorFunction = function(x, y, z) {
 		return {
 			vx: x,
 			vy: y,

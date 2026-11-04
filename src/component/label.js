@@ -50,7 +50,7 @@ export default function() {
 				.append("Billboard")
 				.attr("axisOfRotation", "0 0 0")
 				.append("Transform")
-				.attr("translation", (d) => (state.offset + " " + state.offset + " " + state.offset))
+				.attr("translation", () => (state.offset + " " + state.offset + " " + state.offset))
 				.append("Shape")
 				.call(makeSolid, state.color)
 				.append("Text")

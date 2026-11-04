@@ -35,7 +35,7 @@
   "scripts": {
     "build": "make",
     "test": "mocha 'test/*Test.js' 'test/chart/*Test.js' 'test/component/*Test.js'",
-    "lint": "eslint -c 'config/.eslintrc.json' src",
+    "lint": "eslint -c config/eslint.config.js src",
     "build:docs": "jsdoc -c config/jsdoc.conf.json",
     "deploy:docs": "npm run build:docs && gh-pages -d docs",
     "prototypes": "node src/prototypes/compilePrototypes.js"

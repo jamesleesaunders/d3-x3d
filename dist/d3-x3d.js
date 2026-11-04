@@ -1608,7 +1608,7 @@
         // We only want 2 sets of labels on the y axis if they are in distal position.
         if (state.labelPosition === "proximal") {
           // Make the tickFormat return nothing (i.e hide text).
-          yxAxis.tickFormat(function (d) {
+          yxAxis.tickFormat(function () {
             return "";
           });
         } else {
@@ -1749,17 +1749,11 @@
    * @returns {*}
    */
   function getX3domHolder(event) {
-    var target = d3__namespace.select(event.target);
-    var x3d = target.select(function () {
-      var el = this;
-      while (el.nodeName.toLowerCase() !== "x3d") {
-        el = el.parentElement;
-      }
-      return el;
-    });
-    return x3d.select(function () {
-      return this.parentNode;
-    }).node();
+    var node = event.target;
+    while (node.nodeName.toLowerCase() !== "x3d") {
+      node = node.parentElement;
+    }
+    return node.parentNode;
   }
 
   var events = /*#__PURE__*/Object.freeze({
@@ -2628,7 +2622,7 @@
         }).attr("rotation", function (d) {
           return getRotationVector(d).join(" ");
         }).append("Shape");
-        plane.append("plane").attr("size", function (d) {
+        plane.append("plane").attr("size", function () {
           return "".concat(state.dimensions.x, ",").concat(state.dimensions.y);
         }).attr("solid", false);
         plane.append("Appearance").append("Material").attr("transparency", 0.7).attr("diffuseColor", function (d) {
@@ -2693,7 +2687,7 @@
         var labelSelect = element.selectAll(".label").data([data]);
         var label = labelSelect.enter().append("Transform").attr("translation", function (d) {
           return state.xScale(d.x) + " " + state.yScale(d.y) + " " + state.zScale(d.z);
-        }).classed("label", true).append("Billboard").attr("axisOfRotation", "0 0 0").append("Transform").attr("translation", function (d) {
+        }).classed("label", true).append("Billboard").attr("axisOfRotation", "0 0 0").append("Transform").attr("translation", function () {
           return state.offset + " " + state.offset + " " + state.offset;
         }).append("Shape").call(makeSolid, state.color).append("Text").attr("string", function (d) {
           return d.key;
@@ -3276,7 +3270,7 @@
         var spotsTransition = spotsEnter.transition();
         spotsTransition.attr("translation", function (d) {
           return getPositionVector(state.plane, d).join();
-        }).attr("rotation", function (d) {
+        }).attr("rotation", function () {
           return getRotationVector(state.plane).join();
         });
         spotsTransition.select("Shape").select("Cylinder").attr("radius", function (d) {
@@ -4427,7 +4421,7 @@
      * @param {d3.selection} selection - The chart holder D3 selection.
      */
     var my = function my(selection) {
-      selection.each(function (data) {
+      selection.each(function () {
         var element = d3__namespace.select(this).classed(classed, true).attr("id", function (d) {
           return d.key;
         });
@@ -5532,7 +5526,7 @@
           scene.select(".label").datum(d).each(function () {
             d3__namespace.select(this).call(label);
           });
-        }).on("d3X3dMouseOut", function (e) {
+        }).on("d3X3dMouseOut", function () {
           scene.select(".label").selectAll("*").remove();
         });
         scene.select(".bubbles").datum(data).call(bubbles);
@@ -5934,7 +5928,7 @@
     var my = function my(selection) {
       var layers = ["axis", "volume"];
       var scene = createScene(selection, layers, classed, state.width, state.height, state.debug);
-      selection.each(function (data) {
+      selection.each(function () {
         // Add Viewpoint
         viewpoint.centerOfRotation([state.dimensions.x / 2, state.dimensions.y / 2, state.dimensions.z / 2]);
         scene.call(viewpoint);

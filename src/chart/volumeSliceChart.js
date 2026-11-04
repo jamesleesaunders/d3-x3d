@@ -1,4 +1,3 @@
-import * as d3 from "d3";
 import component from "../component.js";
 import { createScene } from "../base.js";
 import { attachAccessors } from "../accessors.js";
@@ -60,7 +59,7 @@ export default function() {
 		const layers = ["axis", "volume"];
 		const scene = createScene(selection, layers, classed, state.width, state.height, state.debug);
 
-		selection.each((data) => {
+		selection.each(() => {
 
 			// Add Viewpoint
 			viewpoint.centerOfRotation([state.dimensions.x / 2, state.dimensions.y / 2, state.dimensions.z / 2]);
