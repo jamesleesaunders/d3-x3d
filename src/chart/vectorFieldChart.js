@@ -3,6 +3,7 @@ import dataTransform from "../dataTransform.js";
 import component from "../component.js";
 import * as glMatrix from "gl-matrix";
 import { createScene } from "../base.js";
+import { attachAccessors } from "../accessors.js";
 
 /**
  * Reusable 3D Vector Field Chart
@@ -32,43 +33,36 @@ import { createScene } from "../base.js";
 export default function() {
 
 	/* Default Properties */
-	let width = 500;
-	let height = 500;
-	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = d3.schemeRdYlGn[8];
-	let classed = "d3X3dVectorFieldChart";
-	let debug = false;
+	const state = {
+		width: 500,
+		height: 500,
+		dimensions: { x: 40, y: 40, z: 40 },
+		colors: d3.schemeRdYlGn[8],
+		debug: false,
+		xScale: undefined,
+		yScale: undefined,
+		zScale: undefined,
+		colorScale: undefined,
+		sizeScale: undefined,
+		sizeRange: [2.0, 5.0]
+	};
 
-	/* Scales */
-	let xScale;
-	let yScale;
-	let zScale;
-	let colorScale;
-	let sizeScale;
-	let sizeRange = [2.0, 5.0];
-	let origin = { x: 0, y: 0, z: 0 };
-
-	/* Components */
-	const viewpoint = component.viewpoint();
-	const axis = component.crosshair();
-	const vectorFields = component.vectorFields();
-
-	/**
-	 * Vector Field Function
-	 *
-	 * @param {number} x
-	 * @param {number} y
-	 * @param {number} z
-	 * @param {number} value
-	 * @returns {{vx: number, vy: number, vz: number}}
-	 */
-	let vectorFunction = function(x, y, z, value = null) {
+	state.vectorFunction = function(x, y, z, value = null) {
 		return {
 			vx: x,
 			vy: y,
 			vz: z
 		};
 	};
+	let classed = "d3X3dVectorFieldChart";
+
+	/* Scales */
+	let origin = { x: 0, y: 0, z: 0 };
+
+	/* Components */
+	const viewpoint = component.viewpoint();
+	const axis = component.crosshair();
+	const vectorFields = component.vectorFields();
 
 	/**
 	 * Initialise Data and Scales
@@ -80,39 +74,39 @@ export default function() {
 		const { coordinatesMax, coordinatesMin } = dataTransform(data).summary();
 		const { x: minX, y: minY, z: minZ } = coordinatesMin;
 		const { x: maxX, y: maxY, z: maxZ } = coordinatesMax;
-		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
+		const { x: dimensionX, y: dimensionY, z: dimensionZ } = state.dimensions;
 
 		const extent = d3.extent(data.values.map((f) => {
 			let vx, vy, vz;
 			if ("vx" in f) {
 				({ vx, vy, vz } = f);
 			} else {
-				({ vx, vy, vz } = vectorFunction(f.x, f.y, f.z, f.value));
+				({ vx, vy, vz } = state.vectorFunction(f.x, f.y, f.z, f.value));
 			}
 
 			let vector = glMatrix.vec3.fromValues(vx, vy, vz);
 			return glMatrix.vec3.length(vector);
 		}));
 
-		xScale = d3.scaleLinear()
+		state.xScale = d3.scaleLinear()
 			.domain([minX, maxX])
 			.range([0, dimensionX]);
 
-		yScale = d3.scaleLinear()
+		state.yScale = d3.scaleLinear()
 			.domain([minY, maxY])
 			.range([0, dimensionY]);
 
-		zScale = d3.scaleLinear()
+		state.zScale = d3.scaleLinear()
 			.domain([minZ, maxZ])
 			.range([0, dimensionZ]);
 
-		sizeScale = d3.scaleLinear()
+		state.sizeScale = d3.scaleLinear()
 			.domain(extent)
-			.range(sizeRange);
+			.range(state.sizeRange);
 
-		colorScale = d3.scaleQuantize()
+		state.colorScale = d3.scaleQuantize()
 			.domain(extent)
-			.range(colors);
+			.range(state.colors);
 
 		// TODO: Have a think about whether this is appropriate?
 		// Or, do we always want the origin to be 0,0,0 ?
@@ -132,32 +126,32 @@ export default function() {
 	 */
 	const my = function(selection) {
 		const layers = ["axis", "vectorFields"];
-		const scene = createScene(selection, layers, classed, width, height, debug);
+		const scene = createScene(selection, layers, classed, state.width, state.height, state.debug);
 
 		selection.each((data) => {
 			init(data);
 
 			// Add Viewpoint
-			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
+			viewpoint.centerOfRotation([state.dimensions.x / 2, state.dimensions.y / 2, state.dimensions.z / 2]);
 
 			scene.call(viewpoint);
 
 			// Add Axis
-			axis.xScale(xScale)
-				.yScale(yScale)
-				.zScale(zScale);
+			axis.xScale(state.xScale)
+				.yScale(state.yScale)
+				.zScale(state.zScale);
 
 			scene.select(".axis")
 				.datum(origin)
 				.call(axis);
 
 			// Add Vector Fields
-			vectorFields.xScale(xScale)
-				.yScale(yScale)
-				.zScale(zScale)
-				.colorScale(colorScale)
-				.sizeScale(sizeScale)
-				.vectorFunction(vectorFunction);
+			vectorFields.xScale(state.xScale)
+				.yScale(state.yScale)
+				.zScale(state.zScale)
+				.colorScale(state.colorScale)
+				.sizeScale(state.sizeScale)
+				.vectorFunction(state.vectorFunction);
 
 			scene.select(".vectorFields")
 				.datum(data)
@@ -166,148 +160,22 @@ export default function() {
 	};
 
 	/**
-	 * Width Getter / Setter
+	 * Getter / setters. No argument returns the value. One argument sets it and returns the component.
 	 *
-	 * @param {number} _v - X3D canvas width in px.
-	 * @returns {*}
+	 * @param {number} width - X3D canvas width in px.
+	 * @param {number} height - X3D canvas height in px.
+	 * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+	 * @param {d3.scale} xScale - D3 scale.
+	 * @param {d3.scale} yScale - D3 scale.
+	 * @param {d3.scale} zScale - D3 scale.
+	 * @param {d3.scale} colorScale - D3 color scale.
+	 * @param {Array} colors - Array of colours used by color scale.
+	 * @param {d3.scale} sizeScale - D3 color scale.
+	 * @param {number[]} sizeRange - Size min and max (e.g. [0.5, 3.0]).
+	 * @param {function} vectorFunction - Vector Function.
+	 * @param {boolean} debug - Show debug log and stats. True/False.
 	 */
-	my.width = function(_v) {
-		if (!arguments.length) return width;
-		width = _v;
-		return this;
-	};
-
-	/**
-	 * Height Getter / Setter
-	 *
-	 * @param {number} _v - X3D canvas height in px.
-	 * @returns {*}
-	 */
-	my.height = function(_v) {
-		if (!arguments.length) return height;
-		height = _v;
-		return this;
-	};
-
-	/**
-	 * Dimensions Getter / Setter
-	 *
-	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-	 * @returns {*}
-	 */
-	my.dimensions = function(_v) {
-		if (!arguments.length) return dimensions;
-		dimensions = _v;
-		return this;
-	};
-
-	/**
-	 * X Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.xScale = function(_v) {
-		if (!arguments.length) return xScale;
-		xScale = _v;
-		return my;
-	};
-
-	/**
-	 * Y Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.yScale = function(_v) {
-		if (!arguments.length) return yScale;
-		yScale = _v;
-		return my;
-	};
-
-	/**
-	 * Z Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.zScale = function(_v) {
-		if (!arguments.length) return zScale;
-		zScale = _v;
-		return my;
-	};
-
-	/**
-	 * Color Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 color scale.
-	 * @returns {*}
-	 */
-	my.colorScale = function(_v) {
-		if (!arguments.length) return colorScale;
-		colorScale = _v;
-		return my;
-	};
-
-	/**
-	 * Colors Getter / Setter
-	 *
-	 * @param {Array} _v - Array of colours used by color scale.
-	 * @returns {*}
-	 */
-	my.colors = function(_v) {
-		if (!arguments.length) return colors;
-		colors = _v;
-		return my;
-	};
-
-	/**
-	 * Size Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 color scale.
-	 * @returns {*}
-	 */
-	my.sizeScale = function(_v) {
-		if (!arguments.length) return sizeScale;
-		sizeScale = _v;
-		return my;
-	};
-
-	/**
-	 * Size Range Getter / Setter
-	 *
-	 * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
-	 * @returns {*}
-	 */
-	my.sizeRange = function(_v) {
-		if (!arguments.length) return sizeRange;
-		sizeRange = _v;
-		return my;
-	};
-
-	/**
-	 * Vector Function Getter / Setter
-	 *
-	 * @param {function} _f - Vector Function.
-	 * @returns {*}
-	 */
-	my.vectorFunction = function(_f) {
-		if (!arguments.length) return vectorFunction;
-		vectorFunction = _f;
-		return my;
-	};
-
-	/**
-	 * Debug Getter / Setter
-	 *
-	 * @param {boolean} _v - Show debug log and stats. True/False.
-	 * @returns {*}
-	 */
-	my.debug = function(_v) {
-		if (!arguments.length) return debug;
-		debug = _v;
-		return my;
-	};
+	attachAccessors(my, state);
 
 	return my;
 }

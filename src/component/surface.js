@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import dataTransform from "../dataTransform.js";
 import { dispatch } from "../events.js";
 import { colorParse } from "../colorHelper.js";
+import { attachAccessors } from "../accessors.js";
 
 /**
  * Reusable 3D Surface Area Component
@@ -11,15 +12,15 @@ import { colorParse } from "../colorHelper.js";
 export default function() {
 
 	/* Default Properties */
-	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = ["blue", "red"];
+	const state = {
+		dimensions: { x: 40, y: 40, z: 40 },
+		colors: ["blue", "red"],
+		xScale: undefined,
+		yScale: undefined,
+		zScale: undefined,
+		colorScale: undefined
+	};
 	let classed = "d3X3dSurface";
-
-	/* Scales */
-	let xScale;
-	let yScale;
-	let zScale;
-	let colorScale;
 
 	/**
 	 * Array to String
@@ -43,30 +44,30 @@ export default function() {
 	const init = function(data) {
 		const { rowKeys, columnKeys, valueMax } = dataTransform(data).summary();
 		const valueExtent = [0, valueMax];
-		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
+		const { x: dimensionX, y: dimensionY, z: dimensionZ } = state.dimensions;
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scalePoint()
+		if (typeof state.xScale === "undefined") {
+			state.xScale = d3.scalePoint()
 				.domain(rowKeys)
 				.range([0, dimensionX]);
 		}
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
+		if (typeof state.yScale === "undefined") {
+			state.yScale = d3.scaleLinear()
 				.domain(valueExtent)
 				.range([0, dimensionY]);
 		}
 
-		if (typeof zScale === "undefined") {
-			zScale = d3.scalePoint()
+		if (typeof state.zScale === "undefined") {
+			state.zScale = d3.scalePoint()
 				.domain(columnKeys)
 				.range([0, dimensionZ]);
 		}
 
-		if (typeof colorScale === "undefined") {
-			colorScale = d3.scaleLinear()
+		if (typeof state.colorScale === "undefined") {
+			state.colorScale = d3.scaleLinear()
 				.domain(valueExtent)
-				.range(colors)
+				.range(state.colors)
 				.interpolate(d3.interpolateLab);
 		}
 	};
@@ -90,7 +91,7 @@ export default function() {
 				const coordPoints = function(Y) {
 					return Y.map(function(X) {
 						return X.values.map(function(d) {
-							return [xScale(X.key), yScale(d.value), zScale(d.key)];
+							return [state.xScale(X.key), state.yScale(d.value), state.zScale(d.key)];
 						})
 					});
 				};
@@ -110,7 +111,7 @@ export default function() {
 				const colorFaceSet = function(Y) {
 					return Y.map(function(X) {
 						return X.values.map(function(d) {
-							const color = d3.color(colorScale(d.value));
+							const color = d3.color(state.colorScale(d.value));
 							return colorParse(color);
 						})
 					});
@@ -163,78 +164,6 @@ export default function() {
 	};
 
 	/**
-	 * Dimensions Getter / Setter
-	 *
-	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-	 * @returns {*}
-	 */
-	my.dimensions = function(_v) {
-		if (!arguments.length) return dimensions;
-		dimensions = _v;
-		return this;
-	};
-
-	/**
-	 * X Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.xScale = function(_v) {
-		if (!arguments.length) return xScale;
-		xScale = _v;
-		return my;
-	};
-
-	/**
-	 * Y Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.yScale = function(_v) {
-		if (!arguments.length) return yScale;
-		yScale = _v;
-		return my;
-	};
-
-	/**
-	 * Z Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.zScale = function(_v) {
-		if (!arguments.length) return zScale;
-		zScale = _v;
-		return my;
-	};
-
-	/**
-	 * Color Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 color scale.
-	 * @returns {*}
-	 */
-	my.colorScale = function(_v) {
-		if (!arguments.length) return colorScale;
-		colorScale = _v;
-		return my;
-	};
-
-	/**
-	 * Colors Getter / Setter
-	 *
-	 * @param {Array} _v - Array of colours used by color scale.
-	 * @returns {*}
-	 */
-	my.colors = function(_v) {
-		if (!arguments.length) return colors;
-		colors = _v;
-		return my;
-	};
-
-	/**
 	 * Dispatch On Getter
 	 *
 	 * @returns {*}
@@ -243,6 +172,18 @@ export default function() {
 		let value = dispatch.on.apply(dispatch, arguments);
 		return value === dispatch ? my : value;
 	};
+
+	/**
+	 * Getter / setters. No argument returns the value. One argument sets it and returns the component.
+	 *
+	 * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+	 * @param {d3.scale} xScale - D3 scale.
+	 * @param {d3.scale} yScale - D3 scale.
+	 * @param {d3.scale} zScale - D3 scale.
+	 * @param {d3.scale} colorScale - D3 color scale.
+	 * @param {Array} colors - Array of colours used by color scale.
+	 */
+	attachAccessors(my, state);
 
 	return my;
 }

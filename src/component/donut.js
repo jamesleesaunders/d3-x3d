@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import dataTransform from "../dataTransform.js";
 import { attachEventListners, dispatch } from "../events.js";
 import { colorParse } from "../colorHelper.js";
+import { attachAccessors } from "../accessors.js";
 
 /**
  * Reusable 3D Donut Chart Component
@@ -11,14 +12,16 @@ import { colorParse } from "../colorHelper.js";
 export default function() {
 
 	/* Default Properties */
-	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = ["orange", "red", "yellow", "steelblue", "green"];
+	const state = {
+		dimensions: { x: 40, y: 40, z: 40 },
+		colors: ["orange", "red", "yellow", "steelblue", "green"],
+		xScale: undefined,
+		yScale: undefined,
+		colorScale: undefined
+	};
 	let classed = "d3X3dDonut";
 
 	/* Scales */
-	let xScale;
-	let yScale;
-	let colorScale;
 	let colorDomain = [];
 
 	/**
@@ -52,18 +55,18 @@ export default function() {
 	const init = function(data) {
 		const { columnKeys, rowTotal } = dataTransform(data).summary();
 
-		xScale = d3.scaleLinear()
+		state.xScale = d3.scaleLinear()
 			.domain([0, rowTotal])
 			.range([0, (Math.PI * 2)]);
 
-		yScale = d3.scaleLinear()
+		state.yScale = d3.scaleLinear()
 			.domain([0, rowTotal])
 			.range([(Math.PI * 2), 0]);
 
 		colorDomain = arrayUnique(colorDomain, columnKeys);
-		colorScale = d3.scaleOrdinal()
+		state.colorScale = d3.scaleOrdinal()
 			.domain(colorDomain)
-			.range(colors);
+			.range(state.colors);
 	};
 
 	/**
@@ -77,7 +80,7 @@ export default function() {
 		selection.each(function(data) {
 			init(data);
 
-			const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
+			const { x: dimensionX, y: dimensionY, z: dimensionZ } = state.dimensions;
 
 			const element = d3.select(this)
 				.classed(classed, true)
@@ -90,7 +93,7 @@ export default function() {
 
 				shape.append("Torus")
 					.attr("containerField", "geometry")
-					.attr("angle", (d) => xScale(d.value))
+					.attr("angle", (d) => state.xScale(d.value))
 					.attr("innerRadius", 0.25)
 					.attr("outerRadius", 1)
 					.attr("useGeoCache", false)
@@ -100,9 +103,9 @@ export default function() {
 					.append("Material")
 					.attr("diffuseColor", (d) => {
 						// If colour scale is linear then use value for scale.
-						let color = colorScale(d.key);
-						if (typeof colorScale.interpolate === "function") {
-							color = colorScale(d.value);
+						let color = state.colorScale(d.key);
+						if (typeof state.colorScale.interpolate === "function") {
+							color = state.colorScale(d.value);
 						}
 						return colorParse(color);
 					});
@@ -123,75 +126,15 @@ export default function() {
 				.duration(300)
 				.ease(d3.easeBounce)
 				.attr("scale", () => [dimensionX, dimensionY, dimensionZ].map((d) => d / 2).join(" "))
-				.attr("rotation", (d) => [0, 0, 1, yScale(d.y0)].join(" "));
+				.attr("rotation", (d) => [0, 0, 1, state.yScale(d.y0)].join(" "));
 
 			sectorsTransition.select("Shape")
 				.select("Torus")
-				.attr("angle", (d) => xScale(d.value));
+				.attr("angle", (d) => state.xScale(d.value));
 
 			sectors.exit()
 				.remove();
 		});
-	};
-
-	/**
-	 * Dimensions Getter / Setter
-	 *
-	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-	 * @returns {*}
-	 */
-	my.dimensions = function(_v) {
-		if (!arguments.length) return dimensions;
-		dimensions = _v;
-		return this;
-	};
-
-	/**
-	 * X Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.xScale = function(_v) {
-		if (!arguments.length) return xScale;
-		xScale = _v;
-		return my;
-	};
-
-	/**
-	 * Y Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.yScale = function(_v) {
-		if (!arguments.length) return yScale;
-		yScale = _v;
-		return my;
-	};
-
-	/**
-	 * Color Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.colorScale = function(_v) {
-		if (!arguments.length) return colorScale;
-		colorScale = _v;
-		return my;
-	};
-
-	/**
-	 * Colors Getter / Setter
-	 *
-	 * @param {Array} _v - Array of colours used by color scale.
-	 * @returns {*}
-	 */
-	my.colors = function(_v) {
-		if (!arguments.length) return colors;
-		colors = _v;
-		return my;
 	};
 
 	/**
@@ -203,6 +146,17 @@ export default function() {
 		let value = dispatch.on.apply(dispatch, arguments);
 		return value === dispatch ? my : value;
 	};
+
+	/**
+	 * Getter / setters. No argument returns the value. One argument sets it and returns the component.
+	 *
+	 * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+	 * @param {d3.scale} xScale - D3 scale.
+	 * @param {d3.scale} yScale - D3 scale.
+	 * @param {d3.scale} colorScale - D3 scale.
+	 * @param {Array} colors - Array of colours used by color scale.
+	 */
+	attachAccessors(my, state);
 
 	return my;
 }

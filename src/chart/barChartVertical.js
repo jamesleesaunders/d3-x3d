@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import dataTransform from "../dataTransform.js";
 import component from "../component.js";
 import { createScene } from "../base.js";
+import { attachAccessors } from "../accessors.js";
 
 /**
  * Reusable 3D Vertical Bar Chart
@@ -22,17 +23,17 @@ import { createScene } from "../base.js";
 export default function() {
 
 	/* Default Properties */
-	let width = 500;
-	let height = 500;
-	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = ["green", "red", "yellow", "steelblue", "orange"];
+	const state = {
+		width: 500,
+		height: 500,
+		dimensions: { x: 40, y: 40, z: 40 },
+		colors: ["green", "red", "yellow", "steelblue", "orange"],
+		debug: false,
+		xScale: undefined,
+		yScale: undefined,
+		colorScale: undefined
+	};
 	let classed = "d3X3dBarChartVertical";
-	let debug = false;
-
-	/* Scales */
-	let xScale;
-	let yScale;
-	let colorScale;
 
 	/* Components */
 	const viewpoint = component.viewpoint();
@@ -50,22 +51,22 @@ export default function() {
 	const init = function(data) {
 		const { columnKeys, valueMax } = dataTransform(data).summary();
 		const valueExtent = [0, valueMax];
-		const { x: dimensionX, y: dimensionY } = dimensions;
+		const { x: dimensionX, y: dimensionY } = state.dimensions;
 
-		xScale = d3.scaleBand()
+		state.xScale = d3.scaleBand()
 			.domain(columnKeys)
 			.range([0, dimensionX])
 			.padding(0.5)
 			.align(0.75);
 
-		yScale = d3.scaleLinear()
+		state.yScale = d3.scaleLinear()
 			.domain(valueExtent)
 			.range([0, dimensionY])
 			.nice();
 
-		colorScale = d3.scaleOrdinal()
+		state.colorScale = d3.scaleOrdinal()
 			.domain(columnKeys)
-			.range(colors);
+			.range(state.colors);
 	};
 
 	/**
@@ -77,7 +78,7 @@ export default function() {
 	 */
 	const my = function(selection) {
 		const layers = ["xAxis", "yAxis", "bars"];
-		const scene = createScene(selection, layers, classed, width, height, debug);
+		const scene = createScene(selection, layers, classed, state.width, state.height, state.debug);
 
 		selection.each((data) => {
 			init(data);
@@ -88,15 +89,15 @@ export default function() {
 			scene.call(viewpoint);
 
 			// Add Axis
-			xAxis.scale(xScale)
+			xAxis.scale(state.xScale)
 				.direction("x")
 				.tickDirection("y")
 				.tickSize(0);
 
-			yAxis.scale(yScale)
+			yAxis.scale(state.yScale)
 				.direction("y")
 				.tickDirection("x")
-				.tickSize(yScale.range()[1] - yScale.range()[0]);
+				.tickSize(state.yScale.range()[1] - state.yScale.range()[0]);
 
 			scene.select(".xAxis")
 				.call(xAxis);
@@ -105,9 +106,9 @@ export default function() {
 				.call(yAxis);
 
 			// Add Bars
-			bars.xScale(xScale)
-				.yScale(yScale)
-				.colors(colors);
+			bars.xScale(state.xScale)
+				.yScale(state.yScale)
+				.colors(state.colors);
 
 			scene.select(".bars")
 				.datum(data)
@@ -119,100 +120,18 @@ export default function() {
 	};
 
 	/**
-	 * Width Getter / Setter
+	 * Getter / setters. No argument returns the value. One argument sets it and returns the component.
 	 *
-	 * @param {number} _v - X3D canvas width in px.
-	 * @returns {*}
+	 * @param {number} width - X3D canvas width in px.
+	 * @param {number} height - X3D canvas height in px.
+	 * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+	 * @param {d3.scale} xScale - D3 scale.
+	 * @param {d3.scale} yScale - D3 scale.
+	 * @param {d3.scale} colorScale - D3 color scale.
+	 * @param {Array} colors - Array of colours used by color scale.
+	 * @param {boolean} debug - Show debug log and stats. True/False.
 	 */
-	my.width = function(_v) {
-		if (!arguments.length) return width;
-		width = _v;
-		return this;
-	};
-
-	/**
-	 * Height Getter / Setter
-	 *
-	 * @param {number} _v - X3D canvas height in px.
-	 * @returns {*}
-	 */
-	my.height = function(_v) {
-		if (!arguments.length) return height;
-		height = _v;
-		return this;
-	};
-
-	/**
-	 * Dimensions Getter / Setter
-	 *
-	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-	 * @returns {*}
-	 */
-	my.dimensions = function(_v) {
-		if (!arguments.length) return dimensions;
-		dimensions = _v;
-		return this;
-	};
-
-	/**
-	 * X Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.xScale = function(_v) {
-		if (!arguments.length) return xScale;
-		xScale = _v;
-		return my;
-	};
-
-	/**
-	 * Y Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.yScale = function(_v) {
-		if (!arguments.length) return yScale;
-		yScale = _v;
-		return my;
-	};
-
-	/**
-	 * Color Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 color scale.
-	 * @returns {*}
-	 */
-	my.colorScale = function(_v) {
-		if (!arguments.length) return colorScale;
-		colorScale = _v;
-		return my;
-	};
-
-	/**
-	 * Colors Getter / Setter
-	 *
-	 * @param {Array} _v - Array of colours used by color scale.
-	 * @returns {*}
-	 */
-	my.colors = function(_v) {
-		if (!arguments.length) return colors;
-		colors = _v;
-		return my;
-	};
-
-	/**
-	 * Debug Getter / Setter
-	 *
-	 * @param {boolean} _v - Show debug log and stats. True/False.
-	 * @returns {*}
-	 */
-	my.debug = function(_v) {
-		if (!arguments.length) return debug;
-		debug = _v;
-		return my;
-	};
+	attachAccessors(my, state);
 
 	return my;
 }

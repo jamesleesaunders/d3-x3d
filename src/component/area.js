@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform.js";
 import { colorParse } from "../colorHelper.js";
-
+import { attachAccessors } from "../accessors.js";
 
 /**
  * Reusable 3D Area Chart Component
@@ -11,15 +11,15 @@ import { colorParse } from "../colorHelper.js";
 export default function() {
 
 	/* Default Properties */
-	let dimensions = { x: 40, y: 40, z: 5 };
-	let color = "blue";
+	const state = {
+		dimensions: { x: 40, y: 40, z: 5 },
+		color: "blue",
+		smoothed: d3.curveMonotoneX,
+		xScale: undefined,
+		yScale: undefined
+	};
 	let transparency = 0.1;
 	let classed = "d3X3dArea";
-	let smoothed = d3.curveMonotoneX;
-
-	/* Scales */
-	let xScale;
-	let yScale;
 
 	/**
 	 * Initialise Data and Scales
@@ -30,16 +30,16 @@ export default function() {
 	const init = function(data) {
 		const { columnKeys, valueMax } = dataTransform(data).summary();
 		const valueExtent = [0, valueMax];
-		const { x: dimensionX, y: dimensionY } = dimensions;
+		const { x: dimensionX, y: dimensionY } = state.dimensions;
 
-		if (typeof xScale === "undefined") {
-			xScale = d3.scalePoint()
+		if (typeof state.xScale === "undefined") {
+			state.xScale = d3.scalePoint()
 				.domain(columnKeys)
 				.range([0, dimensionX]);
 		}
 
-		if (typeof yScale === "undefined") {
-			yScale = d3.scaleLinear()
+		if (typeof state.yScale === "undefined") {
+			state.yScale = d3.scaleLinear()
 				.domain(valueExtent)
 				.range([0, dimensionY]);
 		}
@@ -61,13 +61,13 @@ export default function() {
 				.attr("id", (d) => d.key);
 
 			const areaData = function(data) {
-				const dimensionX = dimensions.x;
+				const dimensionX = state.dimensions.x;
 
-				if (smoothed) {
-					data = dataTransform(data).smooth(smoothed, 100);
+				if (state.smoothed) {
+					data = dataTransform(data).smooth(state.smoothed, 100);
 
 					const keys = d3.extent(data.values.map((d) => d.key));
-					xScale = d3.scaleLinear()
+					state.xScale = d3.scaleLinear()
 						.domain(keys)
 						.range([0, dimensionX]);
 				}
@@ -82,10 +82,10 @@ export default function() {
 					}
 					let pointNext = array[indexNext];
 
-					let x1 = xScale(pointThis.key);
-					let x2 = xScale(pointNext.key);
-					let y1 = yScale(pointThis.value);
-					let y2 = yScale(pointNext.value);
+					let x1 = state.xScale(pointThis.key);
+					let x2 = state.xScale(pointNext.key);
+					let y1 = state.yScale(pointThis.value);
+					let y2 = state.yScale(pointNext.value);
 
 					return [x1, 0, 0, x1, y1, 0, x2, y2, 0, x2, 0, 0];
 				}).filter((d) => d !== null);
@@ -120,7 +120,7 @@ export default function() {
 						<Coordinate point="${d.point}"></Coordinate>
 					</IndexedFaceset>
 					<Appearance>
-						<Material diffuseColor="${colorParse(color)}" transparency="${transparency}"></Material>
+						<Material diffuseColor="${colorParse(state.color)}" transparency="${transparency}"></Material>
 					</Appearance>
 				`);
 			};
@@ -143,7 +143,7 @@ export default function() {
 
 			areaTransition.select("Appearance")
 				.select("Material")
-				.attr("diffuseColor", colorParse(color));
+				.attr("diffuseColor", colorParse(state.color));
 
 			area.exit()
 				.remove();
@@ -151,69 +151,15 @@ export default function() {
 	};
 
 	/**
-	 * Dimensions Getter / Setter
+	 * Getter / setters. No argument returns the value. One argument sets it and returns the component.
 	 *
-	 * @param {{x: {number}, y: {number}, z: {number}}} _v - 3D Object dimensions.
-	 * @returns {*}
+	 * @param {{x: {number}, y: {number}, z: {number}}} dimensions - 3D Object dimensions.
+	 * @param {d3.scale} xScale - D3 scale.
+	 * @param {d3.scale} yScale - D3 scale.
+	 * @param {string} color - Color (e.g. "red" or "#ff0000").
+	 * @param {d3.curve} smoothed
 	 */
-	my.dimensions = function(_v) {
-		if (!arguments.length) return dimensions;
-		dimensions = _v;
-		return this;
-	};
-
-	/**
-	 * X Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.xScale = function(_v) {
-		if (!arguments.length) return xScale;
-		xScale = _v;
-		return my;
-	};
-
-	/**
-	 * Y Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.yScale = function(_v) {
-		if (!arguments.length) return yScale;
-		yScale = _v;
-		return my;
-	};
-
-	/**
-	 * Color Getter / Setter
-	 *
-	 * @param {string} _v - Color (e.g. "red" or "#ff0000").
-	 * @returns {*}
-	 */
-	my.color = function(_v) {
-		if (!arguments.length) return color;
-		color = _v;
-		return my;
-	};
-
-	/**
-	 * Smooth Interpolation Getter / Setter
-	 *
-	 * Options:
-	 *   d3.curveBasis
-	 *   d3.curveLinear
-	 *   d3.curveMonotoneX
-	 *
-	 * @param {d3.curve} _v.
-	 * @returns {*}
-	 */
-	my.smoothed = function(_v) {
-		if (!arguments.length) return smoothed;
-		smoothed = _v;
-		return my;
-	};
+	attachAccessors(my, state);
 
 	return my;
 }

@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import dataTransform from "../dataTransform.js";
 import component from "../component.js";
 import { createScene } from "../base.js";
+import { attachAccessors } from "../accessors.js";
 
 /**
  * Reusable 3D Spot Plot
@@ -22,20 +23,20 @@ import { createScene } from "../base.js";
 export default function() {
 
 	/* Default Properties */
-	let width = 500;
-	let height = 500;
-	let dimensions = { x: 40, y: 40, z: 40 };
-	let colors = ["green", "red", "yellow", "steelblue", "orange"];
-	let sizeRange = [0.5, 3.5];
+	const state = {
+		width: 500,
+		height: 500,
+		dimensions: { x: 40, y: 40, z: 40 },
+		colors: ["green", "red", "yellow", "steelblue", "orange"],
+		sizeRange: [0.5, 3.5],
+		debug: false,
+		xScale: undefined,
+		yScale: undefined,
+		zScale: undefined,
+		colorScale: undefined,
+		sizeScale: undefined
+	};
 	let classed = "d3X3dSpotPlot";
-	let debug = false;
-
-	/* Scales */
-	let xScale;
-	let yScale;
-	let zScale;
-	let colorScale;
-	let sizeScale;
 
 	/* Components */
 	const viewpoint = component.viewpoint();
@@ -51,27 +52,27 @@ export default function() {
 	const init = function(data) {
 		const { valueExtent, coordinatesExtent, rowKeys } = dataTransform(data).summary();
 		const { x: extentX, y: extentY, z: extentZ } = coordinatesExtent;
-		const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
+		const { x: dimensionX, y: dimensionY, z: dimensionZ } = state.dimensions;
 
-		xScale = d3.scaleLinear()
+		state.xScale = d3.scaleLinear()
 			.domain(extentX)
 			.range([0, dimensionX]);
 
-		yScale = d3.scaleLinear()
+		state.yScale = d3.scaleLinear()
 			.domain(extentY)
 			.range([0, dimensionY]);
 
-		zScale = d3.scaleLinear()
+		state.zScale = d3.scaleLinear()
 			.domain(extentZ)
 			.range([0, dimensionZ]);
 
-		colorScale = d3.scaleOrdinal()
+		state.colorScale = d3.scaleOrdinal()
 			.domain(rowKeys)
-			.range(colors);
+			.range(state.colors);
 
-		sizeScale = d3.scaleLinear()
+		state.sizeScale = d3.scaleLinear()
 			.domain(valueExtent)
-			.range(sizeRange);
+			.range(state.sizeRange);
 	};
 
 	/**
@@ -83,30 +84,30 @@ export default function() {
 	 */
 	const my = function(selection) {
 		const layers = ["axis", "spots"];
-		const scene = createScene(selection, layers, classed, width, height, debug);
+		const scene = createScene(selection, layers, classed, state.width, state.height, state.debug);
 
 		selection.each((data) => {
 			init(data);
 
 			// Add Viewpoint
-			viewpoint.centerOfRotation([dimensions.x / 2, dimensions.y / 2, dimensions.z / 2]);
+			viewpoint.centerOfRotation([state.dimensions.x / 2, state.dimensions.y / 2, state.dimensions.z / 2]);
 
 			scene.call(viewpoint);
 
 			// Add Axis
-			axis.xScale(xScale)
-				.yScale(yScale)
-				.zScale(zScale);
+			axis.xScale(state.xScale)
+				.yScale(state.yScale)
+				.zScale(state.zScale);
 
 			scene.select(".axis")
 				.call(axis);
 
 			// Add Spots
-			spots.xScale(xScale)
-				.yScale(yScale)
-				.zScale(zScale)
-				.sizeScale(sizeScale)
-				.colorScale(colorScale);
+			spots.xScale(state.xScale)
+				.yScale(state.yScale)
+				.zScale(state.zScale)
+				.sizeScale(state.sizeScale)
+				.colorScale(state.colorScale);
 
 			scene.select(".spots")
 				.datum(data)
@@ -115,136 +116,21 @@ export default function() {
 	};
 
 	/**
-	 * Width Getter / Setter
+	 * Getter / setters. No argument returns the value. One argument sets it and returns the component.
 	 *
-	 * @param {number} _v - X3D canvas width in px.
-	 * @returns {*}
+	 * @param {number} width - X3D canvas width in px.
+	 * @param {number} height - X3D canvas height in px.
+	 * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+	 * @param {d3.scale} xScale - D3 scale.
+	 * @param {d3.scale} yScale - D3 scale.
+	 * @param {d3.scale} zScale - D3 scale.
+	 * @param {d3.scale} colorScale - D3 color scale.
+	 * @param {Array} colors - Array of colours used by color scale.
+	 * @param {d3.scale} sizeScale - D3 color scale.
+	 * @param {number[]} sizeRange - Size min and max (e.g. [0.5, 3.0]).
+	 * @param {boolean} debug - Show debug log and stats. True/False.
 	 */
-	my.width = function(_v) {
-		if (!arguments.length) return width;
-		width = _v;
-		return this;
-	};
-
-	/**
-	 * Height Getter / Setter
-	 *
-	 * @param {number} _v - X3D canvas height in px.
-	 * @returns {*}
-	 */
-	my.height = function(_v) {
-		if (!arguments.length) return height;
-		height = _v;
-		return this;
-	};
-
-	/**
-	 * Dimensions Getter / Setter
-	 *
-	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-	 * @returns {*}
-	 */
-	my.dimensions = function(_v) {
-		if (!arguments.length) return dimensions;
-		dimensions = _v;
-		return this;
-	};
-
-	/**
-	 * X Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.xScale = function(_v) {
-		if (!arguments.length) return xScale;
-		xScale = _v;
-		return my;
-	};
-
-	/**
-	 * Y Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.yScale = function(_v) {
-		if (!arguments.length) return yScale;
-		yScale = _v;
-		return my;
-	};
-
-	/**
-	 * Z Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 scale.
-	 * @returns {*}
-	 */
-	my.zScale = function(_v) {
-		if (!arguments.length) return zScale;
-		zScale = _v;
-		return my;
-	};
-
-	/**
-	 * Color Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 color scale.
-	 * @returns {*}
-	 */
-	my.colorScale = function(_v) {
-		if (!arguments.length) return colorScale;
-		colorScale = _v;
-		return my;
-	};
-
-	/**
-	 * Colors Getter / Setter
-	 *
-	 * @param {Array} _v - Array of colours used by color scale.
-	 * @returns {*}
-	 */
-	my.colors = function(_v) {
-		if (!arguments.length) return colors;
-		colors = _v;
-		return my;
-	};
-
-	/**
-	 * Size Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 color scale.
-	 * @returns {*}
-	 */
-	my.sizeScale = function(_v) {
-		if (!arguments.length) return sizeScale;
-		sizeScale = _v;
-		return my;
-	};
-
-	/**
-	 * Size Range Getter / Setter
-	 *
-	 * @param {number[]} _v - Size min and max (e.g. [0.5, 3.0]).
-	 * @returns {*}
-	 */
-	my.sizeRange = function(_v) {
-		if (!arguments.length) return sizeRange;
-		sizeRange = _v;
-		return my;
-	};
-
-	/**
-	 * Debug Getter / Setter
-	 *
-	 * @param {boolean} _v - Show debug log and stats. True/False.
-	 * @returns {*}
-	 */
-	my.debug = function(_v) {
-		if (!arguments.length) return debug;
-		debug = _v;
-		return my;
-	};
+	attachAccessors(my, state);
 
 	return my;
 }

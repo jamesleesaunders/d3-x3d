@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import { colorParse } from "../colorHelper.js";
+import { attachAccessors } from "../accessors.js";
 
 /**
  * Reusable 3D Axis Component
@@ -9,21 +10,21 @@ import { colorParse } from "../colorHelper.js";
 export default function() {
 
 	/* Default Properties */
-	let dimensions = { x: 40, y: 40, z: 40 };
-	let color = "black";
+	const state = {
+		dimensions: { x: 40, y: 40, z: 40 },
+		color: "black",
+		scale: undefined,
+		direction: undefined,
+		tickDirection: undefined,
+		tickArguments: [],
+		tickValues: null,
+		tickFormat: null,
+		tickSize: 1.5,
+		tickPadding: 2.0
+	};
 	let classed = "d3X3dAxis";
 	let labelPosition = "proximal";
 	let labelInset = labelPosition === "distal" ? 1 : -1;
-
-	/* Scale and Axis Options */
-	let scale;
-	let direction;
-	let tickDirection;
-	let tickArguments = [];
-	let tickValues = null;
-	let tickFormat = null;
-	let tickSize = 1.5;
-	let tickPadding = 2.0;
 
 	/**
 	 * Get Axis Direction Vector
@@ -72,24 +73,24 @@ export default function() {
 			const element = d3.select(this)
 				.classed(classed, true);
 
-			const range = scale.range();
+			const range = state.scale.range();
 			const range0 = range[0];
 			const range1 = range[range.length - 1];
 
-			const axisDirectionVector = getAxisDirectionVector(direction);
-			const tickDirectionVector = getAxisDirectionVector(tickDirection);
-			const axisRotationVector = getAxisRotationVector(direction);
-			const tickRotationVector = getAxisRotationVector(tickDirection);
+			const axisDirectionVector = getAxisDirectionVector(state.direction);
+			const tickDirectionVector = getAxisDirectionVector(state.tickDirection);
+			const axisRotationVector = getAxisRotationVector(state.direction);
+			const tickRotationVector = getAxisRotationVector(state.tickDirection);
 
 			/*
 			// FIXME: Currently the tickArguments option does not work.
 			const tickValuesDefault = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
 			tickValues = tickValues === null ? tickValuesDefault : tickValues;
 			*/
-			tickValues = scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain();
+			state.tickValues = state.scale.ticks ? state.scale.ticks.apply(state.scale, state.tickArguments) : state.scale.domain();
 
-			const tickFormatDefault = scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : (d) => d;
-			tickFormat = tickFormat === null ? tickFormatDefault : tickFormat;
+			const tickFormatDefault = state.scale.tickFormat ? state.scale.tickFormat.apply(state.scale, state.tickArguments) : (d) => d;
+			state.tickFormat = state.tickFormat === null ? tickFormatDefault : state.tickFormat;
 
 			const makeSolid = (el, color) => {
 				el.append("Appearance")
@@ -117,7 +118,7 @@ export default function() {
 				.attr("class", "domain")
 				.attr("rotation", axisRotationVector.join(" "))
 				.attr("translation", axisDirectionVector.map((d) => (d * (range0 + range1) / 2)).join(" "))
-				.call(shape, 0.1, range1 - range0, color)
+				.call(shape, 0.1, range1 - range0, state.color)
 				.merge(domain);
 
 			domain.exit()
@@ -125,40 +126,40 @@ export default function() {
 
 			// Tick Lines
 			const ticks = element.selectAll(".tickLine")
-				.data(tickValues, (d) => d);
+				.data(state.tickValues, (d) => d);
 
 			ticks.enter()
 				.append("Transform")
 				.attr("class", "tickLine")
-				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
+				.attr("translation", (t) => (axisDirectionVector.map((a) => (state.scale(t) * a)).join(" ")))
 				.append("Transform")
-				.attr("translation", tickDirectionVector.map((d) => (d * tickSize / 2)).join(" "))
+				.attr("translation", tickDirectionVector.map((d) => (d * state.tickSize / 2)).join(" "))
 				.attr("rotation", tickRotationVector.join(" "))
-				.call(shape, 0.05, tickSize, "#f3f3f3")
+				.call(shape, 0.05, state.tickSize, "#f3f3f3")
 				.merge(ticks);
 
 			ticks.transition()
-				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")));
+				.attr("translation", (t) => (axisDirectionVector.map((a) => (state.scale(t) * a)).join(" ")));
 
 			ticks.exit()
 				.remove();
 
 			// Tick Labels
 			const labels = element.selectAll(".tickLabel")
-				.data(tickValues, (d) => d);
+				.data(state.tickValues, (d) => d);
 
 			labels.enter()
 				.append("Transform")
 				.attr("class", "tickLabel")
-				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
+				.attr("translation", (t) => (axisDirectionVector.map((a) => (state.scale(t) * a)).join(" ")))
 				.append("Transform")
-				.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * tickSize * tickDirectionVector[i])))
+				.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * state.tickPadding) + (((labelInset + 1) / 2) * state.tickSize * tickDirectionVector[i])))
 				.append("Billboard")
 				.attr("axisOfRotation", "0 0 0")
 				.append("Shape")
 				.call(makeSolid, "black")
 				.append("Text")
-				.attr("string", (d) => `"${tickFormat(d)}"`)
+				.attr("string", (d) => `"${state.tickFormat(d)}"`)
 				.append("FontStyle")
 				.attr("size", 1.3)
 				.attr("family", "\"SANS\"")
@@ -167,141 +168,21 @@ export default function() {
 				.merge(labels);
 
 			labels.transition()
-				.attr("translation", (t) => (axisDirectionVector.map((a) => (scale(t) * a)).join(" ")))
+				.attr("translation", (t) => (axisDirectionVector.map((a) => (state.scale(t) * a)).join(" ")))
 				.select("Transform")
-				.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * tickPadding) + (((labelInset + 1) / 2) * tickSize * tickDirectionVector[i])))
+				.attr("translation", tickDirectionVector.map((d, i) => (labelInset * d * state.tickPadding) + (((labelInset + 1) / 2) * state.tickSize * tickDirectionVector[i])))
 				.on("start", function() {
 					d3.select(this)
 						.select("Billboard")
 						.select("Shape")
 						.select("Text")
-						.attr("string", (d) => `"${tickFormat(d)}"`);
+						.attr("string", (d) => `"${state.tickFormat(d)}"`);
 				});
 
 			labels.exit()
 				.remove();
 
 		});
-	};
-
-	/**
-	 * Dimensions Getter / Setter
-	 *
-	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-	 * @returns {*}
-	 */
-	my.dimensions = function(_v) {
-		if (!arguments.length) return dimensions;
-		dimensions = _v;
-		return my;
-	};
-
-	/**
-	 * Scale Getter / Setter
-	 *
-	 * @param {d3.scale} _v - D3 Scale.
-	 * @returns {*}
-	 */
-	my.scale = function(_v) {
-		if (!arguments.length) return scale;
-		scale = _v;
-		return my;
-	};
-
-	/**
-	 * Direction Getter / Setter
-	 *
-	 * @param {string} _v - Direction of Axis (e.g. "x", "y", "z").
-	 * @returns {*}
-	 */
-	my.direction = function(_v) {
-		if (!arguments.length) return direction;
-		direction = _v;
-		return my;
-	};
-
-	/**
-	 * Tick Direction Getter / Setter
-	 *
-	 * @param {string} _v - Direction of Ticks (e.g. "x", "y", "z").
-	 * @returns {*}
-	 */
-	my.tickDirection = function(_v) {
-		if (!arguments.length) return tickDirection;
-		tickDirection = _v;
-		return my;
-	};
-
-	/**
-	 * Tick Arguments Getter / Setter
-	 *
-	 * @param {Array} _v - Tick arguments.
-	 * @returns {Array<*>}
-	 */
-	my.tickArguments = function(_v) {
-		if (!arguments.length) return tickArguments;
-		tickArguments = _v;
-		return my;
-	};
-
-	/**
-	 * Tick Values Getter / Setter
-	 *
-	 * @param {Array} _v - Tick values.
-	 * @returns {*}
-	 */
-	my.tickValues = function(_v) {
-		if (!arguments.length) return tickValues;
-		tickValues = _v;
-		return my;
-	};
-
-	/**
-	 * Tick Format Getter / Setter
-	 *
-	 * @param {string} _v - Tick format.
-	 * @returns {*}
-	 */
-	my.tickFormat = function(_v) {
-		if (!arguments.length) return tickFormat;
-		tickFormat = _v;
-		return my;
-	};
-
-	/**
-	 * Tick Size Getter / Setter
-	 *
-	 * @param {number} _v - Tick length.
-	 * @returns {*}
-	 */
-	my.tickSize = function(_v) {
-		if (!arguments.length) return tickSize;
-		tickSize = _v;
-		return my;
-	};
-
-	/**
-	 * Tick Padding Getter / Setter
-	 *
-	 * @param {number} _v - Tick padding size.
-	 * @returns {*}
-	 */
-	my.tickPadding = function(_v) {
-		if (!arguments.length) return tickPadding;
-		tickPadding = _v;
-		return my;
-	};
-
-	/**
-	 * Color Getter / Setter
-	 *
-	 * @param {string} _v - Color (e.g. "red" or "#ff0000").
-	 * @returns {*}
-	 */
-	my.color = function(_v) {
-		if (!arguments.length) return color;
-		color = _v;
-		return my;
 	};
 
 	/**
@@ -316,6 +197,22 @@ export default function() {
 		labelInset = labelPosition === "distal" ? 1 : -1;
 		return my;
 	};
+
+	/**
+	 * Getter / setters. No argument returns the value. One argument sets it and returns the component.
+	 *
+	 * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+	 * @param {d3.scale} scale - D3 Scale.
+	 * @param {string} direction - Direction of Axis (e.g. "x", "y", "z").
+	 * @param {string} tickDirection - Direction of Ticks (e.g. "x", "y", "z").
+	 * @param {Array} tickArguments - Tick arguments.
+	 * @param {Array} tickValues - Tick values.
+	 * @param {string} tickFormat - Tick format.
+	 * @param {number} tickSize - Tick length.
+	 * @param {number} tickPadding - Tick padding size.
+	 * @param {string} color - Color (e.g. "red" or "#ff0000").
+	 */
+	attachAccessors(my, state);
 
 	return my;
 }

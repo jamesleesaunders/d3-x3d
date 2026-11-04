@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform.js";
+import { attachAccessors } from "../accessors.js";
 
 /**
  * Reusable 3D Volume Slice Component
@@ -9,15 +10,17 @@ import dataTransform from "../dataTransform.js";
 export default function() {
 
 	/* Default Properties */
-	let dimensions = { x: 40, y: 40, z: 40 };
+	const state = {
+		dimensions: { x: 40, y: 40, z: 40 },
+		imageUrl: undefined,
+		numberOfSlices: undefined,
+		slicesOverX: undefined,
+		slicesOverY: undefined,
+		volumeStyle: "OpacityMap"
+	};
 	let classed = "d3X3dVolumeSlice";
 
 	/* Other Volume Properties */
-	let imageUrl;
-	let numberOfSlices;
-	let slicesOverX;
-	let slicesOverY;
-	let volumeStyle = "OpacityMap";
 
 	/**
 	 * Constructor
@@ -33,7 +36,7 @@ export default function() {
 				.classed(classed, true)
 				.attr("id", (d) => d.key);
 
-			const { x: dimensionX, y: dimensionY, z: dimensionZ } = dimensions;
+			const { x: dimensionX, y: dimensionY, z: dimensionZ } = state.dimensions;
 
 			const volumedata = element.append("Transform")
 				.append("VolumeData")
@@ -42,12 +45,12 @@ export default function() {
 			volumedata.append("ImageTextureAtlas")
 				.attr("crossOrigin", "anonymous")
 				.attr("containerField", "voxels")
-				.attr("url", imageUrl)
-				.attr("numberOfSlices", numberOfSlices)
-				.attr("slicesOverX", slicesOverX)
-				.attr("slicesOverY", slicesOverY);
+				.attr("url", state.imageUrl)
+				.attr("numberOfSlices", state.numberOfSlices)
+				.attr("slicesOverX", state.slicesOverX)
+				.attr("slicesOverY", state.slicesOverY);
 
-			switch (volumeStyle) {
+			switch (state.volumeStyle) {
 				case "MPRVolume":
 					volumedata.append("MPRVolumeStyle")
 						.attr("forceOpaic", true)
@@ -71,76 +74,16 @@ export default function() {
 	};
 
 	/**
-	 * Dimensions Getter / Setter
+	 * Getter / setters. No argument returns the value. One argument sets it and returns the component.
 	 *
-	 * @param {{x: number, y: number, z: number}} _v - 3D object dimensions.
-	 * @returns {*}
+	 * @param {{x: number, y: number, z: number}} dimensions - 3D object dimensions.
+	 * @param {string} imageUrl - Image URL path.
+	 * @param {number} numberOfSlices - Total number of slices.
+	 * @param {number} slicesOverX - Number of slices over X axis.
+	 * @param {number} slicesOverY - Number of slices over Y axis.
+	 * @param {string} volumeStyle - Volume render style (either "MPRVolume" or "OpacityMap")
 	 */
-	my.dimensions = function(_v) {
-		if (!arguments.length) return dimensions;
-		dimensions = _v;
-		return this;
-	};
-
-	/**
-	 * Image URL Getter / Setter
-	 *
-	 * @param {string} _v - Image URL path.
-	 * @returns {*}
-	 */
-	my.imageUrl = function(_v) {
-		if (!arguments.length) return imageUrl;
-		imageUrl = _v;
-		return this;
-	};
-
-	/**
-	 * Number of Slices Getter / Setter
-	 *
-	 * @param {number} _v - Total number of slices.
-	 * @returns {*}
-	 */
-	my.numberOfSlices = function(_v) {
-		if (!arguments.length) return numberOfSlices;
-		numberOfSlices = _v;
-		return this;
-	};
-
-	/**
-	 * X Slices Getter / Setter
-	 *
-	 * @param {number} _v - Number of slices over X axis.
-	 * @returns {*}
-	 */
-	my.slicesOverX = function(_v) {
-		if (!arguments.length) return slicesOverX;
-		slicesOverX = _v;
-		return this;
-	};
-
-	/**
-	 * Y Slices Getter / Setter
-	 *
-	 * @param {number} _v - Number of slices over Y axis.
-	 * @returns {*}
-	 */
-	my.slicesOverY = function(_v) {
-		if (!arguments.length) return slicesOverY;
-		slicesOverY = _v;
-		return this;
-	};
-
-	/**
-	 * Volume Style Getter / Setter
-	 *
-	 * @param {string} _v - Volume render style (either "MPRVolume" or "OpacityMap")
-	 * @returns {*}
-	 */
-	my.volumeStyle = function(_v) {
-		if (!arguments.length) return volumeStyle;
-		volumeStyle = _v;
-		return this;
-	};
+	attachAccessors(my, state);
 
 	return my;
 }
