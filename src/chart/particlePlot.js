@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import dataTransform from "../dataTransform.js";
+import { extentsFromMappings } from "../extentsFromMappings.js";
 import component from "../component.js";
 import { dispatch } from "../events.js";
 import { createScene } from "../base.js";
@@ -51,22 +51,7 @@ export default function() {
 	 * @param {Array} data - Chart data.
 	 */
 	const init = function(data) {
-
-		let newData = {};
-		['x', 'y', 'z', 'color'].forEach((dimension) => {
-			let set = {
-				key: dimension,
-				values: []
-			};
-
-			data.values.forEach((d) => {
-				let key = state.mappings[dimension];
-				let value = d.values.find((v) => v.key === key).value;
-				set.values.push({ key: key, value: value });
-			});
-
-			newData[dimension] = dataTransform(set).summary();
-		});
+		const newData = extentsFromMappings(data, state.mappings, ["x", "y", "z", "color"]);
 
 		let extentX = newData.x.valueExtent;
 		let extentY = newData.y.valueExtent;

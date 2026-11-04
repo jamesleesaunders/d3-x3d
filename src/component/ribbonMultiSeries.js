@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform.js";
 import componentRibbon from "./ribbon.js";
+import { arrayUnique } from "../arrayUnique.js";
 import { dispatch } from "../events.js";
 import { attachAccessors } from "../accessors.js";
 
@@ -36,21 +37,6 @@ export default function() {
 	 * @param {array} array2
 	 * @returns {array}
 	 */
-	const arrayUnique = function(array1, array2) {
-		let array = array1.concat(array2);
-
-		let a = array.concat();
-		for (let i = 0; i < a.length; ++i) {
-			for (let j = i + 1; j < a.length; ++j) {
-				if (a[i] === a[j]) {
-					a.splice(j--, 1);
-				}
-			}
-		}
-
-		return a;
-	};
-
 	/**
 	 * Initialise Data and Scales
 	 *
