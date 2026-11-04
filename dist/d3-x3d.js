@@ -31,7 +31,7 @@
 
   var d3__namespace = /*#__PURE__*/_interopNamespaceDefault(d3);
 
-  var version$1="2.1.5";var license$1="GPL-2.0";var packageJson = {version:version$1,license:license$1};
+  var version$1="2.2.0";var license$1="GPL-2.0";var packageJson = {version:version$1,license:license$1};
 
   function _arrayLikeToArray(r, a) {
     (null == a || a > r.length) && (a = r.length);
