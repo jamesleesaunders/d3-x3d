@@ -1,8 +1,8 @@
 import * as d3 from "d3";
 import dataTransform from "../dataTransform.js";
 import { dispatch } from "../events.js";
-import { colorParse } from "../colorHelper.js";
 import { attachAccessors } from "../accessors.js";
+import { drawIndexedFaceStrip } from "./indexedFaceStrip.js";
 
 /**
  * Reusable 3D Ribbon Chart Component
@@ -61,95 +61,20 @@ export default function() {
 				.classed(classed, true)
 				.attr("id", (d) => d.key);
 
-			const ribbonData = function(data) {
-				const dimensionX = state.dimensions.x;
-
-				if (state.smoothed) {
-					data = dataTransform(data).smooth(state.smoothed, 100);
-
-					const keys = d3.extent(data.values.map((d) => d.key));
-					state.xScale = d3.scaleLinear()
-						.domain(keys)
-						.range([0, dimensionX]);
-				}
-
-				let values = data.values;
-
-				// Convert values into IFS coordinates
-				let coords = values.map((pointThis, indexThis, array) => {
-					let indexNext = indexThis + 1;
-					if (indexNext >= array.length) {
-						return null;
-					}
-					let pointNext = array[indexNext];
-
-					let x1 = state.xScale(pointThis.key);
-					let x2 = state.xScale(pointNext.key);
-					let y1 = state.yScale(pointThis.value);
-					let y2 = state.yScale(pointNext.value);
-					let z1 = 1 - (state.dimensions.z) / 2;
-					let z2 = (state.dimensions.z) / 2;
+			drawIndexedFaceStrip(element, state, {
+				itemClass: "ribbon",
+				transparency: transparency,
+				quad: (pointThis, pointNext) => {
+					const x1 = state.xScale(pointThis.key);
+					const x2 = state.xScale(pointNext.key);
+					const y1 = state.yScale(pointThis.value);
+					const y2 = state.yScale(pointNext.value);
+					const z1 = 1 - (state.dimensions.z) / 2;
+					const z2 = (state.dimensions.z) / 2;
 
 					return [x1, y1, z1, x1, y1, z2, x2, y2, z2, x2, y2, z1];
-				}).filter((d) => d !== null);
-
-				data.point = coords.map((d) => d.join(" ")).join(" ");
-				data.coordIndex = coords.map((d, i) => {
-					const offset = i * 4;
-					return [offset, offset + 1, offset + 2, offset + 3, -1].join(" ");
-				}).join(" ");
-
-				return [data];
-			};
-
-			const shape = (el) => {
-				const shape = el.append("Shape");
-
-				/*
-				// FIXME: x3dom cannot have empty IFS nodes, we must to use .html() rather than .append() & .attr().
-				shape.append("IndexedFaceset")
-					.attr("coordIndex", (d) => d.coordIndex)
-					.append("Coordinate")
-					.attr("point", (d) => d.point);
-
-				shape.append("Appearance")
-					.append("Material")
-					.attr("diffuseColor", colorParse(color))
-					.attr("transparency", transparency);
-				*/
-
-				shape.html((d) => `
-					<IndexedFaceset coordIndex="${d.coordIndex}"  solid="false">
-						<Coordinate point="${d.point}"></Coordinate>
-					</IndexedFaceset>
-					<Appearance>
-						<Material diffuseColor="${colorParse(state.color)}" transparency="${transparency}"></Material>
-					</Appearance>
-				`);
-			};
-
-			const ribbon = element.selectAll(".ribbon")
-				.data((d) => ribbonData(d), (d) => d.key);
-
-			ribbon.enter()
-				.append("Group")
-				.classed("ribbon", true)
-				.call(shape)
-				.merge(ribbon);
-
-			const ribbonTransition = ribbon.transition().select("Shape");
-
-			ribbonTransition.select("IndexedFaceset")
-				.attr("coordIndex", (d) => d.coordIndex)
-				.select("Coordinate")
-				.attr("point", (d) => d.point);
-
-			ribbonTransition.select("Appearance")
-				.select("Material")
-				.attr("diffuseColor", colorParse(state.color));
-
-			ribbon.exit()
-				.remove();
+				}
+			});
 
 		});
 	};
